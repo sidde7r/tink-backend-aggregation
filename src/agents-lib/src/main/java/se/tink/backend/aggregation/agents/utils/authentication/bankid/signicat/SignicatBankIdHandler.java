@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.bankid.signicat;
+package se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat;
 
 public interface SignicatBankIdHandler {
     /**

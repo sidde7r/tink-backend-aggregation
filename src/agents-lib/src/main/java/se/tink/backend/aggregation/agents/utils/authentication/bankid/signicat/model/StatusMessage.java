@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.model;
+package se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model;
 
 public class StatusMessage {
     public static final String COMPLETE = "COMPLETE";

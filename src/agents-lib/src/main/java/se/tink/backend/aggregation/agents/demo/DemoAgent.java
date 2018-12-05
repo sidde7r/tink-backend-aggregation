@@ -41,7 +41,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.SignicatBankIdAuthenticator;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.account.TransferDestinationPattern;

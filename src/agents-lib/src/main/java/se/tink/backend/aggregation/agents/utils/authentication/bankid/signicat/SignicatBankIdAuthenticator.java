@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.controllers.bankid.signicat;
+package se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat;
 
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -18,13 +18,13 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.xml.sax.InputSource;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.model.CollectBankIdRequest;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.model.CollectBankIdResponse;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.model.CompleteBankIdResponse;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.model.ErrorCode;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.model.InitiateBankIdRequest;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.model.InitiateBankIdResponse;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.model.StatusMessage;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.CollectBankIdRequest;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.CollectBankIdResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.CompleteBankIdResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.ErrorCode;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.InitiateBankIdRequest;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.InitiateBankIdResponse;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.StatusMessage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.backend.utils.LogUtils;
 

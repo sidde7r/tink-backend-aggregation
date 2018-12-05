@@ -4,8 +4,8 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.SignicatBankIdHandler;
-import se.tink.backend.aggregation.nxgen.controllers.bankid.signicat.SignicatBankIdStatus;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdHandler;
+import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdStatus;
 
 public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatBankIdHandler {
     private static final AggregationLogger log = new AggregationLogger(CredentialsSignicatBankIdAuthenticationHandler.class);
