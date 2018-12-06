@@ -1,4 +1,4 @@
-package src.se.tink.libraries.concurrency;
+package se.tink.libraries.concurrency;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.concurrent.CountDownLatch;

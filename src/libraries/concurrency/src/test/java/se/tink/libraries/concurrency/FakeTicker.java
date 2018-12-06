@@ -1,4 +1,4 @@
-package src.se.tink.libraries.concurrency;
+package se.tink.libraries.concurrency;
 
 import java.util.concurrent.atomic.AtomicLong;
 
