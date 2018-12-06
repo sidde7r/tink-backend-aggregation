@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.skandiabanken.model;
 
 public class LoginMethod {
-    private static final String APP_VERSION = "&appversion=Skandia%202.9.2%20%28587%29";
+    private static final String APP_VERSION =
+            "&appversion%3DSkandia%203.1.3%20%28654%29%26deviceversion%3DiPhone9%2C3%3B%20iOS%2012.1";
 
     private Integer typeOfLogin;
     private String loginUrl;
