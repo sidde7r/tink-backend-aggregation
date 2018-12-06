@@ -587,6 +587,9 @@ junit_test(
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/net",
         "//src/libraries/i18n",
+        "//src/libraries/concurrency:concurrency-test",
+        "//src/libraries/concurrency:concurrency",
+        "//src/libraries/log",
         "//src/libraries/strings:strings",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/creditsafe_consumer_monitoring",
@@ -693,6 +696,7 @@ junit_test(
         ":system-api",
         ":agents-lib",
 
+        "//src/libraries/log",
         "//src/libraries/uuid:uuid",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/metrics:metrics",
