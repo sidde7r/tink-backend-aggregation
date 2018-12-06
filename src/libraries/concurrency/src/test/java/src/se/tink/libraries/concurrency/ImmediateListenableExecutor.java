@@ -1,4 +1,4 @@
-package se.tink.backend.common.concurrency;
+package src.se.tink.libraries.concurrency;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
