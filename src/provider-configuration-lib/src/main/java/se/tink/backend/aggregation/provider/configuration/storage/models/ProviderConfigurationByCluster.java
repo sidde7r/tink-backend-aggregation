@@ -30,8 +30,20 @@ public class ProviderConfigurationByCluster {
             Map<String, ProviderConfiguration> providerConfigurationOverrides,
             Map<String, ProviderConfiguration> allProviderConfiguration,
             Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
-        this.providerConfigurations = Maps.newHashMap();
+
+        this.providerConfigurations = selectProviderConfigurations(clusterId, enabledProviders,
+                providerConfigurationOverrides, allProviderConfiguration, capabilitiesByAgentClass);
         this.clusterId = clusterId;
+        this.enabledMarkets = getEnabledMarkets(providerConfigurations.values());
+    }
+
+    private static Map<String, ProviderConfiguration> selectProviderConfigurations(String clusterId,
+            Set<String> enabledProviders,
+            Map<String, ProviderConfiguration> providerConfigurationOverrides,
+            Map<String, ProviderConfiguration> allProviderConfiguration,
+            Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
+
+        Map<String, ProviderConfiguration> providerConfigurations = Maps.newHashMap();
         enabledProviders.forEach(
                 providerName -> {
                     ProviderConfiguration providerConfiguration;
@@ -55,7 +67,7 @@ public class ProviderConfigurationByCluster {
                 }
         );
 
-        this.enabledMarkets = getEnabledMarkets(providerConfigurations.values());
+        return providerConfigurations;
     }
 
     private static Set<String> getEnabledMarkets(Collection<ProviderConfiguration> providerConfigurations) {
