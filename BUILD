@@ -633,6 +633,7 @@ junit_test(
         ":system-api",
         ":agents-lib",
 
+        "//src/libraries/log",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/metrics:metrics",
         "//src/libraries/date:date",
