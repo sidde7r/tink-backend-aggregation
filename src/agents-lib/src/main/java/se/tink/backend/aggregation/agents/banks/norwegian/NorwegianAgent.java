@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.norwegian;
 
 import com.google.api.client.http.HttpStatusCodes;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
@@ -11,9 +9,11 @@ import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
@@ -39,19 +39,18 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
 
 /**
  * Agent will import data from Bank Norwegian. It is only possible to have one credit-card per person at Norwegian
  * so the only Tink account that will be created right now is a credit-card account. No support for Loans.
- *
  */
 public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
@@ -61,7 +60,8 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
     private static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount";
     private static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
-    private static final String TRANSACTIONS_URL = BASE_URL + "MyPage2/Transaction/GetTransactions?accountNo=%s&year=%d&month=%d";
+    private static final String TRANSACTIONS_URL =
+            BASE_URL + "MyPage2/Transaction/GetTransactions?accountNo=%s&year=%d&month=%d";
     private static final String LOGIN_URL = "https://id.banknorwegian.se/std/method/"
             + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
             + "2fLogin%2fSignicatCallback%3fipid%3d22%26returnUrl%3d%252FMinSida";
@@ -132,15 +132,16 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
             }
 
-            throw new IllegalStateException(String.format("#login-refactoring - Norwegian - Got with code: %s Message: %s",
-                    orderBankIdResponse.getError().getCode(), orderBankIdResponse.getError().getMessage()));
+            throw new IllegalStateException(
+                    String.format("#login-refactoring - Norwegian - Got with code: %s Message: %s",
+                            orderBankIdResponse.getError().getCode(), orderBankIdResponse.getError().getMessage()));
         }
 
         // Prompt a BankId authentication client-side.
 
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        
+
         context.requestSupplementalInformation(credentials, false);
 
         String bankIdCompleteUrl = collectBankId(orderBankIdResponse, bankIdUrl);
@@ -168,9 +169,10 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
             return true;
         } else {
             throw new IllegalStateException(
-                    String.format("#login-refactoring - Norwegian - Did not get status code for both authenticateClientResponse "
-                    + "and loggedInResponse: %s, %s", authenticateClientResponse.getStatus(),
-                    loggedInResponse.getStatus()));
+                    String.format(
+                            "#login-refactoring - Norwegian - Did not get status code for both authenticateClientResponse "
+                                    + "and loggedInResponse: %s, %s", authenticateClientResponse.getStatus(),
+                            loggedInResponse.getStatus()));
         }
     }
 
@@ -199,7 +201,8 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
                     throw BankIdError.ALREADY_IN_PROGRESS.exception();
                 default:
                     throw new IllegalStateException(
-                            String.format("#login-refactoring - Norwegian - BankId login failed with unknown error: %s", error.getCode()));
+                            String.format("#login-refactoring - Norwegian - BankId login failed with unknown error: %s",
+                                    error.getCode()));
                 }
             }
 
@@ -224,9 +227,8 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
     /**
      * Collect the credit card account
-     * 
-     * @throws AccountNotFoundException
-     *             if the account could not be found
+     *
+     * @throws AccountNotFoundException if the account could not be found
      */
     private Account getAccount() throws AccountNotFoundException {
 
@@ -280,17 +282,22 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private void pageTransactions(Account account, String accountNumber)
             throws ParseException, UnsupportedEncodingException {
         List<Transaction> transactions = Lists.newArrayList();
+        List<Long> isIncludedTransaction = new ArrayList<>();
 
         int month = DateTime.now().monthOfYear().get();
         int year = DateTime.now().year().get();
 
         String encodedAccountNumber = URLEncoder.encode(accountNumber, "UTF-8");
 
-        // Add transactions which are not yet billed to the user
+        // Add reserved (not booked) transactions and recent payments which are not yet billed to the user.
         TransactionListResponse pendingTransactions = createClientRequest(
                 String.format(TRANSACTIONS_URL, encodedAccountNumber, 0, 0)).get(TransactionListResponse.class);
-        ImmutableList<TransactionEntity> filteredPendingTransactions = FluentIterable.from(pendingTransactions)
-                .filter(transactionEntity -> !transactionEntity.isBooked()).toList();
+
+        List<TransactionEntity> filteredPendingTransactions = pendingTransactions.stream()
+                .filter(transactionEntity -> isReservedPurchaseOrNotBilledPayment(isIncludedTransaction,
+                        transactionEntity))
+                .collect(Collectors.toList());
+
         for (TransactionEntity transactionEntity : filteredPendingTransactions) {
             transactions.add(transactionEntity.toTransaction());
         }
@@ -298,8 +305,14 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         // Get billed transactions
         do {
             TransactionListResponse transactionListResponse = createClientRequest(
-                    String.format(TRANSACTIONS_URL, encodedAccountNumber, year, month)).get(TransactionListResponse.class);
-            transactions.addAll(transactionListResponse.getTransactions());
+                    String.format(TRANSACTIONS_URL, encodedAccountNumber, year, month))
+                    .get(TransactionListResponse.class);
+
+            transactionListResponse.stream()
+                    .filter(transactionEntity -> !isIncludedTransaction.contains(transactionEntity.getExternalId()))
+                    .map(TransactionEntity::toTransaction)
+                    .forEach(transactions::add);
+
             context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
             month--;
@@ -314,6 +327,17 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         } while (!isContentWithRefresh(account, transactions));
 
         context.updateTransactions(account, transactions);
+    }
+
+    private boolean isReservedPurchaseOrNotBilledPayment(List<Long> isIncludedTransaction,
+            TransactionEntity transactionEntity) {
+
+        if (transactionEntity.isNotBilledPayment()) {
+            isIncludedTransaction.add(transactionEntity.getExternalId());
+            return true;
+        }
+
+        return !transactionEntity.isBooked();
     }
 
     private WebResource.Builder createClientRequest(String url) {
