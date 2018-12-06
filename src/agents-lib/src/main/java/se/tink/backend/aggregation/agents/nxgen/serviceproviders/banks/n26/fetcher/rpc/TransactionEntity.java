@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -167,10 +168,6 @@ public class TransactionEntity {
         return referenceText;
     }
 
-    private String getRawDetails() {
-        return category;
-    }
-
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
@@ -178,7 +175,6 @@ public class TransactionEntity {
                 .setDate(new Date(visibleTS))
                 .setDescription(getDescription())
                 .setPending(isPending())
-                .setRawDetails(getRawDetails())
                 .build();
     }
 }
