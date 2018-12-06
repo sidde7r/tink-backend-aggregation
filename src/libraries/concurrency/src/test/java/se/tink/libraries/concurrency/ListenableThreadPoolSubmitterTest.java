@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.common.utils.ExecutorServiceUtils;
+import se.tink.libraries.executor.ExecutorServiceUtils;
 
 public class ListenableThreadPoolSubmitterTest {
 

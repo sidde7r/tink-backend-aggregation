@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.common.utils.ExecutorServiceUtils;
+import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class ListenableThreadPoolExecutorTest {
