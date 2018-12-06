@@ -14,7 +14,7 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.libraries.concurrency.WrappedRunnableListenableFutureTask;
-import se.tink.backend.common.utils.ExecutorServiceUtils;
+import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;

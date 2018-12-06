@@ -15,7 +15,7 @@ import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
-import se.tink.backend.common.utils.ExecutorServiceUtils;
+import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.log.legacy.LogUtils;
 
 /**

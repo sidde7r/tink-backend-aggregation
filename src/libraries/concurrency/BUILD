@@ -22,6 +22,7 @@ junit_test(
     deps = [
         ":concurrency",
         "//src/libraries/log:log",
+        "//src/libraries/executor_utils:executor-utils",
         "//src/libraries/metrics:metrics",
         "//third_party:com_google_guava_guava",
         "//third_party:org_apache_curator_curator_framework",
