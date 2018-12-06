@@ -3,7 +3,7 @@ package se.tink.libraries.abnamro.client.model.creditcards;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.ImmutableSet;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionContainerEntity {

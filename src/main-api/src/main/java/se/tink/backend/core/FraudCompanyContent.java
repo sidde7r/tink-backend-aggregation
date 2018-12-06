@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.beanutils.PropertyUtilsBean;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FraudCompanyContent extends FraudDetailsContent {

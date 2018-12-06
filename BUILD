@@ -185,6 +185,7 @@ java_library(
         "//src/api-annotations",
         "//src/libraries/cryptography:cryptography",
         "//src/libraries/repository:repository",
+        "//src/libraries/log:log",
 
         "//src/api-headers",
 

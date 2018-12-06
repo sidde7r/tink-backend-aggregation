@@ -16,7 +16,7 @@ import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 
 /**
  * Do not use this class in new code anymore. This class is going to be removed.

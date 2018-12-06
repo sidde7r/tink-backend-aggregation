@@ -15,7 +15,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
 import se.tink.libraries.abnamro.config.TrustStoreConfiguration;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.net.BasicJerseyClientFactory;
 
 public abstract class Client {

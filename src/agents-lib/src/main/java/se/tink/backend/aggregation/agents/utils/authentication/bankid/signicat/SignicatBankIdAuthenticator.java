@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.m
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.StatusMessage;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 
 public class SignicatBankIdAuthenticator implements Runnable {
     private static final int AUTHENTICATION_BANKID_TIMEOUT = 120;

@@ -29,7 +29,7 @@ import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.UpdateDocumentResponse;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
 
