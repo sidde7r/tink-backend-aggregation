@@ -1,8 +1,6 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
-    "bg-first-investment-bank",
-    "nl-test-password",
-    "nl-test-multi-supplemental"
+    "bg-first-investment-bank"
   ]
 }
