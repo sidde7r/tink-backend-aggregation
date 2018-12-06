@@ -82,7 +82,7 @@
         "hint": "NNNNNNN"
       },
       {
-        "Description": "Control Code",
+        "description": "Control Code",
         "helpText" : "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_CardReader.png) Sign using your Belfius Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN.png) Press\n3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter the security code []",
         "immutable": true,
         "masked": false,
@@ -285,7 +285,7 @@
         "hint": "NNNNNNN"
       },
       {
-        "Description": "Control Code",
+        "description": "Control Code",
         "helpText": "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_CardReader.png) Insert your bank card into the card reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN.png) Tap\n3$ Enter the start code []",
         "immutable": true,
         "masked": false,
@@ -392,7 +392,7 @@
         "name": "otpinput"
       },
       {
-        "Description": "Challenge",
+        "description": "Challenge",
         "helpText": "1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN.png) Press\n3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) Enter your PIN and press\n4$ Enter the following number []",
         "immutable": true,
         "masked": false,
