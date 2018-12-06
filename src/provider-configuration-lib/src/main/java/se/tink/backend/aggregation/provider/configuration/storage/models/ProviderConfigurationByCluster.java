@@ -12,8 +12,7 @@ import org.slf4j.LoggerFactory;
 // Upon instantiation the object determines which configuration to choose from
 // the enabled/global/override data and stores them in memory
 public class ProviderConfigurationByCluster {
-
-    private Logger logger = LoggerFactory.getLogger(ProviderConfigurationByCluster.class);
+    private static Logger logger = LoggerFactory.getLogger(ProviderConfigurationByCluster.class);
     private final String clusterId;
     private Set<String> enabledMarkets;
 
