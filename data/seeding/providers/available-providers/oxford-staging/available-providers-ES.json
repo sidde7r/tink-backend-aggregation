@@ -1,7 +1,10 @@
 {
   "clusterid" : "oxford-staging",
   "providers" : [
-    "es-test-password", 
+    "es-ibercaja-password",
+    "es-imaginbank-password",
+    "es-openbank-password",
+    "es-test-password",
     "es-test-multi-supplemental"
   ]
 }
