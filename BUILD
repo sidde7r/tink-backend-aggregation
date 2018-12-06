@@ -185,6 +185,7 @@ java_library(
         "//src/api-annotations",
         "//src/libraries/cryptography:cryptography",
         "//src/libraries/repository:repository",
+        "//src/libraries/concurrency:concurrency",
         "//src/libraries/log:log",
 
         "//src/api-headers",
@@ -353,6 +354,7 @@ java_library(
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/date:date",
         "//src/libraries/log:log",
+        "//src/libraries/concurrency:concurrency",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/generic_application:generic-application",

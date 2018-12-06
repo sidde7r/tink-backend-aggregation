@@ -10,9 +10,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.common.concurrency.InstrumentedRunnable;
-import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
-import se.tink.backend.common.concurrency.RunnableMdcWrapper;
+import se.tink.libraries.concurrency.InstrumentedRunnable;
+import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
+import se.tink.libraries.concurrency.RunnableMdcWrapper;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 

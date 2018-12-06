@@ -5,7 +5,7 @@ import com.google.common.base.Stopwatch;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.common.concurrency.TerminatableExecutor;
+import se.tink.libraries.concurrency.TerminatableExecutor;
 import se.tink.libraries.log.legacy.LogUtils;
 
 public class ExecutorServiceUtils {

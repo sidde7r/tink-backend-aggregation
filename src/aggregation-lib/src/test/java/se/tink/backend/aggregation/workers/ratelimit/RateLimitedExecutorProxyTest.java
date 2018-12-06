@@ -10,8 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.workers.ratelimit.RateLimitedExecutorProxy.RateLimiter;
-import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
-import se.tink.backend.common.concurrency.TypedThreadPoolBuilder;
+import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
+import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 

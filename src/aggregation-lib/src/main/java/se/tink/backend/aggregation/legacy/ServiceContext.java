@@ -11,7 +11,7 @@ import javax.annotation.PreDestroy;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
+import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
