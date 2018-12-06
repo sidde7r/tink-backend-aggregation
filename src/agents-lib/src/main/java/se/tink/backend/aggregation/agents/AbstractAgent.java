@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.utils.CookieContainer;
-import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.TinkApacheHttpClient4;

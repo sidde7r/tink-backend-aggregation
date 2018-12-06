@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {

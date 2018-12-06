@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
-import se.tink.backend.common.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.i18n.Catalog;
 
 public class MobileBankingAuthenticationPayload {
