@@ -68,6 +68,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -75,7 +76,6 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.common.i18n.SocialSecurityNumber;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
@@ -92,7 +92,6 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     private static final int MAX_PAGES_LIMIT = 150;
     private static final String BASE_URL_SECURE = "https://login.skandia.se";
     private static final String AUTHENTICATE_WITH_BANKID_AUTOSTART_URL = BASE_URL_SECURE + "/mobiltbankid/autostartauthenticate/";
-    private static final String AUTHENTICATE_WITH_BANKID_URL = BASE_URL_SECURE + "/mobiltbankid/authenticate/";
     private static final int BANKID_LOGIN_METHOD_ID = 9;
     private static final String BASE_URL = "https://service2.smartrefill.se/BankServicesSkandia";
     private static final String COLLECT_BANKID_URL = BASE_URL_SECURE + "/mobiltbankid/collecting/";
@@ -119,6 +118,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         Preconditions.checkNotNull(token);
 
         form.add("__RequestVerificationToken", token);
+        form.add("X-Requested-With", "XMLHttpRequest");
 
         return form;
     }
@@ -148,16 +148,10 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         String authenticateUrl;
         MultivaluedMap<String, String> postData;
 
-        if (!Strings.isNullOrEmpty(username)) { // Authentication with SSN
-            postData = extractRequestVerificationToken(loginPageBody, "idfield-form");
-            postData.add("NationalIdentificationNumber", username);
-            authenticateUrl = AUTHENTICATE_WITH_BANKID_URL;
-        } else { // Authentication with autostarttoken
-            postData = extractRequestVerificationToken(loginPageBody, "autostartbutton-form");
-            authenticateUrl = AUTHENTICATE_WITH_BANKID_AUTOSTART_URL;
-        }
+        postData = extractRequestVerificationToken(loginPageBody, "autostartbutton-form");
+        authenticateUrl = AUTHENTICATE_WITH_BANKID_AUTOSTART_URL;
 
-        AuthenticateBankIdResponse authenticateResponse = createClientRequest(authenticateUrl)
+        AuthenticateBankIdResponse authenticateResponse = createLoginClientRequest(authenticateUrl, true)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .post(AuthenticateBankIdResponse.class, postData);
 
@@ -182,7 +176,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
             throws AuthenticationException, AuthorizationException {
         // Get the login method for BankID.
 
-        final String loginPageBody = createClientRequest(loginMethod.getLoginUrl()).get(String.class);
+        final String loginPageBody = createLoginClientRequest(loginMethod.getLoginUrl(), false).get(String.class);
 
         Optional<String> autostartToken = initiateBankID(loginPageBody, username);
         openBankID(autostartToken);
@@ -193,7 +187,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
         CollectBankIdResponse collectResponse = null;
         for (int i = 0; i < 30; i++) {
-            collectResponse = createClientRequest(COLLECT_BANKID_URL).type(
+            collectResponse = createLoginClientRequest(COLLECT_BANKID_URL, true).type(
                     MediaType.APPLICATION_FORM_URLENCODED).post(CollectBankIdResponse.class, postData);
 
             // states:
@@ -337,16 +331,31 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     }
 
     private Builder createClientRequest(String url) {
-        Builder requestBuilder = client.resource(url).header("x-smartrefill-version", "101")
-                .header("x-smartrefill-inflow", "Android")
+        Builder requestBuilder = client.resource(url)
+                .header("x-smartrefill-version", "654")
+                .header("x-smartrefill-inflow", "iphone")
                 .header("x-smartrefill-device", StringUtils.hashAsUUID(request.getUser().getId()).toLowerCase())
-                .header("x-smartrefill-api-version", "3").header("x-smartrefill-company", "SKANDIABANKEN")
-                .header("x-smartrefill-country", COUNTRY_CODE).header("x-smartrefill-marketing-version", "2.8.2")
-                .header("x-smartrefill-application", "se.skandiabanken.android.wallet")
+                .header("x-smartrefill-api-version", "2")
+                .header("x-smartrefill-company", "SKANDIABANKEN")
+                .header("x-smartrefill-country", COUNTRY_CODE)
+                .header("x-smartrefill-marketing-version", "3.1.3")
+                .header("x-smartrefill-application", "se.skandia.skandia")
+                .header("x-smartrefill-language", "sv")
                 .header("User-Agent", DEFAULT_USER_AGENT);
 
         if (customerId != null) {
             requestBuilder = requestBuilder.header("x-smartrefill-customer", Integer.toString(customerId));
+        }
+
+        return requestBuilder;
+    }
+
+    private Builder createLoginClientRequest(String url, boolean xhr) {
+        Builder requestBuilder = client.resource(url)
+                .header("User-Agent", DEFAULT_USER_AGENT);
+
+        if (xhr) {
+            requestBuilder.header("X-Requested-With", "XMLHttpRequest");
         }
 
         return requestBuilder;
@@ -640,6 +649,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                 .setMaxRedirects(20)
                 // .setCookieSpec(CookieSpecs.BEST_MATCH) // Not sure I need to set this?
                 .build();
+
         CloseableHttpClient apacheClient = HttpClientBuilder.create()
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieStore(cookieStore)
