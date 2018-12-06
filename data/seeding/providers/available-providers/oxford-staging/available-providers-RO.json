@@ -1,16 +1,11 @@
 {
   "clusterid" : "oxford-staging",
   "providers" : [
-    "ro-banca-comerciala-romana",
-    "ro-banca-transilvania",
-    "ro-brd",
-    "ro-ing-bank",
     "ro-raiffeisen-bank",
-    "ro-unicredit-tirirac-bank",
     "ro-raiffeisen-oauth2",
     "ro-n26-password",
     "ro-revolut-password",
-    "ro-test-password",
+    "ro-test-password",	
     "ro-test-multi-supplemental"
   ]
 }

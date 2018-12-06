@@ -1,13 +1,8 @@
 {
   "clusterid" : "oxford-staging",
   "providers" : [
-    "es-americanexpress",
-    "es-banco-de-sabadell",
-    "es-banco-popular",
-    "es-bankia",
     "es-ibercaja-password",
     "es-imaginbank-password",
-    "es-la-caixa",
     "es-openbank-password",
     "es-test-password",
     "es-test-multi-supplemental"

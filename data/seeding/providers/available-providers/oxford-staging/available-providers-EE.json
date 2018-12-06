@@ -1,11 +1,7 @@
 {
   "clusterid" : "oxford-staging",
   "providers" : [
-    "ee-dnb",
-    "ee-lhv-pank",
-    "ee-nordea",
-    "ee-swedbank",
-    "ee-test-password",
+    "ee-test-password", 
     "ee-test-multi-supplemental"
   ]
 }

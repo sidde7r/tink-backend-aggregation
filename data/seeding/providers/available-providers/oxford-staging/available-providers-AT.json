@@ -3,8 +3,6 @@
   "providers" : [
     "at-volksbank-password",
     "at-bank-austria",
-    "at-bawag-psk",
-    "at-erste-bank-and-sparkasse",
     "at-raiffeisen0-password",
     "at-raiffeisen1-password",
     "at-raiffeisen2-password",
@@ -17,13 +15,11 @@
     "at-raiffeisen9-password",
     "at-raiffeisen10-password",
     "at-raiffeisen11-password",
-    "at-volksbank",
     "at-n26-password",
     "at-revolut-password",
     "at-americanexpress-password",
     "at-raiffeisen-bank",
-    "at-volksbank",
-    "at-test-password",
+    "at-test-password", 
     "at-test-multi-supplemental"
   ]
 }
