@@ -168,15 +168,6 @@ public class TransactionEntity {
         return referenceText;
     }
 
-    private ImmutableMap<String, String> getRawDetails() {
-
-        return ImmutableMap.<String,String>builder()
-                .put("category", Strings.nullToEmpty(category))
-                .put("merchantName", Strings.nullToEmpty(merchantName))
-                .put("referenceText", Strings.nullToEmpty(referenceText))
-                .build();
-    }
-
     public Transaction toTinkTransaction() {
 
         return Transaction.builder()
@@ -184,7 +175,6 @@ public class TransactionEntity {
                 .setDate(new Date(visibleTS))
                 .setDescription(getDescription())
                 .setPending(isPending())
-                .setRawDetails(getRawDetails())
                 .build();
     }
 }
