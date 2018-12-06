@@ -150,7 +150,7 @@
       "supplementalFields": [
         {
           "description": "One-time Password",
-          "helpText": "Insert your card into the card reader\nPress 'Login'\nEnter your PIN\nPress 'OK'\nEnter the OTP",
+          "helpText": "Insert your card into the card reader\nPress 'Identify'\nEnter your PIN\nPress 'OK'\nEnter the OTP",
           "sensitive": true,
           "numeric": true,
           "name": "otpinput"
