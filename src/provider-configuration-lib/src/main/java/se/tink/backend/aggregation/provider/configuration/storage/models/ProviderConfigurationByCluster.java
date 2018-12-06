@@ -46,12 +46,10 @@ public class ProviderConfigurationByCluster {
         Map<String, ProviderConfiguration> providerConfigurations = Maps.newHashMap();
         enabledProviders.forEach(
                 providerName -> {
-                    ProviderConfiguration providerConfiguration;
-                    if (providerConfigurationOverrides.containsKey(providerName)) {
-                        providerConfiguration = providerConfigurationOverrides.get(providerName);
-                    } else if (allProviderConfiguration.containsKey(providerName)) {
-                        providerConfiguration = allProviderConfiguration.get(providerName);
-                    } else {
+                    ProviderConfiguration providerConfiguration = getProviderConfiguration(
+                            providerName, providerConfigurationOverrides, allProviderConfiguration);
+
+                    if (providerConfiguration == null) {
                         logger.error("Could not find configuration for enabled provider {} and cluster {}",
                                 providerName, clusterId);
                         return;
@@ -68,6 +66,17 @@ public class ProviderConfigurationByCluster {
         );
 
         return providerConfigurations;
+    }
+
+    private static ProviderConfiguration getProviderConfiguration(String providerName,
+            Map<String, ProviderConfiguration> providerConfigurationOverrides,
+            Map<String, ProviderConfiguration> allProviderConfiguration) {
+
+        if (providerConfigurationOverrides.containsKey(providerName)) {
+            return providerConfigurationOverrides.get(providerName);
+        }
+
+        return allProviderConfiguration.get(providerName);
     }
 
     private static Set<String> getEnabledMarkets(Collection<ProviderConfiguration> providerConfigurations) {
