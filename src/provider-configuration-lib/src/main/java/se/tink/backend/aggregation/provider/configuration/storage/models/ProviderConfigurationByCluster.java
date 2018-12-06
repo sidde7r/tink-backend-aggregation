@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.provider.configuration.storage.models;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,6 @@ public class ProviderConfigurationByCluster {
             Map<String, ProviderConfiguration> allProviderConfiguration,
             Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
         this.providerConfigurations = Maps.newHashMap();
-        this.enabledMarkets = Sets.newHashSet();
         this.clusterId = clusterId;
         enabledProviders.forEach(
                 providerName -> {
@@ -51,9 +52,16 @@ public class ProviderConfigurationByCluster {
                                     Collections.emptySet()));
 
                     providerConfigurations.put(providerName, providerConfiguration);
-                    enabledMarkets.add(providerConfiguration.getMarket());
                 }
         );
+
+        this.enabledMarkets = getEnabledMarkets(providerConfigurations.values());
+    }
+
+    private static Set<String> getEnabledMarkets(Collection<ProviderConfiguration> providerConfigurations) {
+        return providerConfigurations.stream()
+                .map(ProviderConfiguration::getMarket)
+                .collect(Collectors.toSet());
     }
 
     public boolean marketEnabled(String market) {
