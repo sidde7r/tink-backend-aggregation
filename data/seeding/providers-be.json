@@ -83,7 +83,7 @@
           "hint": "NNNNNNN"
         },
         {
-          "Description": "Challenge",
+          "description": "Challenge",
           "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
           "immutable": true,
           "masked": false,
@@ -156,7 +156,7 @@
           "name": "otpinput"
         },
         {
-          "Description": "Challenge",
+          "description": "Challenge",
           "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
           "immutable": true,
           "masked": false,
@@ -221,7 +221,7 @@
           "hint": "NNNNNNN"
         },
         {
-          "Description": "Challenge",
+          "description": "Challenge",
           "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
           "immutable": true,
           "masked": false,
