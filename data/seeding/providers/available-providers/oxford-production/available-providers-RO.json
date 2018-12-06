@@ -7,6 +7,7 @@
     "ro-raiffeisen-bank",
     "ro-unicredit-tirirac-bank",
     "ro-test-password",
-    "ro-test-multi-supplemental"
+    "ro-test-multi-supplemental",
+    "ro-raiffeisen-oauth2"
   ]
 }
