@@ -1,4 +1,4 @@
-package se.tink.backend.common.concurrency;
+package se.tink.libraries.concurrency;
 
 import javax.inject.Inject;
 import org.apache.curator.framework.CuratorFramework;

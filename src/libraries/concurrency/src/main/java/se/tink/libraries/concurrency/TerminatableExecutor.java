@@ -1,4 +1,4 @@
-package se.tink.backend.common.concurrency;
+package se.tink.libraries.concurrency;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;

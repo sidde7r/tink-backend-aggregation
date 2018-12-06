@@ -1,9 +1,9 @@
-package se.tink.backend.common.concurrency;
+package se.tink.libraries.concurrency;
 
 import com.google.common.util.concurrent.FutureCallback;
 import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
-import se.tink.backend.utils.FutureUncaughtExceptionLogger;
+import se.tink.libraries.concurrency.logger.exception.FutureUncaughtExceptionLogger;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;

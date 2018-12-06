@@ -1,21 +1,22 @@
-package se.tink.backend.common.concurrency;
+package se.tink.libraries.concurrency;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Stopwatch;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
+import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.Service;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import se.tink.backend.utils.FutureUncaughtExceptionLogger;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.metrics.Counter;
 
 /**
@@ -24,26 +25,25 @@ import se.tink.libraries.metrics.Counter;
  * <li>logs errors.</li>
  * <li>returns {@link ListenableFuture}s.</li>
  * <li>makes sure that submission to {@link ThreadPoolExecutor} is type-safe.</li>
- * <li>only handles {@link Callable}s to make implementation of type safety _much_ easier.
- * See {@link ListenableThreadPoolExecutor} for something that accepts {@link Runnable}s.</li>
+ * <li>only handles {@link Runnable}s to make implementation of type safety _much_ easier. See
+ * {@link ListenableThreadPoolSubmitter} for something that accepts {@link java.util.concurrent.Callable}s.</li>
  * </ul>
  *
- * @param <T> the type of Callable that can be submitted.
+ * @param <T> the type of the runnable that can be submitted.
  */
-public class ListenableThreadPoolSubmitter<T extends Callable<?>>
-        implements TerminatableExecutor, ListenableSubmitter {
+public class ListenableThreadPoolExecutor<T extends Runnable> implements TerminatableExecutor, ListenableExecutor<T> {
+    private static final LogUtils log = new LogUtils(ListenableThreadPoolExecutor.class);
 
-    public static final FutureUncaughtExceptionLogger errorLoggingCallback = new FutureUncaughtExceptionLogger();
+    private final FutureCallback<Object> errorLoggingCallback;
 
-    private final RejectedExecutionHandler<WrappedCallableListenableFutureTask<T, ?>> rejectedHandler;
-    private final BlockingQueue<WrappedCallableListenableFutureTask<T, ?>> queue;
+    private final RejectedExecutionHandler<WrappedRunnableListenableFutureTask<T, ?>> rejectedHandler;
+    private final BlockingQueue<WrappedRunnableListenableFutureTask<T, ?>> queue;
     private final QueuePopper queuePopper;
+    private final AtomicBoolean shutdown = new AtomicBoolean(false);
+    private final ThreadPoolExecutor threadPool;
     private final Counter queuedItems;
     private final Counter startedItems;
     private final IncrementCounterRunnable finishedRunningIncrementor;
-    private ThreadPoolExecutor threadPool;
-    private final AtomicBoolean shutdown = new AtomicBoolean(false);
-    private static final LogUtils log = new LogUtils(ListenableThreadPoolSubmitter.class);
 
     private class QueuePopper extends AbstractExecutionThreadService {
         private Thread thread;
@@ -57,7 +57,7 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
             // condition.
             started.countDown();
 
-            WrappedCallableListenableFutureTask<T, ?> item = null;
+            WrappedRunnableListenableFutureTask<T, ?> item = null;
 
             // Normal loop:
 
@@ -72,8 +72,8 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
             }
         }
 
-        private WrappedCallableListenableFutureTask<T, ?> pollAndDelegateQueueItem(
-                WrappedCallableListenableFutureTask<T, ?> item) {
+        private WrappedRunnableListenableFutureTask<T, ?> pollAndDelegateQueueItem(
+                WrappedRunnableListenableFutureTask<T, ?> item) {
             if (item == null) {
                 try {
                     item = queue.take();
@@ -115,31 +115,29 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
         }
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        // Make sure that the background QueuePopper service can be garbage collected. Notice that, a ThreadPoolExecutor
-        // only will be garbage collected if `corePoolSize` is zero. See http://stackoverflow.com/a/7728645.
-        shutdown();
-    }
-
     /**
      * Package private Constructor.
-     * You probably want to use {@code ListenableThreadPoolSubmitterBuilder} instead.
+     * You probably want to use {@code ListenableThreadPoolExecutorBuilder} instead.
      */
-    ListenableThreadPoolSubmitter(
-            BlockingQueue<WrappedCallableListenableFutureTask<T, ?>> queue, TypedThreadPoolBuilder tpb,
-            RejectedExecutionHandler<WrappedCallableListenableFutureTask<T, ?>> rejectedHandler,
+    ListenableThreadPoolExecutor(RejectedExecutionHandler<WrappedRunnableListenableFutureTask<T, ?>> rejectedHandler,
+            BlockingQueue<WrappedRunnableListenableFutureTask<T, ?>> queue,
+            TypedThreadPoolBuilder threadPoolBuilder,
+            FutureCallback<Object> errorLoggingCallback,
             Counter queuedItems,
             Counter startedItems,
             Counter finishedItems) {
+
         this.queue = queue;
         this.queuePopper = new QueuePopper();
         this.rejectedHandler = rejectedHandler;
+        this.errorLoggingCallback = errorLoggingCallback;
 
         this.queuedItems = queuedItems;
         this.startedItems = startedItems;
 
-        threadPool = tpb.build();
+        this.finishedRunningIncrementor = new IncrementCounterRunnable(finishedItems);
+
+        threadPool = threadPoolBuilder.build();
         queuePopper.startAsync();
 
         // Need to call this here to really make sure that _our_ `QueuePopper#run` has started. Otherwise there's a
@@ -151,7 +149,13 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
         // The reason why this happen lies in the method name name "startAsync", which spawns a new thread and then,
         // before calling `run()` double checks that the service still should be started.
         queuePopper.awaitStarted();
-        finishedRunningIncrementor = new IncrementCounterRunnable(finishedItems);
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        // Make sure that the background QueuePopper service can be garbage collected. Notice that, a ThreadPoolExecutor
+        // only will be garbage collected if `corePoolSize` is zero. See http://stackoverflow.com/a/7728645.
+        shutdown();
     }
 
     @Override
@@ -178,11 +182,23 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
 
     @Override
     public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
+        final Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             queuePopper.awaitTerminated(timeout, unit);
+            if (Objects.equal(queuePopper.state(), Service.State.FAILED)) {
+                log.error("QueuePopper failed. This should never happen.", queuePopper.failureCause());
+            }
         } catch (TimeoutException e) {
             return false;
         }
+
+        timeout -= stopwatch.elapsed(unit);
+        if (timeout < 0) {
+            // Just in case. ThreadPoolExecutor#awaitTermination probably handles negative timeout, but better safe than
+            // sorry.
+            timeout = 0;
+        }
+
         if (!threadPool.awaitTermination(timeout, unit)) {
             return false;
         }
@@ -196,14 +212,14 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
     }
 
     @Override
-    public <Q extends Callable<V>, V> ListenableFuture<V> submit(Q callable) {
-        WrappedCallableListenableFutureTask<Q, V> future = new WrappedCallableListenableFutureTask<Q, V>(callable);
+    public ListenableFuture<?> execute(T r) {
+        WrappedRunnableListenableFutureTask<T, ?> future = new WrappedRunnableListenableFutureTask<>(r, null);
 
-        // HACK: Workaround to map a type T's generic to method type V here. Since generics are runtime this seem to
-        // work as unit test pass.
-        WrappedCallableListenableFutureTask<T, ?> castWorkaround = (WrappedCallableListenableFutureTask<T, ?>) future;
-        if (!queue.offer(castWorkaround)) {
-            rejectedHandler.handle(castWorkaround, queue);
+        if (!queue.offer(future)) {
+            rejectedHandler.handle(future, queue);
+
+            // If we come here, we expect the rejectedHandler to have put `future` on `queue`. Otherwise it violates
+            // the contract the defined for `RejectedExecutionHandler`.
         }
 
         queuedItems.inc();
@@ -216,10 +232,31 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
         return future;
     }
 
-    public static <T extends Callable<?>> ListenableThreadPoolSubmitterBuilder<T> builder(
-            BlockingQueue<WrappedCallableListenableFutureTask<T, ?>> queue,
-            TypedThreadPoolBuilder threadPoolBuilder) {
-        return new ListenableThreadPoolSubmitterBuilder<>(queue, threadPoolBuilder);
+    @Override
+    public <V> ListenableFuture<V> execute(T r, V v) {
+        WrappedRunnableListenableFutureTask<T, V> future = new WrappedRunnableListenableFutureTask<>(r, v);
+
+        if (!queue.offer(future)) {
+            rejectedHandler.handle(future, queue);
+
+            // If we come here, we expect the rejectedHandler to have put `future` on `queue`. Otherwise it violates
+            // the contract the defined for `RejectedExecutionHandler`.
+        }
+
+        queuedItems.inc();
+
+        // Make sure we log errors.
+        Futures.addCallback(future, errorLoggingCallback);
+
+        future.addListener(finishedRunningIncrementor, MoreExecutors.directExecutor());
+
+        return future;
     }
 
+    public static <T extends Runnable> ListenableThreadPoolExecutorBuilder<T> builder(
+            BlockingQueue<WrappedRunnableListenableFutureTask<T, ?>> queue,
+            TypedThreadPoolBuilder tpb
+    ) {
+        return new ListenableThreadPoolExecutorBuilder<>(queue, tpb);
+    }
 }

@@ -1,4 +1,4 @@
-package se.tink.backend.common.concurrency;
+package se.tink.libraries.concurrency;
 
 public class NamedRunnable implements Runnable {
     private final Runnable delegate;

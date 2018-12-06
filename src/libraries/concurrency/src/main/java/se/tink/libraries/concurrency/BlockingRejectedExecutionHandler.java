@@ -1,4 +1,4 @@
-package se.tink.backend.common.concurrency;
+package se.tink.libraries.concurrency;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.concurrent.RejectedExecutionHandler;
