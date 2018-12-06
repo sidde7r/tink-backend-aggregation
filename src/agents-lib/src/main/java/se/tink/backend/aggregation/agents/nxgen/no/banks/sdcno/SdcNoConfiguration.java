@@ -9,7 +9,12 @@ public class SdcNoConfiguration extends SdcConfiguration {
 
     public SdcNoConfiguration(Provider provider) {
         super(provider);
-        baseUrl = SdcNoConstants.Market.BASE_URL + bankCode + "/";
+        if (SdcNoConstants.Market.EIKA_BANKS.contains(provider.getPayload())) {
+            baseUrl = SdcNoConstants.Market.EIKA_BASE_URL + bankCode + "/";
+        } else {
+            baseUrl = SdcNoConstants.Market.BASE_URL + bankCode + "/";
+        }
+
         typeGuesser = TypeGuesser.NORWEGIAN;
     }
 
