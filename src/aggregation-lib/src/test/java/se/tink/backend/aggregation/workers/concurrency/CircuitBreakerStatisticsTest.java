@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.workers.concurrency;
 import com.google.common.collect.ImmutableList;
 import java.util.concurrent.TimeUnit;
 import org.junit.Test;
-import src.se.tink.libraries.concurrency.FakeTicker;
+import se.tink.libraries.concurrency.FakeTicker;
 import se.tink.backend.aggregation.configuration.CircuitBreakerConfiguration;
 import se.tink.libraries.metrics.MetricRegistry;
 import static java.util.Collections.emptyList;
