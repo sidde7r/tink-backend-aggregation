@@ -1,4 +1,4 @@
-package se.tink.backend.common.cache;
+package se.tink.libraries.cache;
 
 import java.io.IOException;
 import net.spy.memcached.AddrUtil;
