@@ -213,7 +213,8 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         HttpResponse response = apiClient.authenticationRequest(authResponse.getUrlEncodedFormat());
         String responseBody = response.getBody(String.class);
 
-        if (!Strings.isNullOrEmpty(responseBody) && responseBody.contains(FortisConstants.ERRORCODE.WRONG_PASSWORD)) {
+        if (!Strings.isNullOrEmpty(responseBody) && responseBody.contains(FortisConstants.ERRORCODE.ERROR_CODE)) {
+            LOGGER.warnExtraLong(responseBody, FortisConstants.LOGTAG.LOGIN_ERROR);
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }

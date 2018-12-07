@@ -31,7 +31,9 @@ public class FortisConstants {
     }
 
     public static class ERRORCODE {
+        public static String ERROR_CODE = "ErrCode";
         public static String WRONG_PASSWORD = "EEBA0028";
+        public static String MAXIMUM_NUMBER_OF_TRIES = "EEBA0026";
     }
 
     public static class HEADERS {
@@ -90,6 +92,7 @@ public class FortisConstants {
     }
 
     public static class LOGTAG {
+        public static final LogTag LOGIN_ERROR = LogTag.from("FORTIS_LOGIN_ERROR");
         public static final LogTag TRANSACTION_VALIDATION_ERROR = LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERROR");
         public static final LogTag MULTIPLE_CHALLENGES = LogTag.from("FORTIS_MULTIPLE_CHALLENGES");
         public static final LogTag MULTIPLE_USER_ENTITIES = LogTag.from("FORTIS_MULTIPLE_USER_ENTITIES");
