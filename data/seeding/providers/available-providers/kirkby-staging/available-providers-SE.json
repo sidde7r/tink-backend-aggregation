@@ -51,6 +51,8 @@
     "volkswagenkortet-bankid",
     "volvofinans-bankid",
     "se-test-password",
-    "se-test-multi-supplemental"
+    "se-test-multi-supplemental",
+    "se-test-bankid-successful",
+    "se-test-bankid-failing"
   ]
 }

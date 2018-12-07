@@ -60,8 +60,8 @@
     "swedbank-bankid-youth",
     "volkswagenkortet-bankid",
     "volvofinans-bankid",
-    "se-test-bankid-successful-se",
-    "se-test-bankid-failing-se",
+    "se-test-bankid-successful",
+    "se-test-bankid-failing",
     "se-test-password",
     "se-test-multi-supplemental"
   ]
