@@ -27,17 +27,20 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     private MultivaluedMap<String, Object> headers;
     private List<String> cookies = new ArrayList<>();
 
+    // TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
+    public static Logger logger = LoggerFactory.getLogger(RequestBuilder.class);
 
-    //TODO: REMOVE THIS ONCE AGGREGATOR IDENTIFIER IS VERIFIED
-    public static Logger logger = LoggerFactory
-            .getLogger(RequestBuilder.class);
-
-    public RequestBuilder(Filterable filterChain, Filter finalFilter, URL url, String headerAggregatorIdentifier) {
+    public RequestBuilder(
+            Filterable filterChain,
+            Filter finalFilter,
+            URL url,
+            String headerAggregatorIdentifier) {
         this(filterChain, finalFilter, headerAggregatorIdentifier);
         this.url = url;
     }
 
-    public RequestBuilder(Filterable filterChain, Filter finalFilter, String headerAggregatorIdentifier) {
+    public RequestBuilder(
+            Filterable filterChain, Filter finalFilter, String headerAggregatorIdentifier) {
         super(filterChain);
         this.finalFilter = finalFilter;
 
@@ -66,7 +69,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
             return true;
         }
         if (obj instanceof RequestBuilder) {
-            final RequestBuilder that = (RequestBuilder)obj;
+            final RequestBuilder that = (RequestBuilder) obj;
             return that.url.equals(this.url);
         }
         return false;
@@ -77,7 +80,8 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return new HttpRequestImpl(method, url, headers, body);
     }
 
-    /* package */ <T> T raw(Class<T> c, HttpRequest request) throws HttpClientException, HttpResponseException {
+    /* package */ <T> T raw(Class<T> c, HttpRequest request)
+            throws HttpClientException, HttpResponseException {
         return handle(c, request);
     }
 
@@ -89,8 +93,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * Invoke the HEAD method.
      *
      * @return the HTTP response.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public HttpResponse head() throws HttpClientException {
         return handle(HttpResponse.class, build(HttpMethod.HEAD));
@@ -102,11 +105,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param <T> the type of the response.
      * @param c the type of the returned response.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T options(Class<T> c) throws HttpResponseException, HttpClientException {
         return handle(c, build(HttpMethod.OPTIONS));
@@ -118,11 +119,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param <T> the type of the response.
      * @param c the type of the returned response.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T get(Class<T> c) throws HttpResponseException, HttpClientException {
         return handle(c, build(HttpMethod.GET));
@@ -130,14 +129,13 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Invoke the PUT method with no request body or response.
-     * <p>
-     * If the status code is less than 300 and a representation is present
-     * then that representation is ignored.
      *
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
+     *
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public void put() throws HttpResponseException, HttpClientException {
         voidHandle(build(HttpMethod.PUT));
@@ -145,15 +143,14 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Invoke the PUT method with a request body but no response.
-     * <p>
-     * If the status code is less than 300 and a representation is present
-     * then that representation is ignored.
+     *
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
      *
      * @param body the request body.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public void put(Object body) throws HttpResponseException, HttpClientException {
         body(body).put();
@@ -165,11 +162,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param <T> the type of the response.
      * @param c the type of the returned response.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T put(Class<T> c) throws HttpResponseException, HttpClientException {
         return handle(c, build(HttpMethod.PUT));
@@ -182,11 +177,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param c the type of the returned response.
      * @param body the request body.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T put(Class<T> c, Object body) throws HttpResponseException, HttpClientException {
         return body(body).put(c);
@@ -194,14 +187,13 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Invoke the POST method with no request body or response.
-     * <p>
-     * If the status code is less than 300 and a representation is present
-     * then that representation is ignored.
      *
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
+     *
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public void post() throws HttpResponseException, HttpClientException {
         voidHandle(build(HttpMethod.POST));
@@ -209,15 +201,14 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Invoke the POST method with a request body but no response.
-     * <p>
-     * If the status code is less than 300 and a representation is present
-     * then that representation is ignored.
+     *
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
      *
      * @param body the request body.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public void post(Object body) throws HttpResponseException, HttpClientException {
         body(body).post();
@@ -229,11 +220,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param <T> the type of the response.
      * @param c the type of the returned response.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T post(Class<T> c) throws HttpResponseException, HttpClientException {
         return handle(c, build(HttpMethod.POST));
@@ -246,11 +235,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param c the type of the returned response.
      * @param body the request body.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T post(Class<T> c, Object body) throws HttpResponseException, HttpClientException {
         return body(body).post(c);
@@ -258,14 +245,13 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Invoke the DELETE method with no request body or response.
-     * <p>
-     * If the status code is less than 300 and a representation is present
-     * then that representation is ignored.
      *
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
+     *
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public void delete() throws HttpResponseException, HttpClientException {
         voidHandle(build(HttpMethod.DELETE));
@@ -273,15 +259,14 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Invoke the DELETE method with a request body but no response.
-     * <p>
-     * If the status code is less than 300 and a representation is present
-     * then that representation is ignored.
+     *
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
      *
      * @param body the request body.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public void delete(Object body) throws HttpResponseException, HttpClientException {
         body(body).delete();
@@ -293,11 +278,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param <T> the type of the response.
      * @param c the type of the returned response.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T delete(Class<T> c) throws HttpResponseException, HttpClientException {
         return handle(c, build(HttpMethod.DELETE));
@@ -310,11 +293,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param c the type of the returned response.
      * @param body the request body.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public <T> T delete(Class<T> c, Object body) throws HttpResponseException, HttpClientException {
         return body(body).delete(c);
@@ -322,15 +303,14 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Invoke a HTTP method with no request body or response.
-     * <p>
-     * If the status code is less than 300 and a representation is present
-     * then that representation is ignored.
+     *
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
      *
      * @param method the HTTP method.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
     public void method(HttpMethod method) throws HttpResponseException, HttpClientException {
         voidHandle(build(method));
@@ -338,18 +318,18 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Invoke a HTTP method with a request body but no response.
-     * <p>
-     * If the status code is less than 300 and a representation is present
-     * then that representation is ignored.
+     *
+     * <p>If the status code is less than 300 and a representation is present then that
+     * representation is ignored.
      *
      * @param method the HTTP method.
      * @param body the request body.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public void method(HttpMethod method, Object body) throws HttpResponseException, HttpClientException {
+    public void method(HttpMethod method, Object body)
+            throws HttpResponseException, HttpClientException {
         body(body).method(method);
     }
 
@@ -360,13 +340,12 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param method the HTTP method.
      * @param c the type of the returned response.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T method(HttpMethod method, Class<T> c) throws HttpResponseException, HttpClientException {
+    public <T> T method(HttpMethod method, Class<T> c)
+            throws HttpResponseException, HttpClientException {
         return handle(c, build(method));
     }
 
@@ -378,19 +357,16 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
      * @param c the type of the returned response.
      * @param body the request body.
      * @return an instance of type <code>c</code>.
-     * @throws HttpResponseException if the status of the HTTP response is
-     *         greater than or equal to 300 and <code>c</code> is not the type
-     *         {@link HttpResponse}.
-     * @throws HttpClientException if the client handler fails to process
-     *         the request or response.
+     * @throws HttpResponseException if the status of the HTTP response is greater than or equal to
+     *     300 and <code>c</code> is not the type {@link HttpResponse}.
+     * @throws HttpClientException if the client handler fails to process the request or response.
      */
-    public <T> T method(HttpMethod method, Class<T> c, Object body) throws HttpResponseException, HttpClientException {
+    public <T> T method(HttpMethod method, Class<T> c, Object body)
+            throws HttpResponseException, HttpClientException {
         return body(body).method(method, c);
     }
 
-    /**
-     * AbstractForm and its subclasses handled specifivcally
-     */
+    /** AbstractForm and its subclasses handled specifivcally */
     public RequestBuilder body(Object body) {
         if (body instanceof AbstractForm) {
             this.body = ((AbstractForm) body).getBodyValue();
@@ -495,16 +471,21 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     public RequestBuilder addBasicAuth(String username, String password) {
-        String value = String.format(
-                "Basic %s",
-                Base64.getUrlEncoder().encodeToString(String.format("%s:%s", username, password).getBytes()));
+        String value =
+                String.format(
+                        "Basic %s",
+                        Base64.getUrlEncoder()
+                                .encodeToString(
+                                        String.format("%s:%s", username, password).getBytes()));
         return header(HttpHeaders.AUTHORIZATION, value);
     }
 
     public RequestBuilder addBasicAuth(String username) {
-        String value = String.format(
-                "Basic %s",
-                Base64.getUrlEncoder().encodeToString(String.format("%s", username).getBytes()));
+        String value =
+                String.format(
+                        "Basic %s",
+                        Base64.getUrlEncoder()
+                                .encodeToString(String.format("%s", username).getBytes()));
         return header(HttpHeaders.AUTHORIZATION, value);
     }
 
@@ -524,12 +505,13 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
             return;
         }
 
-        if (!headers.containsKey("X-Aggregator")){
+        if (!headers.containsKey("X-Aggregator")) {
             headers.add("X-Aggregator", headerAggregatorIdentifier);
         }
     }
 
-    private <T> T handle(Class<T> c, HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    private <T> T handle(Class<T> c, HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         // Add the final filter so that we actually send the request
         addFilter(finalFilter);
 
@@ -537,11 +519,12 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         addAggregatorToHeader();
         HttpResponse httpResponse = getFilterHead().handle(httpRequest);
 
-        // Throw an exception for all statuses >= 400, i.e. the request was not accepted. This is to force us
+        // Throw an exception for all statuses >= 400, i.e. the request was not accepted. This is to
+        // force us
         // to handle invalid responses in a unified way (try/catch).
         if (httpResponse.getStatus() >= 400) {
-            throw new HttpResponseException(detailedExceptionMessage(httpResponse), httpRequest,
-                    httpResponse);
+            throw new HttpResponseException(
+                    detailedExceptionMessage(httpResponse), httpRequest, httpResponse);
         }
 
         if (c == HttpResponse.class) {
@@ -561,15 +544,19 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         }
     }
 
-    // This is what Jersey does. Since we are not interested in the response data we immediately close the connection.
-    private void voidHandle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    // This is what Jersey does. Since we are not interested in the response data we immediately
+    // close the connection.
+    private void voidHandle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         addCookiesToHeader();
         addAggregatorToHeader();
         HttpResponse httpResponse = handle(HttpResponse.class, httpRequest);
         if (httpResponse.getStatus() >= 300) {
-            // Since we internally request the response type `ClientResponse` (jersey type) we must do this check
+            // Since we internally request the response type `ClientResponse` (jersey type) we must
+            // do this check
             // here (Jersey does it internally if the response type is != `ClientResponse`).
-            // Jersey has this exact same check in their `voidHandle` (which we bypass, but want to mimic)
+            // Jersey has this exact same check in their `voidHandle` (which we bypass, but want to
+            // mimic)
             throw new HttpResponseException(httpRequest, httpResponse);
         }
     }
