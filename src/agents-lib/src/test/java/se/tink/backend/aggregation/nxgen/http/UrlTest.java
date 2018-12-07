@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.nxgen.http;
 
+import com.sun.jersey.core.util.StringKeyIgnoreCaseMultivaluedMap;
+import java.util.Arrays;
+import java.util.HashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -66,6 +70,172 @@ public class UrlTest {
         String rawUrl = BASE_URL + "?key1=val1";
         Assert.assertEquals(rawUrl, new URL(rawUrl).get());
         Assert.assertEquals(rawUrl + "&key2=val2", new URL(rawUrl).queryParam("key2", "val2").get());
+    }
+
+    @Test
+    public void ensureMultipleQueryParams_areAllowed() {
+        String rawUrl = BASE_URL + "?key1=val1&key2=val2&key3=val3";
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("key1", "val1");
+        queryParams.put("key2", "val2");
+        queryParams.put("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleQueryParams_withNullKeys_areRemoved() {
+        String rawUrl = BASE_URL + "?key3=val3";
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put(null, "val1");
+        queryParams.put(null, "val2");
+        queryParams.put("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleQueryParams_withNullValues_areRemoved() {
+        String rawUrl = BASE_URL + "?key3=val3";
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("key1", null);
+        queryParams.put("key2", null);
+        queryParams.put("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleQueryParams_withEmptyKeys_areRemoved() {
+        String rawUrl = BASE_URL + "?key1=val1&key3=val3";
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("key1", "val1");
+        queryParams.put("", "val2");
+        queryParams.put("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleQueryParams_withEmptyValues_areAdded() {
+        String rawUrl = BASE_URL + "?key1=&key2=&key3=val3";
+        HashMap<String, String> queryParams = new HashMap<>();
+        queryParams.put("key1", "");
+        queryParams.put("key2", "");
+        queryParams.put("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureSingleMultiValuedQueryParams_areAllowed() {
+        String rawUrl = BASE_URL + "?key1=val1&key2=val2&key3=val3";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.putSingle("key1", "val1");
+        queryParams.putSingle("key2", "val2");
+        queryParams.putSingle("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureSingleMultiValuedQueryParams_withNullKeys_areRemoved() {
+        String rawUrl = BASE_URL + "?key3=val3";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.putSingle(null, "val1");
+        queryParams.putSingle(null, "val2");
+        queryParams.putSingle("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureSingleMultiValuedQueryParams_withNullValues_areRemoved() {
+        String rawUrl = BASE_URL + "?key3=val3";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.putSingle("key1", null);
+        queryParams.putSingle("key2", null);
+        queryParams.putSingle("key3", "val3");
+
+        String newUrl = new URL(BASE_URL).queryParams(queryParams).get();
+        Assert.assertEquals(rawUrl, newUrl);
+    }
+
+    @Test
+    public void ensureSingleMultiValuedQueryParams_withEmptyKeys_areRemoved() {
+        String rawUrl = BASE_URL + "?key1=val1&key3=val3";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.putSingle("key1", "val1");
+        queryParams.putSingle("", "val2");
+        queryParams.putSingle("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureSingleMultiValuedQueryParams_withEmptyValues_areAdded() {
+        String rawUrl = BASE_URL + "?key1=&key2=&key3=val3";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.putSingle("key1", "");
+        queryParams.putSingle("key2", "");
+        queryParams.putSingle("key3", "val3");
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleMultiValuedQueryParams_areAllowed() {
+        String rawUrl = BASE_URL + "?key1=val1&key1=val2&key2=val1&key2=val2&key3=val1&key3=val2";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.put("key1", Arrays.asList("val1", "val2"));
+        queryParams.put("key2", Arrays.asList("val1", "val2"));
+        queryParams.put("key3", Arrays.asList("val1", "val2"));
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleMultiValuedQueryParams_withNullKeys_areRemoved() {
+        String rawUrl = BASE_URL + "?key3=val1&key3=val2";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.put(null, Arrays.asList("val1", "val2"));
+        queryParams.put(null, Arrays.asList("val1", "val2"));
+        queryParams.put("key3", Arrays.asList("val1", "val2"));
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleMultiValuedQueryParams_withNullValues_areRemoved() {
+        String rawUrl = BASE_URL + "?key2=val2&key3=val1&key3=val2";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.put("key1", Arrays.asList(null, null));
+        queryParams.put("key2", Arrays.asList(null, "val2"));
+        queryParams.put("key3", Arrays.asList("val1", "val2"));
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleMultiValuedQueryParams_withEmptyKeys_areRemoved() {
+        String rawUrl = BASE_URL + "?key1=val1&key1=val2&key3=val1&key3=val2";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.put("key1", Arrays.asList("val1", "val2"));
+        queryParams.put("", Arrays.asList("val1", "val2"));
+        queryParams.put("key3", Arrays.asList("val1", "val2"));
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
+    }
+
+    @Test
+    public void ensureMultipleMultiValuedQueryParams_withEmptyValues_areAdded() {
+        String rawUrl = BASE_URL + "?key1=val1&key1=val2&key2=val1&key2=val2&key3=val1&key3=val2";
+        MultivaluedMap<String, String> queryParams = new StringKeyIgnoreCaseMultivaluedMap<>();
+        queryParams.put("key1", Arrays.asList("val1", "val2"));
+        queryParams.put("key2", Arrays.asList("val1", "val2"));
+        queryParams.put("key3", Arrays.asList("val1", "val2"));
+
+        Assert.assertEquals(rawUrl, new URL(BASE_URL).queryParams(queryParams).get());
     }
 
     @Test
