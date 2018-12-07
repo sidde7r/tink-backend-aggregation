@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.authenticator.rpc.AuthenticateResponse;
@@ -10,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.entities.For
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.creditcard.rpc.FetchCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.investment.rpc.FetchInvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.transactionalaccount.rpc.FetchAccountResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -45,63 +45,77 @@ public class NordeaFiApiClient {
     }
 
     public FetchAccountResponse fetchAccounts() {
-
-        return createRequest(NordeaFiConstants.Urls.FETCH_PRODUCT, getAccessToken())
-                .queryParam(NordeaFiConstants.QueryParams.PRODUCT_CATEGORY, NordeaFiConstants.Products.ACCOUNT)
-                .get(FetchAccountResponse.class);
-
+        return requestRefreshableGet(
+                createRequest(NordeaFiConstants.Urls.FETCH_PRODUCT, getAccessToken())
+                        .queryParam(NordeaFiConstants.QueryParams.PRODUCT_CATEGORY, NordeaFiConstants.Products.ACCOUNT),
+                FetchAccountResponse.class
+        );
     }
 
     public <T> T fetchTransactions(int offset, int limit, String accountId, String product, Class<T> responseType) {
 
-        return createRequest(NordeaFiConstants.Urls.FETCH_TRANSACTIONS, getAccessToken())
-                .queryParam(NordeaFiConstants.QueryParams.OFFSET, Integer.toString(offset))
-                .queryParam(NordeaFiConstants.QueryParams.LIMIT, Integer.toString(limit))
-                .queryParam(NordeaFiConstants.QueryParams.PRODUCT_ID, accountId)
-                .queryParam(NordeaFiConstants.QueryParams.PRODUCT_CATEGORY, product)
-                .get(responseType);
+        return requestRefreshableGet(
+                createRequest(NordeaFiConstants.Urls.FETCH_TRANSACTIONS, getAccessToken())
+                        .queryParam(NordeaFiConstants.QueryParams.OFFSET, Integer.toString(offset))
+                        .queryParam(NordeaFiConstants.QueryParams.LIMIT, Integer.toString(limit))
+                        .queryParam(NordeaFiConstants.QueryParams.PRODUCT_ID, accountId)
+                        .queryParam(NordeaFiConstants.QueryParams.PRODUCT_CATEGORY, product),
+                responseType
+        );
     }
 
     public FetchCardsResponse fetchCards() {
 
-        return createRequest(NordeaFiConstants.Urls.FETCH_CARDS_DETAILED, getAccessToken())
-                .get(FetchCardsResponse.class);
+        return requestRefreshableGet(
+                createRequest(NordeaFiConstants.Urls.FETCH_CARDS_DETAILED, getAccessToken())
+                , FetchCardsResponse.class
+        );
     }
 
     public HttpResponse fetchLoans() {
-        return createRequest(NordeaFiConstants.Urls.FETCH_PRODUCT, getAccessToken())
-                .queryParam(NordeaFiConstants.QueryParams.PRODUCT_CATEGORY, NordeaFiConstants.Products.LOAN)
-                .get(HttpResponse.class);
+        return requestRefreshableGet(
+                createRequest(NordeaFiConstants.Urls.FETCH_PRODUCT, getAccessToken())
+                        .queryParam(NordeaFiConstants.QueryParams.PRODUCT_CATEGORY, NordeaFiConstants.Products.LOAN),
+                HttpResponse.class
+        );
     }
 
     public FetchInvestmentsResponse fetchInvestments() {
 
-        return createRequest(NordeaFiConstants.Urls.FETCH_SAVINGS, getAccessToken())
-                .queryParam(NordeaFiConstants.QueryParams.TYPE, NordeaFiConstants.Products.SAVINGS)
-                .get(FetchInvestmentsResponse.class);
+        return requestRefreshableGet(
+                createRequest(NordeaFiConstants.Urls.FETCH_SAVINGS, getAccessToken())
+                        .queryParam(NordeaFiConstants.QueryParams.TYPE, NordeaFiConstants.Products.SAVINGS),
+                FetchInvestmentsResponse.class
+        );
     }
 
-    public AuthenticateResponse keepAlive() throws SessionException {
+    public void keepAlive() throws SessionException {
         try {
             String refreshToken = getRefreshToken();
 
             if (refreshToken != null) {
-
-                Form formBuilder = defaultAuthenticationForm(username);
-                formBuilder.put(NordeaFiConstants.FormParams.GRANT_TYPE, NordeaFiConstants.SessionStorage.REFRESH_TOKEN);
-                formBuilder.put(NordeaFiConstants.SessionStorage.REFRESH_TOKEN, refreshToken);
-
-                 return sendAuthenticateRequest(formBuilder);
+                refreshAccessToken(refreshToken);
             } else {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-        } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_BAD_REQUEST) {
+        } catch (HttpResponseException hre) {
+
+            ErrorResponse error = hre.getResponse().getBody(ErrorResponse.class);
+            if (error.isInvalidRefreshToken()) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            throw e;
+            throw hre;
         }
+    }
+
+    private void refreshAccessToken(String refreshToken) {
+        Form formBuilder = defaultAuthenticationForm(username);
+        formBuilder.put(NordeaFiConstants.FormParams.GRANT_TYPE, NordeaFiConstants.SessionStorage.REFRESH_TOKEN);
+        formBuilder.put(NordeaFiConstants.SessionStorage.REFRESH_TOKEN, refreshToken);
+
+        AuthenticateResponse response = sendAuthenticateRequest(formBuilder);
+        response.storeTokens(sessionStorage);
     }
 
     public void logout() {
@@ -128,6 +142,32 @@ public class NordeaFiApiClient {
         formBuilder.put(NordeaFiConstants.FormParams.USERNAME, username);
 
         return formBuilder;
+    }
+
+    // Nordeas short lived access tokens requires us to sometimes have to refresh the
+    // access token during a request. This method should be used by all data fetching calls
+    private <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
+        try {
+
+            return request.get(responseType);
+
+        } catch (HttpResponseException hre) {
+            tryRefreshAccessToken(hre);
+        }
+
+        // retry request with new access token
+        return request.get(responseType);
+    }
+
+    private void tryRefreshAccessToken(HttpResponseException hre) {
+        HttpResponse response = hre.getResponse();
+        ErrorResponse error = response.getBody(ErrorResponse.class);
+
+        if (error.isInvalidAccessToken()) {
+            refreshAccessToken(getRefreshToken());
+        } else {
+            throw hre;
+        }
     }
 
     private RequestBuilder createRequest(URL url, String accessToken) {

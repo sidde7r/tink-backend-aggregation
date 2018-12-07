@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30;
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -85,6 +85,11 @@ public class NordeaFiConstants {
         public static final String AGREEMENT_NOT_CONFIRMED = "RBO_ACCESS_DENIED_AGREEMENT_NOT_CONFIRMED";
         // user has no account connected to depot, cannot fetch investments
         public static final String UNABLE_TO_LOAD_CUSTOMER = "ERROR_OSIA_UNABLE_TO_LOAD_CUSTOMER";
+        // access token has expired
+        public static final String INVALID_TOKEN = "invalid_token";
+        // refresh token has expired
+        public static final String INVALID_GRANT = "invalid_grant";
+
     }
 
     public static class NordeaCodesPayload {
@@ -142,6 +147,7 @@ public class NordeaFiConstants {
                     .put("external_authentication_pending", ThirdPartyAppStatus.WAITING)
                     .put("authentication_cancelled", ThirdPartyAppStatus.CANCELLED)
                     .put("authentication_failed", ThirdPartyAppStatus.TIMED_OUT)
+                    .put("invalid_request", ThirdPartyAppStatus.TIMED_OUT)
                     .put("authentication_collision", ThirdPartyAppStatus.ALREADY_IN_PROGRESS)
                     .build();
 
