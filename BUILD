@@ -345,6 +345,7 @@ java_library(
         "//src/queue-lib:queue-lib",
         "//src/queue-sqs:queue-sqs",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
+        "//src/libraries/cache",
         "//src/libraries/executor_utils:executor-utils",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
@@ -431,6 +432,7 @@ java_library(
         ":system-api",
         ":aggregationcontroller-api",
 
+        "//src/libraries/cache",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
         "//src/libraries/serialization_utils:serialization-utils",

@@ -1,4 +1,4 @@
-package se.tink.backend.common.cache;
+package se.tink.libraries.cache;
 
 /**
  * Enumeration of cache namespaces.

@@ -64,7 +64,7 @@ import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState
 import se.tink.backend.aggregation.workers.metrics.MetricCacheLoader;
 import se.tink.backend.aggregation.workers.refresh.ProcessableItem;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
-import se.tink.backend.common.cache.CacheClient;
+import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentWorkerOperationFactory {

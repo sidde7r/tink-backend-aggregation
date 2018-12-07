@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.aggregation.wrappers.CryptoWrapper;
-import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.cache.CacheScope;
+import se.tink.libraries.cache.CacheClient;
+import se.tink.libraries.cache.CacheScope;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CredentialsCrypto {

@@ -1,4 +1,4 @@
-package se.tink.backend.common.cache;
+package se.tink.libraries.cache;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Stopwatch;

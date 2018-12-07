@@ -1,4 +1,4 @@
-package se.tink.backend.common.cache;
+package se.tink.libraries.cache;
 
 public interface CacheClient {
     void set(CacheScope scope, String key, int expiredTime, Object object);

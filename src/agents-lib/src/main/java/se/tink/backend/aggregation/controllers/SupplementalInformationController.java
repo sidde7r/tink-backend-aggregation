@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.controllers;
 import com.google.inject.Inject;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
-import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.cache.CacheScope;
+import se.tink.libraries.cache.CacheClient;
+import se.tink.libraries.cache.CacheScope;
 import se.tink.backend.aggregation.locks.BarrierName;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
