@@ -9,11 +9,11 @@ import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
@@ -282,7 +282,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private void pageTransactions(Account account, String accountNumber)
             throws ParseException, UnsupportedEncodingException {
         List<Transaction> transactions = Lists.newArrayList();
-        List<Long> isIncludedTransaction = new ArrayList<>();
+        Set<Long> isIncludedTransaction = new HashSet<>();
 
         int month = DateTime.now().monthOfYear().get();
         int year = DateTime.now().year().get();
@@ -293,14 +293,13 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         TransactionListResponse pendingTransactions = createClientRequest(
                 String.format(TRANSACTIONS_URL, encodedAccountNumber, 0, 0)).get(TransactionListResponse.class);
 
-        List<TransactionEntity> filteredPendingTransactions = pendingTransactions.stream()
-                .filter(transactionEntity -> isReservedPurchaseOrNotBilledPayment(isIncludedTransaction,
-                        transactionEntity))
-                .collect(Collectors.toList());
-
-        for (TransactionEntity transactionEntity : filteredPendingTransactions) {
-            transactions.add(transactionEntity.toTransaction());
-        }
+        // List<TransactionEntity> filteredPendingTransactions =
+        pendingTransactions.stream()
+                .filter(this::isReservedPurchaseOrNotBilledPayment)
+                .peek(transactionEntity -> isIncludedTransaction
+                        .add(transactionEntity.getExternalId())) // Add transaction external ID as included
+                .map(TransactionEntity::toTransaction)
+                .forEach(transactions::add);
 
         // Get billed transactions
         do {
@@ -329,11 +328,9 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         context.updateTransactions(account, transactions);
     }
 
-    private boolean isReservedPurchaseOrNotBilledPayment(List<Long> isIncludedTransaction,
-            TransactionEntity transactionEntity) {
+    private boolean isReservedPurchaseOrNotBilledPayment(TransactionEntity transactionEntity) {
 
         if (transactionEntity.isNotBilledPayment()) {
-            isIncludedTransaction.add(transactionEntity.getExternalId());
             return true;
         }
 
