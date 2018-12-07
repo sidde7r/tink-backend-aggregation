@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -33,6 +34,10 @@ public final class URL {
         this.query = query;
     }
 
+    private String prependQueryIfPresent(String queryParam) {
+        return Strings.isNullOrEmpty(query) ? queryParam : query + "&" + queryParam;
+    }
+
     private String urlEncode(String value) {
         try {
             return URLEncoder.encode(value, "UTF-8");
@@ -41,12 +46,12 @@ public final class URL {
         }
     }
 
-    private String toQueryString(String key, String value) {
+    private Optional<String> toQueryString(String key, String value) {
         if (Strings.isNullOrEmpty(key) || value == null) {
-            return "";
+            return Optional.empty();
         }
 
-        return urlEncode(key) + "=" + urlEncode(value);
+        return Optional.of(urlEncode(key) + "=" + urlEncode(value));
     }
 
     public static String urlDecode(String encodedValue) {
@@ -68,17 +73,12 @@ public final class URL {
     }
 
     public URL queryParam(String key, String value) {
-        if (Strings.isNullOrEmpty(key) || value == null) {
-            return this;
-        }
-
-        final String queryParam = toQueryString(key, value);
-
-        if (!Strings.isNullOrEmpty(query)) {
-            return new URL(url, query + "&" + queryParam);
-        }
-
-        return new URL(url, queryParam);
+        return Optional.of(toQueryString(key, value))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(this::prependQueryIfPresent)
+                .map(s -> new URL(url, s))
+                .orElse(this);
     }
 
     public URL queryParams(Map<String, String> map) {
@@ -86,19 +86,15 @@ public final class URL {
             return this;
         }
 
-        final String queryParams =
-                map.entrySet()
-                        .stream()
+        return map.entrySet()
+                .stream()
                         .map(p -> toQueryString(p.getKey(), p.getValue()))
-                        .filter(s -> !s.isEmpty())
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .reduce((p1, p2) -> p1 + "&" + p2)
-                        .orElse("");
-
-        if (!Strings.isNullOrEmpty(query)) {
-            return new URL(url, query + "&" + queryParams);
-        }
-
-        return new URL(url, queryParams);
+                        .map(this::prependQueryIfPresent)
+                        .map(s -> new URL(url, s))
+                        .orElse(this);
     }
 
     public URL queryParams(MultivaluedMap<String, String> map) {
@@ -106,22 +102,18 @@ public final class URL {
             return this;
         }
 
-        final String queryParams =
-                map.entrySet()
+        return map.entrySet()
                         .stream()
                         .flatMap(this::multiEntryToQueryString)
-                        .filter(s -> !s.isEmpty())
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .reduce((p1, p2) -> p1 + "&" + p2)
-                        .orElse("");
-
-        if (!Strings.isNullOrEmpty(query)) {
-            return new URL(url, query + "&" + queryParams);
-        }
-
-        return new URL(url, queryParams);
+                        .map(this::prependQueryIfPresent)
+                        .map(s -> new URL(url, s))
+                        .orElse(this);
     }
 
-    private Stream<String> multiEntryToQueryString(Map.Entry<String, List<String>> m) {
+    private Stream<Optional<String>> multiEntryToQueryString(Map.Entry<String, List<String>> m) {
         return m.getValue().stream().map(p -> toQueryString(m.getKey(), p));
     }
 
