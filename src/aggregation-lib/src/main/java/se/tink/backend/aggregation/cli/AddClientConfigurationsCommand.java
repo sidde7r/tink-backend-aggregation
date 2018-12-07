@@ -54,12 +54,13 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
 
         final String clientName = System.getProperty("clientName");
         final String aggregatorIdentifier = System.getProperty("aggregatorIdentifier");
+        final String aggregatorId = System.getProperty("aggregatorId");
         final String clusterName = System.getProperty("clusterName");
 
 
         Preconditions.checkNotNull(clientName, "Client cannot be null.");
-        Preconditions.checkNotNull(aggregatorIdentifier, "Aggregator cannot be null.");
         Preconditions.checkNotNull(clusterName, "Cluster name cannot be null.");
+        Preconditions.checkArgument((aggregatorIdentifier != null || aggregatorId != null), "Aggregator Id or identifier value should not be null.");
         Preconditions.checkArgument(availableClusterNames.contains(clusterName), "Cannot set up multi tenancy for cluster: {}.", clusterName);
 
         ClusterConfiguration clusterConfiguration = clusterConfigurationsRepository.findOne(clusterName);
@@ -68,10 +69,8 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
         ClientConfiguration existingClientConfiguration = clientConfigurationsRepository.findOne(clientName);
         Preconditions.checkArgument(Objects.isNull(existingClientConfiguration), "We found another entry for that clientName in the database.");
 
-        AggregatorConfiguration aggregatorConfiguration = new AggregatorConfiguration();
-        aggregatorConfiguration.setAggregatorId(UUID.randomUUID().toString());
-        aggregatorConfiguration.setAggregatorInfo(aggregatorIdentifier);
 
+        AggregatorConfiguration aggregatorConfiguration = getOrCreateAggregatorIdentifier(aggregatorConfigurationsRepository, aggregatorId, aggregatorIdentifier);
 
         ClientConfiguration clientConfiguration = new ClientConfiguration();
         clientConfiguration.setApiClientKey(UUID.randomUUID().toString());
@@ -95,6 +94,23 @@ public class AddClientConfigurationsCommand extends AggregationServiceContextCom
         log.info("Api key: {}", clientConfiguration.getApiClientKey());
         log.info("Identifiable as: {}", aggregatorConfiguration.getAggregatorInfo());
         log.info("Please store the encrypted keys on an offline drive.");
+    }
+
+    private AggregatorConfiguration getOrCreateAggregatorIdentifier(AggregatorConfigurationsRepository aggregatorConfigurationsRepository, String aggregatorId, String aggregatorIdentifier) {
+        AggregatorConfiguration aggregatorConfiguration = null;
+        if (aggregatorId != null) {
+            aggregatorConfiguration = aggregatorConfigurationsRepository.findOne(aggregatorId);
+
+            if (aggregatorConfiguration == null) {
+                throw new RuntimeException(String.format("Aggregator with id %s not found in the db", aggregatorId));
+            }
+            return aggregatorConfiguration;
+        }
+
+        aggregatorConfiguration = new AggregatorConfiguration();
+        aggregatorConfiguration.setAggregatorId(UUID.randomUUID().toString());
+        aggregatorConfiguration.setAggregatorInfo(aggregatorIdentifier);
+        return aggregatorConfiguration;
     }
 
     private String getBase64EncodedKey() {
