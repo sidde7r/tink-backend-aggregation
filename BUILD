@@ -459,6 +459,7 @@ java_library(
         "//src/libraries/cli_print_utils:cli_print_utils",
         "//src/libraries/cryptography:cryptography",
 
+        "//third_party:org_modelmapper_modelmapper",
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
