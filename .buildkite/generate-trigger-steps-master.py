@@ -20,6 +20,14 @@ PROJECTS = {
             'aggregation-staging': {'block': False},
         },
     },
+    'tink-backend-aggregation-agents': {
+            'chart': True,
+            'salt': False,
+            'branches': {
+                'aggregation-production': {'block': False},
+                'aggregation-staging': {'block': False},
+            },
+        },
 }
 
 STEP = """
