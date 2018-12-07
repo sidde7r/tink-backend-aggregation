@@ -12,7 +12,7 @@ import java.util.Date;
 import javax.annotation.Nullable;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaHashMapDeserializer;
-import se.tink.backend.common.i18n.SocialSecurityNumber;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;

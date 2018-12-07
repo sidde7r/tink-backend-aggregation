@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import java.util.List;
 import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.exceptions.application.InvalidApplicationException;
-import se.tink.backend.common.i18n.SocialSecurityNumber;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.application.GenericApplicationFieldGroup;
 import se.tink.backend.core.enums.ApplicationFieldName;
 import se.tink.backend.aggregation.log.AggregationLogger;

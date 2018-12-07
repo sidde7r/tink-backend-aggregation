@@ -4,12 +4,11 @@ import com.google.common.base.Preconditions;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
-import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.brokers.lysa.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.brokers.lysa.rpc.StartBankIdRequest;
 import se.tink.backend.aggregation.agents.brokers.lysa.rpc.StartBankIdResponse;
-import se.tink.backend.common.i18n.SocialSecurityNumber;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
