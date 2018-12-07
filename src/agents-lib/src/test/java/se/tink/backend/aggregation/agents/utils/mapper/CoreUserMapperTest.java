@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils.mapper;
+package se.tink.backend.aggregation.agents.utils.mapper;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;

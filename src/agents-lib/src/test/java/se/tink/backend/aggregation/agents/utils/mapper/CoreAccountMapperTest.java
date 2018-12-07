@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.utils.mapper;
+package se.tink.backend.aggregation.agents.utils.mapper;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
