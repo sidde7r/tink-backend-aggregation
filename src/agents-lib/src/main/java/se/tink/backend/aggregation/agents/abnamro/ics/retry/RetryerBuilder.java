@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.abnamro.ics.retry;
 
 import com.github.rholder.retry.Attempt;
 import com.github.rholder.retry.RetryListener;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 
 public class RetryerBuilder {
 

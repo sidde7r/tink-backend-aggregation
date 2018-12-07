@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.backend.utils.StringUtils;
 
 @JsonObject

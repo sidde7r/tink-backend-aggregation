@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 
 public class RetryerBuilderTest {
 

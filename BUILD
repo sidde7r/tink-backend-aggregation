@@ -185,6 +185,8 @@ java_library(
         "//src/api-annotations",
         "//src/libraries/cryptography:cryptography",
         "//src/libraries/repository:repository",
+        "//src/libraries/concurrency:concurrency",
+        "//src/libraries/log:log",
 
         "//src/api-headers",
 
@@ -343,6 +345,7 @@ java_library(
         "//src/queue-lib:queue-lib",
         "//src/queue-sqs:queue-sqs",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
+        "//src/libraries/executor_utils:executor-utils",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
         "//src/libraries/serialization_utils:serialization-utils",
@@ -352,6 +355,7 @@ java_library(
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/date:date",
         "//src/libraries/log:log",
+        "//src/libraries/concurrency:concurrency",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/generic_application:generic-application",
@@ -584,6 +588,9 @@ junit_test(
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/net",
         "//src/libraries/i18n",
+        "//src/libraries/concurrency:concurrency-test",
+        "//src/libraries/concurrency:concurrency",
+        "//src/libraries/log",
         "//src/libraries/strings:strings",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/creditsafe_consumer_monitoring",
@@ -630,6 +637,7 @@ junit_test(
         ":system-api",
         ":agents-lib",
 
+        "//src/libraries/log",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/metrics:metrics",
         "//src/libraries/date:date",
@@ -689,6 +697,7 @@ junit_test(
         ":system-api",
         ":agents-lib",
 
+        "//src/libraries/log",
         "//src/libraries/uuid:uuid",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/metrics:metrics",

@@ -11,12 +11,12 @@ import javax.annotation.PreDestroy;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.common.cache.CacheClient;
-import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
+import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.backend.common.config.DatabaseConfiguration;
 import se.tink.backend.common.config.repository.PersistenceUnit;
 import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
-import se.tink.backend.common.utils.ExecutorServiceUtils;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.executor.ExecutorServiceUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 
 /**
  * Do not use this class in new code anymore. This class is going to be removed.

@@ -23,15 +23,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import javax.persistence.Transient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.Creatable;
 import se.tink.backend.core.Modifiable;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.enums.TransferType;
-import se.tink.backend.utils.LogUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.uuid.UUIDUtils;
 
 @SuppressWarnings("serial")
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -41,7 +43,7 @@ public class Transfer implements Serializable, Cloneable {
     private static final String FOUR_POINT_PRECISION_FORMAT_STRING = "0.0000";
 
     private static final String TINK_GENERATED_MESSAGE_FORMAT = "TinkGenerated://";
-    private static final LogUtils log = new LogUtils(Transfer.class);
+    private static final Logger log = LoggerFactory.getLogger(Transfer.class);
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final TypeReference<Map<TransferPayloadType, String>> PAYLOAD_TYPE_REFERENCE =
@@ -167,7 +169,10 @@ public class Transfer implements Serializable, Cloneable {
             return new Amount(currency, oldAmount);
         }
 
-        log.error(this, "Transfer amount is null");
+
+        log.error("[userId:" + UUIDUtils.toTinkUUID(userId) +
+                " credentialsId:" + UUIDUtils.toTinkUUID(credentialsId) +
+                " transferId:" + UUIDUtils.toTinkUUID(id) + "] " + " Transfer amount is null");
         return new Amount(currency, null);
     }
 

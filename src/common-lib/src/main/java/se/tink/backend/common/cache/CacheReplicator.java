@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.common.concurrency.ListenableThreadPoolExecutor;
-import se.tink.backend.common.concurrency.TypedThreadPoolBuilder;
+import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
+import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.backend.common.utils.ExecutorServiceUtils;
 
 public class CacheReplicator implements CacheClient {

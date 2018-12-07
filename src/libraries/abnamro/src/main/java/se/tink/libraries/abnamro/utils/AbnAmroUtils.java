@@ -24,7 +24,7 @@ import se.tink.backend.core.AccountTypes;
 import se.tink.backend.core.Credentials;
 import se.tink.backend.core.User;
 import se.tink.backend.core.enums.FeatureFlags;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.abnamro.client.model.ContractEntity;
 import se.tink.libraries.abnamro.client.model.RejectedContractEntity;

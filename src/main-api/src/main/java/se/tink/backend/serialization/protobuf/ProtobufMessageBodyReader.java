@@ -15,7 +15,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 import se.tink.backend.rpc.TinkMediaType;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 
 @Provider
 @Consumes(TinkMediaType.APPLICATION_PROTOBUF)

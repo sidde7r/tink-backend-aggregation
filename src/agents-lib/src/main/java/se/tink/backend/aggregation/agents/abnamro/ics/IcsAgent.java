@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.abnamro.ics.retry.RetryerBuilder;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.utils.LogUtils;
+import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
 import se.tink.libraries.abnamro.client.exceptions.IcsRetryableException;
 import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountContainerEntity;
