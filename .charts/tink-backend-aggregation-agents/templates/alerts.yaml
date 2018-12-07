@@ -4,4 +4,4 @@ metadata:
   name: alerts
   namespace: agents
 spec:
-  rules:
+  rules: []
