@@ -45,4 +45,11 @@ public class ParseTest  extends BelfiusTest {
         assertTrue(spr.getSignType().equals("917360"));
     }
 
+    @Test
+    public void doublePaymentCheckTest() {
+        BelfiusPaymentResponse bpr = SerializationUtils.deserializeFromString(BelfiusPaymentTestData.SIGN_REQUIRE, BelfiusPaymentResponse.class);
+        assertTrue(bpr.isErrorOrContinueChangeButtonDoublePayment());
+    }
+
+
 }

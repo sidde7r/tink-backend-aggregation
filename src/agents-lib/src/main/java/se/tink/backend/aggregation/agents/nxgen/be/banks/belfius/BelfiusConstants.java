@@ -272,7 +272,7 @@ public class BelfiusConstants {
     public static class Messages {
         public static final String IDENTICAL_PAYMENT = "identieke overschrijving ingevoerd";
         public static final String CONTINUE_CHANGE_BUTTON = " knop 'Verder' te drukken, zoniet druk op de knop 'Wijzigen";
-        public static final String EXCEED_BENEFICIARY = "Daarom moet u even ondertekenen";
+        public static final String SIGNING_REQUIRED = "Daarom moet u even ondertekenen";
         public static final String ADD_BENEFICIARY_LIMIT = "De limiet voor uw begunstigde is overschreden. Daarom moet u even ondertekenen.";
         public static final String ADD_BENEFICIARY_WEEKLY_LIMIT = "De weeklimiet voor \"Mijn begunstigden\" werd bereikt. Daarom moet u even ondertekenen.";
         public static final String TRANSFER_SIGN_FAILED = "De ondertekening van uw transactie is ongeldig";
