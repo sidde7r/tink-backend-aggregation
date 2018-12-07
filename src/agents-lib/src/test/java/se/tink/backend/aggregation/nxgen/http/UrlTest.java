@@ -23,25 +23,32 @@ public class UrlTest {
 
     @Test
     public void ensureMultipleParameters_isAllowed() {
-        String url = new URL(BASE_URL + "/{param1}/{param2}").parameter("param1", "value1")
-                .parameter("param2", "value2").get();
+        String url =
+                new URL(BASE_URL + "/{param1}/{param2}")
+                        .parameter("param1", "value1")
+                        .parameter("param2", "value2")
+                        .get();
 
         Assert.assertEquals(BASE_URL + "/value1/value2", url);
     }
 
     @Test
     public void ensureParameterCanBeUsed_moreThanOnce() {
-        String url = new URL(BASE_URL + "/{param1}/{param2}/{param1}").parameter("param1", "value1")
-                .parameter("param2", "value2").get();
+        String url =
+                new URL(BASE_URL + "/{param1}/{param2}/{param1}")
+                        .parameter("param1", "value1")
+                        .parameter("param2", "value2")
+                        .get();
 
         Assert.assertEquals(BASE_URL + "/value1/value2/value1", url);
     }
 
     @Test
     public void ensureEscapedParameters() {
-        URL url = new URL(BASE_URL + "/{param}")
-                            .parameter("param", "param&/")
-                            .queryParam("key&", "val&");
+        URL url =
+                new URL(BASE_URL + "/{param}")
+                        .parameter("param", "param&/")
+                        .queryParam("key&", "val&");
         Assert.assertEquals(BASE_URL + "/param%26%2F?key%26=val%26", url.get());
     }
 
@@ -69,7 +76,8 @@ public class UrlTest {
     public void ensurePredefinedQueryParams_areSeparated() {
         String rawUrl = BASE_URL + "?key1=val1";
         Assert.assertEquals(rawUrl, new URL(rawUrl).get());
-        Assert.assertEquals(rawUrl + "&key2=val2", new URL(rawUrl).queryParam("key2", "val2").get());
+        Assert.assertEquals(
+                rawUrl + "&key2=val2", new URL(rawUrl).queryParam("key2", "val2").get());
     }
 
     @Test
