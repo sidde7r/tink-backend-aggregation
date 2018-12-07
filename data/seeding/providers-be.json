@@ -150,7 +150,7 @@
       "supplementalFields": [
         {
           "description": "One-time Password",
-          "helpText": "Insert your card into the card reader\nPress 'Login'\nEnter your PIN\nPress 'OK'\nEnter the OTP",
+          "helpText": "Insert your card into the card reader\nPress 'Identify'\nEnter your PIN\nPress 'OK'\nEnter the OTP",
           "sensitive": true,
           "numeric": true,
           "name": "otpinput"
@@ -435,14 +435,14 @@
       "supplementalFields": [
         {
           "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Login'\nEnter the challenge\nPress 'OK'",
+          "helpText": "Insert your bank card into the card reader\nPress 'M1'\nEnter the challenge\nPress 'OK'\nEnter your PIN\nPress 'OK'\n",
           "immutable": true,
           "masked": false,
           "name": "logindescription"
         },
         {
           "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "helpText": "Enter the response from the card reader",
           "name": "logininput",
           "immutable": false,
           "masked": false,
