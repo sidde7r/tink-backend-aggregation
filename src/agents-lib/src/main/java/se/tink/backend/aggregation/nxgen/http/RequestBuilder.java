@@ -72,11 +72,6 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return false;
     }
 
-    public RequestBuilder queryParam(String key, String value) {
-        url = url.queryParam(key, value);
-        return this;
-    }
-
     // UniformInterface
     private HttpRequest build(HttpMethod method) {
         return new HttpRequestImpl(method, url, headers, body);
@@ -481,6 +476,21 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     public RequestBuilder headers(MultivaluedMap<String, Object> map) {
         map.forEach((k, l) -> l.forEach(v -> header(k, v)));
+        return this;
+    }
+
+    public RequestBuilder queryParam(String key, String value) {
+        url = url.queryParam(key, value);
+        return this;
+    }
+
+    public RequestBuilder queryParams(Map<String, String> queryParams) {
+        url = url.queryParams(queryParams);
+        return this;
+    }
+
+    public RequestBuilder queryParams(MultivaluedMap<String, String> queryParams) {
+        url = url.queryParams(queryParams);
         return this;
     }
 
