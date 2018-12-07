@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.common.SwedishTimeRule;
+import se.tink.libraries.social.security.time.SwedishTimeRule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetRateResponseTest {

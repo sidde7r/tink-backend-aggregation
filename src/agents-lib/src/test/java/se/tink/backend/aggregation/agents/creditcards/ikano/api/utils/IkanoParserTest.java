@@ -6,7 +6,7 @@ import java.util.Date;
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.common.SwedishTimeRule;
+import se.tink.libraries.social.security.time.SwedishTimeRule;
 
 public class IkanoParserTest {
     private static final String DATE = "2016-03-17";

@@ -1,16 +1,12 @@
 package se.tink.libraries.social.security;
 
-import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.common.SwedishTimeRule;
-import se.tink.backend.core.Credentials;
-import se.tink.backend.core.CredentialsStatus;
+import se.tink.libraries.social.security.time.SwedishTimeRule;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;

@@ -650,6 +650,7 @@ junit_test(
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/net",
         "//src/libraries/i18n",
+        "//src/libraries/social_security_number:social-security-number-test",
         "//src/libraries/strings:strings",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/cryptography:cryptography",

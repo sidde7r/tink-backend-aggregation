@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import se.tink.backend.common.SwedishTimeRule;
+import se.tink.libraries.social.security.time.SwedishTimeRule;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import static org.assertj.core.api.Assertions.assertThat;

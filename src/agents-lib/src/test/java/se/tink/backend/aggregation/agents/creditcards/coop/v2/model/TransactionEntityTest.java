@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.assertj.core.data.Offset;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.common.SwedishTimeRule;
+import se.tink.libraries.social.security.time.SwedishTimeRule;
 import se.tink.backend.system.rpc.Transaction;
 import static org.assertj.core.api.Assertions.assertThat;
 
