@@ -5,28 +5,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabLegacyConfiguration;
 
-@JsonIgnoreProperties(ignoreUnknown =  true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class IntegrationsConfiguration {
     @JsonProperty private SbabLegacyConfiguration sbabLegacy;
+    @JsonProperty private Map<String, SbabConfiguration> sbab;
 
-    @JsonProperty
-    private String ukOpenBankingJson;
+    @JsonProperty private String ukOpenBankingJson;
 
-    @JsonProperty
-    private Map<String, MonzoConfiguration> monzo;
+    @JsonProperty private FinTsIntegrationConfiguration fints;
+
+    @JsonProperty private Map<String, MonzoConfiguration> monzo;
+
     public SbabLegacyConfiguration getSbabLegacy() {
         return sbabLegacy;
     }
 
-    @JsonProperty
-    private String proxyUri;
+    @JsonProperty private String proxyUri;
 
-    @JsonProperty
-    private FinTsIntegrationConfiguration fints;
+    public Optional<SbabConfiguration> getSbab(Environment environment) {
+        return Optional.ofNullable(sbab).map(m -> m.getOrDefault(environment.toString(), null));
+    }
 
     public String getUkOpenBankingJson() {
         return ukOpenBankingJson;

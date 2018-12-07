@@ -102,10 +102,17 @@ notifications:
 
 agentsServiceConfiguration:
   integrations:
-    sbabLegacy:
-      signBaseUrl: https://secure.sbab.se
     fints:
       regNumber: "dummyId"
+    sbabLegacy:
+      signBaseUrl: https://secure.sbab.se
+    sbab:
+      sandbox:
+        basicAuthUsername: dummyUser
+        basicAuthPassword: dummyPass
+        clientId: "dummyId"
+        accessToken: sandboxToken
+        redirectUri: https://127.0.0.1:7357/api/v1/thirdparty/callback
     monzo:
       tink:
         clientId: "dummyId"
