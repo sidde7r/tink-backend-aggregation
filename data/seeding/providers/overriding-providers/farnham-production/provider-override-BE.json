@@ -26,7 +26,7 @@
       "children" : null,
       "helpText" : null,
       "hint" : null,
-      "immutable" : false,
+      "immutable" : true,
       "masked" : false,
       "maxLength" : null,
       "minLength" : 1,
@@ -250,7 +250,7 @@
       "children" : null,
       "helpText" : null,
       "hint" : null,
-      "immutable" : false,
+      "immutable" : true,
       "masked" : false,
       "maxLength" : 17,
       "minLength" : 1,
@@ -356,7 +356,7 @@
       "patternError" : null,
       "type" : null,
       "value" : null,
-      "sensitive" : false,
+      "sensitive" : true,
       "checkbox" : false,
       "additionalInfo" : null
     }, {

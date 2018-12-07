@@ -62,7 +62,8 @@
           "numeric": true,
           "minLength": 1,
           "maxLength": 17,
-          "sensitive": true
+          "sensitive": true,
+          "immutable": true
         }
       ],
       "supplementalFields": [
@@ -137,13 +138,15 @@
           "name": "username",
           "immutable": true,
           "numeric": true,
-          "minLength": 1
+          "minLength": 1,
+          "immutable": true
         },
         {
           "description": "Card ID",
           "name": "cardId",
           "numeric": true,
           "minLength": 1,
+          "immutable": true,
           "sensitive": true
         }
       ],
@@ -193,7 +196,8 @@
           "name": "username",
           "numeric": true,
           "minLength": 1,
-          "sensitive": true
+          "sensitive": true,
+          "immutable": true
         },
         {
           "description": "Password",
@@ -429,7 +433,8 @@
           "name": "username",
           "numeric": true,
           "minLength": 1,
-          "sensitive": true
+          "sensitive": true,
+          "immutable": true
         }
       ],
       "supplementalFields": [
@@ -471,7 +476,8 @@
           "name": "username",
           "numeric": true,
           "minLength": 1,
-          "sensitive": true
+          "sensitive": true,
+          "immutable": true
         },
         {
           "description": "Client number",
@@ -509,7 +515,8 @@
           "name": "username",
           "numeric": true,
           "minLength": 1,
-          "sensitive": true
+          "sensitive": true,
+          "immutable": true
         },
         {
           "description": "Client number",
