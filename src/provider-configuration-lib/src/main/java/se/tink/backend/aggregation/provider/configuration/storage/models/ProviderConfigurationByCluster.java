@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.provider.configuration.storage.models;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,8 +13,7 @@ import org.slf4j.LoggerFactory;
 // Upon instantiation the object determines which configuration to choose from
 // the enabled/global/override data and stores them in memory
 public class ProviderConfigurationByCluster {
-
-    private Logger logger = LoggerFactory.getLogger(ProviderConfigurationByCluster.class);
+    private static Logger logger = LoggerFactory.getLogger(ProviderConfigurationByCluster.class);
     private final String clusterId;
     private Set<String> enabledMarkets;
 
@@ -29,17 +29,26 @@ public class ProviderConfigurationByCluster {
             Map<String, ProviderConfiguration> providerConfigurationOverrides,
             Map<String, ProviderConfiguration> allProviderConfiguration,
             Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
-        this.providerConfigurations = Maps.newHashMap();
-        this.enabledMarkets = Sets.newHashSet();
+
+        this.providerConfigurations = selectProviderConfigurations(clusterId, enabledProviders,
+                providerConfigurationOverrides, allProviderConfiguration, capabilitiesByAgentClass);
         this.clusterId = clusterId;
+        this.enabledMarkets = getEnabledMarkets(providerConfigurations.values());
+    }
+
+    private static Map<String, ProviderConfiguration> selectProviderConfigurations(String clusterId,
+            Set<String> enabledProviders,
+            Map<String, ProviderConfiguration> providerConfigurationOverrides,
+            Map<String, ProviderConfiguration> allProviderConfiguration,
+            Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
+
+        Map<String, ProviderConfiguration> providerConfigurations = Maps.newHashMap();
         enabledProviders.forEach(
                 providerName -> {
-                    ProviderConfiguration providerConfiguration;
-                    if (providerConfigurationOverrides.containsKey(providerName)) {
-                        providerConfiguration = providerConfigurationOverrides.get(providerName);
-                    } else if (allProviderConfiguration.containsKey(providerName)) {
-                        providerConfiguration = allProviderConfiguration.get(providerName);
-                    } else {
+                    ProviderConfiguration providerConfiguration = getProviderConfiguration(
+                            providerName, providerConfigurationOverrides, allProviderConfiguration);
+
+                    if (providerConfiguration == null) {
                         logger.error("Could not find configuration for enabled provider {} and cluster {}",
                                 providerName, clusterId);
                         return;
@@ -52,9 +61,27 @@ public class ProviderConfigurationByCluster {
                                     Collections.emptySet()));
 
                     providerConfigurations.put(providerName, providerConfiguration);
-                    enabledMarkets.add(providerConfiguration.getMarket());
                 }
         );
+
+        return providerConfigurations;
+    }
+
+    private static ProviderConfiguration getProviderConfiguration(String providerName,
+            Map<String, ProviderConfiguration> providerConfigurationOverrides,
+            Map<String, ProviderConfiguration> allProviderConfiguration) {
+
+        if (providerConfigurationOverrides.containsKey(providerName)) {
+            return providerConfigurationOverrides.get(providerName);
+        }
+
+        return allProviderConfiguration.get(providerName);
+    }
+
+    private static Set<String> getEnabledMarkets(Collection<ProviderConfiguration> providerConfigurations) {
+        return providerConfigurations.stream()
+                .map(ProviderConfiguration::getMarket)
+                .collect(Collectors.toSet());
     }
 
     public boolean marketEnabled(String market) {
