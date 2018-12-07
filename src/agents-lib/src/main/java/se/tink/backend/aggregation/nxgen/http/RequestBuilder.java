@@ -41,7 +41,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         super(filterChain);
         this.finalFilter = finalFilter;
 
-        // OutBoundHeaders is a case insenstive MultivaluedMap
+        // OutBoundHeaders is a case-insensitive MultivaluedMap
         headers = new OutBoundHeaders();
         this.headerAggregatorIdentifier = headerAggregatorIdentifier;
     }
