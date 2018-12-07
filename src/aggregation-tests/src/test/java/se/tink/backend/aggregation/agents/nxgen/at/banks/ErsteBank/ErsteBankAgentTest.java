@@ -21,5 +21,16 @@ public class ErsteBankAgentTest {
                 .build()
                 .testRefresh();
     }
+
+
+    @Test
+    public void testLoginAndRefreshSidentity() throws Exception {
+        new AgentIntegrationTest.Builder("at", "at-erstebank-thirdparty")
+                .addCredentialField(Field.Key.USERNAME, USERNAME)
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .build()
+                .testRefresh();
+    }
 }
 

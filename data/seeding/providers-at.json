@@ -119,12 +119,13 @@
         },
         {
             "name": "at-erstebank-password",
-            "displayName": "Erste Bank und Sparkasse",
+            "displayName": "Password",
+            "groupDisplayName": "Erste Bank und Sparkasse",
             "popular": true,
             "status": "ENABLED",
             "type": "BANK",
             "credentialsType": "PASSWORD",
-            "className": "nxgen.at.banks.erstebank.ErsteBankAgent",
+            "className": "nxgen.at.banks.erstebank.password.ErstebankAgent",
             "transactional": "true",
             "fields": [
                 {
@@ -139,6 +140,33 @@
                     "sensitive": true
                 }
             ]
+        },
+        {
+            "name": "at-erstebank-thirdparty",
+            "displayName": "Sidentity",
+            "groupDisplayName": "Erste Bank und Sparkasse",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.erstebank.sidentity.ErstebankAgent",
+            "transactional": "true",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "User code",
+                    "immutable": true
+                }
+            ],
+          "supplementalFields": [
+            {
+              "description": "Sidentity Verification code",
+              "helpText": "You will soon receive a message on your s Identity App.\n Open Sidentity, sign and then open Tink again",
+              "immutable": true,
+              "masked": false,
+              "name": "logindescription"
+            }
+          ]
         },
         {
             "name": "at-raiffeisen0-password",
