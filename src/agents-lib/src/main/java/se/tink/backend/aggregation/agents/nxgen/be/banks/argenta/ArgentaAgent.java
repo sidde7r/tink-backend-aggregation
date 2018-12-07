@@ -13,10 +13,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
@@ -58,22 +60,28 @@ public class ArgentaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         String deviceId = new ArgentaPersistentStorage(this.persistentStorage).getDeviceId();
         ArgentaTransactionalAccountFetcher transactionalAccountFetcher =
                 new ArgentaTransactionalAccountFetcher(apiClient, deviceId);
-        ArgentaTransactionalTransactionFetcher argentaTransactionalTransactionFetcher =
+        ArgentaTransactionalTransactionFetcher transactionalTransactionFetcher =
                 new ArgentaTransactionalTransactionFetcher(apiClient, deviceId);
+
+        TransactionPagePaginationController<TransactionalAccount> transactionPagePaginationController =
+                new TransactionPagePaginationController<>(
+                        transactionalTransactionFetcher,
+                        ArgentaConstants.Fetcher.START_PAGE);
+        TransactionFetcherController<TransactionalAccount> transactionFetcherController =
+                new TransactionFetcherController<>(
+                        transactionPaginationHelper,
+                        transactionPagePaginationController);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
                         transactionalAccountFetcher,
-                        new TransactionFetcherController<>(
-                                transactionPaginationHelper,
-                                argentaTransactionalTransactionFetcher)));
+                        transactionFetcherController));
     }
 
     @Override

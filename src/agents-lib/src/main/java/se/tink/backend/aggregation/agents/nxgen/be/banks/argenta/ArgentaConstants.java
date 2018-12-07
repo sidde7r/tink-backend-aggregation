@@ -49,6 +49,11 @@ public class ArgentaConstants {
         public static final String UAK = "UAK";
     }
 
+    public static class Fetcher {
+        public static final int START_PAGE = 1;
+        public static final int END_PAGE = 0;
+    }
+
     public static final class MultiFactorAuthentication {
         public static final String CODE = "code";
     }
