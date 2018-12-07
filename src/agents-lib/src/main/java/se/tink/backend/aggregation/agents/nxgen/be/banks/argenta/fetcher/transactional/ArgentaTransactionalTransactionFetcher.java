@@ -5,7 +5,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
-public class ArgentaTransactionalTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
+public class ArgentaTransactionalTransactionFetcher
+        implements TransactionPagePaginator<TransactionalAccount> {
     private ArgentaApiClient apiClient;
     private final String deviceId;
 

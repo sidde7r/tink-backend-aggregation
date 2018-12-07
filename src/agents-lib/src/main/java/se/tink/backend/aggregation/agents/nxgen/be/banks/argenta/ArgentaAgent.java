@@ -60,21 +60,22 @@ public class ArgentaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         String deviceId = new ArgentaPersistentStorage(this.persistentStorage).getDeviceId();
         ArgentaTransactionalAccountFetcher transactionalAccountFetcher =
                 new ArgentaTransactionalAccountFetcher(apiClient, deviceId);
         ArgentaTransactionalTransactionFetcher transactionalTransactionFetcher =
                 new ArgentaTransactionalTransactionFetcher(apiClient, deviceId);
 
-        TransactionPagePaginationController<TransactionalAccount> transactionPagePaginationController =
-                new TransactionPagePaginationController<>(
-                        transactionalTransactionFetcher,
-                        ArgentaConstants.Fetcher.START_PAGE);
+        TransactionPagePaginationController<TransactionalAccount>
+                transactionPagePaginationController =
+                        new TransactionPagePaginationController<>(
+                                transactionalTransactionFetcher,
+                                ArgentaConstants.Fetcher.START_PAGE);
         TransactionFetcherController<TransactionalAccount> transactionFetcherController =
                 new TransactionFetcherController<>(
-                        transactionPaginationHelper,
-                        transactionPagePaginationController);
+                        transactionPaginationHelper, transactionPagePaginationController);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(

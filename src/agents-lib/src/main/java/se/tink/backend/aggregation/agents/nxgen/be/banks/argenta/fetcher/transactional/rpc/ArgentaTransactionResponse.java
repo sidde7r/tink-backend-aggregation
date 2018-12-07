@@ -32,7 +32,8 @@ public class ArgentaTransactionResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.stream()
+        return transactions
+                .stream()
                 .map(ArgentaTransaction::toTinkTransaction)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
