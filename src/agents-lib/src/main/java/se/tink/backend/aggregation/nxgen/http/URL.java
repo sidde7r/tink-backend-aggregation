@@ -122,9 +122,7 @@ public final class URL {
     }
 
     private Stream<String> multiEntryToQueryString(Map.Entry<String, List<String>> m) {
-        return m.getValue()
-                .stream()
-                .map(p -> toQueryString(m.getKey(), p));
+        return m.getValue().stream().map(p -> toQueryString(m.getKey(), p));
     }
 
     public URL concat(String s) {
@@ -144,8 +142,8 @@ public final class URL {
     public String getScheme() {
         return toUri().getScheme();
     }
-    
-    public URL getUrl(){
+
+    public URL getUrl() {
         return new URL(url);
     }
 
@@ -162,26 +160,17 @@ public final class URL {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         URL url1 = (URL) o;
 
-        return new EqualsBuilder()
-                .append(url, url1.url)
-                .append(query, url1.query)
-                .isEquals();
+        return new EqualsBuilder().append(url, url1.url).append(query, url1.query).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(url)
-                .append(query)
-                .toHashCode();
+        return new HashCodeBuilder(17, 37).append(url).append(query).toHashCode();
     }
 }
-
