@@ -17,7 +17,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
  * Aggregation RPC User
  *
  * {@link se.tink.backend.core.User} objects (from main-api) can be converted to User objects with
- * {@link se.tink.backend.common.mapper.CoreUserMapper}.
  */
 public class User {
     private static final TypeReference<List<String>> STRING_LIST_TYPE_REFERENCE = new TypeReference<List<String>>() {

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroIcsCredentials;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.common.mapper.CoreCredentialsMapper;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.utils.StringUtils;
 
 public class IcsAgentTest extends AbstractAgentTest<IcsAgent> {

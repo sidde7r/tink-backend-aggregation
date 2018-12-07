@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.common.mapper.CoreUserMapper;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
 import se.tink.backend.core.User;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.date.ThreadSafeDateFormat;
