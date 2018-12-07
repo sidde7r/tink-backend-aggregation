@@ -19,6 +19,7 @@ java_library(
 junit_test(
     name = "social-security-number-test",
     srcs = glob(["src/test/**/*.java"]),
+    visibility = ["//visibility:public"],
     deps = [
         ":social-security-number",
 
