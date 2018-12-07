@@ -6,8 +6,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -36,6 +41,14 @@ public final class URL {
         }
     }
 
+    private String toQueryString(String key, String value) {
+        if (Strings.isNullOrEmpty(key) || value == null) {
+            return "";
+        }
+
+        return urlEncode(key) + "=" + urlEncode(value);
+    }
+
     public static String urlDecode(String encodedValue) {
         try {
             return URLDecoder.decode(encodedValue, "UTF-8");
@@ -59,13 +72,59 @@ public final class URL {
             return this;
         }
 
-        final String queryParam = urlEncode(key) + "=" + urlEncode(value);
+        final String queryParam = toQueryString(key, value);
 
         if (!Strings.isNullOrEmpty(query)) {
             return new URL(url, query + "&" + queryParam);
         }
 
         return new URL(url, queryParam);
+    }
+
+    public URL queryParams(Map<String, String> map) {
+        if (Objects.isNull(map) || map.isEmpty()) {
+            return this;
+        }
+
+        final String queryParams =
+                map.entrySet()
+                        .stream()
+                        .map(p -> toQueryString(p.getKey(), p.getValue()))
+                        .filter(s -> !s.isEmpty())
+                        .reduce((p1, p2) -> p1 + "&" + p2)
+                        .orElse("");
+
+        if (!Strings.isNullOrEmpty(query)) {
+            return new URL(url, query + "&" + queryParams);
+        }
+
+        return new URL(url, queryParams);
+    }
+
+    public URL queryParams(MultivaluedMap<String, String> map) {
+        if (Objects.isNull(map) || map.isEmpty()) {
+            return this;
+        }
+
+        final String queryParams =
+                map.entrySet()
+                        .stream()
+                        .flatMap(this::multiEntryToQueryString)
+                        .filter(s -> !s.isEmpty())
+                        .reduce((p1, p2) -> p1 + "&" + p2)
+                        .orElse("");
+
+        if (!Strings.isNullOrEmpty(query)) {
+            return new URL(url, query + "&" + queryParams);
+        }
+
+        return new URL(url, queryParams);
+    }
+
+    private Stream<String> multiEntryToQueryString(Map.Entry<String, List<String>> m) {
+        return m.getValue()
+                .stream()
+                .map(p -> toQueryString(m.getKey(), p));
     }
 
     public URL concat(String s) {
