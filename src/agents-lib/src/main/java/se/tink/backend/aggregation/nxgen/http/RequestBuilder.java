@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -470,6 +471,16 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     public RequestBuilder header(HeaderEnum header) {
         headers.add(header.getKey(), header.getValue());
+        return this;
+    }
+
+    public RequestBuilder headers(Map<String, Object> map) {
+        map.forEach(this::header);
+        return this;
+    }
+
+    public RequestBuilder headers(MultivaluedMap<String, Object> map) {
+        map.forEach((k, l) -> l.forEach(v -> header(k, v)));
         return this;
     }
 
