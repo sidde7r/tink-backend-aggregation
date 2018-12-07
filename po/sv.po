@@ -187,6 +187,9 @@ msgstr "Du har inte behörighet att använda denna tjänst."
 msgid "You do not have a valid profile."
 msgstr "Du har ingen giltig profil."
 
+msgid "You don't have any commitments in the selected bank."
+msgstr "Du har inga åtaganden i den valda banken."
+
 msgid "Your identity could not be validated. Please try again."
 msgstr "Din identitet kunde inte bekräftas. Försök igen."
 
