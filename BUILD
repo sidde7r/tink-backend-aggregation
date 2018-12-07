@@ -776,6 +776,8 @@ java_library(
         "//src/libraries/http:http-utils",
         "//src/libraries/http_client:http-client",
         "//src/libraries/service_version:service-version",
+        "//src/libraries/repository",
+
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jersey",
@@ -810,6 +812,8 @@ java_library(
          "//src/libraries/discovery:discovery",
          "//src/libraries/dropwizard_utils:dropwizard-utils",
          "//src/libraries/metrics:metrics",
+         "//src/libraries/repository",
+
 
          "//src/libraries/cli_print_utils:cli_print_utils",
          "//src/libraries/serialization_utils:serialization-utils",
@@ -878,6 +882,7 @@ java_binary(
          "//src/libraries/cli_print_utils:cli_print_utils",
          "//src/libraries/serialization_utils:serialization-utils",
          "//src/libraries/console_json_logger:console_json_logger",
+         "//src/libraries/repository",
 
          "//third_party:org_springframework_spring_expression",
          "//third_party:org_springframework_data_spring_data_jpa",
