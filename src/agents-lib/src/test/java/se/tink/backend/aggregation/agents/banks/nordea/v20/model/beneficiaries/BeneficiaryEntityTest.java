@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.Test;
-import se.tink.backend.common.utils.TestAccount;
+import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;

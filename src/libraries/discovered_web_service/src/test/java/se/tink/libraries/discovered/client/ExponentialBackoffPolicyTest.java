@@ -1,7 +1,8 @@
-package se.tink.backend.common.client;
+package se.tink.libraries.discovered.client;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.libraries.discovered.ExponentialBackoffPolicy;
 
 public class ExponentialBackoffPolicyTest {
 

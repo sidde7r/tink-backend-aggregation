@@ -1,4 +1,4 @@
-package se.tink.backend.common.helpers.stubs;
+package se.tink.libraries.helper.transfer.stubs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

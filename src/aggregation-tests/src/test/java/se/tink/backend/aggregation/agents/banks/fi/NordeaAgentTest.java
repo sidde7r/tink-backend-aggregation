@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgentUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.savings.CustodyAccount;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.common.utils.TestAccount;
+import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;

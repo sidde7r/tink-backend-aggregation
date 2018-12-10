@@ -1,9 +1,7 @@
-package se.tink.backend.common.utils;
+package se.tink.libraries.strings;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import se.tink.backend.utils.StringUtils;
 
 public class CurrencyUtilsTest {
     @Test

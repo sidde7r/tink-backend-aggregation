@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.SEBKortAgent;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.common.utils.TestSSN;
+import se.tink.libraries.social.security.TestSSN;
 
 public class SASEurobonusMastercardAgentTest extends AbstractAgentTest<SEBKortAgent> {
     public SASEurobonusMastercardAgentTest() {

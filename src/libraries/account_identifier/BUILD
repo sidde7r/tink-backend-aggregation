@@ -31,6 +31,7 @@ java_library(
 junit_test(
     name = "account-identifier-test",
     srcs = glob(["src/test/**/*.java"]),
+    visibility = ["//visibility:public"],
     deps = [
         ":account-identifier",
 
