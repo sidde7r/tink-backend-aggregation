@@ -595,6 +595,7 @@ junit_test(
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/net",
+        "//src/libraries/transfer_stub:transfer-stub-test",
         "//src/libraries/i18n",
         "//src/libraries/concurrency:concurrency-test",
         "//src/libraries/concurrency:concurrency",
@@ -647,6 +648,7 @@ junit_test(
 
         "//src/libraries/log",
         "//src/libraries/pair",
+        "//src/libraries/transfer_stub:transfer-stub-test",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/metrics:metrics",
         "//src/libraries/date:date",
