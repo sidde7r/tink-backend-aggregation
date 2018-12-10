@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth;
 
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.FinTsSegment;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.SegData.PRODUCT_NAME;
 import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.SegData.PRODUCT_VERSION;
 
 public class HKVVB extends FinTsSegment {
@@ -12,7 +11,7 @@ public class HKVVB extends FinTsSegment {
         addDataGroup(FinTsConstants.SegData.DEFAULT_BPD_VERSION);
         addDataGroup(FinTsConstants.SegData.DEFAULT_UPD_VERSION);
         addDataGroup(FinTsConstants.SegData.LANGUAGE_DE);
-        addDataGroup(PRODUCT_NAME);
+        addDataGroup(FinTsConstants.TINK_FINTS_REGISTERATION);
         addDataGroup(PRODUCT_VERSION);
     }
 

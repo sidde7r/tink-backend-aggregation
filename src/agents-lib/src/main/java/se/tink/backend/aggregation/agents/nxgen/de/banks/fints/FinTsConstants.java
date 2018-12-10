@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 public class FinTsConstants {
 
     public static final String CURRENCY = "EUR";
+    public static final String TINK_FINTS_REGISTERATION = "9DA0690B610D90C2CD37E262F";
 
     public static class StatusCode {
         public static final String SUCCESS = "0020";
@@ -68,7 +69,6 @@ public class FinTsConstants {
     }
 
     public static class SegData {
-        public final static String PRODUCT_NAME = "tink";
         public final static String PRODUCT_VERSION = "0.1";
         public final static String CUSTOMER_ID = "1";
         public final static String COUNTRY_CODE = "280"; // Germany
