@@ -91,7 +91,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
         ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository
                 .findOne(providerConfiguration.getName());
 
-        if (providerConfiguration == null) {
+        if (providerStatusConfiguration == null) {
             return Optional.empty();
         }
 
