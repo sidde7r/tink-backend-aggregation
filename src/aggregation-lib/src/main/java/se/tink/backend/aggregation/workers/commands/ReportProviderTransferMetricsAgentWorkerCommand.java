@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.backend.common.utils.MetricsUtils;
+import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.signableoperation.SignableOperation;
