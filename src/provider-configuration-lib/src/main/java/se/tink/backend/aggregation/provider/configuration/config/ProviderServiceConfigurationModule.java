@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.provider.configuration.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import se.tink.backend.common.VersionInformation;
+import se.tink.libraries.service.version.VersionInformation;
 import se.tink.libraries.metrics.HeapDumpGauge;
 import se.tink.libraries.metrics.MetricCollector;
 import se.tink.libraries.metrics.MetricRegistry;

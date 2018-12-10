@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import net.spy.memcached.BinaryConnectionFactory;
-import se.tink.backend.common.VersionInformation;
+import se.tink.libraries.service.version.VersionInformation;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheInstrumentationDecorator;
 import se.tink.libraries.cache.CacheReplicator;

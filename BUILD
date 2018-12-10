@@ -347,6 +347,7 @@ java_library(
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//src/libraries/cache",
         "//src/libraries/social_security_number:social-security-number",
+        "//src/libraries/service_version:service-version",
         "//src/libraries/executor_utils:executor-utils",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
@@ -773,7 +774,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/http:http-utils",
         "//src/libraries/http_client:http-client",
-        
+        "//src/libraries/service_version:service-version",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_dropwizard_dropwizard_jersey",
