@@ -1,4 +1,4 @@
-package se.tink.backend.common.client.retry;
+package se.tink.libraries.discovered.client.retry;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -21,9 +21,8 @@ import javax.ws.rs.core.UriBuilder;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import se.tink.libraries.discovered.RetryableWebResource;
 import se.tink.libraries.http.client.WebResourceFactory;
-import se.tink.backend.common.client.retry.RetryableWebResource.Candidate;
-import se.tink.backend.common.client.retry.RetryableWebResource.RetryFilter;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -113,7 +112,7 @@ public class RetryableWebResourceTest {
         // no mapping present
         String notFoundUri = "http://localhost:" + server.port();
 
-        ImmutableList<Candidate> fallbacks = ImmutableList.of(
+        ImmutableList<RetryableWebResource.Candidate> fallbacks = ImmutableList.of(
                 RetryableWebResource.Candidate.fromURI(new URI(unavailableUri)),
                 RetryableWebResource.Candidate.fromURI(new URI(notFoundUri))
                 );
@@ -155,38 +154,6 @@ public class RetryableWebResourceTest {
             return now;
         }
 
-    }
-
-    @Test
-    public void testRetryingInterval() throws URISyntaxException {
-        String failingUri = "https://nonexistentdomain";
-
-        ArrayList<RetryableWebResource.Candidate> fallbacks = Lists.newArrayList();
-        for (int i = 0; i < 200; i++) {
-            // Must generate unique because the domains are put in a set.
-            String uri = String.format("https://nonexistentdomain%d", i);
-
-            fallbacks.add(RetryableWebResource.Candidate.fromURI(new URI(uri)));
-        }
-
-        WebResource resource = new Client().resource(failingUri);
-        FakeTime fakeTime = new FakeTime();
-        RetryableWebResource.decorate("testClient", fallbacks, resource, fakeTime, fakeTime);
-        Resource client = WebResourceFactory.newResource(Resource.class, resource);
-
-        Stopwatch watch = Stopwatch.createStarted(fakeTime);
-        try {
-            client.endpoint();
-        } catch (ClientHandlerException e) {
-            // Expected
-        }
-        long duration = watch.elapsed(TimeUnit.MILLISECONDS);
-
-        String durationStr = String.valueOf(duration);
-
-        Assert.assertTrue(durationStr, duration < RetryFilter.MAX_TOTAL_TRY_TIME);
-
-        assertEquals(31700, duration);
     }
 
 }
