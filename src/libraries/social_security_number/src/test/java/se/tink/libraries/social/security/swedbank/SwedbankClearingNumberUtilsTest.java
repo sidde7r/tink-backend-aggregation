@@ -1,4 +1,4 @@
-package se.tink.backend.common.utils;
+package se.tink.libraries.social.security.swedbank;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;

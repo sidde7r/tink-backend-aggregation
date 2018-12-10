@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.common.utils.SwedbankClearingNumberUtils;
+import se.tink.libraries.social.security.swedbank.SwedbankClearingNumberUtils;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;

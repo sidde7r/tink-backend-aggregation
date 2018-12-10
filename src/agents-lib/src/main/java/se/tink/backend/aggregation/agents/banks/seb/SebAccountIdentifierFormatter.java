@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb;
 import com.google.common.base.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.seb.model.ExternalAccount;
-import se.tink.backend.common.utils.SwedbankClearingNumberUtils;
+import se.tink.libraries.social.security.swedbank.SwedbankClearingNumberUtils;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;

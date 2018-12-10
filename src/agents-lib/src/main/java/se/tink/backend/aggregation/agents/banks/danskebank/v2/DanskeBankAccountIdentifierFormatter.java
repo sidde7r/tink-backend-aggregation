@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2;
 
 import com.google.common.base.Objects;
-import se.tink.backend.common.utils.SwedbankClearingNumberUtils;
+import se.tink.libraries.social.security.swedbank.SwedbankClearingNumberUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
