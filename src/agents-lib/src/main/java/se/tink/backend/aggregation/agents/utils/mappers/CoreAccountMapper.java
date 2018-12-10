@@ -1,4 +1,4 @@
-package se.tink.backend.common.mapper;
+package se.tink.backend.aggregation.agents.utils.mappers;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.modelmapper.ModelMapper;

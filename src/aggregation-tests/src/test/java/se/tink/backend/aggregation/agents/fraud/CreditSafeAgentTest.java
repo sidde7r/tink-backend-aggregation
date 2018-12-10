@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.common.mapper.CoreUserMapper;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
 import se.tink.backend.common.utils.TestSSN;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.FraudDetailsContentType;

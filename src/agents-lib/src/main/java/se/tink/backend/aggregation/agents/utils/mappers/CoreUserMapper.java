@@ -1,4 +1,4 @@
-package se.tink.backend.common.mapper;
+package se.tink.backend.aggregation.agents.utils.mappers;
 
 import org.assertj.core.util.VisibleForTesting;
 import org.modelmapper.ModelMapper;

@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
-import se.tink.backend.common.mapper.CoreCredentialsMapper;
+import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 
 public class SetCredentialsStatusToAuthenticatingAgentWorkerCommand extends AgentWorkerCommand {
     private final ControllerWrapper controllerWrapper;
