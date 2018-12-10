@@ -29,7 +29,6 @@ public class CircuitBreakerStatistics {
     private final int breakCircuitBreakerThreshold;
     private final List<Integer> rateLimitMultiplicationFactors;
 
-    @Inject
     public CircuitBreakerStatistics(int timeLimit, TimeUnit timeLimitUnit, List<Integer> rateLimitMultiplicationFactors,
             double errorRatioThreshold, int circuitBreakerThreshold, int breakCircuitBreakerThreshold,
             MetricRegistry metricRegistry, String providerName, String className, String market) {
