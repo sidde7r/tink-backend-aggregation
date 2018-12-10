@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.agents.utils.mapper;
+package se.tink.backend.aggregation.agents.utils.mappers;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 
 public class CoreCredentialsMapperTest {
     @Test

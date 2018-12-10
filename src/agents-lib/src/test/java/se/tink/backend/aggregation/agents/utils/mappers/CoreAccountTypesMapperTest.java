@@ -1,7 +1,6 @@
-package se.tink.backend.aggregation.agents.utils.mapper;
+package se.tink.backend.aggregation.agents.utils.mappers;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountTypesMapper;
 import se.tink.backend.core.AccountTypes;
 import static org.junit.Assert.assertEquals;
 

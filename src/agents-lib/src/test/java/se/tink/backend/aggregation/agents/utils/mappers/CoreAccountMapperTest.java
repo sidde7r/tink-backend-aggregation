@@ -1,8 +1,7 @@
-package se.tink.backend.aggregation.agents.utils.mapper;
+package se.tink.backend.aggregation.agents.utils.mappers;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.core.Account;
 import se.tink.backend.core.AccountFlag;
 import static org.junit.Assert.assertEquals;
