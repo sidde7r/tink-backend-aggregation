@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.common.utils.Pair;
 import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.AvanzaAccountTypes;
 import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.AvanzaFallbackAccountTypes;
+import se.tink.libraries.pair.Pair;
 
 public final class AvanzaV2AccountTypeMappers {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaV2AccountTypeMappers.class);
