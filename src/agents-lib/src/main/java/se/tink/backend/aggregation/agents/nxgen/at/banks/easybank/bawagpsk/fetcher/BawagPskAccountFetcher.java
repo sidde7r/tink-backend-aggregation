@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Products;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
-import se.tink.backend.common.utils.Pair;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 /**

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.nordea.utilities;
 
 import com.google.common.base.Strings;
-import se.tink.backend.common.utils.SwedbankClearingNumberUtils;
+import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;

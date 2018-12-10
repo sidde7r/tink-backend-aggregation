@@ -1,4 +1,4 @@
-package se.tink.backend.common.utils;
+package se.tink.libraries.account.identifiers.se.swedbank;
 
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Enclosed.class)

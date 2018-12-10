@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils;
 
-import se.tink.backend.common.utils.SwedbankClearingNumberUtils;
+import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;

@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.core.account;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -10,7 +9,7 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.common.utils.Pair;
+import se.tink.libraries.pair.Pair;
 
 public final class AccountTypePredicateMapperTest {
 

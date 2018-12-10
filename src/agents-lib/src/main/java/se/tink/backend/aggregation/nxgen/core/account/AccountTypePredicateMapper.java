@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.common.utils.Pair;
+import se.tink.libraries.pair.Pair;
 
 public final class AccountTypePredicateMapper<KeyType> {
 

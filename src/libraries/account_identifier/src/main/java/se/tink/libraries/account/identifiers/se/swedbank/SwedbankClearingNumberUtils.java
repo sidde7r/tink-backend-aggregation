@@ -1,4 +1,4 @@
-package se.tink.backend.common.utils;
+package se.tink.libraries.account.identifiers.se.swedbank;
 
 import com.google.common.base.Objects;
 import java.util.Optional;

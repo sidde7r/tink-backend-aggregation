@@ -1,4 +1,4 @@
-package se.tink.backend.common.utils;
+package se.tink.libraries.pair;
 
 public class Pair<T, U> {
     public T first;
