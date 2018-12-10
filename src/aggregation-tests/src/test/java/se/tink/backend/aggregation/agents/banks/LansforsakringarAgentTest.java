@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.helper.transfer.stubs.TransferStub;
 import se.tink.libraries.account.identifiers.TestAccount;
-import se.tink.backend.common.utils.TestSSN;
+import se.tink.libraries.social.security.TestSSN;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;

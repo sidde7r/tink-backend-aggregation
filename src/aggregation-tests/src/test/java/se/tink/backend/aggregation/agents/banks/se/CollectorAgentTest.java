@@ -1,24 +1,13 @@
 package se.tink.backend.aggregation.agents.banks.se;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import java.util.List;
-import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.se.collector.CollectorAgent;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.FetchProductInformationParameterKey;
-import se.tink.backend.aggregation.rpc.ProductType;
-import se.tink.backend.common.utils.TestSSN;
-import se.tink.backend.core.enums.ApplicationFieldName;
-import se.tink.backend.core.enums.GenericApplicationFieldGroupNames;
+import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.application.ApplicationType;
-import se.tink.libraries.application.GenericApplication;
-import se.tink.libraries.application.GenericApplicationFieldGroup;
 
 public class CollectorAgentTest extends AbstractAgentTest<CollectorAgent> {
     private Credentials credentials = new Credentials();

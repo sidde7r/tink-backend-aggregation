@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.creditcards.ikano.api;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.common.utils.TestSSN;
+import se.tink.libraries.social.security.TestSSN;
 
 public class IkanoApiAgentIntegrationTest extends AbstractAgentTest<IkanoApiAgent> {
     public IkanoApiAgentIntegrationTest() {
