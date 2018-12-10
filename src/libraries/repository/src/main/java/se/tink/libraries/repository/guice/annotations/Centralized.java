@@ -1,4 +1,4 @@
-package se.tink.backend.guice.annotations;
+package se.tink.libraries.repository.guice.annotations;
 
 import com.google.inject.BindingAnnotation;
 import java.lang.annotation.Retention;

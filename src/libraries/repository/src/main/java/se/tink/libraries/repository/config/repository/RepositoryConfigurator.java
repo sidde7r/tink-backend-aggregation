@@ -1,4 +1,4 @@
-package se.tink.backend.common.config.repository;
+package se.tink.libraries.repository.config.repository;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;

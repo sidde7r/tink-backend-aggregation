@@ -1,7 +1,4 @@
-package se.tink.backend.common.config.repository;
-
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
+package se.tink.libraries.repository.config.repository;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,23 +7,18 @@ import org.springframework.orm.hibernate3.HibernateExceptionTranslator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-/**
- * JPA repository configurator for aggregation instances.
- * <p>
- * Don't forget to call
- * {@link SingletonRepositoryConfiguration#setConfiguration(se.tink.backend.common.config.DatabaseConfiguration)} before
- * using this class!
- * </p>
- */
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
 @Configuration
 @EnableJpaRepositories(basePackages = {
-        "se.tink.backend.aggregation.storage.database.repositories"
+        "se.tink.backend.aggregation.provider.configuration.storage.repositories"
 })
 @EnableTransactionManagement
-class AggregationRepositoryConfiguration implements RepositoryConfigurator {
+public class ProviderRepositoryConfiguration  implements RepositoryConfigurator {
     private SingletonRepositoryConfiguration realConfigurator;
 
-    public AggregationRepositoryConfiguration() {
+    public ProviderRepositoryConfiguration() {
         realConfigurator = new SingletonRepositoryConfiguration();
     }
 

@@ -1,4 +1,4 @@
-package se.tink.backend.common.config;
+package se.tink.libraries.repository.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;

@@ -1,4 +1,4 @@
-package se.tink.backend.common.providers;
+package se.tink.libraries.repository.providers;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
@@ -7,8 +7,8 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import se.tink.backend.guice.annotations.Centralized;
-import se.tink.libraries.repository.RepositorySource;
+import se.tink.libraries.repository.guice.annotations.Centralized;
+import se.tink.libraries.repository.source.RepositorySource;
 
 public class SpringIntegrationProvider<T> implements Provider<T> {
     private final static Logger log = LoggerFactory.getLogger(SpringIntegrationProvider.class);

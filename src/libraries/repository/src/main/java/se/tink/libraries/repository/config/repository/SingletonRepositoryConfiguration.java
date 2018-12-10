@@ -1,4 +1,4 @@
-package se.tink.backend.common.config.repository;
+package se.tink.libraries.repository.config.repository;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Supplier;
@@ -12,7 +12,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import se.tink.backend.common.config.DatabaseConfiguration;
+import se.tink.libraries.repository.config.DatabaseConfiguration;
 
 /**
  * Does the heavy lifting for {@link AggregationRepositoryConfiguration}.

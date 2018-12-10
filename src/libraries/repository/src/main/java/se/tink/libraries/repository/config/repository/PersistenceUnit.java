@@ -1,4 +1,4 @@
-package se.tink.backend.common.config.repository;
+package se.tink.libraries.repository.config.repository;
 
 public enum PersistenceUnit {
     // !!!  Make sure that all PersistenceUnit names exist in `persistence.xml`  !!!

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.cli;
 
 import com.google.inject.Inject;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import se.tink.backend.guice.annotations.Centralized;
+import se.tink.libraries.repository.guice.annotations.Centralized;
 
 public class AggregationSpringContext {
     private final AnnotationConfigApplicationContext centralizedContext;

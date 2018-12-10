@@ -1,4 +1,4 @@
-package se.tink.libraries.repository;
+package se.tink.libraries.repository.source;
 
 public enum RepositorySource {
     /**

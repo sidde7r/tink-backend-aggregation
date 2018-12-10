@@ -1,12 +1,12 @@
-package se.tink.backend.guice.configuration;
+package se.tink.libraries.repository.guice.configuration;
 
 import com.google.inject.AbstractModule;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import se.tink.backend.common.config.DatabaseConfiguration;
-import se.tink.backend.common.config.repository.PersistenceUnit;
-import se.tink.backend.common.config.repository.SingletonRepositoryConfiguration;
-import se.tink.backend.common.providers.SpringIntegrationProvider;
-import se.tink.backend.guice.annotations.Centralized;
+import se.tink.libraries.repository.config.DatabaseConfiguration;
+import se.tink.libraries.repository.config.repository.PersistenceUnit;
+import se.tink.libraries.repository.config.repository.SingletonRepositoryConfiguration;
+import se.tink.libraries.repository.guice.annotations.Centralized;
+import se.tink.libraries.repository.providers.SpringIntegrationProvider;
 
 public abstract class RepositoryModule extends AbstractModule {
     private final DatabaseConfiguration databaseConfiguration;
