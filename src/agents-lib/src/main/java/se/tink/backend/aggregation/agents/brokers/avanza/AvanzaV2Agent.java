@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
@@ -32,6 +34,8 @@ import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.Urls;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.AccountOverviewEntity;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.LoginEntity;
+import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.PositionAggregationEntity;
+import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.PositionEntity;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.Session;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.BankIdResponse;
@@ -370,38 +374,10 @@ public class AvanzaV2Agent extends AbstractAgent
                             positionResponse
                                     .getInstrumentPositions()
                                     .forEach(
-                                            positionAggregationEntity -> {
-                                                String instrumentType =
-                                                        positionAggregationEntity
-                                                                .getInstrumentType();
-                                                positionAggregationEntity
-                                                        .getPositions()
-                                                        .stream()
-                                                        .filter(
-                                                                positionEntity ->
-                                                                        Objects.nonNull(
-                                                                                positionEntity
-                                                                                        .getOrderbookId()))
-                                                        .forEach(
-                                                                positionEntity -> {
-                                                                    String market =
-                                                                            getInstrumentMarket(
-                                                                                    instrumentType,
-                                                                                    positionEntity
-                                                                                            .getOrderbookId(),
-                                                                                    authenticationSession);
-                                                                    positionEntity
-                                                                            .toInstrument(
-                                                                                    instrumentType,
-                                                                                    market,
-                                                                                    isinByName.get(
-                                                                                            positionEntity
-                                                                                                    .getName()))
-                                                                            .ifPresent(
-                                                                                    instruments
-                                                                                            ::add);
-                                                                });
-                                            });
+                                            aggregatePositionEntityWithInstrumentType(
+                                                    authenticationSession,
+                                                    isinByName,
+                                                    instruments));
                             portfolio.setInstruments(instruments);
 
                             account.setBalance(
@@ -410,6 +386,44 @@ public class AvanzaV2Agent extends AbstractAgent
                             context.cacheAccount(
                                     account, AccountFeatures.createForPortfolios(portfolio));
                         });
+    }
+
+    private Consumer<PositionAggregationEntity> aggregatePositionEntityWithInstrumentType(
+            String authenticationSession,
+            Map<String, String> isinByName,
+            List<Instrument> instruments) {
+        return positionAggregationEntity -> {
+            String instrumentType = positionAggregationEntity.getInstrumentType();
+            positionAggregationEntity
+                    .getPositions()
+                    .stream()
+                    .filter(positionEntityHasOrderbookId())
+                    .forEach(
+                            mapPositionEntityToTinkInstrument(
+                                    authenticationSession,
+                                    isinByName,
+                                    instruments,
+                                    instrumentType));
+        };
+    }
+
+    private Predicate<PositionEntity> positionEntityHasOrderbookId() {
+        return positionEntity -> Objects.nonNull(positionEntity.getOrderbookId());
+    }
+
+    private Consumer<PositionEntity> mapPositionEntityToTinkInstrument(
+            String authenticationSession,
+            Map<String, String> isinByName,
+            List<Instrument> instruments,
+            String instrumentType) {
+        return positionEntity -> {
+            String market =
+                    getInstrumentMarket(
+                            instrumentType, positionEntity.getOrderbookId(), authenticationSession);
+            positionEntity
+                    .toInstrument(instrumentType, market, isinByName.get(positionEntity.getName()))
+                    .ifPresent(instruments::add);
+        };
     }
 
     private void updateAccountsAndTransactions(String authenticationSession) {
@@ -458,14 +472,7 @@ public class AvanzaV2Agent extends AbstractAgent
                     transactionsResponse
                             .getTransactions()
                             .stream()
-                            .filter(
-                                    t ->
-                                            Objects.equals(
-                                                            t.getTransactionType().toLowerCase(),
-                                                            "deposit")
-                                                    || Objects.equals(
-                                                            t.getTransactionType().toLowerCase(),
-                                                            "withdraw"))
+                            .filter(transactionIsDepositOrWithdraw())
                             .map(TransactionEntity::toTinkTransaction)
                             .collect(Collectors.toList()));
 
@@ -481,6 +488,12 @@ public class AvanzaV2Agent extends AbstractAgent
         } while (subsequentEmptyFetches < 3 && !isContentWithRefresh(account, transactions));
 
         return transactions;
+    }
+
+    private Predicate<TransactionEntity> transactionIsDepositOrWithdraw() {
+        return t ->
+                Objects.equals(t.getTransactionType().toLowerCase(), "deposit")
+                        || Objects.equals(t.getTransactionType().toLowerCase(), "withdraw");
     }
 
     private String getInstrumentMarket(
