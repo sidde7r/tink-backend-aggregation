@@ -256,43 +256,6 @@ java_library(
 )
 
 java_library(
-    name = "common-lib-testlib",
-    srcs = glob(
-        include = ["src/common-lib/src/test/**/*.java"],
-        exclude = ["src/common-lib/src/test/**/*Test.java"],
-    ),
-    data = [
-             "//data:cryptography-test",
-         ],
-    runtime_deps = [
-        "//third_party:com_fasterxml_jackson_core_jackson_core",
-        "//third_party:com_fasterxml_jackson_core_jackson_databind",
-        "//third_party:pl_pragmatists_junitparams",
-    ],
-    deps = [
-        ":common-lib",
-        ":main-api",
-
-        "//src/libraries/uuid:uuid",
-        "//src/libraries/http:http-annotations",
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/date:date",
-        "//src/libraries/account_identifier:account-identifier",
-
-        "//third_party:com_github_tomakehurst_wiremock",
-        "//third_party:com_google_code_findbugs_jsr305",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_sun_jersey_jersey_client",
-        "//third_party:com_sun_jersey_jersey_core",
-        "//third_party:commons_lang_commons_lang",
-        "//third_party:joda_time_joda_time",
-        "//third_party:junit_junit",
-        "//third_party:org_mockito_mockito_core",
-        "//third_party:org_springframework_data_spring_data_commons",
-    ],
-)
-
-java_library(
      name = "aggregation-service",
      srcs = glob(["src/aggregation-service/src/main/**/*.java"]),
      data = [
@@ -583,7 +546,6 @@ junit_test(
         ":aggregation-api",
         ":aggregation-lib",
         ":common-lib",
-        ":common-lib-testlib",
         ":main-api",
         ":system-api",
         ":agents-lib",
@@ -641,7 +603,6 @@ junit_test(
     deps = [
         ":aggregation-api",
         ":common-lib",
-        ":common-lib-testlib",
         ":main-api",
         ":system-api",
         ":agents-lib",
@@ -705,7 +666,6 @@ junit_test(
         ":aggregation-api",
         ":aggregation-lib",
         ":common-lib",
-        ":common-lib-testlib",
         ":main-api",
         ":system-api",
         ":agents-lib",
