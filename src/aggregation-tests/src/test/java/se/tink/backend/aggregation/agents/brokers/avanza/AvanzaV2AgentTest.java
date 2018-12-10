@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.social.security.TestSSN;
 
 public class AvanzaV2AgentTest extends AbstractAgentTest<AvanzaV2Agent> {
-    private static final String AUTHENTICATION_SESSION_PAYLOAD = "authenticationSession";
     private Provider provider = new Provider();
 
     public AvanzaV2AgentTest() {
