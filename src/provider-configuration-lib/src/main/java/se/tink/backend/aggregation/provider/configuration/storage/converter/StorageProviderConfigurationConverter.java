@@ -2,12 +2,33 @@ package se.tink.backend.aggregation.provider.configuration.storage.converter;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.core.ProviderStatuses;
 
 public class StorageProviderConfigurationConverter {
-    public static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration convert(
+
+    public static List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> convert(
+            Collection<ProviderConfiguration> providerConfiguration,
+            Map<String, ProviderStatuses> providerStatusesMap) {
+        return providerConfiguration
+                .stream()
+                .map(p -> StorageProviderConfigurationConverter
+                        .convert(p, getProviderStatusIfExists(providerStatusesMap, p)))
+                .collect(Collectors.toList());
+    }
+
+    private static Optional<ProviderStatuses> getProviderStatusIfExists(
+            Map<String, ProviderStatuses> providerStatusesMap,
             ProviderConfiguration providerConfiguration) {
+        return Optional.ofNullable(providerStatusesMap.get(providerConfiguration.getName()));
+    }
+
+    public static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration convert(
+            ProviderConfiguration providerConfiguration, Optional<ProviderStatuses> providerStatus) {
+
         se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration core =
                 new se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration();
         core.setCapabilitiesSerialized(providerConfiguration.getCapabilitiesSerialized());
@@ -26,21 +47,16 @@ public class StorageProviderConfigurationConverter {
         core.setRefreshFrequencyFactor(providerConfiguration.getRefreshFrequencyFactor());
         core.setType(providerConfiguration.getType());
         core.setFields(providerConfiguration.getFields());
-        core.setStatus(providerConfiguration.getStatus());
         core.setTransactional(providerConfiguration.isTransactional());
         core.setDisplayDescription(providerConfiguration.getDisplayDescription());
         core.setSupplementalFields(providerConfiguration.getSupplementalFields());
 
+        providerStatus.ifPresent(core::setStatus);
         providerConfiguration.getRefreshSchedule().ifPresent(
                 prs -> core.setRefreshSchedule(prs)
         );
 
         return core;
-    }
 
-    public static List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> convert(
-            Collection<ProviderConfiguration> providerConfiguration) {
-        return providerConfiguration.stream().map(StorageProviderConfigurationConverter::convert).collect(
-                Collectors.toList());
     }
 }

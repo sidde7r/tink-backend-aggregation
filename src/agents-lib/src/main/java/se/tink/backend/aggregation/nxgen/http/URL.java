@@ -6,8 +6,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -28,12 +34,24 @@ public final class URL {
         this.query = query;
     }
 
+    private String prependQueryIfPresent(String queryParam) {
+        return Strings.isNullOrEmpty(query) ? queryParam : query + "&" + queryParam;
+    }
+
     private String urlEncode(String value) {
         try {
             return URLEncoder.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException(e.getMessage(), e);
         }
+    }
+
+    private Optional<String> toQueryString(String key, String value) {
+        if (Strings.isNullOrEmpty(key) || value == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(urlEncode(key) + "=" + urlEncode(value));
     }
 
     public static String urlDecode(String encodedValue) {
@@ -55,17 +73,48 @@ public final class URL {
     }
 
     public URL queryParam(String key, String value) {
-        if (Strings.isNullOrEmpty(key) || value == null) {
+        return Optional.of(toQueryString(key, value))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(this::prependQueryIfPresent)
+                .map(s -> new URL(url, s))
+                .orElse(this);
+    }
+
+    public URL queryParams(Map<String, String> map) {
+        if (Objects.isNull(map) || map.isEmpty()) {
             return this;
         }
 
-        final String queryParam = urlEncode(key) + "=" + urlEncode(value);
+        return map.entrySet()
+                .stream()
+                        .map(p -> toQueryString(p.getKey(), p.getValue()))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .reduce((p1, p2) -> p1 + "&" + p2)
+                        .map(this::prependQueryIfPresent)
+                        .map(s -> new URL(url, s))
+                        .orElse(this);
+    }
 
-        if (!Strings.isNullOrEmpty(query)) {
-            return new URL(url, query + "&" + queryParam);
+    public URL queryParams(MultivaluedMap<String, String> map) {
+        if (Objects.isNull(map) || map.isEmpty()) {
+            return this;
         }
 
-        return new URL(url, queryParam);
+        return map.entrySet()
+                        .stream()
+                        .flatMap(this::multiEntryToQueryString)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .reduce((p1, p2) -> p1 + "&" + p2)
+                        .map(this::prependQueryIfPresent)
+                        .map(s -> new URL(url, s))
+                        .orElse(this);
+    }
+
+    private Stream<Optional<String>> multiEntryToQueryString(Map.Entry<String, List<String>> m) {
+        return m.getValue().stream().map(p -> toQueryString(m.getKey(), p));
     }
 
     public URL concat(String s) {
@@ -85,8 +134,8 @@ public final class URL {
     public String getScheme() {
         return toUri().getScheme();
     }
-    
-    public URL getUrl(){
+
+    public URL getUrl() {
         return new URL(url);
     }
 
@@ -103,26 +152,17 @@ public final class URL {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         URL url1 = (URL) o;
 
-        return new EqualsBuilder()
-                .append(url, url1.url)
-                .append(query, url1.query)
-                .isEquals();
+        return new EqualsBuilder().append(url, url1.url).append(query, url1.query).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(url)
-                .append(query)
-                .toHashCode();
+        return new HashCodeBuilder(17, 37).append(url).append(query).toHashCode();
     }
 }
-

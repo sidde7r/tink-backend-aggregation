@@ -46,20 +46,9 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
 
         Map<String, ProviderConfiguration> providerConfigurations = clusterProviderHandler.getProviderConfigurationForCluster(clusterId);
 
-        List<ProviderStatusConfiguration> providerStatuses = getProviderStatuses();
+        Map<String, ProviderStatuses> providerStatusMap = getProviderStatusMap();
 
-        // Override the global status only for the values that we have in the database. (Which should be very few at a time.)
-        providerStatuses.forEach(
-                status  -> {
-                    String providerName = status.getProviderName();
-                    if (!providerConfigurations.containsKey(providerName)) {
-                        return;
-                    }
-                    providerConfigurations.get(providerName).setStatus(status.getStatus());
-                }
-        );
-
-        return StorageProviderConfigurationConverter.convert(providerConfigurations.values());
+        return StorageProviderConfigurationConverter.convert(providerConfigurations.values(), providerStatusMap);
     }
 
     @Override
@@ -73,11 +62,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
             return null;
         }
 
-        Optional<ProviderStatusConfiguration> providerStatusConfiguration = getProviderStatus(providerConfiguration);
-        providerStatusConfiguration.ifPresent(providerStatusConfiguration1 -> providerConfiguration
-                .setStatus(providerStatusConfiguration1.getStatus()));
-
-        return StorageProviderConfigurationConverter.convert(providerConfiguration);
+        return StorageProviderConfigurationConverter.convert(providerConfiguration, getProviderStatus(providerConfiguration));
     }
 
 
@@ -91,19 +76,26 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
                 .collect(Collectors.toList());
     }
 
-    private List<ProviderStatusConfiguration> getProviderStatuses() {
+    private Map<String, ProviderStatuses> getProviderStatusMap() {
         List<ProviderStatusConfiguration> providerStatusConfigurations = providerStatusConfigurationRepository.findAll();
         if (Objects.isNull(providerStatusConfigurations)) {
-            return Collections.emptyList();
+            return Collections.emptyMap();
         }
 
-        return providerStatusConfigurations;
+        return providerStatusConfigurations
+                .stream()
+                .collect(Collectors.toMap(ProviderStatusConfiguration::getProviderName, ProviderStatusConfiguration::getStatus));
     }
 
-    private Optional<ProviderStatusConfiguration> getProviderStatus(ProviderConfiguration providerConfiguration) {
+    private Optional<ProviderStatuses> getProviderStatus(ProviderConfiguration providerConfiguration) {
         ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository
                 .findOne(providerConfiguration.getName());
-        return Optional.ofNullable(providerStatusConfiguration);
+
+        if (providerConfiguration == null) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(providerStatusConfiguration.getStatus());
     }
 
     private ProviderStatusConfiguration createProviderStatusConfiguration(String providerName,

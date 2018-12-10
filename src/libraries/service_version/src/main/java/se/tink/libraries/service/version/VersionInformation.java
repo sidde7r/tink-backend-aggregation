@@ -1,4 +1,4 @@
-package se.tink.backend.common;
+package se.tink.libraries.service.version;
 
 import com.google.api.client.util.Charsets;
 import com.google.common.io.Files;

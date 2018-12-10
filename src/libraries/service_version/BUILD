@@ -1,0 +1,13 @@
+java_library(
+    name = "service-version",
+    srcs = glob(["src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/libraries/metrics:metrics",
+        "//src/libraries/serialization_utils:serialization-utils",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_http_client_google_http_client",
+
+    ],
+)
