@@ -1,16 +1,12 @@
-package se.tink.backend.common.i18n;
+package se.tink.libraries.social.security;
 
-import com.google.common.collect.Lists;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.List;
 import org.junit.Assert;
 import org.junit.ComparisonFailure;
 import org.junit.Rule;
 import org.junit.Test;
-import se.tink.backend.common.SwedishTimeRule;
-import se.tink.backend.core.Credentials;
-import se.tink.backend.core.CredentialsStatus;
+import se.tink.libraries.social.security.time.SwedishTimeRule;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
@@ -242,71 +238,6 @@ public class SocialSecurityNumberTest {
             fail("Should have been validated");
         } catch (RuntimeException e) {
         }
-    }
-    
-    @Test
-    public void testFindInValidPersonnumerCredentials() {
-        List<Credentials> credentials = Lists.newArrayList();
-        
-        Credentials credentialsInvalid = new Credentials();
-        credentialsInvalid.setUsername(pnrInvalid1);
-        credentialsInvalid.setStatus(CredentialsStatus.UPDATED);
-        
-        credentials.add(credentialsInvalid);
-        
-        SocialSecurityNumber.Sweden personNumber = SocialSecurityNumber.Sweden.findPersonNumberFromCredentials(credentials);
-        
-        Assert.assertNull(personNumber);
-    }
-    
-    @Test
-    public void testFindValidPersonnumerCredentials() {
-        List<Credentials> credentials = Lists.newArrayList();
-        
-        Credentials credentialsValid = new Credentials();
-        credentialsValid.setUsername(pnrMale1957);
-        credentialsValid.setStatus(CredentialsStatus.UPDATED);
-        
-        credentials.add(credentialsValid);
-        
-        SocialSecurityNumber.Sweden personNumber = SocialSecurityNumber.Sweden.findPersonNumberFromCredentials(credentials);
-        
-        Assert.assertNotNull(personNumber);
-    }
-    
-    @Test
-    public void testFindValidPersonnumerCredentialsFromList() {
-        List<Credentials> credentials = Lists.newArrayList();
-        
-        Credentials credentialsValid = new Credentials();
-        credentialsValid.setUsername(pnrMale1957);
-        credentialsValid.setStatus(CredentialsStatus.UPDATED);
-        
-        Credentials credentialsInValid = new Credentials();
-        credentialsInValid.setUserId(pnrInvalid2);
-        credentialsValid.setStatus(CredentialsStatus.UPDATED);
-        
-        credentials.add(credentialsValid);
-        credentials.add(credentialsInValid);        
-        
-        SocialSecurityNumber.Sweden personNumber = SocialSecurityNumber.Sweden.findPersonNumberFromCredentials(credentials);
-        
-        Assert.assertNotNull(personNumber);
-    }
-    
-    @Test
-    public void testFindValidPersonnumerEmptyFromList() {
-        List<Credentials> credentials = Lists.newArrayList();
-        SocialSecurityNumber.Sweden personNumber = SocialSecurityNumber.Sweden.findPersonNumberFromCredentials(credentials);
-        
-        Assert.assertNull(personNumber);
-    }
-    
-    @Test
-    public void testFindValidPersonnumerFromNull() {
-        SocialSecurityNumber.Sweden personNumber = SocialSecurityNumber.Sweden.findPersonNumberFromCredentials(null);
-        
-        Assert.assertNull(personNumber);
     }
 
     @Test

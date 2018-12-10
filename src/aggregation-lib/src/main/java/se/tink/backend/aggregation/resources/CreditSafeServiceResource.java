@@ -16,7 +16,7 @@ import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsu
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.common.i18n.SocialSecurityNumber;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.http.utils.HttpResponseHelper;
 
 public class CreditSafeServiceResource implements CreditSafeService {

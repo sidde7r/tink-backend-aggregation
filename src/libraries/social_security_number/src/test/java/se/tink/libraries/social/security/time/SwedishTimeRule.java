@@ -1,4 +1,4 @@
-package se.tink.backend.common;
+package se.tink.libraries.social.security.time;
 
 import java.util.TimeZone;
 import org.joda.time.DateTimeZone;

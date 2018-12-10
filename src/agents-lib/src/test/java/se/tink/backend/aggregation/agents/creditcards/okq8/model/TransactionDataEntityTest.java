@@ -5,7 +5,7 @@ import java.util.Date;
 import org.junit.Test;
 import org.junit.Rule;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.common.SwedishTimeRule;
+import se.tink.libraries.social.security.time.SwedishTimeRule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransactionDataEntityTest {

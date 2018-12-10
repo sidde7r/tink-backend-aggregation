@@ -1,18 +1,13 @@
-package se.tink.backend.common.i18n;
+package se.tink.libraries.social.security;
 
-import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.backend.core.Credentials;
-import se.tink.backend.core.CredentialsStatus;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -175,31 +170,6 @@ public class SocialSecurityNumber {
                     .append(parsedSocialSecurityNumber.substring(4, 6)).append("-")
                     .append(parsedSocialSecurityNumber.substring(6, 8)).toString();
         }
-        
-        /**
-         * Find a person number out of a list of credentials.
-         */
-        public static SocialSecurityNumber.Sweden findPersonNumberFromCredentials(List<Credentials> credentialsList) {
-            if (credentialsList != null) {
-                Credentials credentials = Iterables.find(
-                        Iterables.filter(credentialsList,
-                                c -> !Strings.isNullOrEmpty(c.getUsername())
-                                        && c.getStatus() == CredentialsStatus.UPDATED), c -> {
-                            Sweden swedish = new Sweden(c.getUsername());
-                            return swedish.isValid();
-                        }, null);
 
-                if (credentials != null) {
-
-                    String number = credentials.getUsername();
-                    SocialSecurityNumber.Sweden swedish = new SocialSecurityNumber.Sweden(number);
-
-                    if (swedish.isValid()) {
-                        return swedish;
-                    }
-                }
-            }
-            return null;
-        }
     }
 }

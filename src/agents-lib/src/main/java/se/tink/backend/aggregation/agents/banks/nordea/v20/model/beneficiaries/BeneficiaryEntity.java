@@ -9,7 +9,7 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgentUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaHashMapDeserializer;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
-import se.tink.backend.common.i18n.SocialSecurityNumber;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;

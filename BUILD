@@ -346,6 +346,7 @@ java_library(
         "//src/queue-sqs:queue-sqs",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//src/libraries/cache",
+        "//src/libraries/social_security_number:social-security-number",
         "//src/libraries/executor_utils:executor-utils",
         "//src/libraries/uuid:uuid",
         "//src/libraries/http:http-utils",
@@ -434,6 +435,7 @@ java_library(
 
         "//src/libraries/cache",
         "//src/libraries/uuid:uuid",
+        "//src/libraries/social_security_number:social-security-number",
         "//src/libraries/http:http-utils",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/discovery:discovery",
@@ -648,6 +650,7 @@ junit_test(
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/net",
         "//src/libraries/i18n",
+        "//src/libraries/social_security_number:social-security-number-test",
         "//src/libraries/strings:strings",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/cryptography:cryptography",
