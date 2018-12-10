@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
@@ -91,12 +92,11 @@ public class AvanzaV2Agent extends AbstractAgent
                     public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
                         ClientResponse response = getNext().handle(cr);
 
-                        if (response.getHeaders()
-                                .containsKey(AvanzaV2Constants.SECURITY_TOKEN_HEADER)) {
-                            authenticationToken =
-                                    response.getHeaders()
-                                            .getFirst(AvanzaV2Constants.SECURITY_TOKEN_HEADER);
-                        }
+                        authenticationToken = Optional
+                                .ofNullable(response.getHeaders())
+                                .filter(h -> h.containsKey(AvanzaV2Constants.SECURITY_TOKEN_HEADER))
+                                .map(h -> h.getFirst(AvanzaV2Constants.SECURITY_TOKEN_HEADER))
+                                .orElse(null);
 
                         return response;
                     }
