@@ -148,11 +148,12 @@ public class NordeaFiApiClient {
     // access token during a request. This method should be used by all data fetching calls
     private <T> T requestRefreshableGet(RequestBuilder request, Class<T> responseType) {
         try {
-
             return request.get(responseType);
 
         } catch (HttpResponseException hre) {
             tryRefreshAccessToken(hre);
+            // use the new access token
+            request.overrideHeader(HttpHeaders.AUTHORIZATION, getTokenType() + ' ' + getAccessToken());
         }
 
         // retry request with new access token
