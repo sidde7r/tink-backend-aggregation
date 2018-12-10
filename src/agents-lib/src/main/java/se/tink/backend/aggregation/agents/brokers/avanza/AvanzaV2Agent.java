@@ -24,6 +24,11 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.Headers;
+import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.InstrumentTypes;
+import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.Payloads;
+import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.QueryParams;
+import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.Urls;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.AccountOverviewEntity;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.LoginEntity;
@@ -92,11 +97,11 @@ public class AvanzaV2Agent extends AbstractAgent
                     public ClientResponse handle(ClientRequest cr) throws ClientHandlerException {
                         ClientResponse response = getNext().handle(cr);
 
-                        authenticationToken = Optional
-                                .ofNullable(response.getHeaders())
-                                .filter(h -> h.containsKey(AvanzaV2Constants.SECURITY_TOKEN_HEADER))
-                                .map(h -> h.getFirst(AvanzaV2Constants.SECURITY_TOKEN_HEADER))
-                                .orElse(null);
+                        authenticationToken =
+                                Optional.ofNullable(response.getHeaders())
+                                        .filter(h -> h.containsKey(Headers.SECURITY_TOKEN))
+                                        .map(h -> h.getFirst(Headers.SECURITY_TOKEN))
+                                        .orElse(null);
 
                         return response;
                     }
@@ -112,13 +117,13 @@ public class AvanzaV2Agent extends AbstractAgent
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        credentials.setSensitivePayload(AvanzaV2Constants.AUTHENTICATION_SESSION_PAYLOAD, null);
+        credentials.setSensitivePayload(Payloads.AUTHENTICATION_SESSION_PAYLOAD, null);
 
         InitiateBankIdRequest initiateBankIdRequest = new InitiateBankIdRequest();
         initiateBankIdRequest.setIdentificationNumber(credentials.getField(Field.Key.USERNAME));
 
         InitiateBankIdResponse initiateBankIdResponse =
-                createClientRequest(AvanzaV2Constants.URL_BANK_ID_INIT)
+                createClientRequest(Urls.BANK_ID_INIT)
                         .post(InitiateBankIdResponse.class, initiateBankIdRequest);
 
         credentials.setSupplementalInformation(null);
@@ -133,7 +138,7 @@ public class AvanzaV2Agent extends AbstractAgent
             ClientResponse bankIdClientResponse =
                     createClientRequest(
                                     String.format(
-                                            AvanzaV2Constants.URL_BANK_ID_COLLECT,
+                                            Urls.BANK_ID_COLLECT,
                                             initiateBankIdResponse.getTransactionId()))
                             .get(ClientResponse.class);
 
@@ -163,8 +168,7 @@ public class AvanzaV2Agent extends AbstractAgent
 
                     for (LoginEntity entity : bankIdResponse.getLogins()) {
                         ClientResponse clientResponse =
-                                createClientRequest(
-                                                AvanzaV2Constants.BASE_URL + entity.getLoginPath())
+                                createClientRequest(Urls.HOST + entity.getLoginPath())
                                         .post(ClientResponse.class, request);
 
                         int status = clientResponse.getStatus();
@@ -193,8 +197,7 @@ public class AvanzaV2Agent extends AbstractAgent
 
     private Builder createClientRequest(String url) {
         return createClientRequest(
-                url,
-                credentials.getSensitivePayload(AvanzaV2Constants.AUTHENTICATION_SESSION_PAYLOAD));
+                url, credentials.getSensitivePayload(Payloads.AUTHENTICATION_SESSION_PAYLOAD));
     }
 
     private Builder createClientRequest(String url, String authenticationSession) {
@@ -205,13 +208,11 @@ public class AvanzaV2Agent extends AbstractAgent
                         .type(MediaType.APPLICATION_JSON);
 
         if (!Strings.isNullOrEmpty(authenticationSession)) {
-            builder =
-                    builder.header(
-                            AvanzaV2Constants.AUTHENTICATION_SESSION_HEADER, authenticationSession);
+            builder = builder.header(Headers.AUTHENTICATION_SESSION, authenticationSession);
         }
 
         if (!Strings.isNullOrEmpty(authenticationToken)) {
-            builder = builder.header(AvanzaV2Constants.SECURITY_TOKEN_HEADER, authenticationToken);
+            builder = builder.header(Headers.SECURITY_TOKEN, authenticationToken);
         }
 
         return builder;
@@ -226,7 +227,7 @@ public class AvanzaV2Agent extends AbstractAgent
         }
 
         ClientResponse clientResponse =
-                createClientRequest(AvanzaV2Constants.URL_ACCOUNT_OVERVIEW, authenticationSession)
+                createClientRequest(Urls.ACCOUNTS_OVERVIEW, authenticationSession)
                         .get(ClientResponse.class);
 
         if (clientResponse.getStatus() == Status.OK.getStatusCode()) {
@@ -292,8 +293,7 @@ public class AvanzaV2Agent extends AbstractAgent
     private TransactionsResponse fetchTransactions(
             String accountId, String authenticationSession, String fromDate, String toDate) {
         return createClientRequest(
-                        String.format(
-                                AvanzaV2Constants.URL_TRANSACTIONS, accountId, fromDate, toDate),
+                        String.format(Urls.ACCOUNT_TRANSACTIONS, accountId, fromDate, toDate),
                         authenticationSession)
                 .get(TransactionsResponse.class);
     }
@@ -301,8 +301,7 @@ public class AvanzaV2Agent extends AbstractAgent
     private AccountDetailsEntity fetchAccountDetails(
             String accountId, String authenticationSession) {
         return createClientRequest(
-                        String.format(AvanzaV2Constants.URL_ACCOUNT_DETAILS, accountId),
-                        authenticationSession)
+                        String.format(Urls.ACCOUNT_DETAILS, accountId), authenticationSession)
                 .get(AccountDetailsEntity.class);
     }
 
@@ -310,9 +309,9 @@ public class AvanzaV2Agent extends AbstractAgent
             String accountId, String toDate, String authenticationSession) {
         return createClientRequest(
                         String.format(
-                                AvanzaV2Constants.URL_INVESTMENT_TRANSACTIONS,
+                                Urls.INVESTMENT_TRANSACTIONS,
                                 accountId,
-                                AvanzaV2Constants.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS,
+                                QueryParams.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS,
                                 toDate),
                         authenticationSession)
                 .get(InvestmentTransactionsResponse.class);
@@ -321,8 +320,7 @@ public class AvanzaV2Agent extends AbstractAgent
     private PositionResponse fetchInvestmentsPositions(
             String accountId, String authenticationSession) {
         return createClientRequest(
-                        String.format(AvanzaV2Constants.URL_POSITIONS, accountId),
-                        authenticationSession)
+                        String.format(Urls.INVESTMENT_POSITIONS, accountId), authenticationSession)
                 .get(PositionResponse.class);
     }
 
@@ -332,7 +330,7 @@ public class AvanzaV2Agent extends AbstractAgent
             String authenticationSession,
             Class<T> responseType) {
         return createClientRequest(
-                        String.format(AvanzaV2Constants.URL_MARKET_INFO, positionType, orderbookId),
+                        String.format(Urls.MARKET_INFO, positionType, orderbookId),
                         authenticationSession)
                 .get(responseType);
     }
