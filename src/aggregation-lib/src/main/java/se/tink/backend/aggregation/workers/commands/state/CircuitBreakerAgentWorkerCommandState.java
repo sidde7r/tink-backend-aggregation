@@ -41,7 +41,8 @@ public class CircuitBreakerAgentWorkerCommandState {
                                         configuration.getBreakCircuitBreakerThreshold(),
                                         metricRegistry,
                                         provider.getName(),
-                                        provider.getClassName());
+                                        provider.getClassName(),
+                                        provider.getMarket());
                             }
                         });
     }
