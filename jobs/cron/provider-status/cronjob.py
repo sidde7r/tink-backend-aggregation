@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+
+import requests, json, logging, sys, getopt
+from collections import defaultdict
+
+# STATUS PAGE
+STATUSPAGE_API_BASE = "https://api.statuspage.io/v1/pages/"
+NOT_CIRCUIT_BROKEN = 0
+PAGE_ID = "x1lbt12g0ryw"
+COMPONENTS_PATH = "/components/"
+
+STATUS_ENUMS = {
+    0.50: "degraded_performance",
+    0.75: "partial_outage",
+    1: "major_outage"
+}
+
+GROUP_IDS = {
+    "se": "c20kyrkjrgks"
+}
+
+# PROMETHEUS
+PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus:9090"
+
+### Queries
+PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production'}) by (provider, market)"
+INSTANCES_QUERY = "sum(up{job='tink-aggregation', environment='production'})"
+
+# LOGGING
+logger = logging.getLogger('statuspage_provider_status')
+logger.setLevel(logging.DEBUG)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+console_format = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s")
+console_handler.setFormatter(console_format)
+logger.addHandler(console_handler)
+
+
+# SCRIPT
+def create_prometheus_request(query):
+    return requests.get(PROMETHEUS_API_BASE, params = {"query": query})
+
+
+def is_valid_prometheus_response(response):
+    responsestatus = response.json()["status"]
+    if responsestatus == "error":
+        logger.error("Fetch from Prometheus failed - errorType: [%s], errorMessage: [%s]", response.json()["errorType"], response.json()["error"])
+        return False
+
+    if responsestatus != "success":
+        logger.error("Fetch from Prometheus failed with unknown error - Response: %s", json.dumps(response.json()))
+        return False
+    return True
+
+
+def group_by_market(provider_metrics, running_instances):
+    metric_by_market = defaultdict(dict)
+    providers = provider_metrics.json()["data"]["result"]
+    for provider in providers:
+        metric_by_market[provider["metric"]["market"].lower()].update({provider["metric"]["provider"]: float(provider["value"][1]) / int(running_instances)})
+    return metric_by_market
+
+
+def create_statuspage_request(method, path, apikey, payload = None, body = None):
+    url = STATUSPAGE_API_BASE + PAGE_ID + path
+    if method == "POST" or method == "PUT":
+        headers = {"Content-Type": "application/json", "Authorization": "OAuth " + apikey}
+    else:
+        headers = {"Authorization": "OAuth " + apikey}
+    return create_request(method, url, headers, payload, body)
+
+
+def create_request(method, url, headers, payload = None, body = None):
+    if method == "GET":
+        return requests.get(
+            url,
+            headers = headers,
+            params = payload
+        )
+    if method == "DELETE":
+        return requests.delete(
+            url,
+            headers = headers
+        )
+    if method == "POST":
+        return requests.post(
+            url,
+            headers = headers,
+            data = body
+        )
+    if method == "PUT":
+        return requests.put(
+            url,
+            headers = headers,
+            data = body
+        )
+
+
+def build_update_component_status_request_body(new_status):
+    return {
+        "component": {
+            "status": new_status
+        }
+    }
+
+
+def calculate_status(value):
+    if value == NOT_CIRCUIT_BROKEN:
+        return "operational"
+
+    previouslimit = NOT_CIRCUIT_BROKEN
+    for upper_limit, status in STATUS_ENUMS.items():
+        if previouslimit < value <= upper_limit:
+            return status
+        previouslimit = upper_limit
+
+
+def create_missing_components(names_of_missing_components, group_id, providers_from_prometheus, apikey):
+    logger.info("Creating missing components: [{}]".format(names_of_missing_components))
+    for component_name in names_of_missing_components:
+        provider_value = providers_from_prometheus[component_name]
+        status = calculate_status(provider_value)
+        request_body = build_missing_components_request(component_name, status, group_id)
+        r = create_statuspage_request("POST", COMPONENTS_PATH, apikey, body = json.dumps(request_body))
+        if r.status_code != 201:
+            logger.error("Failed to create missing component for component name: [{}]".format(component_name))
+
+
+def build_missing_components_request(name, status, group_id):
+    return {
+        "component": {
+            "description": "",
+            "status": status,
+            "name": name,
+            "only_show_if_degraded": True,
+            "group_id": group_id,
+            "showcase": True
+        }
+    }
+
+
+def group_by_group_id(all_components):
+    components_by_group_id = defaultdict(dict)
+    for component in all_components:
+        components_by_group_id[component["group_id"]].update({component["name"]: component["status"]})
+    return components_by_group_id
+
+
+def process_component(component_name, component_status, provider_metric_value):
+    if provider_metric_value == None:
+        logger.warning("Component exists but there are no metrics available - Provider name: [{}]".format(component_name))
+        return
+
+    new_status = calculate_status(provider_metric_value)
+
+    # Only update the status if is acctually have changed
+    if component_status == new_status:
+        return
+
+    logger.info("The status has changed, updating status [%s] -> [%s]", component_status, new_status)
+
+    payload = build_update_component_status_request_body(new_status)
+    r = create_statuspage_request("PUT", COMPONENTS_PATH, apikey, body = json.dumps(payload))
+    if r.status_code == 200:
+        logger.info("Successfully updated the status to [%s]", calculatedStatus)
+    else:
+        logger.warning("Status updated failed with statusCode [%s] and message [%s]", r.status_code, r.json()['error'])
+
+
+def main(argv):
+    # Get the api key
+    try:
+        opts, args = getopt.getopt(
+                                argv[1:],
+                                "a:",
+                                ["apikey="]
+                            )
+    except getopt.GetoptError:
+        logger.error("Could not retrieve the api key - Aborting")
+        return 1
+
+    apikey = None
+    for opt, arg in opts:
+        if opt in ("-a", "--apikey"):
+            apikey = arg
+
+    if not apikey:
+        logger.error("Missing api key")
+        return 1
+
+    logger.info("Starting cronjob to calculate provider statistics")
+
+    # Get the number of running instances for aggregation production
+    instances_metric = create_prometheus_request(INSTANCES_QUERY)
+
+    if not is_valid_prometheus_response(instances_metric):
+        return 1
+
+    total_running_instances = int(instances_metric.json()["data"]["result"][0]["value"][1])
+
+    if total_running_instances <= 0:
+        logger.error("Total running instances was [{}] - Aborting cron job".format(total_running_instances))
+        return 1
+
+    # The the circuit breaker metrics by provider
+    provider_metrics = create_prometheus_request(PROVIDERS_QUERY)
+    if not is_valid_prometheus_response(provider_metrics):
+        return 1
+
+    provider_metrics_by_market = group_by_market(provider_metrics, total_running_instances)
+    
+    # Fetch all available components
+    all_components = create_statuspage_request("GET", COMPONENTS_PATH, apikey)
+    if len(all_components.json()) == 0:
+        logger.warning("The number of total components was zero")
+        return
+
+    grouped_components = group_by_group_id(all_components.json())
+
+    # Each market is a separate component group
+    for market in GROUP_IDS.keys():
+        provider_metrics = provider_metrics_by_market[market]
+        group_id = GROUP_IDS[market]
+        components = grouped_components[group_id]
+
+        available_component_names = set()
+
+        for component_name, component_status in components.items():
+            provider_metric_value = provider_metrics.get(component_name, None)
+            process_component(component_name, component_status, provider_metric_value)
+
+        # Check if there are any providers in the metrics that don't have an corresponding component
+        # OBS! Do not change order of the comparison since it gives what is available in the first set but not the last
+        missing_components = set(provider_metrics.keys()).difference(set(components.keys()))
+        if missing_components != set():
+            create_missing_components(missing_components, group_id, provider_metrics, apikey)
+
+    logger.info("Cronjob ran successfully")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))
