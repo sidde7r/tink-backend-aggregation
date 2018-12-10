@@ -32,14 +32,14 @@ public class CircuitBreakerStatistics {
     @Inject
     public CircuitBreakerStatistics(int timeLimit, TimeUnit timeLimitUnit, List<Integer> rateLimitMultiplicationFactors,
             double errorRatioThreshold, int circuitBreakerThreshold, int breakCircuitBreakerThreshold,
-            MetricRegistry metricRegistry, String providerName, String className) {
+            MetricRegistry metricRegistry, String providerName, String className, String market) {
         this(timeLimit, timeLimitUnit, rateLimitMultiplicationFactors, errorRatioThreshold, circuitBreakerThreshold,
-                breakCircuitBreakerThreshold, metricRegistry, providerName, className, Ticker.systemTicker());
+                breakCircuitBreakerThreshold, metricRegistry, providerName, className, market, Ticker.systemTicker());
     }
 
     CircuitBreakerStatistics(int timeLimit, TimeUnit timeLimitUnit, List<Integer> rateLimitMultiplicationFactors,
             double errorRatioThreshold, int circuitBreakerThreshold, int breakCircuitBreakerThreshold,
-            MetricRegistry metricRegistry, String providerName, String className, Ticker ticker) {
+            MetricRegistry metricRegistry, String providerName, String className, String market, Ticker ticker) {
         Preconditions.checkArgument(timeLimit > 0);
         Preconditions.checkArgument(rateLimitMultiplicationFactors.size() > 0);
         Preconditions.checkArgument(errorRatioThreshold > 0);
@@ -58,7 +58,8 @@ public class CircuitBreakerStatistics {
 
         this.circuitBrokenGauge = metricRegistry.lastUpdateGauge(CIRCUIT_BROKEN_PROVIDERS
                 .label("provider", providerName)
-                .label("className", className));
+                .label("className", className)
+                .label("market", market));
     }
 
     private boolean needToReset() {

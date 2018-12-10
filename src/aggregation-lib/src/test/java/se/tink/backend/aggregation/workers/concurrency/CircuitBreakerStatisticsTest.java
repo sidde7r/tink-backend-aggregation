@@ -17,38 +17,38 @@ public class CircuitBreakerStatisticsTest {
     @Test(expected = IllegalArgumentException.class)
     public void testNonePositiveTimeLimitValidation() {
         new CircuitBreakerStatistics(0, TimeUnit.HOURS, singletonList(1), 0.5, 1, 1, new MetricRegistry(),
-                "providerName", "className");
+                "providerName", "className", "market");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNoneEmptyListOfMultiplicationFactorsValidation() {
         new CircuitBreakerStatistics(1, TimeUnit.HOURS, emptyList(), 0.5, 1, 1, new MetricRegistry(),
-                "providerName", "className");
+                "providerName", "className","market");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNonePositiveErrorRatioThresholdValidation() {
         new CircuitBreakerStatistics(1, TimeUnit.HOURS, singletonList(1), 0.0, 1, 1, new MetricRegistry(),
-                "providerName", "className");
+                "providerName", "className", "market");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNonePositiveCircuitBreakerThresholdValidation() {
         new CircuitBreakerStatistics(1, TimeUnit.HOURS, singletonList(1), 0.5, 0, 1, new MetricRegistry(),
-                "providerName", "className");
+                "providerName", "className", "market");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testNonePositiveCircuitBreakBreakerThresholdValidation() {
         new CircuitBreakerStatistics(1, TimeUnit.HOURS, singletonList(1), 0.5, 1, 0, new MetricRegistry(),
-                "providerName", "className");
+                "providerName", "className", "market");
     }
 
     @Test
     public void testNotCircuitBrokenAndMultiplicationFactorOfOneAfterInstantiation() {
         final FakeTicker ticker = new FakeTicker();
         CircuitBreakerStatistics statistics = new CircuitBreakerStatistics(1, TimeUnit.SECONDS,
-                ImmutableList.of(1, 2), 0.5, 2, 5, new MetricRegistry(), "providerName", "className", ticker);
+                ImmutableList.of(1, 2), 0.5, 2, 5, new MetricRegistry(), "providerName", "className", "market", ticker);
 
         assertFalse(statistics.getStatus().isCircuitBroken());
         assertEquals(statistics.getStatus().getRateLimitMultiplicationFactor(), 1);
@@ -60,7 +60,7 @@ public class CircuitBreakerStatisticsTest {
         final CircuitBreakerConfiguration circuitBreakerConfiguration = new CircuitBreakerConfiguration();
         CircuitBreakerStatistics statistics = new CircuitBreakerStatistics(1, TimeUnit.SECONDS,
                circuitBreakerConfiguration.getRateLimitMultiplicationFactors(), 0.5, 2, 5, new MetricRegistry(),
-                "providerName", "className", ticker);
+                "providerName", "className", "market", ticker);
 
         statistics.registerError();
         statistics.registerError();
@@ -143,7 +143,7 @@ public class CircuitBreakerStatisticsTest {
         final CircuitBreakerConfiguration circuitBreakerConfiguration = new CircuitBreakerConfiguration();
         CircuitBreakerStatistics statistics = new CircuitBreakerStatistics(1, TimeUnit.SECONDS,
                 circuitBreakerConfiguration.getRateLimitMultiplicationFactors(), 0.5, 2, 5, new MetricRegistry(),
-                "providerName", "className", ticker);
+                "providerName", "className", "market", ticker);
 
         statistics.registerError();
         statistics.registerError();
@@ -221,7 +221,7 @@ public class CircuitBreakerStatisticsTest {
     public void testNoSubsequentIfNoInput() {
         final FakeTicker ticker = new FakeTicker();
         CircuitBreakerStatistics statistics = new CircuitBreakerStatistics(1, TimeUnit.SECONDS,
-                ImmutableList.of(1, 2), 0.5, 2, 5, new MetricRegistry(), "providerName", "className", ticker);
+                ImmutableList.of(1, 2), 0.5, 2, 5, new MetricRegistry(), "providerName", "className", "market", ticker);
 
         statistics.registerError();
 
