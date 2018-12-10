@@ -70,24 +70,24 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                 .executePayment(ownAccount, transfer, createClientSha(transfer),
                         transfer.getMessageType().equals(MessageType.STRUCTURED));
 
-        boolean signed = false;
-
-        // In the app(07.04.003) signing required two times with confirmation but ends up with technical error
-        if (paymentResponse.weeklyBeneficiaryLimitReached()) {
-            throw createCancelledTransferException(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT_FOR_BENEFICIARY,
-                    TransferExecutionException.EndUserMessage.EXCESS_AMOUNT_FOR_BENEFICIARY);
-        }
+        boolean paymentRequireSigning = paymentResponse.requireSign();
 
         if (paymentResponse.requireSignOfBeneficiary()) {
             addBeneficiary(transfer, transfer.getMessageType().equals(MessageType.STRUCTURED));
-            signed = true;
+            paymentRequireSigning = false;
         }
 
-        if (paymentResponse.isDoublePayment()) {
-            apiClient.doublePayment();
+        if (paymentResponse.isErrorOrContinueChangeButtonDoublePayment()) {
+            SignProtocolResponse signProtocolResponse = apiClient.doublePayment();
+            if (signProtocolResponse.signingRequired()){
+                paymentRequireSigning = true;
+            } else if (signProtocolResponse.isError()) {
+                throw createFailedTransferException(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED,
+                        TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
+            }
         }
 
-        if (!signed && paymentResponse.requireSign()) {
+        if (paymentRequireSigning) {
             signPayments();
         }
 
@@ -160,6 +160,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
 
         if (!success) {
             checkThrowableErrors(signProtocolResponse);
+            throw createFailedTransferException(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED,
+                    TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED);
         }
     }
 

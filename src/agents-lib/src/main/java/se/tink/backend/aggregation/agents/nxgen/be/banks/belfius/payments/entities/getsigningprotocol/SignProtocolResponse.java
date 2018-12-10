@@ -50,6 +50,10 @@ public class SignProtocolResponse extends BelfiusResponse {
         return MessageResponse.transferSignFailed(this);
     }
 
+    public boolean isError() {
+        return MessageResponse.isError(this);
+    }
+
     public boolean signTempError() {
         return MessageResponse.transferSignTempError(this);
     }
@@ -60,5 +64,9 @@ public class SignProtocolResponse extends BelfiusResponse {
 
     public boolean invalidBeneficiarySign() {
         return MessageResponse.invalidBeneficiarySign(this);
+    }
+
+    public boolean signingRequired() {
+        return MessageResponse.requireSign(this);
     }
 }

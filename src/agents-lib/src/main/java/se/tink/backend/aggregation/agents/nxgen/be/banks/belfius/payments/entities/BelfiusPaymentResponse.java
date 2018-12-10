@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BelfiusPaymentResponse extends BelfiusResponse {
-    public boolean isDoublePayment() {
-        return MessageResponse.doublePaymentMessageIdentifier(this);
+    public boolean isErrorOrContinueChangeButtonDoublePayment() {
+        return MessageResponse.changeButtonErrorOrDoubleMessageIdentifier(this);
     }
 
     public boolean requireSign() {
@@ -16,10 +16,6 @@ public class BelfiusPaymentResponse extends BelfiusResponse {
 
     public boolean requireSignOfBeneficiary() {
         return MessageResponse.requireSignOfBeneficiaryLimit(this);
-    }
-
-    public boolean weeklyBeneficiaryLimitReached() {
-        return MessageResponse.beneficiaryOverWeeklyLimit(this);
     }
 }
 

@@ -56,7 +56,7 @@ public class MessageResponse extends ResponseEntity {
                 || (messageTarget != null && messageTarget.equalsIgnoreCase("internal")));
     }
 
-    public static boolean doublePaymentMessageIdentifier(BelfiusResponse response) {
+    public static boolean changeButtonErrorOrDoubleMessageIdentifier(BelfiusResponse response) {
         MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
         if (messageResponse == null) {
             return false;
@@ -90,7 +90,7 @@ public class MessageResponse extends ResponseEntity {
     }
 
     public static boolean requireSign(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.EXCEED_BENEFICIARY, "");
+        return findError(response, BelfiusConstants.Messages.SIGNING_REQUIRED, "");
     }
 
     public static boolean requireSignOfBeneficiaryLimit(BelfiusResponse response) {
@@ -110,7 +110,7 @@ public class MessageResponse extends ResponseEntity {
     }
 
     public static boolean weeklyCardLimitCode(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.WEEKLY_READER_LIMIT,BelfiusConstants.ErrorCodes.WEEKLY_READER_LIMIT_CODE);
+        return findError(response, BelfiusConstants.Messages.WEEKLY_READER_LIMIT, BelfiusConstants.ErrorCodes.WEEKLY_READER_LIMIT_CODE);
     }
 
     public static boolean invalidBeneficiarySign(BelfiusResponse response) {
