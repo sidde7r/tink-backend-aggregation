@@ -470,6 +470,12 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return this;
     }
 
+    public RequestBuilder overrideHeader(String name, Object value) {
+        headers.remove(name);
+        headers.add(name, value);
+        return this;
+    }
+
     public RequestBuilder addBasicAuth(String username, String password) {
         String value =
                 String.format(
