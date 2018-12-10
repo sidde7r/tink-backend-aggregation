@@ -6,6 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/log:log",
+        "//src/libraries/uuid",
 
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",

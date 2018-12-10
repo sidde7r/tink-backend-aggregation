@@ -20,10 +20,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Hex;
 import se.tink.libraries.log.LogUtils;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class StringUtils {
     private static final LogUtils log = new LogUtils(StringUtils.class);
@@ -34,6 +36,10 @@ public class StringUtils {
     private static final Splitter TAB_SPLITTER = Splitter.on('\t').trimResults();
     private static final Splitter COMMA_SPLITTER = Splitter.on(',').trimResults().omitEmptyStrings();
     private static final Splitter CSV_SPLITTER = Splitter.on(",").trimResults(CharMatcher.is('"'));
+
+    public static String generateUUID() {
+        return UUIDUtils.toTinkUUID(UUID.randomUUID());
+    }
 
     public static String insertPeriodically(String text, char insert, int period) {
         return text.replaceAll("(.{" + period + "})","$1" + insert);
