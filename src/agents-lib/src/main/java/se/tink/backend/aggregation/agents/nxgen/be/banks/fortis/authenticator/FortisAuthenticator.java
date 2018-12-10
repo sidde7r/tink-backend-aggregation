@@ -150,8 +150,17 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
 
         generateChallenges(res.getValue().getAuthenticationProcessId(), authenticatorFactorId, smid, agreementId,
                 deviceFingerprint);
+        getUserInfoAndPersistMuid();
 
-        UserInfoResponse userInfoResponse = null;
+        /*
+            We are unable to verify the password the user provided in the device binding flow. For that reason we also initiate the flow used in autoAuthenticate()
+         */
+        verifyPassword();
+        getUserInfoAndPersistMuid();
+    }
+
+    private void getUserInfoAndPersistMuid() throws LoginException {
+        UserInfoResponse userInfoResponse;
         try {
             userInfoResponse = apiClient.getUserInfo();
         } catch (HttpClientException hce) {
@@ -159,11 +168,6 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         }
 
         persistentStorage.put(FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
-
-        /*
-            We are unable to verify the password the user provided in the device binding flow. For that reason we also initiate the flow used in autoAuthenticate()
-         */
-        verifyPassword();
     }
 
     private void verifyPassword() throws LoginException {
@@ -227,7 +231,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             throw new IllegalStateException("Could not login during autoAuthenticate");
         }
 
-        UserInfoResponse userInfoResponse = null;
+        UserInfoResponse userInfoResponse;
         try {
             userInfoResponse = apiClient.getUserInfo();
         } catch (HttpClientException hce) {

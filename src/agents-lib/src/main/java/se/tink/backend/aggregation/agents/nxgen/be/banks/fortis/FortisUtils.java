@@ -30,11 +30,21 @@ public class FortisUtils {
         return RandomStringUtils.random(36, FortisConstants.SECURITY.A_TO_F);
     }
 
-    public static String calculateChallenge(String muid, String password, String agreementId, String challenge,
+    public static String calculateChallenge(
+            String muid,
+            String password,
+            String agreementId,
+            String challenge,
             String processId) {
 
-        return m3274(FortisConstants.ENCRYPTION.OCRA, m3277(muid, "4"), null, challenge, m3271(String.format("%s%s", password, agreementId)),
-                m3268(processId), null);
+        return m3274(
+                FortisConstants.ENCRYPTION.OCRA,
+                m3277(muid, "4"),
+                null,
+                challenge,
+                m3271(String.format("%s%s", password, agreementId)),
+                m3268(processId),
+                null);
     }
 
     private static String m3268(String str) {
@@ -109,9 +119,15 @@ public class FortisUtils {
         return new String(cArr);
     }
 
-    private static String m3274(String str, String str2, String str3, String str4, String str5, String str6, String
-            str7) {
-        int[] iArr = new int[] { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000 };
+    private static String m3274(
+            String str,
+            String str2,
+            String str3,
+            String str4,
+            String str5,
+            String str6,
+            String str7) {
+        int[] iArr = new int[] {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000};
         String str8 = "";
         int length = str.getBytes().length;
         int i = 0;
@@ -197,9 +213,15 @@ public class FortisUtils {
         }
         byte[] arr = m3280(str8, m3279(str2), (byte[]) obj);
         int i6 = arr[arr.length - 1] & 15;
-        return m3272(Integer.toString(
-                (((((arr[i6] & CertificateBody.profileType) << 24) | ((arr[i6 + 1] & 255) << 16)) | ((arr[i6 + 2] & 255)
-                        << 8)) | (arr[i6 + 3] & 255)) % iArr[intValue]), intValue, true);
+        return m3272(
+                Integer.toString(
+                        (((((arr[i6] & CertificateBody.profileType) << 24)
+                                                        | ((arr[i6 + 1] & 255) << 16))
+                                                | ((arr[i6 + 2] & 255) << 8))
+                                        | (arr[i6 + 3] & 255))
+                                % iArr[intValue]),
+                intValue,
+                true);
     }
 
     private static String m3272(String str, int i, boolean z) {
@@ -271,8 +293,9 @@ public class FortisUtils {
     }
 
     private static String m3277(String str, String str2) {
-        String toUpperCase = wlm3252(wlm3251(Base64.getDecoder().decode(str), str2.getBytes(), 32))
-                .toUpperCase();
+        String toUpperCase =
+                wlm3252(wlm3251(Base64.getDecoder().decode(str), str2.getBytes(), 32))
+                        .toUpperCase();
         if (toUpperCase.length() > 64) {
             return toUpperCase.substring(0, 64);
         }
@@ -290,5 +313,4 @@ public class FortisUtils {
         }
         return Arrays.copyOfRange(bArr3, 0, i);
     }
-
 }
