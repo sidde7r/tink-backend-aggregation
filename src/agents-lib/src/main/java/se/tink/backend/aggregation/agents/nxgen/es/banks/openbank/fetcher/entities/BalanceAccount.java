@@ -1,12 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BalanceAccount {
     @JsonProperty("fechaAperturaContrato")
-    private String contractOpenedDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date contractOpenedDate;
 
     @JsonProperty("importeLimite")
     private AmountEntity limitAmount;
@@ -44,7 +47,7 @@ public class BalanceAccount {
     @JsonProperty("importeDispuesto")
     private AmountEntity readyAmount;
 
-    public String getContractOpenedDate() {
+    public Date getContractOpenedDate() {
         return contractOpenedDate;
     }
 

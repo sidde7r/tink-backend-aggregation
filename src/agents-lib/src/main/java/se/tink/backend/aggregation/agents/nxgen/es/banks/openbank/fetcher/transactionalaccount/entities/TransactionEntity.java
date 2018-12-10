@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CategoryEntity;
@@ -10,7 +12,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entiti
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.OperacionDGO;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.date.DateUtils;
 
 @JsonObject
 public class TransactionEntity {
@@ -27,7 +28,8 @@ public class TransactionEntity {
     private String description;
 
     @JsonProperty("fechaValor")
-    private String fechaValor; // Not sure how to translate? "valueDate" doesn't sound right
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fechaValor; // Not sure how to translate? "valueDate" doesn't sound right
 
     @JsonProperty("operacionDGO")
     private OperacionDGO operacionDGO;
@@ -54,7 +56,8 @@ public class TransactionEntity {
     private int nummov;
 
     @JsonProperty("fechaOperacion")
-    private String transactionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date transactionDate;
 
     public boolean isReceipt() {
         return receipt;
@@ -72,7 +75,7 @@ public class TransactionEntity {
         return description;
     }
 
-    public String getFechaValor() {
+    public Date getFechaValor() {
         return fechaValor;
     }
 
@@ -108,7 +111,7 @@ public class TransactionEntity {
         return nummov;
     }
 
-    public String getTransactionDate() {
+    public Date getTransactionDate() {
         return transactionDate;
     }
 
@@ -116,7 +119,7 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(transactionAmount.toTinkAmount())
                 .setDescription(description)
-                .setDate(DateUtils.parseDate(transactionDate))
+                .setDate(transactionDate)
                 .build();
     }
 }

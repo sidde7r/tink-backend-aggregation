@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -52,7 +54,8 @@ public class AccountEntity {
     private Object criteria;
 
     @JsonProperty("fechaapertura")
-    private Object fechaapertura;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date fechaapertura;
 
     @JsonProperty("indicadorAcceso")
     private String indicadorAcceso;
@@ -164,7 +167,7 @@ public class AccountEntity {
         return errorCodes;
     }
 
-    public Object getFechaapertura() {
+    public Date getFechaapertura() {
         return fechaapertura;
     }
 
