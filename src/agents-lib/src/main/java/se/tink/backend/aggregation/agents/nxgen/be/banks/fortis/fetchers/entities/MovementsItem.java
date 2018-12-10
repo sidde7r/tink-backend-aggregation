@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
+import com.google.common.base.Strings;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -99,8 +100,26 @@ public class MovementsItem {
         }
     }
 
+    private String getDescription() {
+        StringBuilder builder = new StringBuilder();
+
+        if (!Strings.isNullOrEmpty(description1)) {
+            builder.append(description1 + " ");
+        }
+
+        if (!Strings.isNullOrEmpty(description2)) {
+            builder.append(description2);
+        }
+        return builder.toString();
+    }
+
     private String getTransactionDescription() {
-        return movementText;
+
+        if (!Strings.isNullOrEmpty(getDescription())) {
+            return getDescription();
+        } else {
+            return movementText;
+        }
     }
 
     private String getExternalId() {
