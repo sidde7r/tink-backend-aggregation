@@ -51,7 +51,11 @@ public class StorageProviderConfigurationConverter {
         core.setDisplayDescription(providerConfiguration.getDisplayDescription());
         core.setSupplementalFields(providerConfiguration.getSupplementalFields());
 
-        providerStatus.ifPresent(core::setStatus);
+        if (providerStatus.isPresent()) {
+            core.setStatus(providerStatus.get());
+        } else {
+            core.setStatus(providerConfiguration.getStatus());
+        }
         providerConfiguration.getRefreshSchedule().ifPresent(
                 prs -> core.setRefreshSchedule(prs)
         );
