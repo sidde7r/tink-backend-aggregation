@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.common.utils.Pair;
+import se.tink.libraries.pair.Pair;
 
 public final class BawagPskAccountTypeMappers {
     private static final Logger logger = LoggerFactory.getLogger(BawagPskAccountTypeMappers.class);

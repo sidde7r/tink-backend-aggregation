@@ -346,6 +346,7 @@ java_library(
         "//src/queue-sqs:queue-sqs",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//src/libraries/cache",
+        "//src/libraries/pair",
         "//src/libraries/social_security_number:social-security-number",
         "//src/libraries/service_version:service-version",
         "//src/libraries/executor_utils:executor-utils",
@@ -435,6 +436,7 @@ java_library(
         ":aggregationcontroller-api",
 
         "//src/libraries/cache",
+        "//src/libraries/pair",
         "//src/libraries/uuid:uuid",
         "//src/libraries/social_security_number:social-security-number",
         "//src/libraries/http:http-utils",

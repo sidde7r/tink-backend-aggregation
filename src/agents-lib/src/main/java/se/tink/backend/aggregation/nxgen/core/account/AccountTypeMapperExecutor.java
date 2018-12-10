@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account;
 import java.util.List;
 import java.util.function.Predicate;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.common.utils.Pair;
+import se.tink.libraries.pair.Pair;
 
 /** Side effects to execute when an event occurs in the AccountTypeMapper. */
 public interface AccountTypeMapperExecutor<KeyType> {
