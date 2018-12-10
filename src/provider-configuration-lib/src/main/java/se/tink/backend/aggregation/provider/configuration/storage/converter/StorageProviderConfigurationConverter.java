@@ -15,8 +15,15 @@ public class StorageProviderConfigurationConverter {
             Map<String, ProviderStatuses> providerStatusesMap) {
         return providerConfiguration
                 .stream()
-                .map(p -> StorageProviderConfigurationConverter.convert(p, Optional.ofNullable(providerStatusesMap.get(p.getName()))))
+                .map(p -> StorageProviderConfigurationConverter
+                        .convert(p, getProviderStatusIfExists(providerStatusesMap, p)))
                 .collect(Collectors.toList());
+    }
+
+    private static Optional<ProviderStatuses> getProviderStatusIfExists(
+            Map<String, ProviderStatuses> providerStatusesMap,
+            ProviderConfiguration providerConfiguration) {
+        return Optional.ofNullable(providerStatusesMap.get(providerConfiguration.getName()));
     }
 
     public static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration convert(
