@@ -67,6 +67,7 @@ import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.InstrumentTypes;
 
 /** Latest verified version: iOS v2.12.0 */
 public class AvanzaV2Agent extends AbstractAgent
@@ -490,60 +491,60 @@ public class AvanzaV2Agent extends AbstractAgent
 
         String type = positionType.toLowerCase();
         switch (type) {
-            case "auto_portfolio":
-            case "fund":
+            case InstrumentTypes.AUTO_PORTFOLIO:
+            case InstrumentTypes.FUND:
                 FundMarketInfoResponse fundMarketInfoResponse =
                         getMarketInfoResponse(
-                                "fund",
+                                InstrumentTypes.FUND,
                                 orderbookId,
                                 authenticationSession,
                                 FundMarketInfoResponse.class);
                 return fundMarketInfoResponse.getFundCompany() != null
                         ? fundMarketInfoResponse.getFundCompany().getName()
                         : null;
-            case "stock":
+            case InstrumentTypes.STOCK:
                 return getMarketInfoResponse(
                                 type,
                                 orderbookId,
                                 authenticationSession,
                                 StockMarketInfoResponse.class)
                         .getMarketPlace();
-            case "certificate":
+            case InstrumentTypes.CERTIFICATE:
                 return getMarketInfoResponse(
                                 type,
                                 orderbookId,
                                 authenticationSession,
                                 CertificateMarketInfoResponse.class)
                         .getMarketPlace();
-            case "future_forward":
+            case InstrumentTypes.FUTURE_FORWARD:
                 return getMarketInfoResponse(
                                 type,
                                 orderbookId,
                                 authenticationSession,
                                 FutureForwardMarketInfoResponse.class)
                         .getMarketPlace();
-            case "equity_linked_bond":
+            case InstrumentTypes.EQUITY_LINKED_BOND:
                 return getMarketInfoResponse(
                                 type,
                                 orderbookId,
                                 authenticationSession,
                                 EquityLinkedBondMarketInfoResponse.class)
                         .getMarketPlace();
-            case "bond":
+            case InstrumentTypes.BOND:
                 return getMarketInfoResponse(
                                 type,
                                 orderbookId,
                                 authenticationSession,
                                 BondMarketInfoResponse.class)
                         .getMarketPlace();
-            case "warrant":
+            case InstrumentTypes.WARRANT:
                 return getMarketInfoResponse(
                                 type,
                                 orderbookId,
                                 authenticationSession,
                                 WarrantMarketInfoResponse.class)
                         .getMarketPlace();
-            case "exchange_traded_fund":
+            case InstrumentTypes.EXCHANGE_TRADED_FUND:
                 return getMarketInfoResponse(
                                 type,
                                 orderbookId,
