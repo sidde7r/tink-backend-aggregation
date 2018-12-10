@@ -646,6 +646,7 @@ junit_test(
         ":agents-lib",
 
         "//src/libraries/log",
+        "//src/libraries/pair",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/metrics:metrics",
         "//src/libraries/date:date",
