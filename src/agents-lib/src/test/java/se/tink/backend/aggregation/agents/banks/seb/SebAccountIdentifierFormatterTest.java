@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.seb;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.common.utils.TestAccount;
+import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import static org.assertj.core.api.Assertions.assertThat;
 

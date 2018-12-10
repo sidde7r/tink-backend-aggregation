@@ -4,7 +4,7 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
-import se.tink.backend.common.utils.TestAccount;
+import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.date.DateUtils;

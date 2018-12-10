@@ -652,6 +652,7 @@ junit_test(
         "//src/libraries/date:date",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/account_identifier:account-identifier-test",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/net",
         "//src/libraries/i18n",
