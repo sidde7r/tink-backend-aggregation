@@ -1,0 +1,4 @@
+providerStatus:
+  cronSchedule: "*/5 * * * *"
+  startingDeadlineSeconds: 300
+  activeDeadlineSeconds: 300
