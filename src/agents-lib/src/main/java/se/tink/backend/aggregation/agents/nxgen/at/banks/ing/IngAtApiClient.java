@@ -210,12 +210,10 @@ public final class IngAtApiClient {
     public HttpResponse getXmlDocument(URL url) {
         final String urlSuffix1 = "-1.ILinkListener-nav~wrapper-hauptNavContainer-hauptnavigation-einstellungenLink";
         final URL url1 = new URL(url.toString() + urlSuffix1);
-        System.out.println("#### url1=" + url1); // FIXME!
         final HttpResponse r1 = getIt(url1);
 
         final String urlSuffix2 = "-1.ILinkListener-allgemein-persoenlicheDatenHerunterladen";
         final URL url2 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix2);
-        System.out.println("#### url2=" + url2); // FIXME!
         final HttpResponse r2 = getIt(url2);
 
         final String validationSignature = new IngAtValidationSignatureParser(r2.getBody(String.class))
@@ -224,7 +222,6 @@ public final class IngAtApiClient {
         final Form fileForm = getFileForm(validationSignature);
         final String urlSuffix3 = "-1.IBehaviorListener.1-form-datenauszugHerunterladenButton";
         final URL url3 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix3);
-        System.out.println("#### url3=" + url3); // FIXME!
         final HttpResponse r3 = postIt(url3, fileForm);
 
         //final String antiCache = new IngAtAntiCacheParser(r3.getBody(String.class)).getAntiCache()
@@ -666,6 +663,5 @@ public final class IngAtApiClient {
 
     public void keepAlive() {
         Optional<String> currentUrl = ingAtSessionStorage.getCurrentUrl();
-        System.out.println("#### IngAtApiClient: keepAlive...currentUrl=" + currentUrl); // FIXME!
     }
 }
