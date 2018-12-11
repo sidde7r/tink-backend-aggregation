@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.legacy;
 
-import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import io.dropwizard.lifecycle.Managed;
 import java.util.concurrent.atomic.AtomicReference;
@@ -21,7 +20,6 @@ public class ServiceContext implements Managed {
 
     private AnnotationConfigApplicationContext applicationContext;
     private CacheClient cacheClient;
-    private LoadingCache<Class<?>, Object> DAOs;
 
     @Inject
     public ServiceContext(CacheClient cacheClient) {
@@ -74,10 +72,6 @@ public class ServiceContext implements Managed {
             if (applicationContext != null) {
                 applicationContext.close();
                 applicationContext = null;
-            }
-
-            if (DAOs != null) {
-                DAOs = null;
             }
 
             log.info("Stopped.");
