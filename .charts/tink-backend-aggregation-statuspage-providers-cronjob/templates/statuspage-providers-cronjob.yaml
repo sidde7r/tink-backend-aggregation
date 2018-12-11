@@ -8,10 +8,10 @@ spec:
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
-  startingDeadlineSeconds: {{ .Values.providerStatusCronSchedule | default 300 }}
+  startingDeadlineSeconds: {{ .Values.providerStatusStartingDeadlineSeconds | default 300 }}
   jobTemplate:
     spec:
-      activeDeadlineSeconds: {{ .Values.providerStatusCronSchedule | default 300 }}
+      activeDeadlineSeconds: {{ .Values.providerStatusActiveDeadlineSeconds | default 300 }}
       backoffLimit: 6
       template:
         metadata:
