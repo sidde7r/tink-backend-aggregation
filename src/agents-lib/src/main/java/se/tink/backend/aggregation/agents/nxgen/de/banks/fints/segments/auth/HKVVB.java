@@ -6,12 +6,12 @@ import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConst
 
 public class HKVVB extends FinTsSegment {
 
-    public HKVVB(int segmentNumber) {
+    public HKVVB(int segmentNumber, String regNumber) {
         super(segmentNumber);
         addDataGroup(FinTsConstants.SegData.DEFAULT_BPD_VERSION);
         addDataGroup(FinTsConstants.SegData.DEFAULT_UPD_VERSION);
         addDataGroup(FinTsConstants.SegData.LANGUAGE_DE);
-        addDataGroup(FinTsConstants.TINK_FINTS_REGISTERATION);
+        addDataGroup(regNumber);
         addDataGroup(PRODUCT_VERSION);
     }
 
