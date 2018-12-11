@@ -13,6 +13,6 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_core",
         "//src/libraries/metrics:metrics",
         "//third_party:org_apache_httpcomponents_httpclient",
-
+        "//src/libraries/net",
      ]
  )
