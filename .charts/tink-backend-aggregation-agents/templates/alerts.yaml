@@ -4,4 +4,213 @@ metadata:
   name: alerts
   namespace: agents
 spec:
-  rules: []
+  rules:
+
+### Temporarily escalated alert for BE
+  - alert: LoginSuccessRateTooLowInBelgium
+    expr: |
+      # Trigger if login success rate in Belgium is too low
+       sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market='BE'}[15m])) / sum(increase(tink_agent_login_total{action="login", market='BE'}[15m])) < 0.95
+    for: 5m
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: This will alert when there is a login success rate below 95% in Belgium
+      summary: 'There was a login failure on <{ $labels.provider }>.'
+      tags: '<{ $labels.provider }>'
+
+### Too many errors in general
+    # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
+    # Threshold: old canonical threshold of 20 errors / 15 min.
+  - alert: TooManyLoggedIntegrationErrors
+    expr: sum(rate(logback_appender_total{job="tink-aggregation",at=~"^(?:se.tink.backend.aggregation.nxgen.*)$|^(?:se.tink.backend.aggregation.agents.*)$",level="error"}[5m]))
+      BY (at, job) * 15 * 60 > 20
+    for: 15m
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: Job <{ $labels.job }> has logged <{ $value }> errors past 15m in class
+        '<{ $labels.at }>'.
+      summary: Too many errors logged by <{ $labels.job }>
+
+### Provider level login failures
+  - alert: HighProviderFailedLoginRatio
+    expr: |
+      # Never trigger on providers with less than 10 login attempts past 60 minutes.
+      # This filters out small providers which are less critical to fix quickly
+      sum(increase(tink_agent_login_total{action="login"}[1h])) BY (provider) > 10 and
+      # Providers where more than 95% of the login attempts fail.
+      sum(increase(tink_agent_login_total{action="login",outcome="failed"}[30m])) BY (provider) / sum(increase(tink_agent_login_total{action="login"}[30m])) BY (provider) > 0.95
+    for: 30m
+    labels:
+      severity: ping
+      who: '#integration-oncall'
+    annotations:
+      description: To learn more check out the metric `tink_agent_login_total`. This
+        alert never triggers on providers that did less than 10 operations in the
+        past 60 minutes.
+      summary: Provider <{ $labels.provider }> has failed over 95%
+        of its login attempts the past 60 minutes.
+
+### Provider level fails
+  - alert: HighProviderErrorRatio
+    expr: |
+      # Never triggers on providers that did less than 10 operations past 60
+      # minutes. This filters out small providers which are less critical to fix
+      # quickly.
+      sum(increase(tink_executions_total[1h])) BY (provider) > 10 and
+      # Providers where over 50% of the requests have failed.
+      ratio:tink_provider_errors:delta60m > 50
+    for: 15m
+    labels:
+      severity: ping
+      who: '#integration-oncall'
+    annotations:
+      description: Investigate further in https://kibana.global.tink.network/goto/e0e04ba547d2d76936afa0788febabc8
+        (and possibly add the provider in search query). This alert never triggers
+        on providers that did less than 10 operations past 60 minutes.
+      summary: Provider <{ $labels.provider }> has failed over 50%
+        of its operations the past 60 minutes
+
+### Not able to refresh certain refreshable items
+  - alert: ProviderNotAbleToFetchCheckingAccounts
+    expr: |
+      sum(increase(tink_accounts_refresh_total[1h])) BY (provider) > 10 and
+      ratio:tink_no_checking_accounts_fetched:delta1h > 0.99 and
+      ratio:tink_no_checking_accounts_fetched:delta1w < 0.2
+    for: 2h
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: No checking accounts fetched for <{ $labels.provider }>
+        for 2 hours. Over 80% of users used to have checking accounts.
+      summary: No checking accounts fetched for <{ $labels.provider }>
+        for 2 hours.
+
+  - alert: ProviderNotAbleToFetchSavingAccounts
+    expr: |
+      sum(increase(tink_accounts_refresh_total[1h])) BY (provider) > 10 and
+      ratio:tink_no_savings_accounts_fetched:delta1h > 0.99 and
+      ratio:tink_no_savings_accounts_fetched:delta1w < 0.8
+    for: 2h
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: No savings accounts fetched for <{ $labels.provider }>
+        for 2 hours. Over 20% of users used to have saving accounts.
+      summary: No savings accounts fetched for <{ $labels.provider }>
+        for 2 hours.
+
+  - alert: ProviderNotAbleToFetchCreditCardAccounts
+    expr: |
+      sum(increase(tink_accounts_refresh_total[1h])) BY (provider) > 10 and
+      ratio:tink_no_creditcards_accounts_fetched:delta1h > 0.99 and
+      ratio:tink_no_creditcards_accounts_fetched:delta1w < 0.85
+    for: 2h
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: No credit card accounts fetched for <{ $labels.provider }>
+        for 2 hours. Over 15% of users used to have credit card accounts.
+      summary: No credit card accounts fetched for <{ $labels.provider }>
+        for 2 hours.
+
+  - alert: ProviderNotAbleToFetchInvestmentAccounts
+    expr: |
+      sum(increase(tink_accounts_refresh_total[1h])) BY (provider) > 10 and
+      ratio:tink_no_investment_accounts_fetched:delta1h > 0.99 and
+      ratio:tink_no_investment_accounts_fetched:delta1w < 0.9
+    for: 2h
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: No investment accounts fetched for <{ $labels.provider }>
+        for 2 hours. Over 15% of users used to have investment accounts.
+      summary: No investment card accounts fetched for <{ $labels.provider }>
+        for 2 hours.
+
+  - alert: ProviderNotAbleToFetchLoanAccounts
+    expr: |
+      sum(increase(tink_accounts_refresh_total[1h])) BY (provider) > 10 and
+      ratio:tink_no_loan_accounts_fetched:delta1h > 0.99 and
+      ratio:tink_no_loan_accounts_fetched:delta1w < 0.9
+    for: 2h
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: No loan accounts fetched for <{ $labels.provider }>
+        for 2 hours. Over 15% of users used to have loan accounts.
+      summary: No loan card accounts fetched for <{ $labels.provider }>
+        for 2 hours.
+
+### Precomputations.
+    # Calculate the ratio of not fetching any accounts (with certain type)
+    # over certain interval of time.
+  - record: ratio:tink_no_checking_accounts_fetched:delta1h
+    expr: sum(increase(tink_no_accounts_fetched_total {type="CHECKING"} [1h])) BY (provider)
+        / sum(increase(tink_accounts_refresh_total[1h])) BY (provider)
+  - record: ratio:tink_no_savings_accounts_fetched:delta1h
+    expr: sum(increase(tink_no_accounts_fetched_total {type="SAVINGS"} [1h])) BY (provider)
+        / sum(increase(tink_accounts_refresh_total[1h])) BY (provider)
+
+  - record: ratio:tink_no_creditcards_accounts_fetched:delta1h
+    expr: sum(increase(tink_no_accounts_fetched_total {type="CREDIT_CARD"} [1h])) BY (provider)
+        / sum(increase(tink_accounts_refresh_total[1h])) BY (provider)
+
+  - record: ratio:tink_no_investment_accounts_fetched:delta1h
+    expr: sum(increase(tink_no_accounts_fetched_total {type="INVESTMENT"} [1h])) BY (provider)
+        / sum(increase(tink_accounts_refresh_total[1h])) BY (provider)
+
+  - record: ratio:tink_no_loan_accounts_fetched:delta1h
+    expr: sum(increase(tink_no_accounts_fetched_total {type="LOAN"} [1h])) BY (provider)
+        / sum(increase(tink_accounts_refresh_total[1h])) BY (provider)
+
+    # Calculate the the ration of provider errors (without authentication errors).
+  - record: ratio:tink_provider_errors:delta60m
+    expr: 100 * ((sum(increase(tink_temporary_errors_total[1h])) BY (provider)) /
+      (sum(increase(tink_executions_total[1h])) BY (provider)))
+
+### Only production ###
+  {{- if eq .Values.Environment "production" }}
+  # Trigger on providers that have been circuit broken more than 4 hours on all instances
+  - alert: ProviderCircuitBrokenForTooLong
+    expr: |
+       (count(tink_circuit_broken_providers{provider  !~ "(no|dk|fi|es|fr|de|it|gb)-.*"} == 1) BY (provider)
+       / count(tink_circuit_broken_providers) BY (provider)) == 1
+    for: 4h
+    labels:
+      severity: urgent
+      who: integration
+    annotations:
+      description: This will alert when a provider has been circuit broken for more
+        than four hours on all instances. When a provider is circuit broken we still
+        let some traffic through to test if the status is better, but we limit the
+        rate at which we let connections through.
+      summary: '<{ $labels.provider }> has been circuit broken for four hours on all instances'
+      tags: '<{ $labels.provider }>'
+
+  # Trigger on providers that have been circuit broken more than 4 hours on all instances. Notify the team so they prioritize accordingly.
+  - alert: NonUrgentProviderCircuitBrokenForTooLong
+    expr: |
+       (count(tink_circuit_broken_providers{provider  =~ "(no|dk|fi|es|fr|de|it|gb)-.*"} == 1) BY (provider)
+       / count(tink_circuit_broken_providers) BY (provider)) == 1
+    for: 4h
+    labels:
+      severity: ping
+      who: '#integration-oncall'
+    annotations:
+      description: This will alert when a provider has been circuit broken for more
+        than four hours on all instances. When a provider is circuit broken we still
+        let some traffic through to test if the status is better, but we limit the
+        rate at which we let connections through. Don't forget to notify the team
+        about non-urgent alerts like this one, during office hours.
+      summary: '<{ $labels.provider }> has been circuit broken for four hours on all instances'
+      tags: '<{ $labels.provider }>'
+  {{- end }}
