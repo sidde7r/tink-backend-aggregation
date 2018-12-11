@@ -214,4 +214,3 @@ spec:
       summary: '<{ $labels.provider }> has been circuit broken for four hours on all instances'
       tags: '<{ $labels.provider }>'
   {{- end }}
-  
