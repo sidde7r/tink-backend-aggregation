@@ -248,6 +248,7 @@ java_library(
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:joda_time_joda_time",
         "//third_party:org_apache_commons_commons_math3",
+        "//third_party:org_apache_httpcomponents_httpclient",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_apache_lucene_lucene_core",
