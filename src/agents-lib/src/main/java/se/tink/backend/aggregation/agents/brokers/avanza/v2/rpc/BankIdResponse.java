@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
-
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.LoginEntity;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

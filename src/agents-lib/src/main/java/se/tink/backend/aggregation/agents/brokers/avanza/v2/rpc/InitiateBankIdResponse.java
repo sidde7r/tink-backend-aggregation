@@ -31,5 +31,4 @@ public class InitiateBankIdResponse {
     public void setExpires(String expires) {
         this.expires = expires;
     }
-
 }

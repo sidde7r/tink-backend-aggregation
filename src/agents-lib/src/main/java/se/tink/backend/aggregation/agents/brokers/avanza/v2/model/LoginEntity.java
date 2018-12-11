@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.brokers.avanza.v2.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginEntity {
@@ -34,7 +33,7 @@ public class LoginEntity {
     public void setUsername(String username) {
         this.username = username;
     }
-    
+
     public List<AccountSummaryEntity> getAccounts() {
         return accounts;
     }
