@@ -35,13 +35,9 @@ spec:
               privileged: false
             command:
             - "/opt/provider_status/cronjob.py"
-            - "-a"
-            - "change_me"
-            volumeMounts:
-            - name: config
-              mountPath: /etc/credentials_service
-              readOnly: true
-          volumes:
-          - name: config
-            secret:
-              secretName: statuspage-providers-cronjob
+            env:
+              - name: STATUSPAGE_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: statuspage-providers-cronjob
+                    key: api-key
