@@ -49,7 +49,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.integrations.SbabIntegrationConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabLegacyConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.DocumentIdentifier;
@@ -110,7 +110,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        SbabIntegrationConfiguration sbabConfiguration = configuration.getIntegrations().getSbab();
+        SbabLegacyConfiguration sbabConfiguration = configuration.getIntegrations().getSbabLegacy();
 
         if (sbabConfiguration != null) {
             authenticationClient.setConfiguration(sbabConfiguration);

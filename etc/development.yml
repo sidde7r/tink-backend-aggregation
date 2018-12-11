@@ -102,7 +102,7 @@ notifications:
 
 agentsServiceConfiguration:
   integrations:
-    sbab:
+    sbabLegacy:
       signBaseUrl: https://secure.sbab.se
     fints:
       regNumber: "dummyId"

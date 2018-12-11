@@ -23,7 +23,7 @@ data:
         collectorSubscriptionKey: ASK_JOHANNES
 
       integrations:
-        sbab:
+        sbabLegacy:
           signBaseUrl: https://secure.sbab.se
         monzo:
           tink:

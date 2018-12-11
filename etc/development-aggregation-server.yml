@@ -33,7 +33,7 @@ cache:
 
 agentsServiceConfiguration:
   integrations:
-    sbab:
+    sbabLegacy:
       signBaseUrl: https://secure.sbab.se
   creditsafe:
     username: TINKTESTIN
