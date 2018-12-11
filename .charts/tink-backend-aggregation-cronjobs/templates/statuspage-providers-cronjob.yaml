@@ -4,14 +4,14 @@ metadata:
   name: statuspage-providers-cronjob
   namespace: aggregation-cronjobs
 spec:
-  schedule: "{{ .Values.providerStatus.cronSchedule | default "0/30 * * * *" }}"
+  schedule: "{{ .Values.providerStatusCronSchedule | default "0/30 * * * *" }}"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
-  startingDeadlineSeconds: {{ .Values.providerStatus.startingDeadlineSeconds | default 300 }}
+  startingDeadlineSeconds: {{ .Values.providerStatusCronSchedule | default 300 }}
   jobTemplate:
     spec:
-      activeDeadlineSeconds: {{ .Values.providerStatus.activeDeadlineSeconds | default 300 }}
+      activeDeadlineSeconds: {{ .Values.providerStatusCronSchedule | default 300 }}
       backoffLimit: 6
       template:
         metadata:
