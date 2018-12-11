@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.SubItemsEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.SubcardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TimelineEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineResponse;
@@ -55,10 +57,20 @@ public class AmericanExpressV62TransactionFetcher
                 config.createTimelineRequest(Integer.valueOf(account.getBankIdentifier()));
         TimelineResponse timelineResponse = client.requestTimeline(timelineRequest);
 
-        return getPendingTransactionsFor(timelineResponse.getTimeline());
+        return getPendingTransactionsFor(account, timelineResponse.getTimeline());
     }
 
-    private List<Transaction> getPendingTransactionsFor(TimelineEntity timeline) {
+    private List<Transaction> getPendingTransactionsFor(
+            CreditCardAccount account, TimelineEntity timeline) {
+
+        List<SubcardEntity> partnerCards =
+                timeline.getCardList()
+                        .stream()
+                        .filter(
+                                subCard ->
+                                        AmericanExpressV62Predicates.isPartnerCard.test(
+                                                account, subCard))
+                        .collect(Collectors.toList());
 
         List<String> pendingIdList =
                 Optional.ofNullable(timeline.getTimelineItems())
@@ -75,6 +87,10 @@ public class AmericanExpressV62TransactionFetcher
                 pendingIdList
                         .stream()
                         .map(id -> timeline.getTransactionMap().get(id))
+                        .filter(
+                                transaction ->
+                                        AmericanExpressV62Predicates.filterPartnerTransactions.test(
+                                                transaction, partnerCards))
                         .map(t -> t.toTransaction(config, true))
                         .collect(Collectors.toList()));
 
