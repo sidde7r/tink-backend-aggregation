@@ -1,6 +1,7 @@
 package se.tink.libraries.cache;
 
 import java.io.IOException;
+import javax.annotation.PreDestroy;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.ConnectionFactory;
 import net.spy.memcached.MemcachedClient;
@@ -44,7 +45,9 @@ public class MemcacheClient implements CacheClient {
     }
 
     @Override
+    @PreDestroy
     public void shutdown() {
         memcachedClient.shutdown();
+        log.debug("Stopped memcached client");
     }
 }
