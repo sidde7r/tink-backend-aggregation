@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
+import com.amazonaws.codegen.model.service.Http;
 import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Optional;
@@ -69,13 +70,13 @@ public class IngApiClient {
         this.client.request(trustBuilderUrl).post(HttpResponse.class, trustBuilderRequestBody);
     }
 
-    public void trustBuilderLogin(String url, String ingId, String virtualCardNumber, int otp,
+    public HttpResponse trustBuilderLogin(String url, String ingId, String virtualCardNumber, int otp,
             String deviceId, String psn) {
         TrustBuilderRequestBody trustBuilderRequestBody = new TrustBuilderRequestBody(
                 ingId, virtualCardNumber, Integer.toString(otp), deviceId, psn, false);
         URL trustBuilderUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
-        this.client.request(trustBuilderUrl).post(HttpResponse.class, trustBuilderRequestBody);
+       return this.client.request(trustBuilderUrl).post(HttpResponse.class, trustBuilderRequestBody);
     }
 
     public HttpResponse initEnroll(String url, String username, String cardNumber, String deviceId) {
@@ -124,8 +125,7 @@ public class IngApiClient {
         URL loginUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
         return this.client.request(loginUrl)
-                .post(LoginResponse.class, loginRequestBody)
-                .getMobileResponse();
+                .post(LoginResponse.class, loginRequestBody).getMobileResponse();
     }
 
     public HttpResponse getMenuItems() {
