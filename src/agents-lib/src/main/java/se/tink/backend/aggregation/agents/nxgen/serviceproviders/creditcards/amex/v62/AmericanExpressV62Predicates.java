@@ -63,7 +63,7 @@ public class AmericanExpressV62Predicates {
                     !partnerCards
                             .stream()
                             .map(card -> card.getSuppIndex())
-                            .filter(subIndex -> subIndex.equals(transaction.getSuppIndex()))
+                            .filter(subIndex -> !subIndex.equals(transaction.getSuppIndex()))
                             .collect(Collectors.toList())
                             .isEmpty();
 
