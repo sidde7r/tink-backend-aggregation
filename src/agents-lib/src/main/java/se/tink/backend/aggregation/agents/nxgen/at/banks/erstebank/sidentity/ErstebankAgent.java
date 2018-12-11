@@ -31,7 +31,7 @@ public class ErstebankAgent extends NextGenerationAgent {
 
     public ErstebankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.ersteBankApiClient = new ErsteBankApiClient(client, sessionStorage, persistentStorage);
+        this.ersteBankApiClient = new ErsteBankApiClient(client, persistentStorage);
     }
 
     @Override

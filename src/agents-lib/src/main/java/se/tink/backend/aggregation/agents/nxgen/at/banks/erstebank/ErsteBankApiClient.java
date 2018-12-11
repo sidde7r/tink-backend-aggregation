@@ -15,17 +15,14 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class ErsteBankApiClient {
 
     private final TinkHttpClient client;
-    private final SessionStorage storage;
     private final PersistentStorage persistentStorage;
 
-    public ErsteBankApiClient(TinkHttpClient client, SessionStorage storage, PersistentStorage persistentStorage) {
+    public ErsteBankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        this.storage = storage;
         this.persistentStorage = persistentStorage;
 
         //This is required, otherwise TinkHttpClient throws exception due to deeplink redirect
@@ -101,7 +98,7 @@ public class ErsteBankApiClient {
     }
 
     public TokenEntity getTokenFromStorage() {
-        return storage.get(ErsteBankConstants.STORAGE.TOKEN_ENTITY, TokenEntity.class)
+        return persistentStorage.get(ErsteBankConstants.STORAGE.TOKEN_ENTITY, TokenEntity.class)
                 .orElseThrow(() -> new NoSuchElementException("Token missing"));
     }
 
@@ -145,12 +142,12 @@ public class ErsteBankApiClient {
     }
 
     public void saveToken(TokenEntity tokenEntity) {
-        storage.put(ErsteBankConstants.STORAGE.TOKEN_ENTITY, tokenEntity);
+        persistentStorage.put(ErsteBankConstants.STORAGE.TOKEN_ENTITY, tokenEntity);
     }
 
 
     public boolean tokenExists() {
-        return storage.containsKey(ErsteBankConstants.STORAGE.TOKEN_ENTITY);
+        return persistentStorage.containsKey(ErsteBankConstants.STORAGE.TOKEN_ENTITY);
     }
 
     // Sidentity
