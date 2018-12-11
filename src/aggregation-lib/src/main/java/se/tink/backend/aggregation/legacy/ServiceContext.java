@@ -9,12 +9,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
-import se.tink.libraries.repository.config.DatabaseConfiguration;
-import se.tink.libraries.repository.config.repository.PersistenceUnit;
-import se.tink.libraries.repository.config.repository.SingletonRepositoryConfiguration;
 import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.log.legacy.LogUtils;
 
@@ -29,7 +25,6 @@ public class ServiceContext implements Managed {
 
     private AnnotationConfigApplicationContext applicationContext;
     private CacheClient cacheClient;
-    private final AggregationServiceConfiguration configuration;
     private LoadingCache<Class<?>, Object> DAOs;
 
     private ListenableThreadPoolExecutor<Runnable> trackingExecutorService;
@@ -41,12 +36,10 @@ public class ServiceContext implements Managed {
     private ListenableThreadPoolExecutor<Runnable> executorService;
 
     @Inject
-    public ServiceContext(final AggregationServiceConfiguration configuration,
-            CacheClient cacheClient,
+    public ServiceContext(CacheClient cacheClient,
             @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
             @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService) {
         this.cacheClient = cacheClient;
-        this.configuration = configuration;
         this.executorService = executorService;
         this.trackingExecutorService = trackingExecutorService;
     }
@@ -74,19 +67,6 @@ public class ServiceContext implements Managed {
             log.info("Already started. Not starting again.");
             return;
         }
-
-        log.info("Starting...");
-
-        final DatabaseConfiguration databaseConfiguration = configuration.getDatabase();
-        PersistenceUnit persistenceUnit = null;
-        if (databaseConfiguration.isEnabled()) {
-            SingletonRepositoryConfiguration.setConfiguration(databaseConfiguration);
-            persistenceUnit = PersistenceUnit.fromName(
-                    databaseConfiguration.getPersistenceUnitName());
-            applicationContext = new AnnotationConfigApplicationContext(persistenceUnit.getConfiguratorKlass());
-        }
-
-        log.info("Started.");
     }
 
     /**
