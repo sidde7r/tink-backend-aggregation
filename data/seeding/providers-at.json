@@ -636,7 +636,7 @@
             "name": "at-ingdiba-password",
             "displayName": "ING-DiBa",
             "groupDisplayName": "ING-DiBa",
-            "popular": true,
+            "popular": false,
             "status": "ENABLED",
             "type": "BANK",
             "credentialsType": "PASSWORD",
