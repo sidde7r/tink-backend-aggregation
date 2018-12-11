@@ -2,16 +2,12 @@ package se.tink.backend.aggregation.legacy;
 
 import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 import io.dropwizard.lifecycle.Managed;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.tink.libraries.cache.CacheClient;
-import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
-import se.tink.libraries.executor.ExecutorServiceUtils;
 import se.tink.libraries.log.legacy.LogUtils;
 
 /**
@@ -27,21 +23,9 @@ public class ServiceContext implements Managed {
     private CacheClient cacheClient;
     private LoadingCache<Class<?>, Object> DAOs;
 
-    private ListenableThreadPoolExecutor<Runnable> trackingExecutorService;
-
-    /**
-     * Thread pool used for queuing various general asynchronous tasks. Mostly used to return faster to HTTP clients.
-     */
-
-    private ListenableThreadPoolExecutor<Runnable> executorService;
-
     @Inject
-    public ServiceContext(CacheClient cacheClient,
-            @Named("executor") ListenableThreadPoolExecutor<Runnable> executorService,
-            @Named("trackingExecutor") ListenableThreadPoolExecutor<Runnable> trackingExecutorService) {
+    public ServiceContext(CacheClient cacheClient) {
         this.cacheClient = cacheClient;
-        this.executorService = executorService;
-        this.trackingExecutorService = trackingExecutorService;
     }
 
     private enum ManagedState {
@@ -51,10 +35,6 @@ public class ServiceContext implements Managed {
     }
 
     private AtomicReference<ManagedState> managedState = new AtomicReference<>(ManagedState.STOPPED);
-
-    public void execute(final Runnable runnable) {
-        executorService.execute(runnable);
-    }
 
     /**
      * Start the {@link ServiceContext}. Must support being called multiple times.
@@ -85,20 +65,6 @@ public class ServiceContext implements Managed {
 
         try {
             log.info("Stopping...");
-
-            if (executorService != null) {
-                ExecutorServiceUtils.shutdownExecutor("ServiceContext#executorService", executorService, 2,
-                        TimeUnit.MINUTES);
-                executorService = null;
-            }
-
-            // Needs to be shut down after executorService since executorService is more likely to submit to
-            // trackingService than the other way around.
-            if (trackingExecutorService != null) {
-                ExecutorServiceUtils.shutdownExecutor("ServiceContext#trackingService", trackingExecutorService, 20,
-                        TimeUnit.SECONDS);
-                trackingExecutorService = null;
-            }
 
             if (cacheClient != null) {
                 cacheClient.shutdown();
