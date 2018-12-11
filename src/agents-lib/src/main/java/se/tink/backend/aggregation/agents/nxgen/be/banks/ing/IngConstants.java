@@ -20,6 +20,9 @@ public class IngConstants {
     public static final class Headers {
         public static final String USER_AGENT = "Mozilla/5.0 (iPhone8,1; U; CPU OS 10.3.1 like Mac OS X; en-us) "
                 + "AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10; MyING.be/8.4";
+
+        public static final String LOCATION = "location";
+        public static final String ERROR_CODE_WRONG_OTP = "ERROR_CODE=399";
     }
 
     static final class Crypto {
