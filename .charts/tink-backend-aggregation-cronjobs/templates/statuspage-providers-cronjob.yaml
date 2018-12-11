@@ -2,7 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: statuspage-providers-cronjob
-  namespace: aggregation-cronjobs
+  namespace: statuspage-providers-cronjob
 spec:
   schedule: "{{ .Values.providerStatusCronSchedule | default "0/30 * * * *" }}"
   concurrencyPolicy: Forbid
