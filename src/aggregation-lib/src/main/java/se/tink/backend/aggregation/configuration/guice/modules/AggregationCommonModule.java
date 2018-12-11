@@ -53,40 +53,6 @@ public class AggregationCommonModule extends AbstractModule {
         bind(HeapDumpGauge.class).in(Scopes.SINGLETON);
     }
 
-    @Provides
-    @Singleton
-    @Named("executor")
-    public ListenableThreadPoolExecutor<Runnable> provideApplicationExecutor(MetricRegistry metricRegistry) {
-        BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> executorServiceQueue = Queues
-                .newLinkedBlockingQueue();
-        ThreadFactory executorServiceThreadFactory = new ThreadFactoryBuilder()
-                .setNameFormat("executor-service-thread-%d")
-                .build();
-
-        return ListenableThreadPoolExecutor.builder(
-                executorServiceQueue,
-                new TypedThreadPoolBuilder(20, executorServiceThreadFactory))
-                .withMetric(metricRegistry, "executor_service")
-                .build();
-    }
-
-    @Provides
-    @Singleton
-    @Named("trackingExecutor")
-    public ListenableThreadPoolExecutor<Runnable> provideTrackingExecutor(MetricRegistry metricRegistry) {
-        BlockingQueue<WrappedRunnableListenableFutureTask<Runnable, ?>> executorServiceQueue = Queues
-                .newLinkedBlockingQueue();
-        ThreadFactory executorServiceThreadFactory = new ThreadFactoryBuilder()
-                .setNameFormat("service-context-tracking-thread-%d")
-                .build();
-
-        return ListenableThreadPoolExecutor.builder(
-                executorServiceQueue,
-                new TypedThreadPoolBuilder(10, executorServiceThreadFactory))
-                .withMetric(metricRegistry, "tracking_executor_service")
-                .build();
-    }
-
     private static class CacheProvider implements Provider<CacheClient> {
         private static final MetricId PRIMARY_METRIC_NAME = MetricId.newId("caches")
                 .label("hierarchy", "primary");

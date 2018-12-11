@@ -6,11 +6,15 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.PreDestroy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.Timer;
 
 public class CacheInstrumentationDecorator implements CacheClient {
+    private static final Logger logger = LoggerFactory.getLogger(CacheInstrumentationDecorator.class);
 
     private final CacheClient delegate;
 
@@ -94,7 +98,9 @@ public class CacheInstrumentationDecorator implements CacheClient {
     }
 
     @Override
+    @PreDestroy
     public void shutdown() {
         delegate.shutdown();
+        logger.debug("Stopped CacheInstrumentationDecorator");
     }
 }

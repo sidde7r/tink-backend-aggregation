@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.storage.debug.AgentDebugLocalStorage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugS3Storage;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorker;
-import se.tink.backend.aggregation.legacy.ServiceContext;
 import se.tink.libraries.http.client.RequestTracingFilter;
 import se.tink.libraries.jersey.guice.JerseyResourceRegistrar;
 import se.tink.libraries.jersey.logging.AccessLoggingFilter;
@@ -51,9 +50,6 @@ public class AggregationModule extends AbstractModule {
         bind(ControllerWrapperProvider.class).in(Scopes.SINGLETON);
         bind(AggregatorInfoProvider.class).in(Scopes.SINGLETON);
         bind(ClientConfigurationProvider.class).in(Scopes.SINGLETON);
-
-        // TODO Remove these lines after getting rid of dependencies on ServiceContext
-        bind(ServiceContext.class).in(Scopes.SINGLETON);
 
         bind(AggregationService.class).to(AggregationServiceResource.class);
         bind(CreditSafeService.class).to(CreditSafeServiceResource.class);
