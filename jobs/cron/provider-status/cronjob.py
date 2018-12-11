@@ -166,7 +166,7 @@ def process_component(component_name, component_status, provider_metric_value):
     payload = build_update_component_status_request_body(new_status)
     r = create_statuspage_request("PUT", COMPONENTS_PATH, body = json.dumps(payload))
     if r.status_code == 200:
-        logger.info("Successfully updated the status to [%s]", calculatedStatus)
+        logger.info("Successfully updated the status to [%s]", new_status)
     else:
         logger.warning("Status updated failed with statusCode [%s] and message [%s]", r.status_code, r.json()['error'])
 
