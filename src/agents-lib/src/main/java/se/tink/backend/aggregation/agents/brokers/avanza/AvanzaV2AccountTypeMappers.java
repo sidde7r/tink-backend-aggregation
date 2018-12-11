@@ -44,44 +44,46 @@ public final class AvanzaV2AccountTypeMappers {
     }
 
     private AccountTypeMapper getAccountTypeMapper() {
-        if (accountTypeMapper == null) {
-            accountTypeMapper =
-                    AccountTypeMapper.builder()
-                            .put(
-                                    AccountTypes.INVESTMENT,
-                                    AvanzaAccountTypes.AKTIE_FONDKONTO,
-                                    AvanzaAccountTypes.INVESTERINGSSPARKONTO,
-                                    AvanzaAccountTypes.KAPITALFORSAKRING)
-                            .put(
-                                    AccountTypes.SAVINGS,
-                                    AvanzaAccountTypes.SPARKONTO,
-                                    AvanzaAccountTypes.SPARKONTOPLUS)
-                            .put(
-                                    AccountTypes.PENSION,
-                                    AvanzaAccountTypes.TJANSTEPENSION,
-                                    AvanzaAccountTypes.PENSIONSFORSAKRING,
-                                    AvanzaAccountTypes.IPS)
-                            .build();
-        }
+        accountTypeMapper =
+                Optional.ofNullable(accountTypeMapper)
+                        .orElse(
+                                AccountTypeMapper.builder()
+                                        .put(
+                                                AccountTypes.INVESTMENT,
+                                                AvanzaAccountTypes.AKTIE_FONDKONTO,
+                                                AvanzaAccountTypes.INVESTERINGSSPARKONTO,
+                                                AvanzaAccountTypes.KAPITALFORSAKRING)
+                                        .put(
+                                                AccountTypes.SAVINGS,
+                                                AvanzaAccountTypes.SPARKONTO,
+                                                AvanzaAccountTypes.SPARKONTOPLUS)
+                                        .put(
+                                                AccountTypes.PENSION,
+                                                AvanzaAccountTypes.TJANSTEPENSION,
+                                                AvanzaAccountTypes.PENSIONSFORSAKRING,
+                                                AvanzaAccountTypes.IPS)
+                                        .build());
+
         return accountTypeMapper;
     }
 
     private AccountTypePredicateMapper<String> getAccountTypeFallbackMapper() {
-        if (accountTypeFallbackMapper == null) {
-            accountTypeFallbackMapper =
-                    AccountTypePredicateMapper.<String>builder()
-                            .setExecutor(new AvanzaV2AccountTypeMapperExecutor())
-                            .fallbackValue(
-                                    AccountTypes.PENSION,
-                                    codeMatches(AvanzaFallbackAccountTypes.PENSION))
-                            .fallbackValue(
-                                    AccountTypes.SAVINGS,
-                                    codeMatches(AvanzaFallbackAccountTypes.SPARKONTO))
-                            .fallbackValue(
-                                    AccountTypes.LOAN,
-                                    codeMatches(AvanzaFallbackAccountTypes.KREDIT))
-                            .build();
-        }
+        accountTypeFallbackMapper =
+                Optional.ofNullable(accountTypeFallbackMapper)
+                        .orElse(
+                                AccountTypePredicateMapper.<String>builder()
+                                        .setExecutor(new AvanzaV2AccountTypeMapperExecutor())
+                                        .fallbackValue(
+                                                AccountTypes.PENSION,
+                                                codeMatches(AvanzaFallbackAccountTypes.PENSION))
+                                        .fallbackValue(
+                                                AccountTypes.SAVINGS,
+                                                codeMatches(AvanzaFallbackAccountTypes.SPARKONTO))
+                                        .fallbackValue(
+                                                AccountTypes.LOAN,
+                                                codeMatches(AvanzaFallbackAccountTypes.KREDIT))
+                                        .build());
+
         return accountTypeFallbackMapper;
     }
 
