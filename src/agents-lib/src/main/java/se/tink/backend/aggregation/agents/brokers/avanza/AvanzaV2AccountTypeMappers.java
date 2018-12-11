@@ -35,7 +35,7 @@ public final class AvanzaV2AccountTypeMappers {
         if (!accountType.isPresent()) {
             LOGGER.warn(
                     String.format(
-                            "{} Could not infer account type from type \"{}\"; ignoring the account",
+                            "%s Could not infer account type from type \"%s\"; ignoring the account",
                             AvanzaV2Constants.LogTags.UNKNOWN_ACCOUNT_TYPE,
                             accountTypeKey));
         }
