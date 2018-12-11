@@ -14,6 +14,9 @@ java_library(
 
       # Dropwizard
       "//third_party:io_dropwizard_dropwizard_core",
+
+      "//third_party:org_apache_httpcomponents_httpclient",
+
     ],
 )
 

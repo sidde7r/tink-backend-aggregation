@@ -12,5 +12,7 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:io_dropwizard_dropwizard_core",
         "//src/libraries/metrics:metrics",
+        "//third_party:org_apache_httpcomponents_httpclient",
+
      ]
  )
