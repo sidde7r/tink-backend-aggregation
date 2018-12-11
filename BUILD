@@ -352,6 +352,7 @@ java_library(
         "//third_party:net_sourceforge_cssparser_cssparser",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
+        "//third_party:org_apache_httpcomponents_httpclient",
 
     ],
 )
@@ -386,6 +387,8 @@ java_binary(
         "//third_party:com_google_inject_guice",
         "//third_party:com_netflix_governator",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:org_apache_httpcomponents_httpclient",
+
     ],
 )
 
