@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
-import se.tink.backend.common.utils.MetricsUtils;
+import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;

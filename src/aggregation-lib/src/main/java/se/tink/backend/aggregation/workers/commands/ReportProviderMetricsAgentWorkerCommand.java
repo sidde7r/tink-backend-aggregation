@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.commands.state.ReportProviderMetricsAgentWorkerCommandState;
 import se.tink.libraries.metrics.MetricId;
-import se.tink.backend.common.utils.MetricsUtils;
+import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.log.AggregationLogger;
 

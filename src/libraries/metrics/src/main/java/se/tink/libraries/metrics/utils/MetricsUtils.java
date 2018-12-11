@@ -1,8 +1,4 @@
-package se.tink.backend.common.utils;
-
-import com.google.common.base.CaseFormat;
-import se.tink.backend.core.Credentials;
-import se.tink.backend.core.Provider;
+package se.tink.libraries.metrics.utils;
 
 // TODO: This should be moved into the classes themselves (provider.getMetricName())
 public class MetricsUtils {
@@ -20,13 +16,4 @@ public class MetricsUtils {
         return proposal.replace("'", "").replace("*", "").replace(")", "_").replace("(", "_");
     }
 
-    @Deprecated
-    public static String providerTypeName(Provider provider) {
-        return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_UNDERSCORE, provider.getType().name());
-    }
-
-    @Deprecated
-    public static String credentialName(Credentials credentials) {
-        return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_UNDERSCORE, credentials.getType().name());
-    }
 }
