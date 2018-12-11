@@ -35,8 +35,6 @@ public class IngAtAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(true); // FIXME! Used only during development
-        client.setDebugProxy("http://127.0.0.1:8080"); // FIXME! Used only during development
         client.setUserAgent(IngAtConstants.Header.USER_AGENT);
     }
 
