@@ -5,7 +5,6 @@ import io.dropwizard.lifecycle.Managed;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.log.legacy.LogUtils;
 
@@ -18,7 +17,6 @@ import se.tink.libraries.log.legacy.LogUtils;
 public class ServiceContext implements Managed {
     private static final LogUtils log = new LogUtils(ServiceContext.class);
 
-    private AnnotationConfigApplicationContext applicationContext;
     private CacheClient cacheClient;
 
     @Inject
@@ -67,11 +65,6 @@ public class ServiceContext implements Managed {
             if (cacheClient != null) {
                 cacheClient.shutdown();
                 cacheClient = null;
-            }
-
-            if (applicationContext != null) {
-                applicationContext.close();
-                applicationContext = null;
             }
 
             log.info("Stopped.");
