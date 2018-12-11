@@ -31,7 +31,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class FinTsApiClient {
