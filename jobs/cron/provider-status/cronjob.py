@@ -57,6 +57,9 @@ def group_by_market(provider_metrics, running_instances):
     metric_by_market = defaultdict(dict)
     providers = provider_metrics.json()["data"]["result"]
     for provider in providers:
+        # Metric by market holds the provider metrics by market.
+        # Here we update the market by adding the provider together with the calculated value.
+        # The calculated value is the number instances where the provider is circuit broken divided by the total number of running instances.
         metric_by_market[provider["metric"]["market"].lower()].update({provider["metric"]["provider"]: float(provider["value"][1]) / int(running_instances)})
     return metric_by_market
 
@@ -191,6 +194,19 @@ def main(argv):
     logger.info("Starting cronjob to calculate provider statistics")
 
     # Get the number of running instances for aggregation production
+    # Example: 
+    # {
+    #   "status": "success",
+    #   "data": {
+    #       "resultType": "vector",
+    #       "result":[
+    #           {
+    #               "metric": {},
+    #               "value":[1544520295.983,"9"]
+    #           }
+    #       ]
+    #   }
+    # }
     instances_metric = create_prometheus_request(INSTANCES_QUERY)
 
     if not is_valid_prometheus_response(instances_metric):
@@ -206,15 +222,50 @@ def main(argv):
     provider_metrics = create_prometheus_request(PROVIDERS_QUERY)
     if not is_valid_prometheus_response(provider_metrics):
         return 1
-
+    
+    # Example: 
+    # {
+    #   "se": {
+    #       "provider-name-1": 0.2, 
+    #       "provider-name-2": 0, 
+    #       "provider-name-3": 1, 
+    #       ...
+    #   }
+    # }
     provider_metrics_by_market = group_by_market(provider_metrics, total_running_instances)
     
     # Fetch all available components
+    # Example: [
+    #   {
+    #       "id": "string",
+    #       "page_id": "string",
+    #       "group_id": "string",
+    #       "created_at": "2018-12-11T09:26:03Z",
+    #       "updated_at": "2018-12-11T09:26:03Z",
+    #       "group": true,
+    #       "name": "string",
+    #       "description": "string",
+    #       "position": 0,
+    #       "status": "operational",
+    #       "showcase": true,
+    #       "only_show_if_degraded": true,
+    #       "automation_email": "string"
+    #   }
+    # ]
     all_components = create_statuspage_request("GET", COMPONENTS_PATH, apikey)
     if len(all_components.json()) == 0:
         logger.warning("The number of total components was zero")
         return
 
+    # Example:
+    # {
+    #   "group_id_1": {
+    #       "component-1": "status",
+    #       "component-2": "status",
+    #       "component-3": "status",
+    #       ...
+    #   }
+    # }
     grouped_components = group_by_group_id(all_components.json())
 
     # Each market is a separate component group
