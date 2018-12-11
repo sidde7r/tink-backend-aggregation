@@ -677,6 +677,11 @@ junit_test(
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/i18n",
+        "//src/libraries/social_security_number:social-security-number",
+        "//src/libraries/social_security_number:social-security-number-test",
+        "//src/libraries/transfer_stub:transfer-stub-test",
+        "//src/libraries/account_identifier:account-identifier-test",
+        "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/strings:strings",
         "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
 
