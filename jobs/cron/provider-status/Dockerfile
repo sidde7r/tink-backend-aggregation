@@ -5,4 +5,3 @@ RUN pip3 install -r requirements.txt
 
 COPY /cronjob.py /opt/provider_status/cronjob.py
 ENTRYPOINT ["/opt/provider_status/cronjob.py"]
-CMD ["-a", "change-me-to-correct-apikey"]
