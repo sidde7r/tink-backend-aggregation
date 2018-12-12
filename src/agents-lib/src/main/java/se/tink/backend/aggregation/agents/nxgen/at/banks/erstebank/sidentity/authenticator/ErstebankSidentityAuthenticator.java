@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity.aut
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 
@@ -59,7 +60,12 @@ public class ErstebankSidentityAuthenticator implements MultiFactorAuthenticator
 
     private void poll() throws LoginException {
         for (int i = 0; i < ErsteBankConstants.SIDENTITY.MAX_SIDENTITY_POLLING_ATTEMPTS; i++) {
-            PollResponse response = ersteBankApiClient.pollStatus();
+            PollResponse response;
+            try {
+                response = ersteBankApiClient.pollStatus();
+            } catch (HttpResponseException hre) {
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+            }
 
             switch (response.getSecondFactorStatus()) {
             case ErsteBankConstants.SIDENTITY.POLL_DONE:
