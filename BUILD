@@ -231,6 +231,8 @@ java_library(
         "//src/libraries/draining:draining",
         "//src/libraries/repository:repository",
 
+        "//po:i18n",
+
         "//third_party:org_springframework_spring_expression",
         "//third_party:com_fasterxml_jackson_dataformat_jackson_dataformat_xml",
         "//third_party:com_github_detro_ghostdriver_phantomjsdriver",
