@@ -603,13 +603,10 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     }
 
     private void loginWithBankId() throws BankIdException {
-        InitiateBankIdRequest initiateBankIdRequest = new InitiateBankIdRequest();
-        initiateBankIdRequest.setUid(credentials.getField(Field.Key.USERNAME));
-        initiateBankIdRequest.setSebReferer(SEB_REFERER_BANKID_LOGIN);
         InitiateBankIdResponse initiateBankIdResponse = resource(INITIATE_BANKID_URL)
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .post(InitiateBankIdResponse.class, initiateBankIdRequest);
+                .post(InitiateBankIdResponse.class, new InitiateBankIdRequest(SEB_REFERER_BANKID_LOGIN));
 
 
         final String rfa = initiateBankIdResponse.getRfa().toLowerCase();
@@ -632,7 +629,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                             rfa, status, initiateBankIdResponse.getMessage()));
         }
 
-        context.openBankId(null, false);
+        context.openBankId(initiateBankIdResponse.getAutostartToken(), false);
 
         collectBankId(initiateBankIdResponse);
     }
