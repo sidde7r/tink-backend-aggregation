@@ -40,7 +40,7 @@ public class ErstebankSidentityAuthenticator implements MultiFactorAuthenticator
     public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
         String username = credentials.getUsername();
         String verificationCode = ersteBankApiClient.getSidentityVerificationCode(username);
-        supplementalInformationHelper.waitAndShowDescriptionField(verificationCode);
+        supplementalInformationHelper.waitAndShowLoginDescription(verificationCode);
         poll();
         TokenEntity token = ersteBankApiClient.getSidentityToken();
         ersteBankApiClient.saveToken(token);
