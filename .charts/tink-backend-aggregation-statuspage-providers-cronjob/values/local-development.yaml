@@ -1,0 +1,3 @@
+providerStatusCronSchedule: "*/5 * * * *"
+providerStatusStartingDeadlineSeconds: 300
+providerStatusActiveDeadlineSeconds: 300
