@@ -22,7 +22,7 @@ public class IngConstants {
                 + "AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10; MyING.be/8.4";
 
         public static final String LOCATION = "location";
-        public static final String ERROR_CODE_WRONG_OTP = "ERROR_CODE=399";
+        public static final String ERROR_CODE_WRONG_OTP = "ERROR_CODE=3";
     }
 
     static final class Crypto {
