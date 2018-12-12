@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
-import java.util.Optional;
-import org.apache.zookeeper.Op;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.backend.core.Amount;
+
+import java.util.Optional;
 
 public class IngAtTransactionalAccountParser {
 
@@ -51,8 +51,7 @@ public class IngAtTransactionalAccountParser {
     public Optional<String> getBic() {
         try {
             return Optional.of(getAccountIdentifier("BIC"));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
