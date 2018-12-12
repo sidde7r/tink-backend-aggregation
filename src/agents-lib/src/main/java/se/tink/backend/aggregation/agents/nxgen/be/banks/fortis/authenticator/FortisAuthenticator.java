@@ -128,13 +128,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         persistentStorage.put(FortisConstants.STORAGE.PASSWORD, password);
         persistentStorage.put(FortisConstants.STORAGE.DEVICE_FINGERPRINT, deviceFingerprint);
 
-        EbankingUsersResponse eBankingUserIdEntity =
-                getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
-
-        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() > 1) {
-            LOGGER.warnExtraLong(String.format("authenticate, multiple users found: %s", ""),
-                    FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
-        }
+        EbankingUsersResponse eBankingUserIdEntity = getEbankingUsersResponse(authenticatorFactorId, smid);
 
         String agreementId = eBankingUserIdEntity.getValue().getEBankingUsers().get(0)
                 .getEBankingUser().getEBankingUserId().getAgreementId();
@@ -153,10 +147,26 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         getUserInfoAndPersistMuid();
 
         /*
-            We are unable to verify the password the user provided in the device binding flow. For that reason we also initiate the flow used in autoAuthenticate()
+            We are unable to verify the password the user provided in the device binding flow.
+            For that reason we also initiate the flow used in autoAuthenticate()
          */
         verifyPassword();
         getUserInfoAndPersistMuid();
+    }
+
+    private EbankingUsersResponse getEbankingUsersResponse(String authenticatorFactorId, String smid) throws LoginException {
+        EbankingUsersResponse eBankingUserIdEntity =
+                getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
+
+        if (eBankingUserIdEntity.getValue() == null) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() > 1) {
+            LOGGER.warnExtraLong(String.format("authenticate, multiple users found: %s", ""),
+                    FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
+        }
+        return eBankingUserIdEntity;
     }
 
     private void getUserInfoAndPersistMuid() throws LoginException {
@@ -179,13 +189,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         String smid = persistentStorage.get(FortisConstants.STORAGE.SMID);
         String deviceFingerprint = persistentStorage.get(FortisConstants.STORAGE.DEVICE_FINGERPRINT);
 
-        EbankingUsersResponse eBankingUserIdEntity =
-                getEbankingUsers(cardNumber, apiClient.getDistributorId(), smid);
-
-        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() > 1) {
-            LOGGER.warnExtraLong(String.format("authenticate, multiple users found: %s", ""),
-                    FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
-        }
+        EbankingUsersResponse eBankingUserIdEntity = getEbankingUsersResponse(cardNumber, smid);
 
         AuthenticationProcessResponse res = createAuthenticationProcess(eBankingUserIdEntity,
                 apiClient.getDistributorId(), FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD);

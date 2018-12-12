@@ -1,20 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
-import java.util.List;
-import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.ChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.entities.CheckForcedUpgradeRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.AuthenticationProcessRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.AuthenticationProcessResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.DistributorAuthenticationRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.EBankingUsersRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.EbankingUsersResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.GenerateChallangeRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.UserInfoResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.AccountsRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.AccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsRequest;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rpc.*;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.*;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -22,6 +11,9 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 public class FortisApiClient {
 
@@ -103,16 +95,11 @@ public class FortisApiClient {
                 .post(TransactionsResponse.class, SerializationUtils.serializeToString(request));
     }
 
-    public void fetchAndLogUpcoming(int page, String accountProductId) {
+    public UpcomingTransactionsResponse fetchUpcomingTransactions(int page, String accountProductId) {
         TransactionsRequest request = new TransactionsRequest(accountProductId, page);
-        try {
-            String response = getRequestBuilderWithCookies(FortisConstants.URLS.UPCOMING_TRANSACTIONS)
-                    .post(String.class, SerializationUtils.serializeToString(request));
-            LOGGER.infoExtraLong(response, FortisConstants.LOGTAG.UPCOMING_TRANSACTIONS);
-        } catch (Exception e) {
-            LOGGER.errorExtraLong("Error fetching upcoming transactions: ",
-                    FortisConstants.LOGTAG.UPCOMING_TRANSACTIONS_ERR, e);
-        }
+            return getRequestBuilderWithCookies(FortisConstants.URLS.UPCOMING_TRANSACTIONS)
+                    .post(UpcomingTransactionsResponse.class, SerializationUtils.serializeToString(request));
+
     }
 
     public String fetchChallenges(GenerateChallangeRequest challangeRequest) {
