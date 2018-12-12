@@ -166,8 +166,9 @@ public final class IngAtApiClient {
                 .header("Accept-Encoding", "gzip, deflate, br")
                 .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7");
 
-        if (referer != null && !referer.isEmpty())
+        if (referer != null && !referer.isEmpty()) {
             b.header("Referer", referer);
+        }
 
         final HttpResponse r = b.get(HttpResponse.class);
 
