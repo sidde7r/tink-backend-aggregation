@@ -1,17 +1,16 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.ErsteBankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.credit.ErsteBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.ErsteBankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.ErsteBankTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.session.ErsteBankSessionHandler;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity.authenticator.ErstebankSidentityAuthenticator;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -24,26 +23,25 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
-public class ErstebankAgent extends NextGenerationAgent {
+
+public class ErsteBankPasswordAgent extends NextGenerationAgent {
 
     private final ErsteBankApiClient ersteBankApiClient;
 
-    public ErstebankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public ErsteBankPasswordAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.ersteBankApiClient = new ErsteBankApiClient(client, persistentStorage);
+        this.ersteBankApiClient = new ErsteBankApiClient(this.client, persistentStorage);
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        ErstebankSidentityAuthenticator authenticator =
-                new ErstebankSidentityAuthenticator(ersteBankApiClient, supplementalInformationHelper);
-        return new AutoAuthenticationController(request, context, authenticator, authenticator);
+        return new PasswordAuthenticationController(new ErsteBankPasswordAuthenticator(ersteBankApiClient));
     }
 
     @Override

@@ -125,7 +125,7 @@
             "status": "ENABLED",
             "type": "BANK",
             "credentialsType": "PASSWORD",
-            "className": "nxgen.at.banks.erstebank.password.ErstebankAgent",
+            "className": "nxgen.at.banks.erstebank.password.ErsteBankPasswordAgent",
             "transactional": "true",
             "fields": [
                 {
@@ -149,7 +149,7 @@
             "status": "ENABLED",
             "type": "BANK",
             "credentialsType": "PASSWORD",
-            "className": "nxgen.at.banks.erstebank.sidentity.ErstebankAgent",
+            "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
             "transactional": "true",
             "fields": [
                 {
