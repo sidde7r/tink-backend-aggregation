@@ -19,6 +19,8 @@
     "at-revolut-password",
     "at-americanexpress-password",
     "at-raiffeisen-bank",
+    "at-erstebank-password",
+    "at-erstebank-thirdparty",
     "at-test-password", 
     "at-test-multi-supplemental"
   ]

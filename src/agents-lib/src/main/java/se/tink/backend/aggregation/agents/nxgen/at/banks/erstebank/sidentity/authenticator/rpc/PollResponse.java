@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
 
 @JsonObject
-public class PollResponse implements ThirdPartyAppResponse<String> {
+public class PollResponse {
 
     @JsonProperty("secondFactorStatus")
     private String secondFactorStatus;
@@ -21,23 +21,5 @@ public class PollResponse implements ThirdPartyAppResponse<String> {
 
     public int getPollingIntervalMs() {
         return pollingIntervalMs;
-    }
-
-    @Override
-    public ThirdPartyAppStatus getStatus() {
-        switch (secondFactorStatus) {
-        case ErsteBankConstants.SIDENTITY.POLL_WAITING:
-            return ThirdPartyAppStatus.WAITING;
-        case ErsteBankConstants.SIDENTITY.POLL_DONE:
-            return ThirdPartyAppStatus.DONE;
-        default:
-            throw new IllegalStateException(
-                    String.format("Sidentity unknown polling status: %s", secondFactorStatus));
-        }
-    }
-
-    @Override
-    public String getReference() {
-        return null;
     }
 }
