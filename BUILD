@@ -330,6 +330,7 @@ java_library(
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:joda_time_joda_time",
+        "//third_party:org_apache_commons_commons_csv",
         "//third_party:org_apache_commons_commons_math3",
         "//third_party:org_apache_curator_curator_framework",
         "//third_party:org_apache_curator_curator_recipes",

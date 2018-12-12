@@ -15,7 +15,7 @@ public interface PaginatorResponse {
      *
      * @return true if the paginator knows or suspects there exist more transactions to fetch
      *         false if the paginator has evidence that there exist no more transactions to fetch
-     *         Optional.empty() if the paginator suspects that there are no much transactions to fetch
+     *         Optional.empty() if the paginator suspects that there are no more transactions to fetch
      */
     Optional<Boolean> canFetchMore();
 }
