@@ -32,7 +32,7 @@ PROJECTS = {
         'chart': True,
         'salt': False,
         'branches': {
-            'aggregation-production': {'block': False},
+            'aggregation-production': {'block': True},
         },
     },
 }
