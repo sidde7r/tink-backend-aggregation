@@ -24,13 +24,11 @@ public class IngAtSessionStorage {
     }
 
     public void setCurrentUrl(String currentUrl) {
-        System.out.println("#### setCurrentUrl: Current URL=" + currentUrl); // FIXME!
         sessionStorage.put(IngAtConstants.Storage.CURRENT_URL.name(), currentUrl);
     }
 
     public Optional<String> getCurrentUrl() {
         final Optional<String> currentUrl = sessionStorage.get(IngAtConstants.Storage.CURRENT_URL.name(), String.class);
-        System.out.println("#### getCurrentUrl: URL=" + currentUrl.orElse("null")); // FIXME!
         return currentUrl;
     }
 
