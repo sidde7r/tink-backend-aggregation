@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.W
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.rpc.CSVTransactionsPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtAntiCacheParser;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtOpeningDateParser;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtValidationSignatureParser;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.Form;
@@ -38,8 +37,6 @@ public final class IngAtApiClient {
 
     // Increments every time a CSV file is downloaded
     private int downloadCount = 1;
-
-    private int currentPage = 0;
 
     // TODO session storage?
     // Account numbers -> account opening dates
@@ -170,99 +167,6 @@ public final class IngAtApiClient {
         }
     }
 
-    private HttpResponse getIt(URL url) {
-        final String referer = ingAtSessionStorage.getCurrentUrl().orElse("");
-        RequestBuilder b =
-                client.request(url)
-                        .header("Host", "banking.ing.at")
-                        .header("Upgrade-Insecure-Requests", "1")
-                        .header(
-                                "Accept",
-                                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-                        .header("Referer", referer)
-                        .header("Accept-Encoding", "gzip, deflate, br")
-                        .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7");
-
-        if (referer != null && !referer.isEmpty()) {
-            b.header("Referer", referer);
-        }
-
-        final HttpResponse r = b.get(HttpResponse.class);
-
-        updateCurrentUrl(r, url);
-        return r;
-    }
-
-    public HttpResponse postIt(URL url, Form form) {
-        final HttpResponse r =
-                client.request(url)
-                        .header("Host", "banking.ing.at")
-                        .header("Connection", "keep-alive")
-                        .header("Origin", "https://banking.ing.at")
-                        .header("Wicket-FocusedElementId", "submitBtnce")
-                        .header(
-                                "User-Agent",
-                                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36")
-                        .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                        .header("X-Requested-With", "XMLHttpRequest")
-                        .header("Wicket-Ajax", "true")
-                        .header(
-                                "Wicket-Ajax-BaseURL",
-                                "einstellungen/persoenliche_daten_herunterladen?2")
-                        .header(
-                                "Referer",
-                                "https://banking.ing.at/online-banking/wicket/einstellungen/persoenliche_daten_herunterladen?2")
-                        .header("Accept-Encoding", "gzip, deflate, br")
-                        .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
-                        .body(form.serialize())
-                        .post(HttpResponse.class);
-
-        updateCurrentUrl(r, url);
-        return r;
-    }
-
-    private Form getFileForm(final String validationSignature) {
-        return Form.builder()
-                .put("id56_hf_0", "")
-                .put("DIBA_SEC_FORM_VALIDATION_SIGN", validationSignature)
-                .put("datenauszugHerunterladenButton", "1")
-                .build();
-    }
-
-    public HttpResponse getXmlDocument(URL url) {
-        final String urlSuffix1 =
-                "-1.ILinkListener-nav~wrapper-hauptNavContainer-hauptnavigation-einstellungenLink";
-        final URL url1 = new URL(url.toString() + urlSuffix1);
-        final HttpResponse r1 = getIt(url1);
-
-        final String urlSuffix2 = "-1.ILinkListener-allgemein-persoenlicheDatenHerunterladen";
-        final URL url2 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix2);
-        final HttpResponse r2 = getIt(url2);
-
-        final String validationSignature =
-                new IngAtValidationSignatureParser(r2.getBody(String.class))
-                        .getValidationSignature()
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                "Failed to extract validation signature"));
-        final Form fileForm = getFileForm(validationSignature);
-        final String urlSuffix3 = "-1.IBehaviorListener.1-form-datenauszugHerunterladenButton";
-        final URL url3 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix3);
-        final HttpResponse r3 = postIt(url3, fileForm);
-
-        // final String antiCache = new
-        // IngAtAntiCacheParser(r3.getBody(String.class)).getAntiCache()
-        //        .orElseThrow(() -> new IllegalStateException("Failed to extract antiCache code"));
-        // final String urlSuffix4 = urlSuffix3 + "&antiCache=" + antiCache;
-        // final URL url4 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix4);
-        // System.out.println("#### url4=" + url4); // FIXME!
-        // final HttpResponse r4 = getIt(url4);
-        // return r4;
-        return null;
-    }
-
     private static Date today(int shiftedDays) {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, shiftedDays);
@@ -300,16 +204,6 @@ public final class IngAtApiClient {
         return d2;
     }
 
-    private static String getAjaxBase(String s) {
-        final Pattern pattern = Pattern.compile("wicket/page\\?([0-9]+)");
-        final Matcher m = pattern.matcher(s);
-        if (m.find()) {
-            return "wicket/page?" + m.group(1);
-        } else {
-            return "";
-        }
-    }
-
     private static int pageNumberFromAjaxLocation(final String s) {
         final Pattern pattern = Pattern.compile("/page\\?([0-9]+)");
         final Matcher m = pattern.matcher(s);
@@ -318,20 +212,6 @@ public final class IngAtApiClient {
             throw new IllegalStateException();
         }
         return Integer.parseInt(m.group(1));
-    }
-
-    private String setPage(final String url, final int pageNo) {
-        final Pattern regex = Pattern.compile("page\\?\\d+");
-        final Matcher matcher = regex.matcher(url);
-        final String replaced = matcher.replaceAll("page?" + pageNo);
-        return replaced;
-    }
-
-    private int getPage(final String url) {
-        final Pattern regex = Pattern.compile("page\\?(\\d+)");
-        final Matcher matcher = regex.matcher(url);
-        matcher.find();
-        return Integer.parseInt(matcher.group(1));
     }
 
     private static Form dateRangesForm(final Date fromDate, final Date toDate) {
@@ -368,40 +248,6 @@ public final class IngAtApiClient {
                         dateFormatter.format(toDate))
                 .put("download", "1")
                 .build();
-    }
-
-    private HttpResponse requestByAjaxLocation(
-            final HttpResponse message, final TransactionalAccount account) {
-        final int pageNo =
-                pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));
-        final int accountIndex =
-                Integer.parseInt(
-                        account.getFromTemporaryStorage(
-                                IngAtConstants.Storage.ACCOUNT_INDEX.name()));
-
-        final URL url =
-                new URL(
-                        "https://banking.ing.at/online-banking/wicket/wicket/page?"
-                                + pageNo
-                                + "-1.ILinkListener-nav~wrapper-kontenAusklappen-kontoTableRepeater-"
-                                + accountIndex
-                                + "-kontoDetailLink");
-        final HttpResponse response =
-                client.request(url)
-                        .header("Host", "banking.ing.at")
-                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                        .header("Accept-Language", "en-US,en;q=0.5")
-                        .header("Accept-Encoding", "gzip, deflate, br")
-                        .header(
-                                "Referer",
-                                "https://banking.ing.at/online-banking/wicket/wicket/page?1")
-                        .header("Wicket-Ajax", "true")
-                        .header("Wicket-Ajax-BaseURL", "wicket/page?1")
-                        .header("Wicket-FocusedElementId", "id49")
-                        .header("X-Requested-With", "XMLHttpRequest")
-                        .header("Connection", "keep-alive")
-                        .get(HttpResponse.class);
-        return response;
     }
 
     private HttpResponse redirect(final HttpResponse message) {
