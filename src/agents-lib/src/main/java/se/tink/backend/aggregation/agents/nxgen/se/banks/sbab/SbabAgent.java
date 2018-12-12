@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKey;
@@ -30,14 +31,14 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class SbabAgent extends NextGenerationAgent {
     private final SbabApiClient apiClient;
-    private final Environment environment;
+    private final String clientName;
 
     public SbabAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.environment = Environment.getEnvironmentOrDefault(request.getProvider().getPayload());
-        this.apiClient = new SbabApiClient(client, environment, sessionStorage, persistentStorage);
+        apiClient = new SbabApiClient(client, sessionStorage, persistentStorage);
+        clientName = request.getProvider().getPayload();
     }
 
     @Override
@@ -46,17 +47,19 @@ public class SbabAgent extends NextGenerationAgent {
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
+
+        final Supplier<IllegalStateException> illegalStateException =
+                () ->
+                        new IllegalStateException(
+                                String.format(
+                                        "No SBAB client configured for name: %s", clientName));
         final SbabConfiguration config =
                 configuration
                         .getIntegrations()
-                        .getSbab(environment)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format(
-                                                        "No SBAB client configured for environment: %s",
-                                                        environment)));
+                        .getSbab(clientName)
+                        .orElseThrow(illegalStateException);
 
+        persistentStorage.put(StorageKey.ENVIRONMENT, config.getEnvironment());
         persistentStorage.put(StorageKey.BASIC_AUTH_USERNAME, config.getBasicAuthUsername());
         persistentStorage.put(StorageKey.BASIC_AUTH_PASSWORD, config.getBasicAuthPassword());
         persistentStorage.put(StorageKey.CLIENT_ID, config.getClientId());

@@ -107,7 +107,8 @@ agentsServiceConfiguration:
     sbabLegacy:
       signBaseUrl: https://secure.sbab.se
     sbab:
-      sandbox:
+      tink:
+        environment: sandbox
         basicAuthUsername: dummyUser
         basicAuthPassword: dummyPass
         clientId: "dummyId"

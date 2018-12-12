@@ -46,76 +46,81 @@ public abstract class SbabConstants {
         }
     }
 
-    public static final class Urls {
-        private static final String HOST = "https://api.sbab.se/{environment}";
-        private static final String AUTH = HOST + "/auth/1.0";
+    public static final class Uris {
+        private static final String BASE_URL = "https://api.sbab.se/{environment}";
+
+        private static final String AUTH = "/auth/1.0";
         private static final String AUTHORIZE = AUTH + "/authorize";
         private static final String AUTH_STATUS = AUTH + "/status?pending_code={pendingCode}";
         private static final String TOKEN = AUTH + "/token";
         private static final String INVALIDATE_TOKEN = TOKEN + "/invalidate";
-        private static final String ACCOUNTS = HOST + "/savings/2.0/accounts";
+        private static final String ACCOUNTS = "/savings/2.0/accounts";
         private static final String ACCOUNT = ACCOUNTS + "/{accountNo}";
         private static final String TRANSFERS = ACCOUNT + "/transfers";
         private static final String TRANSFER = TRANSFERS + "/{transferId}";
         private static final String TRANSFER_STATUS = TRANSFER + "/status/{referenceId}";
-        private static final String LOANS = HOST + "/loan/2.0/loans";
+        private static final String LOANS = "/loan/2.0/loans";
         private static final String LOAN = LOANS + "/{loanNumber}";
         private static final String AMORTISATION = LOAN + "/amortisation";
 
-        public static String GET_PENDING_AUTH_CODE(Environment env) {
-            return new UriTemplate(AUTHORIZE).createURI(env.toString());
+        public static String GET_BASE_URL(Environment env) {
+            return new UriTemplate(BASE_URL).createURI();
         }
 
-        public static String GET_AUTH_STATUS(Environment env, String pendingCode) {
-            return new UriTemplate(AUTH_STATUS).createURI(env.toString(), pendingCode);
+        public static String GET_PENDING_AUTH_CODE() {
+            return new UriTemplate(AUTHORIZE).createURI();
         }
 
-        public static String GET_ACCESS_TOKEN(Environment env) {
-            return new UriTemplate(ACCOUNT).createURI(env.toString());
+        public static String GET_AUTH_STATUS(String pendingCode) {
+            return new UriTemplate(AUTH_STATUS).createURI(pendingCode);
         }
 
-        public static String INVALIDATE_ACCESS_TOKEN(Environment env) {
-            return new UriTemplate(INVALIDATE_TOKEN).createURI(env.toString());
+        public static String GET_ACCESS_TOKEN() {
+            return new UriTemplate(ACCOUNT).createURI();
         }
 
-        public static String LIST_ACCOUNTS(Environment env) {
-            return new UriTemplate(ACCOUNTS).createURI(env.toString());
+        public static String INVALIDATE_ACCESS_TOKEN() {
+            return new UriTemplate(INVALIDATE_TOKEN).createURI();
         }
 
-        public static String GET_ACCOUNT(Environment env, String accountNo) {
-            return new UriTemplate(ACCOUNT).createURI(env.toString(), accountNo);
+        public static String LIST_ACCOUNTS() {
+            return new UriTemplate(ACCOUNTS).createURI();
         }
 
-        public static String INIT_TRANSFER(Environment env, String accountNo) {
-            return new UriTemplate(TRANSFERS).createURI(env.toString(), accountNo);
+        public static String GET_ACCOUNT(String accountNo) {
+            return new UriTemplate(ACCOUNT).createURI(accountNo);
         }
 
-        public static String LIST_TRANSFERS(Environment env, String accountNo) {
-            return new UriTemplate(TRANSFERS).createURI(env.toString(), accountNo);
+        public static String INIT_TRANSFER(String accountNo) {
+            return new UriTemplate(TRANSFERS).createURI(accountNo);
         }
 
-        public static String GET_TRANSFER(Environment env, String accountNo, String transferId) {
-            return new UriTemplate(TRANSFER).createURI(env.toString(), accountNo, transferId);
+        public static String LIST_TRANSFERS(String accountNo) {
+            return new UriTemplate(TRANSFERS).createURI(accountNo);
         }
 
-        public static String DELETE_TRANSFER(Environment env, String accountNo, String transferId) {
-            return new UriTemplate(TRANSFER).createURI(env.toString(), accountNo, transferId);
+        public static String GET_TRANSFER(String accountNo, String transferId) {
+            return new UriTemplate(TRANSFER).createURI(accountNo, transferId);
         }
 
-        public static String GET_TRANSFER_STATUS(Environment env, String accountNo, String refId) {
-            return new UriTemplate(TRANSFER_STATUS).createURI(env.toString(), accountNo, refId);
+        public static String DELETE_TRANSFER(String accountNo, String transferId) {
+            return new UriTemplate(TRANSFER).createURI(accountNo, transferId);
         }
 
-        public static String LIST_LOANS(Environment env) {
-            return new UriTemplate(LOANS).createURI(env.toString());
+        public static String GET_TRANSFER_STATUS(String accountNo, String refId) {
+            return new UriTemplate(TRANSFER_STATUS).createURI(accountNo, refId);
         }
 
-        public static String GET_LOAN(Environment env, String loanNumber) {
-            return new UriTemplate(LOAN).createURI(env.toString(), loanNumber);
+        public static String LIST_LOANS() {
+            return new UriTemplate(LOANS).createURI();
         }
 
-        public static String GET_AMORTISATION(Environment env, String loanNumber) {
-            return new UriTemplate(AMORTISATION).createURI(env.toString(), loanNumber);
+        public static String GET_LOAN(String loanNumber) {
+            return new UriTemplate(LOAN).createURI(loanNumber);
+        }
+
+        public static String GET_AMORTISATION(String loanNumber) {
+            return new UriTemplate(AMORTISATION).createURI(loanNumber);
         }
     }
 
@@ -129,6 +134,7 @@ public abstract class SbabConstants {
     }
 
     public static class StorageKey {
+        public static final String ENVIRONMENT = "environment";
         public static final String BASIC_AUTH_USERNAME = "basic_auth_username";
         public static final String BASIC_AUTH_PASSWORD = "basic_auth_password";
         public static final String PENDING_AUTH_CODE = "pending_auth_code";

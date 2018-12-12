@@ -1282,7 +1282,7 @@
             "multiFactor": true,
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
             "tutorialUrl": "http://www.sbab.se",
-            "payload": "sandbox",
+            "payload": "tink",
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,

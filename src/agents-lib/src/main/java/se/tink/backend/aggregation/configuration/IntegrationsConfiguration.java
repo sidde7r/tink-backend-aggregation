@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
@@ -25,16 +24,16 @@ public class IntegrationsConfiguration {
         return sbabLegacy;
     }
 
-    private <T> Optional<T> getClientConfiguration(String key, Map<String, T> configMap) {
-        return Optional.ofNullable(configMap).map(m -> m.getOrDefault(key, null));
+    private <T> Optional<T> getClientConfiguration(String clientName, Map<String, T> configMap) {
+        return Optional.ofNullable(configMap).map(m -> m.getOrDefault(clientName, null));
     }
 
     public Optional<MonzoConfiguration> getMonzo(String clientName) {
         return getClientConfiguration(clientName, monzo);
     }
 
-    public Optional<SbabConfiguration> getSbab(Environment environment) {
-        return getClientConfiguration(environment.toString(), sbab);
+    public Optional<SbabConfiguration> getSbab(String clientName) {
+        return getClientConfiguration(clientName, sbab);
     }
 
     public FinTsIntegrationConfiguration getFinTsIntegrationConfiguration() {
