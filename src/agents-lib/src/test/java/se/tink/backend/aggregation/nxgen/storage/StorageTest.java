@@ -100,4 +100,11 @@ public class StorageTest {
                 Optional.empty(), equalTo(this.sessionStorage.get(KEY, new TypeReference<Double>() {
                 })));
     }
+
+    @Test
+    public void ensureOurGet_withOurPutString_doesNotRaise() {
+        sessionStorage.put("mykey", "myvalue");
+        final Optional<String> value = sessionStorage.get("mykey", String.class);
+        assertThat(Optional.of("myvalue"), equalTo(value));
+    }
 }
