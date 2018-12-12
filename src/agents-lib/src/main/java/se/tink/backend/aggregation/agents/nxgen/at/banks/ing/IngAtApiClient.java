@@ -90,7 +90,7 @@ public final class IngAtApiClient {
     }
 
     public HttpResponse logIn(URL url, Form passwordForm) {
-        final HttpResponse r =
+        final HttpResponse response =
                 client.request(url)
                         .header("Host", "banking.ing.at")
                         .header("Origin", "https://banking.ing.at")
@@ -105,12 +105,12 @@ public final class IngAtApiClient {
                         .body(passwordForm.serialize())
                         .post(HttpResponse.class);
 
-        updateCurrentUrl(r, url);
-        return r;
+        updateCurrentUrl(response, url);
+        return response;
     }
 
     public HttpResponse search(URL url, Form form) {
-        final HttpResponse r =
+        final HttpResponse response =
                 client.request(url)
                         .header("Host", "banking.ing.at")
                         .header("Connection", "keep-alive")
@@ -129,12 +129,12 @@ public final class IngAtApiClient {
                         .body(form.serialize())
                         .post(HttpResponse.class);
 
-        updateCurrentUrl(r, url);
-        return r;
+        updateCurrentUrl(response, url);
+        return response;
     }
 
     public HttpResponse getAccountDetails(URL url) {
-        final HttpResponse r =
+        final HttpResponse response =
                 client.request(url)
                         .header("Host", "banking.ing.at")
                         .header("Upgrade-Insecure-Requests", "1")
@@ -148,13 +148,13 @@ public final class IngAtApiClient {
                         .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
                         .get(HttpResponse.class);
 
-        updateCurrentUrl(r, url);
-        return r;
+        updateCurrentUrl(response, url);
+        return response;
     }
 
     public void logOut() {
         try {
-            final HttpResponse r =
+            final HttpResponse response =
                     client.request(IngAtConstants.Url.LOGOUT)
                             .header("Host", "banking.ing.at")
                             .header("Upgrade-Insecure-Requests", "1")
@@ -164,7 +164,7 @@ public final class IngAtApiClient {
                             .header("Accept-Encoding", "gzip, deflate, br")
                             .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
                             .get(HttpResponse.class);
-            updateCurrentUrl(r, IngAtConstants.Url.LOGOUT);
+            updateCurrentUrl(response, IngAtConstants.Url.LOGOUT);
         } catch (HttpResponseException e) {
             logger.warn("Failed to log out: {}", e);
         }
