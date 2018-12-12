@@ -17,6 +17,9 @@ public class Storage extends HashMap<String, String> {
     }
 
     public <T> Optional<T> get(String key, Class<T> valueType) {
+        if (valueType == String.class) {
+            return Optional.ofNullable((T) get(key));
+        }
         T data = !containsKey(key) ? null : SerializationUtils.deserializeFromString(get(key), valueType);
 
         return Optional.ofNullable(data);
