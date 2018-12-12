@@ -45,7 +45,9 @@ public final class IngAtApiClient {
     // Account numbers -> account opening dates
     private final Map<String, Date> accountOpeningDates = new HashMap<>();
 
-    public IngAtApiClient(final TinkHttpClient client, final Provider provider,
+    public IngAtApiClient(
+            final TinkHttpClient client,
+            final Provider provider,
             IngAtSessionStorage ingAtSessionStorage) {
         this.client = client;
         this.ingAtSessionStorage = ingAtSessionStorage;
@@ -56,8 +58,7 @@ public final class IngAtApiClient {
                 .header("Host", "banking.ing.at")
                 .header("Accept", "application/xml, text/xml, */*; q=0.01")
                 .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Connection", "keep-alive")
-                ;
+                .header("Connection", "keep-alive");
     }
 
     public static URL getLastRedirectUrl(final List<URI> redirects) {
@@ -89,52 +90,63 @@ public final class IngAtApiClient {
     }
 
     public HttpResponse logIn(URL url, Form passwordForm) {
-        final HttpResponse r = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Origin", "https://banking.ing.at")
-                .header("Upgrade-Insecure-Requests", "1")
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                .header("Referer", "https://banking.ing.at/online-banking/wicket/login?0")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
-                .body(passwordForm.serialize())
-                .post(HttpResponse.class);
+        final HttpResponse r =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Origin", "https://banking.ing.at")
+                        .header("Upgrade-Insecure-Requests", "1")
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .header(
+                                "Accept",
+                                "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                        .header("Referer", "https://banking.ing.at/online-banking/wicket/login?0")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
+                        .body(passwordForm.serialize())
+                        .post(HttpResponse.class);
 
         updateCurrentUrl(r, url);
         return r;
     }
 
     public HttpResponse search(URL url, Form form) {
-        final HttpResponse r = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Connection", "keep-alive")
-                .header("Origin", "https://banking.ing.at")
-                .header("Wicket-FocusedElementId", "id172")
-                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                .header("X-Requested-With", "XMLHttpRequest")
-                .header("Wicket-Ajax", "true")
-                .header("Wicket-Ajax-BaseURL", "wicket/page?2")
-                .header("Referer", "https://banking.ing.at/online-banking/wicket/wicket/page?2")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
-                .body(form.serialize())
-                .post(HttpResponse.class);
+        final HttpResponse r =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Connection", "keep-alive")
+                        .header("Origin", "https://banking.ing.at")
+                        .header("Wicket-FocusedElementId", "id172")
+                        .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Wicket-Ajax", "true")
+                        .header("Wicket-Ajax-BaseURL", "wicket/page?2")
+                        .header(
+                                "Referer",
+                                "https://banking.ing.at/online-banking/wicket/wicket/page?2")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
+                        .body(form.serialize())
+                        .post(HttpResponse.class);
 
         updateCurrentUrl(r, url);
         return r;
     }
 
     public HttpResponse getAccountDetails(URL url) {
-        final HttpResponse r = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Upgrade-Insecure-Requests", "1")
-                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                .header("Referer", "https://banking.ing.at/online-banking/wicket/wicket/page?0")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
-                .get(HttpResponse.class);
+        final HttpResponse r =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Upgrade-Insecure-Requests", "1")
+                        .header(
+                                "Accept",
+                                "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                        .header(
+                                "Referer",
+                                "https://banking.ing.at/online-banking/wicket/wicket/page?0")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
+                        .get(HttpResponse.class);
 
         updateCurrentUrl(r, url);
         return r;
@@ -142,13 +154,16 @@ public final class IngAtApiClient {
 
     public void logOut() {
         try {
-            final HttpResponse r = client.request(IngAtConstants.Url.LOGOUT)
-                    .header("Host", "banking.ing.at")
-                    .header("Upgrade-Insecure-Requests", "1")
-                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                    .header("Accept-Encoding", "gzip, deflate, br")
-                    .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
-                    .get(HttpResponse.class);
+            final HttpResponse r =
+                    client.request(IngAtConstants.Url.LOGOUT)
+                            .header("Host", "banking.ing.at")
+                            .header("Upgrade-Insecure-Requests", "1")
+                            .header(
+                                    "Accept",
+                                    "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                            .header("Accept-Encoding", "gzip, deflate, br")
+                            .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
+                            .get(HttpResponse.class);
             updateCurrentUrl(r, IngAtConstants.Url.LOGOUT);
         } catch (HttpResponseException e) {
             logger.warn("Failed to log out: {}", e);
@@ -157,14 +172,16 @@ public final class IngAtApiClient {
 
     private HttpResponse getIt(URL url) {
         final String referer = ingAtSessionStorage.getCurrentUrl().orElse("");
-        RequestBuilder b = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Upgrade-Insecure-Requests", "1")
-                .header("Accept",
-                        "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8") //text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
-                .header("Referer", referer)
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7");
+        RequestBuilder b =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Upgrade-Insecure-Requests", "1")
+                        .header(
+                                "Accept",
+                                "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8") // text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                        .header("Referer", referer)
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7");
 
         if (referer != null && !referer.isEmpty()) {
             b.header("Referer", referer);
@@ -177,24 +194,29 @@ public final class IngAtApiClient {
     }
 
     public HttpResponse postIt(URL url, Form form) {
-        final HttpResponse r = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Connection", "keep-alive")
-                .header("Origin", "https://banking.ing.at")
-                .header("Wicket-FocusedElementId", "submitBtnce")
-                .header("User-Agent",
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36")
-                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                .header("X-Requested-With", "XMLHttpRequest")
-                .header("Wicket-Ajax", "true")
-                .header("Wicket-Ajax-BaseURL", "einstellungen/persoenliche_daten_herunterladen?2")
-                .header("Referer",
-                        "https://banking.ing.at/online-banking/wicket/einstellungen/persoenliche_daten_herunterladen?2")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
-                .body(form.serialize())
-                .post(HttpResponse.class);
+        final HttpResponse r =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Connection", "keep-alive")
+                        .header("Origin", "https://banking.ing.at")
+                        .header("Wicket-FocusedElementId", "submitBtnce")
+                        .header(
+                                "User-Agent",
+                                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36")
+                        .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Wicket-Ajax", "true")
+                        .header(
+                                "Wicket-Ajax-BaseURL",
+                                "einstellungen/persoenliche_daten_herunterladen?2")
+                        .header(
+                                "Referer",
+                                "https://banking.ing.at/online-banking/wicket/einstellungen/persoenliche_daten_herunterladen?2")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,sv;q=0.7")
+                        .body(form.serialize())
+                        .post(HttpResponse.class);
 
         updateCurrentUrl(r, url);
         return r;
@@ -209,7 +231,8 @@ public final class IngAtApiClient {
     }
 
     public HttpResponse getXmlDocument(URL url) {
-        final String urlSuffix1 = "-1.ILinkListener-nav~wrapper-hauptNavContainer-hauptnavigation-einstellungenLink";
+        final String urlSuffix1 =
+                "-1.ILinkListener-nav~wrapper-hauptNavContainer-hauptnavigation-einstellungenLink";
         final URL url1 = new URL(url.toString() + urlSuffix1);
         final HttpResponse r1 = getIt(url1);
 
@@ -217,21 +240,26 @@ public final class IngAtApiClient {
         final URL url2 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix2);
         final HttpResponse r2 = getIt(url2);
 
-        final String validationSignature = new IngAtValidationSignatureParser(r2.getBody(String.class))
-                .getValidationSignature()
-                .orElseThrow(() -> new IllegalStateException("Failed to extract validation signature"));
+        final String validationSignature =
+                new IngAtValidationSignatureParser(r2.getBody(String.class))
+                        .getValidationSignature()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Failed to extract validation signature"));
         final Form fileForm = getFileForm(validationSignature);
         final String urlSuffix3 = "-1.IBehaviorListener.1-form-datenauszugHerunterladenButton";
         final URL url3 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix3);
         final HttpResponse r3 = postIt(url3, fileForm);
 
-        //final String antiCache = new IngAtAntiCacheParser(r3.getBody(String.class)).getAntiCache()
+        // final String antiCache = new
+        // IngAtAntiCacheParser(r3.getBody(String.class)).getAntiCache()
         //        .orElseThrow(() -> new IllegalStateException("Failed to extract antiCache code"));
-        //final String urlSuffix4 = urlSuffix3 + "&antiCache=" + antiCache;
-        //final URL url4 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix4);
-        //System.out.println("#### url4=" + url4); // FIXME!
-        //final HttpResponse r4 = getIt(url4);
-        //return r4;
+        // final String urlSuffix4 = urlSuffix3 + "&antiCache=" + antiCache;
+        // final URL url4 = new URL(ingAtSessionStorage.getCurrentUrl().get() + urlSuffix4);
+        // System.out.println("#### url4=" + url4); // FIXME!
+        // final HttpResponse r4 = getIt(url4);
+        // return r4;
         return null;
     }
 
@@ -342,9 +370,14 @@ public final class IngAtApiClient {
                 .build();
     }
 
-    private HttpResponse requestByAjaxLocation(final HttpResponse message, final TransactionalAccount account) {
-        final int pageNo = pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));
-        final int accountIndex = Integer.parseInt(account.getFromTemporaryStorage(IngAtConstants.Storage.ACCOUNT_INDEX.name()));
+    private HttpResponse requestByAjaxLocation(
+            final HttpResponse message, final TransactionalAccount account) {
+        final int pageNo =
+                pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));
+        final int accountIndex =
+                Integer.parseInt(
+                        account.getFromTemporaryStorage(
+                                IngAtConstants.Storage.ACCOUNT_INDEX.name()));
 
         final URL url =
                 new URL(
@@ -353,72 +386,98 @@ public final class IngAtApiClient {
                                 + "-1.ILinkListener-nav~wrapper-kontenAusklappen-kontoTableRepeater-"
                                 + accountIndex
                                 + "-kontoDetailLink");
-        final HttpResponse response = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Referer", "https://banking.ing.at/online-banking/wicket/wicket/page?1")
-                .header("Wicket-Ajax", "true")
-                .header("Wicket-Ajax-BaseURL", "wicket/page?1")
-                .header("Wicket-FocusedElementId", "id49")
-                .header("X-Requested-With", "XMLHttpRequest")
-                .header("Connection", "keep-alive")
-                .get(HttpResponse.class);
+        final HttpResponse response =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
+                        .header("Accept-Language", "en-US,en;q=0.5")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header(
+                                "Referer",
+                                "https://banking.ing.at/online-banking/wicket/wicket/page?1")
+                        .header("Wicket-Ajax", "true")
+                        .header("Wicket-Ajax-BaseURL", "wicket/page?1")
+                        .header("Wicket-FocusedElementId", "id49")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Connection", "keep-alive")
+                        .get(HttpResponse.class);
         return response;
     }
 
     private HttpResponse redirect(final HttpResponse message) {
-        final int pageNo = pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));
+        final int pageNo =
+                pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));
 
-        final URL url = new URL("https://banking.ing.at/online-banking/wicket/wicket/page?" + pageNo);
-        final HttpResponse response = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Referer", "https://banking.ing.at/online-banking/wicket/wicket/page?1")
-                .header("Wicket-Ajax", "true")
-                .header("Wicket-Ajax-BaseURL", "wicket/page?" + pageNo)
-                .header("Wicket-FocusedElementId", "id49")
-                .header("X-Requested-With", "XMLHttpRequest")
-                .header("Connection", "keep-alive")
-                .get(HttpResponse.class);
+        final URL url =
+                new URL("https://banking.ing.at/online-banking/wicket/wicket/page?" + pageNo);
+        final HttpResponse response =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
+                        .header("Accept-Language", "en-US,en;q=0.5")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header(
+                                "Referer",
+                                "https://banking.ing.at/online-banking/wicket/wicket/page?1")
+                        .header("Wicket-Ajax", "true")
+                        .header("Wicket-Ajax-BaseURL", "wicket/page?" + pageNo)
+                        .header("Wicket-FocusedElementId", "id49")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Connection", "keep-alive")
+                        .get(HttpResponse.class);
         return response;
     }
 
-    private HttpResponse requestFormDownload(final int pageNumber, final Date fromDate, final Date toDate) {
-        final URL url = new URL("https://banking.ing.at/online-banking/wicket/wicket/page?" + pageNumber + "-" + downloadCount + ".IBehaviorListener.0-form-download");
-        final HttpResponse response = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Referer", "https://banking.ing.at/online-banking/wicket/wicket/page?" + pageNumber)
-                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                .header("Wicket-Ajax", "true")
-                .header("Wicket-Ajax-BaseURL", "wicket/page?" + pageNumber)
-                .header("Wicket-FocusedElementId", "id17e")
-                .header("X-Requested-With", "XMLHttpRequest")
-                .header("Connection", "keep-alive")
-                .body(downloadForm(fromDate, toDate).serialize())
-                .post(HttpResponse.class);
+    private HttpResponse requestFormDownload(
+            final int pageNumber, final Date fromDate, final Date toDate) {
+        final URL url =
+                new URL(
+                        "https://banking.ing.at/online-banking/wicket/wicket/page?"
+                                + pageNumber
+                                + "-"
+                                + downloadCount
+                                + ".IBehaviorListener.0-form-download");
+        final HttpResponse response =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
+                        .header("Accept-Language", "en-US,en;q=0.5")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header(
+                                "Referer",
+                                "https://banking.ing.at/online-banking/wicket/wicket/page?"
+                                        + pageNumber)
+                        .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                        .header("Wicket-Ajax", "true")
+                        .header("Wicket-Ajax-BaseURL", "wicket/page?" + pageNumber)
+                        .header("Wicket-FocusedElementId", "id17e")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Connection", "keep-alive")
+                        .body(downloadForm(fromDate, toDate).serialize())
+                        .post(HttpResponse.class);
 
         return response;
     }
 
-    // The protocol for downloading a CSV file with all transactions within a date range repeatedly looks like this:
+    // The protocol for downloading a CSV file with all transactions within a date range repeatedly
+    // looks like this:
     //
-    // GET https://banking.ing.at/online-banking/wicket/wicket/page?1-1.IBehaviorListener.0-umsaetzePanel-suche-exportLink&_=<NUMBER1>
+    // GET
+    // https://banking.ing.at/online-banking/wicket/wicket/page?1-1.IBehaviorListener.0-umsaetzePanel-suche-exportLink&_=<NUMBER1>
     // GET https://banking.ing.at/online-banking/wicket/wicket/page?2
-    // POST https://banking.ing.at/online-banking/wicket/wicket/page?2-1.IBehaviorListener.0-form-dateRange-ranges
-    // POST https://banking.ing.at/online-banking/wicket/wicket/page?2-1.IBehaviorListener.0-form-download
-    // GET https://banking.ing.at/online-banking/wicket/wicket/page?2-1.IBehaviorListener.0-&antiCache=<NUMBER2>
+    // POST
+    // https://banking.ing.at/online-banking/wicket/wicket/page?2-1.IBehaviorListener.0-form-dateRange-ranges
+    // POST
+    // https://banking.ing.at/online-banking/wicket/wicket/page?2-1.IBehaviorListener.0-form-download
+    // GET
+    // https://banking.ing.at/online-banking/wicket/wicket/page?2-1.IBehaviorListener.0-&antiCache=<NUMBER2>
     // ^--- Response contains first CSV body
     //
     // GET https://banking.ing.at/online-banking/wicket/wicket/page?2
-    // POST https://banking.ing.at/online-banking/wicket/wicket/page?2-2.IBehaviorListener.0-form-download
-    // GET https://banking.ing.at/online-banking/wicket/wicket/page?2-2.IBehaviorListener.0-&antiCache=<NUMBER3>
+    // POST
+    // https://banking.ing.at/online-banking/wicket/wicket/page?2-2.IBehaviorListener.0-form-download
+    // GET
+    // https://banking.ing.at/online-banking/wicket/wicket/page?2-2.IBehaviorListener.0-&antiCache=<NUMBER3>
     // ^--- Response contains second CSV body
     //
     // where <NUMBER1>, <NUMBER2>, <NUMBER3> are placeholders.
@@ -435,7 +494,8 @@ public final class IngAtApiClient {
                     final Date openingDate = getAccountOpeningDate(webLoginResponse, account);
                     accountOpeningDates.put(account.getAccountNumber(), openingDate);
                 }
-                return getSubsequentCheckingTransactionsResponse(webLoginResponse, account, fromDate, toDate);
+                return getSubsequentCheckingTransactionsResponse(
+                        webLoginResponse, account, fromDate, toDate);
             case SAVINGS:
                 return getSavingsTransactionsResponse(webLoginResponse, account);
         }
@@ -453,8 +513,7 @@ public final class IngAtApiClient {
     }
 
     private Date getAccountOpeningDate(
-            final WebLoginResponse webLoginResponse,
-            final TransactionalAccount account) {
+            final WebLoginResponse webLoginResponse, final TransactionalAccount account) {
         final HttpResponse exportResponse = requestExport();
         final HttpResponse responseCsvDownloadPage = redirect(exportResponse);
 
@@ -464,7 +523,8 @@ public final class IngAtApiClient {
         final Date toDate = new GregorianCalendar(10000, 1, 1).getTime();
 
         requestDateRange(exportResponse, account, fromDate, toDate);
-        final int pageNumber = pageNumberFromAjaxLocation(exportResponse.getHeaders().getFirst("Ajax-Location"));
+        final int pageNumber =
+                pageNumberFromAjaxLocation(exportResponse.getHeaders().getFirst("Ajax-Location"));
         final HttpResponse responseFormDownload = requestFormDownload(pageNumber, fromDate, toDate);
 
         downloadCount += 1; // TODO
@@ -480,10 +540,13 @@ public final class IngAtApiClient {
 
         refreshCurrentPage();
 
-        final Date adjustedFromDate = adjustDate(fromDate, accountOpeningDates.get(account.getAccountNumber()));
-        final Date adjustedToDate = adjustDate(toDate, accountOpeningDates.get(account.getAccountNumber()));
+        final Date adjustedFromDate =
+                adjustDate(fromDate, accountOpeningDates.get(account.getAccountNumber()));
+        final Date adjustedToDate =
+                adjustDate(toDate, accountOpeningDates.get(account.getAccountNumber()));
 
-        final HttpResponse responseFormDownload = requestFormDownload(3, adjustedFromDate, adjustedToDate);
+        final HttpResponse responseFormDownload =
+                requestFormDownload(3, adjustedFromDate, adjustedToDate);
         final HttpResponse antiCacheResponse = requestAntiCache(responseFormDownload);
 
         final Date openingDate = accountOpeningDates.get(account.getAccountNumber());
@@ -491,9 +554,7 @@ public final class IngAtApiClient {
 
         final CSVTransactionsPage csvPaginatorResponse =
                 new CSVTransactionsPage(
-                        antiCacheResponse.getBody(String.class),
-                        isAfterOpeningDate
-                );
+                        antiCacheResponse.getBody(String.class), isAfterOpeningDate);
 
         downloadCount += 1; // TODO
 
@@ -503,10 +564,12 @@ public final class IngAtApiClient {
     private void refreshCurrentPage() {
         final int pageNo = 3;
 
-        final URL url = new URL("https://banking.ing.at/online-banking/wicket/wicket/page?" + pageNo);
-        final HttpResponse response = commonHeaders(url)
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .get(HttpResponse.class);
+        final URL url =
+                new URL("https://banking.ing.at/online-banking/wicket/wicket/page?" + pageNo);
+        final HttpResponse response =
+                commonHeaders(url)
+                        .header("Accept-Language", "en-US,en;q=0.5")
+                        .get(HttpResponse.class);
     }
 
     private void requestExportButton(final HttpResponse message) {
@@ -536,11 +599,12 @@ public final class IngAtApiClient {
                                         + pageNo
                                         + "-1.IBehaviorListener.0-umsaetze-transactionsSearchbarContainer-exportPanel-csvExportDesktop&_=%s",
                                 underscoreValue));
-        final HttpResponse response = commonHeaders(url)
-                .header("Wicket-Ajax", "true")
-                .header("Wicket-Ajax-BaseURL", "wicket/page?1")
-                .header("X-Requested-With", "XMLHttpRequest")
-                .get(HttpResponse.class);
+        final HttpResponse response =
+                commonHeaders(url)
+                        .header("Wicket-Ajax", "true")
+                        .header("Wicket-Ajax-BaseURL", "wicket/page?1")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .get(HttpResponse.class);
         return response;
     }
 
@@ -556,14 +620,12 @@ public final class IngAtApiClient {
                                 + "-1.ILinkListener-nav~wrapper-kontenAusklappen-kontoTableRepeater-"
                                 + accountIndex
                                 + "-kontoDetailLink");
-        final HttpResponse response = commonHeaders(url)
-                .get(HttpResponse.class);
+        final HttpResponse response = commonHeaders(url).get(HttpResponse.class);
         return response;
     }
 
     private PaginatorResponse getSavingsTransactionsResponse(
-            final WebLoginResponse webLoginResponse,
-            final TransactionalAccount account) {
+            final WebLoginResponse webLoginResponse, final TransactionalAccount account) {
         final int pageNo = 0;
 
         final HttpResponse selectAccountResponse = selectAccount(account, pageNo);
@@ -575,10 +637,7 @@ public final class IngAtApiClient {
         final boolean canFetchMore = false;
 
         final CSVTransactionsPage csvPaginatorResponse =
-                new CSVTransactionsPage(
-                        antiCacheResponse.getBody(String.class),
-                        canFetchMore
-                );
+                new CSVTransactionsPage(antiCacheResponse.getBody(String.class), canFetchMore);
 
         return csvPaginatorResponse;
     }
@@ -592,18 +651,21 @@ public final class IngAtApiClient {
                                 "https://banking.ing.at/online-banking/wicket/wicket/page?1-1.IBehaviorListener.0-umsaetzePanel-suche-exportLink&_=%s",
                                 underscoreValue));
 
-        final HttpResponse response = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Referer", "https://banking.ing.at/online-banking/wicket/wicket/page?1")
-                .header("Wicket-Ajax", "true")
-                .header("Wicket-Ajax-BaseURL", "wicket/page?1")
-                .header("Wicket-FocusedElementId", "id49")
-                .header("X-Requested-With", "XMLHttpRequest")
-                .header("Connection", "keep-alive")
-                .get(HttpResponse.class);
+        final HttpResponse response =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
+                        .header("Accept-Language", "en-US,en;q=0.5")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header(
+                                "Referer",
+                                "https://banking.ing.at/online-banking/wicket/wicket/page?1")
+                        .header("Wicket-Ajax", "true")
+                        .header("Wicket-Ajax-BaseURL", "wicket/page?1")
+                        .header("Wicket-FocusedElementId", "id49")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Connection", "keep-alive")
+                        .get(HttpResponse.class);
         return response;
     }
 
@@ -613,23 +675,32 @@ public final class IngAtApiClient {
             final Date fromDate,
             final Date toDate) {
 
-        final int currentPageNo = pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));
+        final int currentPageNo =
+                pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));
 
-        final URL url = new URL("https://banking.ing.at/online-banking/wicket/wicket/page?" + currentPageNo + "-1.IBehaviorListener.0-form-dateRange-ranges");
-        final HttpResponse response = client.request(url)
-                .header("Host", "banking.ing.at")
-                .header("Accept", "application/xml, text/xml, */*; q=0.01")
-                .header("Accept-Language", "en-US,en;q=0.5")
-                .header("Accept-Encoding", "gzip, deflate, br")
-                .header("Referer", "https://banking.ing.at/online-banking/wicket/wicket/page?" + currentPageNo)
-                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-                .header("Wicket-Ajax", "true")
-                .header("Wicket-Ajax-BaseURL", "wicket/page?" + currentPageNo)
-                .header("Wicket-FocusedElementId", "id17e")
-                .header("X-Requested-With", "XMLHttpRequest")
-                .header("Connection", "keep-alive")
-                .body(dateRangesForm(fromDate, toDate).serialize())
-                .post(HttpResponse.class);
+        final URL url =
+                new URL(
+                        "https://banking.ing.at/online-banking/wicket/wicket/page?"
+                                + currentPageNo
+                                + "-1.IBehaviorListener.0-form-dateRange-ranges");
+        final HttpResponse response =
+                client.request(url)
+                        .header("Host", "banking.ing.at")
+                        .header("Accept", "application/xml, text/xml, */*; q=0.01")
+                        .header("Accept-Language", "en-US,en;q=0.5")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header(
+                                "Referer",
+                                "https://banking.ing.at/online-banking/wicket/wicket/page?"
+                                        + currentPageNo)
+                        .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                        .header("Wicket-Ajax", "true")
+                        .header("Wicket-Ajax-BaseURL", "wicket/page?" + currentPageNo)
+                        .header("Wicket-FocusedElementId", "id17e")
+                        .header("X-Requested-With", "XMLHttpRequest")
+                        .header("Connection", "keep-alive")
+                        .body(dateRangesForm(fromDate, toDate).serialize())
+                        .post(HttpResponse.class);
         return response;
     }
 
@@ -654,7 +725,8 @@ public final class IngAtApiClient {
                         .header("Accept-Encoding", "gzip, deflate, br")
                         .header(
                                 "Referer",
-                                "https://banking.ing.at/online-banking/wicket/wicket/page?" + pageNumber)
+                                "https://banking.ing.at/online-banking/wicket/wicket/page?"
+                                        + pageNumber)
                         .header("Connection", "keep-alive")
                         .header("Upgrade-Insecure-Requests", "1")
                         .get(HttpResponse.class);
