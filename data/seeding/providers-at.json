@@ -143,7 +143,7 @@
         },
         {
             "name": "at-erstebank-thirdparty",
-            "displayName": "Sidentity",
+            "displayName": "s Identity",
             "groupDisplayName": "Erste Bank und Sparkasse",
             "popular": true,
             "status": "ENABLED",
@@ -160,8 +160,8 @@
             ],
           "supplementalFields": [
             {
-              "description": "Sidentity Verification code",
-              "helpText": "You will soon receive a message on your s Identity App.\n Open Sidentity, sign and then open Tink again",
+              "description": "s Identity Verification code",
+              "helpText": "You will soon receive a message on your s Identity App.\n Open s Identity, sign and then open Tink again",
               "immutable": true,
               "masked": false,
               "name": "logindescription"
