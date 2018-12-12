@@ -102,7 +102,7 @@ public class ErsteBankConstants {
     }
 
     public static class SIDENTITY {
-        public static final int MAX_SIDENTITY_POLLING_ATTEMPTS = 10;
+        public static final int MAX_SIDENTITY_POLLING_ATTEMPTS = 80;
         public static final String POLL_WAITING = "PENDING";
         public static final String POLL_DONE = "DONE";
     }
