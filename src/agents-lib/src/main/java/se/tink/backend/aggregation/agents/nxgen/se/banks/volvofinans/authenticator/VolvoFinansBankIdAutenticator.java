@@ -6,9 +6,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.InitBankIdRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -27,9 +29,23 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
 
     @Override
     public String init(String ssn) throws BankIdException, BankServiceException, AuthorizationException {
-        HttpResponse httpResponse = apiClient.loginBankIdInit(new InitBankIdRequest(ssn));
-        String location = httpResponse.getHeaders().getFirst(VolvoFinansConstants.Headers.HEADER_LOCATION);
-        return location.substring(location.lastIndexOf('/') + 1);
+        try {
+            HttpResponse httpResponse = apiClient.loginBankIdInit(new InitBankIdRequest(ssn));
+            String location = httpResponse.getHeaders().getFirst(VolvoFinansConstants.Headers.HEADER_LOCATION);
+            return location.substring(location.lastIndexOf('/') + 1);
+        } catch (HttpResponseException hre) {
+            HttpResponse httpResponse = hre.getResponse();
+
+            if (httpResponse.getStatus() == HttpStatus.SC_CONFLICT) {
+                ErrorResponse errorResponse = httpResponse.getBody(ErrorResponse.class);
+
+                if (errorResponse.isBankIdAlreadyInProgressError()) {
+                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                }
+            }
+
+            throw hre;
+        }
     }
 
     @Override
