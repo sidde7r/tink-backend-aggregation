@@ -32,13 +32,13 @@ public class LysaClient {
         StartBankIdRequest request = new StartBankIdRequest();
         request.setIdentificationNumber(socialSecurityNumber.asString());
 
-        return createClientRequest("login/bankid/start").post(StartBankIdResponse.class, request);
+        return createClientRequest("login/bankid").post(StartBankIdResponse.class, request);
     }
 
     public PollBankIdResponse pollBankId(String transactionId) {
         Preconditions.checkNotNull(transactionId);
 
-        return createClientRequest("login/bankid/poll/" + transactionId).get(PollBankIdResponse.class);
+        return createClientRequest("login/bankid/" + transactionId).get(PollBankIdResponse.class);
     }
 
     public List<TransactionEntity> getTransactions() {
