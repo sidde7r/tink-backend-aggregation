@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class FortisConstants {
 
@@ -32,6 +33,7 @@ public class FortisConstants {
 
     public static class ERRORCODE {
         public static String ERROR_CODE = "ErrCode";
+        public static String INVALID_SIGNATURE = "EEBA0028";
         public static String WRONG_PASSWORD = "EEBA0028";
         public static String MAXIMUM_NUMBER_OF_TRIES = "EEBA0026";
     }
