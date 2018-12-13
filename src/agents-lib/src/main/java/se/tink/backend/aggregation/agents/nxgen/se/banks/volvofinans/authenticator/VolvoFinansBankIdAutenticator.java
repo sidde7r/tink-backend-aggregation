@@ -3,9 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authentica
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansApiClient;
@@ -15,20 +13,17 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticat
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String> {
 
     private final VolvoFinansApiClient apiClient;
-    private final SessionStorage sessionStorage;
 
-    public VolvoFinansBankIdAutenticator(VolvoFinansApiClient apiClient, SessionStorage sessionStorage) {
+    public VolvoFinansBankIdAutenticator(VolvoFinansApiClient apiClient) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public String init(String ssn) throws BankIdException, BankServiceException, AuthorizationException {
+    public String init(String ssn) throws BankIdException {
         try {
             HttpResponse httpResponse = apiClient.loginBankIdInit(new InitBankIdRequest(ssn));
             String location = httpResponse.getHeaders().getFirst(VolvoFinansConstants.Headers.HEADER_LOCATION);
@@ -49,7 +44,7 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
     }
 
     @Override
-    public BankIdStatus collect(String identificationId) throws AuthenticationException, AuthorizationException {
+    public BankIdStatus collect(String identificationId) throws AuthenticationException {
         BankIdStatus bankIdStatus = apiClient.loginBankIdPoll(identificationId).getBankIdStatus();
 
         if (bankIdStatus.equals(BankIdStatus.DONE)) {
