@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Predicates;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.SubItemsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.SubcardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.TimelineEntity;
@@ -21,21 +23,28 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class AmericanExpressV62TransactionFetcher
         implements TransactionPagePaginator<CreditCardAccount> {
     private final AmericanExpressV62ApiClient client;
     private final AmericanExpressV62Configuration config;
+    private final SessionStorage sessionStorage;
 
     private AmericanExpressV62TransactionFetcher(
-            AmericanExpressV62ApiClient client, AmericanExpressV62Configuration config) {
+            AmericanExpressV62ApiClient client,
+            AmericanExpressV62Configuration config,
+            SessionStorage sessionStorage) {
         this.client = client;
         this.config = config;
+        this.sessionStorage = sessionStorage;
     }
 
     public static AmericanExpressV62TransactionFetcher create(
-            AmericanExpressV62ApiClient client, AmericanExpressV62Configuration config) {
-        return new AmericanExpressV62TransactionFetcher(client, config);
+            AmericanExpressV62ApiClient client,
+            AmericanExpressV62Configuration config,
+            SessionStorage sessionStorage) {
+        return new AmericanExpressV62TransactionFetcher(client, config, sessionStorage);
     }
 
     @Override
@@ -62,15 +71,18 @@ public class AmericanExpressV62TransactionFetcher
 
     private List<Transaction> getPendingTransactionsFor(
             CreditCardAccount account, TimelineEntity timeline) {
+        List<CardEntity> partnerCardEntities =
+                AmericanExpressV62Predicates.filterOutMainCardFromPartnerCards(
+                        sessionStorage
+                                .get(
+                                        AmericanExpressV62Constants.Tags.CARD_LIST,
+                                        new TypeReference<List<CardEntity>>() {})
+                                .orElse(Collections.emptyList()),
+                        account);
 
         List<SubcardEntity> partnerCards =
-                timeline.getCardList()
-                        .stream()
-                        .filter(
-                                subCard ->
-                                        AmericanExpressV62Predicates.isPartnerCard.test(
-                                                account, subCard))
-                        .collect(Collectors.toList());
+                AmericanExpressV62Predicates.getPartnerCardsFromSubcards(
+                        timeline.getCardList(), partnerCardEntities);
 
         List<String> pendingIdList =
                 Optional.ofNullable(timeline.getTimelineItems())

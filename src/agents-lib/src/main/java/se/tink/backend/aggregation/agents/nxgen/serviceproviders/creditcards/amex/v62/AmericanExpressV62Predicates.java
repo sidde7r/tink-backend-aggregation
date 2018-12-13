@@ -67,14 +67,42 @@ public class AmericanExpressV62Predicates {
                             .collect(Collectors.toList())
                             .isEmpty();
 
-    public static BiPredicate<CreditCardAccount, SubcardEntity> isPartnerCard =
+    public static BiPredicate<CardEntity, SubcardEntity> isPartnerCard =
             (cardEntity, subcardEntity) ->
                     getCardEndingNumbers
-                            .apply(cardEntity.getAccountNumber())
+                            .apply(cardEntity.getCardNumberDisplay())
                             .equals(getCardEndingNumbers.apply(subcardEntity.getCardProductName()));
+    public static BiPredicate<CreditCardAccount, CardEntity> notMainCard =
+            (main, subCard) ->
+                    !getCardEndingNumbers
+                            .apply(subCard.getCardNumberDisplay())
+                            .equals(getCardEndingNumbers.apply(main.getAccountNumber()));
 
     public static final Consumer<TransactionEntity> transformIntoTinkTransactions(
             AmericanExpressV62Configuration config, List<Transaction> list) {
         return transaction -> list.add(transaction.toTransaction(config, false));
+    }
+
+    public static final List<CardEntity> filterOutMainCardFromPartnerCards(
+            List<CardEntity> cardList, CreditCardAccount account) {
+        return cardList.stream()
+                .filter(subCard -> AmericanExpressV62Predicates.notMainCard.test(account, subCard))
+                .collect(Collectors.toList());
+    }
+
+    public static List<SubcardEntity> getPartnerCardsFromSubcards(List<SubcardEntity> subcardList, List<CardEntity> partnerCardList) {
+
+     return subcardList
+                        .stream()
+                        .filter(
+                                subCard ->
+                                        partnerCardList
+                                                .stream()
+                                                .anyMatch(
+                                                        mainCard ->
+                                                                AmericanExpressV62Predicates
+                                                                        .isPartnerCard.test(
+                                                                        mainCard, subCard)))
+             .collect(Collectors.toList());
     }
 }
