@@ -127,6 +127,7 @@
       "credentialsType": "PASSWORD",
       "className": "nxgen.at.banks.erstebank.password.ErsteBankPasswordAgent",
       "transactional": "true",
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
         {
           "name": "username",
@@ -150,6 +151,7 @@
       "type": "BANK",
       "credentialsType": "PASSWORD",
       "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
+      "passwordHelpText": "Use the same username as you would in your bank's mobile app.",
       "transactional": "true",
       "fields": [
         {
@@ -161,7 +163,7 @@
       "supplementalFields": [
         {
           "description": "s Identity Verification code",
-          "helpText": "You will soon receive a message on your s Identity App.\n Open s Identity, sign and then open Tink again",
+          "helpText": "You will soon receive a message on your s Identity App.\nOpen s Identity and sign.\nThen open Tink and press Submit",
           "immutable": true,
           "masked": false,
           "name": "logindescription"
