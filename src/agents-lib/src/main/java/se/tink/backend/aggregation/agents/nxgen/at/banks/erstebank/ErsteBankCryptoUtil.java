@@ -26,22 +26,22 @@ public class ErsteBankCryptoUtil {
 
     public static TokenEntity getTokenFromResponse(HttpResponse response) throws LoginException {
         String location = response.getHeaders().getFirst(ErsteBankConstants.LOCATION);
-        String accessToken = match(ErsteBankConstants.PATTERN.ACCESS_TOKEN, location);
-        String tokenType = match(ErsteBankConstants.PATTERN.TOKEN_TYPE, location);
-        String expiresIn = match(ErsteBankConstants.PATTERN.EXPIRES_IN, location);
+        String accessToken = matchOrThrow(ErsteBankConstants.PATTERN.ACCESS_TOKEN, location);
+        String tokenType = matchOrThrow(ErsteBankConstants.PATTERN.TOKEN_TYPE, location);
+        String expiresIn = matchOrThrow(ErsteBankConstants.PATTERN.EXPIRES_IN, location);
 
         return new TokenEntity(accessToken, tokenType, expiresIn);
     }
 
     public static EncryptionValuesEntity getEncryptionValues(String html) throws LoginException {
-        String salt = match(ErsteBankConstants.PATTERN.SALT, html);
-        String exponent = match(ErsteBankConstants.PATTERN.EXPONENT, html);
-        String modulus = match(ErsteBankConstants.PATTERN.MODULUS, html);
+        String salt = matchOrThrow(ErsteBankConstants.PATTERN.SALT, html);
+        String exponent = matchOrThrow(ErsteBankConstants.PATTERN.EXPONENT, html);
+        String modulus = matchOrThrow(ErsteBankConstants.PATTERN.MODULUS, html);
 
         return new EncryptionValuesEntity(salt, exponent, modulus);
     }
 
-    private static String match(Pattern pattern, String html) throws LoginException {
+    private static String matchOrThrow(Pattern pattern, String html) throws LoginException {
         Matcher matcher = pattern.matcher(html);
         if(matcher.find()){
             return matcher.group(1);
@@ -51,7 +51,7 @@ public class ErsteBankCryptoUtil {
     }
 
     public static String getSidentityCode(String html) throws LoginException {
-        return match(ErsteBankConstants.PATTERN.SIDENTITY_VERIFICATION_CODE, html);
+        return matchOrThrow(ErsteBankConstants.PATTERN.SIDENTITY_VERIFICATION_CODE, html);
     }
 
     public static String getRSAPassword(String salt, String privateExponent, String publicModulus, String password)
