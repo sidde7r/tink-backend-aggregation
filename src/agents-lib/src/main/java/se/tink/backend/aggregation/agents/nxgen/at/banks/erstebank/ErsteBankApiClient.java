@@ -3,25 +3,27 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank;
 import java.util.NoSuchElementException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity.EncryptionValuesEntity;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity.TokenEntity;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.rpc.AccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity.EncryptionValuesEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity.TokenEntity;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity.authenticator.rpc.PollResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class ErsteBankApiClient {
 
     private final TinkHttpClient client;
-    private final SessionStorage storage;
+    private final PersistentStorage persistentStorage;
 
-    public ErsteBankApiClient(TinkHttpClient client, SessionStorage storage) {
+    public ErsteBankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
-        this.storage = storage;
+        this.persistentStorage = persistentStorage;
 
         //This is required, otherwise TinkHttpClient throws exception due to deeplink redirect
         client.setFollowRedirects(false);
@@ -50,7 +52,7 @@ public class ErsteBankApiClient {
                 .queryParam(ErsteBankConstants.QUERYPARAMS.REDIRECT_URI, redirectUrl);
     }
 
-    private EncryptionValuesEntity GetEncryptionValues(String username) {
+    private EncryptionValuesEntity GetEncryptionValues(String username) throws LoginException {
         String html = getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.OAUTH,
                 ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
                 ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
@@ -74,7 +76,7 @@ public class ErsteBankApiClient {
                 .post(HttpResponse.class, ErsteBankConstants.BODY.JAVASCRIPT_ENABLED);
     }
 
-    public EncryptionValuesEntity getEncryptionValues(String username) {
+    public EncryptionValuesEntity getEncryptionValues(String username) throws LoginException {
         getCookies();
         sendJavascriptEnabled();
         return GetEncryptionValues(username);
@@ -84,7 +86,8 @@ public class ErsteBankApiClient {
 
         Form form = Form.builder()
                 .put(ErsteBankConstants.BODY.RSA_ENCRYPTED, rsa)
-                .put(ErsteBankConstants.BODY.AUTHENTICATION_METHOD, ErsteBankConstants.BODY.AUTHENTICATION_METHOD_PASSWORD)
+                .put(ErsteBankConstants.BODY.AUTHENTICATION_METHOD,
+                        ErsteBankConstants.BODY.AUTHENTICATION_METHOD_PASSWORD)
                 .build();
 
         return getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.OAUTH,
@@ -94,8 +97,8 @@ public class ErsteBankApiClient {
                 .post(HttpResponse.class, form.serialize());
     }
 
-    private TokenEntity getTokenFromStorage() {
-        return storage.get(ErsteBankConstants.STORAGE.TOKEN_ENTITY, TokenEntity.class)
+    public TokenEntity getTokenFromStorage() {
+        return persistentStorage.get(ErsteBankConstants.STORAGE.TOKEN_ENTITY, TokenEntity.class)
                 .orElseThrow(() -> new NoSuchElementException("Token missing"));
     }
 
@@ -139,11 +142,42 @@ public class ErsteBankApiClient {
     }
 
     public void saveToken(TokenEntity tokenEntity) {
-        storage.put(ErsteBankConstants.STORAGE.TOKEN_ENTITY, tokenEntity);
+        persistentStorage.put(ErsteBankConstants.STORAGE.TOKEN_ENTITY, tokenEntity);
     }
 
+
     public boolean tokenExists() {
-        return storage.containsKey(ErsteBankConstants.STORAGE.TOKEN_ENTITY);
+        return persistentStorage.containsKey(ErsteBankConstants.STORAGE.TOKEN_ENTITY);
+    }
+
+    // Sidentity
+
+    public PollResponse pollStatus() {
+        return getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.POLL, "*/*")
+                .post(PollResponse.class);
+    }
+
+    public String getSidentityVerificationCode(String username) throws LoginException {
+        getCookies();
+        sendJavascriptEnabled();
+
+        String html = getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.OAUTH,
+                ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
+                ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(String.class, ErsteBankConstants.BODY.USERNAME + username);
+
+        return ErsteBankCryptoUtil.getSidentityCode(html);
+    }
+
+    public TokenEntity getSidentityToken() throws LoginException {
+        HttpResponse response = getRequest(ErsteBankConstants.URLS.LOGIN_BASE, ErsteBankConstants.URLS.OAUTH,
+                ErsteBankConstants.QUERYPARAMS.SPARKASSE_ACCEPT,
+                ErsteBankConstants.QUERYPARAMS.REDIRECT_URI_AUTHENTICATION)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .post(HttpResponse.class);
+
+        return ErsteBankCryptoUtil.getTokenFromResponse(response);
     }
 
 }
