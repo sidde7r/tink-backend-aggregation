@@ -34,7 +34,8 @@ public class ErstebankSidentityAuthenticator implements MultiFactorAuthenticator
 
     @Override
     public CredentialsTypes getType() {
-        return CredentialsTypes.THIRD_PARTY_APP;
+        // Fix for not refreshing the credential automatically
+        return CredentialsTypes.MOBILE_BANKID;
     }
 
     @Override
