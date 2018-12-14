@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaTransactionResponse;
@@ -12,6 +11,9 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 public class ArgentaParsingTests {
 
@@ -60,6 +62,20 @@ public class ArgentaParsingTests {
         Assert.assertEquals("error.request.invalid", argentaErrorResponse.getCode());
         Assert.assertEquals(1, argentaErrorResponse.getFieldErrors().size());
         Assert.assertEquals(ArgentaTestData.CARD_NUMBER_REQUIRED, argentaErrorResponse.getFieldErrors().get(0).getMessage());
+    }
+
+    @Test
+    public void shouldParseErrorMessage() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArgentaErrorResponse argentaErrorResponse = objectMapper.readValue(ArgentaTestData.AUTHENTICATION_ERROR, ArgentaErrorResponse.class);
+        Assert.assertEquals(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP, argentaErrorResponse.getCode());
+    }
+
+    @Test
+    public void shouldParseToManyDevicesMessage() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArgentaErrorResponse argentaErrorResponse = objectMapper.readValue(ArgentaTestData.TOO_MANY_DEVICE_ERROR, ArgentaErrorResponse.class);
+        Assert.assertTrue(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP, argentaErrorResponse.getMessage().contains("maximumaantal actieve registraties"));
     }
 
 
