@@ -161,36 +161,6 @@
         }
       ],
       "capabilities": []
-    },
-    {
-      "name": "at-erstebank-thirdparty",
-      "currency": "EUR",
-      "market": "AT",
-      "displayName": "s Identity",
-      "groupDisplayName": "Erste Bank und Sparkasse",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "MOBILE_BANKID",
-      "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
-      "passwordHelpText": "Use the same username as you would in your bank's mobile app.",
-      "transactional": "true",
-      "fields": [
-        {
-          "name": "username",
-          "description": "User code",
-          "immutable": true
-        }
-      ],
-      "supplementalFields": [
-        {
-          "description": "s Identity Verification code",
-          "helpText": "You will soon receive a message on your s Identity App.\nOpen s Identity and sign.\nThen open Tink and press Submit",
-          "immutable": true,
-          "masked": false,
-          "name": "logindescription"
-        }
-      ]
     }
   ]
 }

@@ -149,7 +149,7 @@
       "popular": true,
       "status": "ENABLED",
       "type": "BANK",
-      "credentialsType": "THIRD_PARTY_APP",
+      "credentialsType": "MOBILE_BANKID",
       "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
       "passwordHelpText": "Use the same username as you would in your bank's mobile app.",
       "transactional": "true",
