@@ -10,6 +10,6 @@ public class CoopV2AgentTest extends AbstractAgentTest<CoopV2Agent> {
 
     @Test
     public void testAgent() throws Exception {
-        testAgent("daniel.lervik@gmail.com", "ASK_DANIEL");
+        testAgent("name@example.com", "mypassword");
     }
 }
