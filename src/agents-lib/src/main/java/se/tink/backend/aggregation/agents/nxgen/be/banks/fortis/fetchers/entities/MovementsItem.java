@@ -122,9 +122,6 @@ public class MovementsItem {
         }
     }
 
-    private String getExternalId() {
-        return operationId;
-    }
 
     public boolean isValid() {
         try {
@@ -142,7 +139,6 @@ public class MovementsItem {
                 .setAmount(getTinkAmount())
                 .setDate(getDate())
                 .setDescription(getTransactionDescription())
-                .setExternalId(getExternalId())
                 .build();
     }
 }
