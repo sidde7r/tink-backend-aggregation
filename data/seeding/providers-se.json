@@ -1796,6 +1796,7 @@
             "credentialsType": "MOBILE_BANKID",
             "displayDescription": "Mobile BankID",
             "displayName": "Test BankID (successful) ",
+            "groupDisplayName": "Test BankID (successful) ",
             "fields": [
                 {
                     "hint": "YYYYMMDDNNNN",
@@ -1823,6 +1824,7 @@
             "credentialsType": "MOBILE_BANKID",
             "displayDescription": "Mobile BankID",
             "displayName": "Test BankID (failing) ",
+            "groupDisplayName": "Test BankID (failing) ",
             "fields": [
                 {
                     "hint": "YYYYMMDDNNNN",
