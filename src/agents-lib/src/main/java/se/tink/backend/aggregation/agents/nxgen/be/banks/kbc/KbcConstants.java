@@ -188,7 +188,11 @@ public class KbcConstants {
 
     public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES = ImmutableMap.<String, AccountTypes>builder()
             .put("3844", AccountTypes.CHECKING)
+            .put("3737", AccountTypes.CHECKING) // Business Pro
+            .put("0028", AccountTypes.CHECKING) // Company Card
             .put("3591", AccountTypes.SAVINGS)
+            .put("3867", AccountTypes.SAVINGS) // Savings Pro
+            .put("3590", AccountTypes.SAVINGS) // Start2Save
             .build();
 
     public static final class ErrorMessage {

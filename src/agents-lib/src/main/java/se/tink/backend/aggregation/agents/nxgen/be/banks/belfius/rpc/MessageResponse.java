@@ -23,7 +23,8 @@ public class MessageResponse extends ResponseEntity {
 
     public static boolean isError(BelfiusResponse response) {
         MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
-        return messageResponse != null && messageResponse.getMessageType().equalsIgnoreCase("error");
+        return messageResponse != null && (messageResponse.getMessageType().equalsIgnoreCase("error")
+                                       || messageResponse.getMessageType().equalsIgnoreCase("fatal"));
     }
 
     public static void validate(BelfiusResponse response) throws IllegalStateException {
