@@ -38,6 +38,9 @@ public final class IngAtApiClient {
     // Increments every time a CSV file is downloaded
     private int downloadCount = 1;
 
+    // TODO Should be used everywhere and maybe encapsulated in an immutable State class
+    private int currentPage = 0;
+
     // TODO session storage?
     // Account numbers -> account opening dates
     private final Map<String, Date> accountOpeningDates = new HashMap<>();
@@ -340,8 +343,7 @@ public final class IngAtApiClient {
                     final Date openingDate = getAccountOpeningDate(webLoginResponse, account);
                     accountOpeningDates.put(account.getAccountNumber(), openingDate);
                 }
-                return getSubsequentCheckingTransactionsResponse(
-                        webLoginResponse, account, fromDate, toDate);
+                return getSubsequentCheckingTransactionsResponse(account, fromDate, toDate);
             case SAVINGS:
                 return getSavingsTransactionsResponse(webLoginResponse, account);
         }
@@ -369,9 +371,9 @@ public final class IngAtApiClient {
         final Date toDate = new GregorianCalendar(10000, 1, 1).getTime();
 
         requestDateRange(exportResponse, account, fromDate, toDate);
-        final int pageNumber =
+        currentPage =
                 pageNumberFromAjaxLocation(exportResponse.getHeaders().getFirst("Ajax-Location"));
-        final HttpResponse responseFormDownload = requestFormDownload(pageNumber, fromDate, toDate);
+        final HttpResponse responseFormDownload = requestFormDownload(currentPage, fromDate, toDate);
 
         downloadCount += 1; // TODO
 
@@ -379,7 +381,6 @@ public final class IngAtApiClient {
     }
 
     private PaginatorResponse getSubsequentCheckingTransactionsResponse(
-            final WebLoginResponse webLoginResponse,
             final TransactionalAccount account,
             final Date fromDate,
             final Date toDate) {
@@ -392,7 +393,7 @@ public final class IngAtApiClient {
                 adjustDate(toDate, accountOpeningDates.get(account.getAccountNumber()));
 
         final HttpResponse responseFormDownload =
-                requestFormDownload(3, adjustedFromDate, adjustedToDate);
+                requestFormDownload(currentPage, adjustedFromDate, adjustedToDate);
         final HttpResponse antiCacheResponse = requestAntiCache(responseFormDownload);
 
         final Date openingDate = accountOpeningDates.get(account.getAccountNumber());
@@ -408,10 +409,8 @@ public final class IngAtApiClient {
     }
 
     private void refreshCurrentPage() {
-        final int pageNo = 3;
-
         final URL url =
-                new URL("https://banking.ing.at/online-banking/wicket/wicket/page?" + pageNo);
+                new URL("https://banking.ing.at/online-banking/wicket/wicket/page?" + currentPage);
         final HttpResponse response =
                 commonHeaders(url)
                         .header("Accept-Language", "en-US,en;q=0.5")
