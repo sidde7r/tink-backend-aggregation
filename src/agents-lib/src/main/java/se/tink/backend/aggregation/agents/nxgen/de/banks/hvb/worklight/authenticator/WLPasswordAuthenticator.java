@@ -200,7 +200,7 @@ public final class WLPasswordAuthenticator implements PasswordAuthenticator {
      * Tell server that we want to log in
      */
     private void login(final String wlInstanceId) {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put(WLConstants.Forms.REALM, WLConstants.Forms.REALM_VALUE)
                 .build();
         final HttpResponse response = getRequest(getApiPath(WLConstants.Url.LOGIN),
@@ -215,7 +215,7 @@ public final class WLPasswordAuthenticator implements PasswordAuthenticator {
      * Fetch px2 string
      */
     private String loginSecurityCheck(String username, String password, final String wlInstanceId) {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put(WLConstants.Forms.J_USERNAME)
                 .put(WLConstants.Forms.J_PASSWORD)
                 .put(WLConstants.Forms.USERNAME, username)
@@ -251,7 +251,7 @@ public final class WLPasswordAuthenticator implements PasswordAuthenticator {
      */
     private void invoke(final String username, final String px2, final String wlInstanceId)
             throws LoginException, AuthorizationException {
-        final Form request = new Form.Builder()
+        final Form request = Form.builder()
                 .put(WLConstants.Forms.ADAPTER, WLConstants.Forms.ADAPTER_SECURITY_SERVICE)
                 .put(WLConstants.Forms.PROCEDURE, WLConstants.Forms.PROCEDURE_LOGIN)
                 .put(WLConstants.Forms.COMPRESS_RESPONSE)
