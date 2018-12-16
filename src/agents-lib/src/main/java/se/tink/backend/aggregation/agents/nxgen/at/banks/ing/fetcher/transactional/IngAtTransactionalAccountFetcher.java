@@ -34,8 +34,13 @@ public class IngAtTransactionalAccountFetcher implements AccountFetcher<Transact
 
     private static boolean isTransactionalAccountType(AccountReferenceEntity r) {
         final String type = r.getType();
-        return (type.equalsIgnoreCase(AccountTypes.CHECKING.toString()) ||
-                type.equalsIgnoreCase(AccountTypes.SAVINGS.toString()));
+        switch (type.toUpperCase()) {
+            case "CHECKING":
+            case "SAVINGS":
+                return true;
+        }
+        logger.warn("Unknown account type: {}", type);
+        return false;
     }
 
     @Override
