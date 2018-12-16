@@ -39,14 +39,11 @@ public final class CSVTransactionsPage implements PaginatorResponse {
         } catch (ParseException e) {
             throw new IllegalStateException();
         }
-        final double amountValue = Double.parseDouble(outgoingAmount.replace(".", "").replace(",", "."));
+        final double amountValue =
+                Double.parseDouble(outgoingAmount.replace(".", "").replace(",", "."));
         final Amount amount = new Amount(currency.trim(), amountValue);
 
-        return Transaction.builder()
-                .setDate(date)
-                .setAmount(amount)
-                .setDescription(text)
-                .build();
+        return Transaction.builder().setDate(date).setAmount(amount).setDescription(text).build();
     }
 
     @Override
