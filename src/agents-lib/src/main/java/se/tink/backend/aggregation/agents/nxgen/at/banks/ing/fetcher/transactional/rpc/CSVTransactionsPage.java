@@ -59,6 +59,7 @@ public final class CSVTransactionsPage implements PaginatorResponse {
             return parser.getRecords()
                     .stream()
                     .map(CSVTransactionsPage::recordToTransaction)
+                    .filter(t -> t.getAmount().getValue() != 0.0)
                     .collect(Collectors.toSet());
         } catch (IOException e) {
             throw new IllegalStateException();
