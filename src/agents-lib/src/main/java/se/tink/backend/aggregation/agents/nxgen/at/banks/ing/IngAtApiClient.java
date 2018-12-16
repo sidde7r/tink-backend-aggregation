@@ -343,7 +343,7 @@ public final class IngAtApiClient {
                     final Date openingDate = getAccountOpeningDate(webLoginResponse, account);
                     accountOpeningDates.put(account.getAccountNumber(), openingDate);
                 }
-                return getSubsequentCheckingTransactionsResponse(account, fromDate, toDate);
+                return getCheckingTransactionsResponse(account, fromDate, toDate);
             case SAVINGS:
                 return getSavingsTransactionsResponse(webLoginResponse, account);
         }
@@ -380,7 +380,7 @@ public final class IngAtApiClient {
         return extractAccountOpeningDate(responseFormDownload.getBody(String.class));
     }
 
-    private PaginatorResponse getSubsequentCheckingTransactionsResponse(
+    private PaginatorResponse getCheckingTransactionsResponse(
             final TransactionalAccount account,
             final Date fromDate,
             final Date toDate) {
