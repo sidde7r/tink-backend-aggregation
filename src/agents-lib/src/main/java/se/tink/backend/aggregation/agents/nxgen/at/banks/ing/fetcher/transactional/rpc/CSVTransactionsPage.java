@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactio
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
@@ -16,6 +18,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class CSVTransactionsPage implements PaginatorResponse {
+    public static Logger logger = LoggerFactory.getLogger(CSVTransactionsPage.class);
+
     private final String csvBody;
     private final boolean keepFetching;
 
@@ -46,6 +50,10 @@ public final class CSVTransactionsPage implements PaginatorResponse {
 
         final double outgoingValue = toValue(outgoingAmount);
         final double incomingValue = toValue(incomingAmount);
+
+        if (Math.min(outgoingValue, incomingValue) != 0.0) {
+            logger.warn("Found a transaction where both the outgoing and incoming amounts were nonzero");
+        }
 
         final double amountValue = incomingValue - outgoingValue;
         final Amount amount = new Amount(currency.trim(), amountValue);
