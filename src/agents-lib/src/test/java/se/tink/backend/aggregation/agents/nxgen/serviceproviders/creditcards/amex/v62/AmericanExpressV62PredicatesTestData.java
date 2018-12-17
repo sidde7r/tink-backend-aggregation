@@ -44,7 +44,7 @@ public class AmericanExpressV62PredicatesTestData {
                     + PARTNER_CARD_NUMBER
                     + "\",\"suppIndex\":\"01\"}";
     public static final String REGULAR_SUBCARD =
-            "{\"cardMemberName\":\"MAIN OWNER\",\"cardProductName\":\"SAS Amex Premium-12346\",\"suppIndex\":\"00\"}";
+            "{\"cardMemberName\":\"MAIN OWNER\",\"cardProductName\":\"SAS Amex Premium-11111\",\"suppIndex\":\"00\"}";
     public static final String TRANSACTION =
             "{\"transactionId\":\"AAAAAAAAAAAAAAAAAAAAAAA---AAAA---AAAAAAAA\","
                     + "\"transactionReference\":\"AAAAAAAAAAAAAAAAAAAAAAA\","

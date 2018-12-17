@@ -176,4 +176,20 @@ public class AmericanExpressV62PredicatesTest {
                         Collections.EMPTY_LIST, Lists.newArrayList(partnerCardEntity));
         assertTrue(cardEntities.isEmpty());
     }
+
+    @Test
+    public void checkIfSubcardIsParterCard_IsPartnerCard() throws IOException {
+        SubcardEntity subcardEntity = mapper.readValue(
+                AmericanExpressV62PredicatesTestData.PARTNER_SUBCARD, SubcardEntity.class);
+        assertTrue(AmericanExpressV62Predicates.checkIfSubcardIsParterCard.test(
+                        subcardEntity, Lists.newArrayList(partnerCardEntity)));
+    }
+
+    @Test
+    public void checkIfSubcardIsParterCard_NotPartnerCard() throws IOException {
+        SubcardEntity subcardEntity = mapper.readValue(
+                AmericanExpressV62PredicatesTestData.REGULAR_SUBCARD, SubcardEntity.class);
+        assertFalse(AmericanExpressV62Predicates.checkIfSubcardIsParterCard.test(
+                       subcardEntity,  Lists.newArrayList(partnerCardEntity)));
+    }
 }

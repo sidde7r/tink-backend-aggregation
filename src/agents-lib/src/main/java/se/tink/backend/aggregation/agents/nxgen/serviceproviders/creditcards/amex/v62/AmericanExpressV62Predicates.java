@@ -78,6 +78,15 @@ public class AmericanExpressV62Predicates {
                             .apply(subCard.getCardNumberDisplay())
                             .equals(getCardEndingNumbers.apply(main.getAccountNumber()));
 
+    protected static BiPredicate<SubcardEntity, List<CardEntity>> checkIfSubcardIsParterCard =
+            (subCard, partnerCardList) ->
+                    partnerCardList
+                            .stream()
+                            .anyMatch(
+                                    mainCard ->
+                                            AmericanExpressV62Predicates.isPartnerCard.test(
+                                                    mainCard, subCard));
+
     public static final Consumer<TransactionEntity> transformIntoTinkTransactions(
             AmericanExpressV62Configuration config, List<Transaction> list) {
         return transaction -> list.add(transaction.toTransaction(config, false));
@@ -90,19 +99,11 @@ public class AmericanExpressV62Predicates {
                 .collect(Collectors.toList());
     }
 
-    public static List<SubcardEntity> getPartnerCardsFromSubcards(List<SubcardEntity> subcardList, List<CardEntity> partnerCardList) {
-
-     return subcardList
-                        .stream()
-                        .filter(
-                                subCard ->
-                                        partnerCardList
-                                                .stream()
-                                                .anyMatch(
-                                                        mainCard ->
-                                                                AmericanExpressV62Predicates
-                                                                        .isPartnerCard.test(
-                                                                        mainCard, subCard)))
-             .collect(Collectors.toList());
+    public static List<SubcardEntity> getPartnerCardsFromSubcards(
+            List<SubcardEntity> subcardList, List<CardEntity> partnerCardList) {
+        return subcardList
+                .stream()
+                .filter(subcard -> checkIfSubcardIsParterCard.test(subcard, partnerCardList))
+                .collect(Collectors.toList());
     }
 }
