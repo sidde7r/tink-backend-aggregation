@@ -8,6 +8,7 @@ icon:at-bankaustria https://cdn.tink.se/provider-images/at/at-bankaustria.png
 icon:at-bawagpsk https://cdn.tink.se/provider-images/at/at-bawagpsk.png
 icon:at-easybank https://cdn.tink.se/provider-images/at/at-easybank.png
 icon:at-erstebank https://cdn.tink.se/provider-images/at/at-erstebank.png
+icon:at-ing-diba	https://cdn.tink.se/provider-images/at/at-ing-diba.png
 icon:at-n26 https://cdn.tink.se/provider-images/at/at-n26.png
 icon:at-raiffeisen https://cdn.tink.se/provider-images/at/at-raiffeisen.png
 icon:at-revolut https://cdn.tink.se/provider-images/at/at-revolut.png
