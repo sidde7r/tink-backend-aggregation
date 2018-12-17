@@ -6,12 +6,12 @@ public class SparebankenVestEncapConfiguration implements EncapConfiguration {
 
     @Override
     public String getApplicationVersion() {
-        return "2.3.4";
+        return "3.2.4";
     }
 
     @Override
     public String getEncapApiVersion() {
-        return "2.9.2.1";
+        return "3.3.5";
     }
 
     @Override
