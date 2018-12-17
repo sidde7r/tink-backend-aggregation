@@ -76,7 +76,6 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
@@ -87,11 +86,13 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin, RefreshableItemExecutor {
     private static final int MAX_PAGES_LIMIT = 150;
     private static final String BASE_URL_SECURE = "https://login.skandia.se";
-    private static final String AUTHENTICATE_WITH_BANKID_AUTOSTART_URL = BASE_URL_SECURE + "/mobiltbankid/autostartauthenticate/";
+    private static final String AUTHENTICATE_WITH_BANKID_AUTOSTART_URL =
+            BASE_URL_SECURE + "/mobiltbankid/autostartauthenticate/";
     private static final int BANKID_LOGIN_METHOD_ID = 9;
     private static final String BASE_URL = "https://service2.smartrefill.se/BankServicesSkandia";
     private static final String COLLECT_BANKID_URL = BASE_URL_SECURE + "/mobiltbankid/collecting/";
@@ -113,10 +114,8 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     /**
      * Extract request verification token from a HTML document body.
      * 
-     * @param html
-     *            the HTML body to extract the request verification token from.
-     * @param formId
-     *            the HTML ID of the form that holds the request verification token.
+     * @param html   the HTML body to extract the request verification token from.
+     * @param formId the HTML ID of the form that holds the request verification token.
      * @return a string consisting of the request verification token.
      */
     private static MultivaluedMap<String, String> extractRequestVerificationToken(String html, String formId) {
@@ -432,8 +431,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     /**
      * Generate a map from query string.
      *
-     * @param query
-     *            a query string like "hej=1&yo=2". Can be extracted using {@link URL#getQuery()}.
+     * @param query a query string like "hej=1&yo=2". Can be extracted using {@link URL#getQuery()}.
      * @return a map containing the key/values.
      */
     private static ListMultimap<String, String> getQueryMap(String query) {
@@ -477,7 +475,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
     /**
      * Parse and convert the transactions.
-     * 
+     * <p>
      * Package-local visibility for testability.
      */
     static Transaction parseAccountTransaction(TransactionEntity transactionEntity) {
@@ -510,7 +508,6 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
         return transaction;
     }
-
 
     private Map<AccountEntity, Account> getAccounts() {
         if (accounts != null) {
@@ -639,7 +636,8 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                                 "Breaking because we found no transactions."));
             }
             if (Strings.isNullOrEmpty(accountEntity.getFwdKey())) {
-                log.debug(String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId, "Breaking due to missing fwdKey."));
+                log.debug(
+                        String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId, "Breaking due to missing fwdKey."));
             }
             if (isContentWithRefresh) {
                 log.debug(String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId,
@@ -676,8 +674,10 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         TinkApacheHttpClient4Handler tinkJerseyApacheHttpsClientHandler = new TinkApacheHttpClient4Handler(
                 apacheClient, cookieStore, false);
         TinkApacheHttpClient4 tinkJerseyClient = new TinkApacheHttpClient4(tinkJerseyApacheHttpsClientHandler);
+
         try {
-            tinkJerseyClient.addFilter(new LoggingFilter(new PrintStream(context.getLogOutputStream(), true, "UTF-8")));
+            tinkJerseyClient
+                    .addFilter(new LoggingFilter(new PrintStream(context.getLogOutputStream(), true, "UTF-8")));
         } catch (UnsupportedEncodingException e) {
             log.warn("Could not add buffered logging filter.");
         }
@@ -769,15 +769,18 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     }
 
     private enum UserMessage implements LocalizableEnum {
-        CONFIRM_BANKID(new LocalizableKey("You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once to confirm that the BankID is yours. You may then continue using BankID here.")),
+        CONFIRM_BANKID(new LocalizableKey(
+                "You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once to confirm that the BankID is yours. You may then continue using BankID here.")),
         WRONG_BANKID(new LocalizableKey("Wrong BankID signature. Did you log in with the wrong personnummer?")),
-        UNDERAGE(new LocalizableKey("Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."));
+        UNDERAGE(new LocalizableKey(
+                "Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."));
 
         private LocalizableKey userMessage;
 
         UserMessage(LocalizableKey userMessage) {
             this.userMessage = userMessage;
         }
+
         @Override
         public LocalizableKey getKey() {
             return userMessage;
