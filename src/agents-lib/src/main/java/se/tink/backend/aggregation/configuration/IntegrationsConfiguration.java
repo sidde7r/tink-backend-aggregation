@@ -6,22 +6,21 @@ import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabLegacyConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IntegrationsConfiguration {
-    @JsonProperty private SbabLegacyConfiguration sbabLegacy;
+    @JsonProperty private SbabConfiguration sbab;
     @JsonProperty private Map<String, MonzoConfiguration> monzo;
-    @JsonProperty private Map<String, SbabConfiguration> sbab;
 
     @JsonProperty private FinTsIntegrationConfiguration fints;
     @JsonProperty private String ukOpenBankingJson;
 
     @JsonProperty private String proxyUri;
 
-    public SbabLegacyConfiguration getSbabLegacy() {
-        return sbabLegacy;
+    public SbabConfiguration getSbab() {
+        return sbab;
     }
 
     private <T> Optional<T> getClientConfiguration(String clientName, Map<String, T> configMap) {
@@ -32,8 +31,8 @@ public class IntegrationsConfiguration {
         return getClientConfiguration(clientName, monzo);
     }
 
-    public Optional<SbabConfiguration> getSbab(String clientName) {
-        return getClientConfiguration(clientName, sbab);
+    public Optional<SbabClientConfiguration> getSbab(String clientName) {
+        return Optional.ofNullable(sbab).flatMap(sc -> getClientConfiguration(clientName, sc.getClients()));
     }
 
     public FinTsIntegrationConfiguration getFinTsIntegrationConfiguration() {
