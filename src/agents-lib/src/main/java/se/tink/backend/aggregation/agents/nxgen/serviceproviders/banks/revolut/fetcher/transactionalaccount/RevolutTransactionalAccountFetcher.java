@@ -28,7 +28,7 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
         for (PocketEntity pocket : wallet.getPockets()) {
             if (isActive(pocket) && !pocket.isClosed()) {
                 for (AccountEntity topUpAccount : topUpAccountEntities) {
-                    if (matchPocketToAccount(pocket, topUpAccount)) {
+                    if (isSameCurrency(pocket, topUpAccount)) {
                         transactionalAccounts.add(convertToTinkAccount(pocket, topUpAccount));
                     }
                 }
@@ -46,7 +46,7 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
         return RevolutConstants.Accounts.ACTIVE_STATE.equalsIgnoreCase(pocket.getState());
     }
 
-    private boolean matchPocketToAccount(PocketEntity pocket, AccountEntity topUpAccount) {
+    private boolean isSameCurrency(PocketEntity pocket, AccountEntity topUpAccount) {
         return topUpAccount.getCurrency().equalsIgnoreCase(pocket.getCurrency());
     }
 
