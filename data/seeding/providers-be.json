@@ -60,8 +60,10 @@
           "description": "Card number",
           "name": "username",
           "numeric": true,
-          "minLength": 1,
+          "minLength": 17,
           "maxLength": 17,
+          "pattern": "[0-9]{17}",
+          "patternError": "You have to enter your full card number and control number. 17 digits.",
           "sensitive": true,
           "immutable": true
         }
@@ -145,7 +147,10 @@
           "description": "Card ID",
           "name": "cardId",
           "numeric": true,
-          "minLength": 1,
+          "minLength": 17,
+          "maxLength": 17,
+          "pattern": "[0-9]{17}",
+          "patternError": "You have to enter your full card number and control number. 17 digits.",
           "immutable": true,
           "sensitive": true
         }
@@ -195,7 +200,10 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 1,
+          "minLength": 17,
+          "maxLength": 17,
+          "pattern": "[0-9]{17}",
+          "patternError": "You have to enter your full card number and control number. 17 digits.",
           "sensitive": true,
           "immutable": true
         },
@@ -432,7 +440,10 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 1,
+          "minLength": 17,
+          "maxLength": 17,
+          "pattern": "[0-9]{17}",
+          "patternError": "You have to enter your full card number and control number. 17 digits.",
           "sensitive": true,
           "immutable": true
         }
@@ -475,7 +486,10 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 1,
+          "minLength": 17,
+          "maxLength": 17,
+          "pattern": "[0-9]{17}",
+          "patternError": "You have to enter your full card number and control number. 17 digits.",
           "sensitive": true,
           "immutable": true
         },
@@ -514,7 +528,10 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 1,
+          "minLength": 17,
+          "maxLength": 17,
+          "pattern": "[0-9]{17}",
+          "patternError": "You have to enter your full card number and control number. 17 digits.",
           "sensitive": true,
           "immutable": true
         },
