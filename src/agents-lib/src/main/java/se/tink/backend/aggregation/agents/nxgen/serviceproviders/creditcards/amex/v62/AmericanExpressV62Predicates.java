@@ -78,7 +78,7 @@ public class AmericanExpressV62Predicates {
                             .apply(subCard.getCardNumberDisplay())
                             .equals(getCardEndingNumbers.apply(main.getAccountNumber()));
 
-    protected static BiPredicate<SubcardEntity, List<CardEntity>> checkIfSubcardIsParterCard =
+    public static BiPredicate<SubcardEntity, List<CardEntity>> checkIfSubcardIsParterCard =
             (subCard, partnerCardList) ->
                     partnerCardList
                             .stream()
