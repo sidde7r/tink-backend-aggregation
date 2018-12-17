@@ -48,6 +48,7 @@ public final class CSVTransactionsPage implements PaginatorResponse {
             throw new IllegalStateException();
         }
 
+        // One of these should be zero, and the other should be a positive amount
         final double outgoingValue = toValue(outgoingAmount);
         final double incomingValue = toValue(incomingAmount);
 
