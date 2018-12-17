@@ -4,7 +4,7 @@ import requests, json, logging, sys, getopt, os
 from collections import defaultdict
 
 # STATUS PAGE
-STATUSPAGE_API_KEY = os.environ.get("STATUSPAGE_API_KEY")
+STATUSPAGE_API_KEY = os.environ.get("STATUSPAGE_API_KEY").rstrip("\n")
 STATUSPAGE_API_BASE = "https://api.statuspage.io/v1/pages/"
 NOT_CIRCUIT_BROKEN = 0
 PAGE_ID = "x1lbt12g0ryw"
