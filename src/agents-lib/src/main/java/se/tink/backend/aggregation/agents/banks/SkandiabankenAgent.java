@@ -101,6 +101,15 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     private static final int FUND = 1;
     private static final int STOCK = 2;
 
+    // states:
+    //  3 - continue polling
+    //  4 - cancelled (both user cancelled and already-in-progress)
+    //  5 - done
+    private static final int BANKID_CONTINUE = 3;
+    private static final int BANKID_CANCELLED = 4;
+    private static final int BANKID_DONE = 5;
+    private static final int NUM_QR_REFRESH_RETRY_ATTEMPTS = 3;
+
     /**
      * Extract request verification token from a HTML document body.
      * 
@@ -144,7 +153,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         client = createCircularRedirectClient();
     }
 
-    private Optional<String> initiateBankID(String loginPageBody, String username) throws BankIdException {
+    private Optional<String> initiateBankID(String loginPageBody) throws BankIdException {
         String authenticateUrl;
         MultivaluedMap<String, String> postData;
 
@@ -172,38 +181,25 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         }
     }
 
-    private LoginResponse authenticateWithBankId(LoginMethod loginMethod, String username)
-            throws AuthenticationException, AuthorizationException {
-        // Get the login method for BankID.
+    private Optional<CollectBankIdResponse> poll(MultivaluedMap<String, String> postData) throws BankIdException {
 
-        final String loginPageBody = createLoginClientRequest(loginMethod.getLoginUrl(), false).get(String.class);
-
-        Optional<String> autostartToken = initiateBankID(loginPageBody, username);
-        openBankID(autostartToken);
-
-        // Wait for a successful BankID authentication.
-        String interAppURL = null;
-        MultivaluedMap<String, String> postData = extractRequestVerificationToken(loginPageBody, "collect-form");
-
-        CollectBankIdResponse collectResponse = null;
         for (int i = 0; i < 30; i++) {
-            collectResponse = createLoginClientRequest(COLLECT_BANKID_URL, true).type(
+            CollectBankIdResponse collectResponse = createLoginClientRequest(COLLECT_BANKID_URL, false).type(
                     MediaType.APPLICATION_FORM_URLENCODED).post(CollectBankIdResponse.class, postData);
 
-            // states:
-            //  3 - continue polling
-            //  4 - cancelled (both user cancelled and already-in-progress)
-            //  5 - done
-            if (collectResponse.getState() == 4) {
+            if (collectResponse.getState() == BANKID_DONE) {
+                return Optional.of(collectResponse);
+            }
+
+            if (collectResponse.getState() == BANKID_CANCELLED) {
                 String header = collectResponse.getMessage().getHeader();
                 switch (header.toLowerCase()) {
                 case "du har valt att avbryta inloggningen":
                     throw BankIdError.CANCELLED.exception();
                 case "inloggningen har avbrutits":
-                    // collectResponse.getMessage().getText() == "En inloggning för den här personen är redan påbörjad."
                     throw BankIdError.ALREADY_IN_PROGRESS.exception();
                 case "bankid inte installerat":
-                    throw BankIdError.NO_CLIENT.exception();
+                    return Optional.empty(); // Signal retry for QR-code
                 default:
                     throw new IllegalStateException(
                                     String.format(
@@ -213,16 +209,38 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                                     )
                     );
                 }
-            } else if (collectResponse.getState() == 5) {
-                interAppURL = collectResponse.getRedirectUrl();
-                break;
-            } else if (!collectResponse.getMessage().getContinueCollect()) {
-                break;
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
+        // If we are polling QR code it should have refreshed at this point.
+        // If we are using autostarttoken redirect the BankID app will have timed out on its own.
+        throw BankIdError.TIMEOUT.exception();
+    }
+
+    private LoginResponse authenticateWithBankId(LoginMethod loginMethod)
+            throws AuthenticationException, AuthorizationException {
+        // Get the login method for BankID.
+
+        final String loginPageBody = createLoginClientRequest(loginMethod.getLoginUrl(), false).get(String.class);
+
+        // Wait for a successful BankID authentication.
+        String interAppURL = null;
+        MultivaluedMap<String, String> postData = extractRequestVerificationToken(loginPageBody, "collect-form");
+
+        Optional<CollectBankIdResponse> pollResult;
+        int attempts = 0;
+        do {
+
+            openBankID(initiateBankID(loginPageBody));
+            pollResult = poll(postData);
+            attempts++;
+
+        } while (attempts < NUM_QR_REFRESH_RETRY_ATTEMPTS && !pollResult.isPresent());
+
+        CollectBankIdResponse collectResponse = pollResult.orElseThrow(BankIdError.TIMEOUT::exception);
+        interAppURL = collectResponse.getRedirectUrl();
         if (interAppURL == null) {
             throw BankIdError.TIMEOUT.exception();
         }
@@ -675,8 +693,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         List<LoginMethod> loginMethods = getLoginMethods();
 
         Preconditions.checkArgument(credentials.getType() == CredentialsTypes.MOBILE_BANKID);
-        LoginResponse loginResponse = authenticateWithBankId(extractLoginMethod(loginMethods, BANKID_LOGIN_METHOD_ID),
-                credentials.getField(Field.Key.USERNAME));
+        LoginResponse loginResponse = authenticateWithBankId(extractLoginMethod(loginMethods, BANKID_LOGIN_METHOD_ID));
 
         Preconditions.checkNotNull(loginResponse);
 
