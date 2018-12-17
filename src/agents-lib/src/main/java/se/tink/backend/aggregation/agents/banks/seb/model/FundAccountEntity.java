@@ -18,6 +18,8 @@ public class FundAccountEntity {
     private Double disposableIncome;
     @JsonProperty("FONDID")
     private String fundId;
+    @JsonProperty("ISIN_CODE")
+    private String isin;
     @JsonProperty("FONDNAMN")
     private String name;
     @JsonProperty("ANDEL_ANT")
@@ -61,6 +63,14 @@ public class FundAccountEntity {
 
     public String getFundId() {
         return fundId;
+    }
+
+    public String getIsin() {
+        return isin;
+    }
+
+    public void setIsin(String isin) {
+        this.isin = isin;
     }
 
     public void setFundId(String fundId) {
@@ -171,6 +181,7 @@ public class FundAccountEntity {
         instrument.setRawType(getAccountType());
         instrument.setType(Instrument.Type.FUND);
         instrument.setUniqueIdentifier(getFundId() + getShortId());
+        instrument.setIsin(getIsin());
 
         return Optional.of(instrument);
     }
