@@ -28,14 +28,6 @@ public abstract class SbabConstants {
             this.baseUri = baseUri;
         }
 
-        public static Environment getEnvironmentOrDefault(String environmentString) {
-            try {
-                return Environment.valueOf(environmentString.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                return Environment.PRODUCTION;
-            }
-        }
-
         public String getBaseUri() {
             return baseUri;
         }
