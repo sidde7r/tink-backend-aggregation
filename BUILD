@@ -552,7 +552,6 @@ junit_test(
         "external",
         "manual",
     ],
-    visibility = ["//visibility:public"], # Needed for now since there are some pkgs used by other targets
     deps = [
         ":aggregation-api",
         ":aggregation-lib",

@@ -11,7 +11,6 @@ test_sources:
 targets:
   //...:all
   //:aggregation-test
-  //src/aggregation-tests/src/test/java/se/tink/backend/aggregation/agents/nxgen/at/banks/ing:at-ing-test
   -//deb:all
   -//third_party:all
 
