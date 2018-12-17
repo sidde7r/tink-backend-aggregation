@@ -21,7 +21,7 @@ GROUP_IDS = {
 }
 
 # PROMETHEUS
-PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus:9090/api/v1/query"
+PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
 
 ### Queries
 PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production'}) by (provider, market)"
