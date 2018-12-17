@@ -24,6 +24,10 @@ public final class CSVTransactionsPage implements PaginatorResponse {
         this.keepFetching = keepFetching;
     }
 
+    private static double toValue(final String valueString) {
+        return Double.parseDouble(valueString.replace(".", "").replace(",", "."));
+    }
+
     private static Transaction recordToTransaction(final CSVRecord record) {
         final String iban = record.get(0);
         final String text = record.get(1);
@@ -39,8 +43,11 @@ public final class CSVTransactionsPage implements PaginatorResponse {
         } catch (ParseException e) {
             throw new IllegalStateException();
         }
-        final double amountValue =
-                Double.parseDouble(outgoingAmount.replace(".", "").replace(",", "."));
+
+        final double outgoingValue = toValue(outgoingAmount);
+        final double incomingValue = toValue(incomingAmount);
+
+        final double amountValue = incomingValue - outgoingValue;
         final Amount amount = new Amount(currency.trim(), amountValue);
 
         return Transaction.builder().setDate(date).setAmount(amount).setDescription(text).build();
