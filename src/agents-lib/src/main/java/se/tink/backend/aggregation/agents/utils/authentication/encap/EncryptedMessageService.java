@@ -3,79 +3,15 @@ package se.tink.backend.aggregation.agents.utils.authentication.encap;
 import com.google.common.collect.Maps;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.encrypted.RequestBody;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
-public class EncryptedMessageService implements EncapMessageService {
+public class EncryptedMessageService {
 
-    private final EncapClientHelper encapClientHelper;
-    private final Map<String, String> encapStorage;
-
-    private EncryptedMessageService(EncapClientHelper encapClientHelper, Map<String, String> encapStorage) {
-        this.encapClientHelper = encapClientHelper;
-        this.encapStorage = encapStorage;
-    }
-
-    public static EncryptedMessageService build(EncapClientHelper encapClientHelper,
-            Map<String, String> encapStorage) {
-        return new EncryptedMessageService(encapClientHelper, encapStorage);
-    }
-
-    @Override
-    public String executeActivationExchange() {
-        String message = buildFirstMessageForActivation(encapStorage);
-        String decryptedResponseMessage = encryptAndSendMessage(message);
-
-        encapClientHelper.updateEncapParamsActivation(decryptedResponseMessage);
-
-        message = buildSecondMessageForActivation(encapStorage);
-        decryptedResponseMessage = encryptAndSendMessage(message);
-
-        return EncapUtils.getSamlObject(decryptedResponseMessage);
-    }
-
-    @Override
-    public String finishActivation(String activationSessionId, String samlObject) {
-        String dataToSend = encapClientHelper.buildActivationCreateRequest(activationSessionId, samlObject);
-        String response = encapClientHelper.postSoapMessage(
-                EncapConstants.Urls.ACTIVATION_SERVICE, "\"\"", dataToSend);
-
-        // Returns [securityToken, samUserId]. samUserId is not currently used, saving it in case needed in future
-        List<String> securityValuesList = EncapUtils.getSecurityValuesList(response);
-        encapClientHelper.saveSamUserId(securityValuesList.get(1));
-
-        return securityValuesList.get(0);
-    }
-
-    @Override
-    public String executeAuthenticationExchange() {
-        String message = buildFirstMessageForAuthentication(encapStorage);
-        String decryptedResponseMessage = encryptAndSendMessage(message);
-
-        encapClientHelper.updateEncapParamsAuthentication(true, decryptedResponseMessage);
-
-        message = buildSecondMessageForAuthentication(encapStorage);
-        decryptedResponseMessage = encryptAndSendMessage(message);
-
-        return EncapUtils.getSamlObject(decryptedResponseMessage);
-    }
-
-    @Override
-    public String finishAuthentication(String samlObject) {
-        String dataToSend = encapClientHelper.buildAuthServiceRequest(samlObject);
-        String response = encapClientHelper.postSoapMessage(
-                EncapConstants.Urls.AUTHENTICATION_SERVICE, "\"\"", dataToSend);
-
-        // Returns [securityToken, samUserId]. samUserId is not currently used, saving it in case needed in future
-        List<String> securityValuesList = EncapUtils.getSecurityValuesList(response);
-        encapClientHelper.saveSamUserId(securityValuesList.get(1));
-
-        return securityValuesList.get(0);
-    }
-
-    static void setDeviceInformation(Map<String, String> queryPairs, Map<String, String> encapStorage) {
+    private static void setDeviceInformation(Map<String, String> queryPairs, Map<String, String> encapStorage) {
         queryPairs.put("device.ApplicationHash", encapStorage.get(EncapConstants.Storage.B64_APPLICATION_HASH));
         queryPairs.put("device.DeviceHash", encapStorage.get(EncapConstants.Storage.B64_DEVICE_HASH));
         queryPairs.put("device.DeviceManufacturer", EncapConstants.DeviceInformation.MANUFACTURER);
@@ -157,7 +93,7 @@ public class EncryptedMessageService implements EncapMessageService {
         return EncapUtils.getUrlEncodedQueryParams(queryPairs);
     }
 
-    private HashMap<String, String> getCryptoRequestParams(byte[] rand16BytesKey, byte[] rand16BytesIv,
+    static private HashMap<String, String> getCryptoRequestParams(byte[] rand16BytesKey, byte[] rand16BytesIv,
             byte[] serverPubKeyBytes, String inputInPlainText) {
         HashMap<String, String> requestParams = Maps.newHashMap();
         requestParams.put("EMD", EncapCrypto.computeEMD(rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
@@ -169,7 +105,7 @@ public class EncryptedMessageService implements EncapMessageService {
         return requestParams;
     }
 
-    private String encryptAndSendMessage(String plainTextMessage) {
+    static String encryptAndSendMessage(TinkHttpClient client, String plainTextMessage) {
         byte[] key = EncapCrypto.getRandomBytes(16);
         byte[] iv = EncapCrypto.getRandomBytes(16);
         byte[] pubKeyBytes = EncodingUtils.decodeBase64String(EncapConstants.B64_ELLIPTIC_CURVE_PUBLIC_KEY);
@@ -179,7 +115,10 @@ public class EncryptedMessageService implements EncapMessageService {
 
         RequestBody encryptionRequestBody = new RequestBody(cryptoRequestParams);
 
-        String response = encapClientHelper.postEncryptedMessage(encryptionRequestBody);
+        String response = client.request(EncapConstants.Urls.CRYPTO_EXCHANGE)
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_FORM_URLENCODED)
+                .post(String.class, encryptionRequestBody);
 
         Map<String, String> responseQueryPairs = EncapUtils.parseResponseQuery(response);
 
