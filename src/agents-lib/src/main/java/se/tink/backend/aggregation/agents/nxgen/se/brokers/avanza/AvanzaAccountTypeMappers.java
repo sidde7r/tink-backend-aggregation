@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.common.utils.Pair;
+import se.tink.libraries.pair.Pair;
 
 public final class AvanzaAccountTypeMappers {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaAccountTypeMappers.class);

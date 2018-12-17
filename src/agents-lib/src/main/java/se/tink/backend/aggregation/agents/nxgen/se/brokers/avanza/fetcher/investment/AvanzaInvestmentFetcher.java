@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.backend.common.utils.Pair;
 import se.tink.backend.system.rpc.Instrument;
+import se.tink.libraries.pair.Pair;
 
 public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final AvanzaApiClient apiClient;
