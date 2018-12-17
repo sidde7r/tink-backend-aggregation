@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -30,22 +32,32 @@ public class FinTsAgent extends NextGenerationAgent {
 
     private FinTsApiClient apiClient;
 
-    public FinTsAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public FinTsAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         String[] payload = request.getProvider().getPayload().split(" ");
-        se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration configuration =
-                new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration(
+        FinTsConfiguration configuration = new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration(
                         payload[0],
                         payload[1],
                         request.getCredentials().getField(Field.Key.USERNAME),
                         request.getCredentials().getField(Field.Key.PASSWORD));
 
-        this.apiClient = new FinTsApiClient(this.client, configuration);
+        this.apiClient = new FinTsApiClient(this.client, configuration, persistentStorage);
     }
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
+    }
 
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+
+        super.setConfiguration(configuration);
+
+        FinTsIntegrationConfiguration finTsIntegrationConfiguration =
+                configuration.getIntegrations().getFinTsIntegrationConfiguration();
+
+        this.persistentStorage.put(FinTsConstants.Storage.REG_NUMBER, finTsIntegrationConfiguration.getRegNumber());
     }
 
     @Override
@@ -54,12 +66,17 @@ public class FinTsAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         FinTsTransactionFetcher transactionFetcher = new FinTsTransactionFetcher(apiClient);
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new FinTsAccountFetcher(apiClient),
-                new TransactionFetcherController<>(this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(transactionFetcher))));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new FinTsAccountFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(transactionFetcher))));
     }
 
     @Override
@@ -70,10 +87,10 @@ public class FinTsAgent extends NextGenerationAgent {
                 new CreditCardRefreshController(
                         this.metricRefreshController,
                         this.updateController,
-                        creditCardFetcher, new TransactionFetcherController<>(
-                        this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditCardFetcher))));
-
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(creditCardFetcher))));
     }
 
     @Override
@@ -93,7 +110,7 @@ public class FinTsAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

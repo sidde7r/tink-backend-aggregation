@@ -30,6 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccoun
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class FinTsApiClient {
@@ -50,11 +51,14 @@ public class FinTsApiClient {
     private boolean endDateSupported = true;
     private int fetchedTransactions = -1;
 
-    public FinTsApiClient(TinkHttpClient apiClient, FinTsConfiguration configuration) {
+    private final PersistentStorage persistStorage;
+
+    public FinTsApiClient(TinkHttpClient apiClient, FinTsConfiguration configuration, PersistentStorage persistStorage) {
         this.apiClient = apiClient;
         this.configuration = configuration;
         sepaAccounts = new ArrayList<>();
         this.sepaAccountGuesser = new SepaAccountGuesser();
+        this.persistStorage = persistStorage;
     }
 
     private FinTsResponse sendMessage(FinTsRequest message) {
@@ -74,7 +78,7 @@ public class FinTsApiClient {
     private FinTsRequest getMessageSync() {
         HKIDN segIdentification =
                 new HKIDN(3, configuration.getBlz(), configuration.getUsername(), "0");
-        HKVVB segPrepare = new HKVVB(4);
+        HKVVB segPrepare = new HKVVB(4, persistStorage.get(FinTsConstants.Storage.REG_NUMBER));
         HKSYN segSync = new HKSYN(5);
         this.messageNumber = 1;
         return new FinTsRequest(
@@ -84,7 +88,7 @@ public class FinTsApiClient {
     private FinTsRequest getMessageInit() {
         HKIDN segIdentification =
                 new HKIDN(3, configuration.getBlz(), configuration.getUsername(), this.systemId);
-        HKVVB segPrepare = new HKVVB(4);
+        HKVVB segPrepare = new HKVVB(4, persistStorage.get(FinTsConstants.Storage.REG_NUMBER));
 
         return new FinTsRequest(
                 configuration,

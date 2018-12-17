@@ -104,6 +104,8 @@ agentsServiceConfiguration:
   integrations:
     sbab:
       signBaseUrl: https://secure.sbab.se
+    fints:
+      regNumber: "dummyId"
     monzo:
       tink:
         clientId: "dummyId"

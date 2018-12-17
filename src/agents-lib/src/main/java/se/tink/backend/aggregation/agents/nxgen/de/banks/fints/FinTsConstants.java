@@ -105,4 +105,8 @@ public class FinTsConstants {
         public static final LogTag ERROR_CODE = LogTag.from("#fints_login_error_types");
         public static final LogTag PRODUCTNAME_FOR_MISSING_ACCOUNT_TYPE = LogTag.from("#fints_missing_account_type");
     }
+
+    public static class Storage {
+        public static final String REG_NUMBER = "regNumber";
+    }
 }
