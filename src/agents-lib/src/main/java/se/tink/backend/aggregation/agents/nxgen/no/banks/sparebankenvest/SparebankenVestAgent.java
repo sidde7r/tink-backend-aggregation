@@ -50,7 +50,7 @@ public class SparebankenVestAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         EncapClient encapClient = new EncapClient(new SparebankenVestEncapConfiguration(), persistentStorage,
-                client, false, credentials.getField(Field.Key.USERNAME));
+                client, true, credentials.getField(Field.Key.USERNAME));
 
         return new AutoAuthenticationController(request, context,
                 new OneTimeActivationCodeAuthenticationController(
