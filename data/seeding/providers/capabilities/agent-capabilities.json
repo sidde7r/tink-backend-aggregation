@@ -18,7 +18,7 @@
   "creditcards.rikskortet.RikskortetAgent": ["CREDIT_CARDS"],
   "creditcards.sebkort.SEBKortAgent": ["CREDIT_CARDS"],
   "creditcards.supremecard.v2.SupremeCardAgent": ["CREDIT_CARDS"],
-  "demo.DemoAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "TRANSFERS", "PAYMENTS],
+  "demo.DemoAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "TRANSFERS", "PAYMENTS"],
   "fraud.CreditSafeAgent": [],
   "nxgen.at.banks.bankaustria.BankAustriaAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
   "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS"],
