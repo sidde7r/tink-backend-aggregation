@@ -10,7 +10,7 @@
     "market" : "BE",
     "multiFactor" : true,
     "name" : "be-belfius-cardreader",
-    "passwordHelpText" : "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Belfius card reader to finish the authentication.",
+    "passwordHelpText" : "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
     "payload" : null,
     "popular" : false,
     "refreshFrequency" : 0.0,
