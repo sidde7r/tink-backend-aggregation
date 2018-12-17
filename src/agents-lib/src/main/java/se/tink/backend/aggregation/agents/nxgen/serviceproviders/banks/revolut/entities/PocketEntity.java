@@ -23,7 +23,7 @@ public class PocketEntity {
     private int creditLimit;    // expressed in cents
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(String requiredReference, AccountEntity topUpAccount) {
+    public TransactionalAccount toTinkAccount(AccountEntity topUpAccount) {
         String accountNumber = topUpAccount.getIdentifier();
         String accountName = Optional.ofNullable(getName()).orElse("Revolut " + getCurrency());
 
@@ -35,12 +35,6 @@ public class PocketEntity {
                 .setName(accountName)
                 .setHolderName(new HolderName(topUpAccount.getBeneficiaryName()))
                 .setAccountNumber(accountNumber);
-
-        if (requiredReference != null) {
-            builder.putInTemporaryStorage(
-                    RevolutConstants.Accounts.REQUIRED_REFERENCE,
-                    requiredReference);
-        }
 
         builder.putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
 

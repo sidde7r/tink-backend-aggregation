@@ -23,16 +23,13 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
 
         AccountsResponse topUpAccountEntities = apiClient.fetchAccounts();
         WalletEntity wallet = apiClient.fetchWallet();
-        String requiredReference = wallet.getRef();
 
         Collection<TransactionalAccount> transactionalAccounts = new ArrayList<>();
         for (PocketEntity pocket : wallet.getPockets()) {
             if (isActive(pocket) && !pocket.isClosed()) {
                 for (AccountEntity topUpAccount : topUpAccountEntities) {
-                    if (requiredReference.equalsIgnoreCase(topUpAccount.getRequiredReference())
-                            && matchPocketToAccount(pocket, topUpAccount)) {
-                        transactionalAccounts.add(convertToTinkAccount(pocket, requiredReference,
-                                topUpAccount));
+                    if (matchPocketToAccount(pocket, topUpAccount)) {
+                        transactionalAccounts.add(convertToTinkAccount(pocket, topUpAccount));
                     }
                 }
             }
@@ -41,9 +38,8 @@ public class RevolutTransactionalAccountFetcher implements AccountFetcher<Transa
         return transactionalAccounts;
     }
 
-    private TransactionalAccount convertToTinkAccount(PocketEntity pocket, String requiredReference,
-            AccountEntity topUpAccount) {
-        return pocket.toTinkAccount(requiredReference, topUpAccount);
+    private TransactionalAccount convertToTinkAccount(PocketEntity pocket, AccountEntity topUpAccount) {
+        return pocket.toTinkAccount(topUpAccount);
     }
 
     private boolean isActive(PocketEntity pocket) {
