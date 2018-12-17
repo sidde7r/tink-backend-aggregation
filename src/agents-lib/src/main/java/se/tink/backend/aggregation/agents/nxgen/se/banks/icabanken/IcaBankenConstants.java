@@ -39,8 +39,6 @@ public class IcaBankenConstants {
         public static final String ACCEPT = "Accept";
         public static final String HEADER_CLIENTAPPVERSION = "ClientAppVersion";
         public static final String VALUE_CLIENTAPPVERSION = "1.44.2";
-        public static final String HEADER_USERAGENT = "User-Agent";
-        public static final String VALUE_USERAGENT = "ICA Banken/1.42.1.3 (iPhone; iOS 10.1.1; Scale/2.00)";
         public static final String HEADER_APIKEY = "ApiKey";
         public static final String VALUE_APIKEY = "B4D6E1AC-527A-4BBC-AF04-1F2A6D8B38BA";
         public static final String HEADER_API_VERSION = "ApiVersion";
