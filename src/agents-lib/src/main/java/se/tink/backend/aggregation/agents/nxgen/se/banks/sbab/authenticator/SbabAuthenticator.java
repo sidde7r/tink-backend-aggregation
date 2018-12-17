@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator;
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Uris;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities.AuthGrantTypeEntity;
@@ -43,7 +42,7 @@ public class SbabAuthenticator implements OAuth2Authenticator {
                         .withAuthMethod(AuthMethodEntity.MOBILE_BANKID)
                         .withUserId(persistentStorage.get(StorageKey.USER_ID));
 
-        return new URL(Uris.GET_PENDING_AUTH_CODE(Environment.PRODUCTION)).queryParams(request);
+        return new URL(Uris.GET_PENDING_AUTH_CODE()).queryParams(request);
     }
 
     @Override
