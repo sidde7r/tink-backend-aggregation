@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.log;
+package se.tink.backend.aggregation.nxgen.http.log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Functions;
@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.utils.MapValueMasker;
 import se.tink.backend.aggregation.utils.MapValueMaskerImpl;
 import se.tink.backend.aggregation.utils.StringMasker;

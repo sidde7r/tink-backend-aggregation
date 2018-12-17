@@ -15,6 +15,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
+import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilter;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.aggregation.rpc.Credentials;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;

@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.annotations.Implements;
 import se.tink.backend.aggregation.constants.Capability;
-import se.tink.backend.aggregation.log.ClientFilterFactory;
+import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;

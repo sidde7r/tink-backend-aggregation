@@ -5,7 +5,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import java.util.Map;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.log.ClientFilterFactory;
+import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 
 public class JerseyClientWrapper implements HttpClient {
     private final ApiConfiguration apiConfiguration;

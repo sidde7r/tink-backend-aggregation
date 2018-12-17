@@ -1,10 +1,12 @@
-package se.tink.backend.aggregation.log;
+package se.tink.backend.aggregation.nxgen.http.log;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.StringMasker;
 
 /**
