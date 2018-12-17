@@ -27,100 +27,100 @@ public class AccountEntity {
         return accountId;
     }
 
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public double getBuyingPower() {
-        return buyingPower;
-    }
-
-    public double getInterestRate() {
-        return interestRate;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public double getOwnCapital() {
-        return ownCapital;
-    }
-
-    public double getPerformance() {
-        return performance;
-    }
-
-    public double getPerformancePercent() {
-        return performancePercent;
-    }
-
-    public double getTotalBalance() {
-        return totalBalance;
-    }
-
-    public double getTotalBalanceDue() {
-        return totalBalanceDue;
-    }
-
-    public boolean isAccountPartlyOwned() {
-        return accountPartlyOwned;
-    }
-
-    public boolean isAttorney() {
-        return attorney;
-    }
-
-    public boolean isTradable() {
-        return tradable;
-    }
-
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
 
-    public void setAccountPartlyOwned(boolean accountPartlyOwned) {
-        this.accountPartlyOwned = accountPartlyOwned;
+    public String getAccountType() {
+        return accountType;
     }
 
     public void setAccountType(String accountType) {
         this.accountType = accountType;
     }
 
-    public void setAttorney(boolean attorney) {
-        this.attorney = attorney;
+    public double getBuyingPower() {
+        return buyingPower;
     }
 
     public void setBuyingPower(double buyingPower) {
         this.buyingPower = buyingPower;
     }
 
+    public double getInterestRate() {
+        return interestRate;
+    }
+
     public void setInterestRate(double interestRate) {
         this.interestRate = interestRate;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public double getOwnCapital() {
+        return ownCapital;
+    }
+
     public void setOwnCapital(double ownCapital) {
         this.ownCapital = ownCapital;
+    }
+
+    public double getPerformance() {
+        return performance;
     }
 
     public void setPerformance(double performance) {
         this.performance = performance;
     }
 
+    public double getPerformancePercent() {
+        return performancePercent;
+    }
+
     public void setPerformancePercent(double performancePercent) {
         this.performancePercent = performancePercent;
+    }
+
+    public double getTotalBalance() {
+        return totalBalance;
     }
 
     public void setTotalBalance(double totalBalance) {
         this.totalBalance = totalBalance;
     }
 
+    public double getTotalBalanceDue() {
+        return totalBalanceDue;
+    }
+
     public void setTotalBalanceDue(double totalBalanceDue) {
         this.totalBalanceDue = totalBalanceDue;
+    }
+
+    public boolean isAccountPartlyOwned() {
+        return accountPartlyOwned;
+    }
+
+    public void setAccountPartlyOwned(boolean accountPartlyOwned) {
+        this.accountPartlyOwned = accountPartlyOwned;
+    }
+
+    public boolean isAttorney() {
+        return attorney;
+    }
+
+    public void setAttorney(boolean attorney) {
+        this.attorney = attorney;
+    }
+
+    public boolean isTradable() {
+        return tradable;
     }
 
     public void setTradable(boolean tradable) {

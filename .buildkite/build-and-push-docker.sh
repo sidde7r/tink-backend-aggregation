@@ -13,3 +13,7 @@ gcloud docker -- push "gcr.io/tink-containers/tink-backend-aggregation:$VERSION"
 
 docker tag gcr.io/tink-containers/tink-backend-provider-configuration:latest "gcr.io/tink-containers/tink-backend-provider-configuration:$VERSION";
 gcloud docker -- push "gcr.io/tink-containers/tink-backend-provider-configuration:$VERSION";
+
+docker build -t gcr.io/tink-containers/tink-backend-aggregation-statuspage-providers-cronjob jobs/cron/provider-status
+docker tag gcr.io/tink-containers/tink-backend-aggregation-statuspage-providers-cronjob:latest "gcr.io/tink-containers/tink-backend-aggregation-statuspage-providers-cronjob:$VERSION";
+gcloud docker -- push "gcr.io/tink-containers/tink-backend-aggregation-statuspage-providers-cronjob:$VERSION";

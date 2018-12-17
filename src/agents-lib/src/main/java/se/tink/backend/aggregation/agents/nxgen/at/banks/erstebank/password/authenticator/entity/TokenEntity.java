@@ -1,5 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity;
 
+import java.util.Calendar;
+import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -39,5 +41,12 @@ public class TokenEntity {
 
     public void setExpiresIn(String expiresIn) {
         this.expiresIn = expiresIn;
+    }
+
+    public Date getExpiryDate(){
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.SECOND, Integer.parseInt(expiresIn));
+        return c.getTime();
     }
 }

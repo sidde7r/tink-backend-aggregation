@@ -112,16 +112,16 @@ public class PositionResponse {
 
     private Portfolio.Type getPortfolioType() {
         switch (getAccountType().toLowerCase()) {
-        case "investeringssparkonto":
-            return Portfolio.Type.ISK;
-        case "aktiefondkonto":
-            return Portfolio.Type.DEPOT;
-        case "tjanstepension":
-            return Portfolio.Type.PENSION;
-        case "kapitalforsakring":
-            return Portfolio.Type.KF;
-        default:
-            return Portfolio.Type.OTHER;
+            case "investeringssparkonto":
+                return Portfolio.Type.ISK;
+            case "aktiefondkonto":
+                return Portfolio.Type.DEPOT;
+            case "tjanstepension":
+                return Portfolio.Type.PENSION;
+            case "kapitalforsakring":
+                return Portfolio.Type.KF;
+            default:
+                return Portfolio.Type.OTHER;
         }
     }
 }

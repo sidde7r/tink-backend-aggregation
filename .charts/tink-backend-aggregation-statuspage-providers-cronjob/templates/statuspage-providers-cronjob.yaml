@@ -1,0 +1,43 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: statuspage-providers-cronjob
+  namespace: statuspage-providers-cronjob
+spec:
+  schedule: "{{ .Values.providerStatusCronSchedule | default "0/30 * * * *" }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  startingDeadlineSeconds: {{ .Values.providerStatusStartingDeadlineSeconds | default 300 }}
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: {{ .Values.providerStatusActiveDeadlineSeconds | default 300 }}
+      backoffLimit: 6
+      template:
+        metadata:
+          labels:
+            app: statuspage-providers-cronjob
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: tink-containers
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            fsGroup: 65535
+          containers:
+          - name: tests
+            image: gcr.io/tink-containers/tink-backend-aggregation-statuspage-providers-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-statuspage-providers-cronjob.txt" | default "latest" }}
+            imagePullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
+              privileged: false
+            command:
+            - "/opt/provider_status/cronjob.py"
+            env:
+              - name: STATUSPAGE_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: statuspage-providers-cronjob
+                    key: api-key

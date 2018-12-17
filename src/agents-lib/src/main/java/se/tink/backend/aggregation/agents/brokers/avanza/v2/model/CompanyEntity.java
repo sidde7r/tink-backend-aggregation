@@ -17,6 +17,7 @@ public class CompanyEntity {
     private String marketCapitalCurrency;
     private String chairman;
     private long totalNumberOfShares;
+
     @JsonProperty("CEO")
     private String ceo;
 

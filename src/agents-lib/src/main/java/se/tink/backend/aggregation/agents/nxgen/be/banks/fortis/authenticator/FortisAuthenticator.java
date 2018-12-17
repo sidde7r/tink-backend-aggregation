@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisUtils;
@@ -29,6 +30,8 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.libraries.i18n.Catalog;
+
+import java.util.Optional;
 
 public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
@@ -62,18 +65,11 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         return apiClient.getEBankingUsers(eBankingUsersRequest);
     }
 
-    private AuthenticationProcessResponse createAuthenticationProcess(EbankingUsersResponse ebankingUsersResponse,
+    private AuthenticationProcessResponse createAuthenticationProcess(EBankingUserId eBankingUserId,
             String distributorId, String authMode) {
 
-        EBankingUserId ebankingUserId = ebankingUsersResponse.getValue()
-                .getEBankingUsers()
-                .get(0)
-                .getEBankingUser()
-                .getEBankingUserId();
-
         AuthenticationProcessRequest authenticationProcessRequest =
-                new AuthenticationProcessRequest(ebankingUserId, distributorId,
-                        authMode);
+                new AuthenticationProcessRequest(eBankingUserId, distributorId, authMode);
 
         AuthenticationProcessResponse authenticationProcessResponse =
                 apiClient.createAuthenticationProcess(authenticationProcessRequest);
@@ -128,23 +124,19 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         persistentStorage.put(FortisConstants.STORAGE.PASSWORD, password);
         persistentStorage.put(FortisConstants.STORAGE.DEVICE_FINGERPRINT, deviceFingerprint);
 
-        EbankingUsersResponse eBankingUserIdEntity =
-                getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
-
-        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() > 1) {
-            LOGGER.warnExtraLong(String.format("authenticate, multiple users found: %s", ""),
-                    FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
+        Optional<EBankingUserId> ebankingUsersResponse = getEbankingUserId(authenticatorFactorId, smid);
+        if (!ebankingUsersResponse.isPresent()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        String agreementId = eBankingUserIdEntity.getValue().getEBankingUsers().get(0)
-                .getEBankingUser().getEBankingUserId().getAgreementId();
+        String agreementId = ebankingUsersResponse.get().getAgreementId();
 
         if (Strings.isNullOrEmpty(agreementId)) {
             throw new IllegalArgumentException("agreementId cannot be null or empty!");
         }
         persistentStorage.put(FortisConstants.STORAGE.AGREEMENT_ID, agreementId);
 
-        AuthenticationProcessResponse res = createAuthenticationProcess(eBankingUserIdEntity,
+        AuthenticationProcessResponse res = createAuthenticationProcess(ebankingUsersResponse.get(),
                 apiClient.getDistributorId(),
                 FortisConstants.HEADER_VALUES.AUTHENTICATION_DEVICE_PINNING);
 
@@ -153,10 +145,28 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         getUserInfoAndPersistMuid();
 
         /*
-            We are unable to verify the password the user provided in the device binding flow. For that reason we also initiate the flow used in autoAuthenticate()
+            We are unable to verify the password the user provided in the device binding flow.
+            For that reason we also initiate the flow used in autoAuthenticate()
          */
-        verifyPassword();
+        if (!isCredentialsCorrect()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
         getUserInfoAndPersistMuid();
+    }
+
+    private Optional<EBankingUserId> getEbankingUserId(String authenticatorFactorId, String smid) {
+        EbankingUsersResponse eBankingUserIdEntity =
+                getEbankingUsers(authenticatorFactorId, apiClient.getDistributorId(), smid);
+
+        if (eBankingUserIdEntity.getValue() == null) {
+            return Optional.empty();
+        }
+
+        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() > 1) {
+            LOGGER.warnExtraLong(String.format("authenticate, multiple users found: %s", ""),
+                    FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
+        }
+        return Optional.ofNullable(eBankingUserIdEntity.getValue().getEBankingUsers().get(0).getEBankingUser().getEBankingUserId());
     }
 
     private void getUserInfoAndPersistMuid() throws LoginException {
@@ -170,7 +180,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         persistentStorage.put(FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
     }
 
-    private void verifyPassword() throws LoginException {
+    private boolean isCredentialsCorrect()  {
         String muid = persistentStorage.get(FortisConstants.STORAGE.MUID);
         String password = persistentStorage.get(FortisConstants.STORAGE.PASSWORD);
         String agreementId = persistentStorage.get(FortisConstants.STORAGE.AGREEMENT_ID);
@@ -179,15 +189,12 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         String smid = persistentStorage.get(FortisConstants.STORAGE.SMID);
         String deviceFingerprint = persistentStorage.get(FortisConstants.STORAGE.DEVICE_FINGERPRINT);
 
-        EbankingUsersResponse eBankingUserIdEntity =
-                getEbankingUsers(cardNumber, apiClient.getDistributorId(), smid);
-
-        if (eBankingUserIdEntity.getValue().getEBankingUsers().size() > 1) {
-            LOGGER.warnExtraLong(String.format("authenticate, multiple users found: %s", ""),
-                    FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
+        Optional<EBankingUserId> ebankingUsersId = getEbankingUserId(cardNumber, smid);
+        if (!ebankingUsersId.isPresent()) {
+            return false;
         }
 
-        AuthenticationProcessResponse res = createAuthenticationProcess(eBankingUserIdEntity,
+        AuthenticationProcessResponse res = createAuthenticationProcess(ebankingUsersId.get(),
                 apiClient.getDistributorId(), FortisConstants.HEADER_VALUES.AUTHENTICATION_PASSWORD);
         String authenticationProcessId = res.getValue().getAuthenticationProcessId();
 
@@ -218,17 +225,19 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         String responseBody = response.getBody(String.class);
 
         if (!Strings.isNullOrEmpty(responseBody) && responseBody.contains(FortisConstants.ERRORCODE.ERROR_CODE)) {
+            if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE)) {
+                return false;
+            }
             LOGGER.warnExtraLong(responseBody, FortisConstants.LOGTAG.LOGIN_ERROR);
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
+            return false;
         }
+        return true;
     }
 
     @Override
     public void autoAuthenticate() throws SessionException {
-        try {
-            verifyPassword();
-        } catch (LoginException e) {
-            throw new IllegalStateException("Could not login during autoAuthenticate");
+        if(!isCredentialsCorrect()) {
+            throw SessionError.SESSION_EXPIRED.exception();
         }
 
         UserInfoResponse userInfoResponse;

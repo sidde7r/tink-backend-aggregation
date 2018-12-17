@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.entity;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.entity;
 
 public class EncryptionValuesEntity {
 

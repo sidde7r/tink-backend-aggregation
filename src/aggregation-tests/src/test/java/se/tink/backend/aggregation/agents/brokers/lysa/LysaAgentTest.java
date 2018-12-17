@@ -1,8 +1,7 @@
-package se.tink.backend.aggregation.agents.brokers;
+package se.tink.backend.aggregation.agents.brokers.lysa;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.brokers.lysa.LysaAgent;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.social.security.TestSSN;

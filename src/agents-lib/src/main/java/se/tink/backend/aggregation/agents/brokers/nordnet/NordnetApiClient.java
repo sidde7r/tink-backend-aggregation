@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AuthenticateBasicLoginRequest;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.AuthenticateBasicLoginResponse;
+import se.tink.backend.aggregation.agents.brokers.nordnet.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.LoginAnonymousPostResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.PositionsResponse;
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.Request.CollectBankIdRequest;
@@ -47,6 +48,7 @@ import se.tink.backend.aggregation.agents.brokers.nordnet.model.Response.TokenRe
 import se.tink.backend.aggregation.agents.brokers.nordnet.model.html.CompleteBankIdPage;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -200,16 +202,41 @@ public class NordnetApiClient {
 
         // Try to initiate the bankid auth twice (if the first one fails). It will fail the first time if the customer
         // has an already active authentication (both authentications will be cancelled by bankid)
-        for (int i=0; i<2; i++) {
-            InitBankIdResponse response = post(bankIdUrl + "order",
+        InitBankIdResponse initBankIdResponse = null;
+
+        for (int i = 0; i < 2; i++) {
+            initBankIdResponse = post(bankIdUrl + "order",
                     new InitBankIdRequest(username), InitBankIdResponse.class);
 
-            String orderRef = response.getOrderRef();
+            String orderRef = initBankIdResponse.getOrderRef();
+
             if (!Strings.isNullOrEmpty(orderRef)) {
                 return orderRef;
             }
         }
+
+        handleKnownBankIdInitError(initBankIdResponse);
+
         throw new IllegalStateException("Missing BankID order ref");
+    }
+
+    /**
+     * A user can get ALREADY_IN_PROGRESS error on both bankID initiation tries. Logging other errors as well.
+     */
+    private void handleKnownBankIdInitError(InitBankIdResponse initBankIdResponse) throws BankIdException {
+        ErrorEntity error = initBankIdResponse.getError();
+
+        if (error == null) {
+            return;
+        }
+
+        if (error.isBankIdAlreadyInProgressError()) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        }
+
+        if (!Strings.isNullOrEmpty(error.getCode())) {
+            log.error(String.format("BankID initiation failed with error code: %s", error.getCode()));
+        }
     }
 
     public BankIdStatus collectBankId(String orderRef) {

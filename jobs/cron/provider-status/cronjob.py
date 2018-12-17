@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-import requests, json, logging, sys, getopt
+import requests, json, logging, sys, getopt, os
 from collections import defaultdict
 
 # STATUS PAGE
+STATUSPAGE_API_KEY = os.environ.get("STATUSPAGE_API_KEY")
 STATUSPAGE_API_BASE = "https://api.statuspage.io/v1/pages/"
 NOT_CIRCUIT_BROKEN = 0
 PAGE_ID = "x1lbt12g0ryw"
@@ -20,7 +21,7 @@ GROUP_IDS = {
 }
 
 # PROMETHEUS
-PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus:9090"
+PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus:9090/api/v1/query"
 
 ### Queries
 PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production'}) by (provider, market)"
@@ -64,12 +65,12 @@ def group_by_market(provider_metrics, running_instances):
     return metric_by_market
 
 
-def create_statuspage_request(method, path, apikey, payload = None, body = None):
+def create_statuspage_request(method, path, payload = None, body = None):
     url = STATUSPAGE_API_BASE + PAGE_ID + path
     if method == "POST" or method == "PUT":
-        headers = {"Content-Type": "application/json", "Authorization": "OAuth " + apikey}
+        headers = {"Content-Type": "application/json", "Authorization": "OAuth " + STATUSPAGE_API_KEY}
     else:
-        headers = {"Authorization": "OAuth " + apikey}
+        headers = {"Authorization": "OAuth " + STATUSPAGE_API_KEY}
     return create_request(method, url, headers, payload, body)
 
 
@@ -118,13 +119,13 @@ def calculate_status(value):
         previouslimit = upper_limit
 
 
-def create_missing_components(names_of_missing_components, group_id, providers_from_prometheus, apikey):
+def create_missing_components(names_of_missing_components, group_id, providers_from_prometheus):
     logger.info("Creating missing components: [{}]".format(names_of_missing_components))
     for component_name in names_of_missing_components:
         provider_value = providers_from_prometheus[component_name]
         status = calculate_status(provider_value)
         request_body = build_missing_components_request(component_name, status, group_id)
-        r = create_statuspage_request("POST", COMPONENTS_PATH, apikey, body = json.dumps(request_body))
+        r = create_statuspage_request("POST", COMPONENTS_PATH, body = json.dumps(request_body))
         if r.status_code != 201:
             logger.error("Failed to create missing component for component name: [{}]".format(component_name))
 
@@ -163,31 +164,15 @@ def process_component(component_name, component_status, provider_metric_value):
     logger.info("The status has changed, updating status [%s] -> [%s]", component_status, new_status)
 
     payload = build_update_component_status_request_body(new_status)
-    r = create_statuspage_request("PUT", COMPONENTS_PATH, apikey, body = json.dumps(payload))
+    r = create_statuspage_request("PUT", COMPONENTS_PATH, body = json.dumps(payload))
     if r.status_code == 200:
-        logger.info("Successfully updated the status to [%s]", calculatedStatus)
+        logger.info("Successfully updated the status to [%s]", new_status)
     else:
         logger.warning("Status updated failed with statusCode [%s] and message [%s]", r.status_code, r.json()['error'])
 
 
-def main(argv):
-    # Get the api key
-    try:
-        opts, args = getopt.getopt(
-                                argv[1:],
-                                "a:",
-                                ["apikey="]
-                            )
-    except getopt.GetoptError:
-        logger.error("Could not retrieve the api key - Aborting")
-        return 1
-
-    apikey = None
-    for opt, arg in opts:
-        if opt in ("-a", "--apikey"):
-            apikey = arg
-
-    if not apikey:
+def main():
+    if not STATUSPAGE_API_KEY:
         logger.error("Missing api key")
         return 1
 
@@ -252,7 +237,7 @@ def main(argv):
     #       "automation_email": "string"
     #   }
     # ]
-    all_components = create_statuspage_request("GET", COMPONENTS_PATH, apikey)
+    all_components = create_statuspage_request("GET", COMPONENTS_PATH)
     if len(all_components.json()) == 0:
         logger.warning("The number of total components was zero")
         return
@@ -284,11 +269,11 @@ def main(argv):
         # OBS! Do not change order of the comparison since it gives what is available in the first set but not the last
         missing_components = set(provider_metrics.keys()).difference(set(components.keys()))
         if missing_components != set():
-            create_missing_components(missing_components, group_id, provider_metrics, apikey)
+            create_missing_components(missing_components, group_id, provider_metrics)
 
     logger.info("Cronjob ran successfully")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv))
+    sys.exit(main())

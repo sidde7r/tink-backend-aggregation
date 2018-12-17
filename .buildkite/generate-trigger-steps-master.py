@@ -28,6 +28,13 @@ PROJECTS = {
                 'aggregation-staging': {'block': False},
             },
         },
+    'tink-backend-aggregation-statuspage-providers-cronjob': {
+        'chart': True,
+        'salt': False,
+        'branches': {
+            'aggregation-production': {'block': True},
+        },
+    },
 }
 
 STEP = """

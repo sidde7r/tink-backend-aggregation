@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.brokers;
+package se.tink.backend.aggregation.agents.brokers.nordnet;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
+import se.tink.backend.aggregation.agents.brokers.NordnetAgent;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.libraries.social.security.TestSSN;
 

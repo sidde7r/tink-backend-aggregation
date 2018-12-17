@@ -26,6 +26,7 @@ public class ErsteBankConstants {
         public static final String ACCOUNT = "/bff/b/overview";
         public static final String SPARKASSE_BASE = "https://api.sparkasse.at";
         public static final String LOGOUT = "/rest/netbanking/auth/token/invalidate";
+        public static final String POLL = "/sts/secapp/secondfactor";
     }
 
     public static class HEADERS {
@@ -58,6 +59,7 @@ public class ErsteBankConstants {
         public static final String TOKEN_ENTITY = "TOKEN_ENTITY";
         public static final String TRANSACTIONSURL = "ACCOUNT_URL";
         public static final String CREDITURL = "CREDIT_URL";
+        public static final String USERNAME = "USERNAME";
     }
 
     public static class PATTERN {
@@ -71,6 +73,7 @@ public class ErsteBankConstants {
         public static final Pattern ACCESS_TOKEN = Pattern.compile("access_token=(.*)&token_type");
         public static final Pattern TOKEN_TYPE = Pattern.compile("token_type=(.*)&expires_in");
         public static final Pattern EXPIRES_IN = Pattern.compile("expires_in=(.*)&scope");
+        public static final Pattern SIDENTITY_VERIFICATION_CODE = Pattern.compile("Verification code: <b>(.*)<\\/b>");
 
         public static final String DATE_FORMAT = "M/d/y";
         public static final String TRANSACTION_FORMAT = "/bff/b/products/%s/transactions";
@@ -96,5 +99,11 @@ public class ErsteBankConstants {
         public static final String YESTERDAY = "Yesterday";
         public static final String TODAY = "Today";
         public static final String TOMORROW = "Tomorrow";
+    }
+
+    public static class SIDENTITY {
+        public static final int MAX_SIDENTITY_POLLING_ATTEMPTS = 80;
+        public static final String POLL_WAITING = "PENDING";
+        public static final String POLL_DONE = "DONE";
     }
 }

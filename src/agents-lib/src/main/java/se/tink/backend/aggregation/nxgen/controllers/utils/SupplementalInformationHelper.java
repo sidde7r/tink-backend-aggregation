@@ -67,6 +67,12 @@ public class SupplementalInformationHelper {
                 extraChallenge);
     }
 
+    public void waitAndShowLoginDescription(final String description) throws SupplementalInfoException {
+        Field descriptionField = getField(Field.Key.LOGIN_DESCRIPTION);
+        descriptionField.setValue(description);
+        supplementalInformationController.askSupplementalInformation(descriptionField);
+    }
+
     private String waitForChallengeResponseExtra(
             final Field.Key descriptionKey,
             final Field.Key extraDescriptionKey,

@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.brokers.avanza.v2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Optional;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.MAPPERS;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDetailsEntity {
@@ -206,18 +207,9 @@ public class AccountDetailsEntity {
         this.currencyAccounts = currencyAccounts;
     }
 
-    private static AccountTypes determineType(String accountType) {
-        String name = accountType.toLowerCase();
-
-        if (name.contains("pension")) {
-            return AccountTypes.PENSION;
-        } else if (name.startsWith("sparkonto")) {
-            return AccountTypes.SAVINGS;
-        } else if (name.startsWith("kredit")) {
-            return AccountTypes.LOAN;
-        } else {
-            return AccountTypes.INVESTMENT;
-        }
+    public AccountTypes toTinkAccountType() {
+        Optional<AccountTypes> accountType = MAPPERS.inferAccountType(getAccountType());
+        return accountType.orElse(AccountTypes.OTHER);
     }
 
     public Account toAccount(AccountEntity accountEntity) {
@@ -228,7 +220,8 @@ public class AccountDetailsEntity {
         // Validate account numbers.
         Preconditions.checkState(
                 Preconditions.checkNotNull(account.getBankId()).matches("[1-9][0-9]*"),
-                "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+                "Unexpected account.bankid '%s'. Reformatted?",
+                account.getBankId());
 
         if (Strings.isNullOrEmpty(clearingNumber)) {
             account.setAccountNumber(accountId);
@@ -236,15 +229,15 @@ public class AccountDetailsEntity {
             account.setAccountNumber(clearingNumber + "-" + accountId);
         }
 
-        if (!Strings.isNullOrEmpty(accountEntity.getName()) &&
-                !Objects.equals(accountEntity.getAccountId(), accountEntity.getName())) {
+        if (!Strings.isNullOrEmpty(accountEntity.getName())
+                && !Objects.equals(accountEntity.getAccountId(), accountEntity.getName())) {
             account.setName(accountEntity.getName());
         } else {
             account.setName(accountTypeName);
         }
 
         account.setBalance(ownCapital);
-        account.setType(determineType(accountType));
+        account.setType(toTinkAccountType());
 
         account.putIdentifier(new SwedishIdentifier(account.getAccountNumber()));
 

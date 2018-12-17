@@ -6,15 +6,14 @@ import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.TransactionEnt
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionsResponse {
-        private List<TransactionEntity> transactions;
-        private int totalNumberOfTransactions;
+    private List<TransactionEntity> transactions;
+    private int totalNumberOfTransactions;
 
     public List<TransactionEntity> getTransactions() {
         return transactions;
     }
 
-    public void setTransactions(
-            List<TransactionEntity> transactions) {
+    public void setTransactions(List<TransactionEntity> transactions) {
         this.transactions = transactions;
     }
 

@@ -6,6 +6,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,32 +20,61 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class AmericanExpressV62Predicates {
 
-    public static final Function<ActivityListEntity, List<TransactionEntity>> getTransactionsFromGivenPage = activity ->
-            Optional.ofNullable(activity.getTransactionList())
-                    // If we don't have more pages, we return true for `canStillFetch` and use it
-                    // in paginator
-                    .orElse(Lists.emptyList());
+    public static final Function<ActivityListEntity, List<TransactionEntity>>
+            getTransactionsFromGivenPage =
+                    activity ->
+                            Optional.ofNullable(activity.getTransactionList())
+                                    // If we don't have more pages, we return true for
+                                    // `canStillFetch` and use it
+                                    // in paginator
+                                    .orElse(Lists.emptyList());
+    public static final Predicate<CardEntity> cancelledCardSummaryValuePredicate =
+            c -> {
+                if ("true".equals(c.getCanceled())) {
+                    return false;
+                }
+                return true;
+            };
+    protected static final Function<String, String> getCardEndingNumbers =
+            fullCardNumber -> fullCardNumber.split("-")[1].trim();
     private static final String ERROR = "ERROR";
-    private static final Logger LOGGER = LoggerFactory.getLogger(AmericanExpressV62Predicates.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(AmericanExpressV62Predicates.class);
     // Cancelled card contains Message with type ERROR
-    public static final Predicate<CardEntity> cancelledCardsPredicate = c -> {
-        Message m = c.getMessage();
-        if (m != null && ERROR.equalsIgnoreCase(m.getType())) {
-            // TODO: Not sure if should be warning or just info
-            LOGGER.warn("Credit card not included because of error message: " + m.getShortValue());
-            return false;
-        }
-        return true;
-    };
-    public static final Predicate<CardEntity> cancelledCardSummaryValuePredicate = c -> {
-        if ("true".equals(c.getCanceled())) {
-            return false;
-        }
-        return true;
-    };
+    public static final Predicate<CardEntity> cancelledCardsPredicate =
+            c -> {
+                Message m = c.getMessage();
+                if (m != null && ERROR.equalsIgnoreCase(m.getType())) {
+                    // TODO: Not sure if should be warning or just info
+                    LOGGER.warn(
+                            "Credit card not included because of error message: "
+                                    + m.getShortValue());
+                    return false;
+                }
+                return true;
+            };
+    /*
+    If the transactions belongs to any "partner" card (card that is visible in main veiw and in subcards view)
+    We want to filter out this transaction.
+    If it does not, even if it's not "main card" transaction, it's just a "subcard " transaction that we would like to keep
+     */
+    public static BiPredicate<TransactionEntity, List<SubcardEntity>> filterPartnerTransactions =
+            (transaction, partnerCards) ->
+                    !partnerCards
+                            .stream()
+                            .map(card -> card.getSuppIndex())
+                            .filter(subIndex -> !subIndex.equals(transaction.getSuppIndex()))
+                            .collect(Collectors.toList())
+                            .isEmpty();
+
+    public static BiPredicate<CreditCardAccount, SubcardEntity> isPartnerCard =
+            (cardEntity, subcardEntity) ->
+                    getCardEndingNumbers
+                            .apply(cardEntity.getAccountNumber())
+                            .equals(getCardEndingNumbers.apply(subcardEntity.getCardProductName()));
+
     public static final Consumer<TransactionEntity> transformIntoTinkTransactions(
-            AmericanExpressV62Configuration config,
-            List<Transaction> list) {
+            AmericanExpressV62Configuration config, List<Transaction> list) {
         return transaction -> list.add(transaction.toTransaction(config, false));
     }
 }

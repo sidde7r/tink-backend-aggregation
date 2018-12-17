@@ -59,5 +59,9 @@ public class VolvoFinansConstants {
     public class Fetcher {
         public static final String ACCOUNT_ROLE_MAIN_APPLICANT = "HUVUDSOKANDE";
     }
+
+    public static final class Message {
+        public static final String ALREADY_IN_PROGRESS = "already in progress";
+    }
 }
 

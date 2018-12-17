@@ -1,8 +1,9 @@
-package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank;
+package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.authenticator.ErsteBankPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.authenticator.ErsteBankPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.credit.ErsteBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.ErsteBankAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.transactional.ErsteBankTransactionFetcher;
@@ -24,13 +25,14 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
-public class ErsteBankAgent extends NextGenerationAgent {
+
+public class ErsteBankPasswordAgent extends NextGenerationAgent {
 
     private final ErsteBankApiClient ersteBankApiClient;
 
-    public ErsteBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public ErsteBankPasswordAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.ersteBankApiClient = new ErsteBankApiClient(this.client, sessionStorage);
+        this.ersteBankApiClient = new ErsteBankApiClient(this.client, persistentStorage);
     }
 
     @Override

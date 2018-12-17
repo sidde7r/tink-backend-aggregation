@@ -33,10 +33,13 @@ public class FundMarketInfoResponse {
     private Boolean buyable;
     private Boolean sellable;
     private String preliminaryFeesType;
+
     @JsonProperty("NAV")
     private Double nav;
+
     @JsonProperty("NAVLastUpdated")
     private String navLastUpdated;
+
     private Double changeSinceOneDay;
     private Double changeSinceOneWeek;
     private Double changeSinceOneMonth;
