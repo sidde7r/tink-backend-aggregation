@@ -57,6 +57,10 @@ public final class ValidatorFactory {
                                                 .orElse(0)
                                         <= 1000,
                         trx -> String.format("Transaction description is too long: %s", trx))
+                .ruleTransaction(
+                        "Transaction amount is nonzero",
+                        trx -> trx.getAmount() != 0.0,
+                        trx -> String.format("Amount of transaction is zero: %s", trx))
                 .rule(
                         "No duplicate transactions",
                         aisdata -> !dupeFinder.containsDuplicates(aisdata.getTransactions()),

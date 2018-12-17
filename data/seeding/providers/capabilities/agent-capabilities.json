@@ -24,6 +24,7 @@
   "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS"],
   "nxgen.at.banks.erstebank.password.ErsteBankPasswordAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS"],
   "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS"],
+  "nxgen.at.banks.ing.IngAtAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
   "nxgen.at.banks.raiffeisen.RaiffeisenAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
   "nxgen.at.banks.volksbank.VolksbankAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
   "nxgen.at.creditcards.amex.v62.AmericanExpressV62ATAgent": ["CREDIT_CARDS"],

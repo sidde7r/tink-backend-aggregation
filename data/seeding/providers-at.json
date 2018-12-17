@@ -663,6 +663,30 @@
       "status": "ENABLED",
       "transactional": true,
       "type": "TEST"
+    },
+    {
+      "name": "at-ingdiba-password",
+      "displayName": "ING-DiBa",
+      "groupDisplayName": "ING-DiBa",
+      "popular": false,
+      "status": "ENABLED",
+      "type": "BANK",
+      "credentialsType": "PASSWORD",
+      "className": "nxgen.at.banks.ing.IngAtAgent",
+      "transactional": "true",
+      "payload": "",
+      "fields": [
+        {
+          "name": "username",
+          "description": "Customer number",
+          "immutable": true
+        },
+        {
+          "name": "password",
+          "description": "PIN",
+          "masked": true
+        }
+      ]
     }
   ]
 }
