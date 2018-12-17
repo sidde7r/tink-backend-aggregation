@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.UUID;
-import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,27 +11,19 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap.entities.Ac
 import se.tink.backend.aggregation.agents.utils.authentication.encap.entities.AuthenticationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.ActivationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.AuthenticationResponse;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.encrypted.RequestBody;
-import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EncapClientHelper {
-
-    private final TinkHttpClient client;
     private final String username;
     private Map<String, String> encapStorage;
     private final PersistentStorage persistentStorage;
     private final EncapConfiguration configuration;
     public final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public EncapClientHelper(TinkHttpClient client, String username,
-            String encapStorageString, PersistentStorage persistentStorage,
+    public EncapClientHelper(String username, String encapStorageString, PersistentStorage persistentStorage,
             EncapConfiguration configuration) {
-        this.client = client;
         this.username = username;
         this.persistentStorage = persistentStorage;
         this.configuration = configuration;
@@ -139,27 +130,6 @@ public class EncapClientHelper {
 
         persistEncapStorage();
         return true;
-    }
-
-    RequestBuilder getPlainTextRequest() {
-        return client.request(EncapConstants.Urls.PLAIN_TEXT_EXCHANGE)
-                .accept(MediaType.WILDCARD)
-                .type(MediaType.APPLICATION_FORM_URLENCODED);
-    }
-
-    String postSoapMessage(URL url, String soapAction, String body) {
-        return client.request(url)
-                .header("SOAPAction", soapAction)
-                .type("text/xml; charset=utf-8")
-                .accept(MediaType.WILDCARD)
-                .post(String.class, body);
-    }
-
-    String postEncryptedMessage(RequestBody encryptionRequestBody) {
-        return client.request(EncapConstants.Urls.CRYPTO_EXCHANGE)
-                .accept(MediaType.WILDCARD)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(String.class, encryptionRequestBody);
     }
 
     // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why they are static
