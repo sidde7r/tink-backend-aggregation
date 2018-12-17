@@ -156,9 +156,9 @@ icon:ikanokort	https://cdn.tink.se/provider-images/ikano.png
 icon:ingo	https://cdn.tink.se/provider-images/ingo.png
 icon:jakbanken	https://cdn.tink.se/provider-images/jakbanken.png
 icon:jetmastercard	https://cdn.tink.se/provider-images/ingo.png
+icon:lan_spar_bank	https://cdn.tink.se/provider-images/lan_spar_bank.png
 icon:landshypotek	https://cdn.tink.se/provider-images/landshypotek.png
 icon:lansforsakringar	https://cdn.tink.se/provider-images/lansforsakringar.png
-icon:lan_spar_bank	https://cdn.tink.se/provider-images/lan_spar_bank.png
 icon:lysa	https://cdn.tink.se/provider-images/lysa.png
 icon:marginalen	https://cdn.tink.se/provider-images/marginalen.png
 icon:nknyckelnmastercard	https://cdn.tink.se/provider-images/nk.png
