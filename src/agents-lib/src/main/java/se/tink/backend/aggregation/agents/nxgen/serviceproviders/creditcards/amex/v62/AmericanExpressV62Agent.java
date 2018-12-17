@@ -68,7 +68,7 @@ public class AmericanExpressV62Agent extends NextGenerationAgent {
                 .create(sessionStorage, config);
 
         AmericanExpressV62TransactionFetcher americanExpressV62TransactionFetcher = AmericanExpressV62TransactionFetcher
-                .create(apiClient, config);
+                .create(apiClient, config, sessionStorage);
 
         TransactionPagePaginationController<CreditCardAccount> amexV66TransactionPagePaginationController =
                 new TransactionPagePaginationController<>(
