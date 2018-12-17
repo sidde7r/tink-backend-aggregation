@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.log;
+package se.tink.backend.aggregation.nxgen.http.log;
 
 public class HttpRequestLogEntry extends HttpLogEntry {
     private static final String ENTRY_TYPE = "Request";

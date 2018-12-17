@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.log;
+package se.tink.backend.aggregation.nxgen.http.log;
 
 public abstract class HttpLogEntry {
     private String agent;
