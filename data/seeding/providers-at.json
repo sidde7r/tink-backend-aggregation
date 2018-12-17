@@ -153,6 +153,8 @@
       "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
       "passwordHelpText": "Use the same username as you would in your bank's mobile app.",
       "transactional": "true",
+      "refreshFrequency" : 0.0,
+      "refreshFrequencyFactor" : 0.0,
       "fields": [
         {
           "name": "username",
