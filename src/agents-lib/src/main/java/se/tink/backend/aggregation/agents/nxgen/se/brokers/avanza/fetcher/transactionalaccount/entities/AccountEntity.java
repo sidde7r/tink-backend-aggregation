@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.trans
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
-import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
@@ -116,9 +115,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public AccountTypes toTinkAccountType() {
-        final Optional<AccountTypes> accountType = MAPPERS.inferAccountType(this.accountType);
-
-        return accountType.orElse(AccountTypes.OTHER);
+        return MAPPERS.inferAccountType(accountType).orElse(AccountTypes.OTHER);
     }
 
     @JsonIgnore

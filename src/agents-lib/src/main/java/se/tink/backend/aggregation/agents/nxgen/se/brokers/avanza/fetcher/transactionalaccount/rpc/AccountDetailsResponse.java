@@ -262,9 +262,7 @@ public class AccountDetailsResponse {
     }
 
     public AccountTypes toTinkAccountType() {
-        final Optional<AccountTypes> accountType = MAPPERS.inferAccountType(this.accountType);
-
-        return accountType.orElse(AccountTypes.OTHER);
+        return MAPPERS.inferAccountType(accountType).orElse(AccountTypes.OTHER);
     }
 
     public <T extends Account> T toTinkAccount(HolderName holderName, Class<T> type) {
