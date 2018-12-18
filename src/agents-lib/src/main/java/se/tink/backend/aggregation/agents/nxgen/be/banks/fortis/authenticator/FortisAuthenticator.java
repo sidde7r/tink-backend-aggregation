@@ -103,10 +103,23 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     private void sendChallenges(AuthResponse response) throws LoginException {
+
+        HttpResponse httpres = null;
         try {
-            apiClient.authenticationRequest(response.getUrlEncodedFormat());
+            httpres = apiClient.authenticationRequest(response.getUrlEncodedFormat());
         } catch (Exception e) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+
+        String responseBody = httpres.getBody(String.class);
+
+        if (!Strings.isNullOrEmpty(responseBody) && responseBody.contains(FortisConstants.ERRORCODE.ERROR_CODE)) {
+            if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE_KO) || responseBody
+                    .contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE)) {
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+            } else {
+                throw new IllegalStateException(String.format("Unknown error: %s", responseBody));
+            }
         }
     }
 
@@ -166,7 +179,8 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             LOGGER.warnExtraLong(String.format("authenticate, multiple users found: %s", ""),
                     FortisConstants.LOGTAG.MULTIPLE_USER_ENTITIES);
         }
-        return Optional.ofNullable(eBankingUserIdEntity.getValue().getEBankingUsers().get(0).getEBankingUser().getEBankingUserId());
+        return Optional.ofNullable(
+                eBankingUserIdEntity.getValue().getEBankingUsers().get(0).getEBankingUser().getEBankingUserId());
     }
 
     private void getUserInfoAndPersistMuid() throws LoginException {
@@ -180,7 +194,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         persistentStorage.put(FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
     }
 
-    private boolean isCredentialsCorrect()  {
+    private boolean isCredentialsCorrect() {
         String muid = persistentStorage.get(FortisConstants.STORAGE.MUID);
         String password = persistentStorage.get(FortisConstants.STORAGE.PASSWORD);
         String agreementId = persistentStorage.get(FortisConstants.STORAGE.AGREEMENT_ID);
@@ -236,7 +250,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
 
     @Override
     public void autoAuthenticate() throws SessionException {
-        if(!isCredentialsCorrect()) {
+        if (!isCredentialsCorrect()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
