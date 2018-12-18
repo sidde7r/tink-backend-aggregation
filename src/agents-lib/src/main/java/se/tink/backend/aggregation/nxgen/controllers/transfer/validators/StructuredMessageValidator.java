@@ -24,8 +24,8 @@ public class StructuredMessageValidator {
             return false;
         }
 
-        int generatorDigits = Integer.parseInt(reference.substring(0, 10));
-        int checkDigits = Integer.parseInt(reference.substring(10, 12));
+        long generatorDigits = Long.parseLong(reference.substring(0, 10));
+        long checkDigits = Long.parseLong(reference.substring(10, 12));
 
         return (generatorDigits % 97 == 0 && checkDigits == 97)
                 || generatorDigits % 97 == checkDigits;
