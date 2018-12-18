@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusOctetReader;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferDestinationFetcher;
@@ -31,25 +30,25 @@ public class BelfiusAgent extends NextGenerationAgent {
     private final BelfiusApiClient apiClient;
     private final BelfiusSessionStorage belfiusSessionStorage;
 
-    public BelfiusAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BelfiusAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
         this.apiClient = new BelfiusApiClient(this.client, belfiusSessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.addMessageReader(new BelfiusOctetReader());
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BelfiusAuthenticator authenticator = new BelfiusAuthenticator(
-                apiClient,
-                credentials,
-                persistentStorage,
-                belfiusSessionStorage,
-                supplementalInformationHelper);
+        BelfiusAuthenticator authenticator =
+                new BelfiusAuthenticator(
+                        apiClient,
+                        credentials,
+                        persistentStorage,
+                        belfiusSessionStorage,
+                        supplementalInformationHelper);
 
         return new AutoAuthenticationController(
                 request,
@@ -59,9 +58,10 @@ public class BelfiusAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        BelfiusTransactionalAccountFetcher transactionalAccountFetcher
-                = new BelfiusTransactionalAccountFetcher(this.apiClient);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        BelfiusTransactionalAccountFetcher transactionalAccountFetcher =
+                new BelfiusTransactionalAccountFetcher(this.apiClient);
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
@@ -100,7 +100,8 @@ public class BelfiusAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.of(
                 new TransferDestinationRefreshController(
                         metricRefreshController,

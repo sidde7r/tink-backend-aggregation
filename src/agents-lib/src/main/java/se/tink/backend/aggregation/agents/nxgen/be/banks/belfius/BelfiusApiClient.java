@@ -53,6 +53,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.StartFlowRe
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.sessionhandler.rpc.TechnicalResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -303,7 +304,12 @@ public class BelfiusApiClient {
     private <T extends BelfiusResponse> T post(URL url, Class<T> c, BelfiusRequest.Builder builder) {
         setSessionData(builder);
         String body = "request=" + SerializationUtils.serializeToString(builder.build());
-        T response = buildRequest(url).post(c, body);
+        HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
+        String contentType = httpResponse.getHeaders().getFirst("Content-Type");
+        if ("application/octet-stream".equals(contentType)) {
+            throw new IllegalStateException("invalid content type found");
+        }
+        T response = httpResponse.getBody(c);
         MessageResponse.validate(response);
         this.sessionStorage.incrementRequestCounter();
         return response;
