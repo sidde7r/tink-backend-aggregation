@@ -57,9 +57,17 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
         final String accountPrefix = IngAtConstants.Url.ACCOUNT_PREFIX.toString();
         final IngAtAccountsListParser parser = new IngAtAccountsListParser(loginResponse.getBody(String.class));
         final List<IngAtAccountsListParser.AccountSummary> accountsSummary = parser.getAccountsSummary();
-        final List<AccountReferenceEntity> accountEntities = accountsSummary.stream()
-                .map(a -> new AccountReferenceEntity(a.getId(), a.getType(), accountPrefix + a.getLink().replaceFirst("./", "")))
-                .collect(Collectors.toList());
+        final List<AccountReferenceEntity> accountEntities =
+                accountsSummary
+                        .stream()
+                        .map(
+                                a ->
+                                        new AccountReferenceEntity(
+                                                a.getId(),
+                                                a.getType(),
+                                                a.getAccountName(),
+                                                accountPrefix + a.getLink().replaceFirst("./", "")))
+                        .collect(Collectors.toList());
         final WebLoginResponse webLoginResponse =
                 new WebLoginResponse(
                         username,

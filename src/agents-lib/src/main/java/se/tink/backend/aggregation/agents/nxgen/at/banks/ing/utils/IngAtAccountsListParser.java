@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class IngAtAccountsListParser {
     private static Logger logger = LoggerFactory.getLogger(IngAtAccountsListParser.class);
@@ -72,6 +72,7 @@ public class IngAtAccountsListParser {
     public static class AccountSummary {
         private String type;
         private String link;
+        private String accountName;
         private String id;
         private String currency;
         private double balance;
@@ -80,6 +81,8 @@ public class IngAtAccountsListParser {
             final Element link = columns.get(0);
             this.type = textToAccountType(link.text());
             this.link = link.getElementsByTag("a").attr("href");
+            this.accountName =
+                    Optional.ofNullable(link.getElementsByTag("span").last()).orElse(null).text();
             this.id = columns.get(2).text();
             this.currency = "EUR";
             String balance = columns.get(3).text();
@@ -99,6 +102,10 @@ public class IngAtAccountsListParser {
             return link;
         }
 
+        public String getAccountName() {
+            return accountName;
+        }
+
         public String getId() {
             return id;
         }
@@ -113,8 +120,9 @@ public class IngAtAccountsListParser {
 
         @Override
         public String toString() {
-            return String.format("AccountSummary(type=%s, link=%s, id=%s, currency=%s, balance=%s)",
-                    type, link, id, currency, balance);
+            return String.format(
+                    "AccountSummary(type=%s, link=%s, accountName=%s, id=%s, currency=%s, balance=%s)",
+                    type, link, accountName, id, currency, balance);
         }
     }
 }

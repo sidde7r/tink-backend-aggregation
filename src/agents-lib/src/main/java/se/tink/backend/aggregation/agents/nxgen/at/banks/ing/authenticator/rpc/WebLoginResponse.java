@@ -1,24 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc;
 
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.entities.AccountReferenceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @JsonObject
 public class WebLoginResponse {
     private String username;
     private String accountHolder;
+    private String accountName;
     private String basePage;
     private List<AccountReferenceEntity> accountReferenceEntities;
 
     private WebLoginResponse() {
     }
 
-    public WebLoginResponse(final String username, final String accountHolder, final String basePage, final List<AccountReferenceEntity> accountReferenceEntities) {
+    public WebLoginResponse(
+            final String username,
+            final String accountHolder,
+            final String basePage,
+            final List<AccountReferenceEntity> accountReferenceEntities) {
         this.username = username;
         this.accountHolder = accountHolder;
         this.basePage = basePage;
