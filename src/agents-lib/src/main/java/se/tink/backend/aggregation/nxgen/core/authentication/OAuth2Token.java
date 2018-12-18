@@ -10,6 +10,9 @@ import java.util.Optional;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class OAuth2Token {
+    @JsonIgnore
+    private static final String BEARER = "bearer";
+
     private String tokenType;
     private String accessToken;
     @JsonProperty
@@ -58,6 +61,29 @@ public class OAuth2Token {
         );
     }
 
+    @JsonIgnore
+    public static OAuth2Token createBearer(String accessToken, String refreshToken,
+            long accessExpiresInSeconds) {
+        return create(
+                BEARER,
+                accessToken,
+                refreshToken,
+                accessExpiresInSeconds
+        );
+    }
+
+    @JsonIgnore
+    public static OAuth2Token createBearer(String accessToken, String refreshToken,
+            long accessExpiresInSeconds, long refreshExpiresInSeconds) {
+        return create(
+                BEARER,
+                accessToken,
+                refreshToken,
+                accessExpiresInSeconds,
+                refreshExpiresInSeconds
+        );
+    }
+
     public String getTokenType() {
         return tokenType;
     }
@@ -103,7 +129,7 @@ public class OAuth2Token {
 
     @JsonIgnore
     public boolean isBearer() {
-        return !Strings.isNullOrEmpty(tokenType) && "bearer".equalsIgnoreCase(tokenType);
+        return !Strings.isNullOrEmpty(tokenType) && BEARER.equalsIgnoreCase(tokenType);
     }
 
     @JsonIgnore
