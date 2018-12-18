@@ -1,17 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
-import com.google.api.client.repackaged.com.google.common.base.Strings;
-import java.util.Map;
-import java.util.Optional;
-import javax.ws.rs.core.MediaType;
-
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.*;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.StartAuthResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ValidateAuthResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaAccountResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaTransactionResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -19,6 +19,9 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+
+import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 public class ArgentaApiClient {
 
@@ -111,27 +114,27 @@ public class ArgentaApiClient {
         } catch (HttpResponseException responseException) {
             HttpResponse response = responseException.getResponse();
             ArgentaErrorResponse argentaErrorResponse = response.getBody(ArgentaErrorResponse.class);
-            handleAuthorizationErrors(getErrorCode(argentaErrorResponse));
+            handleKnownErrorResponses(argentaErrorResponse);
             LOGGER.warn(getErrorMessage(argentaErrorResponse));
             throw new IllegalArgumentException(getErrorMessage(argentaErrorResponse));
         }
     }
 
-    private void handleAuthorizationErrors(Optional<String> errorCode) throws LoginException {
-        if (errorCode.isPresent()) {
-            if (errorCode.get().toLowerCase().startsWith(ArgentaConstants.ErrorResponse.AUTHENTICATION))
+    private void handleKnownErrorResponses(ArgentaErrorResponse argentaErrorResponse) throws LoginException {
+        String errorCode = argentaErrorResponse.getCode();
+        if (!Strings.isNullOrEmpty(errorCode)) {
+            if (errorCode.toLowerCase().startsWith(ArgentaConstants.ErrorResponse.AUTHENTICATION)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
-            else if (errorCode.get().equalsIgnoreCase(ArgentaConstants.ErrorResponse.TOO_MANY_DEVICES))
-                throw LoginError.REGISTER_DEVICE_ERROR.exception();
+            } else if (errorCode.toLowerCase().startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP)) {
+                String errorMessage = getErrorMessage(argentaErrorResponse);
+                if (!Strings.isNullOrEmpty(errorMessage)) {
+                    if (errorMessage.toLowerCase().contains(ArgentaConstants.ErrorResponse.TOO_MANY_DEVICES)) {
+                        throw LoginError.REGISTER_DEVICE_ERROR.exception();
+                    } else if (errorMessage.toLowerCase().contains(ArgentaConstants.ErrorResponse.AUTHENTICATION_ERROR))
+                        throw LoginError.INCORRECT_CREDENTIALS.exception();
+                }
+            }
         }
-    }
-
-    private Optional<String> getErrorCode(ArgentaErrorResponse argentaErrorResponse) {
-        if (argentaErrorResponse.getFieldErrors() != null
-                && argentaErrorResponse.getFieldErrors().size() >= 1) {
-            return Optional.ofNullable(argentaErrorResponse.getCode());
-        }
-        return Optional.empty();
     }
 
     private String getErrorMessage(ArgentaErrorResponse argentaErrorResponse) {
