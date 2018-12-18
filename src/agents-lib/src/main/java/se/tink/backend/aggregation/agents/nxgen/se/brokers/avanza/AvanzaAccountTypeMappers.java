@@ -28,10 +28,6 @@ public final class AvanzaAccountTypeMappers {
         return t -> Pattern.compile(regex).matcher(t).matches();
     }
 
-    private static String toKeyString(Object accountTypeKey) {
-        return String.valueOf(accountTypeKey).toLowerCase();
-    }
-
     public Optional<AccountTypes> inferAccountType(final String accountTypeKey) {
         final Optional<AccountTypes> accountType =
                 Optional.of(getAccountTypeMapper().translate(accountTypeKey))
@@ -92,21 +88,19 @@ public final class AvanzaAccountTypeMappers {
         return accountTypeFallbackMapper;
     }
 
-    private boolean verify(Object key, AccountTypes value) {
-        Optional<AccountTypes> inferred = inferAccountType(toKeyString(key));
-        return inferred.isPresent() && inferred.get() == value;
+    private boolean verify(String key, AccountTypes value) {
+        return inferAccountType(key).map(x -> x == value).orElse(false);
     }
 
-    private boolean verify(Object key, Collection<AccountTypes> values) {
-        Optional<AccountTypes> inferred = inferAccountType(toKeyString(key));
-        return inferred.isPresent() && values.contains(inferred.get());
+    private boolean verify(String key, Collection<AccountTypes> values) {
+        return inferAccountType(key).map(values::contains).orElse(false);
     }
 
-    public boolean isInvestmentAccount(Object accountTypeKey) {
+    public boolean isInvestmentAccount(String accountTypeKey) {
         return verify(accountTypeKey, InvestmentAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
-    public boolean isTransactionalAccount(Object accountTypeKey) {
+    public boolean isTransactionalAccount(String accountTypeKey) {
         return verify(accountTypeKey, TransactionalAccount.ALLOWED_ACCOUNT_TYPES);
     }
 
@@ -114,19 +108,19 @@ public final class AvanzaAccountTypeMappers {
         return TransactionalAccount.ALLOWED_ACCOUNT_TYPES.contains(type);
     }
 
-    public boolean isSavingsAccount(Object accountTypeKey) {
+    public boolean isSavingsAccount(String accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.SAVINGS);
     }
 
-    public boolean isCheckingAccount(Object accountTypeKey) {
+    public boolean isCheckingAccount(String accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.CHECKING);
     }
 
-    public boolean isLoanAccount(Object accountTypeKey) {
+    public boolean isLoanAccount(String accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.LOAN);
     }
 
-    public boolean isCreditCardAccount(Object accountTypeKey) {
+    public boolean isCreditCardAccount(String accountTypeKey) {
         return verify(accountTypeKey, AccountTypes.CREDIT_CARD);
     }
 
