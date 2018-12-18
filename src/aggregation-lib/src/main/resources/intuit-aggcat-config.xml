@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<intuit-config>
-	<saml>
-		<keystoreFile>data/intuit.jks</keystoreFile>
-		<keystorePassword>Tink&lt;3Security</keystorePassword>
-		<keyPassword>Tink&lt;3Security</keyPassword>
-		<certAlias>1</certAlias>
-	</saml>
-</intuit-config>
