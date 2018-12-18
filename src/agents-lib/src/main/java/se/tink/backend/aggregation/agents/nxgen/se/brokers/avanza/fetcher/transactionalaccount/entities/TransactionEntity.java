@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.TransactionTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
@@ -56,8 +56,8 @@ public class TransactionEntity {
     public boolean isDepositOrWithdraw() {
         final String type = getTransactionType().toLowerCase();
 
-        return Objects.equals(type, AvanzaConstants.TransactionType.DEPOSIT)
-                || Objects.equals(type, AvanzaConstants.TransactionType.WITHDRAW);
+        return Objects.equals(type, TransactionTypes.DEPOSIT)
+                || Objects.equals(type, TransactionTypes.WITHDRAW);
     }
 
     @JsonIgnore

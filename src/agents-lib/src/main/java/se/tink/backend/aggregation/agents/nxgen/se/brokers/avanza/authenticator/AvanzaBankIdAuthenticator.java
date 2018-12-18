@@ -7,7 +7,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCompleteResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.HeaderKey.SECURITY_TOKEN;
 
 public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
     private final AvanzaApiClient apiClient;
@@ -54,7 +54,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                                 final String token = r.getSecurityToken();
                                 sessionStorage.put(session, token);
                             });
-            temporaryStorage.put(AvanzaConstants.StorageKey.HOLDER_NAME, response.getName());
+            temporaryStorage.put(StorageKeys.HOLDER_NAME, response.getName());
         }
 
         return status;
@@ -70,7 +70,8 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                         .map(l -> apiClient.completeBankId(transactionId, l.getCustomerId()))
                         .map(
                                 r -> {
-                                    final String token = r.getHeaders().getFirst(SECURITY_TOKEN);
+                                    final String token =
+                                            r.getHeaders().getFirst(HeaderKeys.SECURITY_TOKEN);
                                     final BankIdCompleteResponse response =
                                             r.getBody(BankIdCompleteResponse.class)
                                                     .withSecurityToken(token);

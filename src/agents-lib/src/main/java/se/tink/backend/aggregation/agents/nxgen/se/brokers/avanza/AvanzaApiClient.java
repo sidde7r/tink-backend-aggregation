@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitResponse;
@@ -23,7 +26,6 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Urls;
 
 public class AvanzaApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaApiClient.class);
@@ -45,8 +47,8 @@ public class AvanzaApiClient {
     private RequestBuilder createRequestInSession(
             String url, String authSession, String securityToken) {
         return createRequest(url)
-                .header(AvanzaConstants.HeaderKey.AUTH_SESSION, authSession)
-                .header(AvanzaConstants.HeaderKey.SECURITY_TOKEN, securityToken);
+                .header(HeaderKeys.AUTH_SESSION, authSession)
+                .header(HeaderKeys.SECURITY_TOKEN, securityToken);
     }
 
     private RequestBuilder createRequestInSession(String url, String authSession) {
@@ -96,7 +98,7 @@ public class AvanzaApiClient {
                 String.format(
                         Urls.INVESTMENT_TRANSACTIONS_LIST,
                         accountId,
-                        AvanzaConstants.QueryValue.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS,
+                        QueryValues.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS,
                         toDate);
 
         return createRequestInSession(investmentTransactionsUrl, authSession)

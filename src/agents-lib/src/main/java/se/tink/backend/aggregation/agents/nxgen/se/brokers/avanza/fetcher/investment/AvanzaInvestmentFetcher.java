@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.IsinMap;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentAccountPortfolioResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
@@ -36,8 +36,7 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        final HolderName holderName =
-                new HolderName(temporaryStorage.get(AvanzaConstants.StorageKey.HOLDER_NAME));
+        final HolderName holderName = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
 
         final Supplier<Stream<Pair<String, String>>> sessionAccountPairStream =
                 () ->

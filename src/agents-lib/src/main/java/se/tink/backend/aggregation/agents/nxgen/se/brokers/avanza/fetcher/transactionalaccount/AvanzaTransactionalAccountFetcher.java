@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.rpc.TransactionsResponse;
@@ -37,8 +37,7 @@ public class AvanzaTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final HolderName holderName =
-                new HolderName(temporaryStorage.get(AvanzaConstants.StorageKey.HOLDER_NAME));
+        final HolderName holderName = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
 
         return sessionStorage
                 .keySet()
