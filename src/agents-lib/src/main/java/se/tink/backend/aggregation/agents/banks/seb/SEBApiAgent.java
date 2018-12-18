@@ -104,6 +104,7 @@ import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBBankIdLoginUtil
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -123,7 +124,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -145,6 +145,7 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecutor, PersistentLogin, TransferExecutor {
 
@@ -937,7 +938,22 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
         userId = userinfo.IMS_SHORT_USERID;
         Preconditions.checkNotNull(customerId);
         Preconditions.checkNotNull(userId);
+        checkLoggedInCustomerId(customerId);
+
         return true;
+    }
+
+    // Make sure the user always logs in to the same login to not mistakenly suddenly get the wrong transactions.
+    private void checkLoggedInCustomerId(String bankCustomerId) throws LoginException {
+        final String customerIdString = bankCustomerId;
+        final String previousCustomerId = credentials.getPayload();
+        if (previousCustomerId != null) {
+            if (!Objects.equal(customerIdString, previousCustomerId)) {
+                throw LoginError.NOT_CUSTOMER.exception(UserMessage.WRONG_BANKID.getKey());
+            }
+        }
+        credentials.setPayload(customerIdString);
+        context.updateCredentialsExcludingSensitiveInformation(credentials, false);
     }
 
     @Override
@@ -2035,6 +2051,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
     private enum UserMessage implements LocalizableEnum {
         MUST_AUTHORIZE_BANKID(new LocalizableKey("The first time you use your mobile BankId you have to verify it with your Digipass. Login to the SEB-app with your mobile BankID to do this.")),
+        WRONG_BANKID(new LocalizableKey("Wrong BankID signature. Did you log in with the wrong personnummer?")),
         DO_NOT_SUPPORT_YOUTH(new LocalizableKey("It looks like you have SEB Ung. Unfortunately we currently only support SEB's standard login."));
 
         private LocalizableKey userMessage;
