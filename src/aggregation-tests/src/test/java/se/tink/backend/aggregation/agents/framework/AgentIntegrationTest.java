@@ -26,7 +26,6 @@ import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.agents.nxgen.framework.validation.ValidatorFactory;
-import se.tink.backend.aggregation.capability.CapabilityTester;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -516,7 +515,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
             Preconditions.checkNotNull(provider, "Provider was not set.");
             Preconditions.checkNotNull(credential, "Credential was not set.");
-            CapabilityTester.checkCapabilities(provider.getClassName());
             credential.setProviderName(provider.getName());
             credential.setType(provider.getCredentialsType());
 
