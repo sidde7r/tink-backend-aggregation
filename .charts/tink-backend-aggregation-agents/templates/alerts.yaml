@@ -38,9 +38,9 @@ spec:
 ### Provider level login failures
   - alert: HighProviderFailedLoginRatio
     expr: |
-      # Never trigger on providers with less than 20 login attempts past 60 minutes.
+      # Never trigger on providers with less than 40 login attempts past 60 minutes.
       # This filters out small providers which are less critical to fix quickly
-      sum(increase(tink_agent_login_total{action="login"}[1h])) BY (provider) > 20 and
+      sum(increase(tink_agent_login_total{action="login"}[1h])) BY (className) > 40 and
       # Providers where more than 20% of the login attempts fail.
       sum(increase(tink_agent_login_total{action="login",outcome="failed"}[30m])) BY (provider) / sum(increase(tink_agent_login_total{action="login"}[30m])) BY (provider) > 0.20
     for: 30m
