@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
@@ -14,6 +15,10 @@ public class InvestmentGenerator {
 
     public static Collection<InvestmentAccount> fetchInvestmentAccounts(String currency, DemoInvestmentAccount accountDefinition) {
         List<InvestmentAccount> investmentAccounts = new ArrayList<>();
+        if (Objects.isNull(accountDefinition)) {
+            return investmentAccounts;
+        }
+
         investmentAccounts.add(
                 InvestmentAccount.builder(accountDefinition.getAccountId())
                         .setBalance(new Amount(currency,  DemoConstants.getSekToCurrencyConverter(
