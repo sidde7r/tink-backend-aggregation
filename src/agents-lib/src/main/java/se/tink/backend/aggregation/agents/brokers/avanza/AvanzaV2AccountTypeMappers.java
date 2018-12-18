@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.brokers.avanza;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -12,6 +8,12 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.libraries.pair.Pair;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+
 import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.AvanzaAccountTypes;
 import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.AvanzaFallbackAccountTypes;
 
@@ -29,15 +31,14 @@ public final class AvanzaV2AccountTypeMappers {
     public Optional<AccountTypes> inferAccountType(final String accountTypeKey) {
         final Optional<AccountTypes> accountType =
                 Optional.of(getAccountTypeMapper().translate(accountTypeKey))
-                        .orElse(getAccountTypeFallbackMapper().translate(accountTypeKey));
+                        .orElseGet(() -> getAccountTypeFallbackMapper().translate(accountTypeKey));
 
         // TODO refactor with isPresentOrElse when we are past Java 8
         if (!accountType.isPresent()) {
             LOGGER.warn(
                     String.format(
                             "%s Could not infer account type from type \"%s\"; ignoring the account",
-                            AvanzaV2Constants.LogTags.UNKNOWN_ACCOUNT_TYPE,
-                            accountTypeKey));
+                            AvanzaV2Constants.LogTags.UNKNOWN_ACCOUNT_TYPE, accountTypeKey));
         }
 
         return accountType;
