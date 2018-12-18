@@ -202,6 +202,7 @@ public class KbcConstants {
         public static final String INCORRECT_LOGIN_CODE = "you have entered the wrong login code";
         public static final String INCORRECT_SIGN_CODE = "your sign code is incorrect";
         public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
+        public static final String ACCOUNT_BLOCKED = "type in the characters as they appear in the image below and then click 'confirm'";
     }
 
     public enum UserMessage implements LocalizableEnum {
