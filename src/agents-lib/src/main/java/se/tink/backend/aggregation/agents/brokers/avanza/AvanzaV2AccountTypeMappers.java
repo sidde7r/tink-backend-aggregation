@@ -29,7 +29,7 @@ public final class AvanzaV2AccountTypeMappers {
     public Optional<AccountTypes> inferAccountType(final String accountTypeKey) {
         final Optional<AccountTypes> accountType =
                 Optional.of(getAccountTypeMapper().translate(accountTypeKey))
-                        .orElse(getAccountTypeFallbackMapper().translate(accountTypeKey));
+                        .orElseGet(() -> getAccountTypeFallbackMapper().translate(accountTypeKey));
 
         // TODO refactor with isPresentOrElse when we are past Java 8
         if (!accountType.isPresent()) {
