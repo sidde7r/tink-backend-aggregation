@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities.AddressEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -76,8 +78,22 @@ public class AccountEntity {
         return requiredReference;
     }
 
-    public String getIdentifier() {
+    @JsonIgnore
+    public Optional<String> findIdentifier() {
         // iban or accountNumber is set depending on if the account is UK local or not.
-        return iban != null ? iban : accountNumber;
+
+        if (iban != null) {
+            return Optional.of(iban);
+        }
+
+        if (accountNumber != null) {
+            return Optional.of(accountNumber);
+        }
+
+        if (bic != null) {
+            return Optional.of(bic);
+        }
+
+        return Optional.empty(); // No identifier found, which is not expected.
     }
 }
