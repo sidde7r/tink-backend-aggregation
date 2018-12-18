@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -20,8 +18,6 @@ import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import static se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.HeaderKey.SECURITY_TOKEN;
 
 public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaBankIdAuthenticator.class);
-
     private final AvanzaApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final TemporaryStorage temporaryStorage;
