@@ -1796,6 +1796,7 @@
             "credentialsType": "MOBILE_BANKID",
             "displayDescription": "Mobile BankID",
             "displayName": "Test BankID (successful) ",
+            "groupDisplayName": "Test BankID",
             "fields": [
                 {
                     "hint": "YYYYMMDDNNNN",
@@ -1809,7 +1810,6 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
-            "groupDisplayName": "TestBank",
             "multiFactor": true,
             "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
             "popular": false,
@@ -1823,6 +1823,7 @@
             "credentialsType": "MOBILE_BANKID",
             "displayDescription": "Mobile BankID",
             "displayName": "Test BankID (failing) ",
+            "groupDisplayName": "Test BankID",
             "fields": [
                 {
                     "hint": "YYYYMMDDNNNN",
@@ -1836,7 +1837,6 @@
                     "patternError": "Please enter a valid social security number."
                 }
             ],
-            "groupDisplayName": "TestBank",
             "multiFactor": true,
             "passwordHelpText": "To connect your broker, you need to identify yourself using Mobile BankID.",
             "popular": false,
@@ -1849,6 +1849,7 @@
             "className": "nxgen.demo.banks.password.PasswordDemoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
             "fields": [
                 {
                     "description": "Username",
@@ -1874,6 +1875,7 @@
             "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
             "fields": [
                 {
                     "description": "Username",

@@ -2050,7 +2050,8 @@
       "name": "dk-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
       "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
+      "displayName":"Test Password",
+      "groupDisplayName":"Test Password",
       "fields": [
           {
               "description": "Username",
@@ -2076,6 +2077,7 @@
       "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Multi-Supplemental",
+      "groupDisplayName": "Test Multi-Supplemental",
       "fields": [
           {
               "description": "Username",
