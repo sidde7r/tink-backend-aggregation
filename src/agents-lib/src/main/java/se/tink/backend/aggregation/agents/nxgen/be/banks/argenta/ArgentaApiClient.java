@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.rpc.ArgentaErrorResponse;
@@ -48,7 +50,7 @@ public class ArgentaApiClient {
 
     public StartAuthResponse startAuth(
             URL authStart, StartAuthRequest registrationRequest, String deviceToken)
-            throws LoginException {
+            throws LoginException, AuthorizationException {
         RequestBuilder request =
                 client.request(authStart)
                         .type(MediaType.APPLICATION_JSON_TYPE)
@@ -58,7 +60,7 @@ public class ArgentaApiClient {
     }
 
     public ValidateAuthResponse validateAuth(
-            ValidateAuthRequest validateAuthRequest, String deviceToken) throws LoginException {
+            ValidateAuthRequest validateAuthRequest, String deviceToken) throws LoginException, AuthorizationException {
         RequestBuilder request =
                 client.request(ArgentaConstants.Url.AUTH_VALIDATE)
                         .accept(MediaType.APPLICATION_JSON_TYPE)
@@ -105,7 +107,7 @@ public class ArgentaApiClient {
     }
 
     private <T, R> T postRequestWithAuthorization(
-            Class<T> responseClass, RequestBuilder request, R post) throws LoginException {
+            Class<T> responseClass, RequestBuilder request, R post) throws LoginException, AuthorizationException {
         setAuthorization(request);
         try {
             HttpResponse response = request.post(HttpResponse.class, post);
@@ -113,14 +115,16 @@ public class ArgentaApiClient {
             return response.getBody(responseClass);
         } catch (HttpResponseException responseException) {
             HttpResponse response = responseException.getResponse();
-            ArgentaErrorResponse argentaErrorResponse = response.getBody(ArgentaErrorResponse.class);
+            ArgentaErrorResponse argentaErrorResponse =
+                    response.getBody(ArgentaErrorResponse.class);
             handleKnownErrorResponses(argentaErrorResponse);
             LOGGER.warn(getErrorMessage(argentaErrorResponse));
             throw new IllegalArgumentException(getErrorMessage(argentaErrorResponse));
         }
     }
 
-    private void handleKnownErrorResponses(ArgentaErrorResponse argentaErrorResponse) throws LoginException {
+    private void handleKnownErrorResponses(ArgentaErrorResponse argentaErrorResponse)
+            throws LoginException, AuthorizationException {
         String errorCode = argentaErrorResponse.getCode();
         if (!Strings.isNullOrEmpty(errorCode)) {
             if (errorCode.toLowerCase().startsWith(ArgentaConstants.ErrorResponse.AUTHENTICATION)) {
@@ -128,12 +132,19 @@ public class ArgentaApiClient {
             } else if (errorCode.toLowerCase().startsWith(ArgentaConstants.ErrorResponse.ERROR_CODE_SBP)) {
                 String errorMessage = getErrorMessage(argentaErrorResponse);
                 if (!Strings.isNullOrEmpty(errorMessage)) {
-                    if (errorMessage.toLowerCase().contains(ArgentaConstants.ErrorResponse.TOO_MANY_DEVICES)) {
-                        throw LoginError.REGISTER_DEVICE_ERROR.exception();
-                    } else if (errorMessage.toLowerCase().contains(ArgentaConstants.ErrorResponse.AUTHENTICATION_ERROR))
-                        throw LoginError.INCORRECT_CREDENTIALS.exception();
+                    handleKnownErrorMessages(errorMessage.toLowerCase());
                 }
             }
+        }
+    }
+
+    private void handleKnownErrorMessages(String errorMessage) throws LoginException, AuthorizationException {
+        if (errorMessage.contains(ArgentaConstants.ErrorResponse.TOO_MANY_DEVICES)) {
+            throw LoginError.REGISTER_DEVICE_ERROR.exception();
+        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.AUTHENTICATION_ERROR)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        } else if (errorMessage.contains(ArgentaConstants.ErrorResponse.ACCOUNT_BLOCKED)) {
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
     }
 
@@ -158,7 +169,8 @@ public class ArgentaApiClient {
     }
 
     private void storeAuthorization(HttpResponse response) {
-        String authorization = response.getHeaders().getFirst(ArgentaConstants.HEADER.AUTHORIZATION);
+        String authorization =
+                response.getHeaders().getFirst(ArgentaConstants.HEADER.AUTHORIZATION);
         sessionStorage.setAuthorization(authorization);
     }
 }
