@@ -54,6 +54,15 @@ public class AvanzaConstants {
         public static final String KREDIT = "kredit";
     }
 
+    public static class PortfolioTypes {
+        public static final String INVESTERINGSSPARKONTO = "investeringssparkonto";
+        public static final String AKTIEFONDKONTO = "aktiefondkonto";
+        public static final String TJANSTEPENSION = "tjanstepension";
+        public static final String PENSIONSFORSAKRING = "pensionsforsakring";
+        public static final String IPS = "ips";
+        public static final String KAPITALFORSAKRING = "kapitalforsakring";
+    }
+
     public static class Urls {
         private static final String HOST = "https://www.avanza.se";
         private static final String API = HOST + "/_api";

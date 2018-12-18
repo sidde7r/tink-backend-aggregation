@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.PortfolioTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
@@ -112,15 +113,15 @@ public class PortfolioEntity {
     @JsonIgnore
     private Portfolio.Type getPortfolioType() {
         switch (getAccountType().toLowerCase()) {
-            case "investeringssparkonto":
+            case PortfolioTypes.INVESTERINGSSPARKONTO:
                 return Portfolio.Type.ISK;
-            case "aktiefondkonto":
+            case PortfolioTypes.AKTIEFONDKONTO:
                 return Portfolio.Type.DEPOT;
-            case "tjanstepension":
-            case "pensionsforsakring":
-            case "ips":
+            case PortfolioTypes.TJANSTEPENSION:
+            case PortfolioTypes.PENSIONSFORSAKRING:
+            case PortfolioTypes.IPS:
                 return Portfolio.Type.PENSION;
-            case "kapitalforsakring":
+            case PortfolioTypes.KAPITALFORSAKRING:
                 return Portfolio.Type.KF;
             default:
                 return Portfolio.Type.OTHER;
