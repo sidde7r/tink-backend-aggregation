@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -11,8 +13,11 @@ import se.tink.backend.aggregation.rpc.Field;
 
 public class PasswordAuthenticator implements MultiFactorAuthenticator {
 
-    private static final String demoUsername = "tink";
-    private static final String demoPassword = "tink1234";
+    private static final Map<String, String> TEST_CREDENTIALS = ImmutableMap.of(
+            "tink", "tink-1234",
+            "tink2", "tink-2345",
+            "tink3", "tink-3456"
+    );
 
     public PasswordAuthenticator() {
     }
@@ -32,7 +37,7 @@ public class PasswordAuthenticator implements MultiFactorAuthenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        if (!(username.equals(demoUsername) && password.equals(demoPassword))) {
+        if (!(TEST_CREDENTIALS.containsKey(username) && TEST_CREDENTIALS.get(username).equals(password))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }

@@ -31,7 +31,6 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
     //TODO Requires changes when multi-currency is implemented. Will do for now
     private final String currency;
-    private final NextGenerationDemoTransactionFetcher transactionFetcher;
 
     public NextGenerationDemoAgent(CredentialsRequest request,
             AgentContext context,
@@ -39,11 +38,7 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
-        this.transactionFetcher =  new NextGenerationDemoTransactionFetcher(request.getAccounts(),
-                        currency,
-                        catalog,
-                        getTransactionalAccountAccounts(),
-                        getDemoSavingsAccounts());
+
     }
 
     @Override
@@ -60,6 +55,13 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+        NextGenerationDemoTransactionFetcher transactionFetcher = new NextGenerationDemoTransactionFetcher(
+                request.getAccounts(),
+                currency,
+                catalog,
+                getTransactionalAccountAccounts(),
+                getDemoSavingsAccounts());
+
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,transactionFetcher,
                 new TransactionFetcherController<>(transactionPaginationHelper, transactionFetcher)));
     }

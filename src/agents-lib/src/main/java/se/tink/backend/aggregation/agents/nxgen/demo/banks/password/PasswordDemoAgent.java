@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator.PasswordAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.authenticator.PasswordAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
@@ -21,8 +22,13 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
+    private static String username;
+    private static String provider;
+
     public PasswordDemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        this.username = request.getCredentials().getField("username");
+        this.provider = request.getProvider().getName();
     }
 
     @Override
@@ -60,9 +66,12 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
         return Optional.empty();
     }
 
-
     @Override
     public DemoInvestmentAccount getInvestmentAccounts() {
+        if (!username.equals("tink")) {
+            return null;
+        }
+
         return new DemoInvestmentAccount() {
             @Override
             public String getAccountId() {
@@ -83,26 +92,15 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoSavingsAccount getDemoSavingsAccounts() {
-        return new DemoSavingsAccount() {
-            @Override
-            public String getAccountId() {
-                return "7777-222222222222";
-            }
-
-            @Override
-            public String getAccountName() {
-                return "SavingsAccount";
-            }
-
-            @Override
-            public double getAccountBalance() {
-                return 1245.33;
-            }
-        };
+        return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(this.username, this.provider);
     }
 
     @Override
     public DemoLoanAccount getDemoLoanAccounts() {
+        if (!username.equals("tink")) {
+            return null;
+        }
+
         return new DemoLoanAccount() {
             @Override
             public String getMortgageId() {
@@ -148,21 +146,6 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoTransactionAccount getTransactionalAccountAccounts() {
-        return new DemoTransactionAccount() {
-            @Override
-            public String getAccountId() {
-                return "7777-111111111111";
-            }
-
-            @Override
-            public String getAccountName() {
-                return "Checking Account";
-            }
-
-            @Override
-            public double getBalance() {
-                return  25.33;
-            }
-        };
+        return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(this.username, this.provider);
     }
 }
