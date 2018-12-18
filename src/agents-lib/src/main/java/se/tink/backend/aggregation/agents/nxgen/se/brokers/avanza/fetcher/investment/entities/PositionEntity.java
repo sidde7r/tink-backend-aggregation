@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.InstrumentTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.system.rpc.Instrument;
 
@@ -183,7 +184,7 @@ public class PositionEntity {
         instrument.setProfit(profit);
         instrument.setQuantity(volume);
         instrument.setRawType(parent.getInstrumentType());
-        instrument.setType(getInstrumentType(parent.getInstrumentType()));
+        instrument.setType(getTinkInstrumentType(parent.getInstrumentType()));
         // Since we don't get the isin from this entity we have to enrich the instrument in a later
         // stage.
         // This is done by matching the order book id of the transactions of the specific
@@ -194,23 +195,23 @@ public class PositionEntity {
     }
 
     @JsonIgnore
-    private Instrument.Type getInstrumentType(String instrumentType) {
+    private Instrument.Type getTinkInstrumentType(String instrumentType) {
         switch (instrumentType.toLowerCase()) {
-            case "stock":
+            case InstrumentTypes.STOCK:
                 return Instrument.Type.STOCK;
-            case "fund":
+            case InstrumentTypes.FUND:
                 return Instrument.Type.FUND;
-            case "bond":
-            case "option":
-            case "future_forward":
-            case "certificate":
-            case "warrant":
-            case "exchange_traded_fund":
-            case "index":
-            case "premium_bond":
-            case "subscription_option":
-            case "equity_linked_bond":
-            case "convertible":
+            case InstrumentTypes.BOND:
+            case InstrumentTypes.OPTION:
+            case InstrumentTypes.FUTURE_FORWARD:
+            case InstrumentTypes.CERTIFICATE:
+            case InstrumentTypes.WARRANT:
+            case InstrumentTypes.EXCHANGE_TRADED_FUND:
+            case InstrumentTypes.INDEX:
+            case InstrumentTypes.PREMIUM_BOND:
+            case InstrumentTypes.SUBSCRIPTION_OPTION:
+            case InstrumentTypes.EQUITY_LINKED_BOND:
+            case InstrumentTypes.CONVERTIBLE:
                 // Intentional fall through
             default:
                 return Instrument.Type.OTHER;

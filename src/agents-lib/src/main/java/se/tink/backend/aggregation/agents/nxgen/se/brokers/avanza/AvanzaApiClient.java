@@ -4,6 +4,7 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.InstrumentTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
@@ -128,45 +129,48 @@ public class AvanzaApiClient {
 
         String type = instrumentType.toLowerCase();
         switch (type) {
-            case "auto_portfolio":
-            case "fund":
+            case InstrumentTypes.AUTO_PORTFOLIO:
+            case InstrumentTypes.FUND:
                 FundMarketInfoResponse fundMarketInfoResponse =
                         fetchMarketInfoResponse(
-                                "fund", orderbookId, authSession, FundMarketInfoResponse.class);
+                                InstrumentTypes.FUND,
+                                orderbookId,
+                                authSession,
+                                FundMarketInfoResponse.class);
                 return fundMarketInfoResponse.getFundCompany() != null
                         ? fundMarketInfoResponse.getFundCompany().getName()
                         : null;
-            case "stock":
+            case InstrumentTypes.STOCK:
                 return fetchMarketInfoResponse(
                                 type, orderbookId, authSession, StockMarketInfoResponse.class)
                         .getMarketPlace();
-            case "certificate":
+            case InstrumentTypes.CERTIFICATE:
                 return fetchMarketInfoResponse(
                                 type, orderbookId, authSession, CertificateMarketInfoResponse.class)
                         .getMarketPlace();
-            case "future_forward":
+            case InstrumentTypes.FUTURE_FORWARD:
                 return fetchMarketInfoResponse(
                                 type,
                                 orderbookId,
                                 authSession,
                                 FutureForwardMarketInfoResponse.class)
                         .getMarketPlace();
-            case "equity_linked_bond":
+            case InstrumentTypes.EQUITY_LINKED_BOND:
                 return fetchMarketInfoResponse(
                                 type,
                                 orderbookId,
                                 authSession,
                                 EquityLinkedBondMarketInfoResponse.class)
                         .getMarketPlace();
-            case "bond":
+            case InstrumentTypes.BOND:
                 return fetchMarketInfoResponse(
                                 type, orderbookId, authSession, BondMarketInfoResponse.class)
                         .getMarketPlace();
-            case "warrant":
+            case InstrumentTypes.WARRANT:
                 return fetchMarketInfoResponse(
                                 type, orderbookId, authSession, WarrantMarketInfoResponse.class)
                         .getMarketPlace();
-            case "exchange_traded_fund":
+            case InstrumentTypes.EXCHANGE_TRADED_FUND:
                 return fetchMarketInfoResponse(
                                 type,
                                 orderbookId,
