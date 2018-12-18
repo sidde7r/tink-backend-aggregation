@@ -58,7 +58,6 @@
           "name": "password",
           "description": "PIN",
           "masked": true,
-          "numeric": true,
           "sensitive": true
         }
       ]
