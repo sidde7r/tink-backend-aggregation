@@ -2,14 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class IngAtAccountsListParser {
+    private static Logger logger = LoggerFactory.getLogger(IngAtAccountsListParser.class);
+
     private Document doc;
 
     public IngAtAccountsListParser(Document doc) {
@@ -36,8 +42,16 @@ public class IngAtAccountsListParser {
         }
     }
 
-    public String getAccountHolder() {
-        return doc.select("small[class=title__subheadline]").select("span").last().text();
+    public Optional<String> getAccountHolder() {
+        final Optional<String> text = doc.select("small[class=title__subheadline]")
+                .select("span")
+                .stream()
+                .findAny()
+                .map(Element::text);
+        if (!text.isPresent()) {
+            logger.warn("Could not extract account holder");
+        }
+        return text;
     }
 
     private AccountSummary parseAccount(Element r) {

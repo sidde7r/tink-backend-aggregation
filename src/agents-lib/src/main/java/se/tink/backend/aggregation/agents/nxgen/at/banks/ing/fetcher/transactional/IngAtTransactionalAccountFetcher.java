@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactio
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class IngAtTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
@@ -61,8 +61,10 @@ public class IngAtTransactionalAccountFetcher implements AccountFetcher<Transact
                     r.getId(),
                     parser.getAmount());
             builder.setAccountNumber(r.getId())
-                    .addIdentifier(ibanId)
-                    .setHolderName(new HolderName(webLoginResponse.getAccountHolder()));
+                    .addIdentifier(ibanId);
+
+            Optional.ofNullable(webLoginResponse.getAccountHolder())
+                    .ifPresent(holder -> builder.setHolderName(new HolderName(holder)));
 
             builder.putInTemporaryStorage(IngAtConstants.Storage.ACCOUNT_INDEX.name(), r.getAccountIndex());
 
