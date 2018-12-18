@@ -76,7 +76,6 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
@@ -87,11 +86,13 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin, RefreshableItemExecutor {
     private static final int MAX_PAGES_LIMIT = 150;
     private static final String BASE_URL_SECURE = "https://login.skandia.se";
-    private static final String AUTHENTICATE_WITH_BANKID_AUTOSTART_URL = BASE_URL_SECURE + "/mobiltbankid/autostartauthenticate/";
+    private static final String AUTHENTICATE_WITH_BANKID_AUTOSTART_URL =
+            BASE_URL_SECURE + "/mobiltbankid/autostartauthenticate/";
     private static final int BANKID_LOGIN_METHOD_ID = 9;
     private static final String BASE_URL = "https://service2.smartrefill.se/BankServicesSkandia";
     private static final String COLLECT_BANKID_URL = BASE_URL_SECURE + "/mobiltbankid/collecting/";
@@ -101,13 +102,20 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     private static final int FUND = 1;
     private static final int STOCK = 2;
 
+    // states:
+    //  3 - continue polling
+    //  4 - cancelled (both user cancelled and already-in-progress)
+    //  5 - done
+    private static final int BANKID_CONTINUE = 3;
+    private static final int BANKID_CANCELLED = 4;
+    private static final int BANKID_DONE = 5;
+    private static final int NUM_QR_REFRESH_RETRY_ATTEMPTS = 3;
+
     /**
      * Extract request verification token from a HTML document body.
      * 
-     * @param html
-     *            the HTML body to extract the request verification token from.
-     * @param formId
-     *            the HTML ID of the form that holds the request verification token.
+     * @param html   the HTML body to extract the request verification token from.
+     * @param formId the HTML ID of the form that holds the request verification token.
      * @return a string consisting of the request verification token.
      */
     private static MultivaluedMap<String, String> extractRequestVerificationToken(String html, String formId) {
@@ -144,7 +152,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         client = createCircularRedirectClient();
     }
 
-    private Optional<String> initiateBankID(String loginPageBody, String username) throws BankIdException {
+    private Optional<String> initiateBankID(String loginPageBody) throws BankIdException {
         String authenticateUrl;
         MultivaluedMap<String, String> postData;
 
@@ -172,38 +180,25 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         }
     }
 
-    private LoginResponse authenticateWithBankId(LoginMethod loginMethod, String username)
-            throws AuthenticationException, AuthorizationException {
-        // Get the login method for BankID.
+    private Optional<CollectBankIdResponse> poll(MultivaluedMap<String, String> postData) throws BankIdException {
 
-        final String loginPageBody = createLoginClientRequest(loginMethod.getLoginUrl(), false).get(String.class);
-
-        Optional<String> autostartToken = initiateBankID(loginPageBody, username);
-        openBankID(autostartToken);
-
-        // Wait for a successful BankID authentication.
-        String interAppURL = null;
-        MultivaluedMap<String, String> postData = extractRequestVerificationToken(loginPageBody, "collect-form");
-
-        CollectBankIdResponse collectResponse = null;
         for (int i = 0; i < 30; i++) {
-            collectResponse = createLoginClientRequest(COLLECT_BANKID_URL, true).type(
+            CollectBankIdResponse collectResponse = createLoginClientRequest(COLLECT_BANKID_URL, false).type(
                     MediaType.APPLICATION_FORM_URLENCODED).post(CollectBankIdResponse.class, postData);
 
-            // states:
-            //  3 - continue polling
-            //  4 - cancelled (both user cancelled and already-in-progress)
-            //  5 - done
-            if (collectResponse.getState() == 4) {
+            if (collectResponse.getState() == BANKID_DONE) {
+                return Optional.of(collectResponse);
+            }
+
+            if (collectResponse.getState() == BANKID_CANCELLED) {
                 String header = collectResponse.getMessage().getHeader();
                 switch (header.toLowerCase()) {
                 case "du har valt att avbryta inloggningen":
                     throw BankIdError.CANCELLED.exception();
                 case "inloggningen har avbrutits":
-                    // collectResponse.getMessage().getText() == "En inloggning för den här personen är redan påbörjad."
                     throw BankIdError.ALREADY_IN_PROGRESS.exception();
                 case "bankid inte installerat":
-                    throw BankIdError.NO_CLIENT.exception();
+                    return Optional.empty(); // Signal retry for QR-code
                 default:
                     throw new IllegalStateException(
                                     String.format(
@@ -213,16 +208,38 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                                     )
                     );
                 }
-            } else if (collectResponse.getState() == 5) {
-                interAppURL = collectResponse.getRedirectUrl();
-                break;
-            } else if (!collectResponse.getMessage().getContinueCollect()) {
-                break;
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
+        // If we are polling QR code it should have refreshed at this point.
+        // If we are using autostarttoken redirect the BankID app will have timed out on its own.
+        throw BankIdError.TIMEOUT.exception();
+    }
+
+    private LoginResponse authenticateWithBankId(LoginMethod loginMethod)
+            throws AuthenticationException, AuthorizationException {
+        // Get the login method for BankID.
+
+        final String loginPageBody = createLoginClientRequest(loginMethod.getLoginUrl(), false).get(String.class);
+
+        // Wait for a successful BankID authentication.
+        String interAppURL = null;
+        MultivaluedMap<String, String> postData = extractRequestVerificationToken(loginPageBody, "collect-form");
+
+        Optional<CollectBankIdResponse> pollResult;
+        int attempts = 0;
+        do {
+
+            openBankID(initiateBankID(loginPageBody));
+            pollResult = poll(postData);
+            attempts++;
+
+        } while (attempts < NUM_QR_REFRESH_RETRY_ATTEMPTS && !pollResult.isPresent());
+
+        CollectBankIdResponse collectResponse = pollResult.orElseThrow(BankIdError.TIMEOUT::exception);
+        interAppURL = collectResponse.getRedirectUrl();
         if (interAppURL == null) {
             throw BankIdError.TIMEOUT.exception();
         }
@@ -302,15 +319,6 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                     statusCode, requestParameters), e);
 
             Preconditions.checkNotNull(errorResponse);
-            SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(credentials.getField(Field.Key.USERNAME));
-            if (!ssn.isValid()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-
-            if (errorResponse.getMessage().toLowerCase().contains("den här versionen av appen stöds inte längre.") &&
-                     ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
-                throw LoginError.NOT_SUPPORTED.exception(UserMessage.UNDERAGE.getKey());
-            }
             throw new IllegalStateException(
                     String.format("#login-refactoring - Skandiabanken - Login failed with message %s",
                             errorResponse.getMessage()));
@@ -414,8 +422,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     /**
      * Generate a map from query string.
      *
-     * @param query
-     *            a query string like "hej=1&yo=2". Can be extracted using {@link URL#getQuery()}.
+     * @param query a query string like "hej=1&yo=2". Can be extracted using {@link URL#getQuery()}.
      * @return a map containing the key/values.
      */
     private static ListMultimap<String, String> getQueryMap(String query) {
@@ -459,7 +466,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
     /**
      * Parse and convert the transactions.
-     * 
+     * <p>
      * Package-local visibility for testability.
      */
     static Transaction parseAccountTransaction(TransactionEntity transactionEntity) {
@@ -492,7 +499,6 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
         return transaction;
     }
-
 
     private Map<AccountEntity, Account> getAccounts() {
         if (accounts != null) {
@@ -621,7 +627,8 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                                 "Breaking because we found no transactions."));
             }
             if (Strings.isNullOrEmpty(accountEntity.getFwdKey())) {
-                log.debug(String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId, "Breaking due to missing fwdKey."));
+                log.debug(
+                        String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId, "Breaking due to missing fwdKey."));
             }
             if (isContentWithRefresh) {
                 log.debug(String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId,
@@ -658,8 +665,10 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         TinkApacheHttpClient4Handler tinkJerseyApacheHttpsClientHandler = new TinkApacheHttpClient4Handler(
                 apacheClient, cookieStore, false);
         TinkApacheHttpClient4 tinkJerseyClient = new TinkApacheHttpClient4(tinkJerseyApacheHttpsClientHandler);
+
         try {
-            tinkJerseyClient.addFilter(new LoggingFilter(new PrintStream(context.getLogOutputStream(), true, "UTF-8")));
+            tinkJerseyClient
+                    .addFilter(new LoggingFilter(new PrintStream(context.getLogOutputStream(), true, "UTF-8")));
         } catch (UnsupportedEncodingException e) {
             log.warn("Could not add buffered logging filter.");
         }
@@ -675,8 +684,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         List<LoginMethod> loginMethods = getLoginMethods();
 
         Preconditions.checkArgument(credentials.getType() == CredentialsTypes.MOBILE_BANKID);
-        LoginResponse loginResponse = authenticateWithBankId(extractLoginMethod(loginMethods, BANKID_LOGIN_METHOD_ID),
-                credentials.getField(Field.Key.USERNAME));
+        LoginResponse loginResponse = authenticateWithBankId(extractLoginMethod(loginMethods, BANKID_LOGIN_METHOD_ID));
 
         Preconditions.checkNotNull(loginResponse);
 
@@ -752,15 +760,18 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     }
 
     private enum UserMessage implements LocalizableEnum {
-        CONFIRM_BANKID(new LocalizableKey("You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once to confirm that the BankID is yours. You may then continue using BankID here.")),
+        CONFIRM_BANKID(new LocalizableKey(
+                "You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once to confirm that the BankID is yours. You may then continue using BankID here.")),
         WRONG_BANKID(new LocalizableKey("Wrong BankID signature. Did you log in with the wrong personnummer?")),
-        UNDERAGE(new LocalizableKey("Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."));
+        UNDERAGE(new LocalizableKey(
+                "Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."));
 
         private LocalizableKey userMessage;
 
         UserMessage(LocalizableKey userMessage) {
             this.userMessage = userMessage;
         }
+
         @Override
         public LocalizableKey getKey() {
             return userMessage;
