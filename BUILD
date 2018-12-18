@@ -178,6 +178,7 @@ java_library(
 java_library(
     name = "aggregation-lib",
     srcs = glob(["src/aggregation-lib/src/main/**/*.java"]),
+    resources = glob(["src/aggregation-lib/src/main/resources/**"]),
     visibility = ["//visibility:public"],
     data = [
         "//tools:phantomjs_linux",
