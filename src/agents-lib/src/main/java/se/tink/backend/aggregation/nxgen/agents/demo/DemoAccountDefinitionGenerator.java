@@ -59,7 +59,7 @@ public class DemoAccountDefinitionGenerator {
     }
 
 
-    public static DemoTransactionAccount getTransactionalAccountAccounts(String username, String providerName) {
+    public static DemoTransactionAccount getDemoTransactionalAccount(String username, String providerName) {
         String deterministicKey = createDeterministicKey("Transaction" + username + providerName);
         return new DemoTransactionAccount() {
             @Override

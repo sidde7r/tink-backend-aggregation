@@ -13,7 +13,7 @@ public class DemoAccountDefinitionGeneratorTest {
     @Test
     public void TestGenerateDeterministicTransactionalAccount() {
         DemoTransactionAccount transactionalAccountAccounts = DemoAccountDefinitionGenerator
-                .getTransactionalAccountAccounts(testUserName, testProvider);
+                .getDemoTransactionalAccount(testUserName, testProvider);
 
         Assert.assertTrue(transactionalAccountAccounts.getBalance() == 618.75);
         Assert.assertTrue(transactionalAccountAccounts.getAccountId().equals("4950-618754677750"));

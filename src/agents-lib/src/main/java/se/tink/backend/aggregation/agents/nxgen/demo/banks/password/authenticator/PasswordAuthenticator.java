@@ -37,7 +37,7 @@ public class PasswordAuthenticator implements MultiFactorAuthenticator {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        if(!(TEST_CREDENTIALS.containsKey(username) && TEST_CREDENTIALS.get(username).equals(password))) {
+        if (!(TEST_CREDENTIALS.containsKey(username) && TEST_CREDENTIALS.get(username).equals(password))) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }

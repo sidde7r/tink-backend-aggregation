@@ -146,6 +146,6 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoTransactionAccount getTransactionalAccountAccounts() {
-        return DemoAccountDefinitionGenerator.getTransactionalAccountAccounts(this.username, this.provider);
+        return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(this.username, this.provider);
     }
 }
