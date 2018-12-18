@@ -60,10 +60,8 @@
           "description": "Card number",
           "name": "username",
           "numeric": true,
-          "minLength": 17,
-          "maxLength": 17,
-          "pattern": "[0-9]{17}",
-          "patternError": "You have to enter your full card number and control number. 17 digits.",
+          "pattern": "^[0-9]{17}$",
+          "patternError": "Please enter your 17 digit card number, including the control number.",
           "sensitive": true,
           "immutable": true
         }
@@ -83,7 +81,9 @@
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "hint": "NNNNNNN"
+          "pattern": "^[0-9]{8}$",
+          "patternError": "Please enter your 8 digit response code from your card reader.",
+          "hint": "8 digits."
         },
         {
           "description": "Challenge",
@@ -99,7 +99,9 @@
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "hint": "NNNNNNN"
+          "pattern": "^[0-9]{8}$",
+          "patternError": "Please enter your 8 digit response code from your card reader.",
+          "hint": "8 digits."
         },
         {
           "description" : "Control Code",
@@ -111,12 +113,14 @@
         },
         {
           "description" : "Response Code",
-          "hint" : "NNNNNNN",
           "immutable": false,
           "masked" : false,
           "numeric": true,
           "name" : "signfortransferinput",
-          "value" : null
+          "value" : null,
+          "pattern": "^[0-9]{8}$",
+          "patternError": "Please enter your 8 digit response code from your card reader.",
+          "hint": "8 digits."
         }
       ],
       "multiFactor": true,
@@ -140,17 +144,16 @@
           "name": "username",
           "immutable": true,
           "numeric": true,
-          "minLength": 1,
-          "immutable": true
+          "pattern": "^[0-9]{10}$",
+          "patternError": "Incorrect ID format. The ID should be 10 digits.",
+          "hint": "10 digits."
         },
         {
           "description": "Card ID",
           "name": "cardId",
           "numeric": true,
-          "minLength": 17,
-          "maxLength": 17,
-          "pattern": "[0-9]{17}",
-          "patternError": "You have to enter your full card number and control number. 17 digits.",
+          "pattern": "^[0-9]{17}$",
+          "patternError": "Please enter your 17 digit card number, including the control number.",
           "immutable": true,
           "sensitive": true
         }
@@ -161,7 +164,10 @@
           "helpText": "Insert your card into the card reader\nPress 'Identify'\nEnter your PIN\nPress 'OK'\nEnter the OTP",
           "sensitive": true,
           "numeric": true,
-          "name": "otpinput"
+          "name": "otpinput",
+          "pattern": "^[0-9]{8}$",
+          "patternError": "Incorrect OTP format. The OTP should be 8 digits.",
+          "hint": "8 digits."
         },
         {
           "description": "Challenge",
@@ -177,7 +183,9 @@
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "hint": "NNNNNNN"
+          "pattern": "^[0-9]{8}$",
+          "patternError": "Please enter your 8 digit response code from your card reader.",
+          "hint": "8 digits."
         }
       ],
       "multiFactor": true,
@@ -200,10 +208,8 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 17,
-          "maxLength": 17,
-          "pattern": "[0-9]{17}",
-          "patternError": "You have to enter your full card number and control number. 17 digits.",
+          "pattern": "^[0-9]{17}$",
+          "patternError": "Please enter your 17 digit card number, including the control number.",
           "sensitive": true,
           "immutable": true
         },
@@ -230,7 +236,10 @@
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "hint": "NNNNNNN"
+          "maxLength":100000,
+          "pattern": "^[0-9]{1,8}$",
+          "patternError": "Please enter your response code from you card reader.",
+          "hint": "1-8 digits."
         },
         {
           "description": "Challenge",
@@ -246,7 +255,9 @@
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "hint": "NNNNNNN"
+          "pattern": "^[0-9]{1,8}$",
+          "patternError": "Please enter your response code from you card reader.",
+          "hint": "1-8 digits."
         },
         {
           "description" : "Control Code",
@@ -268,11 +279,13 @@
         },
         {
           "helpText" : "Enter your PIN\nEnter the signature code from the reader",
-          "hint" : "NNNNNNN",
           "immutable": false,
           "masked" : false,
           "name" : "signfortransferinput",
-          "value" : null
+          "value" : null,
+          "pattern": "^[0-9]{1,8}$",
+          "patternError": "Please enter your response code from you card reader.",
+          "hint": "1-8 digits."
         },
         {
           "description": "Beneficiary Name",
@@ -302,11 +315,13 @@
         {
           "description" : "Response Code",
           "helpText" : "Enter your PIN\nEnter the signature code from the reader",
-          "hint" : "NNNNNNN",
           "immutable" : true,
           "masked" : false,
           "name" : "signforbeneficiaryinput",
-          "value" : null
+          "value" : null,
+          "pattern": "^[0-9]{1,8}$",
+          "patternError": "Please enter your response code from you card reader.",
+          "hint": "1-8 digits."
         }
       ],
       "multiFactor": true,
@@ -385,11 +400,9 @@
         {
           "description": "Passcode",
           "name": "password",
-          "pattern": "[0-9]{4}",
+          "pattern": "^[0-9]{4}$",
           "sensitive": true,
           "masked": true,
-          "minLength": 4,
-          "maxLength": 4,
           "patternError": "Please enter your four digit passcode."
         }
       ],
@@ -440,10 +453,8 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 17,
-          "maxLength": 17,
-          "pattern": "[0-9]{17}",
-          "patternError": "You have to enter your full card number and control number. 17 digits.",
+          "pattern": "^[0-9]{17}$",
+          "patternError": "Please enter your 17 digit card number, including the control number.",
           "sensitive": true,
           "immutable": true
         }
@@ -463,7 +474,9 @@
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "hint": "NNNNNNN"
+          "pattern": "^[0-9]{8}$",
+          "patternError": "Please enter your 8 digit response code from your card reader.",
+          "hint": "8 digits."
         }
       ],
       "multiFactor": true,
@@ -486,10 +499,8 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 17,
-          "maxLength": 17,
-          "pattern": "[0-9]{17}",
-          "patternError": "You have to enter your full card number and control number. 17 digits.",
+          "pattern": "^[0-9]{17}$",
+          "patternError": "Please enter your 17 digit card number, including the control number.",
           "sensitive": true,
           "immutable": true
         },
@@ -498,7 +509,9 @@
           "masked": true,
           "sensitive": true,
           "name": "clientnumber",
-          "minLength": 1
+          "pattern": "^[0-9]{10}$",
+          "patternError": "Please enter your 10 digit client number.",
+          "hint": "10 digits."
         },
         {
           "description": "Password",
@@ -528,10 +541,8 @@
           "description": "Number of your bank card",
           "name": "username",
           "numeric": true,
-          "minLength": 17,
-          "maxLength": 17,
-          "pattern": "[0-9]{17}",
-          "patternError": "You have to enter your full card number and control number. 17 digits.",
+          "pattern": "^[0-9]{17}$",
+          "patternError": "Please enter your 17 digit card number, including the control number.",
           "sensitive": true,
           "immutable": true
         },
@@ -540,7 +551,11 @@
           "masked": true,
           "sensitive": true,
           "name": "clientnumber",
-          "minLength": 1
+          "maxLength": 10,
+          "minLength": 10,
+          "pattern": "^[0-9]{10}$",
+          "patternError": "Please enter your 10 digit client number.",
+          "hint": "10 digits."
         },
         {
           "description": "Password",
