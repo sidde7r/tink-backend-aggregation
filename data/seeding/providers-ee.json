@@ -34,8 +34,8 @@
       "name": "ee-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
       "credentialsType": "PASSWORD",
-        "displayName": "Test Password",
-        "groupDisplayName": "Test Password",
+      "displayName": "Test Password",
+      "groupDisplayName": "Test Password",
       "fields": [
           {
               "description": "Username",
