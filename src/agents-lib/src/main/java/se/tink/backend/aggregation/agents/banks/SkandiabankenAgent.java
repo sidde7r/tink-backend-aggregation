@@ -319,15 +319,6 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
                     statusCode, requestParameters), e);
 
             Preconditions.checkNotNull(errorResponse);
-            SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(credentials.getField(Field.Key.USERNAME));
-            if (!ssn.isValid()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-
-            if (errorResponse.getMessage().toLowerCase().contains("den här versionen av appen stöds inte längre.") &&
-                     ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
-                throw LoginError.NOT_SUPPORTED.exception(UserMessage.UNDERAGE.getKey());
-            }
             throw new IllegalStateException(
                     String.format("#login-refactoring - Skandiabanken - Login failed with message %s",
                             errorResponse.getMessage()));
