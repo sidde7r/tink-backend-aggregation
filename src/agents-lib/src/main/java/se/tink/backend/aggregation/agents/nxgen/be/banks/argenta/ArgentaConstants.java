@@ -81,6 +81,7 @@ public class ArgentaConstants {
         public static final String ERROR_CODE_SBP = "error.sbp";
         public static final String TOO_MANY_DEVICES = "maximumaantal actieve registraties";
         public static final String AUTHENTICATION_ERROR = "de logingegevens zijn niet juist";
+        public static final String ACCOUNT_BLOCKED = "is geblokkeerd";
 
     }
 

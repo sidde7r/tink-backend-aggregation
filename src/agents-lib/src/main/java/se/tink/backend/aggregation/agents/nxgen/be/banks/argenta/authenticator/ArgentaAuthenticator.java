@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import java.util.UUID;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -23,6 +22,8 @@ import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformati
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
+
+import java.util.UUID;
 
 public class ArgentaAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
     private ArgentaPersistentStorage persistentStorage;
@@ -88,13 +89,13 @@ public class ArgentaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     }
 
     private StartAuthResponse startAuth(String username, String deviceId, boolean registered)
-            throws LoginException {
+            throws LoginException, AuthorizationException {
         StartAuthRequest registrationRequest = new StartAuthRequest(username, registered);
         return apiClient.startAuth(ArgentaConstants.Url.AUTH_START, registrationRequest, deviceId);
     }
 
     private ValidateAuthResponse validateDevice(StartAuthResponse startAuthResponse, String username)
-            throws SupplementalInfoException, LoginException {
+            throws SupplementalInfoException, LoginException, AuthorizationException {
         String twoFactorResponse =
                 supplementalInformationHelper.waitForLoginChallengeResponse(startAuthResponse.getChallenge());
         ValidateAuthRequest validateAuthRequest =
@@ -114,13 +115,13 @@ public class ArgentaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
             startAuthResponse = startAuth(cardNumber, deviceToken, true);
             validateAuthResponse = validatePin(startAuthResponse, cardNumber);
             return validateAuthResponse;
-        } catch (LoginException e) {
+        } catch (LoginException | AuthorizationException e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 
     private ValidateAuthResponse registerNewDevice(String cardNumber)
-            throws SupplementalInfoException, LoginException {
+            throws SupplementalInfoException, LoginException, AuthorizationException {
         String deviceToken = generateRandomDeviceID();
         StartAuthResponse startAuthResponse = startAuth(cardNumber, deviceToken, false);
         persistentStorage.storeDeviceId(deviceToken);
@@ -129,7 +130,7 @@ public class ArgentaAuthenticator implements MultiFactorAuthenticator, AutoAuthe
     }
 
     private ValidateAuthResponse validatePin(StartAuthResponse startAuthResponse, String cardNumber)
-            throws SessionException, LoginException {
+            throws SessionException, LoginException, AuthorizationException {
         if (!startAuthResponse
                 .getAuthMethod()
                 .equalsIgnoreCase(ArgentaConstants.Api.AUTH_METHOD_PIN)) {
