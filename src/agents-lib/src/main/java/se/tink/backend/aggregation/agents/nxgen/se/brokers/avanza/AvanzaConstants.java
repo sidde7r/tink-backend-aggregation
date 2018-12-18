@@ -77,29 +77,29 @@ public class AvanzaConstants {
                 TRANSACTIONS + "/%s/options?from=%s&includeInstrumentsWithNoOrderbook=1&to=%s";
     }
 
-    public static class TransactionType {
+    public static class TransactionTypes {
         public static final String DEPOSIT = "deposit";
         public static final String WITHDRAW = "withdraw";
     }
 
-    public static class StorageKey {
+    public static class StorageKeys {
         public static final String HOLDER_NAME = "holder_name";
     }
 
-    public static class QueryKey {}
+    public static class QueryKeys {}
 
-    public static class QueryValue {
+    public static class QueryValues {
         public static final String FROM_DATE_FOR_INVESTMENT_TRANSACTIONS = "2000-01-01";
     }
 
-    public static class HeaderKey {
+    public static class HeaderKeys {
         public static final String AUTH_SESSION = "X-AuthenticationSession";
         public static final String SECURITY_TOKEN = "X-SecurityToken";
     }
 
-    public static class FormKey {}
+    public static class FormKeys {}
 
-    public static class FormValue {}
+    public static class FormValues {}
 
     public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("avanza_unknown_accountype");
