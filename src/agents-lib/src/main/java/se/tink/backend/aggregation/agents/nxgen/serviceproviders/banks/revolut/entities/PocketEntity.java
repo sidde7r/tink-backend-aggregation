@@ -24,7 +24,8 @@ public class PocketEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount(AccountEntity topUpAccount) {
-        String accountNumber = topUpAccount.getIdentifier();
+        String accountNumber = topUpAccount.findIdentifier()
+                .orElseThrow(() -> new IllegalStateException("Could not find identifier for account."));
         String accountName = Optional.ofNullable(getName()).orElse("Revolut " + getCurrency());
 
         TransactionalAccount.Builder builder = TransactionalAccount
