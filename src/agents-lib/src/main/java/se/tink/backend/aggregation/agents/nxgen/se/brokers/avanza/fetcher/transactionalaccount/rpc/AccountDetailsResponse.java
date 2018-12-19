@@ -274,7 +274,7 @@ public class AccountDetailsResponse {
                         .setAccountNumber(accountId)
                         .setName(accountName)
                         .setHolderName(holderName)
-                        .setBalance(new Amount("SEK", ownCapital))
+                        .setBalance(Amount.inSEK(ownCapital))
                         .setBankIdentifier(accountId)
                         .build();
 
