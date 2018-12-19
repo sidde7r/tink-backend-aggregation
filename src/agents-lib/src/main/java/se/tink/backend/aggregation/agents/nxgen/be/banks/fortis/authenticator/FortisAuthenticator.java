@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisApiClient;
@@ -183,15 +184,23 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                 eBankingUserIdEntity.getValue().getEBankingUsers().get(0).getEBankingUser().getEBankingUserId());
     }
 
-    private void getUserInfoAndPersistMuid() throws LoginException {
+    private void getUserInfoAndPersistMuid() throws LoginException, AuthorizationException {
         UserInfoResponse userInfoResponse;
         try {
             userInfoResponse = apiClient.getUserInfo();
+            validateMuid(userInfoResponse);
         } catch (HttpClientException hce) {
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
 
         persistentStorage.put(FortisConstants.STORAGE.MUID, userInfoResponse.getValue().getUserData().getMuid());
+    }
+
+    private void validateMuid(UserInfoResponse userInfoResponse) throws AuthorizationException {
+        if (Strings.isNullOrEmpty(userInfoResponse.getValue().getUserData().getMuid())) {
+            LOGGER.warnExtraLong(String.format("muid missing, muidcode %s", userInfoResponse.getValue().getUserData().getMuidCode()), FortisConstants.LOGTAG.LOGIN_ERROR);
+            throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+        }
     }
 
     private boolean isCredentialsCorrect() {
@@ -249,7 +258,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     @Override
-    public void autoAuthenticate() throws SessionException {
+    public void autoAuthenticate() throws SessionException, AuthorizationException {
         if (!isCredentialsCorrect()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
@@ -257,6 +266,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         UserInfoResponse userInfoResponse;
         try {
             userInfoResponse = apiClient.getUserInfo();
+            validateMuid(userInfoResponse);
         } catch (HttpClientException hce) {
             throw new IllegalStateException("Incorrect challenge in autoAuthenticate");
         }
