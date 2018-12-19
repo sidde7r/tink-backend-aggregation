@@ -10,13 +10,15 @@ import java.util.regex.Pattern;
 public class AccountReferenceEntity {
     private String id;
     private String type;
+    private String accountName;
     private String url;
 
     private AccountReferenceEntity() {}
 
-    public AccountReferenceEntity(String id, String type, String uri) {
+    public AccountReferenceEntity(String id, String type, String accountName, String uri) {
         this.id = id;
         this.type = type;
+        this.accountName = accountName;
         this.url = uri;
     }
 
@@ -26,6 +28,10 @@ public class AccountReferenceEntity {
 
     public String getType() {
         return type;
+    }
+
+    public String getAccountName() {
+        return accountName;
     }
 
     public String getUrl() {

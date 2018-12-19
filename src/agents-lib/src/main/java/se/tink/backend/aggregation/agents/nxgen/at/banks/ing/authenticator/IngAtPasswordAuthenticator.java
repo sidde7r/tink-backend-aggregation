@@ -25,8 +25,8 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
     private final IngAtApiClient apiClient;
     private final IngAtSessionStorage sessionStorage;
 
-    public IngAtPasswordAuthenticator(final IngAtApiClient apiClient,
-            final IngAtSessionStorage sessionStorage) {
+    public IngAtPasswordAuthenticator(
+            final IngAtApiClient apiClient, final IngAtSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -34,9 +34,9 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
     private Form fillInPasswordForm(String htmlText, String username, String password) {
         final IngAtRSAPublicKeyParser rsaParser = new IngAtRSAPublicKeyParser(htmlText);
         final Optional<RSAPublicKeySpec> optionalPublicKeySpec = rsaParser.getPublicKeySpec();
-        final RSAPublicKeySpec publicKeySpec = optionalPublicKeySpec.isPresent() ?
-                optionalPublicKeySpec.get() :
-                IngAtRSAPublicKeyParser.getDefaultRSAPublicKeySpec();
+        final RSAPublicKeySpec publicKeySpec =
+                optionalPublicKeySpec.orElseGet(
+                        IngAtRSAPublicKeyParser::getDefaultRSAPublicKeySpec);
         final IngAtRsa rsa = new IngAtRsa(publicKeySpec);
         final Form passwordForm = new IngAtPasswordFormParser(rsaParser.getDocument()).getForm();
         final String encryptedPassword = rsa.encrypt(password);
@@ -47,19 +47,35 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
                 .build();
     }
 
-    @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
-        final HttpResponse response = apiClient.initiateWebLogin(IngAtConstants.Url.AUTH_START);
-        final Form passwordForm = fillInPasswordForm(response.getBody(String.class), username, password);
-        final HttpResponse loginResponse = apiClient.logIn(IngAtConstants.Url.PASSWORD, passwordForm);
-        final URL page0 = IngAtApiClient.getLastRedirectUrl(loginResponse);
-        //final HttpResponse xmlResponse = apiClient.getXmlDocument(page0);
+    private static AccountReferenceEntity summaryToAccountReference(
+            final IngAtAccountsListParser.AccountSummary summary) {
         final String accountPrefix = IngAtConstants.Url.ACCOUNT_PREFIX.toString();
-        final IngAtAccountsListParser parser = new IngAtAccountsListParser(loginResponse.getBody(String.class));
-        final List<IngAtAccountsListParser.AccountSummary> accountsSummary = parser.getAccountsSummary();
-        final List<AccountReferenceEntity> accountEntities = accountsSummary.stream()
-                .map(a -> new AccountReferenceEntity(a.getId(), a.getType(), accountPrefix + a.getLink().replaceFirst("./", "")))
-                .collect(Collectors.toList());
+
+        return new AccountReferenceEntity(
+                summary.getId(),
+                summary.getType(),
+                summary.getAccountName(),
+                accountPrefix + summary.getLink().replaceFirst("./", ""));
+    }
+
+    @Override
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        final HttpResponse response = apiClient.initiateWebLogin(IngAtConstants.Url.AUTH_START);
+        final Form passwordForm =
+                fillInPasswordForm(response.getBody(String.class), username, password);
+        final HttpResponse loginResponse =
+                apiClient.logIn(IngAtConstants.Url.PASSWORD, passwordForm);
+        final URL page0 = IngAtApiClient.getLastRedirectUrl(loginResponse);
+        final IngAtAccountsListParser parser =
+                new IngAtAccountsListParser(loginResponse.getBody(String.class));
+        final List<IngAtAccountsListParser.AccountSummary> accountsSummary =
+                parser.getAccountsSummary();
+        final List<AccountReferenceEntity> accountEntities =
+                accountsSummary
+                        .stream()
+                        .map(IngAtPasswordAuthenticator::summaryToAccountReference)
+                        .collect(Collectors.toList());
         final WebLoginResponse webLoginResponse =
                 new WebLoginResponse(
                         username,

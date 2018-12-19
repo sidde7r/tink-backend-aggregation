@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,6 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.rpc.AccountTypes;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class IngAtAccountsListParser {
     private static Logger logger = LoggerFactory.getLogger(IngAtAccountsListParser.class);
@@ -29,25 +29,26 @@ public class IngAtAccountsListParser {
     private static String textToAccountType(String s) {
         s = s.toLowerCase();
         switch (s) {
-        case "girokonto":
-            return AccountTypes.CHECKING.toString();
-        case "direkt-sparkonto":
-            return AccountTypes.SAVINGS.toString();
-        default:
-            if (s.contains("kreditkarte")) {
-                return AccountTypes.CREDIT_CARD.toString();
-            } else {
-                return AccountTypes.OTHER.toString();
-            }
+            case "girokonto":
+                return AccountTypes.CHECKING.toString();
+            case "direkt-sparkonto":
+                return AccountTypes.SAVINGS.toString();
+            default:
+                if (s.contains("kreditkarte")) {
+                    return AccountTypes.CREDIT_CARD.toString();
+                } else {
+                    return AccountTypes.OTHER.toString();
+                }
         }
     }
 
     public Optional<String> getAccountHolder() {
-        final Optional<String> text = doc.select("small[class=title__subheadline]")
-                .select("span")
-                .stream()
-                .findAny()
-                .map(Element::text);
+        final Optional<String> text =
+                doc.select("small[class=title__subheadline]")
+                        .select("span")
+                        .stream()
+                        .findAny()
+                        .map(Element::text);
         if (!text.isPresent()) {
             logger.warn("Could not extract account holder");
         }
@@ -72,6 +73,7 @@ public class IngAtAccountsListParser {
     public static class AccountSummary {
         private String type;
         private String link;
+        private String accountName;
         private String id;
         private String currency;
         private double balance;
@@ -80,15 +82,15 @@ public class IngAtAccountsListParser {
             final Element link = columns.get(0);
             this.type = textToAccountType(link.text());
             this.link = link.getElementsByTag("a").attr("href");
+            this.accountName =
+                    Optional.ofNullable(link.getElementsByTag("span").last()).orElse(null).text();
             this.id = columns.get(2).text();
             this.currency = "EUR";
             String balance = columns.get(3).text();
             if (balance.endsWith("€")) {
                 balance = balance.substring(0, balance.length() - 1).trim();
             }
-            this.balance = Double.parseDouble(balance
-                    .replace(".", "")
-                    .replace(',', '.'));
+            this.balance = Double.parseDouble(balance.replace(".", "").replace(',', '.'));
         }
 
         public String getType() {
@@ -97,6 +99,10 @@ public class IngAtAccountsListParser {
 
         public String getLink() {
             return link;
+        }
+
+        public String getAccountName() {
+            return accountName;
         }
 
         public String getId() {
@@ -113,8 +119,9 @@ public class IngAtAccountsListParser {
 
         @Override
         public String toString() {
-            return String.format("AccountSummary(type=%s, link=%s, id=%s, currency=%s, balance=%s)",
-                    type, link, id, currency, balance);
+            return String.format(
+                    "AccountSummary(type=%s, link=%s, accountName=%s, id=%s, currency=%s, balance=%s)",
+                    type, link, accountName, id, currency, balance);
         }
     }
 }
