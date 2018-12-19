@@ -44,13 +44,22 @@ public class BecLoanFetcher implements AccountFetcher<LoanAccount> {
             // -    Providers that do not have mortgages in the app return status code 403 (forbidden)
 
             HttpResponse httpResponse = hre.getResponse();
+
             switch(httpResponse.getStatus()) {
             case HttpStatus.SC_BAD_REQUEST:
-                // Possible that the user did not have mortgage
+                // Possible that the user did not have mortgage or that details doesn't exist for any loans.
                 BecErrorResponse becErrorResponse = this.apiClient.parseBodyAsError(httpResponse);
+
                 if (becErrorResponse.isWithoutMortgage()) {
+                    log.info(String.format("%s - User does not have any mortgages", BecConstants.Log.LOANS));
                     return Collections.emptyList();
                 }
+
+                if (becErrorResponse.noDetailsExist()) {
+                    log.info(String.format("%s - No details for loans exist", BecConstants.Log.LOANS));
+                    return Collections.emptyList();
+                }
+
                 log.warn(String.format(
                                 "%s - Unknown error: [%s] %s",
                                 BecConstants.Log.LOAN_FAILED,

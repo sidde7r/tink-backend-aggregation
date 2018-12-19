@@ -20,4 +20,8 @@ public class BecErrorResponse {
     public boolean isWithoutMortgage() {
         return getMessage().contains(BecConstants.ErrorMessage.NO_MORTGAGE);
     }
+
+    public boolean noDetailsExist() {
+        return getMessage().contains(BecConstants.ErrorMessage.LOAN_NO_DETAILS_EXIST);
+    }
 }
