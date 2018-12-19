@@ -48,6 +48,17 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
                 .build();
     }
 
+    private static AccountReferenceEntity summaryToAccountReference(
+            final IngAtAccountsListParser.AccountSummary summary) {
+        final String accountPrefix = IngAtConstants.Url.ACCOUNT_PREFIX.toString();
+
+        return new AccountReferenceEntity(
+                summary.getId(),
+                summary.getType(),
+                summary.getAccountName(),
+                accountPrefix + summary.getLink().replaceFirst("./", ""));
+    }
+
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
@@ -57,7 +68,6 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
         final HttpResponse loginResponse =
                 apiClient.logIn(IngAtConstants.Url.PASSWORD, passwordForm);
         final URL page0 = IngAtApiClient.getLastRedirectUrl(loginResponse);
-        final String accountPrefix = IngAtConstants.Url.ACCOUNT_PREFIX.toString();
         final IngAtAccountsListParser parser =
                 new IngAtAccountsListParser(loginResponse.getBody(String.class));
         final List<IngAtAccountsListParser.AccountSummary> accountsSummary =
@@ -65,13 +75,7 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
         final List<AccountReferenceEntity> accountEntities =
                 accountsSummary
                         .stream()
-                        .map(
-                                a ->
-                                        new AccountReferenceEntity(
-                                                a.getId(),
-                                                a.getType(),
-                                                a.getAccountName(),
-                                                accountPrefix + a.getLink().replaceFirst("./", "")))
+                        .map(IngAtPasswordAuthenticator::summaryToAccountReference)
                         .collect(Collectors.toList());
         final WebLoginResponse webLoginResponse =
                 new WebLoginResponse(
