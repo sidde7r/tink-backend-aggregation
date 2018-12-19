@@ -140,6 +140,7 @@ public final class BawagPskAccountTypeMappers {
                                     AccountTypes.CREDIT_CARD, Product.codeMatches("00\\w\\w"))
                             .fallbackValue(AccountTypes.LOAN, Product.codeMatches("S\\w\\w\\w"))
                             .fallbackValue(AccountTypes.LOAN, Product.codeMatches("U\\w\\w\\w"))
+                            .fallbackValue(AccountTypes.INVESTMENT, Product.codeMatches("T\\w\\w\\w"))
                             .build();
         }
         return productFallbackMapper;
@@ -194,9 +195,7 @@ public final class BawagPskAccountTypeMappers {
                                     "00PD",
                                     "00PF")
                             .put(AccountTypes.LOAN, "S110", "S132", "U100", "U411")
-                            .ignoreKeys(
-                                    "T99A" // Product type "TIME_DEPOSIT"; not yet supported
-                                    )
+                            .put(AccountTypes.INVESTMENT, "T99A")
                             .build();
         }
         return productCodeMapper;
@@ -212,6 +211,7 @@ public final class BawagPskAccountTypeMappers {
                             .put(AccountTypes.SAVINGS, "SAVINGS")
                             .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
                             .put(AccountTypes.LOAN, "LOAN")
+                            .put(AccountTypes.INVESTMENT, "TIME_DEPOSIT")
                             .build();
         }
         return productTypeMapper;
