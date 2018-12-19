@@ -9,10 +9,11 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class IngAtSessionHandler implements SessionHandler {
-    final private IngAtApiClient apiClient;
-    final private IngAtSessionStorage ingAtSessionStorage;
+    private final IngAtApiClient apiClient;
+    private final IngAtSessionStorage ingAtSessionStorage;
 
-    public IngAtSessionHandler(final IngAtApiClient apiClient, final IngAtSessionStorage ingAtSessionStorage) {
+    public IngAtSessionHandler(
+            final IngAtApiClient apiClient, final IngAtSessionStorage ingAtSessionStorage) {
         this.apiClient = apiClient;
         this.ingAtSessionStorage = ingAtSessionStorage;
     }
@@ -26,7 +27,9 @@ public class IngAtSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         // If nothing in session storage -> SessionException
-        ingAtSessionStorage.getWebLoginResponse().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        ingAtSessionStorage
+                .getWebLoginResponse()
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
         // If keepalive request fails -> SessionException
         final HttpResponse keepAliveResponse;
