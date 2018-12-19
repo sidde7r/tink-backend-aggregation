@@ -23,12 +23,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class IngAtTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private static final Logger logger = LoggerFactory.getLogger(IngAtTransactionalAccountFetcher.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(IngAtTransactionalAccountFetcher.class);
     private IngAtApiClient apiClient;
     private IngAtSessionStorage sessionStorage;
 
-    public IngAtTransactionalAccountFetcher(final IngAtApiClient apiClient,
-            final IngAtSessionStorage sessionStorage) {
+    public IngAtTransactionalAccountFetcher(
+            final IngAtApiClient apiClient, final IngAtSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -46,30 +47,44 @@ public class IngAtTransactionalAccountFetcher implements AccountFetcher<Transact
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        final WebLoginResponse webLoginResponse = sessionStorage.getWebLoginResponse()
-                .orElseThrow(() -> new IllegalStateException("Could not find login response when fetching accounts"));
-        final List<AccountReferenceEntity> transactionalAccountReferences = webLoginResponse
-                .getAccountReferenceEntities().stream()
-                .filter(r -> isTransactionalAccountType(r)).collect(Collectors.toList());
+        final WebLoginResponse webLoginResponse =
+                sessionStorage
+                        .getWebLoginResponse()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find login response when fetching accounts"));
+        final List<AccountReferenceEntity> transactionalAccountReferences =
+                webLoginResponse
+                        .getAccountReferenceEntities()
+                        .stream()
+                        .filter(r -> isTransactionalAccountType(r))
+                        .collect(Collectors.toList());
         final Collection<TransactionalAccount> res = new ArrayList<>();
         for (AccountReferenceEntity accountReference : transactionalAccountReferences) {
-            final HttpResponse response = apiClient.getAccountDetails(new URL(accountReference.getUrl()));
-            final IngAtTransactionalAccountParser parser = new IngAtTransactionalAccountParser(
-                    response.getBody(String.class));
-            final IbanIdentifier ibanId = parser.getBic().isPresent() ? new IbanIdentifier(parser.getBic().get(), parser.getIban()) : new IbanIdentifier(parser.getIban());
-            TransactionalAccount.Builder builder = TransactionalAccount.builder(
-                    AccountTypes.valueOf(accountReference.getType()),
-                    accountReference.getId(),
-                    parser.getAmount());
-            builder.setAccountNumber(accountReference.getId())
-                    .addIdentifier(ibanId);
+            final HttpResponse response =
+                    apiClient.getAccountDetails(new URL(accountReference.getUrl()));
+            final IngAtTransactionalAccountParser parser =
+                    new IngAtTransactionalAccountParser(response.getBody(String.class));
+            final IbanIdentifier ibanId =
+                    parser.getBic().isPresent()
+                            ? new IbanIdentifier(parser.getBic().get(), parser.getIban())
+                            : new IbanIdentifier(parser.getIban());
+            TransactionalAccount.Builder builder =
+                    TransactionalAccount.builder(
+                            AccountTypes.valueOf(accountReference.getType()),
+                            accountReference.getId(),
+                            parser.getAmount());
+            builder.setAccountNumber(accountReference.getId()).addIdentifier(ibanId);
 
             Optional.ofNullable(accountReference.getAccountName()).ifPresent(builder::setName);
 
             Optional.ofNullable(webLoginResponse.getAccountHolder())
                     .ifPresent(holder -> builder.setHolderName(new HolderName(holder)));
 
-            builder.putInTemporaryStorage(IngAtConstants.Storage.ACCOUNT_INDEX.name(), accountReference.getAccountIndex());
+            builder.putInTemporaryStorage(
+                    IngAtConstants.Storage.ACCOUNT_INDEX.name(),
+                    accountReference.getAccountIndex());
 
             res.add(builder.build());
         }
