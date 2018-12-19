@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -33,6 +32,14 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         this.temporaryStorage = temporaryStorage;
     }
 
+    private BankIdCompleteResponse injectSecurityToken(HttpResponse r) {
+        final String token = r.getHeaders().getFirst(HeaderKeys.SECURITY_TOKEN);
+        final BankIdCompleteResponse response =
+                r.getBody(BankIdCompleteResponse.class).withSecurityToken(token);
+
+        return response;
+    }
+
     @Override
     public BankIdInitResponse init(String ssn) throws BankIdException, AuthorizationException {
         final BankIdInitRequest request = new BankIdInitRequest(ssn);
@@ -49,13 +56,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         final BankIdStatus status = response.getBankIdStatus();
 
         if (status == BankIdStatus.DONE) {
-            complete(response)
-                    .forEach(
-                            r -> {
-                                final String session = r.getAuthenticationSession();
-                                final String token = r.getSecurityToken();
-                                authSessionStorage.put(session, token);
-                            });
+            complete(response).forEach(this::putAuthCredentialsInAuthSessionStorage);
             temporaryStorage.put(StorageKeys.HOLDER_NAME, response.getName());
         }
 
@@ -70,19 +71,13 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                         .getLogins()
                         .stream()
                         .map(l -> apiClient.completeBankId(transactionId, l.getCustomerId()))
-                        .map(injectSecurityToken())
+                        .map(this::injectSecurityToken)
                         .collect(Collectors.toList());
 
         return collect;
     }
 
-    private Function<HttpResponse, BankIdCompleteResponse> injectSecurityToken() {
-        return r -> {
-            final String token = r.getHeaders().getFirst(HeaderKeys.SECURITY_TOKEN);
-            final BankIdCompleteResponse response =
-                    r.getBody(BankIdCompleteResponse.class).withSecurityToken(token);
-
-            return response;
-        };
+    private void putAuthCredentialsInAuthSessionStorage(BankIdCompleteResponse r) {
+        authSessionStorage.put(r.getAuthenticationSession(), r.getSecurityToken());
     }
 }
