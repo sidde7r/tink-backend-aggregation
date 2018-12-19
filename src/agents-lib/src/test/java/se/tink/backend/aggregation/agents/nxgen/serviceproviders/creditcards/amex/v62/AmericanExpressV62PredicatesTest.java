@@ -43,7 +43,7 @@ public class AmericanExpressV62PredicatesTest {
     @Test
     public void testFilterPartnerTransactions_PartnerCardsNotPresent() {
         assertFalse(
-                AmericanExpressV62Predicates.filterPartnerTransactions.test(
+                AmericanExpressV62Predicates.checkIfTransactionsBelongsToPartnerCards.test(
                         transaction, partnerCards));
     }
 
@@ -53,7 +53,7 @@ public class AmericanExpressV62PredicatesTest {
                 mapper.readValue(
                         AmericanExpressV62PredicatesTestData.PARTNER_SUBCARD, SubcardEntity.class));
         assertTrue(
-                AmericanExpressV62Predicates.filterPartnerTransactions.test(
+                AmericanExpressV62Predicates.checkIfTransactionsBelongsToPartnerCards.test(
                         transaction, partnerCards));
     }
 
@@ -66,7 +66,7 @@ public class AmericanExpressV62PredicatesTest {
                 mapper.readValue(
                         AmericanExpressV62PredicatesTestData.REGULAR_SUBCARD, SubcardEntity.class));
         assertTrue(
-                AmericanExpressV62Predicates.filterPartnerTransactions.test(
+                AmericanExpressV62Predicates.checkIfTransactionsBelongsToPartnerCards.test(
                         transaction, partnerCards));
     }
 
