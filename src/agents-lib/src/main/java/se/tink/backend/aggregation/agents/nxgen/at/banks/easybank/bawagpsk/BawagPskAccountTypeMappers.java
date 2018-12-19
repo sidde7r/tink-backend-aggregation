@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
@@ -11,6 +7,11 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.libraries.pair.Pair;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 public final class BawagPskAccountTypeMappers {
     private static final Logger logger = LoggerFactory.getLogger(BawagPskAccountTypeMappers.class);
@@ -79,7 +80,9 @@ public final class BawagPskAccountTypeMappers {
         }
 
         public static Predicate<Product> codeMatches(final String regex) {
-            return t -> Pattern.compile(regex).matcher(t.getProductCode()).matches();
+            return t ->
+                    t.getProductCode() != null
+                            && Pattern.compile(regex).matcher(t.getProductCode()).matches();
         }
 
         @Override
