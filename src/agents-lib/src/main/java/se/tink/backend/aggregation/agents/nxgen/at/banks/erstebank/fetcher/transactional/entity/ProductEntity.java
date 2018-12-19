@@ -93,12 +93,12 @@ public class ProductEntity {
         return new HolderName(getTitle());
     }
 
-    public boolean isValid() {
+    public boolean isValidTransactional() {
         try {
-            getTinkBalance();
+            toTransactionalAccount();
             return true;
         } catch (Exception e) {
-            logger.warn("{} {}", ErsteBankConstants.LOGTAG.MISSING_BALANCE_FOR_ACCOUNT_TYPE, getType());
+            logger.warn("{} {}", ErsteBankConstants.LOGTAG.TRANSANSACTIONAL_ACC_ERR, getType());
             return false;
         }
     }
@@ -120,11 +120,10 @@ public class ProductEntity {
 
     public boolean isValidCreditCardAccount() {
         try {
-            getTinkBalance();
-            getAvailableCredit();
+            toCreditCardAccount();
             return true;
         } catch (Exception e) {
-            logger.warn("{} {}", ErsteBankConstants.LOGTAG.CREDIT_CARD_ERROR, e.toString());
+            logger.warn("{} {}", ErsteBankConstants.LOGTAG.CREDIT_ACC_ERR, e.toString());
             return false;
         }
     }

@@ -16,7 +16,7 @@ public class AccountResponse {
 
     public List<TransactionalAccount> toTransactionalAccounts() {
         return productListEntity.stream()
-                .filter(productEntity -> productEntity.isValid())
+                .filter(productEntity -> productEntity.isValidTransactional())
                 .map(ProductEntity::toTransactionalAccount).collect(Collectors.toList());
     }
 
