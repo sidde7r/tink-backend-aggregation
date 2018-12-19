@@ -35,9 +35,8 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
         final IngAtRSAPublicKeyParser rsaParser = new IngAtRSAPublicKeyParser(htmlText);
         final Optional<RSAPublicKeySpec> optionalPublicKeySpec = rsaParser.getPublicKeySpec();
         final RSAPublicKeySpec publicKeySpec =
-                optionalPublicKeySpec.isPresent()
-                        ? optionalPublicKeySpec.get()
-                        : IngAtRSAPublicKeyParser.getDefaultRSAPublicKeySpec();
+                optionalPublicKeySpec.orElseGet(
+                        IngAtRSAPublicKeyParser::getDefaultRSAPublicKeySpec);
         final IngAtRsa rsa = new IngAtRsa(publicKeySpec);
         final Form passwordForm = new IngAtPasswordFormParser(rsaParser.getDocument()).getForm();
         final String encryptedPassword = rsa.encrypt(password);
