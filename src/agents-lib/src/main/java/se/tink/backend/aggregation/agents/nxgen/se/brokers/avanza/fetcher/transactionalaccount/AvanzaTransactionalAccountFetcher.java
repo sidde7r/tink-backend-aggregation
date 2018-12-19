@@ -62,7 +62,7 @@ public class AvanzaTransactionalAccountFetcher
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
-        final String accId = account.getAccountNumber();
+        final String accId = account.getBankIdentifier();
         final String fromDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate);
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
