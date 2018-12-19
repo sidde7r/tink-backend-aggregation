@@ -101,7 +101,8 @@ public class AmericanExpressV62TransactionFetcher
                         .map(id -> timeline.getTransactionMap().get(id))
                         .filter(
                                 transaction ->
-                                        AmericanExpressV62Predicates.filterPartnerTransactions.test(
+                                        !AmericanExpressV62Predicates
+                                                .checkIfTransactionsBelongsToPartnerCards.test(
                                                 transaction, partnerCards))
                         .map(t -> t.toTransaction(config, true))
                         .collect(Collectors.toList()));

@@ -58,7 +58,7 @@ public class AmericanExpressV62Predicates {
     We want to filter out this transaction.
     If it does not, even if it's not "main card" transaction, it's just a "subcard " transaction that we would like to keep
      */
-    public static BiPredicate<TransactionEntity, List<SubcardEntity>> filterPartnerTransactions =
+    public static BiPredicate<TransactionEntity, List<SubcardEntity>> checkIfTransactionsBelongsToPartnerCards =
             (transaction, partnerCards) ->
                     !partnerCards
                             .stream()
