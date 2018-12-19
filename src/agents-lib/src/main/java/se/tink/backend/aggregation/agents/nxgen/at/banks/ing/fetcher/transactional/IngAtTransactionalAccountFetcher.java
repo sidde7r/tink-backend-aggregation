@@ -52,24 +52,24 @@ public class IngAtTransactionalAccountFetcher implements AccountFetcher<Transact
                 .getAccountReferenceEntities().stream()
                 .filter(r -> isTransactionalAccountType(r)).collect(Collectors.toList());
         final Collection<TransactionalAccount> res = new ArrayList<>();
-        for (AccountReferenceEntity r : transactionalAccountReferences) {
-            final HttpResponse response = apiClient.getAccountDetails(new URL(r.getUrl()));
+        for (AccountReferenceEntity accountReference : transactionalAccountReferences) {
+            final HttpResponse response = apiClient.getAccountDetails(new URL(accountReference.getUrl()));
             final IngAtTransactionalAccountParser parser = new IngAtTransactionalAccountParser(
                     response.getBody(String.class));
             final IbanIdentifier ibanId = parser.getBic().isPresent() ? new IbanIdentifier(parser.getBic().get(), parser.getIban()) : new IbanIdentifier(parser.getIban());
             TransactionalAccount.Builder builder = TransactionalAccount.builder(
-                    AccountTypes.valueOf(r.getType()),
-                    r.getId(),
+                    AccountTypes.valueOf(accountReference.getType()),
+                    accountReference.getId(),
                     parser.getAmount());
-            builder.setAccountNumber(r.getId())
+            builder.setAccountNumber(accountReference.getId())
                     .addIdentifier(ibanId);
 
-            Optional.ofNullable(r.getAccountName()).ifPresent(builder::setName);
+            Optional.ofNullable(accountReference.getAccountName()).ifPresent(builder::setName);
 
             Optional.ofNullable(webLoginResponse.getAccountHolder())
                     .ifPresent(holder -> builder.setHolderName(new HolderName(holder)));
 
-            builder.putInTemporaryStorage(IngAtConstants.Storage.ACCOUNT_INDEX.name(), r.getAccountIndex());
+            builder.putInTemporaryStorage(IngAtConstants.Storage.ACCOUNT_INDEX.name(), accountReference.getAccountIndex());
 
             res.add(builder.build());
         }
