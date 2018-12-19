@@ -57,7 +57,6 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
         final HttpResponse loginResponse =
                 apiClient.logIn(IngAtConstants.Url.PASSWORD, passwordForm);
         final URL page0 = IngAtApiClient.getLastRedirectUrl(loginResponse);
-        // final HttpResponse xmlResponse = apiClient.getXmlDocument(page0);
         final String accountPrefix = IngAtConstants.Url.ACCOUNT_PREFIX.toString();
         final IngAtAccountsListParser parser =
                 new IngAtAccountsListParser(loginResponse.getBody(String.class));
