@@ -304,11 +304,7 @@ public class BelfiusApiClient {
     private <T extends BelfiusResponse> T post(URL url, Class<T> c, BelfiusRequest.Builder builder) {
         setSessionData(builder);
         String body = "request=" + SerializationUtils.serializeToString(builder.build());
-        HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
-        String contentType = httpResponse.getHeaders().getFirst("Content-Type");
-        if ("application/octet-stream".equals(contentType)) {
-            throw new IllegalStateException("invalid content type found");
-        }
+        HttpResponse httpResponse = checkContentTypeOfResponse(url, body);
         T response = httpResponse.getBody(c);
         MessageResponse.validate(response);
         this.sessionStorage.incrementRequestCounter();
@@ -318,7 +314,8 @@ public class BelfiusApiClient {
     private <T extends BelfiusResponse> T postUserInput(URL url, Class<T> c, BelfiusRequest.Builder builder) {
         setSessionData(builder);
         String body = "request=" + SerializationUtils.serializeToString(builder.build());
-        T response = buildRequest(url).post(c, body);
+        HttpResponse httpResponse = checkContentTypeOfResponse(url, body);
+        T response = httpResponse.getBody(c);
         this.sessionStorage.incrementRequestCounter();
         return response;
     }
@@ -327,9 +324,19 @@ public class BelfiusApiClient {
         setSessionData(builder);
         String body = "request=" + SerializationUtils.serializeToString(builder.build());
         body = body.replace("\\\\", Character.toString((char) 92));
-        T response = buildRequest(url).post(c, body);
+        HttpResponse httpResponse = checkContentTypeOfResponse(url, body);
+        T response = httpResponse.getBody(c);
         this.sessionStorage.incrementRequestCounter();
         return response;
+    }
+
+    private HttpResponse checkContentTypeOfResponse(URL url, String body) {
+        HttpResponse httpResponse = buildRequest(url).post(HttpResponse.class, body);
+        String contentType = httpResponse.getHeaders().getFirst("Content-Type");
+        if ("application/octet-stream".equals(contentType)) {
+            throw new IllegalStateException("invalid content type found");
+        }
+        return httpResponse;
     }
 
     private void setSessionData(BelfiusRequest.Builder builder) {
