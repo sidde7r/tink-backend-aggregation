@@ -29,25 +29,26 @@ public class IngAtAccountsListParser {
     private static String textToAccountType(String s) {
         s = s.toLowerCase();
         switch (s) {
-        case "girokonto":
-            return AccountTypes.CHECKING.toString();
-        case "direkt-sparkonto":
-            return AccountTypes.SAVINGS.toString();
-        default:
-            if (s.contains("kreditkarte")) {
-                return AccountTypes.CREDIT_CARD.toString();
-            } else {
-                return AccountTypes.OTHER.toString();
-            }
+            case "girokonto":
+                return AccountTypes.CHECKING.toString();
+            case "direkt-sparkonto":
+                return AccountTypes.SAVINGS.toString();
+            default:
+                if (s.contains("kreditkarte")) {
+                    return AccountTypes.CREDIT_CARD.toString();
+                } else {
+                    return AccountTypes.OTHER.toString();
+                }
         }
     }
 
     public Optional<String> getAccountHolder() {
-        final Optional<String> text = doc.select("small[class=title__subheadline]")
-                .select("span")
-                .stream()
-                .findAny()
-                .map(Element::text);
+        final Optional<String> text =
+                doc.select("small[class=title__subheadline]")
+                        .select("span")
+                        .stream()
+                        .findAny()
+                        .map(Element::text);
         if (!text.isPresent()) {
             logger.warn("Could not extract account holder");
         }
@@ -89,9 +90,7 @@ public class IngAtAccountsListParser {
             if (balance.endsWith("€")) {
                 balance = balance.substring(0, balance.length() - 1).trim();
             }
-            this.balance = Double.parseDouble(balance
-                    .replace(".", "")
-                    .replace(',', '.'));
+            this.balance = Double.parseDouble(balance.replace(".", "").replace(',', '.'));
         }
 
         public String getType() {
