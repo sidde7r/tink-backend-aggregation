@@ -95,7 +95,7 @@ public class ProductEntity {
 
     public boolean isValid() {
         try {
-            getTinkBalance();
+            toTransactionalAccount();
             return true;
         } catch (Exception e) {
             logger.warn("{} {}", ErsteBankConstants.LOGTAG.MISSING_BALANCE_FOR_ACCOUNT_TYPE, getType());
@@ -120,8 +120,7 @@ public class ProductEntity {
 
     public boolean isValidCreditCardAccount() {
         try {
-            getTinkBalance();
-            getAvailableCredit();
+            toCreditCardAccount();
             return true;
         } catch (Exception e) {
             logger.warn("{} {}", ErsteBankConstants.LOGTAG.CREDIT_CARD_ERROR, e.toString());
