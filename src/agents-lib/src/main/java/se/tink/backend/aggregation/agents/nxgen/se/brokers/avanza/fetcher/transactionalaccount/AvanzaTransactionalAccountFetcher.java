@@ -2,7 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.trans
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
@@ -42,15 +44,19 @@ public class AvanzaTransactionalAccountFetcher
         return authSessionStorage
                 .keySet()
                 .stream()
-                .flatMap(
-                        session ->
-                                apiClient
-                                        .fetchAccounts(session)
-                                        .getAccounts()
-                                        .stream()
-                                        .filter(AccountEntity::isTransactionalAccount)
-                                        .map(account -> account.toTinkAccount(holderName)))
+                .flatMap(getAccounts(holderName))
                 .collect(Collectors.toList());
+    }
+
+    private Function<String, Stream<? extends TransactionalAccount>> getAccounts(
+            HolderName holderName) {
+        return authSession ->
+                apiClient
+                        .fetchAccounts(authSession)
+                        .getAccounts()
+                        .stream()
+                        .filter(AccountEntity::isTransactionalAccount)
+                        .map(account -> account.toTinkAccount(holderName));
     }
 
     @Override

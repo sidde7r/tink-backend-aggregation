@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
@@ -68,18 +70,19 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                         .getLogins()
                         .stream()
                         .map(l -> apiClient.completeBankId(transactionId, l.getCustomerId()))
-                        .map(
-                                r -> {
-                                    final String token =
-                                            r.getHeaders().getFirst(HeaderKeys.SECURITY_TOKEN);
-                                    final BankIdCompleteResponse response =
-                                            r.getBody(BankIdCompleteResponse.class)
-                                                    .withSecurityToken(token);
-
-                                    return response;
-                                })
+                        .map(injectSecurityToken())
                         .collect(Collectors.toList());
 
         return collect;
+    }
+
+    private Function<HttpResponse, BankIdCompleteResponse> injectSecurityToken() {
+        return r -> {
+            final String token = r.getHeaders().getFirst(HeaderKeys.SECURITY_TOKEN);
+            final BankIdCompleteResponse response =
+                    r.getBody(BankIdCompleteResponse.class).withSecurityToken(token);
+
+            return response;
+        };
     }
 }

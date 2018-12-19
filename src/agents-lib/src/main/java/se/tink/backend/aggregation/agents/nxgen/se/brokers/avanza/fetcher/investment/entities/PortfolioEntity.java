@@ -2,13 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.inves
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.PortfolioTypes;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 
@@ -68,34 +70,6 @@ public class PortfolioEntity {
     }
 
     @JsonIgnore
-    public List<Instrument> toTinkInstruments(
-            IsinMap isinMap, AvanzaApiClient apiClient, String session) {
-        return getInstruments()
-                .stream()
-                .flatMap(
-                        instrument ->
-                                instrument
-                                        .getPositions()
-                                        .stream()
-                                        .map(
-                                                position -> {
-                                                    final String instrumentType =
-                                                            instrument.getInstrumentType();
-                                                    final String orderbookId =
-                                                            position.getOrderbookId();
-                                                    final String market =
-                                                            apiClient.getInstrumentMarket(
-                                                                    instrumentType,
-                                                                    orderbookId,
-                                                                    session);
-
-                                                    return position.toTinkInstrument(
-                                                            instrument, market, isinMap);
-                                                }))
-                .collect(Collectors.toList());
-    }
-
-    @JsonIgnore
     public Portfolio toTinkPortfolio(List<Instrument> instruments) {
         Portfolio portfolio = new Portfolio();
 
@@ -108,6 +82,21 @@ public class PortfolioEntity {
         portfolio.setInstruments(instruments);
 
         return portfolio;
+    }
+
+    public InvestmentAccount toTinkInvestmentAccount(HolderName holderName, List<Instrument> instruments) {
+        return toTinkInvestmentAccount(holderName, toTinkPortfolio(instruments));
+    }
+
+    public InvestmentAccount toTinkInvestmentAccount(HolderName holderName, Portfolio portfolio) {
+        return InvestmentAccount.builder(getAccountId())
+                .setAccountNumber(getAccountId())
+                .setName(getAccountType())
+                .setHolderName(holderName)
+                .setCashBalance(Amount.inSEK(getTotalBuyingPower()))
+                .setBankIdentifier(getAccountId())
+                .setPortfolios(Lists.newArrayList(portfolio))
+                .build();
     }
 
     @JsonIgnore
