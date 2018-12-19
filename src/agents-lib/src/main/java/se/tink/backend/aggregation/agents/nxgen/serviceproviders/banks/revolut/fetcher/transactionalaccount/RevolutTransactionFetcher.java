@@ -29,7 +29,7 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
         TransactionKeyPaginatorResponseImpl<String> response = new TransactionKeyPaginatorResponseImpl<>();
 
         String accountCurrency = account.getFromTemporaryStorage(RevolutConstants.Storage.CURRENCY);
-        String accountNumber = account.getAccountNumber();
+        String accountBankId = account.getBankIdentifier();
 
         if (account.getType().equals(AccountTypes.CHECKING)) {
             Collection<TransactionEntity> transactionEntities = apiClient.fetchTransactions(count, toDateMillis);
@@ -37,7 +37,7 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
             response.setTransactions(transactionEntities.stream()
                     .filter(TransactionEntity::isValid)
                     .filter(t -> t.hasCurrency(accountCurrency))
-                    .filter(t -> t.isTopUp() || t.isCardPayment() || t.belongsToAccount(accountNumber))
+                    .filter(t -> t.isTopUp() || t.isCardPayment() || t.belongsToAccount(accountBankId))
                     .map(TransactionEntity::toTinkTransaction)
                     .collect(Collectors.toList()));
 
@@ -56,7 +56,7 @@ public class RevolutTransactionFetcher implements TransactionKeyPaginator<Transa
             response.setTransactions(transactionEntities.stream()
                     .filter(TransactionEntity::isValid)
                     .filter(t -> t.hasCurrency(accountCurrency))
-                    .filter(t -> t.belongsToAccount(accountNumber))
+                    .filter(t -> t.belongsToAccount(accountBankId))
                     .map(TransactionEntity::toTinkTransaction)
                     .collect(Collectors.toList())
             );

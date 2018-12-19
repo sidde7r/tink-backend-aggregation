@@ -35,7 +35,8 @@ public class PocketEntity {
                         new Amount(currency.toUpperCase(), getBalance()))
                 .setName(accountName)
                 .setHolderName(new HolderName(topUpAccount.getBeneficiaryName()))
-                .setAccountNumber(accountNumber);
+                .setAccountNumber(accountNumber)
+                .setBankIdentifier(id);
 
         builder.putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
 
