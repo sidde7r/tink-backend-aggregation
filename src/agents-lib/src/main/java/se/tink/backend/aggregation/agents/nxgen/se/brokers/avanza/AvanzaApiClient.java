@@ -26,17 +26,16 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transa
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class AvanzaApiClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvanzaApiClient.class);
 
     private final TinkHttpClient client;
-    private final SessionStorage sessionStorage;
+    private final AvanzaAuthSessionStorage authSessionStorage;
 
-    public AvanzaApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
+    public AvanzaApiClient(TinkHttpClient client, AvanzaAuthSessionStorage authSessionStorage) {
         this.client = client;
-        this.sessionStorage = sessionStorage;
+        this.authSessionStorage = authSessionStorage;
     }
 
     private RequestBuilder createRequest(String url) {
@@ -53,7 +52,7 @@ public class AvanzaApiClient {
     }
 
     private RequestBuilder createRequestInSession(String url, String authSession) {
-        final String securityToken = sessionStorage.get(authSession);
+        final String securityToken = authSessionStorage.get(authSession);
 
         return createRequestInSession(url, authSession, securityToken);
     }

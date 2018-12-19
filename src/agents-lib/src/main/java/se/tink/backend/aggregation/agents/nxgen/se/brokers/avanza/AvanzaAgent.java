@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public final class AvanzaAgent extends NextGenerationAgent {
+    private final AvanzaAuthSessionStorage authSessionStorage;
     private final AvanzaApiClient apiClient;
     private final TemporaryStorage temporaryStorage;
 
@@ -32,7 +33,8 @@ public final class AvanzaAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.apiClient = new AvanzaApiClient(client, sessionStorage);
+        this.authSessionStorage = new AvanzaAuthSessionStorage();
+        this.apiClient = new AvanzaApiClient(client, authSessionStorage);
         this.temporaryStorage = new TemporaryStorage();
     }
 
@@ -43,14 +45,14 @@ public final class AvanzaAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
                 context,
-                new AvanzaBankIdAuthenticator(apiClient, sessionStorage, temporaryStorage));
+                new AvanzaBankIdAuthenticator(apiClient, authSessionStorage, temporaryStorage));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
         final AvanzaTransactionalAccountFetcher accountFetcher =
-                new AvanzaTransactionalAccountFetcher(apiClient, sessionStorage, temporaryStorage);
+                new AvanzaTransactionalAccountFetcher(apiClient, authSessionStorage, temporaryStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
@@ -73,7 +75,7 @@ public final class AvanzaAgent extends NextGenerationAgent {
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new AvanzaInvestmentFetcher(apiClient, sessionStorage, temporaryStorage)));
+                        new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage)));
     }
 
     @Override
@@ -94,7 +96,7 @@ public final class AvanzaAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new AvanzaSessionHandler(apiClient, sessionStorage);
+        return new AvanzaSessionHandler(apiClient, authSessionStorage);
     }
 
     @Override

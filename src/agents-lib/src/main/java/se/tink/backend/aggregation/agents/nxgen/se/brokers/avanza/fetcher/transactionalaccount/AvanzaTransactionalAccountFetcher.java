@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transactionalaccount.entities.TransactionEntity;
@@ -15,7 +16,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
@@ -23,15 +23,15 @@ public class AvanzaTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
     private final AvanzaApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final AvanzaAuthSessionStorage authSessionStorage;
     private final TemporaryStorage temporaryStorage;
 
     public AvanzaTransactionalAccountFetcher(
             AvanzaApiClient apiClient,
-            SessionStorage sessionStorage,
+            AvanzaAuthSessionStorage authSessionStorage,
             TemporaryStorage temporaryStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.authSessionStorage = authSessionStorage;
         this.temporaryStorage = temporaryStorage;
     }
 
@@ -39,7 +39,7 @@ public class AvanzaTransactionalAccountFetcher
     public Collection<TransactionalAccount> fetchAccounts() {
         final HolderName holderName = new HolderName(temporaryStorage.get(StorageKeys.HOLDER_NAME));
 
-        return sessionStorage
+        return authSessionStorage
                 .keySet()
                 .stream()
                 .flatMap(
@@ -61,7 +61,7 @@ public class AvanzaTransactionalAccountFetcher
         final String toDateStr = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
 
         Collection<? extends Transaction> transactions =
-                sessionStorage
+                authSessionStorage
                         .keySet()
                         .stream()
                         .map(a -> apiClient.fetchTransactions(accId, fromDateStr, toDateStr, a))

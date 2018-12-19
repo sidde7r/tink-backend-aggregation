@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.IsinMap;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.rpc.InvestmentAccountPortfolioResponse;
@@ -15,22 +16,21 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.transa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.libraries.pair.Pair;
 
 public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final AvanzaApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final AvanzaAuthSessionStorage authSessionStorage;
     private final TemporaryStorage temporaryStorage;
 
     public AvanzaInvestmentFetcher(
             AvanzaApiClient apiClient,
-            SessionStorage sessionStorage,
+            AvanzaAuthSessionStorage authSessionStorage,
             TemporaryStorage temporaryStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.authSessionStorage = authSessionStorage;
         this.temporaryStorage = temporaryStorage;
     }
 
@@ -40,7 +40,7 @@ public class AvanzaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
         final Supplier<Stream<Pair<String, String>>> sessionAccountPairStream =
                 () ->
-                        sessionStorage
+                        authSessionStorage
                                 .keySet()
                                 .stream()
                                 .flatMap(

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaAuthSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.AvanzaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdCollectResponse;
@@ -14,20 +15,19 @@ import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 
 public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
     private final AvanzaApiClient apiClient;
-    private final SessionStorage sessionStorage;
+    private final AvanzaAuthSessionStorage authSessionStorage;
     private final TemporaryStorage temporaryStorage;
 
     public AvanzaBankIdAuthenticator(
             AvanzaApiClient apiClient,
-            SessionStorage sessionStorage,
+            AvanzaAuthSessionStorage authSessionStorage,
             TemporaryStorage temporaryStorage) {
         this.apiClient = apiClient;
-        this.sessionStorage = sessionStorage;
+        this.authSessionStorage = authSessionStorage;
         this.temporaryStorage = temporaryStorage;
     }
 
@@ -52,7 +52,7 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
                             r -> {
                                 final String session = r.getAuthenticationSession();
                                 final String token = r.getSecurityToken();
-                                sessionStorage.put(session, token);
+                                authSessionStorage.put(session, token);
                             });
             temporaryStorage.put(StorageKeys.HOLDER_NAME, response.getName());
         }
