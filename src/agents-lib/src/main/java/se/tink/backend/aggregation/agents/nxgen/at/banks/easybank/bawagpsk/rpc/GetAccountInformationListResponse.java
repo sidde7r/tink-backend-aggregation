@@ -138,7 +138,6 @@ public final class GetAccountInformationListResponse {
                                                                 .getAmount()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
-                                        // Shouldn't need to set this, but there is a bug requiring me to
                                         .setBankIdentifier(accountInfo.getAccountNumber())
                                         .setHolderName(
                                                 new HolderName(
@@ -174,7 +173,6 @@ public final class GetAccountInformationListResponse {
                                                                 .getAmount()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
-                                        // Shouldn't need to set this, but there is a bug requiring me to
                                         .setBankIdentifier(accountInfo.getAccountNumber())
                                         .setHolderName(
                                                 new HolderName(
@@ -203,7 +201,6 @@ public final class GetAccountInformationListResponse {
                                                                 .getAmount()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
-                                        // Shouldn't need to set this, but there is a bug requiring me to
                                         .setBankIdentifier(accountInfo.getAccountNumber())
                                         .setHolderName(
                                                 new HolderName(
