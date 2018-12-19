@@ -95,7 +95,7 @@
             "type": "BROKER"
         },
         {
-            "name": "avanza-nxgen-bankid",
+            "name": "se-avanza-bankid",
             "className": "nxgen.se.brokers.avanza.AvanzaAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -121,7 +121,7 @@
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
+            "status": "DISABLED",
             "transactional": true,
             "type": "BROKER"
         },

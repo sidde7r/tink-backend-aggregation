@@ -15,7 +15,7 @@ public class AvanzaAgentTest {
     @Before
     public void setup() {
         builder =
-                new AgentIntegrationTest.Builder("se", "avanza-nxgen-bankid")
+                new AgentIntegrationTest.Builder("se", "se-avanza-bankid")
                         .addCredentialField(Field.Key.USERNAME, USERNAME)
                         .loadCredentialsBefore(false)
                         .saveCredentialsAfter(false)
