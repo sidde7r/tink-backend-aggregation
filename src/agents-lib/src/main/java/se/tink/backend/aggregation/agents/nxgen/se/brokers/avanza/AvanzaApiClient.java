@@ -58,36 +58,35 @@ public class AvanzaApiClient {
     }
 
     public BankIdInitResponse initBankId(BankIdInitRequest request) {
-        return createRequest(Urls.BANK_ID_INIT).post(BankIdInitResponse.class, request);
+        return createRequest(Urls.BANK_ID_INIT()).post(BankIdInitResponse.class, request);
     }
 
     public BankIdCollectResponse collectBankId(String transactionId) {
-        final String collectUrl = String.format(Urls.BANK_ID_COLLECT, transactionId);
+        final String collectUrl = Urls.BANK_ID_COLLECT(transactionId);
 
         return createRequest(collectUrl).get(BankIdCollectResponse.class);
     }
 
     public HttpResponse completeBankId(String transactionId, String customerId) {
-        final String completeUrl = String.format(Urls.BANK_ID_COMPLETE, transactionId, customerId);
+        final String completeUrl = Urls.BANK_ID_COMPLETE(transactionId, customerId);
 
         return createRequest(completeUrl).get(HttpResponse.class);
     }
 
     public AccountsOverviewResponse fetchAccounts(String authSession) {
-        return createRequestInSession(Urls.ACCOUNTS_OVERVIEW, authSession)
+        return createRequestInSession(Urls.ACCOUNTS_OVERVIEW(), authSession)
                 .get(AccountsOverviewResponse.class);
     }
 
     public AccountDetailsResponse fetchAccountDetails(String accountId, String authSession) {
-        final String detailsUrl = String.format(Urls.ACCOUNT_DETAILS, accountId);
+        final String detailsUrl = Urls.ACCOUNT_DETAILS(accountId);
 
         return createRequestInSession(detailsUrl, authSession).get(AccountDetailsResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(
             String accountId, String fromDate, String toDate, String authSession) {
-        final String transactionsUrl =
-                String.format(Urls.TRANSACTIONS_LIST, accountId, fromDate, toDate);
+        final String transactionsUrl = Urls.TRANSACTIONS_LIST(accountId, fromDate, toDate);
 
         return createRequestInSession(transactionsUrl, authSession).get(TransactionsResponse.class);
     }
@@ -95,11 +94,8 @@ public class AvanzaApiClient {
     public InvestmentTransactionsResponse fetchInvestmentTransactions(
             String accountId, String toDate, String authSession) {
         final String investmentTransactionsUrl =
-                String.format(
-                        Urls.INVESTMENT_TRANSACTIONS_LIST,
-                        accountId,
-                        QueryValues.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS,
-                        toDate);
+                Urls.INVESTMENT_TRANSACTIONS_LIST(
+                        accountId, QueryValues.FROM_DATE_FOR_INVESTMENT_TRANSACTIONS, toDate);
 
         return createRequestInSession(investmentTransactionsUrl, authSession)
                 .get(InvestmentTransactionsResponse.class);
@@ -107,7 +103,7 @@ public class AvanzaApiClient {
 
     public InvestmentAccountPortfolioResponse fetchInvestmentAccountPortfolio(
             String accountId, String authSession) {
-        final String positionsUrl = String.format(Urls.INVESTMENT_PORTFOLIO_POSITIONS, accountId);
+        final String positionsUrl = Urls.INVESTMENT_PORTFOLIO_POSITIONS(accountId);
 
         return createRequestInSession(positionsUrl, authSession)
                 .get(InvestmentAccountPortfolioResponse.class);
@@ -115,9 +111,9 @@ public class AvanzaApiClient {
 
     public <T> T fetchMarketInfoResponse(
             String instrumentType, String orderbookId, String authSession, Class<T> responseType) {
-        return createRequestInSession(
-                        String.format(Urls.MARKET_INFO, instrumentType, orderbookId), authSession)
-                .get(responseType);
+        final String marketInfoUrl = Urls.MARKET_INFO(instrumentType, orderbookId);
+
+        return createRequestInSession(marketInfoUrl, authSession).get(responseType);
     }
 
     public String getInstrumentMarket(
@@ -187,7 +183,7 @@ public class AvanzaApiClient {
     }
 
     public String logout(String authSession) {
-        final String logoutUrl = String.format(Urls.LOGOUT, authSession);
+        final String logoutUrl = Urls.LOGOUT(authSession);
 
         return createRequestInSession(logoutUrl, authSession).delete(String.class);
     }

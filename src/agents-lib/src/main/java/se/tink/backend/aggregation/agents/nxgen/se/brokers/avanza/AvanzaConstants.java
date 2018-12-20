@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza;
 
+import com.sun.jersey.api.uri.UriTemplate;
 import java.time.ZoneId;
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -84,23 +85,64 @@ public class AvanzaConstants {
         private static final String HOST = "https://www.avanza.se";
         private static final String API = HOST + "/_api";
         private static final String AUTH = API + "/authentication";
-        public static final String LOGOUT = AUTH + "/sessions/%s";
-        public static final String BANK_ID_INIT = AUTH + "/sessions/bankid";
-        public static final String BANK_ID_COLLECT = AUTH + "/sessions/bankid/%s";
-        public static final String BANK_ID_COMPLETE =
-                AUTH + "/sessions/bankid/%s/%s?maxInactiveMinutes=60";
+
+        private static final String LOGOUT = AUTH + "/sessions/{authSession}";
+        private static final String BANK_ID_INIT = AUTH + "/sessions/bankid";
+        private static final String BANK_ID_COLLECT = AUTH + "/sessions/bankid/{transactionId}";
+        private static final String BANK_ID_COMPLETE =
+                AUTH + "/sessions/bankid/{transactionId}/{customerId}?maxInactiveMinutes=60";
         private static final String MOBILE = HOST + "/_mobile";
-        public static final String MARKET_INFO = MOBILE + "/market/%s/%s";
+        private static final String MARKET_INFO = MOBILE + "/market/{instrumentType}/{orderbookId}";
 
         private static final String ACCOUNT = MOBILE + "/account";
-        public static final String ACCOUNTS_OVERVIEW = ACCOUNT + "/overview";
-        public static final String ACCOUNT_DETAILS = ACCOUNT + "/%s/overview";
-        public static final String INVESTMENT_PORTFOLIO_POSITIONS =
-                ACCOUNT + "/%s/positions?autoPortfolio=1&sort=name";
+        private static final String ACCOUNTS_OVERVIEW = ACCOUNT + "/overview";
+        private static final String ACCOUNT_DETAILS = ACCOUNT + "/{accountId}/overview";
+        private static final String INVESTMENT_PORTFOLIO_POSITIONS =
+                ACCOUNT + "/{accountId}/positions?autoPortfolio=1&sort=name";
         private static final String TRANSACTIONS = ACCOUNT + "/transactions";
-        public static final String TRANSACTIONS_LIST = TRANSACTIONS + "/%s?from=%s&to=%s";
-        public static final String INVESTMENT_TRANSACTIONS_LIST =
-                TRANSACTIONS + "/%s/options?from=%s&includeInstrumentsWithNoOrderbook=1&to=%s";
+        private static final String TRANSACTIONS_LIST = TRANSACTIONS + "/{accountId}?from={fromDate}&to={toDate}";
+        private static final String INVESTMENT_TRANSACTIONS_LIST =
+                TRANSACTIONS + "/{accountId}/options?from={fromDate}&includeInstrumentsWithNoOrderbook=1&to={toDate}";
+
+        public static String LOGOUT(String authSession) {
+            return new UriTemplate(LOGOUT).createURI(authSession);
+        }
+
+        public static String BANK_ID_INIT() {
+            return new UriTemplate(BANK_ID_INIT).createURI();
+        }
+
+        public static String BANK_ID_COLLECT(String transactionId) {
+            return new UriTemplate(BANK_ID_COLLECT).createURI(transactionId);
+        }
+
+        public static String BANK_ID_COMPLETE(String transactionId, String customerId) {
+            return new UriTemplate(BANK_ID_COMPLETE).createURI(transactionId, customerId);
+        }
+
+        public static String MARKET_INFO(String instrumentType, String orderbookId) {
+            return new UriTemplate(MARKET_INFO).createURI(instrumentType, orderbookId);
+        }
+
+        public static String ACCOUNTS_OVERVIEW() {
+            return new UriTemplate(ACCOUNTS_OVERVIEW).createURI();
+        }
+
+        public static String ACCOUNT_DETAILS(String accountId) {
+            return new UriTemplate(ACCOUNT_DETAILS).createURI(accountId);
+        }
+
+        public static String INVESTMENT_PORTFOLIO_POSITIONS(String accountId) {
+            return new UriTemplate(INVESTMENT_PORTFOLIO_POSITIONS).createURI(accountId);
+        }
+
+        public static String TRANSACTIONS_LIST(String accountId, String fromDate, String toDate) {
+            return new UriTemplate(TRANSACTIONS_LIST).createURI(accountId, fromDate, toDate);
+        }
+
+        public static String INVESTMENT_TRANSACTIONS_LIST(String accountId, String fromDate, String toDate) {
+            return new UriTemplate(INVESTMENT_TRANSACTIONS_LIST).createURI(accountId, fromDate, toDate);
+        }
     }
 
     public static class TransactionTypes {
