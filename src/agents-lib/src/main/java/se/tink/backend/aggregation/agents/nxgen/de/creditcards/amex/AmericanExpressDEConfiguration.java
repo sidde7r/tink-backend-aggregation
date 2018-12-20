@@ -20,7 +20,7 @@ public class AmericanExpressDEConfiguration implements AmericanExpressV62Configu
 
     @Override
     public String getBankId(CardEntity cardEntity) {
-        return null;
+        return cardEntity.getCardNumberDisplay();
     }
 
     @Override
