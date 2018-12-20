@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.password.Erst
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity.authenticator.ErstebankSidentityAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class ErstebankSidentityAgent extends ErsteBankPasswordAgent {
@@ -20,8 +19,6 @@ public class ErstebankSidentityAgent extends ErsteBankPasswordAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        ErstebankSidentityAuthenticator authenticator =
-                new ErstebankSidentityAuthenticator(ersteBankApiClient, supplementalInformationHelper);
-        return new AutoAuthenticationController(request, context, authenticator, authenticator);
+        return new ErstebankSidentityAuthenticator(ersteBankApiClient, supplementalInformationHelper);
     }
 }
