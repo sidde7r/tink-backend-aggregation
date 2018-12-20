@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+
 import java.util.UUID;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public final class WLConstants {
     private WLConstants() {
