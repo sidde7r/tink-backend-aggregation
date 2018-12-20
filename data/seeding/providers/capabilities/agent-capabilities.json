@@ -104,6 +104,7 @@
   "nxgen.se.banks.swedbank.SwedbankSEAgent": ["MORTGAGE_AGGREGATION", "TRANSFERS", "CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS"],
   "nxgen.se.banks.swedbank.SwedbankSEAgentPaymentsRevamp": ["MORTGAGE_AGGREGATION", "TRANSFERS", "CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS"],
   "nxgen.se.banks.volvofinans.VolvoFinansAgent": ["SAVINGS_ACCOUNTS", "CREDIT_CARDS"],
+  "nxgen.se.brokers.avanza.AvanzaAgent": ["SAVINGS_ACCOUNTS", "INVESTMENTS"],
   "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent": ["CREDIT_CARDS"],
   "nxgen.serviceproviders.banks.bec.BecAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS"],
   "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent": ["CHECKING_ACCOUNTS"],

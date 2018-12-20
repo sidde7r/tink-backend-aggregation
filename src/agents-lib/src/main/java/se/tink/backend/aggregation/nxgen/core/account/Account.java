@@ -57,8 +57,10 @@ public abstract class Account {
             return TransactionalAccount.builder(type, uniqueIdentifier);
         case CREDIT_CARD:
             return CreditCardAccount.builder(uniqueIdentifier);
+        case PENSION:
         case INVESTMENT:
             return InvestmentAccount.builder(uniqueIdentifier);
+        case MORTGAGE:
         case LOAN:
             return LoanAccount.builder(uniqueIdentifier);
         default:
