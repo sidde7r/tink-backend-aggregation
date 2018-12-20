@@ -206,9 +206,6 @@ public final class BawagPskAccountTypeMappers {
                                     "00PF")
                             .put(AccountTypes.LOAN, "S110", "S132", "U100", "U411")
                             .put(AccountTypes.INVESTMENT, "T99A")
-                            .ignoreKeys(
-                                    "BUILDING_SAVINGS" // Not sure what this is
-                                    )
                             .build();
         }
         return productCodeMapper;
@@ -225,6 +222,9 @@ public final class BawagPskAccountTypeMappers {
                             .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
                             .put(AccountTypes.LOAN, "LOAN")
                             .put(AccountTypes.INVESTMENT, "TIME_DEPOSIT")
+                            .ignoreKeys(
+                                    "BUILDING_SAVINGS" // Not sure what this is
+                            )
                             .build();
         }
         return productTypeMapper;
