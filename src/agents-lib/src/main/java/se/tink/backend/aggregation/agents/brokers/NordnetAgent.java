@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -29,7 +30,6 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
@@ -58,6 +58,12 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
             if (!"sparkonto".equalsIgnoreCase(accountEntity.getAccountCode())) {
                 return;
             }
+            // accounts can be blocked, will have no further data
+            if (accountEntity.isBlocked()) {
+                log.debug(String.format("Account: %s blocked, reason: %s ",
+                        accountEntity.getAccountNumber(), accountEntity.getBlockedReason()));
+                return;
+            }
 
             context.cacheAccount(accountEntity.toAccount(AccountTypes.SAVINGS));
         });
@@ -68,6 +74,12 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
 
             // A sparkonto don't hold instruments
             if (Objects.equals("sparkonto", Strings.nullToEmpty(accountEntity.getAccountCode()).toLowerCase())) {
+                return;
+            }
+            // accounts can be blocked, will have no further data
+            if (accountEntity.isBlocked()) {
+                log.debug(String.format("Account: %s blocked, reason: %s ",
+                        accountEntity.getAccountNumber(), accountEntity.getBlockedReason()));
                 return;
             }
 

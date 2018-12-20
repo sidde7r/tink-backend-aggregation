@@ -25,6 +25,11 @@ public class AccountEntity {
     @JsonProperty("account_code")
     private String accountCode;
     private String role;
+    @JsonProperty("is_blocked")
+    private boolean blocked;
+    @JsonProperty("blocked_reason")
+    private String blockedReason;
+
     @JsonProperty("default")
     private boolean defaultAccount;
     private String alias;
@@ -50,6 +55,14 @@ public class AccountEntity {
 
     public String getAccountNumber() {
         return accountNumber;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public String getBlockedReason() {
+        return blockedReason;
     }
 
     /**
@@ -106,6 +119,7 @@ public class AccountEntity {
         portfolio.setType(this.getPortfolioType());
         portfolio.setTotalValue(this.getMarketValue());
         portfolio.setUniqueIdentifier(this.getAccountNumber());
+        portfolio.setCashValue(this.getCashBalance());
 
         return portfolio;
     }
@@ -129,5 +143,4 @@ public class AccountEntity {
     private boolean isTypeOccupationalPension() {
         return Strings.nullToEmpty(type).toLowerCase().contains("btp1");
     }
-
 }
