@@ -45,13 +45,17 @@ public class DepotEntity {
     }
 
     public Portfolio toPortfolio(Double marketValue, Double cashValue) {
+        return toPortfolio(marketValue, cashValue, Portfolio.Type.DEPOT);
+    }
+
+    public Portfolio toPortfolio(Double marketValue, Double cashValue, Portfolio.Type type) {
         Portfolio portfolio = new Portfolio();
 
         portfolio.setCashValue(cashValue);
         portfolio.setUniqueIdentifier(getDepotNumber());
         portfolio.setTotalValue(marketValue);
         portfolio.setTotalProfit(getTotalGrowthInRealValue());
-        portfolio.setType(Portfolio.Type.DEPOT);
+        portfolio.setType(type);
 
         return portfolio;
     }
