@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight;
 
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+
 import java.util.UUID;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public final class WLConstants {
     private WLConstants() {
@@ -81,7 +82,7 @@ public final class WLConstants {
 
     public static final String DEVICE_ID = UUID.randomUUID().toString().toUpperCase();
 
-    public static final String WL_APP_VERSION = "2.5.006";
+    public static final String WL_APP_VERSION = "2.5.007";
 
     public static final String ENVIRONMENT = "iphone";
     public static final String MODEL = "iPhone9,3";
