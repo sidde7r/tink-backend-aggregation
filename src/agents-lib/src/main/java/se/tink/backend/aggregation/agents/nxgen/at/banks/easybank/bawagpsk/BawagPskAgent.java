@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.authenticator.BawagPskPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.BawagPskTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.creditcard.BawagPskCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.investment.BawagPskInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.loan.BawagPskLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.transactional.BawagPskTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.session.BawagPskSessionHandler;
@@ -25,6 +25,8 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+
+import java.util.Optional;
 
 public class BawagPskAgent extends NextGenerationAgent {
 
@@ -80,7 +82,11 @@ public class BawagPskAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BawagPskInvestmentFetcher(apiClient)));
     }
 
     @Override

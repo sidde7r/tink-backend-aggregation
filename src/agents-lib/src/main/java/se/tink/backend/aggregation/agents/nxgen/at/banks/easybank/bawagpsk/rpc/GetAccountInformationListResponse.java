@@ -1,17 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskAccountTypeMappers;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInfo;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInformationListItem;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
@@ -20,12 +12,22 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.OK;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class GetAccountInformationListResponse {
     private static final Logger logger =
@@ -120,6 +122,18 @@ public final class GetAccountInformationListResponse {
                 .collect(Collectors.toSet());
     }
 
+    public Collection<InvestmentAccount> extractInvestmentAccounts(final Map<String, String> productCodes) {
+        return getAccountInfoList()
+                .stream()
+                .map(
+                        accInfo ->
+                                toInvestmentAccount(
+                                        accInfo, productCodes.get(accInfo.getAccountNumber())))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+    }
+
     private static Optional<TransactionalAccount> toTransactionalAccount(
             final AccountInfo accountInfo, final String productCode) {
         return mappers.inferAccountType(productCode, accountInfo.getProductID().getProductType())
@@ -138,7 +152,6 @@ public final class GetAccountInformationListResponse {
                                                                 .getAmount()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
-                                        // Shouldn't need to set this, but there is a bug requiring me to
                                         .setBankIdentifier(accountInfo.getAccountNumber())
                                         .setHolderName(
                                                 new HolderName(
@@ -174,7 +187,6 @@ public final class GetAccountInformationListResponse {
                                                                 .getAmount()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
-                                        // Shouldn't need to set this, but there is a bug requiring me to
                                         .setBankIdentifier(accountInfo.getAccountNumber())
                                         .setHolderName(
                                                 new HolderName(
@@ -203,7 +215,43 @@ public final class GetAccountInformationListResponse {
                                                                 .getAmount()))
                                         .setAccountNumber(accountInfo.getAccountNumber())
                                         .addIdentifier(getIban(accountInfo.getProductID()))
-                                        // Shouldn't need to set this, but there is a bug requiring me to
+                                        .setBankIdentifier(accountInfo.getAccountNumber())
+                                        .setHolderName(
+                                                new HolderName(
+                                                        accountInfo
+                                                                .getProductID()
+                                                                .getAccountOwner()
+                                                                .trim()))
+                                        .build());
+    }
+
+    private static Optional<InvestmentAccount> toInvestmentAccount(
+            final AccountInfo accountInfo, final String productCode) {
+        return mappers.inferAccountType(productCode, accountInfo.getProductID().getProductType())
+                .filter(type -> type == AccountTypes.INVESTMENT)
+                .map(
+                        type ->
+                                InvestmentAccount.builder(accountInfo.getAccountNumber())
+                                        // Need to set balance to prevent NPE
+                                        .setBalance(
+                                                new Amount(
+                                                        accountInfo
+                                                                .getCurrentBalanceEntity()
+                                                                .getCurrency(),
+                                                        accountInfo
+                                                                .getCurrentBalanceEntity()
+                                                                .getAmount()))
+                                        .setCashBalance(
+                                                new Amount(
+                                                        accountInfo
+                                                                .getCurrentBalanceEntity()
+                                                                .getCurrency(),
+                                                        accountInfo
+                                                                .getCurrentBalanceEntity()
+                                                                .getAmount()))
+                                        .setPortfolios(Collections.emptyList())
+                                        .setAccountNumber(accountInfo.getAccountNumber())
+                                        .addIdentifier(getIban(accountInfo.getProductID()))
                                         .setBankIdentifier(accountInfo.getAccountNumber())
                                         .setHolderName(
                                                 new HolderName(

@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher;
 
-import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Date;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskUtils;
@@ -16,6 +12,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+
+import java.time.ZoneId;
+import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 public final class BawagPskTransactionFetcher<AcccountT extends Account>
         implements TransactionDatePaginator<AcccountT> {

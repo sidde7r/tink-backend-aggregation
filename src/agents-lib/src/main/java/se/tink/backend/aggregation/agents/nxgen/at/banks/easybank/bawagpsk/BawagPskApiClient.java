@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Envelope;
@@ -25,6 +26,15 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 
 public class BawagPskApiClient {
 
