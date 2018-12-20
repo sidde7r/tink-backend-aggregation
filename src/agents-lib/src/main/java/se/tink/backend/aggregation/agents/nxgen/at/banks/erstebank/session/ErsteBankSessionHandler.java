@@ -5,10 +5,10 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-public class ErsteBankSessionHandler implements SessionHandler{
+public class ErsteBankSessionHandler implements SessionHandler {
     private final ErsteBankApiClient ersteBankApiClient;
 
-    public ErsteBankSessionHandler(ErsteBankApiClient ersteBankApiClient){
+    public ErsteBankSessionHandler(ErsteBankApiClient ersteBankApiClient) {
         this.ersteBankApiClient = ersteBankApiClient;
     }
 
@@ -19,13 +19,12 @@ public class ErsteBankSessionHandler implements SessionHandler{
 
     @Override
     public void keepAlive() throws SessionException {
-        if(!ersteBankApiClient.tokenExists()){
+        if (!ersteBankApiClient.tokenExists()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
-        try{
+        try {
             ersteBankApiClient.fetchAccounts();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
