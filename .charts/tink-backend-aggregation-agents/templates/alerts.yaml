@@ -35,23 +35,23 @@ spec:
         '<{ $labels.at }>'.
       summary: Too many errors logged by <{ $labels.job }>
 
-### Provider level login failures
+### Agent level login failures
   - alert: HighProviderFailedLoginRatio
     expr: |
-      # Never trigger on providers with less than 40 login attempts past 60 minutes.
-      # This filters out small providers which are less critical to fix quickly
+      # Never trigger on agents with less than 40 login attempts past 60 minutes.
+      # This filters out small agents which are less critical to fix quickly
       sum(increase(tink_agent_login_total{action="login"}[1h])) BY (className) > 40 and
-      # Providers where more than 20% of the login attempts fail.
-      sum(increase(tink_agent_login_total{action="login",outcome="failed"}[30m])) BY (className) / sum(increase(tink_agent_login_total{action="login"}[30m])) BY (provider) > 0.20
+      # Agents where more than 20% of the login attempts fail.
+      sum(increase(tink_agent_login_total{action="login",outcome="failed"}[30m])) BY (className) / sum(increase(tink_agent_login_total{action="login"}[30m])) BY (className) > 0.20
     for: 30m
     labels:
       severity: urgent
       who: integration
     annotations:
       description: To learn more check out the metric `tink_agent_login_total`. This
-        alert never triggers on providers that did less than 10 operations in the
+        alert never triggers on agents that did less than 10 operations in the
         past 60 minutes.
-      summary: Provider <{ $labels.provider }> has failed over 20%
+      summary: Agent <{ $labels.className }> has failed over 20%
         of its login attempts the past 60 minutes.
 
 ### Provider level fails
