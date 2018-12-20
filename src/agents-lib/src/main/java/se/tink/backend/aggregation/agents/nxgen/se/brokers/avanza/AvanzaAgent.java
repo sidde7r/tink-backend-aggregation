@@ -52,7 +52,8 @@ public final class AvanzaAgent extends NextGenerationAgent {
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
         final AvanzaTransactionalAccountFetcher accountFetcher =
-                new AvanzaTransactionalAccountFetcher(apiClient, authSessionStorage, temporaryStorage);
+                new AvanzaTransactionalAccountFetcher(
+                        apiClient, authSessionStorage, temporaryStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
@@ -75,7 +76,8 @@ public final class AvanzaAgent extends NextGenerationAgent {
                 new InvestmentRefreshController(
                         metricRefreshController,
                         updateController,
-                        new AvanzaInvestmentFetcher(apiClient, authSessionStorage, temporaryStorage)));
+                        new AvanzaInvestmentFetcher(
+                                apiClient, authSessionStorage, temporaryStorage)));
     }
 
     @Override

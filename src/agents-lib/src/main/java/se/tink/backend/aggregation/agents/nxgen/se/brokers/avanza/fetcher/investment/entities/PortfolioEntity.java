@@ -84,7 +84,8 @@ public class PortfolioEntity {
         return portfolio;
     }
 
-    public InvestmentAccount toTinkInvestmentAccount(HolderName holderName, List<Instrument> instruments) {
+    public InvestmentAccount toTinkInvestmentAccount(
+            HolderName holderName, List<Instrument> instruments) {
         return toTinkInvestmentAccount(holderName, toTinkPortfolio(instruments));
     }
 
