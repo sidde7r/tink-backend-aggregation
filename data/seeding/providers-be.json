@@ -230,15 +230,13 @@
           "name": "logindescription"
         },
         {
-          "description": "Response",
           "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
           "name": "logininput",
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "maxLength":100000,
           "pattern": "^[0-9]{1,8}$",
-          "patternError": "Please enter your response code from you card reader.",
+          "patternError": "Invalid login code.",
           "hint": "1-8 digits."
         },
         {
@@ -249,14 +247,13 @@
           "name": "signcodedescription"
         },
         {
-          "description": "Response",
           "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{1,8}$",
-          "patternError": "Please enter your response code from you card reader.",
+          "patternError": "Invalid sign code.",
           "hint": "1-8 digits."
         },
         {
