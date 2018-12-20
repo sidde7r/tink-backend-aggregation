@@ -24,7 +24,7 @@ GROUP_IDS = {
 PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
 
 ### Queries
-PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production'}) by (provider, market)"
+PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production', className!~'abnamro.*|.*abstract.*|demo.DemoAgent'}) by (provider, market)"
 INSTANCES_QUERY = "sum(up{job='tink-aggregation', environment='production'})"
 
 # LOGGING
