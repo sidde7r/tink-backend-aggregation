@@ -152,7 +152,7 @@
         "description" : "Response Code",
         "helpText" : "6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) Enter your PIN\n7$ Enter the signature code",
         "hint" : "NNNNNNN",
-        "immutable" : true,
+        "immutable" : false,
         "masked" : false,
         "name" : "signforbeneficiaryinput",
         "value" : null
