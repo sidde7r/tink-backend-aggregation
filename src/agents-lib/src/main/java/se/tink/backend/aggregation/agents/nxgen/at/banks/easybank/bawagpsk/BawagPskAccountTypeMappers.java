@@ -135,7 +135,10 @@ public final class BawagPskAccountTypeMappers {
                     AccountTypePredicateMapper.<Product>builder()
                             .setExecutor(new BawagPskAccountTypeMapperExecutor())
                             .fallbackValue(AccountTypes.CHECKING, Product.codeMatches("B\\w\\w\\w"))
+                            .fallbackValue(AccountTypes.CHECKING, Product.codeMatches("G\\w\\w\\w"))
                             .fallbackValue(AccountTypes.SAVINGS, Product.codeMatches("D\\w\\w\\w"))
+                            .fallbackValue(AccountTypes.SAVINGS, Product.codeMatches("K\\w\\w\\w"))
+                            .fallbackValue(AccountTypes.SAVINGS, Product.codeMatches("N\\w\\w\\w"))
                             .fallbackValue(
                                     AccountTypes.CREDIT_CARD, Product.codeMatches("00\\w\\w"))
                             .fallbackValue(AccountTypes.LOAN, Product.codeMatches("S\\w\\w\\w"))
@@ -169,9 +172,11 @@ public final class BawagPskAccountTypeMappers {
                                     "B460",
                                     "B510",
                                     "B512",
+                                    "B515",
                                     "B531",
                                     "B553",
-                                    "B600")
+                                    "B600",
+                                    "G100")
                             .put(
                                     AccountTypes.SAVINGS,
                                     "D242",
@@ -184,7 +189,11 @@ public final class BawagPskAccountTypeMappers {
                                     "D267",
                                     "D268",
                                     "D270",
-                                    "D272")
+                                    "D271",
+                                    "D272",
+                                    "K99I",
+                                    "N96D",
+                                    "N99Q")
                             .put(
                                     AccountTypes.CREDIT_CARD,
                                     "00BD",
@@ -192,6 +201,7 @@ public final class BawagPskAccountTypeMappers {
                                     "00EC",
                                     "00EQ",
                                     "00ET",
+                                    "00EÖ",
                                     "00PD",
                                     "00PF")
                             .put(AccountTypes.LOAN, "S110", "S132", "U100", "U411")
@@ -212,6 +222,9 @@ public final class BawagPskAccountTypeMappers {
                             .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
                             .put(AccountTypes.LOAN, "LOAN")
                             .put(AccountTypes.INVESTMENT, "TIME_DEPOSIT")
+                            .ignoreKeys(
+                                    "BUILDING_SAVINGS" // Not sure what this is
+                            )
                             .build();
         }
         return productTypeMapper;
