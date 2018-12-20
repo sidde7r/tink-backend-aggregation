@@ -83,6 +83,8 @@ public class NordeaFiConstants {
     public static class ErrorCodes {
         // user has no agreement (for investments)
         public static final String AGREEMENT_NOT_CONFIRMED = "RBO_ACCESS_DENIED_AGREEMENT_NOT_CONFIRMED";
+        public static final String CLASSIFICATION_NOT_CONFIRMED = "RBO_ACCESS_DENIED_CLASSIFICATION_NOT_CONFIRMED";
+
         // user has no account connected to depot, cannot fetch investments
         public static final String UNABLE_TO_LOAD_CUSTOMER = "ERROR_OSIA_UNABLE_TO_LOAD_CUSTOMER";
         // access token has expired

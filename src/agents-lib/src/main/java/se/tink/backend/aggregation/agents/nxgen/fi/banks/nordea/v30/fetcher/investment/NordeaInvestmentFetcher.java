@@ -47,6 +47,13 @@ public class NordeaInvestmentFetcher implements AccountFetcher<InvestmentAccount
             return true;
         }
 
+        // user not having confirmed classification for investments could spoil the refresh
+        if (errorResponse.hasNoClassification()) {
+
+            LOG.debug("User has not cconfirmed classification for investments");
+            return true;
+        }
+
         // custody account is missing care account
         // Your custody account is missing a care account. It blocks access to the investment section.
         if (errorResponse.hasNoConnectedAccount()) {

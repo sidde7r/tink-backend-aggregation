@@ -29,6 +29,11 @@ public class ErrorResponse {
     }
 
     @JsonIgnore
+    public boolean hasNoClassification() {
+        return NordeaFiConstants.ErrorCodes.CLASSIFICATION_NOT_CONFIRMED.equalsIgnoreCase(error);
+    }
+
+    @JsonIgnore
     public boolean hasNoConnectedAccount() {
         return NordeaFiConstants.ErrorCodes.UNABLE_TO_LOAD_CUSTOMER.equalsIgnoreCase(error);
     }
