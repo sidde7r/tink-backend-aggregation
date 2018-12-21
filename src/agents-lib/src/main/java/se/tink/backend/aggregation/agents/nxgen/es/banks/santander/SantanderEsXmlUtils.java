@@ -45,6 +45,16 @@ public class SantanderEsXmlUtils {
         } catch (IOException e) {
             throw new IllegalStateException("Could not parse XML string into JSON object.");
         }
+    }
 
+    /**
+     * It's necessary to serialize an XML node to a String and then deserialize it into a String if we want to save
+     * it to the session storage. Otherwise we get a "String in a String" (i.e. double quotes) when we fetch it
+     * from the session storage as a String.
+     */
+    public static String convertToString(Node node) {
+        String serializedNode = SerializationUtils.serializeToString(node);
+
+        return SerializationUtils.deserializeFromString(serializedNode, String.class);
     }
 }
