@@ -49,7 +49,6 @@ public class FinTsApiClient {
     private static final AggregationLogger LONGLOGGER = new AggregationLogger(FinTsApiClient.class);
 
     private boolean endDateSupported = true;
-    private int fetchedTransactions = -1;
 
     private final PersistentStorage persistStorage;
 
@@ -193,7 +192,7 @@ public class FinTsApiClient {
                 sepaAccount.setBlz(element1Elements.get(3));
                 sepaAccount.setIban(elements.get(2));
                 sepaAccount.setCustomerId(elements.get(3));
-                // Some banks don not set the account type field...
+                // Some banks don't set the account type field...
                 sepaAccount.setAccountType(getAccountType(elements.get(4), elements.get(8)));
                 sepaAccount.setCurrency(elements.get(5));
                 sepaAccount.setAccountOwner1(elements.get(6));
@@ -341,10 +340,6 @@ public class FinTsApiClient {
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
 
-        if (!endDateSupported) {
-            end = new Date();
-        }
-
         FinTsRequest getTransactionRequest = this.createStatementRequest(targetAccount, start, end, null);
 
         FinTsResponse response = sendMessage(getTransactionRequest);
@@ -380,8 +375,8 @@ public class FinTsApiClient {
         List<MT940Statement> transactions = new ArrayList<>(this.parseMt940Transactions(mt940));
 
         // Process with touchdowns
-        String seg = null;
-        String mt940Content = null;
+        String seg;
+        String mt940Content;
         while (touchdowns.containsKey(FinTsConstants.Segments.HKKAZ)) {
             try {
                 FinTsRequest getFurtherTransactionRequest =
@@ -395,23 +390,18 @@ public class FinTsApiClient {
             } catch (Exception e) {
                 continue;
             }
-
         }
 
-        Date endDate = end;
         // Some banks does not take the end date in to account, here we check
         if (!endDateSupported) {
-            if (fetchedTransactions == transactions.size()) {
-                return Collections.emptyList();
-            }
-            fetchedTransactions = transactions.size();
-        } else if (endDateSupported && transactions.stream()
-                .anyMatch(transaction -> transaction.getDate().after(endDate))) {
-            return transactions.stream().filter(transaction -> transaction.getDate().before(endDate))
+            Interval transactionInterval = new Interval(new DateTime(start), new DateTime(end));
+            return transactions.stream()
+                    .filter(transaction -> transactionInterval.contains(new DateTime(transaction.getDate())))
+                    .collect(Collectors.toList());
+        }  else  {
+            return transactions.stream().filter(transaction -> transaction.getDate().before(end))
                     .collect(Collectors.toList());
         }
-
-        return transactions;
     }
 
     private List<MT940Statement> parseMt940Transactions(String mt940) {
