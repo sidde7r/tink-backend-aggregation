@@ -579,7 +579,7 @@ public final class IngAtApiClient {
         return response;
     }
 
-    public void keepAlive() {
-        Optional<String> currentUrl = ingAtSessionStorage.getCurrentUrl();
+    public Optional<HttpResponse> keepAlive() {
+        return ingAtSessionStorage.getCurrentUrl().map(url -> getAccountDetails(new URL(url)));
     }
 }

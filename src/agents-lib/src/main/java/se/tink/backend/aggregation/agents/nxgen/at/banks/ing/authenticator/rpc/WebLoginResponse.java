@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 public class WebLoginResponse {
     private String username;
     private String accountHolder;
-    private String accountName;
     private String basePage;
     private List<AccountReferenceEntity> accountReferenceEntities;
 

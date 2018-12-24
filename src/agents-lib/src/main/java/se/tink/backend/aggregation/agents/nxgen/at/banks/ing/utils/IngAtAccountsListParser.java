@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class IngAtAccountsListParser {
     private static Logger logger = LoggerFactory.getLogger(IngAtAccountsListParser.class);
@@ -43,16 +44,19 @@ public class IngAtAccountsListParser {
     }
 
     public Optional<String> getAccountHolder() {
-        final Optional<String> text =
+        final List<String> greeting =
                 doc.select("small[class=title__subheadline]")
                         .select("span")
                         .stream()
-                        .findAny()
-                        .map(Element::text);
-        if (!text.isPresent()) {
+                        .map(Element::text)
+                        .collect(Collectors.toList());
+
+        // The greeting consist of three segments, roughly: ["Hi", "Herr", "Sebastian Olsson"]
+        if (greeting.size() != 3) {
             logger.warn("Could not extract account holder");
+            return Optional.empty();
         }
-        return text;
+        return Optional.ofNullable(greeting.get(2));
     }
 
     private AccountSummary parseAccount(Element r) {

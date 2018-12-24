@@ -1,18 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.session;
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtSessionStorage;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.WebLoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class IngAtSessionHandler implements SessionHandler {
-    final private IngAtApiClient apiClient;
-    final private IngAtSessionStorage ingAtSessionStorage;
+    private final IngAtApiClient apiClient;
+    private final IngAtSessionStorage ingAtSessionStorage;
 
-    public IngAtSessionHandler(final IngAtApiClient apiClient, final IngAtSessionStorage ingAtSessionStorage) {
+    public IngAtSessionHandler(
+            final IngAtApiClient apiClient, final IngAtSessionStorage ingAtSessionStorage) {
         this.apiClient = apiClient;
         this.ingAtSessionStorage = ingAtSessionStorage;
     }
@@ -25,7 +26,23 @@ public class IngAtSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        final WebLoginResponse webLoginResponse = ingAtSessionStorage.getWebLoginResponse().orElseThrow(SessionError.SESSION_EXPIRED::exception);
-        apiClient.keepAlive();
+        // If nothing in session storage -> SessionException
+        ingAtSessionStorage
+                .getWebLoginResponse()
+                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        // If keepalive request fails -> SessionException
+        final HttpResponse keepAliveResponse;
+        try {
+            keepAliveResponse =
+                    apiClient.keepAlive().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        } catch (HttpResponseException e) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        // If keepalive response indicates expiration -> SessionException
+        if (keepAliveResponse.getRequest().getUrl().get().contains("timeExpired")) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
     }
 }
