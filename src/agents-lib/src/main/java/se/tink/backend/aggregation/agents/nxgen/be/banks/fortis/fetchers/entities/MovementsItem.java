@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
 import com.google.common.base.Strings;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.core.Amount;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
 
 public class MovementsItem {
     private boolean detailPresent;
@@ -86,7 +87,9 @@ public class MovementsItem {
 
     private Amount getTinkAmount() {
         try {
-            return new Amount(currency, NumberFormat.getInstance(Locale.FRANCE).parse(amount));
+            return new Amount(
+                    currency,
+                    NumberFormat.getInstance(Locale.FRANCE).parse(amount.replace(".", "")));
         } catch (ParseException e) {
             throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
         }
