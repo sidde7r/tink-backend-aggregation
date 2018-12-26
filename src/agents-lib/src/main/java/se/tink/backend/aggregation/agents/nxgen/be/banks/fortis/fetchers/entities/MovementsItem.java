@@ -86,7 +86,9 @@ public class MovementsItem {
 
     private Amount getTinkAmount() {
         try {
-            return new Amount(currency, NumberFormat.getInstance(Locale.FRANCE).parse(amount));
+            return new Amount(
+                    currency,
+                    NumberFormat.getInstance(Locale.FRANCE).parse(amount.replace(".", "")));
         } catch (ParseException e) {
             throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
         }
