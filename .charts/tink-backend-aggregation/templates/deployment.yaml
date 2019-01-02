@@ -1,3 +1,4 @@
+{{- $agentsConfig := .Values.agents | default dict }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -220,6 +221,13 @@ spec:
         volumeMounts:
         - name: altered-config-volume
           mountPath: /etc/tink
+        - name: bnppf-cert
+          mountPath: /etc/tink/bnppf-cert.p12
+          subPath: bnppf-cert.p12
+        {{- if $agentsConfig.mountSignatureKeyPair }}
+        - name: signature-request-key
+          mountPath: /etc/tink-signature-key
+        {{- end }}
 
       volumes:
       - name: aggregation-config
@@ -228,5 +236,14 @@ spec:
       - name: agents-config
         configMap:
           name: agents-config
+      - name: bnppf-cert
+        secret:
+          secretName: bnppf-cert
+          optional: true
+      {{- if $agentsConfig.mountSignatureKeyPair }}
+      - name: signature-request-key
+        secret:
+          secretName: signature-request-key
+      {{- end }}
       - name: altered-config-volume
         emptyDir: {}

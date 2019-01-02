@@ -12,8 +12,9 @@ data:
           - local-development
 
       signatureKeyPair:
-        privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
-        publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
+        {{- $signatureKeyPath := ($agentsConfig.mountSignatureKeyPair | default false) | ternary "/etc/tink-signature-key" "data/test/cryptography" }}
+        privateKeyPath: "{{ $signatureKeyPath }}/private_rsa_key.pem"
+        publicKeyPath: "{{ $signatureKeyPath }}/public_rsa_key.pem"
 
       creditsafe:
         username: CREDITSAFE_USERNAME
