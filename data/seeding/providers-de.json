@@ -22440,7 +22440,7 @@
       ]
     },
     {
-      "name": "de-levoBank-password",
+      "name": "de-levobank-password",
       "displayName": "LevoBank",
       "groupDisplayName": "LevoBank",
       "popular": false,
@@ -49224,7 +49224,7 @@
       ]
     },
     {
-      "name": "de-münsterländische-password",
+      "name": "de-munsterländische-password",
       "displayName": "Münsterländische Bank Thie & Co",
       "groupDisplayName": "Münsterländische Bank Thie & Co",
       "popular": false,
@@ -50277,7 +50277,7 @@
       ]
     },
     {
-      "name": "de-schwäbische-password",
+      "name": "de-schwabische-password",
       "displayName": "Schwäbische Bank",
       "groupDisplayName": "Schwäbische Bank",
       "popular": false,
