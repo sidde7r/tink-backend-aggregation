@@ -8,7 +8,7 @@
       "displayName": "Jyske Bank",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -40,7 +40,7 @@
       "displayName": "Danske Bank",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -55,7 +55,7 @@
           "name": "password",
           "numeric": true,
           "pattern": "([0-9]{4})",
-          "patternError": "Please enter 4 digits."
+          "patternError": "Please enter four digits."
         }
       ],
       "multiFactor": false,
@@ -73,7 +73,7 @@
       "displayName": "Nordea",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -98,7 +98,7 @@
       "displayName": "Ringkjøbing Landbobank",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -132,7 +132,7 @@
       "name": "dk-sydbank-password",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -164,7 +164,7 @@
       "displayName": "Skjern Bank",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -198,7 +198,7 @@
       "displayName": "Nordjyske Bank",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -231,7 +231,7 @@
       "displayName": "Alm Brand Bank",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -264,7 +264,7 @@
       "displayName": "Nordfyns Bank",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -297,7 +297,7 @@
       "displayName": "Djurslands Bank",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric": true
@@ -331,7 +331,7 @@
       "displayName": "Sparekassen Sjælland",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric":true
@@ -365,7 +365,7 @@
       "displayName": "Østjydsk Bank",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric":true
@@ -398,7 +398,7 @@
       "displayName": "Kreditbanken",
       "fields":[
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username",
           "numeric":true
@@ -431,7 +431,7 @@
       "displayName": "BankNordik",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -457,7 +457,7 @@
       "displayName": "Basisbank",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -483,7 +483,7 @@
       "displayName": "Borbjerg Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -509,7 +509,7 @@
       "displayName": "Broager Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -535,7 +535,7 @@
       "displayName": "Dragsholm Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -561,7 +561,7 @@
       "displayName": "Dronninglund Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -587,7 +587,7 @@
       "displayName": "Fanø Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -613,7 +613,7 @@
       "displayName": "Folkesparekassen",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -639,7 +639,7 @@
       "displayName": "Frøs Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -665,7 +665,7 @@
       "displayName": "Jutlander Bank",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -691,7 +691,7 @@
       "displayName": "Klim Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -717,7 +717,7 @@
       "displayName": "Langå Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -743,7 +743,7 @@
       "displayName": "Middelfart Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -769,7 +769,7 @@
       "displayName": "Rise Flemløse Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -795,7 +795,7 @@
       "displayName": "Rønde Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -821,7 +821,7 @@
       "displayName": "Sparekassen Balling",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -847,7 +847,7 @@
       "displayName": "Sparekassen Bredebro",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -873,7 +873,7 @@
       "displayName": "Sparekassen Den lille Bikube",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -899,7 +899,7 @@
       "displayName": "Sparekassen Djursland",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -925,7 +925,7 @@
       "displayName": "Sparekassen for Nr. Nebel og Omegn",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -951,7 +951,7 @@
       "displayName": "Sparekassen Kronjylland",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -977,7 +977,7 @@
       "displayName": "Sparekassen Thy",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -1003,7 +1003,7 @@
       "displayName": "Sparekassen Vendsyssel",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -1029,7 +1029,7 @@
       "displayName": "Sønderhå-Hørsted Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -1055,7 +1055,7 @@
       "displayName": "Andelskassen Oikos",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -1081,7 +1081,7 @@
       "displayName": "J.A.K. Andelskasse Østervrå",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -1107,7 +1107,7 @@
       "displayName": "Stadil Sparekasse",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -1134,7 +1134,7 @@
       "displayName": "Forbrugsforeningen",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -1160,7 +1160,7 @@
       "displayName": "Lån & Spar Bank A/S",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
@@ -1186,7 +1186,7 @@
       "displayName": "Saxo Privatbank A/S",
       "fields": [
         {
-          "description": "User ID",
+          "description": "User-ID",
           "hint": "CPR or NemID number.",
           "name": "username"
         },
