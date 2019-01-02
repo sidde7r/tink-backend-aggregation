@@ -95,7 +95,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-dnb",
@@ -140,7 +140,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ]
     },
@@ -206,7 +206,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-bv",
@@ -242,7 +242,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-gudbrandsdal",
@@ -278,7 +278,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-hallingdal-valdres",
@@ -314,7 +314,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-lom-og-skjak",
@@ -350,7 +350,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-modum",
@@ -386,7 +386,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-nord-norge",
@@ -422,7 +422,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-nordvest",
@@ -458,7 +458,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-ringerike-hadeland",
@@ -494,7 +494,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-smn",
@@ -530,7 +530,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-sr-bank",
@@ -566,7 +566,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-sore-sunnmore",
@@ -602,7 +602,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-telemark",
@@ -638,7 +638,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-ostfold-akershus",
@@ -674,7 +674,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ],
       "name": "no-sparebank1-ostlandet",
@@ -719,7 +719,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ]
     },
@@ -3528,7 +3528,7 @@
           "name": "mobilenumber",
           "numeric": true,
           "pattern": "[0-9]{8}",
-          "patternError": "Please enter a valid mobile number."
+          "patternError": "Please enter a valid mobile phone number."
         }
       ]
     },
