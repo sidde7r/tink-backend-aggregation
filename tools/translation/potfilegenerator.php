@@ -3,6 +3,16 @@ class PotFileGenerator {
     private $backendPotFilename = "tink-aggr-backend.pot";
     private $providerPotFilename = "tink-aggr-provider.pot";
 
+    private $passwordHelpTextKey = "passwordHelpText";
+    private $nameKey = "name";
+    private $displayDescriptionKey = "displayDescription";
+    private $fieldsKey = "fields";
+    private $hintKey = "hint";
+    private $helpTextKey = "helpText";
+    private $descriptionKey = "description";
+    private $patternErrorKey = "patternError";
+    private $supplementalFieldsKey = "supplementalFields";
+
     public function generateBackendPotFile() {
         echo "Generating '" . $this->backendPotFilename . "'..." . PHP_EOL;
         exec ('find ../../src/ -name \'*.java\' ! -path \'*Lookup*\' ! -name SeedMerchantsCommand.java ! -name \'*Test.java\' -exec xgettext --from-code="UTF-8" -kgetString -kgetPluralString:1,2 -kLocalizableKey -kLocalizableParametrizedKey -kLocalizablePluralKey:1,2 --join-existing -o ../../po/' . $this->backendPotFilename . ' {} +');
@@ -22,97 +32,55 @@ class PotFileGenerator {
         return $this->providerPotFilename;
     }
 
+    private function addTranslatableProviderStringIfNotEmpty(&$translatableStrings, $json, $key, $providerFile) {
+        if (isset($json[$key]) && !empty($json[$key])) {
+            $translatableStrings[$providerFile][] = $json[$key];
+        } else {
+            //echo "Note: " . $json[$this->nameKey] . " [" . $key . "] exists but is empty!" . PHP_EOL;
+        }
+    }
+
+    private function addTranslatableFieldStringIfNotEmpty(&$translatableStrings, $json, $key, $providerName, $providerFile) {
+        if (isset($json[$key]) && !empty($json[$key])) {
+            $translatableStrings[$providerFile][] = $json[$key];
+        } else {
+            //echo "Note: " . $providerName . " [" . $json[$this->nameKey] . "]" . " [" . $key . "] exists but is empty!" . PHP_EOL;
+        }
+    }
+
     private function findTranslatableProviderStrings() {
         $translatableStrings = array();
-
-        foreach ($this->getAllProviders() as $provider) {
-            if (!isset($provider['name']) || empty($provider['name'])) {
-                echo "Warning! Found unnamed provider, ignoring the provider and continuing";
-                continue;
-            }
-
-            if (isset($provider['passwordHelpText'])) {
-                if (!empty($provider['passwordHelpText'])) {
-                    $translatableStrings[] = $provider['passwordHelpText'];
-                } else {
-                    echo "Note: " . $provider['name'] . "['passwordHelpText'] exists but is empty!" . PHP_EOL;
+        $allProviderFiles = $this->getAllProviders();
+        foreach ($allProviderFiles as $providerFile => $value) {
+            foreach ($value as $provider) {
+                if (!isset($provider[$this->nameKey]) || empty($provider[$this->nameKey])) {
+                    var_dump($provider);
+                    echo "Warning! ". $providerFile ." contains an unnamed provider, ignoring the provider and continuing\n";
+                    continue;
                 }
-            }
-            if (isset($provider['displayDescription'])) {
-                if (!empty($provider['displayDescription'])) {
-                    $translatableStrings[] = $provider['displayDescription'];
-                } else {
-                    echo "Note: " . $provider['name'] . "['displayDescription'] exists but is empty!" . PHP_EOL;
-                }
-            }
 
-            if (isset($provider['fields'])) {
-                foreach ($provider['fields'] as $field) {
-                    if (isset($field['hint'])) {
-                        if (!empty($field['hint'])) {
-                            $translatableStrings[] = $field['hint'];
-                        } else {
-                            echo "Note: " . $provider['name'] . "['" . $field['name'] . "']['hint'] exists but is empty!" . PHP_EOL;
-                        }
-                    }
-                    if (isset($field['helpText'])) {
-                        if (!empty($field['helpText'])) {
-                            $translatableStrings[] = $field['helpText'];
-                        } else {
-                            echo "Note: " . $provider['name'] . "['" . $field['name'] . "']['helpText'] exists but is empty!" . PHP_EOL;
-                        }
-                    }
-                    if (isset($field['description'])) {
-                        if (!empty($field['description'])) {
-                            $translatableStrings[] = $field['description'];
-                        } else {
-                            echo "Note: " . $provider['name'] . "['" . $field['name'] . "']['description'] exists but is empty!" . PHP_EOL;
-                        }
-                    }
-                    if (isset($field['patternError'])) {
-                        if (!empty($field['patternError'])) {
-                            $translatableStrings[] = $field['patternError'];
-                        } else {
-                            echo "Note: " . $provider['name'] . "['" . $field['name'] . "']['patternError'] exists but is empty!" . PHP_EOL;
-                        }
+                $this->addTranslatableProviderStringIfNotEmpty($translatableStrings, $provider, $this->passwordHelpTextKey, $providerFile);
+                $this->addTranslatableProviderStringIfNotEmpty($translatableStrings, $provider, $this->displayDescriptionKey, $providerFile);
+
+                if (isset($provider[$this->fieldsKey])) {
+                    foreach ($provider[$this->fieldsKey] as $field) {
+                        $this->addTranslatableFieldStringIfNotEmpty($translatableStrings, $field, $this->hintKey, $provider[$this->nameKey], $providerFile);
+                        $this->addTranslatableFieldStringIfNotEmpty($translatableStrings, $field, $this->helpTextKey, $provider[$this->nameKey], $providerFile);
+                        $this->addTranslatableFieldStringIfNotEmpty($translatableStrings, $field, $this->descriptionKey, $provider[$this->nameKey], $providerFile);
+                        $this->addTranslatableFieldStringIfNotEmpty($translatableStrings, $field, $this->patternErrorKey, $provider[$this->nameKey], $providerFile);
                     }
                 }
-            }
 
-            if (isset($provider['supplementalFields'])) {
-                foreach ($provider['supplementalFields'] as $field) {
-                    if (isset($field['hint'])) {
-                        if (!empty($field['hint'])) {
-                            $translatableStrings[] = $field['hint'];
-                        } else {
-                            echo "Note: " . $provider['name'] . "['" . $field['name'] . "']['hint'] exists but is empty!" . PHP_EOL;
-                        }
-                    }
-                    if (isset($field['helpText'])) {
-                        if (!empty($field['helpText'])) {
-                            $translatableStrings[] = $field['helpText'];
-                        } else {
-                            echo "Note: " . $provider['name'] . "['" . $field['name'] . "']['helpText'] exists but is empty!" . PHP_EOL;
-                        }
-                    }
-                    if (isset($field['description'])) {
-                        if (!empty($field['description'])) {
-                            $translatableStrings[] = $field['description'];
-                        } else {
-                            echo "Note: " . $provider['name'] . "['" . $field['name'] . "']['description'] exists but is empty!" . PHP_EOL;
-                        }
-                    }
-                    if (isset($field['patternError'])) {
-                        if (!empty($field['patternError'])) {
-                            $translatableStrings[] = $field['patternError'];
-                        } else {
-                            echo "Note: " . $provider['name'] . "['" . $field['name'] . "']['patternError'] exists but is empty!" . PHP_EOL;
-                        }
+                if (isset($provider[$this->supplementalFieldsKey])) {
+                    foreach ($provider[$this->supplementalFieldsKey] as $field) {
+                        $this->addTranslatableFieldStringIfNotEmpty($translatableStrings, $field, $this->hintKey, $provider[$this->nameKey], $providerFile);
+                        $this->addTranslatableFieldStringIfNotEmpty($translatableStrings, $field, $this->helpTextKey, $provider[$this->nameKey], $providerFile);
+                        $this->addTranslatableFieldStringIfNotEmpty($translatableStrings, $field, $this->descriptionKey, $provider[$this->nameKey], $providerFile);
+                        $this->addTranslatableFieldStringIfNotEmpty($translatableStrings, $field, $this->patternErrorKey, $provider[$this->nameKey], $providerFile);
                     }
                 }
             }
         }
-
         return $translatableStrings;
     }
 
@@ -146,14 +114,18 @@ class PotFileGenerator {
         fwrite_line($providerPot);
         fwrite_line($providerPot, "#, java-format");
 
-        foreach ($translatableStrings as $translatableString) {
-            if (empty($translatableString)) {
-                echo "Warning! Found empty string, continuing without adding the empty string to the .pot file" . PHP_EOL;
-                continue;
+        foreach ($translatableStrings as $providerFile => $strings) {
+            fwrite_line($providerPot, '# ' . $providerFile);
+            sort($strings);
+            foreach ($strings as $translatableString) {
+                if (empty($translatableString)) {
+                    echo "Warning! Found empty string, continuing without adding the empty string to the .pot file" . PHP_EOL;
+                    continue;
+                }
+                fwrite_line($providerPot, 'msgid "' . str_replace('"', '\\"', $translatableString) . '"');
+                fwrite_line($providerPot, "msgstr " . '""');
+                fwrite_line($providerPot);
             }
-            fwrite_line($providerPot, 'msgid "' . str_replace('"', '\\"', $translatableString) . '"');
-            fwrite_line($providerPot, "msgstr " . '""');
-            fwrite_line($providerPot);
         }
 
         fclose($providerPot);
@@ -162,37 +134,28 @@ class PotFileGenerator {
     private function getAllProviders() {
         $dir = "../../data/seeding/";
         $allProviders = array();
-
-        foreach (glob($dir . "providers-*.json") as $filename) {
-            echo "$filename \n";
-            $providerFile = fopen($filename, "r") or die("Unable to open file!");
-            $contents = str_replace('\\n', '\\\\n', fread($providerFile, filesize($filename)));
-            $providerConf = json_decode($contents, true);
-
-            if( array_key_exists('providers', $providerConf) ) {
-                $key = "providers";
-                $allProviders = array_merge($allProviders, $providerConf[$key]);
+        $it = new RecursiveDirectoryIterator($dir);
+        foreach(new RecursiveIteratorIterator($it) as $filename)
+        {
+            if(preg_match('/.*available-providers.*/i', $filename)) {
+                continue;
             }
-            
-            fclose($providerFile);
-        }
+            if(preg_match('/.*providers?-.*\.json/i', $filename)) {
+                $providerFile = fopen($filename, "r") or die("Unable to open file!");
+                $contents = str_replace('\\n', '\\\\n', fread($providerFile, filesize($filename)));
+                $providerConf = json_decode($contents, true);
 
-        $dir = "../../data/seeding/providers/overriding-providers/*/";
-
-        foreach (glob($dir . "provider-override-*.json") as $filename) {
-            echo "overrides: $filename \n";
-            $providerFile = fopen($filename, "r") or die("Unable to open file!");
-            $contents = str_replace('\\n', '\\\\n', fread($providerFile, filesize($filename)));
-            $providerConf = json_decode($contents, true);
-
-            if( array_key_exists('provider-configuration', $providerConf) ) {
-                $key = "provider-configuration";
-                $allProviders = array_merge($allProviders, $providerConf[$key]);
+                if (isset($providerConf)) {
+                    $providersKey = "providers";
+                    $providersConfigKey = "provider-configuration";
+                    if( array_key_exists($providersKey, $providerConf) ) {
+                        $allProviders[str_replace('../', '', $filename)] = $providerConf[$providersKey];
+                    } else if (array_key_exists($providersConfigKey, $providerConf)) {
+                        $allProviders[str_replace('../', '', $filename)] = $providerConf[$providersConfigKey];
+                    }
+                }
             }
-            
-            fclose($providerFile);
         }
-
         return $allProviders;
     }
 }
