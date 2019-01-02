@@ -23,7 +23,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Cod utilizator",
+          "description": "User-ID",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -46,7 +46,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Parola",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
