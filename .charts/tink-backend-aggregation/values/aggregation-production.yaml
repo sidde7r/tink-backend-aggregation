@@ -16,3 +16,16 @@ s3StorageConfiguration:
   url: "https://s3.eu-west-1.amazonaws.com"
   region: "eu-west-1"
   agentDebugBucketName: "aggregation-production-agent-debug-20180918120109492100000001"
+
+agents:
+  collectorSubscriptionKey: true
+  monzo:
+    redirectUrl: https://api.tink.se/api/v1/credentials/third-party/callback
+
+  proxyUri: http://10.88.12.185:8080
+
+  fints: true
+  abnAmro:
+    production: {}
+    staging:
+      cleanBankId: true

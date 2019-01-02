@@ -19,7 +19,6 @@ spec:
         # Force rollout of new pods if the config has changed
         checksum/aggregation-config: {{ include (print $.Template.BasePath "/aggregation-config.yaml") . | sha256sum }}
         checksum/agents-config: {{ include (print $.Template.BasePath "/agents-config.yaml") . | sha256sum }}
-        prometheus.io/port: '9130'
         prometheus.io/scrape: 'true'
     spec:
       securityContext:
@@ -37,10 +36,22 @@ spec:
           - "cp /mnt/aggregation-config/* /mnt/altered-config-volume && \
              echo -e '\n' >> /mnt/altered-config-volume/config.yml && \
              cat /mnt/agents-config/config.yml >> /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/COLLECTOR_SUBSCRIPTION_KEY/$COLLECTOR_SUBSCRIPTION_KEY/g\" /mnt/altered-config-volume/config.yml && \
              sed -i \"s/UKOPENBANKINGJSON/$UKOPENBANKINGJSON/g\" /mnt/altered-config-volume/config.yml && \
              sed -i \"s/CREDITSAFE_USERNAME/$CREDITSAFE_USERNAME/g\" /mnt/altered-config-volume/config.yml && \
              sed -i \"s/CREDITSAFE_PASSWORD/$CREDITSAFE_PASSWORD/g\" /mnt/altered-config-volume/config.yml && \
              sed -i \"s/KEYSTORE_PASSWORD/$KEYSTORE_PASSWORD/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/MONZO_CLIENT_ID/$MONZO_CLIENT_ID/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/MONZO_CLIENT_SECRET/$MONZO_CLIENT_SECRET/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/FINTS_REG_NUMBER/$FINTS_REG_NUMBER/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/ABN_STAGING_BANKING_HOST/$ABN_STAGING_BANKING_HOST/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/ABN_STAGING_BANKING_AUTH_TOKEN/$ABN_STAGING_BANKING_AUTH_TOKEN/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/ABN_STAGING_ENROLLMENT_URL/$ABN_STAGING_ENROLLMENT_URL/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/ABN_STAGING_ENROLLMENT_API_KEY/$ABN_STAGING_ENROLLMENT_API_KEY/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/ABN_PRODUCTION_BANKING_HOST/$ABN_PRODUCTION_BANKING_HOST/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/ABN_PRODUCTION_BANKING_AUTH_TOKEN/$ABN_PRODUCTION_BANKING_AUTH_TOKEN/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/ABN_PRODUCTION_ENROLLMENT_URL/$ABN_PRODUCTION_ENROLLMENT_URL/g\" /mnt/altered-config-volume/config.yml && \
+             sed -i \"s/ABN_PRODUCTION_ENROLLMENT_API_KEY/$ABN_PRODUCTION_ENROLLMENT_API_KEY/g\" /mnt/altered-config-volume/config.yml && \
              sed -i \"s/MYSQL_PASSWORD/$MYSQL_PASSWORD/g\" /mnt/altered-config-volume/config.yml"
         image: gcr.io/tink-containers/debian:stretch
         imagePullPolicy: IfNotPresent
@@ -54,6 +65,12 @@ spec:
         - name: altered-config-volume
           mountPath: /mnt/altered-config-volume
         env:
+        - name: COLLECTOR_SUBSCRIPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: collector-subscription-key
+              optional: true
         - name: KEYSTORE_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -79,6 +96,72 @@ spec:
             secretKeyRef:
               name: aggregation-secrets
               key: creditsafe-password
+        - name: MONZO_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: monzo-client-id
+              optional: true
+        - name: MONZO_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: monzo-client-secret
+              optional: true
+        - name: FINTS_REG_NUMBER
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: fints-reg-number
+              optional: true
+        - name: ABN_STAGING_BANKING_HOST
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-staging-banking-host
+              optional: true
+        - name: ABN_STAGING_BANKING_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-staging-banking-auth-token
+              optional: true
+        - name: ABN_STAGING_ENROLLMENT_URL
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-staging-enrollment-url
+              optional: true
+        - name: ABN_STAGING_ENROLLMENT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-staging-enrollment-api-key
+              optional: true
+        - name: ABN_PRODUCTION_BANKING_HOST
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-prod-banking-host
+              optional: true
+        - name: ABN_PRODUCTION_BANKING_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-prod-banking-auth-token
+              optional: true
+        - name: ABN_PRODUCTION_ENROLLMENT_URL
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-prod-enrollment-url
+              optional: true
+        - name: ABN_PRODUCTION_ENROLLMENT_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: abn-prod-enrollment-api-key
+              optional: true
 
       containers:
       - name: tink-backend-aggregation
