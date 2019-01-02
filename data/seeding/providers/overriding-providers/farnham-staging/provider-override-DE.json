@@ -35,7 +35,7 @@
       "optional" : false,
       "options" : null,
       "pattern" : "([0-9]{3})",
-      "patternError" : "Please enter 3 digits.",
+      "patternError" : "Please enter three digits.",
       "type" : null,
       "value" : null,
       "sensitive" : false,
@@ -43,7 +43,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Account number",
+      "description" : "Account Number",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -130,7 +130,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Kontonummer",
+      "description" : "Account Number",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -155,7 +155,7 @@
       "description" : "Online-Banking PIN",
       "exposed" : true,
       "children" : null,
-      "helpText" : "Bei 6-stelliger PIN bitte die ersten 5 Stellen eingeben.",
+      "helpText" : "For 6-digit PIN please enter the first 5 digits.",
       "hint" : "XXXXX",
       "immutable" : false,
       "masked" : true,
@@ -195,7 +195,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "User ID",
+      "description" : "User-ID",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
