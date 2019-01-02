@@ -11,7 +11,7 @@
       "market": "FI",
       "multiFactor": true,
       "name": "danskebank-fi",
-      "passwordHelpText": "Du anvander samma 4-siffriga servicekod som i Danske Banks mobilapp.",
+      "passwordHelpText": "You use the same 4-digit service code as in Danske Banks mobile app.",
       "payload": "FI",
       "popular": true,
       "refreshFrequency": 0.0,
@@ -23,7 +23,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Käyttäjätunnus",
+          "description": "Username",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -46,7 +46,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Salasana",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -60,7 +60,7 @@
           "optional": false,
           "options": null,
           "pattern": "([0-9]{4})",
-          "patternError": "Vänligen ange fyra siffror.",
+          "patternError": "Please enter four digits.",
           "type": null,
           "value": null,
           "sensitive": false,
@@ -80,7 +80,7 @@
       "market": "FI",
       "multiFactor": false,
       "name": "fi-pop-pankki",
-      "passwordHelpText": "Du använder samma bankkoder som i POP Pankkis mobilapp.",
+      "passwordHelpText": "You use the same bank codes as in POP Pankkis mobile app.",
       "payload": null,
       "popular": false,
       "refreshFrequency": 0.0,
@@ -92,7 +92,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Käyttäjätunnus",
+          "description": "Username",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -115,7 +115,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Salasana",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -149,7 +149,7 @@
       "market": "FI",
       "multiFactor": false,
       "name": "fi-saastopankki",
-      "passwordHelpText": "Du använder samma bankkoder som i Säästöpankkins mobilapp.",
+      "passwordHelpText": "You use the same bank codes as in Säästöpankkins mobile app.",
       "payload": null,
       "popular": false,
       "refreshFrequency": 0.0,
@@ -161,7 +161,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Käyttäjätunnus",
+          "description": "Username",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -184,7 +184,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Salasana",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -218,7 +218,7 @@
       "market": "FI",
       "multiFactor": true,
       "name": "fi-alandsbanken",
-      "passwordHelpText": "Du använder ditt finska användar-ID och lösenord på samma sätt som när du loggar in i Ålandsbankens mobilapp.",
+      "passwordHelpText": "You use your Finnish user-ID and password the same way as when you log in to Ålandsbankens mobile app.",
       "payload": null,
       "popular": true,
       "refreshFrequency": 0.0,
@@ -230,7 +230,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Användar-ID",
+          "description": "User-ID",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -253,7 +253,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Lösenord",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -287,7 +287,7 @@
       "market": "FI",
       "multiFactor": true,
       "name": "fi-op-pohjola",
-      "passwordHelpText": "Du använder samma bankkoder som i OP-Pohjolas mobilapp.",
+      "passwordHelpText": "You use the same bank codes as in OP-Pohjolas mobile app.",
       "payload": null,
       "popular": true,
       "refreshFrequency": 0.0,
@@ -299,7 +299,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "User ID",
+          "description": "User-ID",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -313,7 +313,7 @@
           "optional": false,
           "options": null,
           "pattern": "([0-9]{6,10})",
-          "patternError": "Vänligen ange din användarkod.",
+          "patternError": "Please enter your user-id.",
           "type": null,
           "value": null,
           "sensitive": false,
@@ -336,7 +336,7 @@
           "optional": false,
           "options": null,
           "pattern": "([0-9]{4})",
-          "patternError": "Vänligen ange fyra siffror.",
+          "patternError": "Please enter four digits.",
           "type": null,
           "value": null,
           "sensitive": false,
@@ -356,7 +356,7 @@
       "market": "FI",
       "multiFactor": false,
       "name": "nordea-fi",
-      "passwordHelpText": "Du använder samma PIN-kod (4 siffror) som för Nordeas mobilapp.",
+      "passwordHelpText": "You use the same PIN (4 digits) as for Nordeas mobile app.",
       "payload": "FI",
       "popular": true,
       "refreshFrequency": 0.0,
@@ -368,7 +368,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "User ID",
+          "description": "User-ID",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -405,7 +405,7 @@
           "optional": false,
           "options": null,
           "pattern": "([0-9]{4})",
-          "patternError": "Vänligen ange fyra siffror.",
+          "patternError": "Please enter four digits.",
           "type": null,
           "value": null,
           "sensitive": false,
@@ -425,7 +425,7 @@
       "market": "FI",
       "multiFactor": false,
       "name": "fi-s-pankki",
-      "passwordHelpText": "Du använder samma bankkoder som i S-Pankkis mobilapp.",
+      "passwordHelpText": "You use the same bank codes as in S-Pankkis mobile app.",
       "payload": null,
       "popular": false,
       "refreshFrequency": 0.0,
@@ -437,7 +437,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "User ID",
+          "description": "User-ID",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -474,7 +474,7 @@
           "optional": false,
           "options": null,
           "pattern": "([0-9]{4,6})",
-          "patternError": "Ange fyra till sex siffror.",
+          "patternError": "Please enter four to six digits.",
           "type": null,
           "value": null,
           "sensitive": false,
