@@ -21,7 +21,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "User ID",
+      "description" : "User-ID",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -86,7 +86,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "User ID",
+      "description" : "User-ID",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -368,7 +368,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "User ID",
+      "description" : "User-ID",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
