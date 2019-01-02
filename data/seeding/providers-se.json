@@ -307,7 +307,7 @@
                     "maxLength": 4,
                     "minLength": 4,
                     "description": "PIN",
-                    "patternError": "Please enter 4 digits"
+                    "patternError": "Please enter four digits."
                 }
             ],
             "market": "SE",
@@ -354,7 +354,7 @@
                     "maxLength": 4,
                     "minLength": 4,
                     "description": "Password",
-                    "patternError": "Please enter 4 digits"
+                    "patternError": "Please enter four digits."
                 }
             ],
             "groupDisplayName": "Danske Bank",
@@ -589,7 +589,7 @@
                     "maxLength": 4,
                     "minLength": 4,
                     "description": "PIN",
-                    "patternError": "Please enter 4 digits"
+                    "patternError": "Please enter four digits."
                 }
             ],
             "groupDisplayName": "Handelsbanken",
@@ -860,7 +860,7 @@
                   "minLength": 0,
                   "optional": true,
                   "description": "PIN",
-                  "patternError": "Please enter 4 digits",
+                  "patternError": "Please enter four digits.",
                   "helpText": "Use the same code that you use in the bank's mobile app after you log in with Bank ID once. If you forgot your code, you can choose a new one in the bank's mobile app. By filling in this, transactions can be downloaded automatically in the background, so you do not need to use Bank ID every time."
                 }
             ],
