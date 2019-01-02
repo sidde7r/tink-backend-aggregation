@@ -3,6 +3,7 @@
 require_once('oneskyclient.php');
 require_once('potfilegenerator.php');
 
+$oneSkyProjectId = 154300;
 $oneSkyClient = new OneSkyClient();
 $potFileGenerator = new PotFileGenerator();
 
