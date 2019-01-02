@@ -36,7 +36,7 @@ class PotFileGenerator {
         if (isset($json[$key]) && !empty($json[$key])) {
             $translatableStrings[$providerFile][] = $json[$key];
         } else {
-            //echo "Note: " . $json[$this->nameKey] . " [" . $key . "] exists but is empty!" . PHP_EOL;
+            //echo "Note: in " . $providerFile . " " . $json[$this->nameKey] . " [" . $key . "] exists but is empty!" . PHP_EOL;
         }
     }
 
@@ -44,7 +44,7 @@ class PotFileGenerator {
         if (isset($json[$key]) && !empty($json[$key])) {
             $translatableStrings[$providerFile][] = $json[$key];
         } else {
-            //echo "Note: " . $providerName . " [" . $json[$this->nameKey] . "]" . " [" . $key . "] exists but is empty!" . PHP_EOL;
+            //echo "Note: in " . $providerFile . " " . $providerName . " [" . $json[$this->nameKey] . "]" . " [" . $key . "] exists but is empty!" . PHP_EOL;
         }
     }
 
@@ -112,16 +112,15 @@ class PotFileGenerator {
         fwrite_line($providerPot, '"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"');
 
         fwrite_line($providerPot);
-        fwrite_line($providerPot, "#, java-format");
 
         foreach ($translatableStrings as $providerFile => $strings) {
-            fwrite_line($providerPot, '# ' . $providerFile);
             sort($strings);
             foreach ($strings as $translatableString) {
                 if (empty($translatableString)) {
                     echo "Warning! Found empty string, continuing without adding the empty string to the .pot file" . PHP_EOL;
                     continue;
                 }
+                fwrite_line($providerPot, '# ' . $providerFile);
                 fwrite_line($providerPot, 'msgid "' . str_replace('"', '\\"', $translatableString) . '"');
                 fwrite_line($providerPot, "msgstr " . '""');
                 fwrite_line($providerPot);
@@ -146,12 +145,13 @@ class PotFileGenerator {
                 $providerConf = json_decode($contents, true);
 
                 if (isset($providerConf)) {
+                    $cleanFilename = str_replace('../', '', $filename);
                     $providersKey = "providers";
                     $providersConfigKey = "provider-configuration";
                     if( array_key_exists($providersKey, $providerConf) ) {
-                        $allProviders[str_replace('../', '', $filename)] = $providerConf[$providersKey];
+                        $allProviders[$cleanFilename] = $providerConf[$providersKey];
                     } else if (array_key_exists($providersConfigKey, $providerConf)) {
-                        $allProviders[str_replace('../', '', $filename)] = $providerConf[$providersConfigKey];
+                        $allProviders[$cleanFilename] = $providerConf[$providersConfigKey];
                     }
                 }
             }
