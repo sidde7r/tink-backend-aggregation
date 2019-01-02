@@ -194,7 +194,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Account number",
+      "description" : "Account Number",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
