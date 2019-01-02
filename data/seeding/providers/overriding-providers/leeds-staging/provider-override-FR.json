@@ -21,7 +21,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Identifiant",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -43,7 +43,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Code confidentiel",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -86,7 +86,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Identifiant",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -108,7 +108,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Mot de passe",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -151,7 +151,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Identifiant",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -173,7 +173,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Mot de passe",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -216,7 +216,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Identifiant",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -238,7 +238,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Mot de passe",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -281,7 +281,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Identifiant",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -303,7 +303,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Mot de passe",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -346,7 +346,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Identifiant",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -368,7 +368,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Mot de passe",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -411,7 +411,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Identifiant",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -433,7 +433,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Mot de passe",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,

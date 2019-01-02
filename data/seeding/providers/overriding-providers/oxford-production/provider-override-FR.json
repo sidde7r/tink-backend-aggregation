@@ -23,7 +23,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Identifiant",
+          "description": "Username",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -46,7 +46,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Mot de passe",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -92,7 +92,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Identifiant",
+          "description": "Username",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -115,7 +115,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Mot de passe",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -161,7 +161,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Identifiant",
+          "description": "Username",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -184,7 +184,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Mot de passe",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -230,7 +230,7 @@
       "fields": [
         {
           "defaultValue": null,
-          "description": "Identifiant",
+          "description": "Username",
           "exposed": true,
           "children": null,
           "helpText": null,
@@ -253,7 +253,7 @@
         },
         {
           "defaultValue": null,
-          "description": "Mot de passe",
+          "description": "Password",
           "exposed": true,
           "children": null,
           "helpText": null,
