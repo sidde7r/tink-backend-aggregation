@@ -63,10 +63,10 @@ data:
       hosts: {{ default "coordination:2181" .Values.coordinationHosts }}
 
     sqsQueueConfiguration:
-      {{ .Values.sqsQueueConfiguration | toYaml | indent 6 | trim }}
+      {{ .Values.sqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
 
     s3StorageConfiguration:
-      {{ .Values.s3StorageConfiguration | toYaml | indent 6 | trim }}
+      {{ .Values.s3StorageConfiguration | default dict | toYaml | indent 6 | trim }}
 
     isMultiClientDevelopment: false
 
