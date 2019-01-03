@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-02 12:56PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2019-01-03 16:51PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -113,7 +113,7 @@ msgstr ""
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "To connect Lysa you need to authenticate with Mobile BankID. You use Mobile "
-"BankID the same way as on Lysa:s website."
+"BankID the same way as at Lysa:s website."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -126,8 +126,15 @@ msgstr ""
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as in Handelsbankens mobile app. More information "
-"at [Handelsbanken](https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/"
+"Mobile BankID the same way as at SBAB:s website. More info at [SBAB](http://"
+"www.sbab.se)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
+"To connect your bank you need to authenticate with Mobile BankID. You use "
+"Mobile BankID the same way as in Handelsbankens mobile app. more info at "
+"[Handelsbanken](https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/"
 "qF01AA1F3402ECCE2C12581A0003CC76F)."
 msgstr ""
 
@@ -135,16 +142,15 @@ msgstr ""
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as in SEBs mobile app. You will return to Tink "
-"when you have authenticated yourself. More information at [SEB](http://www."
-"seb.se)."
+"when you have authenticated yourself. more info at [SEB](http://www.seb.se)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as in Sparbanken Syds mobile app. You will return "
-"to Tink when you have authenticated yourself. More information at "
-"[Sparbanken Syd](https://www.sparbankensyd.se/vardagstjanster/mobilbanken/)."
+"to Tink when you have authenticated yourself. Read more at [Sparbanken Syd]"
+"(https://www.sparbankensyd.se/vardagstjanster/mobilbanken/)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -154,14 +160,7 @@ msgid ""
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
-"To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as when you log in to SBAB:s website. More info "
-"at [SBAB](http://www.sbab.se)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid "To connect your card you have to authenticate with Mobile BankID."
+msgid "To connect your card you need to authenticate with Mobile BankID."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -195,6 +194,13 @@ msgstr ""
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
+"Mobile BankID the same way as when you log in to INGO MasterCards website "
+"(previously JET MasterCard)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
+"To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to NK Nyckeln MasterCards "
 "website."
 msgstr ""
@@ -202,21 +208,14 @@ msgstr ""
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as when you log in to Opel INGO MasterCards "
-"website (previously JET MasterCard)."
+"Mobile BankID the same way as when you log in to Nordic Choice Club "
+"MasterCards website."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to Opel MasterCards website."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
-"To connect your card you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as when you log in to Opel Nordic Choice Club "
-"MasterCards website."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -281,34 +280,46 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You log in with Mobile BankID the same was as with the Nordeas mobile app. "
-"Read more at [Nordea](http://www.nordea.se/privat/vardagstjanster/internet-"
-"mobil-telefon/mobilbanken.html)."
+"You log in with Mobile BankID the same way as with Nordeas mobile app. Read "
+"more at [Nordea](http://www.nordea.se/privat/vardagstjanster/internet-mobil-"
+"telefon/mobilbanken.html)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID in the same way as in Danske Banks mobile app. You can "
-"order Mobile BankID in the internetbank."
+"You use Mobile BankID the same way as for Länsförsäkringars internet "
+"services or mobile app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID in the same way as in ICAbankens mobile app. You can "
+"You use Mobile BankID the same way as in Danske Banks mobile app. You can "
+"order a new Mobile BankID in the internet bank."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
+"You use Mobile BankID the same way as in ICAbankens mobile app. You can "
 "order a new Mobile BankID at the internet bank."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID in the same way as in Skandiabankens mobile app. You "
-"can order a new Mobile BankID at the internet bank. Read more at "
-"[Skandiabanken](http://www.skandiabanken.se/hem/Konton/Mobila-planboken/"
-"Fakta/Mobila-planboken/Sa-har-ansluter-du-dig/)."
+"You use Mobile BankID the same way as in Skandiabankens mobile app. Read "
+"more at Skandiabanken."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID in the same way as in Sparbankernas mobile app. If you "
+"You use Mobile BankID the same way as in Skandiabankens mobile app. You can "
+"order a new Mobile BankID at the internet bank. Read more at [Skandiabanken]"
+"(http://www.skandiabanken.se/hem/Konton/Mobila-planboken/Fakta/Mobila-"
+"planboken/Sa-har-ansluter-du-dig/)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
+"You use Mobile BankID the same way as in Sparbankernas mobile app. If you "
 "have a personal code for simplified login, we recommend that you use that "
 "instead of Mobile BankID. Back out one step and choose Swedbank Ung. That "
 "way you can get automatic warnings and notifications without having to use "
@@ -317,7 +328,7 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID in the same way as in Sparbankernas mobile app. If you "
+"You use Mobile BankID the same way as in Sparbankernas mobile app. If you "
 "have a personal code for simplified login, we recommend that you use that "
 "instead of Mobile BankID. Back out one step and choose Swedbank och "
 "Sparbankerna. That way you can get automatic warnings and notifications "
@@ -325,19 +336,7 @@ msgid ""
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid "You use Mobile BankID in the same way as in Swedbanks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
-"You use Mobile BankID the same was as for Länsförsäkringars internet "
-"services or mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
-"You use Mobile BankID the same way as in Skandiabankens mobile app. Read "
-"more at Skandiabanken."
+msgid "You use Mobile BankID the same way as in Swedbanks mobile app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -351,20 +350,20 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID to confirm your identity in the same way as in "
-"Nordnets mobile app."
+"You use Mobile BankID to confirm your identity the same way as in Avanzas "
+"app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID to confirm your identity the same way as in the "
-"Avanzas app."
+"You use Mobile BankID to confirm your identity the same way as in Collectors "
+"app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID to confirm your identity the same way as in the "
-"Collectors app."
+"You use Mobile BankID to confirm your identity the same way as in Nordnets "
+"mobile app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -377,7 +376,13 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use the same 4 digit service code as for Danske Banks mobile app. You "
+"You use the same 4-digit PIN as when you log in to csn.se. You can order a "
+"new code at [CSN](https://www.csn.se/bas/ekund/personligKod.do)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
+"You use the same 4-digit service code as for Danske Banks mobile app. You "
 "also need access to your code generator to create a screen code. Read more "
 "at [Danske Bank](http://www.danskebank.se/sv-se/privat/Onlinetjanster/mobila-"
 "tjanster/Pages/mobilbank.aspx)."
@@ -385,15 +390,9 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use the same 4-digit PIN as when you log in to csn.se. You can order a "
-"new code at [CSN](https://www.csn.se/bas/ekund/personligKod.do)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
-"You use the same PIN as for Länsförsäkringars webservice or mobile app. If "
-"you do not have a PIN you can order one via Länsförsäkringars customer "
-"service (telephone 0771-666-555 and hold for personal service)."
+"You use the same PIN as for Länsförsäkringars internet service or mobile "
+"app. If you do not have a PIN you can order one via Länsförsäkringars "
+"customer service (telephone 0771-666-555 and hold for personal service)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -504,14 +503,6 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use the same password as when you log in to americanexpress.se. You can "
-"order a new username and password on at [American Express](https://global."
-"americanexpress.com/myca/fuidfyp/emea/action?"
-"request_type=RecoverPasswordStep1&Face=sv_SE)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
 "You use the same personal code as for SEBs mobile app. You can order a new "
 "code from the internet bank. More info at [SEB](http://www.seb.se/pow/wcp/"
 "index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID"
@@ -527,13 +518,13 @@ msgstr ""
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "You use the same self-service code as when you log in to Preems website. The "
-"self-service code is your IVR code, located on your statements."
+"self-service code is your IVR code, located on your statement."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "You use the same self-service code as when you log in to SEAT My Account. "
-"The self-service code is your IVR code, located on your statements."
+"The self-service code is your IVR code, located on your statement."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -545,7 +536,7 @@ msgstr ""
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "You use the same self-service code as when you log in to Volkswagen My "
-"Account. The self-service code is your IVR code, located on your statements."
+"Account. The self-service code is your IVR code, located on your statement."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -570,10 +561,32 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
+"You use the same username and password as when you use Rikskortets app or "
+"log in to the website. You can order a new code on the [website](https://"
+"edenred.se/rikskuponger/mina-sidor/glomt-losenord/)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
+"You use your Swedish user-ID and password the same way as when you log in to "
+"Ålandsbankens mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
 "You use your card reader and personal code the same way as for the "
 "Handelsbankens mobile app. More info at [Handelsbanken](https://www."
 "handelsbanken.se/SHB/Inet/ICentSv.nsf/default/"
 "qF01AA1F3402ECCE2C12581A0003CC76F)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
+"You use your personal code (4 digits & 2 letters) as you use for simplified "
+"login in Sparbanken Ungs mobile app. You can get it directly in Sparbankens "
+"internet bank. Read more at [Sparbanken](http://www.swedbank.se/privat/"
+"internet-och-telefontjanster/internetbanken-privat/faq-internetbanken/logga-"
+"in/index.htm?wt_query_text=skaffa%20personlig%20kod%239)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -596,39 +609,8 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"You use your personal code (4 digits & 2 letters) as you use on simplified "
-"login in Sparbanken Ungs mobile app. You can get it directly in Sparbankens "
-"internet bank. Read more at [Sparbanken](http://www.swedbank.se/privat/"
-"internet-och-telefontjanster/internetbanken-privat/faq-internetbanken/logga-"
-"in/index.htm?wt_query_text=skaffa%20personlig%20kod%239)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
-"You use your personal code (4 digits & 2 letters) as you use on simplified "
-"login in Swedbanks mobile app. You can get it directly in Swedbanks internet "
-"bank. Read more at [Swedbank](http://www.swedbank.se/privat/internet-och-"
-"telefontjanster/internetbanken-privat/faq-internetbanken/logga-in/index.htm?"
-"wt_query_text=skaffa%20personlig%20kod%239)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
 "You use your social security number and PIN the same way as when you log in "
 "to Forex Banks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
-"You use your swedish user-ID and password the same way as when you log in to "
-"Ålandsbankens mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
-msgid ""
-"You user the same username and password as when you use Rikskortets app or "
-"log in to the website. You can order a new code on the [website](https://"
-"edenred.se/rikskuponger/mina-sidor/glomt-losenord/)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-NO.json
@@ -653,10 +635,6 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
 msgid "Please enter your user-id."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid "You use the same 4-digit service code as in Danske Banks mobile app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
@@ -1153,22 +1131,14 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
 msgid ""
-"You use the same parsonal code as for SEBs mobile app. You can order a new "
-"code from the internet bank. More info at [SEB](http://www.seb.se/pow/wcp/"
-"index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID"
-"%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
-msgid ""
 "You use your card reader and personal code the same way as you would in the "
 "bank's mobile app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
 msgid ""
-"You use your social security number and PIN in the same way as when you log "
-"in to the bank's mobile app."
+"You use your social security number and PIN the same way as when you log in "
+"to the bank's mobile app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
@@ -1216,13 +1186,6 @@ msgstr ""
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as at SBAB:s website. More info at [SBAB](http://"
-"www.sbab.se)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as in Handelsbankens mobile app. More info at "
 "[Handelsbanken](https://www.handelsbanken.se/SHB/Inet/ICentSv.nsf/default/"
 "qF01AA1F3402ECCE2C12581A0003CC76F)."
@@ -1238,55 +1201,13 @@ msgstr ""
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as in Sparbanken Syds mobile app. You will return "
-"to Tink when you have authenticated yourself. Read more at [Sparbanken Syd]"
-"(https://www.sparbankensyd.se/vardagstjanster/mobilbanken/)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as on Collector Banks website."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as on Finnair Plus MasterCards website."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"To connect your card you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as whe nyou log in to Chevrolet Big Plus Cards "
-"website."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"To connect your card you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as whe nyou log in to SJ Prio MasterCards "
-"website. You will return to Tink when you have authenticated yourself."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to JET MasterCards website."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"To connect your card you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as when you log in to Nordic Choice Club "
-"MasterCards website."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"You log in with Mobile BankID the same way as in Nordeas mobile app. Read "
-"more at [Nordea](http://www.nordea.se/privat/vardagstjanster/internet-mobil-"
-"telefon/mobilbanken.html)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
@@ -1304,7 +1225,7 @@ msgstr ""
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "You use Mobile BankID the same way as in ICAbankens mobile app. You can "
-"order Mobile BankID at the internetbank."
+"order Mobile BankID at the internet bank."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
@@ -1314,18 +1235,9 @@ msgstr ""
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "You use Mobile BankID the same way as in Skandiabankens mobile app. You can "
-"order Mobile BankID at the internetbank. Read more at [Skandiabanken](http://"
-"www.skandiabanken.se/hem/Konton/Mobila-planboken/Fakta/Mobila-planboken/Sa-"
-"har-ansluter-du-dig/)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"You use Mobile BankID the same way as in Sparbankernas mobile app. If you "
-"have a personal code for simplified login, we recommend that you use that "
-"instead of Mobile BankID. Back out one step and choose Swedbank och "
-"Sparbankerna. That way you can get automatic warnings and notifications "
-"without having to use Mobile BankID to log in to Tink every time."
+"order Mobile BankID at the internet bank. Read more at [Skandiabanken]"
+"(http://www.skandiabanken.se/hem/Konton/Mobila-planboken/Fakta/Mobila-"
+"planboken/Sa-har-ansluter-du-dig/)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
@@ -1339,18 +1251,6 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
-"You use Mobile BankID to confirm your identity in the same way as in Avanzas "
-"app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
-"You use Mobile BankID to confirm your identity in the same way as in "
-"Nordnets mobil app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
-msgid ""
 "You use the same password as when you log in to Supreme Cards website. If "
 "you do not remember your password, you can reset it by calling customer "
 "service: 077-440 44 77."
@@ -1358,12 +1258,6 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
 msgid "Servicekod"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
-msgid ""
-"To connect Lysa you need to authenticate with Mobile BankID. You use Mobile "
-"BankID the same way as at Lysa:s website."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
@@ -1385,45 +1279,8 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
 msgid ""
-"You use Mobile BankID the same way as in Sparbankernas mobile app. If you "
-"have a personal code for simplified login, we recommend that you use that "
-"instead of Mobile BankID. Back out one step and choose Swedbank Ung. That "
-"way you can get automatic warnings and notifications without having to use "
-"Mobile BankID to log in to Tink every time."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
-msgid ""
-"You use the same 4-digit service code as for Danske Banks mobile app. You "
-"also need access to your code generator to create a screen code. Read more "
-"at [Danske Bank](http://www.danskebank.se/sv-se/privat/Onlinetjanster/mobila-"
-"tjanster/Pages/mobilbank.aspx)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
-msgid ""
-"You use the same password as when you log in to americanexpress.se.You can "
-"order a new username and password at [American Express](https://global."
-"americanexpress.com/myca/fuidfyp/emea/action?"
-"request_type=RecoverPasswordStep1&Face=sv_SE)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
-msgid ""
-"You use the same self-service code as when you log in to SEAT My Account. "
-"The self-service code is your IVR code, located on your statement."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
-msgid ""
 "You use the same self-service code as when you log in to Skoda My Account. "
 "The self-service code is your IVR code, located on your statement."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
-msgid ""
-"You use the same self-service code as when you log in to Volkswagen My "
-"Account. The self-service code is your IVR code, located on your statement."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
@@ -1435,18 +1292,18 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
 msgid ""
+"You use your Swedish user-ID and password the same way as when you log in to "
+"csn.se. You can order a new code at [CSN](https://www.csn.se/bas/ekund/"
+"personligKod.do)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
+msgid ""
 "You use your card reader and personal code the same way as for "
 "Handelsbankens mobile app. More info at [Handelsbanken](http://www."
 "handelsbanken.se/shb/INeT/IStartSv.nsf/FrameSet?OpenView&amp;iddef=&amp;"
 "navid=A_Sjalvbetjaning_-_Effektivisera&amp;sa=/SHB/Inet/ICentSv.nsf/Default/"
 "q6C11BD80287CAC54C125772A0028E9E8)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
-msgid ""
-"You use your swedish user-ID and password the same way as when you log in to "
-"csn.se mobile app. You can order a new code at [CSN](https://www.csn.se/bas/"
-"ekund/personligKod.do)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-staging/provider-override-EE.json
@@ -2149,37 +2006,18 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/leeds-staging/provider-override-SE.json
 msgid ""
-"Same code as you use in Nordeas mobileapp after you have logged in with "
+"The same code you use in Nordeas mobile app after you have logged in with "
 "BankID once. If you have forgotten your code you can pick a new one in "
 "Nordeas mobile app. By providing this, transactions can be fetched "
 "automatically in the background, so you do not have to use BankID every time."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/leeds-staging/provider-override-SE.json
-msgid "To connect your card you need to authenticate with Mobile BankID."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-SE.json
 msgid ""
-"To connect your card you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as when you log in to INGO MasterCards website "
-"(previously JET MasterCard)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-SE.json
-msgid "You use Mobile BankID the same way as in Swedbanks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-SE.json
-msgid ""
-"You use Mobile BankID to confirm your identity in the same way as in "
-"Collectors app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-SE.json
-msgid ""
-"You use your Swedish user-ID and password the same way as when you log in to "
-"Ålandsbankens mobile app."
+"You use the same parsonal code as for SEBs mobile app. You can order a new "
+"code from the internet bank. More info at [SEB](http://www.seb.se/pow/wcp/"
+"index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID"
+"%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
@@ -2193,12 +2031,6 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
 msgid "Response code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
-msgid ""
-"To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as in the CarPay- app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
@@ -2351,8 +2183,8 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/kirkby-production/provider-override-NO.json
 msgid ""
-"You log in the same way as in Nordeas mobile app. You can order Mobile "
-"BankID in the internetbank."
+"You log in the same way as with Nordeas mobile app. You can order a new "
+"Mobile BankID in the internet bank."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/kirkby-production/provider-override-FI.json
