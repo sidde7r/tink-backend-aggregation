@@ -1,0 +1,183 @@
+package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.entities;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.CoopConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.core.Amount;
+import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
+
+@JsonObject
+public class AccountEntity {
+    @JsonProperty("AccountType")
+    private int accountType;
+    @JsonProperty("Balance")
+    private double balance;
+    @JsonProperty("CanSetInternetAndForeignPayments")
+    private boolean canSetInternetAndForeignPayments;
+    @JsonProperty("CreditLimit")
+    private int creditLimit;
+    @JsonProperty("Details")
+    private List<DetailsEntity> details;
+    @JsonProperty("Name")
+    private String accountName;
+    @JsonProperty("TotalBalance")
+    private double totalBalance;
+
+    /**
+     * To be able to easily do transfers to the account we can add the plusgiro identifier with OCR that should be
+     * available on all coop accounts that you can pay to. There might be accounts that are special, so we only add
+     * those with valid ocr and plusgiro.
+     */
+    private static List<AccountIdentifier> getAccountIdentifier(Map<String, String> accountDetailsMap) {
+        String plusGiro = accountDetailsMap.get(CoopConstants.Account.PG_NUMBER);
+        String ocr = accountDetailsMap.get(CoopConstants.Account.OCR_NUMBER);
+
+        // Ensure we have values we expect from a valid destination account
+        if (Strings.isNullOrEmpty(plusGiro) || Strings.isNullOrEmpty(ocr)) {
+            return Collections.emptyList();
+        }
+
+        PlusGiroIdentifier plusGiroIdentifier = new PlusGiroIdentifier(plusGiro, ocr);
+        if (!plusGiroIdentifier.isValid()) {
+            return Collections.emptyList();
+        } else {
+            return Lists.newArrayList(plusGiroIdentifier);
+        }
+    }
+
+    @JsonIgnore
+    public boolean isCard() {
+        return AccountTypes.CREDIT_CARD == guessAccountType();
+    }
+
+    public Optional<CreditCardAccount> toTinkCard(String credentialsId) {
+        AccountTypes type = guessAccountType();
+        if (type != AccountTypes.CREDIT_CARD) {
+            Optional.empty();
+        }
+
+        Map<String, String> accountDetailsMap = getAccountDetailsMap();
+        String accountNumber = accountDetailsMap.get(CoopConstants.Account.ACCOUNT_NUMBER);
+        if (Strings.isNullOrEmpty(accountNumber)) {
+            return Optional.empty();
+        }
+
+        String ownerName = accountDetailsMap.get(CoopConstants.Account.OWNER_NAME);
+        HolderName holdername = Strings.isNullOrEmpty(ownerName) ? null : new HolderName(ownerName);
+
+        List<AccountIdentifier> identifiers = getAccountIdentifier(accountDetailsMap);
+
+        CreditCardAccount card = CreditCardAccount.builder(getUniqueId(credentialsId, accountNumber))
+                .setName(accountName)
+                .setAccountNumber(accountNumber)
+                .setBalance(Amount.inSEK(totalBalance))
+                .setHolderName(holdername)
+                .setBankIdentifier(String.valueOf(this.accountType))
+                .setAvailableCredit(Amount.inSEK(balance))
+                .addIdentifiers(identifiers)
+                .build();
+
+        return Optional.of(card);
+    }
+
+    public Optional<TransactionalAccount> toTinkAccount(String credentialsId) {
+        AccountTypes type = guessAccountType();
+        if (type == AccountTypes.CREDIT_CARD) {
+            Optional.empty();
+        }
+
+        Map<String, String> accountDetailsMap = getAccountDetailsMap();
+        String accountNumber = accountDetailsMap.get(CoopConstants.Account.ACCOUNT_NUMBER);
+        if (Strings.isNullOrEmpty(accountNumber)) {
+            return Optional.empty();
+        }
+
+        String ownerName = accountDetailsMap.get(CoopConstants.Account.OWNER_NAME);
+        HolderName holdername = Strings.isNullOrEmpty(ownerName) ? null : new HolderName(ownerName);
+
+        List<AccountIdentifier> identifiers = getAccountIdentifier(accountDetailsMap);
+
+        TransactionalAccount account =
+                TransactionalAccount.builder(AccountTypes.OTHER, getUniqueId(credentialsId, accountNumber))
+                        .setName(accountName)
+                        .setAccountNumber(accountNumber)
+                        .setBalance(Amount.inSEK(totalBalance))
+                        .setHolderName(holdername)
+                        .setBankIdentifier(String.valueOf(this.accountType))
+                        .addIdentifiers(identifiers)
+                        .build();
+
+        return Optional.of(account);
+    }
+
+    @JsonIgnore
+    private Map<String, String> getAccountDetailsMap() {
+        return Optional.ofNullable(details).orElse(Collections.emptyList())
+                .stream()
+                .collect(Collectors.toMap(DetailsEntity::getIdLowerCase, DetailsEntity::getValue));
+    }
+
+    @JsonIgnore
+    private String getUniqueId(String credentialsId, String accountNumber) {
+        // THIS IS TO AVOID Migration of unique ID until we find a way to handle Migrations in a better way than today.
+        //        return accountNumber;
+        return hashLegacyBankId(credentialsId, coopAccountType());
+    }
+
+    /**
+     * <p>
+     * Preferrably we'd use the account number instead, but that'll require merging of data since V1 version of Coop
+     * used same kind of logic for hashing the BankId.
+     */
+    private String hashLegacyBankId(String credentialsId, CoopConstants.AccountType accountType) {
+        return StringUtils.hashAsStringMD5(credentialsId + accountType.getLegacyBankIdPart());
+    }
+
+    @JsonIgnore
+    private CoopConstants.AccountType coopAccountType() {
+        CoopConstants.AccountType accountType = CoopConstants.AccountType.valueOf(this.accountType);
+        if (accountType == null) {
+            accountType = CoopConstants.AccountType.guessFromName(this.accountName);
+            ;
+        }
+
+        return accountType;
+    }
+
+    @JsonIgnore
+    private AccountTypes guessAccountType() {
+        CoopConstants.AccountType accountType = coopAccountType();
+
+        if (accountType == null) {
+            return AccountTypes.OTHER;
+        }
+
+        switch (accountType) {
+        case MEDMERA_MER:
+        case MEDMERA_EFTER_1:
+        case MEDMERA_EFTER_2:
+        case MEDMERA_FORE:
+        case MEDMERA_FAKTURA:
+        case MEDMERA_VISA:
+            return AccountTypes.CREDIT_CARD;
+        case MEDMERA_KONTO:
+        default:
+            return AccountTypes.OTHER;
+        }
+    }
+
+}
