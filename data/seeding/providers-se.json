@@ -548,7 +548,7 @@
             ],
             "market": "SE",
             "multiFactor": false,
-            "passwordHelpText": "You use your social security number and PIN in the same way as when you log in to the bank's mobile app.",
+            "passwordHelpText": "You use your social security number and PIN the same way as when you log in to the bank's mobile app.",
             "popular": false,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,

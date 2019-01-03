@@ -11,7 +11,7 @@
       "market": "FI",
       "multiFactor": true,
       "name": "danskebank-fi",
-      "passwordHelpText": "You use the same 4-digit service code as in Danske Banks mobile app.",
+      "passwordHelpText": "You use the same 4-digit service code as for Danske Banks mobile app.",
       "payload": "FI",
       "popular": true,
       "refreshFrequency": 0.0,
