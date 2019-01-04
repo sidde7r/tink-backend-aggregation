@@ -36,7 +36,7 @@ class PotFileGenerator {
         if (isset($json[$key]) && !empty($json[$key])) {
             $translatableStrings[$providerFile][] = $json[$key];
         } else {
-            //echo "Note: in " . $providerFile . " " . $json[$this->nameKey] . " [" . $key . "] exists but is empty!" . PHP_EOL;
+            echo "Note: in " . $providerFile . " " . $json[$this->nameKey] . " [" . $key . "] exists but is empty!" . PHP_EOL;
         }
     }
 
@@ -44,7 +44,7 @@ class PotFileGenerator {
         if (isset($json[$key]) && !empty($json[$key])) {
             $translatableStrings[$providerFile][] = $json[$key];
         } else {
-            //echo "Note: in " . $providerFile . " " . $providerName . " [" . $json[$this->nameKey] . "]" . " [" . $key . "] exists but is empty!" . PHP_EOL;
+            echo "Note: in " . $providerFile . " " . $providerName . " [" . $json[$this->nameKey] . "]" . " [" . $key . "] exists but is empty!" . PHP_EOL;
         }
     }
 
