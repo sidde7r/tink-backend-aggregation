@@ -333,7 +333,7 @@ public class BelfiusApiClient {
     // Note: When Belfius returns a response of error message, sometimes the "Content-Type" is missing, this will
     // result the client interpret the body as binary, which cause exception in getting the body content.
     private <T extends BelfiusResponse> T parseBelfiusResponse(HttpResponse httpResponse, Class<T> c) {
-        if (httpResponse.getHeaders().getFirst("ContentType") == null) {
+        if (httpResponse.getHeaders().getFirst("Content-Type") == null) {
             return SerializationUtils.deserializeFromString(httpResponse.getBody(String.class), c);
         } else {
             return httpResponse.getBody(c);
