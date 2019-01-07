@@ -29,8 +29,15 @@ public class AmericanExpressDEConfiguration implements AmericanExpressV62Configu
     }
 
     @Override
-    public Amount toAmount(Double amount) {
-        return Amount.inEUR(amount);
+    public Amount toAmount(Double value) {
+        // When the amount is 0.0 and we try to switch sign we end up with -0.0 what we would like
+        // to avoid
+        Amount amount = Amount.inEUR(value);
+        if (amount.isZero()) {
+            return amount;
+        }
+        // We are switching sign as Amex app shows values inversely to our standard
+        return amount.negate();
     }
 
     @Override
