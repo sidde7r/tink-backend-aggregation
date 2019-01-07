@@ -411,12 +411,15 @@ junit_test(
         ":aggregation-api",
         ":main-api",
 
+        "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_annotations:api-annotations-testlib-test",
 
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:org_reflections_reflections",
+        "//third_party:org_javassist_javassist",
         "//third_party:org_assertj_assertj_core",
     ],
 )
