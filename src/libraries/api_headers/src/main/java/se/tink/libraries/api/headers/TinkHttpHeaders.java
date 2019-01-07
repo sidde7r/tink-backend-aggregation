@@ -1,4 +1,4 @@
-package se.tink.backend.libraries.api.headers;
+package se.tink.libraries.api.headers;
 
 public class TinkHttpHeaders {
     public static final String FORWARDED_FOR_HEADER_NAME = "X-Forwarded-For";

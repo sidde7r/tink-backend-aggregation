@@ -36,7 +36,7 @@ java_library(
         "//third_party:org_codehaus_plexus_plexus_utils",
 
         # Api utils
-        "//src/api-headers",
+        "//src/libraries/api_headers:api-headers",
         "//src/libraries/api_annotations:api-annotations",
     ],
 )

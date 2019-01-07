@@ -88,7 +88,7 @@ java_library(
         "//src/libraries/log",
         "//src/libraries/phone_number_utils:phone_number_utils",
         "//src/libraries/api_annotations:api-annotations",
-        "//src/api-headers",
+        "//src/libraries/api_headers:api-headers",
 
         # Proto serialization util
         "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
