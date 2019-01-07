@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.rpc.
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.rpc.UserSummaryResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -40,17 +41,31 @@ public class CoopApiClient {
     }
 
 
+    // fetch transactions
+    // this is done in three tries where we fetch 200 first time, 1000 second time and 10000 last time
+    // this is because Coop API only returns a number of transactions, there is no offsetting
+    // we fetch e few the first time since most accounts are fetched every day
+    // We will not fetch more than 10000 transactions
     public PaginatorResponse fetchTransactions(int page, int accountType) {
+        if (page > 2) {
+            return PaginatorResponseImpl.createEmpty(false);
+        }
+
         LocalDate now = LocalDate.now();
-        int offset = page * CoopConstants.Account.TRANSACTION_BATCH;
-        int maxNoTransactions = (page + 1) * CoopConstants.Account.TRANSACTION_BATCH;
-        int fromYear = now.getYear() - CoopConstants.Account.MAX_YEAR_TO_FETCH;
+        // offset is already fetched transactions
+        int offset = 0;
+        if (page > 0) {
+            offset = CoopConstants.Account.TRANSACTION_BATCH_SIZE.get(page-1);
+        }
+
+        int maxNoTransactions = CoopConstants.Account.TRANSACTION_BATCH_SIZE.get(page);
+        int fromYear = CoopConstants.Account.YEAR_TO_START_FETCH;
 
         TransactionsRequest transactionsRequest = TransactionsRequest.create(maxNoTransactions, accountType, fromYear);
 
         return createRequest(CoopConstants.Url.TRANSACTIONS)
                 .post(TransactionsResponse.class, transactionsRequest)
-                .getTinkTransactions(offset, CoopConstants.Account.TRANSACTION_BATCH);
+                .getTinkTransactions(offset, maxNoTransactions);
     }
 
     private RequestBuilder createRequest(URL url) {

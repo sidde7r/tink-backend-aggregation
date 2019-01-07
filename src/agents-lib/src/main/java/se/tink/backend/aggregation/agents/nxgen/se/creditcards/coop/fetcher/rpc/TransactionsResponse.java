@@ -27,6 +27,6 @@ public class TransactionsResponse {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList()),
-                transactions.size() >= offset + batchSize);
+                transactions.size() >= batchSize);
     }
 }

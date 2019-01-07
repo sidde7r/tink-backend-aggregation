@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -24,8 +26,8 @@ public class CoopConstants {
         public static final String PG_NUMBER = "plusgironumber";
         public static final String OCR_NUMBER = "ocrnumber";
 
-        public static final int MAX_YEAR_TO_FETCH = 3;
-        public static final int TRANSACTION_BATCH = 200;
+        public static final int YEAR_TO_START_FETCH = 2000;
+        public static final List<Integer> TRANSACTION_BATCH_SIZE = ImmutableList.of(200, 1000, 10000);
     }
 
     public static class Storage {
