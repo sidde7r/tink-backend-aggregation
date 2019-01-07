@@ -4334,7 +4334,7 @@
     "popular" : false,
     "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
-    "status" : "TEMPORARY_DISABLED",
+    "status" : "ENABLED",
     "transactional" : false,
     "type" : "OTHER",
     "displayDescription" : null,
