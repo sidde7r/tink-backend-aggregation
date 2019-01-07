@@ -110,7 +110,7 @@ public class ArgentaTestData {
             + "      \"beneficiaryIban\": \"BE33973151001146\",\n"
             + "      \"beneficiaryName\": \"Olivier Appel\",\n"
             + "      \"messageLines\": [\n"
-            + "        \"Zakgeld\"\n"
+            + "        \"Olivier Appel\"\n"
             + "      ],\n"
             + "      \"reference\": \"B7H30BI3K00A000T\",\n"
             + "      \"transferType\": \"OTHER\"\n"

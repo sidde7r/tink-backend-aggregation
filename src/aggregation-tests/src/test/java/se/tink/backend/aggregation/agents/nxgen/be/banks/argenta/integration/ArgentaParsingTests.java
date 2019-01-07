@@ -54,6 +54,20 @@ public class ArgentaParsingTests {
         Assert.assertEquals("Date", "20170930", format.format(argentaTransaction.getDate()));
     }
 
+    @Test
+    public void shouldNotDuplicateDescriptionWhenBeneficiaryAndMessageLineEqual() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArgentaTransactionResponse argentaTransactionResponse = objectMapper.readValue(ArgentaTestData.TRANSACTIONS, ArgentaTransactionResponse.class);
+
+        Transaction argentaTransaction = argentaTransactionResponse.getTransactions().get(4).toTinkTransaction();
+        Assert.assertEquals("Amount", Amount.inEUR(-15), argentaTransaction.getAmount());
+        Assert.assertEquals("Description", "Uw overschrijving Olivier Appel", argentaTransaction.getDescription());
+        Assert.assertEquals("External id", "B7H30BI3K00A000T", argentaTransaction.getExternalId());
+        String pattern = "yyyyMMdd";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        Assert.assertEquals("Date", "20170929", format.format(argentaTransaction.getDate()));
+    }
+
 
     @Test
     public void shouldParseErrorCode() throws IOException {
