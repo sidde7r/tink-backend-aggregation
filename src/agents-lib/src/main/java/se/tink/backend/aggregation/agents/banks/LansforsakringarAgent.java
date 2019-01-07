@@ -96,6 +96,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -106,7 +107,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -1380,7 +1380,8 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                 log.warn("Could not build URI", e);
             }
 
-            Portfolio portfolio = investmentDepotWrapper.getDepot().toPortfolio(marketValue, cashValue);
+            Portfolio portfolio =
+                    investmentDepotWrapper.getDepot().toPortfolio(marketValue, cashValue, Portfolio.Type.ISK);
 
             SecurityHoldingsResponse funds;
             SecurityHoldingsResponse stocks;
