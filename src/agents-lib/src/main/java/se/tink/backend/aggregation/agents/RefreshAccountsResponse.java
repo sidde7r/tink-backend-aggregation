@@ -4,7 +4,7 @@ import java.util.List;
 import se.tink.backend.aggregation.rpc.Account;
 
 public class RefreshAccountsResponse {
-    List<Account> refreshedList;
+    private List<Account> refreshedList;
 
     public List<Account> getRefreshedList() {
         return refreshedList;

@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.account.TransferDestinationPattern;
 
 public class RefreshTransferDestinationsResponse {
-    Map<Account, List<TransferDestinationPattern>> refreshedTransferDestinations;
+    private Map<Account, List<TransferDestinationPattern>> refreshedTransferDestinations;
 
     public Map<Account, List<TransferDestinationPattern>> getRefreshedTransferDestinations() {
         return refreshedTransferDestinations;
