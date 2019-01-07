@@ -1,4 +1,4 @@
-package se.tink.backend.queue;
+package se.tink.backend.libraries.queue;
 
 public interface QueueConsumer {
     void consume(String message) throws Exception;

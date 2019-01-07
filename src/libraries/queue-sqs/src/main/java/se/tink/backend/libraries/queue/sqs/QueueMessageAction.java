@@ -1,4 +1,4 @@
-package se.tink.backend.queue.sqs;
+package se.tink.backend.libraries.queue.sqs;
 
 import java.io.IOException;
 

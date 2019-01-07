@@ -1,4 +1,4 @@
-package se.tink.backend.queue.sqs;
+package se.tink.backend.libraries.queue.sqs;
 
 import com.amazonaws.services.sqs.model.DeleteMessageRequest;
 import com.amazonaws.services.sqs.model.Message;
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.queue.QueueConsumer;
+import se.tink.backend.libraries.queue.QueueConsumer;
 
 public class SqsConsumer implements Managed, QueueConsumer {
 

@@ -1,4 +1,4 @@
-package se.tink.backend.queue.sqs.configuration;
+package se.tink.backend.libraries.queue.sqs.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

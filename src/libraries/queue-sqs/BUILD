@@ -4,7 +4,7 @@ java_library(
      resources = glob(["src/main/resources/**"]),
      visibility = ["//visibility:public"],
      deps = [
-        "//src/queue-lib:queue-lib",
+        "//src/libraries/queue-lib:queue-lib",
         "//src/libraries/log",
         "//third_party:com_google_guava_guava",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",

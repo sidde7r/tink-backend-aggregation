@@ -1,4 +1,4 @@
-package se.tink.backend.queue.sqs;
+package se.tink.backend.libraries.queue.sqs;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -14,7 +14,7 @@ import com.google.inject.Inject;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
+import se.tink.backend.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
