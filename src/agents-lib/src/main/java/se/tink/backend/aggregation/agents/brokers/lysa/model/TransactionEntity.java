@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.brokers.lysa.model;
 
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.system.rpc.Transaction;
 import java.util.Date;
 import java.util.Objects;
 
+@JsonObject
 public class TransactionEntity {
     private String accountId;
     private double amount;

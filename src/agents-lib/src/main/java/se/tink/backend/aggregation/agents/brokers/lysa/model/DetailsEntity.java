@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.brokers.lysa.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class DetailsEntity {
     private List<AccountEntity> accounts;
     private List<LegalEntityEntity> legalEntities;
