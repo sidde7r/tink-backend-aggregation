@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -84,5 +85,10 @@ public class UserEntity {
 
     public String getLocale() {
         return locale;
+    }
+
+    @JsonIgnore
+    public String getFullName() {
+        return String.format("%s %s", firstName, lastName);
     }
 }

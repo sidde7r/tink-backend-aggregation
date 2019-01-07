@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Optional;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.RevolutConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -23,31 +22,33 @@ public class PocketEntity {
     private int creditLimit;    // expressed in cents
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(AccountEntity topUpAccount) {
-        String accountNumber = topUpAccount.findIdentifier()
-                .orElseThrow(() -> new IllegalStateException("Could not find identifier for account."));
-        String accountName = Optional.ofNullable(getName()).orElse("Revolut " + getCurrency());
+    public TransactionalAccount toTinkCheckingAccount(String accountNumber, String holderName) {
+        return toTinkAccount(accountNumber, holderName, AccountTypes.CHECKING);
+    }
 
+    @JsonIgnore
+    public TransactionalAccount toTinkSavingsAccount(String holderName) {
+        return toTinkAccount(id, holderName, AccountTypes.SAVINGS); // Savings account has no external id
+    }
+
+    private TransactionalAccount toTinkAccount(String accountNumber, String holderName, AccountTypes accountType) {
         TransactionalAccount.Builder builder = TransactionalAccount
                 .builder(
-                        getTinkAccountType(),
-                        getId(),
+                        accountType,
+                        id,
                         new Amount(currency.toUpperCase(), getBalance()))
-                .setName(accountName)
-                .setHolderName(new HolderName(topUpAccount.getBeneficiaryName()))
+                .setName(getAccountName())
+                .setHolderName(new HolderName(holderName))
                 .setAccountNumber(accountNumber)
                 .setBankIdentifier(id);
 
         builder.putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
-
         return builder.build();
     }
 
     @JsonIgnore
-    private AccountTypes getTinkAccountType() {
-        return (type.equalsIgnoreCase(RevolutConstants.Pockets.SAVINGS_ACCOUNT)
-                ? AccountTypes.SAVINGS
-                : AccountTypes.CHECKING);
+    private String getAccountName() {
+        return Strings.isNullOrEmpty(name) ? "Revolut " + getCurrency() : name;
     }
 
     public String getId() {
@@ -74,8 +75,12 @@ public class PocketEntity {
         return blockedAmount / 100.0;
     }
 
-    public boolean isClosed() {
-        return closed;
+    public boolean isActive() {
+        return RevolutConstants.Accounts.ACTIVE_STATE.equalsIgnoreCase(getState());
+    }
+
+    public boolean isOpen() {
+        return !closed;
     }
 
     public double getCreditLimit() {
