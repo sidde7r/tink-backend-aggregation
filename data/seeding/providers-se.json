@@ -1504,19 +1504,7 @@
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Skandiabanken",
-            "fields": [
-                {
-                    "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
-                    "immutable": true,
-                    "maxLength": 12,
-                    "minLength": 12,
-                    "description": "Social security number",
-                    "patternError": "Please enter a valid social security number."
-                }
-            ],
+            "fields": [],
             "market": "SE",
             "multiFactor": false,
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
