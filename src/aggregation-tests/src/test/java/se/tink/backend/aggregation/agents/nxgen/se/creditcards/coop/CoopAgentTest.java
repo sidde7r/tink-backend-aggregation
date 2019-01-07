@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.rpc.Field;
 
+@Ignore
 public class CoopAgentTest {
 
     private static final String USERNAME = "";
@@ -28,5 +30,4 @@ public class CoopAgentTest {
         builder.build().testRefresh();
         builder.loadCredentialsBefore(true).build().testRefresh();
     }
-
 }
