@@ -23,7 +23,7 @@ java_library(
         "//src/libraries/uuid:uuid",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
 
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
@@ -51,7 +51,7 @@ java_library(
         "//src/libraries/uuid:uuid",
         "//src/libraries/serialization_utils:serialization-utils",
         "//src/libraries/date:date",
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
 
         "//third_party:c3p0_c3p0",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
@@ -87,7 +87,7 @@ java_library(
         "//src/libraries/i18n",
         "//src/libraries/log",
         "//src/libraries/phone_number_utils:phone_number_utils",
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
         "//src/api-headers",
 
         # Proto serialization util
@@ -135,7 +135,7 @@ java_library(
         ":main-api",
         ":system-api",
         ":aggregation-api",
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/libraries/http_client:http-client",
         "//src/libraries/http:http-annotations",
@@ -226,7 +226,7 @@ java_library(
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
         "//src/libraries/creditsafe_consumer_monitoring:creditsafe_consumer_monitoring",
         "//src/libraries/draining:draining",
@@ -315,7 +315,7 @@ java_library(
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/cli_print_utils:cli_print_utils",
         "//src/libraries/cryptography:cryptography",
 
@@ -411,7 +411,7 @@ junit_test(
         ":aggregation-api",
         ":main-api",
 
-        "//src/api-annotations-testlib",
+        "//src/libraries/api_annotations:api-annotations-testlib-test",
 
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -605,7 +605,7 @@ java_library(
     deps = [
         ":main-api",
 
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",
@@ -626,7 +626,7 @@ java_library(
     deps = [
         ":main-api",
         ":provider-configuration-api",
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/jersey_guice:jersey-guice",
         "//src/libraries/metrics:metrics",

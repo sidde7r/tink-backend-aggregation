@@ -6,7 +6,7 @@ import com.sun.jersey.spi.container.ContainerResponse;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ResourceFilter;
 import java.util.Optional;
-import se.tink.api.annotations.TeamOwnership;
+import se.tink.backend.libraries.api.annotations.TeamOwnership;
 import se.tink.libraries.log.LogUtils;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;

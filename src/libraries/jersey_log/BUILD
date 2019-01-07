@@ -37,7 +37,7 @@ java_library(
 
         # Api utils
         "//src/api-headers",
-        "//src/api-annotations",
+        "//src/libraries/api_annotations:api-annotations",
     ],
 )
 
