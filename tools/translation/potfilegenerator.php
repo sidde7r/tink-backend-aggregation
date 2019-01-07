@@ -154,6 +154,7 @@ class PotFileGenerator {
                         $allProviders[$cleanFilename] = $providerConf[$providersConfigKey];
                     }
                 }
+                fclose($filename);
             }
         }
         return $allProviders;
