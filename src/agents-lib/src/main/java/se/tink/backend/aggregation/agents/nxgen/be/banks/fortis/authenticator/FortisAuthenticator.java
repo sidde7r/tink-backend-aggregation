@@ -204,13 +204,13 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     private boolean isCredentialsCorrect() {
-        String muid = persistentStorage.get(FortisConstants.STORAGE.MUID);
-        String password = persistentStorage.get(FortisConstants.STORAGE.PASSWORD);
-        String agreementId = persistentStorage.get(FortisConstants.STORAGE.AGREEMENT_ID);
+        String muid = checkNotNullOrEmpty(persistentStorage.get(FortisConstants.STORAGE.MUID), FortisConstants.STORAGE.MUID);
+        String password = checkNotNullOrEmpty(persistentStorage.get(FortisConstants.STORAGE.PASSWORD), FortisConstants.STORAGE.PASSWORD);
+        String agreementId = checkNotNullOrEmpty(persistentStorage.get(FortisConstants.STORAGE.AGREEMENT_ID), FortisConstants.STORAGE.AGREEMENT_ID);
 
-        String cardNumber = persistentStorage.get(FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID);
-        String smid = persistentStorage.get(FortisConstants.STORAGE.SMID);
-        String deviceFingerprint = persistentStorage.get(FortisConstants.STORAGE.DEVICE_FINGERPRINT);
+        String cardNumber = checkNotNullOrEmpty(persistentStorage.get(FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID), FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID);
+        String smid = checkNotNullOrEmpty(persistentStorage.get(FortisConstants.STORAGE.SMID), FortisConstants.STORAGE.SMID);
+        String deviceFingerprint = checkNotNullOrEmpty(persistentStorage.get(FortisConstants.STORAGE.DEVICE_FINGERPRINT), FortisConstants.STORAGE.DEVICE_FINGERPRINT);
 
         Optional<EBankingUserId> ebankingUsersId = getEbankingUserId(cardNumber, smid);
         if (!ebankingUsersId.isPresent()) {
@@ -255,6 +255,15 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
             return false;
         }
         return true;
+    }
+
+    private String checkNotNullOrEmpty(String persistentStoreValue, String persistentStorageKey) {
+        if (Strings.isNullOrEmpty(persistentStoreValue)) {
+            String errorMessage = String.format("PersistentStorage is missing %s", persistentStorageKey);
+            LOGGER.warnExtraLong(errorMessage, FortisConstants.LOGTAG.LOGIN_ERROR);
+            throw new IllegalStateException(errorMessage);
+        }
+        return persistentStoreValue;
     }
 
     @Override
