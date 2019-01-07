@@ -58,7 +58,10 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
         // Login response contain users accounts, save to session storage to use for later fetching
         Node loginResponseNode =  SantanderEsXmlUtils.getTagNodeFromSoapString(
                 responseString, SantanderEsConstants.NodeTags.METHOD_RESULT);
-        sessionStorage.put(SantanderEsConstants.Storage.LOGIN_RESPONSE, loginResponseNode);
+
+        String loginResponseString = SantanderEsXmlUtils.convertToString(loginResponseNode);
+
+        sessionStorage.put(SantanderEsConstants.Storage.LOGIN_RESPONSE, loginResponseString);
 
     }
 }
