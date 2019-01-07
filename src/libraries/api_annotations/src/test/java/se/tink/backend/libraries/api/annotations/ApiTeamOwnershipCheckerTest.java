@@ -6,16 +6,16 @@ public class ApiTeamOwnershipCheckerTest {
 
     @Test(expected = AssertionError.class)
     public void testFailingTest() {
-        new ApiTeamOwnershipChecker("se.tink.api.annotations.failing").check();
+        new ApiTeamOwnershipChecker("se.tink.backend.libraries.api.annotations.failing").check();
     }
 
     @Test
     public void testPassing() {
-        new ApiTeamOwnershipChecker("se.tink.api.annotations.passing").check();
+        new ApiTeamOwnershipChecker("se.tink.backend.libraries.api.annotations.passing").check();
     }
 
     @Test(expected = AssertionError.class)
     public void testEmptyPackage() {
-        new ApiTeamOwnershipChecker("se.tink.api.annotations.missing").check();
+        new ApiTeamOwnershipChecker("se.tink.backend.libraries.api.annotations.missing").check();
     }
 }
