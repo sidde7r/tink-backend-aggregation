@@ -142,7 +142,7 @@ public class KbcApiClient {
                 .build();
     }
 
-    private boolean matchesErrorMessage(TypeValuePair e, String errorMessage) {
+    private static boolean matchesErrorMessage(TypeValuePair e, String errorMessage) {
         return e != null
                 && e.getValue() != null
                 && e.getValue().toLowerCase().contains(errorMessage);
