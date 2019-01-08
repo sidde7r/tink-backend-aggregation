@@ -451,21 +451,19 @@
       "supplementalFields": [
         {
           "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'M1'\nEnter the challenge\nPress 'OK'\nEnter your PIN\nPress 'OK'\n",
+          "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "logindescription"
         },
         {
-          "description": "Response",
-          "helpText": "Enter the response from the card reader",
+          "description": "Response, 8 digits.",
           "name": "logininput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader.",
-          "hint": "8 digits."
+          "patternError": "Please enter your 8 digit response code from your card reader."
         }
       ],
       "multiFactor": true,
