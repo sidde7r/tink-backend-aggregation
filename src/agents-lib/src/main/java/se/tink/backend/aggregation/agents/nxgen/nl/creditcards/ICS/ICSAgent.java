@@ -47,7 +47,7 @@ public class ICSAgent extends NextGenerationAgent {
     super.setConfiguration(configuration);
     ICSConfiguration icsConfiguration = configuration.getIntegrations().getIcsConfiguration();
 
-    if (icsConfiguration == null || icsConfiguration.isEmpty()) {
+    if (icsConfiguration == null || !icsConfiguration.isValid()) {
       throw new IllegalStateException("ICS Configuration is empty!");
     }
 
