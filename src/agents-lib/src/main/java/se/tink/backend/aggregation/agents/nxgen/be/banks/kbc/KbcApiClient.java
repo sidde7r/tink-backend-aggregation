@@ -95,8 +95,14 @@ public class KbcApiClient {
 
     private void checkBlockedAccount(HeaderDto header) throws AuthorizationException {
         String resultValue = getResultCodeOrThrow(header);
-        if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue)
-                && matchesErrorMessage(header.getResultMessage(), KbcConstants.ErrorMessage.ACCOUNT_BLOCKED)) {
+        boolean matchesErrorMessages =
+                matchesErrorMessage(
+                                header.getResultMessage(),
+                                KbcConstants.ErrorMessage.ACCOUNT_BLOCKED)
+                        || matchesErrorMessage(
+                                header.getResultMessage(),
+                                KbcConstants.ErrorMessage.ACCOUNT_BLOCKED2);
+        if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue) && matchesErrorMessages) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
     }
