@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
