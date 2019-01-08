@@ -217,38 +217,36 @@
       ],
       "supplementalFields": [
         {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Login'\nEnter the challenge\nPress 'OK'",
+          "description": "Security code",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Login'.\nEnter the security code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the registration code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "logindescription"
         },
         {
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "description": "Registration code, 1-8 digits.",
           "name": "logininput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{1,8}$",
-          "patternError": "Invalid login code.",
-          "hint": "1-8 digits."
+          "patternError": "Invalid registration code."
         },
         {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
+          "description": "Security code",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter the security code.\nPress 'OK'.\nThe following message is displayed on the card reader 'Register your device?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "signcodedescription"
         },
         {
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "description": "Sign code, 1-8 digits.",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{1,8}$",
-          "patternError": "Invalid sign code.",
-          "hint": "1-8 digits."
+          "patternError": "Invalid sign code."
         },
         {
           "description" : "Control Code",
