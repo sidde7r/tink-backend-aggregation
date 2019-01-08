@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.brokers.lysa.model;
 
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
 public class LegalEntityEntity {
     private String entityType;
     private String id;

@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.brokers.lysa.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
 import java.util.Date;
 import java.util.Map;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class AccountEntity {
     private String accountId;
     private double cash;
