@@ -21,7 +21,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Agência",
+      "description" : "Agency",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -43,7 +43,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Conta",
+      "description" : "Account",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -65,7 +65,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -108,7 +108,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Nº do estabelecimento",
+      "description" : "Property Number",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -130,7 +130,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Usuário",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -152,7 +152,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -217,7 +217,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha da sua conta",
+      "description" : "Password for your account.",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -260,7 +260,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Agência",
+      "description" : "Agency",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -282,7 +282,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Conta",
+      "description" : "Account",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -304,7 +304,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -369,7 +369,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -412,7 +412,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Agência",
+      "description" : "Agency",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -434,7 +434,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Conta",
+      "description" : "Account",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -456,7 +456,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -499,7 +499,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Número do cartão",
+      "description" : "Card Number",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -521,7 +521,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha do cartão",
+      "description" : "Card Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -564,7 +564,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Agência",
+      "description" : "Agency",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -586,7 +586,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Conta",
+      "description" : "Account",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -608,7 +608,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -651,7 +651,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Agência",
+      "description" : "Agency",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -673,7 +673,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Conta",
+      "description" : "Account",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -695,7 +695,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -760,10 +760,10 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
-      "helpText" : "Diferente da senha do cartão",
+      "helpText" : "Different from the card password",
       "hint" : null,
       "immutable" : false,
       "masked" : true,
@@ -825,7 +825,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -890,7 +890,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Senha eletrônica",
+      "description" : "PIN",
       "exposed" : true,
       "children" : null,
       "helpText" : null,

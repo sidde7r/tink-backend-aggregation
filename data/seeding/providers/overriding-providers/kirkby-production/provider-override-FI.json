@@ -75,7 +75,7 @@
     "market" : "FI",
     "multiFactor" : false,
     "name" : "op",
-    "passwordHelpText" : "Käytät samoja kirjautumistietoja kuin kirjauduttasi osoitteeseen op.fi.",
+    "passwordHelpText" : "You use the same login information as when you log in to op.fi.",
     "payload" : null,
     "popular" : true,
     "refreshFrequency" : 0.0,
@@ -86,7 +86,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Käyttäjätunnus",
+      "description" : "Username",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -108,7 +108,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Salasana",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -140,7 +140,7 @@
     "market" : "FI",
     "multiFactor" : true,
     "name" : "fi-alandsbanken",
-    "passwordHelpText" : "Du använder ditt finska användar ID och lösenord på samma sätt som när du loggar in i Ålandsbankens mobilapp.",
+    "passwordHelpText" : "You use your Finnish user-ID and password the same way as when you log in to Ålandsbankens mobile app.",
     "payload" : null,
     "popular" : false,
     "refreshFrequency" : 0.0,
@@ -151,7 +151,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "Användar-ID",
+      "description" : "User-ID",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -173,7 +173,7 @@
       "additionalInfo" : null
     }, {
       "defaultValue" : null,
-      "description" : "Lösenord",
+      "description" : "Password",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -595,7 +595,7 @@
     "market" : "FI",
     "multiFactor" : true,
     "name" : "fi-alandsbanken-codecard",
-    "passwordHelpText" : "Use the same User ID and password as you would in your bank's mobile app.",
+    "passwordHelpText" : "Use the same User-ID and password as you would in your bank's mobile app.",
     "payload" : null,
     "popular" : false,
     "refreshFrequency" : 1.0,
@@ -606,7 +606,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "User ID",
+      "description" : "User-ID",
       "exposed" : true,
       "children" : null,
       "helpText" : null,

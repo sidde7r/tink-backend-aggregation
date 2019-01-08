@@ -140,7 +140,7 @@
     "market" : "FI",
     "multiFactor" : true,
     "name" : "fi-alandsbanken-codecard",
-    "passwordHelpText" : "Use the same User ID and password as you would in your bank's mobile app.",
+    "passwordHelpText" : "Use the same User-ID and password as you would in your bank's mobile app.",
     "payload" : null,
     "popular" : false,
     "refreshFrequency" : 1.0,
@@ -151,7 +151,7 @@
     "displayDescription" : null,
     "fields" : [ {
       "defaultValue" : null,
-      "description" : "User ID",
+      "description" : "User-ID",
       "exposed" : true,
       "children" : null,
       "helpText" : null,
@@ -278,7 +278,7 @@
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
-    "displayDescription" : "Personlig kod",
+    "displayDescription" : "Personal code",
     "fields" : [ {
       "defaultValue" : null,
       "description" : "Username",
