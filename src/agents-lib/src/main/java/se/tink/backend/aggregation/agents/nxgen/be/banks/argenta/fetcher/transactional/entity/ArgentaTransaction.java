@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
-import java.util.Date;
-import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
+
+import java.util.Date;
+import java.util.List;
 
 @JsonObject
 public class ArgentaTransaction {
@@ -45,7 +46,9 @@ public class ArgentaTransaction {
             tinkDescription = tinkDescription.concat(" " + beneficiaryName);
         }
         if (messageLines != null && messageLines.size() > 0) {
-            tinkDescription = tinkDescription.concat(" " + messageLines.get(0));
+            if (!messageLines.get(0).equalsIgnoreCase(beneficiaryName)) {
+                tinkDescription = tinkDescription.concat(" " + messageLines.get(0));
+            }
         }
         return tinkDescription;
     }
