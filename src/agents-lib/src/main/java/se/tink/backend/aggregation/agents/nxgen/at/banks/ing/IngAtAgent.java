@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.IngAtPasswordAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.IngAtTransactionFetcher;
@@ -22,6 +21,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+
+import java.util.Optional;
 
 public class IngAtAgent extends NextGenerationAgent {
     private final IngAtSessionStorage ingAtSessionStorage;
