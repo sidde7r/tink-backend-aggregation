@@ -57,7 +57,7 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
         LansforsakringarAgent agent = (LansforsakringarAgent) factory
                 .create(cls, createRefreshInformationRequest(credentials), testContext);
         agent.login();
-        List<Account> accounts = agent.refreshCheckingAccounts().getRefreshedList();
+        List<Account> accounts = agent.refreshCheckingAccounts().getAccounts();
         agent.refreshSavingAccounts();
         agent.refreshCheckingTransactions();
         agent.refreshSavingTransactions();
