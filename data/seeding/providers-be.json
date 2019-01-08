@@ -157,37 +157,34 @@
       ],
       "supplementalFields": [
         {
-          "description": "One-time Password",
-          "helpText": "Insert your card into the card reader\nPress 'Identify'\nEnter your PIN\nPress 'OK'\nEnter the OTP",
+          "description": "Response code, 8 digits.",
+          "helpText": "Insert your card into the card reader.\nPress 'Identify'.\nEnter your PIN.\nPress 'OK'.\nEnter the response code.",
           "sensitive": true,
           "numeric": true,
           "name": "otpinput",
           "pattern": "^[0-9]{8}$",
-          "patternError": "Incorrect OTP format. The OTP should be 8 digits.",
-          "hint": "8 digits."
+          "patternError": "Incorrect response code format. The response code should be 8 digits."
         },
         {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
+          "description": "Sign code",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter the sign code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the response code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "signcodedescription"
         },
         {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "description": "Response code, 8 digits.",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader.",
-          "hint": "8 digits."
+          "patternError": "Please enter your 8 digit response code from your card reader."
         }
       ],
       "multiFactor": true,
       "name": "be-ing-cardreader",
-      "passwordHelpText": "By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
+      "passwordHelpText": "In order to authenticate yourself you will need your ING card reader.\nBy connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
       "popular": true,
       "status": "ENABLED",
       "transactional": true,
