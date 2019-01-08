@@ -8,28 +8,31 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountSetupResponse {
-    @JsonProperty("Data")
-    private DataResponseEntity data;
-    @JsonProperty("Risk")
-    private Object Risk;
-    @JsonProperty("Links")
-    private LinksEntity links;
-    @JsonProperty("Meta")
-    private MetaEntity meta;
+  @JsonProperty("Data")
+  private DataResponseEntity data;
 
-    public DataResponseEntity getData() {
-        return data;
-    }
+  @JsonProperty("Risk")
+  private Object Risk;
 
-    public Object getRisk() {
-        return Risk;
-    }
+  @JsonProperty("Links")
+  private LinksEntity links;
 
-    public LinksEntity getLinks() {
-        return links;
-    }
+  @JsonProperty("Meta")
+  private MetaEntity meta;
 
-    public MetaEntity getMeta() {
-        return meta;
-    }
+  public DataResponseEntity getData() {
+    return data;
+  }
+
+  public Object getRisk() {
+    return Risk;
+  }
+
+  public LinksEntity getLinks() {
+    return links;
+  }
+
+  public MetaEntity getMeta() {
+    return meta;
+  }
 }

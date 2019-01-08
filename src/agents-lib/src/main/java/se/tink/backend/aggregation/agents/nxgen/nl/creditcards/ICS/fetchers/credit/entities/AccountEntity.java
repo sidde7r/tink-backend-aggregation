@@ -8,38 +8,42 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 
 @JsonObject
 public class AccountEntity {
-    @JsonProperty("AccountId")
-    private String accountId;
-    @JsonProperty("Currency")
-    private String currency;
-    @JsonProperty("CreditCardAccountInfo")
-    private CreditCardEntity creditCardEntity;
-    @JsonProperty("ProductInfo")
-    private ProductEntity productEntity;
+  @JsonProperty("AccountId")
+  private String accountId;
 
-    public String getAccountId() {
-        return accountId;
-    }
+  @JsonProperty("Currency")
+  private String currency;
 
-    public String getCurrency() {
-        return currency;
-    }
+  @JsonProperty("CreditCardAccountInfo")
+  private CreditCardEntity creditCardEntity;
 
-    public CreditCardEntity getCreditCardEntity() {
-        return creditCardEntity;
-    }
+  @JsonProperty("ProductInfo")
+  private ProductEntity productEntity;
 
-    public ProductEntity getProductEntity() {
-        return productEntity;
-    }
+  public String getAccountId() {
+    return accountId;
+  }
 
-    public CreditCardAccount toCreditCardAccount(CreditBalanceResponse balanceResponse) {
-        return CreditCardAccount.builder(accountId,
-                balanceResponse.getBalance(accountId),
-                balanceResponse.getAvailableCredit(accountId))
-                .setName(productEntity.getProductName())
-                .setAccountNumber(creditCardEntity.getCustomerNumber())
-                .putInTemporaryStorage(ICSConstants.Storage.ACCOUNT_ID, accountId)
-                .build();
-    }
+  public String getCurrency() {
+    return currency;
+  }
+
+  public CreditCardEntity getCreditCardEntity() {
+    return creditCardEntity;
+  }
+
+  public ProductEntity getProductEntity() {
+    return productEntity;
+  }
+
+  public CreditCardAccount toCreditCardAccount(CreditBalanceResponse balanceResponse) {
+    return CreditCardAccount.builder(
+            accountId,
+            balanceResponse.getBalance(accountId),
+            balanceResponse.getAvailableCredit(accountId))
+        .setName(productEntity.getProductName())
+        .setAccountNumber(creditCardEntity.getCustomerNumber())
+        .putInTemporaryStorage(ICSConstants.Storage.ACCOUNT_ID, accountId)
+        .build();
+  }
 }

@@ -9,29 +9,30 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class ICSOAuthAuthenticator implements OAuth2Authenticator {
 
-    private final ICSApiClient client;
+  private final ICSApiClient client;
 
-    public ICSOAuthAuthenticator(ICSApiClient client) {
-        this.client = client;
-    }
+  public ICSOAuthAuthenticator(ICSApiClient client) {
+    this.client = client;
+  }
 
-    @Override
-    public URL buildAuthorizeUrl(String state) {
-        return client.getAuthorizeUrl(state);
-    }
+  @Override
+  public URL buildAuthorizeUrl(String state) {
+    return client.getAuthorizeUrl(state);
+  }
 
-    @Override
-    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-        return client.fetchToken(code);
-    }
+  @Override
+  public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+    return client.fetchToken(code);
+  }
 
-    @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException, BankServiceException {
-        return client.refreshToken(refreshToken);
-    }
+  @Override
+  public OAuth2Token refreshAccessToken(String refreshToken)
+      throws SessionException, BankServiceException {
+    return client.refreshToken(refreshToken);
+  }
 
-    @Override
-    public void useAccessToken(OAuth2Token accessToken) {
-        this.client.setToken(accessToken);
-    }
+  @Override
+  public void useAccessToken(OAuth2Token accessToken) {
+    this.client.setToken(accessToken);
+  }
 }

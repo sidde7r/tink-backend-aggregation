@@ -14,21 +14,25 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class CreditTransactionsResponse implements PaginatorResponse {
-    @JsonProperty("Data")
-    private CreditDataEntity data;
-    @JsonProperty("Links")
-    private LinksEntity links;
-    @JsonProperty("Meta")
-    private MetaEntity meta;
+  @JsonProperty("Data")
+  private CreditDataEntity data;
 
-    @Override
-    public Collection<? extends Transaction> getTinkTransactions() {
-        return data.getTransactions().stream().map(TransactionEntity::toTinkTransaction).collect(Collectors.toList());
-    }
+  @JsonProperty("Links")
+  private LinksEntity links;
 
-    @Override
-    public Optional<Boolean> canFetchMore() {
-        return Optional.of(false);
-    }
+  @JsonProperty("Meta")
+  private MetaEntity meta;
 
+  @Override
+  public Collection<? extends Transaction> getTinkTransactions() {
+    return data.getTransactions()
+        .stream()
+        .map(TransactionEntity::toTinkTransaction)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public Optional<Boolean> canFetchMore() {
+    return Optional.of(false);
+  }
 }

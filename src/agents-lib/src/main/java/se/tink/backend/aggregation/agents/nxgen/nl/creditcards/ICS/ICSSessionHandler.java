@@ -6,11 +6,11 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class ICSSessionHandler implements SessionHandler {
 
-    @Override
-    public void logout() {}
+  @Override
+  public void logout() {}
 
-    @Override
-    public void keepAlive() throws SessionException {
-        throw SessionError.SESSION_EXPIRED.exception();
-    }
+  @Override
+  public void keepAlive() throws SessionException {
+    throw SessionError.SESSION_EXPIRED.exception();
+  }
 }

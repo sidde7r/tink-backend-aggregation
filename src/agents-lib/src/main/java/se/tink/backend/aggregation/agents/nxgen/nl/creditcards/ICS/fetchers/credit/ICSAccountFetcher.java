@@ -11,26 +11,28 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 
 public class ICSAccountFetcher implements AccountFetcher<CreditCardAccount> {
 
-    private final ICSApiClient client;
+  private final ICSApiClient client;
 
-    public ICSAccountFetcher(ICSApiClient client) {
-        this.client = client;
-    }
+  public ICSAccountFetcher(ICSApiClient client) {
+    this.client = client;
+  }
 
-    private Collection<CreditCardAccount> toCreditCardAccounts(CreditAccountsResponse accountsResponse) {
-        ArrayList<CreditCardAccount> result = new ArrayList<>();
-        for (AccountEntity account : accountsResponse.getData().getAccount()) {
-            if (account.getCreditCardEntity().isActive()) {
-                CreditBalanceResponse balanceResponse = this.client.getAccountBalance(account.getAccountId());
-                result.add(account.toCreditCardAccount(balanceResponse));
-            }
-        }
-        return result;
+  private Collection<CreditCardAccount> toCreditCardAccounts(
+      CreditAccountsResponse accountsResponse) {
+    ArrayList<CreditCardAccount> result = new ArrayList<>();
+    for (AccountEntity account : accountsResponse.getData().getAccount()) {
+      if (account.getCreditCardEntity().isActive()) {
+        CreditBalanceResponse balanceResponse =
+            this.client.getAccountBalance(account.getAccountId());
+        result.add(account.toCreditCardAccount(balanceResponse));
+      }
     }
+    return result;
+  }
 
-    @Override
-    public Collection<CreditCardAccount> fetchAccounts() {
-        CreditAccountsResponse accountsResponse = this.client.getAllAccounts();
-        return toCreditCardAccounts(accountsResponse);
-    }
+  @Override
+  public Collection<CreditCardAccount> fetchAccounts() {
+    CreditAccountsResponse accountsResponse = this.client.getAllAccounts();
+    return toCreditCardAccounts(accountsResponse);
+  }
 }

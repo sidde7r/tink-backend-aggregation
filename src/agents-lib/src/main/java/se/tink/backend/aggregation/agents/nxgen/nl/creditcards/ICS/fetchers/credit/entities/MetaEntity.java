@@ -6,10 +6,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class MetaEntity {
-    @JsonProperty("TotalPages")
-    private int totalPages;
-    @JsonProperty("FirstAvailableDateTime")
-    private Date firstAvailableDateTime;
-    @JsonProperty("LastAvailableDateTime")
-    private Date lastAvailableDateTime;
+  @JsonProperty("TotalPages")
+  private int totalPages;
+
+  @JsonProperty("FirstAvailableDateTime")
+  private Date firstAvailableDateTime;
+
+  @JsonProperty("LastAvailableDateTime")
+  private Date lastAvailableDateTime;
 }

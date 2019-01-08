@@ -5,22 +5,24 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CreditCardEntity {
-    @JsonProperty("AccountType")
-    private String accountType;
-    @JsonProperty("CustomerNumber")
-    private String customerNumber;
-    @JsonProperty("Active")
-    private boolean active;
+  @JsonProperty("AccountType")
+  private String accountType;
 
-    public String getAccountType() {
-        return accountType;
-    }
+  @JsonProperty("CustomerNumber")
+  private String customerNumber;
 
-    public String getCustomerNumber() {
-        return customerNumber;
-    }
+  @JsonProperty("Active")
+  private boolean active;
 
-    public boolean isActive() {
-        return active;
-    }
+  public String getAccountType() {
+    return accountType;
+  }
+
+  public String getCustomerNumber() {
+    return customerNumber;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
 }
