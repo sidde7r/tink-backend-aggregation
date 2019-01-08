@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentCo
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
 import se.tink.backend.aggregation.configuration.models.S3StorageConfiguration;
-import se.tink.backend.queue.sqs.configuration.SqsQueueConfiguration;
+import se.tink.backend.libraries.queue.sqs.configuration.SqsQueueConfiguration;
 import se.tink.libraries.discovery.CoordinationConfiguration;
 import se.tink.libraries.metrics.PrometheusConfiguration;
 

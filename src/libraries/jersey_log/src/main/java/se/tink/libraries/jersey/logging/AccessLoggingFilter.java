@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import org.codehaus.plexus.util.StringUtils;
-import se.tink.api.headers.TinkHttpHeaders;
+import se.tink.libraries.api.headers.TinkHttpHeaders;
 import se.tink.libraries.access_logging.AccessLoggingRequestDetails;
 import se.tink.libraries.access_logging.AccessLoggingUtils;
 import se.tink.libraries.auth.HttpAuthenticationMethod;
