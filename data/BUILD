@@ -12,7 +12,10 @@ filegroup(
 
 filegroup(
     name = "common-lib-test",
-    srcs = glob(["test/*", "templates/*"]),
+    srcs = glob([
+        "test/*",
+        "templates/*",
+    ]),
     visibility = ["//visibility:public"],
 )
 
@@ -65,7 +68,7 @@ filegroup(
     name = "provider-configuration-test",
     srcs = glob([
         "seeding/providers-*.json",
-        "seeding/providers/**"
+        "seeding/providers/**",
     ]),
     visibility = ["//visibility:public"],
 )
@@ -74,7 +77,7 @@ filegroup(
     name = "cryptography-test",
     srcs = [
         "test/cryptography/private_rsa_key.pem",
-        "test/cryptography/public_rsa_key.pub"
+        "test/cryptography/public_rsa_key.pub",
     ],
     visibility = ["//visibility:public"],
 )
