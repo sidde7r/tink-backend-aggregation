@@ -79,6 +79,7 @@ public class MonzoTransactionalAccountFetcher
             allTransactions.addAll(
                     fetchTransactions
                             .stream()
+                            .filter(TransactionEntity::isNotDeclinedOrCardActivityCheck)
                             .map(TransactionEntity::toTinkTransaction)
                             .collect(Collectors.toList())
             );

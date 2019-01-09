@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.time.Instant;
@@ -26,6 +27,8 @@ public class TransactionEntity {
     @JsonProperty("is_load")
     private boolean isLoad;
     private Instant settled;
+    @JsonProperty("decline_reason")
+    private String declineReason;
     @JsonProperty("local_amount")
     private int localAmount;
     @JsonProperty("local_currency")
@@ -67,6 +70,7 @@ public class TransactionEntity {
         return id;
     }
 
+    @JsonIgnore
     public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setDateTime(created.atZone(MonzoConstants.ZONE_ID))
@@ -76,4 +80,18 @@ public class TransactionEntity {
                 .build();
     }
 
+    @JsonIgnore
+    public boolean isNotDeclinedOrCardActivityCheck() {
+        return !(isDeclinedTransaction() || isZeroAmountCardActivityCheck());
+    }
+
+    @JsonIgnore
+    private boolean isDeclinedTransaction() {
+        return !Strings.isNullOrEmpty(declineReason);
+    }
+
+    @JsonIgnore
+    private boolean isZeroAmountCardActivityCheck() {
+        return amount == 0 && settled == null;
+    }
 }
