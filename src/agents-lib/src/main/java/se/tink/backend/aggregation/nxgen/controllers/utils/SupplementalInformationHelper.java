@@ -100,9 +100,9 @@ public class SupplementalInformationHelper {
         return waitForSupplementalDescriptionAndInput(inputKey, description, input);
     }
 
-    private String waitForSupplementalInput(Field.Key intputKey) throws SupplementalInfoException {
-        Field input = getField(intputKey);
-        return supplementalInformationController.askSupplementalInformation(input).get(intputKey.getFieldKey());
+    private String waitForSupplementalInput(Field.Key inputKey) throws SupplementalInfoException {
+        Field input = getField(inputKey);
+        return supplementalInformationController.askSupplementalInformation(input).get(inputKey.getFieldKey());
     }
 
     private String waitForSupplementalDescriptionAndInput(
