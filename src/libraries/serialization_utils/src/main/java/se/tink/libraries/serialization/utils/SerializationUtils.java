@@ -93,6 +93,19 @@ public class SerializationUtils {
         }
     }
 
+    public static <T> T deserializeFromString(File file, Class<T> cls) {
+        if (file == null) {
+            return null;
+        }
+
+        try {
+            return STRING_MAPPER.readValue(file, cls);
+        } catch (Exception e) {
+            log.error("Could not deserialize object", e);
+            return null;
+        }
+    }
+
     public static <T> T deserializeFromString(String data, Class<T> cls) {
         return deserializeFromString(data, cls, e -> log.error("Could not deserialize object", e));
     }
