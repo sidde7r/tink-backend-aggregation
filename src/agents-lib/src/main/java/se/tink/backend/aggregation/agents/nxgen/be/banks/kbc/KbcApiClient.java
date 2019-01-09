@@ -2,11 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.common.base.Charsets;
 import com.google.common.primitives.Bytes;
-import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
 import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -66,6 +61,12 @@ import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+import java.security.PublicKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+
 public class KbcApiClient {
     private final SessionStorage sessionStorage;
     private final TinkHttpClient client;
@@ -95,8 +96,14 @@ public class KbcApiClient {
 
     private void checkBlockedAccount(HeaderDto header) throws AuthorizationException {
         String resultValue = getResultCodeOrThrow(header);
-        if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue)
-                && matchesErrorMessage(header.getResultMessage(), KbcConstants.ErrorMessage.ACCOUNT_BLOCKED)) {
+        boolean matchesErrorMessages =
+                matchesErrorMessage(
+                                header.getResultMessage(),
+                                KbcConstants.ErrorMessage.ACCOUNT_BLOCKED)
+                        || matchesErrorMessage(
+                                header.getResultMessage(),
+                                KbcConstants.ErrorMessage.ACCOUNT_BLOCKED2);
+        if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue) && matchesErrorMessages) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
     }
@@ -135,7 +142,7 @@ public class KbcApiClient {
                 .build();
     }
 
-    private boolean matchesErrorMessage(TypeValuePair e, String errorMessage) {
+    private static boolean matchesErrorMessage(TypeValuePair e, String errorMessage) {
         return e != null
                 && e.getValue() != null
                 && e.getValue().toLowerCase().contains(errorMessage);
