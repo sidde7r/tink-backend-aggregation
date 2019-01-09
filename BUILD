@@ -528,6 +528,7 @@ junit_test(
     srcs = glob(["src/aggregation-tests/src/test/**/*.java"]),
     data = [
         "etc/development.yml",
+        "//data:agent-unit-tests",
         "//data:agents",
         "//data:aggregation-test",
         "//data:cryptography-test",
