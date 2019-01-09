@@ -57,16 +57,16 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
         LansforsakringarAgent agent = (LansforsakringarAgent) factory
                 .create(cls, createRefreshInformationRequest(credentials), testContext);
         agent.login();
-        List<Account> accounts = agent.refreshCheckingAccounts().getAccounts();
-        agent.refreshSavingAccounts();
-        agent.refreshCheckingTransactions();
-        agent.refreshSavingTransactions();
-        agent.refreshCreditCardAccounts();
-        agent.refreshCreditCardTransactions();
-        agent.refreshEInvoices();
-        agent.refreshTransferDestinations(accounts);
-        agent.refreshLoanAccounts();
-        agent.refreshInvestmentAccounts();
+        List<Account> accounts = agent.fetchCheckingAccounts().getAccounts();
+        agent.fetchSavingAccounts();
+        agent.fetchCheckingTransactions();
+        agent.fetchSavingTransactions();
+        agent.fetchCreditCardAccounts();
+        agent.fetchCreditCardTransactions();
+        agent.fetchEInvoices();
+        agent.fetchTransferDestinations(accounts);
+        agent.fetchLoanAccounts();
+        agent.fetchInvestmentAccounts();
         agent.keepAlive();
         agent.logout();
         agent.close();

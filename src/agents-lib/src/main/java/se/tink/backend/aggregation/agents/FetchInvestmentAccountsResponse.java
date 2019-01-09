@@ -4,7 +4,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.system.rpc.AccountFeatures;
 
-public class RefreshInvestmentAccountsResponse {
+public class FetchInvestmentAccountsResponse {
     private Map<Account, AccountFeatures> accounts;
 
     public Map<Account, AccountFeatures> getAccounts() {

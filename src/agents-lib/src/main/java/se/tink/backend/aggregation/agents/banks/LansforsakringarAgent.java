@@ -30,13 +30,13 @@ import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.RefreshAccountsResponse;
-import se.tink.backend.aggregation.agents.RefreshEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.RefreshExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsResponse;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsResponse;
-import se.tink.backend.aggregation.agents.RefreshTransactionsResponse;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -1264,8 +1264,8 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
 
     ///// Refresh Executor Refactor /////
     @Override
-    public RefreshEInvoicesResponse refreshEInvoices() {
-        RefreshEInvoicesResponse refreshEInvoicesResponse = new RefreshEInvoicesResponse();
+    public FetchEInvoicesResponse fetchEInvoices() {
+        FetchEInvoicesResponse fetchEInvoicesResponse = new FetchEInvoicesResponse();
         try {
             List<AccountEntity> accountEntities = fetchAccountEntities();
 
@@ -1291,16 +1291,16 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
             for (EInvoice eInvoice : eInvoiceEntities) {
                 eInvoices.add(eInvoice.toTransfer());
             }
-            refreshEInvoicesResponse.setEInvoices(eInvoices);
-            return refreshEInvoicesResponse;
+            fetchEInvoicesResponse.setEInvoices(eInvoices);
+            return fetchEInvoicesResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
     @Override
-    public RefreshTransferDestinationsResponse refreshTransferDestinations(List<Account> updatedAccounts) {
-        RefreshTransferDestinationsResponse refreshTransferDestinationsResponse = new RefreshTransferDestinationsResponse();
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> updatedAccounts) {
+        FetchTransferDestinationsResponse fetchTransferDestinationsResponse = new FetchTransferDestinationsResponse();
         try {
             List<AccountEntity> accountEntities = fetchAccountEntities();
 
@@ -1309,45 +1309,45 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
             response.addDestinations(getTransferAccountDestinations(accountEntities, updatedAccounts));
             response.addDestinations(getPaymentAccountDestinations(accountEntities, updatedAccounts));
 
-            refreshTransferDestinationsResponse.setTransferDestinations(response.getDestinations());
-            return refreshTransferDestinationsResponse;
+            fetchTransferDestinationsResponse.setTransferDestinations(response.getDestinations());
+            return fetchTransferDestinationsResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
     @Override
-    public RefreshAccountsResponse refreshCheckingAccounts() {
+    public FetchAccountsResponse fetchCheckingAccounts() {
         return this.refreshTransactionalAccounts(CHECKING_ACCOUNTS);
     }
     @Override
-    public RefreshAccountsResponse refreshSavingAccounts() {
+    public FetchAccountsResponse fetchSavingAccounts() {
         return this.refreshTransactionalAccounts(SAVING_ACCOUNTS);
     }
 
-    private RefreshAccountsResponse refreshTransactionalAccounts(RefreshableItem type) {
-        RefreshAccountsResponse refreshAccountsResponse = new RefreshAccountsResponse();
+    private FetchAccountsResponse refreshTransactionalAccounts(RefreshableItem type) {
+        FetchAccountsResponse fetchAccountsResponse = new FetchAccountsResponse();
         List<Account> refreshedAccounts = getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
-        refreshAccountsResponse.setAccounts(refreshedAccounts);
-        return refreshAccountsResponse;
+        fetchAccountsResponse.setAccounts(refreshedAccounts);
+        return fetchAccountsResponse;
     }
 
     @Override
-    public RefreshTransactionsResponse refreshCheckingTransactions() {
+    public FetchTransactionsResponse fetchCheckingTransactions() {
         return this.refreshTransactionalAccountTransactions(CHECKING_TRANSACTIONS);
     }
 
 
     @Override
-    public RefreshTransactionsResponse refreshSavingTransactions() {
+    public FetchTransactionsResponse fetchSavingTransactions() {
         return this.refreshTransactionalAccountTransactions(SAVING_TRANSACTIONS);
     }
 
-    private RefreshTransactionsResponse refreshTransactionalAccountTransactions(RefreshableItem type) {
-        RefreshTransactionsResponse refreshCheckingTransactionsResponse = new RefreshTransactionsResponse();
+    private FetchTransactionsResponse refreshTransactionalAccountTransactions(RefreshableItem type) {
+        FetchTransactionsResponse refreshCheckingTransactionsResponse = new FetchTransactionsResponse();
         Map<String, List<Transaction>> accountTransactions = new HashMap<>();
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
@@ -1417,8 +1417,8 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
     }
 
     @Override
-    public RefreshAccountsResponse refreshCreditCardAccounts() {
-        RefreshAccountsResponse refreshAccountsResponse = new RefreshAccountsResponse();
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        FetchAccountsResponse fetchAccountsResponse = new FetchAccountsResponse();
         List<Account> cards = Lists.newArrayList();
         try {
             List<CardEntity> cardEntities = fetchCardEntities();
@@ -1433,16 +1433,16 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
                 }
                 cards.add(cardEntity.getAccount());
             }
-            refreshAccountsResponse.setAccounts(cards);
-            return refreshAccountsResponse;
+            fetchAccountsResponse.setAccounts(cards);
+            return fetchAccountsResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
     @Override
-    public RefreshTransactionsResponse refreshCreditCardTransactions() {
-        RefreshTransactionsResponse refreshTransactionsResponse = new RefreshTransactionsResponse();
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        FetchTransactionsResponse fetchTransactionsResponse = new FetchTransactionsResponse();
         Map<String, List<Transaction>> accountTransactions = new HashMap<>();
         try {
             List<CardEntity> cardEntities = fetchCardEntities();
@@ -1491,16 +1491,16 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
 
                 accountTransactions.put(account.getBankId(), transactions);
             }
-            refreshTransactionsResponse.setTransactions(accountTransactions);
-            return refreshTransactionsResponse;
+            fetchTransactionsResponse.setTransactions(accountTransactions);
+            return fetchTransactionsResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
     @Override
-    public RefreshLoanAccountsResponse refreshLoanAccounts() {
-        RefreshLoanAccountsResponse refreshLoanAccountsResponse = new RefreshLoanAccountsResponse();
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        FetchLoanAccountsResponse fetchLoanAccountsResponse = new FetchLoanAccountsResponse();
         Map<Account, AccountFeatures> loanAccounts = new HashMap<>();
 
         LoanListResponse loans = null;
@@ -1531,13 +1531,13 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
                 log.warn("Was not able to retrieve loan: " + e.getMessage());
             }
         }
-        refreshLoanAccountsResponse.setAccounts(loanAccounts);
-        return refreshLoanAccountsResponse;
+        fetchLoanAccountsResponse.setAccounts(loanAccounts);
+        return fetchLoanAccountsResponse;
     }
 
     @Override
-    public RefreshInvestmentAccountsResponse refreshInvestmentAccounts() {
-        RefreshInvestmentAccountsResponse refreshInvestmentAccountsResponse = new RefreshInvestmentAccountsResponse();
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        FetchInvestmentAccountsResponse fetchInvestmentAccountsResponse = new FetchInvestmentAccountsResponse();
         Map<Account, AccountFeatures> investmentAccounts = new HashMap<>();
 
         try {
@@ -1554,8 +1554,8 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
             // Just catch and exit gently
             log.warn("Caught exception while logging investment data", e);
         }
-        refreshInvestmentAccountsResponse.setAccounts(investmentAccounts);
-        return refreshInvestmentAccountsResponse;
+        fetchInvestmentAccountsResponse.setAccounts(investmentAccounts);
+        return fetchInvestmentAccountsResponse;
     }
 
     private Map<Account, AccountFeatures> refreshIskAccountsCopy() throws HttpStatusCodeErrorException {
