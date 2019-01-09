@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class DemoConstants {
 
     public static String BASE_PATH = "data/demo";
@@ -19,6 +22,14 @@ public class DemoConstants {
             conversionAmount = 1;
         }
 
-        return amountInSek/conversionAmount;
+        return roundDecimal(amountInSek/conversionAmount);
     }
+
+    // always return 2 decimals
+    private static double roundDecimal(double number) {
+        BigDecimal bd = new BigDecimal(number);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
 }
