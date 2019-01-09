@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.ICSConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
