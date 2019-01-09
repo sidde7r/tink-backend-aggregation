@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.ics;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.rpc.AccountSetupResponse;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditAccountsResponse;
@@ -10,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.cred
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.rpc.CreditTransactionsResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-@Ignore
+
 public class ICSSerializationTest {
 
     private String accountSetupResponse;
