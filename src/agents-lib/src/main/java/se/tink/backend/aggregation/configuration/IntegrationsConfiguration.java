@@ -20,7 +20,7 @@ public class IntegrationsConfiguration {
 
     @JsonProperty private String proxyUri;
 
-    @JsonProperty private ICSConfiguration icsConfiguration;
+    @JsonProperty private Map<String, ICSConfiguration> icsConfiguration;
 
     public SbabConfiguration getSbab() {
         return sbab;
@@ -50,7 +50,7 @@ public class IntegrationsConfiguration {
         return proxyUri;
     }
 
-    public ICSConfiguration getIcsConfiguration() {
-        return icsConfiguration;
+    public Optional<ICSConfiguration> getIcsConfiguration(String clientName) {
+        return getClientConfiguration(clientName, icsConfiguration);
     }
 }

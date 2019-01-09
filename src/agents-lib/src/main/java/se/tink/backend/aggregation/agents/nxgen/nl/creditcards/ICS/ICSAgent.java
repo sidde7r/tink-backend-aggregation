@@ -30,11 +30,13 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class ICSAgent extends NextGenerationAgent {
 
   private final ICSApiClient icsApiClient;
+  private String clientName;
 
   public ICSAgent(
       CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
     super(request, context, signatureKeyPair);
     icsApiClient = new ICSApiClient(client, sessionStorage, persistentStorage);
+    clientName = request.getProvider().getPayload();
   }
 
   @Override
@@ -45,7 +47,8 @@ public class ICSAgent extends NextGenerationAgent {
   @Override
   public void setConfiguration(AgentsServiceConfiguration configuration) {
     super.setConfiguration(configuration);
-    ICSConfiguration icsConfiguration = configuration.getIntegrations().getIcsConfiguration();
+    ICSConfiguration icsConfiguration =
+        configuration.getIntegrations().getIcsConfiguration(clientName).get();
 
     if (icsConfiguration == null || !icsConfiguration.isValid()) {
       throw new IllegalStateException("ICS Configuration is empty!");
