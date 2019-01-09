@@ -68,51 +68,48 @@
       ],
       "supplementalFields": [
         {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Login'\nEnter the challenge\nPress 'OK'",
+          "description": "Start code",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Login' twice.\nEnter the start code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the login code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "logindescription"
         },
         {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "description": "Login code, 8 digits.",
           "name": "logininput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader.",
-          "hint": "8 digits."
+          "patternError": "Please enter your 8 digit login code from your card reader."
         },
         {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
+          "description": "Start code",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Sign' twice.\nEnter the start code.\nPress 'OK'.\nThe following message is displayed on the card reader 'Request to sign up OK?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "signcodedescription"
         },
         {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "description": "Sign code, 8 digits.",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader.",
-          "hint": "8 digits."
+          "patternError": "Please enter your 8 digit sign code from your card reader."
         },
         {
-          "description" : "Control Code",
-          "helpText" : "Insert your card into the card reader and press SIGN twice. Enter the control code on your card reader and press OK. Then enter the amount of your transfer, including the digits after the decimal sign, and press OK. Enter and your PIN and press OK, then enter the code from the card reader in the response code field.",
+          "description" : "Start code",
+          "helpText" : "Insert you bank card into the card reader.\nPress 'Sign' twice.\nEnter the start code.\nPress 'OK' twice.\nEnter the full amount of your transfer including the digits after the decimal point.\nPress 'OK'.",
           "immutable" : true,
           "masked" : false,
           "name" : "signfortransferdescription",
           "value" : null
         },
         {
-          "description" : "Response Code",
+          "description" : "Sign code",
+          "helpText": "Enter your PIN.\nPress 'OK'.\nEnter the sign code from your card reader.",
           "immutable": false,
           "masked" : false,
           "numeric": true,
@@ -160,37 +157,34 @@
       ],
       "supplementalFields": [
         {
-          "description": "One-time Password",
-          "helpText": "Insert your card into the card reader\nPress 'Identify'\nEnter your PIN\nPress 'OK'\nEnter the OTP",
+          "description": "Response code, 4-8 digits.",
+          "helpText": "Insert your card into the card reader.\nPress 'Identify'.\nEnter your PIN.\nPress 'OK'.\nEnter the response code.",
           "sensitive": true,
           "numeric": true,
           "name": "otpinput",
-          "pattern": "^[0-9]{8}$",
-          "patternError": "Incorrect OTP format. The OTP should be 8 digits.",
-          "hint": "8 digits."
+          "pattern": "^[0-9]{4,8}$",
+          "patternError": "Incorrect response code format. The response code should be 4-8 digits."
         },
         {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
+          "description": "Sign code",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code.\nPress 'Sign'.\nEnter the response code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "signcodedescription"
         },
         {
-          "description": "Response",
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "description": "Response code, 4-8 digits.",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader.",
-          "hint": "8 digits."
+          "pattern": "^[0-9]{4,8}$",
+          "patternError": "Please enter your 4-8 digit response code from your card reader."
         }
       ],
       "multiFactor": true,
       "name": "be-ing-cardreader",
-      "passwordHelpText": "By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
+      "passwordHelpText": "In order to authenticate yourself you will need your ING card reader.\nBy connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
       "popular": true,
       "status": "ENABLED",
       "transactional": true,
@@ -223,38 +217,36 @@
       ],
       "supplementalFields": [
         {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Login'\nEnter the challenge\nPress 'OK'",
+          "description": "Security code",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Login'.\nEnter the security code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the registration code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "logindescription"
         },
         {
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "description": "Registration code, 1-8 digits.",
           "name": "logininput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{1,8}$",
-          "patternError": "Invalid login code.",
-          "hint": "1-8 digits."
+          "patternError": "Invalid registration code."
         },
         {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'Sign'\nEnter the challenge\nPress 'OK'",
+          "description": "Security code",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter the security code.\nPress 'OK'.\nThe following message is displayed on the card reader 'Register your device?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "signcodedescription"
         },
         {
-          "helpText": "Enter your PIN\nPress 'OK'\nEnter the response from the card reader",
+          "description": "Sign code, 1-8 digits.",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{1,8}$",
-          "patternError": "Invalid sign code.",
-          "hint": "1-8 digits."
+          "patternError": "Invalid sign code."
         },
         {
           "description" : "Control Code",
@@ -459,21 +451,19 @@
       "supplementalFields": [
         {
           "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader\nPress 'M1'\nEnter the challenge\nPress 'OK'\nEnter your PIN\nPress 'OK'\n",
+          "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "logindescription"
         },
         {
-          "description": "Response",
-          "helpText": "Enter the response from the card reader",
+          "description": "Response, 8 digits.",
           "name": "logininput",
           "immutable": false,
           "masked": false,
           "numeric": true,
           "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader.",
-          "hint": "8 digits."
+          "patternError": "Please enter your 8 digit response code from your card reader."
         }
       ],
       "multiFactor": true,
