@@ -167,7 +167,7 @@
         },
         {
           "description": "Sign code",
-          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter the sign code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the response code from the card reader.",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code.\nPress 'Sign'.\nEnter the response code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "signcodedescription"
