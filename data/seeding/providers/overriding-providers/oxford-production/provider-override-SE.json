@@ -3544,7 +3544,7 @@
     "capabilities" : [ ]
   }, {
     "capabilitiesSerialized" : "[]",
-    "className" : "creditcards.coop.v2.CoopV2Agent",
+    "className" : "nxgen.se.creditcards.coop.CoopAgent",
     "credentialsType" : "PASSWORD",
     "currency" : "SEK",
     "displayName" : "Coop MedMera",
