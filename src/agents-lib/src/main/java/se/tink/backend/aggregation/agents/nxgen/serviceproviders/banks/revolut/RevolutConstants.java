@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut;
 
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class RevolutConstants {
 
@@ -72,10 +74,11 @@ public class RevolutConstants {
         public static final String ACCOUNT_ID = "id";
     }
 
-    public static final class Pockets {
-        public static final String CURRENT_ACCOUNT = "CURRENT";
-        public static final String SAVINGS_ACCOUNT = "SAVINGS";
-    }
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.SAVINGS, "SAVINGS")
+                    .put(AccountTypes.CHECKING,"CURRENT")
+                    .build();
 
     public static class Pagination {
         public static final int COUNT = 120;

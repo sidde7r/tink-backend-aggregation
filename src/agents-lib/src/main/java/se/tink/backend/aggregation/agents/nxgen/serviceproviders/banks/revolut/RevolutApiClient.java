@@ -8,9 +8,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.a
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.ResendCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.SignInRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.authenticator.rpc.UserExistResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.entities.WalletEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.rpc.BaseUserResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -63,9 +63,9 @@ public class RevolutApiClient {
                 .post(ConfirmSignInResponse.class, request);
     }
 
-    public WalletEntity fetchWallet() {
-        return getUserAuthorizedRequest(RevolutConstants.Urls.WALLET)
-                .get(WalletEntity.class);
+    public BaseUserResponse fetchUser() {
+        return getUserAuthorizedRequest(RevolutConstants.Urls.USER_CURRENT)
+                .get(BaseUserResponse.class);
     }
 
     public AccountsResponse fetchAccounts() {

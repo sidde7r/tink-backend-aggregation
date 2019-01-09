@@ -23,7 +23,7 @@ public class RevolutAutoAuthenticator implements AutoAuthenticator {
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
         try {
-            apiClient.fetchWallet();
+            apiClient.fetchUser();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
                 throw SessionError.SESSION_EXPIRED.exception();

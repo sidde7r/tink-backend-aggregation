@@ -34,8 +34,8 @@ public class AccountEntity {
         return bankName;
     }
 
-    public String getBeneficiaryName() {
-        return beneficiaryName;
+    public Optional<String> getBeneficiaryName() {
+        return Optional.ofNullable(beneficiaryName);
     }
 
     public String getAccountNumber() {
@@ -66,8 +66,8 @@ public class AccountEntity {
         return activate;
     }
 
-    public String getIban() {
-        return iban;
+    public Optional<String> getIban() {
+        return Optional.ofNullable(iban);
     }
 
     public String getBic() {
@@ -76,24 +76,5 @@ public class AccountEntity {
 
     public String getRequiredReference() {
         return requiredReference;
-    }
-
-    @JsonIgnore
-    public Optional<String> findIdentifier() {
-        // iban or accountNumber is set depending on if the account is UK local or not.
-
-        if (iban != null) {
-            return Optional.of(iban);
-        }
-
-        if (accountNumber != null) {
-            return Optional.of(accountNumber);
-        }
-
-        if (bic != null) {
-            return Optional.of(bic);
-        }
-
-        return Optional.empty(); // No identifier found, which is not expected.
     }
 }
