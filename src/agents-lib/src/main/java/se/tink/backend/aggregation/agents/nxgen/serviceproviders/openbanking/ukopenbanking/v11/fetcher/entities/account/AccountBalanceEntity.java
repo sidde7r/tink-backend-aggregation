@@ -32,31 +32,36 @@ public class AccountBalanceEntity {
 
         Amount total = getSignedAmount();
 
-        if (creditLine != null) {
-            for (CreditLineEntity credit : creditLine) {
+        // If no credit line is present the balance is already calculated.
+        if (creditLine == null || creditLine.isEmpty()) {
+            return total;
+        }
+
+        // Only one credit line can be approved at a time, but this can be repeated under a different ExternalLimitType.
+        // We find the first credit line that is included in the balance and return (balance - credit).
+        // ExternalLimitType.AVAILABLE is not useful when calculating credit exclusive balance so this is ignored.
+        for (CreditLineEntity credit : creditLine) {
+            if (credit.getType() != UkOpenBankingConstants.ExternalLimitType.AVAILABLE) {
                 if (credit.isIncluded()) {
-                    total = total.subtract(credit.getAmount());
+                    return total.subtract(credit.getAmount());
                 }
             }
+
         }
 
         return total;
     }
 
-    public Optional<Amount> getAvaliableCredit() {
+    public Optional<Amount> getAvailableCredit() {
 
         if (creditLine == null || creditLine.isEmpty()) {
             return Optional.empty();
         }
 
-        Amount total = new Amount(balance.getCurrency(), 0D);
-        for (CreditLineEntity credit : creditLine) {
-            if (credit.isIncluded()) {
-                total = total.add(credit.getAmount());
-            }
-        }
-
-        return Optional.of(total);
+        return creditLine.stream()
+                .filter(credit -> credit.getType() == UkOpenBankingConstants.ExternalLimitType.AVAILABLE)
+                .findAny()
+                .map(CreditLineEntity::getAmount);
     }
 
     private Amount getSignedAmount() {
