@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.nxgen.controllers.utils;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.utils.StringUtils;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class SupplementalInformationHelper {
 
