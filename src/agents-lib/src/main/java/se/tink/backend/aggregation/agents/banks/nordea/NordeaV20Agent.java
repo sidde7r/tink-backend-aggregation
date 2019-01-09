@@ -104,6 +104,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -117,7 +118,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -2073,7 +2073,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         // We get payments for each account separately, because we've encountered problems when requesting payments for
         // multiple accounts at the same time.
-        for (ProductEntity account : accounts) {
+        for (ProductEntity account : Optional.ofNullable(accounts).orElse(Collections.emptyList())) {
             for (PaymentEntity paymentEntity :  getPayments(account, status)) {
                 PaymentDetailsResponseOut paymentDetails = getPaymentDetails(paymentEntity);
 
