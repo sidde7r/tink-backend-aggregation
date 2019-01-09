@@ -51,7 +51,7 @@ public class ICSAgent extends NextGenerationAgent {
         configuration.getIntegrations().getIcsConfiguration(clientName).get();
 
     if (icsConfiguration == null || !icsConfiguration.isValid()) {
-      throw new IllegalStateException("ICS Configuration is empty!");
+      throw new IllegalStateException("ICS Configuration is invalid!");
     }
 
     client.setSslClientCertificate(
