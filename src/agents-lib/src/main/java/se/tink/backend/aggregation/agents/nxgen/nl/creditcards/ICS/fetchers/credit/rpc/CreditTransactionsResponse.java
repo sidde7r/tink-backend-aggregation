@@ -31,6 +31,10 @@ public class CreditTransactionsResponse implements PaginatorResponse {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Currently ICS does not support pagination. Once they do, this should be implemented
+   * @return
+   */
   @Override
   public Optional<Boolean> canFetchMore() {
     return Optional.of(false);
