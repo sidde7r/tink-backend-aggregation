@@ -157,13 +157,13 @@
       ],
       "supplementalFields": [
         {
-          "description": "Response code, 8 digits.",
+          "description": "Response code, 4-8 digits.",
           "helpText": "Insert your card into the card reader.\nPress 'Identify'.\nEnter your PIN.\nPress 'OK'.\nEnter the response code.",
           "sensitive": true,
           "numeric": true,
           "name": "otpinput",
-          "pattern": "^[0-9]{8}$",
-          "patternError": "Incorrect response code format. The response code should be 8 digits."
+          "pattern": "^[0-9]{4,8}$",
+          "patternError": "Incorrect response code format. The response code should be 4-8 digits."
         },
         {
           "description": "Sign code",
@@ -173,13 +173,13 @@
           "name": "signcodedescription"
         },
         {
-          "description": "Response code, 8 digits.",
+          "description": "Response code, 4-8 digits.",
           "name": "signcodeinput",
           "immutable": false,
           "masked": false,
           "numeric": true,
-          "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader."
+          "pattern": "^[0-9]{4,8}$",
+          "patternError": "Please enter your 4-8 digit response code from your card reader."
         }
       ],
       "multiFactor": true,
