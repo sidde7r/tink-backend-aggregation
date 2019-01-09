@@ -150,12 +150,12 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
     @Override
     public void refresh(RefreshableItem item) {
         switch (item) {
-        case SAVING_ACCOUNTS:
+        case SAVINGS_ACCOUNTS:
             List<Account> accounts = apiClient.getAccounts();
             context.cacheAccounts(accounts);
             break;
 
-        case SAVING_TRANSACTIONS:
+        case SAVINGS_TRANSACTIONS:
             for (Account account : apiClient.getAccounts()) {
                 List<Transaction> transactions = apiClient.fetchTransactionsFor(account);
 

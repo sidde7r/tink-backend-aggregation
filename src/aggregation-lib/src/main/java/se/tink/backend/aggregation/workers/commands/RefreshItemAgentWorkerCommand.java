@@ -93,16 +93,16 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                                         accountTransactions.getValue());
                             }
                             break;
-                        case SAVING_ACCOUNTS:
+                        case SAVINGS_ACCOUNTS:
                             context.cacheAccounts(
                                     ((RefreshExecutor) agent)
-                                            .fetchSavingAccounts()
+                                            .fetchSavingsAccounts()
                                             .getAccounts());
                             break;
-                        case SAVING_TRANSACTIONS:
+                        case SAVINGS_TRANSACTIONS:
                             for (Map.Entry<String, List<Transaction>> accountTransactions :
                                     ((RefreshExecutor) agent)
-                                            .fetchSavingTransactions()
+                                            .fetchSavingsTransactions()
                                             .getTransactions()
                                             .entrySet()) {
                                 context.cacheTransactions(

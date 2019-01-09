@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
-import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
@@ -178,7 +177,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
+        case SAVINGS_ACCOUNTS:
             updateAccountPerType(item);
             break;
         case CREDITCARD_ACCOUNTS:
