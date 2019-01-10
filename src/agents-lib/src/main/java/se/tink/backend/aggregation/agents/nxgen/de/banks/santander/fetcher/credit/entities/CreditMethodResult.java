@@ -20,7 +20,11 @@ public class CreditMethodResult {
   private String isLastPage;
 
   public Collection<? extends Transaction> getTinkTransactions() {
-    return movList.stream().map(t -> t.getTinkTransactions()).collect(Collectors.toList());
+    return movList
+        .stream()
+        .filter(movListItem -> movListItem.isValid())
+        .map(t -> t.getTinkTransactions())
+        .collect(Collectors.toList());
   }
 
   public boolean getIsLastPage() {

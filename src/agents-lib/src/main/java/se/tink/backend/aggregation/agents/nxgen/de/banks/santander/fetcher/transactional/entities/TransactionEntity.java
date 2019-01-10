@@ -12,4 +12,8 @@ public class TransactionEntity {
   public Transaction toTinkTransaction() {
     return transactionRecord.toTinkTransaction();
   }
+
+  public boolean isValid() {
+    return transactionRecord.isValid();
+  }
 }

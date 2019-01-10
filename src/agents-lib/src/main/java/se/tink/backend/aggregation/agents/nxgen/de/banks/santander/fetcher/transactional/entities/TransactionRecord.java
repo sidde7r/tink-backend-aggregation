@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -29,6 +32,8 @@ public class TransactionRecord {
   @JsonProperty("TransactionAmount")
   private TransactionAmount amount;
 
+  @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(TransactionRecord.class);
+
   private String getDescription() {
     StringBuilder builder = new StringBuilder();
 
@@ -43,13 +48,26 @@ public class TransactionRecord {
     return builder.toString();
   }
 
+  public boolean isValid() {
+    try {
+      toTinkTransaction();
+      return true;
+    } catch (Exception e) {
+      logger.error("{} {}", SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR, e.toString());
+      return false;
+    }
+  }
+
   private Date toDate() {
     try {
       return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(transactionDate);
     } catch (ParseException e) {
-      e.printStackTrace();
+      logger.error(
+          "{} Cannot parse date: {}",
+          SantanderConstants.LOGTAG.SANTANDER_DATE_PARSING_ERROR,
+          transactionDate);
+      throw new IllegalStateException("Cannot parse datetransaction");
     }
-    return null;
   }
 
   public Transaction toTinkTransaction() {

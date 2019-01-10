@@ -13,4 +13,8 @@ public class MovListItem {
   public Transaction getTinkTransactions() {
     return mov.toTinkTransaction();
   }
+
+  public boolean isValid(){
+    return mov.isValid();
+  }
 }

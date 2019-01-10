@@ -15,6 +15,7 @@ public class TransactionResultEntity {
   public Collection<Transaction> toTinkTransactions() {
     return transactions
         .stream()
+        .filter(transactionEntity -> transactionEntity.isValid())
         .map(TransactionEntity::toTinkTransaction)
         .collect(Collectors.toList());
   }
