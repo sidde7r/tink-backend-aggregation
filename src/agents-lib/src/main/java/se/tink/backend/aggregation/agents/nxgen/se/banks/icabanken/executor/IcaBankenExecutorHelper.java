@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.SignedAssignmentListEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.entities.TransferBankEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc.TransferRequest;
@@ -186,8 +187,10 @@ public class IcaBankenExecutorHelper {
 
     public void signTransfer(Transfer transfer, AccountEntity sourceAccount) {
         try {
-            String reference = apiClient.initTransferSign();
-            context.openBankId(null, false);
+            BankIdBodyEntity bankIdResponse = apiClient.initTransferSign();
+            String reference = bankIdResponse.getRequestId();
+
+            context.openBankId(bankIdResponse.getAutostartToken(), false);
             poll(reference);
             assertSuccessfulSign(reference);
         } catch (Exception initialException) {
@@ -204,6 +207,16 @@ public class IcaBankenExecutorHelper {
                 throw initialException;
             }
         }
+    }
+
+    public String signEInvoice(String invoiceId) {
+        BankIdBodyEntity bankIdResponse = apiClient.initEInvoiceBankId(invoiceId);
+        String reference = bankIdResponse.getRequestId();
+
+        context.openBankId(bankIdResponse.getAutostartToken(), false);
+        poll(reference);
+
+        return reference;
     }
 
     private void throwBankIdAlreadyInProgressError() {
