@@ -36,12 +36,14 @@ public class ICSApiClient {
   private final TinkHttpClient client;
   private final SessionStorage sessionStorage;
   private final PersistentStorage persistentStorage;
+  private final String redirectUri;
 
   public ICSApiClient(
-      TinkHttpClient client, SessionStorage sessionStorage, PersistentStorage persistentStorage) {
+      TinkHttpClient client, SessionStorage sessionStorage, PersistentStorage persistentStorage, String redirectUri) {
     this.client = client;
     this.sessionStorage = sessionStorage;
     this.persistentStorage = persistentStorage;
+    this.redirectUri = redirectUri;
   }
 
   private ICSConfiguration getICSConfiguration() {
@@ -77,7 +79,7 @@ public class ICSApiClient {
             ICSConstants.Query.ACCOUNT_REQUEST_ID,
             accountSetupResponse.getData().getAccountRequestId())
         .queryParam(ICSConstants.Query.STATE, state)
-        .queryParam(ICSConstants.Query.REDIRECT_URI, getICSConfiguration().getRedirectUri())
+        .queryParam(ICSConstants.Query.REDIRECT_URI, redirectUri)
         .queryParam(ICSConstants.Query.RESPONSE_TYPE, ICSConstants.Query.RESPONSE_TYPE_CODE)
         .getUrl();
   }
@@ -199,7 +201,7 @@ public class ICSApiClient {
         .queryParam(ICSConstants.Query.GRANT_TYPE, ICSConstants.Query.GRANT_TYPE_AUTH_CODE)
         .queryParam(ICSConstants.Query.CLIENT_ID, getICSConfiguration().getClientId())
         .queryParam(ICSConstants.Query.CLIENT_SECRET, getICSConfiguration().getClientSecret())
-        .queryParam(ICSConstants.Query.REDIRECT_URI, getICSConfiguration().getRedirectUri())
+        .queryParam(ICSConstants.Query.REDIRECT_URI, redirectUri)
         .queryParam(ICSConstants.Query.AUTH_CODE, authCode)
         .queryParam(ICSConstants.Query.STATE, state)
         .get(TokenResponse.class)

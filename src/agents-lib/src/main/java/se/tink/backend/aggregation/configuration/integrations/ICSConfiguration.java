@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ICSConfiguration {
   @JsonProperty private String clientId;
   @JsonProperty private String clientSecret;
-  @JsonProperty private String redirectUri;
   @JsonProperty private String clientSSLCertificate;
   @JsonProperty private String rootCACertificate;
   @JsonProperty private String rootCAPassword;
@@ -28,10 +27,6 @@ public class ICSConfiguration {
 
   public String getClientSecret() {
     return clientSecret;
-  }
-
-  public String getRedirectUri() {
-    return redirectUri;
   }
 
   public String getClientSSLCertificate() {
@@ -50,7 +45,6 @@ public class ICSConfiguration {
 
     if (!Strings.isNullOrEmpty(clientId)
         && !Strings.isNullOrEmpty(clientSecret)
-        && !Strings.isNullOrEmpty(redirectUri)
         && !Strings.isNullOrEmpty(clientSSLCertificate)
         && !Strings.isNullOrEmpty(rootCACertificate)
         && !Strings.isNullOrEmpty(rootCAPassword)) {
@@ -64,10 +58,6 @@ public class ICSConfiguration {
 
       if (Strings.isNullOrEmpty(clientSecret)) {
         list.add("clientSecret");
-      }
-
-      if (Strings.isNullOrEmpty(redirectUri)) {
-        list.add("redirectUri");
       }
 
       if (Strings.isNullOrEmpty(clientSSLCertificate)) {

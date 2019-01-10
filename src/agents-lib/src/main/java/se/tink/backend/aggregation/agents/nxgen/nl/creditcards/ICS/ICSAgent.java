@@ -30,13 +30,16 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 public class ICSAgent extends NextGenerationAgent {
 
   private final ICSApiClient icsApiClient;
-  private String clientName;
+  private final String clientName;
+  private final String redirectUri;
 
   public ICSAgent(
       CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
     super(request, context, signatureKeyPair);
-    icsApiClient = new ICSApiClient(client, sessionStorage, persistentStorage);
-    clientName = request.getProvider().getPayload();
+    clientName = request.getProvider().getPayload().split(" ")[0];
+    redirectUri = request.getProvider().getPayload().split(" ")[1];
+    icsApiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
+
   }
 
   @Override

@@ -117,10 +117,9 @@
       "className": "nxgen.nl.creditcards.ICS.ICSAgent",
       "passwordHelpText": null,
       "transactional": "true",
-      "payload": null,
       "tutorialUrl": null,
       "fields": [],
-      "payload": "abn"
+      "payload": "abn https://127.0.0.1:7357/api/v1/thirdparty/callback"
     }
   ]
 }
