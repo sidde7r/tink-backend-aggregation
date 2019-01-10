@@ -252,7 +252,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         String authenticationToken = null;
 
         // TODO: Replace with new AgentWorker
-        if (!(this.request.getType() == CredentialsRequestType.TRANSFER) && (this.request.isUpdate() || this.request.isCreate())) {
+        if (!(this.request.getType() == CredentialsRequestType.TRANSFER) && (this.request.isUpdate() || this.request
+                .isCreate())) {
             // if (request instanceof UpdateCredentialsRequest || request instanceof CreateCredentialsRequest) {
             // Start off in manual mode (Bank ID)
             updateCredentialsType(CredentialsTypes.MOBILE_BANKID);
@@ -298,7 +299,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         LoginResponse loginResponse;
         try {
-            String loginResponseContent = createClientRequest(this.market.getAuthenticationEndPoint() + "/SecurityToken",
+            String loginResponseContent = createClientRequest(
+                    this.market.getAuthenticationEndPoint() + "/SecurityToken",
                     null).type(MediaType.APPLICATION_JSON_TYPE).post(String.class, loginRequest);
 
             loginResponse = MAPPER.readValue(loginResponseContent, LoginResponse.class);
@@ -321,7 +323,6 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         return (String) response.getAuthenticationToken().getToken().get("$");
     }
-
 
     // Create a faux device-ID.
     private String getDeviceId() {
@@ -357,7 +358,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         LoginResponse loginResponse;
         try {
-            String loginResponseContent = createClientRequest(this.market.getAuthenticationEndPoint() + "/SecurityToken",
+            String loginResponseContent = createClientRequest(
+                    this.market.getAuthenticationEndPoint() + "/SecurityToken",
                     null).type(MediaType.APPLICATION_JSON_TYPE).post(String.class, loginRequest);
 
             loginResponse = MAPPER.readValue(loginResponseContent, LoginResponse.class);
@@ -399,7 +401,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             String authenticationToken) {
         try {
             String resultResponseContent = createClientRequest(
-                    this.market.getBankingEndpoint() + "/MobileBankIdAuthenticationResult/" + requestToken, authenticationToken)
+                    this.market.getBankingEndpoint() + "/MobileBankIdAuthenticationResult/" + requestToken,
+                    authenticationToken)
                     .get(String.class);
 
             return MAPPER.readValue(resultResponseContent, MobileBankIdAuthenticationResultResponse.class);
@@ -659,7 +662,6 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                         REGEXP_OR_JOINER.join("\\*{12}[0-9]{4}", "Classic", "\\*{12}-[0-9]{3}")),
                 "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
-
         String accountTypeCode = productEntity.getNordeaProductTypeExtension();
 
         String accountName = NordeaAgentUtils.getAccountNameForCode(accountTypeCode);
@@ -690,8 +692,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         if (!currency.equalsIgnoreCase(this.market.getCurrency())) {
             this.log.warn(String.format(
-                            "%s is the only supported currency for Nordea. Account will not be imported. Account currency was %s",
-                            this.market.getCurrency(), currency));
+                    "%s is the only supported currency for Nordea. Account will not be imported. Account currency was %s",
+                    this.market.getCurrency(), currency));
             return Optional.empty();
         }
 
@@ -700,7 +702,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         if (Objects.equal(productType, PRODUCT_TYPE_CARD)) {
             String accountId = productEntity.getNordeaAccountIdV2();
 
-            String cardDetailsResponseContent = createClientRequest(this.market.getBankingEndpoint() + "/Cards/" + accountId,
+            String cardDetailsResponseContent = createClientRequest(
+                    this.market.getBankingEndpoint() + "/Cards/" + accountId,
                     this.securityToken).get(String.class);
 
             CardDetailsResponse cardDetailsResponse = MAPPER.readValue(cardDetailsResponseContent,
@@ -739,7 +742,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     /**
      * Fetch regular account transactions.
      */
-    private Account refreshAccountTransactions(Account account, String accountId, ProductEntity productEntity) throws IOException {
+    private Account refreshAccountTransactions(Account account, String accountId, ProductEntity productEntity)
+            throws IOException {
         Map<String, Transaction> transactionsMap = Maps.newHashMap();
         List<Transaction> transactions = Lists.newArrayList();
 
@@ -842,9 +846,11 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                     .getLastDateFromPeriod(period)));
 
             String transactionListResponseContent = createClientRequest(
-                    this.market.getBankingEndpoint() + "/Transactions?cardNumber=" + accountId + "&beginTransactionDate="
-                            + beginTransactionDate + "&endTransactionDate=" + endTransactionDate, this.securityToken).get(
-                    String.class);
+                    this.market.getBankingEndpoint() + "/Transactions?cardNumber=" + accountId
+                            + "&beginTransactionDate="
+                            + beginTransactionDate + "&endTransactionDate=" + endTransactionDate, this.securityToken)
+                    .get(
+                            String.class);
 
             TransactionListResponse transactionListResponse = MAPPER.readValue(transactionListResponseContent,
                     TransactionListResponse.class);
@@ -889,7 +895,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void refreshLoan(Account account, ProductEntity product) throws IOException, ParseException {
         String accountId = product.getNordeaAccountIdV2();
 
-        String loanResponseContent = createClientRequest(this.market.getBankingEndpoint() + "/Loans/Details/" + accountId,
+        String loanResponseContent = createClientRequest(
+                this.market.getBankingEndpoint() + "/Loans/Details/" + accountId,
                 this.securityToken).get(String.class);
         LoanDetailsResponse loanDetails = MAPPER.readValue(loanResponseContent, LoanDetailsResponse.class);
 
@@ -934,7 +941,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                     continue;
                 }
 
-                Preconditions.checkState(custodyAccount.hasValidBankId(), "Unexpected account.bankid '%s' for account.name '%s'. Reformatted?",
+                Preconditions.checkState(custodyAccount.hasValidBankId(),
+                        "Unexpected account.bankid '%s' for account.name '%s'. Reformatted?",
                         custodyAccount.getAccountId(), custodyAccount.getName());
 
                 if (!custodyAccount.getCurrency().equalsIgnoreCase(this.market.getCurrency())) {
@@ -1128,7 +1136,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 refreshLoan(account.get(), product);
             } catch (Exception e) {
                 this.log.error("Couldn't fetch loan information--ignoring account ("
-                                + product.getNordeaAccountIdV2() + ")", e);
+                        + product.getNordeaAccountIdV2() + ")", e);
             }
         }
     }
@@ -1401,11 +1409,13 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                     transfer, Iterables.toString(unsignedEInvoices)));
 
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(this.catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
+                    .setEndUserMessage(
+                            this.catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
                     .build();
         } else if (!(matchingPayments.size() == 1)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(this.catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_MULTIPLE_MATCHES))
+                    .setEndUserMessage(
+                            this.catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_MULTIPLE_MATCHES))
                     .build();
         }
 
@@ -1432,7 +1442,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         if (!matchingEInvoice.isAllowedToModify()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
-                            this.catalog.getString(TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_NOT_ALLOWED))
+                            this.catalog
+                                    .getString(TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_NOT_ALLOWED))
                     .build();
         }
 
@@ -1640,7 +1651,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         String url = this.market.getBankingEndpoint() + "/Transfers";
 
-        InternalBankTransferResponse transferResponse = createJsonRequest(url, transferRequest, InternalBankTransferResponse.class);
+        InternalBankTransferResponse transferResponse = createJsonRequest(url, transferRequest,
+                InternalBankTransferResponse.class);
 
         if (!transferResponse.isTransferAccepted()) {
             String errorMessage = transferResponse.getErrorMessage().isPresent() ?
@@ -1656,7 +1668,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
      * when transferring between two Nordea accounts. How they set the default message is better, since they internally
      * have different values on the source and destination account, but for us using the API we can only set one
      * message. So default to empty string to let them decide message if our client hasn't set any message.
-     *
+     * <p>
      * If the client has set the destination message we use it with the formatter (in order to get it cut off if it's
      * too long).
      */
@@ -1784,7 +1796,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         if (!exclusivePaymentToSignSE.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(
-                            this.catalog.getString(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS))
+                            this.catalog
+                                    .getString(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS))
                     .setMessage("Could not find exclusive match on transfer to sign")
                     .build();
         }
@@ -1814,7 +1827,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         }
     }
 
-    private void  signEInvoice(PaymentEntity eInvoiceToSign) throws IOException, InterruptedException {
+    private void signEInvoice(PaymentEntity eInvoiceToSign) throws IOException, InterruptedException {
         Preconditions.checkState(Objects.equal(this.market.getMarketCode(), "SE"),
                 String.format("Signing e-invoices for market(%s) not implemented", this.market.getMarketCode()));
 
@@ -1870,19 +1883,19 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 String errorMessage;
 
                 switch (errorCode.get()) {
-                    case "MBS9001":
-                    case "MBS0905":     // TIMEOUT
-                        errorMessage = this.catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE);
-                        confirmationStatus = SignableOperationStatuses.CANCELLED;
-                        break;
-                    case "MBS0902":     // CANCELLED
-                        errorMessage = this.catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED);
-                        confirmationStatus = SignableOperationStatuses.CANCELLED;
-                        break;
-                    default:            // FAILED
-                        confirmationStatus = SignableOperationStatuses.FAILED;
-                        errorMessage = NordeaErrorUtils.getErrorMessage(errorCode.get());
-                        break;
+                case "MBS9001":
+                case "MBS0905":     // TIMEOUT
+                    errorMessage = this.catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE);
+                    confirmationStatus = SignableOperationStatuses.CANCELLED;
+                    break;
+                case "MBS0902":     // CANCELLED
+                    errorMessage = this.catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED);
+                    confirmationStatus = SignableOperationStatuses.CANCELLED;
+                    break;
+                default:            // FAILED
+                    confirmationStatus = SignableOperationStatuses.FAILED;
+                    errorMessage = NordeaErrorUtils.getErrorMessage(errorCode.get());
+                    break;
                 }
 
                 String logMessage = MoreObjects.toStringHelper(NordeaErrorUtils.class)
@@ -2067,14 +2080,15 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         return getPaymentsWithDetails(accounts, status, null);
     }
 
-    private List<PaymentPair> getPaymentsWithDetails(List<ProductEntity> accounts, Payment.StatusCode status, Payment.SubType type)
+    private List<PaymentPair> getPaymentsWithDetails(List<ProductEntity> accounts, Payment.StatusCode status,
+            Payment.SubType type)
             throws IOException {
         List<PaymentPair> paymentPairs = Lists.newArrayList();
 
         // We get payments for each account separately, because we've encountered problems when requesting payments for
         // multiple accounts at the same time.
         for (ProductEntity account : Optional.ofNullable(accounts).orElse(Collections.emptyList())) {
-            for (PaymentEntity paymentEntity :  getPayments(account, status)) {
+            for (PaymentEntity paymentEntity : getPayments(account, status)) {
                 PaymentDetailsResponseOut paymentDetails = getPaymentDetails(paymentEntity);
 
                 // When Nordea has temp errors we get null in payment details, so we need to null check it to avoid NPE's
@@ -2202,7 +2216,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         InitBankIdPaymentRequest request = new InitBankIdPaymentRequest(entity);
 
-        Optional<String> orderRef = createJsonRequest(url, request, InitBankIdConfirmPaymentResponse.class).getOrderRef();
+        Optional<String> orderRef = createJsonRequest(url, request, InitBankIdConfirmPaymentResponse.class)
+                .getOrderRef();
 
         if (!orderRef.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
@@ -2363,7 +2378,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
     /**
      * Pair of entity model and details model used for response object in eInvoice signing
-     *
+     * <p>
      * Reason: DetailsResponseOut doesn't have `paymentType`, and PaymentEntity doesn't have `messageRow` and correct
      * `paymentSubType`
      */
@@ -2397,7 +2412,6 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         private PaymentDetailsResponseOut getPaymentDetails() {
             return this.paymentDetailsResponseOut;
         }
-
 
         private Transaction toTransaction(Optional<Transfer> modifiableTransfer) throws JsonProcessingException {
             Transaction transaction = this.paymentEntity.toTransaction();
