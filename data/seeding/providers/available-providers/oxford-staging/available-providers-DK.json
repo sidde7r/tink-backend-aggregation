@@ -1,6 +1,7 @@
 {
   "clusterid" : "oxford-staging",
   "providers" : [
+    "dk-danskebank-servicecode",
     "dk-test-password", 
     "dk-test-multi-supplemental"
   ]
