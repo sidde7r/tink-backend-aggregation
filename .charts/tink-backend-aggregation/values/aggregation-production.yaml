@@ -1,3 +1,6 @@
+nodeZones:
+- "eu-west-1a"
+
 aggregationdb:
   host: aggregation-20180326162307651700000003.cn1ms2m3gdpa.eu-west-1.rds.amazonaws.com
 

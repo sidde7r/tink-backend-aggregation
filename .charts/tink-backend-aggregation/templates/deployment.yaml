@@ -22,6 +22,27 @@ spec:
         checksum/agents-config: {{ include (print $.Template.BasePath "/agents-config.yaml") . | sha256sum }}
         prometheus.io/scrape: 'true'
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - topologyKey: "kubernetes.io/hostname"
+              labelSelector:
+                matchLabels:
+                  app: aggregation-service
+
+        {{- if .Values.nodeZones }}
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: "failure-domain.beta.kubernetes.io/zone"
+                operator: In
+                values:
+                {{- range $zone := .Values.nodeZones }}
+                - "{{ $zone }}"
+                {{- end }}
+        {{- end }}
+
       securityContext:
         runAsNonRoot: true
         runAsUser: 65535
