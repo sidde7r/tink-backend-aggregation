@@ -53,33 +53,14 @@ spec:
       # Script to replace placeholder passwords with the real passwords
       - name: add-secrets-to-config
         command:
-          - "bash"
-          - "-c"
-          - "cp /mnt/aggregation-config/* /mnt/altered-config-volume && \
-             echo -e '\n' >> /mnt/altered-config-volume/config.yml && \
-             cat /mnt/agents-config/config.yml >> /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/COLLECTOR_SUBSCRIPTION_KEY/$COLLECTOR_SUBSCRIPTION_KEY/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/UKOPENBANKINGJSON/$UKOPENBANKINGJSON/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/CREDITSAFE_USERNAME/$CREDITSAFE_USERNAME/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/CREDITSAFE_PASSWORD/$CREDITSAFE_PASSWORD/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/KEYSTORE_PASSWORD/$KEYSTORE_PASSWORD/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/MONZO_CLIENT_ID/$MONZO_CLIENT_ID/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/MONZO_CLIENT_SECRET/$MONZO_CLIENT_SECRET/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/FINTS_REG_NUMBER/$FINTS_REG_NUMBER/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/ABN_STAGING_BANKING_HOST/$ABN_STAGING_BANKING_HOST/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/ABN_STAGING_BANKING_AUTH_TOKEN/$ABN_STAGING_BANKING_AUTH_TOKEN/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/ABN_STAGING_ENROLLMENT_URL/$ABN_STAGING_ENROLLMENT_URL/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/ABN_STAGING_ENROLLMENT_API_KEY/$ABN_STAGING_ENROLLMENT_API_KEY/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/ABN_PRODUCTION_BANKING_HOST/$ABN_PRODUCTION_BANKING_HOST/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/ABN_PRODUCTION_BANKING_AUTH_TOKEN/$ABN_PRODUCTION_BANKING_AUTH_TOKEN/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/ABN_PRODUCTION_ENROLLMENT_URL/$ABN_PRODUCTION_ENROLLMENT_URL/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/ABN_PRODUCTION_ENROLLMENT_API_KEY/$ABN_PRODUCTION_ENROLLMENT_API_KEY/g\" /mnt/altered-config-volume/config.yml && \
-             sed -i \"s/MYSQL_PASSWORD/$MYSQL_PASSWORD/g\" /mnt/altered-config-volume/config.yml"
+          - "/mnt/scripts/add-secrets.sh"
         image: gcr.io/tink-containers/debian:stretch
         imagePullPolicy: IfNotPresent
         securityContext:
           readOnlyRootFilesystem: true
         volumeMounts:
+        - name: config-scripts
+          mountPath: /mnt/scripts
         - name: aggregation-config
           mountPath: /mnt/aggregation-config
         - name: agents-config
@@ -251,6 +232,10 @@ spec:
         {{- end }}
 
       volumes:
+      - name: config-scripts
+        configMap:
+          name: config-scripts
+          defaultMode: 0111
       - name: aggregation-config
         configMap:
           name: aggregation-config

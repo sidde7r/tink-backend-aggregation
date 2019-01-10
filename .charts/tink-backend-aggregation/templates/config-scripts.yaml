@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-scripts
+  namespace: aggregation
+data:
+  add-secrets.sh: |
+    #!/bin/bash -e
+
+    cp /mnt/aggregation-config/* /mnt/altered-config-volume
+    echo -e '\n' >> /mnt/altered-config-volume/config.yml
+    cat /mnt/agents-config/config.yml >> /mnt/altered-config-volume/config.yml
+
+    function substitute-secret() {
+      local name="$1"
+      local value="$2"
+      echo "Substituting secret $name"
+
+      sed -i \"s/$name/${value//\//\\\/}/g\" /mnt/altered-config-volume/config.yml
+    }
+
+    substitute-secret COLLECTOR_SUBSCRIPTION_KEY "$COLLECTOR_SUBSCRIPTION_KEY"
+    substitute-secret UKOPENBANKINGJSON "$UKOPENBANKINGJSON"
+    substitute-secret CREDITSAFE_USERNAME "$CREDITSAFE_USERNAME"
+    substitute-secret CREDITSAFE_PASSWORD "$CREDITSAFE_PASSWORD"
+    substitute-secret KEYSTORE_PASSWORD "$KEYSTORE_PASSWORD"
+    substitute-secret MONZO_CLIENT_ID "$MONZO_CLIENT_ID"
+    substitute-secret MONZO_CLIENT_SECRET "$MONZO_CLIENT_SECRET"
+    substitute-secret FINTS_REG_NUMBER "$FINTS_REG_NUMBER"
+    substitute-secret ABN_STAGING_BANKING_HOST "$ABN_STAGING_BANKING_HOST"
+    substitute-secret ABN_STAGING_BANKING_AUTH_TOKEN "$ABN_STAGING_BANKING_AUTH_TOKEN"
+    substitute-secret ABN_STAGING_ENROLLMENT_URL "$ABN_STAGING_ENROLLMENT_URL"
+    substitute-secret ABN_STAGING_ENROLLMENT_API_KEY "$ABN_STAGING_ENROLLMENT_API_KEY"
+    substitute-secret ABN_PRODUCTION_BANKING_HOST "$ABN_PRODUCTION_BANKING_HOST"
+    substitute-secret ABN_PRODUCTION_BANKING_AUTH_TOKEN "$ABN_PRODUCTION_BANKING_AUTH_TOKEN"
+    substitute-secret ABN_PRODUCTION_ENROLLMENT_URL "$ABN_PRODUCTION_ENROLLMENT_URL"
+    substitute-secret ABN_PRODUCTION_ENROLLMENT_API_KEY "$ABN_PRODUCTION_ENROLLMENT_API_KEY"
+    substitute-secret MYSQL_PASSWORD "$MYSQL_PASSWORD"
