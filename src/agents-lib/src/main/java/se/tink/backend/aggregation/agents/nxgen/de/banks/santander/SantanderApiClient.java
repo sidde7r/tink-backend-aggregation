@@ -158,7 +158,7 @@ public class SantanderApiClient {
             new CreditTransactionsRequest(
                 storage.get(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL),
                 "",
-                "L",
+                SantanderConstants.INDMPX_L,
                 SantanderConstants.QUERYPARAMS.DIALECT_DE,
                 SantanderConstants.QUERYPARAMS.LANGUAGE_DE));
 

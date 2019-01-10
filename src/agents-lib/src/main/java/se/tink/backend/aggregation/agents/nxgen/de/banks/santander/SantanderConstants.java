@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 public class SantanderConstants {
 
   public static final String WHITESPACE = " ";
+  public static final String INDMPX_L = "L";
+
   public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
       AccountTypeMapper.builder()
           .put(AccountTypes.CHECKING, "GIROKONTO")
