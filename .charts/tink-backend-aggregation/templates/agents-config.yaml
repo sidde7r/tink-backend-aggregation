@@ -1,3 +1,4 @@
+{{- $agentsConfig := .Values.agents | default dict }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -11,23 +12,88 @@ data:
           - local-development
 
       signatureKeyPair:
-        privateKeyPath: "data/test/cryptography/private_rsa_key.pem"
-        publicKeyPath: "data/test/cryptography/public_rsa_key.pub"
+        {{- $signatureKeyPath := ($agentsConfig.mountSignatureKeyPair | default false) | ternary "/etc/tink-signature-key" "data/test/cryptography" }}
+        privateKeyPath: "{{ $signatureKeyPath }}/private_rsa_key.pem"
+        publicKeyPath: "{{ $signatureKeyPath }}/public_rsa_key.pem"
 
       creditsafe:
         username: CREDITSAFE_USERNAME
         password: CREDITSAFE_PASSWORD
         logConsumerMonitoringTraffic: true
 
+      {{- if $agentsConfig.collectorSubscriptionKey }}
       aggregationWorker:
-        collectorSubscriptionKey: ASK_JOHANNES
+        collectorSubscriptionKey: COLLECTOR_SUBSCRIPTION_KEY
+      {{- end }}
 
       integrations:
         sbab:
           signBaseUrl: https://secure.sbab.se
+        ukOpenBankingJson: UKOPENBANKINGJSON
+
+        {{- if $agentsConfig.proxyUri }}
+        proxyUri: "{{ $agentsConfig.proxyUri }}"
+        {{- end }}
+
+        {{- if $agentsConfig.monzo }}
         monzo:
           tink:
-            clientId: "dummyId"
-            clientSecret: "dummySecret"
-            redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
-        ukOpenBankingJson: UKOPENBANKINGJSON
+            clientId: "MONZO_CLIENT_ID"
+            clientSecret: "MONZO_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.monzo.redirectUrl }}"
+        {{- end }}
+
+        {{- if $agentsConfig.fints }}
+        fints:
+          regNumber: "FINTS_REG_NUMBER"
+        {{- end }}
+
+        {{- if $agentsConfig.abnAmro }}
+        {{- range $name, $env := dict "abnAmroProduction" "production" "abnAmroStaging" "staging" }}
+        {{- $envConfig := index $agentsConfig.abnAmro $env }}
+        {{ $name }}:
+
+          {{- if kindIs "bool" $envConfig.ignoreCreditCardErrors }}
+          ignoreCreditCardErrors: {{ $envConfig.ignoreCreditCardErrors}}
+          {{- else }}
+          ignoreCreditCardErrors: true
+          {{- end }}
+
+          {{- if kindIs "bool" $envConfig.cleanBankId }}
+          cleanBankId: {{ $envConfig.cleanBankId}}
+          {{- else }}
+          cleanBankId: false
+          {{- end }}
+
+          trustStore:
+            path: data/security/abnamro.truststore
+            password: changeme
+
+          internetBanking:
+            host: ABN_{{ $env | upper }}_BANKING_HOST
+            authorizationToken: ABN_{{ $env | upper }}_BANKING_AUTH_TOKEN
+
+            products:
+              creditCards:
+              groups:
+              - CREDIT_CARDS_PRIVATE_AND_RETAIL
+              - PAYMENT_SERVICES
+              ids:
+              - 129
+            payments:
+              groups:
+              - PAYMENT_ACCOUNTS
+              ids:
+              - 13
+              - 25
+            savings:
+              groups:
+              - SAVINGS_ACCOUNTS
+              ids:
+              - 5
+              - 8
+          enrollment:
+            url: ABN_{{ $env | upper }}_ENROLLMENT_URL
+            apiKey: ABN_{{ $env | upper }}_ENROLLMENT_API_KEY
+        {{- end }}
+        {{- end }}

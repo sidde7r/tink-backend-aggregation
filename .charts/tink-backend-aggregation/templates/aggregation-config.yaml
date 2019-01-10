@@ -1,5 +1,4 @@
-{{ $aggregationdb := .Values.aggregationdb | default dict }}
-
+{{- $aggregationdb := .Values.aggregationdb | default dict }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -33,9 +32,11 @@ data:
     logging:
       level: INFO
       loggers:
-        se.tink: TRACE
+        se.tink: DEBUG
         se.tink.org.eclipse: INFO
         org.hibernate: WARN
+        org.apache.http.client.protocol.ResponseProcessCookies: ERROR
+        tink.org.apache.http.client.protocol.ResponseProcessCookies: ERROR
       appenders:
         - type: console
           threshold: ALL
@@ -62,15 +63,14 @@ data:
       hosts: {{ default "coordination:2181" .Values.coordinationHosts }}
 
     sqsQueueConfiguration:
-{{ toYaml .Values.sqsQueueConfiguration | indent 6 }}
+      {{ .Values.sqsQueueConfiguration | default dict | toYaml | indent 6 | trim }}
 
     s3StorageConfiguration:
-{{ toYaml .Values.s3StorageConfiguration | indent 6 }}
+      {{ .Values.s3StorageConfiguration | default dict | toYaml | indent 6 | trim }}
 
     isMultiClientDevelopment: false
 
-{{- if eq "local" .Values.Cluster }}
-
+    {{- if eq "local" .Values.Cluster }}
     developmentMode: true
 
     developmentConfiguration:
@@ -94,4 +94,4 @@ data:
           clusterId: local-development
           keyId: 1
         base64EncodedKey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
-{{- end }}
+    {{- end }}
