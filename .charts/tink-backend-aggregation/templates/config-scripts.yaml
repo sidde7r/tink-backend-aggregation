@@ -13,10 +13,10 @@ data:
 
     function substitute-secret() {
       local name="$1"
-      local value="$2"
+      local value="${2%$'\n'}"
       echo "Substituting secret $name"
 
-      sed -i \"s/$name/${value//\//\\\/}/g\" /mnt/altered-config-volume/config.yml
+      sed -i "s/$name/${value//\//\\\/}/g" /mnt/altered-config-volume/config.yml
     }
 
     substitute-secret COLLECTOR_SUBSCRIPTION_KEY "$COLLECTOR_SUBSCRIPTION_KEY"
