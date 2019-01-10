@@ -244,11 +244,11 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
-        commands.add(new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(controllerWrapper, request.getCredentials(), request.getProvider()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName, reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(controllerWrapper, request.getCredentials(), request.getProvider()));
+        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName, reportMetricsAgentWorkerCommandState));
         commands.add(new DecryptCredentialsWorkerCommand(context, new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
@@ -312,9 +312,9 @@ public class AgentWorkerOperationFactory {
         return Lists.newArrayList(
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
+                new LockAgentWorkerCommand(context),
                 new ReportProviderMetricsAgentWorkerCommand(context, operationName, reportMetricsAgentWorkerCommandState),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context,  operationName),
-                new LockAgentWorkerCommand(context),
                 new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
@@ -382,8 +382,8 @@ public class AgentWorkerOperationFactory {
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "keep-alive", reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, "keep-alive", reportMetricsAgentWorkerCommandState));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
@@ -465,11 +465,11 @@ public class AgentWorkerOperationFactory {
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
 
-        commands.add(new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(controllerWrapper, request.getCredentials(), request.getProvider()));
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName, reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(controllerWrapper, request.getCredentials(), request.getProvider()));
+        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, metricsName, reportMetricsAgentWorkerCommandState));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
@@ -510,8 +510,8 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
-        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, operationMetricName, reportMetricsAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(new ReportProviderMetricsAgentWorkerCommand(context, operationMetricName, reportMetricsAgentWorkerCommandState));
         commands.add(new DecryptCredentialsWorkerCommand(context, new CredentialsCrypto(cacheClient, controllerWrapper, cryptoWrapper)));
         commands.add(new DebugAgentWorkerCommand(context, debugAgentWorkerCommandState, agentDebugStorageHandler));
         commands.add(new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
