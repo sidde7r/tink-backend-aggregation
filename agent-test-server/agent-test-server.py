@@ -32,10 +32,13 @@ class SupplementalStdin(object):
     def get_answers(self):
         return self.answers
 
-    def get_description(self, field, separator=" "):
-        desc = field.get("description").encode("utf-8")
+    @staticmethod
+    def get_description(field):
+        desc = ''
+        if field.get("description"):
+            desc += field.get("description").encode("utf-8")
         if field.get("helpText"):
-            desc += separator + "(%s)" % field.get("helpText").encode("utf-8")
+            desc += " (%s)" % field.get("helpText").encode("utf-8")
 
         return desc
 
