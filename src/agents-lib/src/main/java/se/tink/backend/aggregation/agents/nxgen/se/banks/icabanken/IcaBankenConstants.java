@@ -38,9 +38,9 @@ public class IcaBankenConstants {
     public static final class Headers {
         public static final String ACCEPT = "Accept";
         public static final String HEADER_CLIENTAPPVERSION = "ClientAppVersion";
-        public static final String VALUE_CLIENTAPPVERSION = "1.44.2";
+        public static final String VALUE_CLIENTAPPVERSION = "1.45.1";
         public static final String HEADER_APIKEY = "ApiKey";
-        public static final String VALUE_APIKEY = "B4D6E1AC-527A-4BBC-AF04-1F2A6D8B38BA";
+        public static final String VALUE_APIKEY = "BBA7D74A-042F-4E87-8C88-55412320F186";
         public static final String HEADER_API_VERSION = "ApiVersion";
         public static final String VALUE_API_VERSION = "8";
         public static final String HEADER_CLIENT_OS = "ClientOS";
