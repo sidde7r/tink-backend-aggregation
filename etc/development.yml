@@ -103,7 +103,7 @@ notifications:
 agentsServiceConfiguration:
   integrations:
     icsConfiguration:
-      tink:
+      abn:
         clientId: "dummyId"
         clientSecret: "dummySecret"
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
