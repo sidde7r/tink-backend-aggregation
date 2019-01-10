@@ -133,6 +133,7 @@ public class CliPrintUtils {
                 first = false;
             }
             String value = Optional.ofNullable(row.get(column.getKey())).orElse("");
+            value = value.replace("\n", "⏎"); // Newlines ruin the table; replaced string needs to be a single char
             out.print(value);
             out.print(Strings.repeat(" ", column.getValue() - value.length())); // Padding
         }
