@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.credit.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.credit.entities.MethodResult;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -23,12 +24,14 @@ public class CardDetailsResponse {
     return new Amount(methodResult.getSaldo().getdIVISA(), methodResult.getSaldo().getiMPORTE());
   }
 
-  public CreditCardAccount toCreditCardAccount() {
+  public CreditCardAccount toCreditCardAccount(String localContractDetail) {
     return CreditCardAccount.builder(
             methodResult.getMainCardPan(), getBalance(), getAvailableBalance())
         .setHolderName(new HolderName(methodResult.getCardHolderName()))
         .setAccountNumber(methodResult.getMainCardPan())
         .setName(methodResult.getProductName())
+        .putInTemporaryStorage(
+            SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL, localContractDetail)
         .build();
   }
 }

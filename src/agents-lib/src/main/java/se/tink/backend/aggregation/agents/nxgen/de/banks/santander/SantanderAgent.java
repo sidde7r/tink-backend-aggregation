@@ -35,7 +35,8 @@ public class SantanderAgent extends NextGenerationAgent {
   }
 
   @Override
-  protected void configureHttpClient(TinkHttpClient client) {}
+  protected void configureHttpClient(TinkHttpClient client) {
+  }
 
   @Override
   protected Authenticator constructAuthenticator() {

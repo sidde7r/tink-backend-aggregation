@@ -28,6 +28,10 @@ public class CurrentEntity {
     }
   }
 
+  public boolean isTransactionalAccount(){
+    return SantanderConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(accountEntity.getAccountType());
+  }
+
   public TransactionalAccount toTransactionalAccount() {
     return TransactionalAccount.builder(
             SantanderConstants.ACCOUNT_TYPE_MAPPER.translate(accountEntity.getAccountType()).get(),
@@ -35,6 +39,15 @@ public class CurrentEntity {
             accountEntity.getAvailableBalance().toTinkAmount())
         .setAccountNumber(accountEntity.getAccountNumberSort())
         .setName(accountEntity.getAccountAlias())
+        .putInTemporaryStorage(
+            SantanderConstants.STORAGE.LOCAL_CONTRACT_TYPE,
+            accountEntity.getAccountNumber().getLocalContractType())
+        .putInTemporaryStorage(
+            SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL,
+            accountEntity.getAccountNumber().getLocalContractDetail())
+        .putInTemporaryStorage(
+            SantanderConstants.STORAGE.COMPANY_ID,
+            accountEntity.getSubProductEntity().getProductEntity().getCompanyId())
         .build();
   }
 }

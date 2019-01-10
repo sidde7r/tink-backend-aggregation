@@ -54,11 +54,6 @@ public class Cards {
     return availableBalance.toTinkAmount();
   }
 
-  public CreditCardAccount toCreditCardAccount() {
-    return CreditCardAccount.builder(
-            getUniqueIdentifier(), getAvailableCredit(), getAvailableCredit())
-        .build();
-  }
 
   public String getPanTarjeta() {
     return panTarjeta;

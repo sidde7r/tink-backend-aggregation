@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.cred
 import java.util.ArrayList;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderApiClient;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.credit.rpc.CardDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.entities.ListTarjetasItem;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -27,15 +29,20 @@ public class SantanderCreditCardFetcher
     if (!response.containsCreditCards()) {
       return res;
     }
-    CardDetailsResponse creditInfoResponse =
-        client.fetchCardInfo(response.getAccountResultEntity().getCreditPan());
-    res.add(creditInfoResponse.toCreditCardAccount());
+
+    for (ListTarjetasItem item : response.getAccountResultEntity().getListCredit()) {
+      CardDetailsResponse creditInfoResponse =
+          client.fetchCardInfo(
+              item.getCards().getPanTarjeta(), item.getCards().getDetailContractLocal());
+      res.add(creditInfoResponse.toCreditCardAccount(item.getCards().getDetailContractLocal()));
+    }
+
     return res;
   }
 
   @Override
   public TransactionKeyPaginatorResponse<String> getTransactionsFor(
       CreditCardAccount account, String key) {
-    return client.fetchCardTransactions();
+    return client.fetchCardTransactions(account.getFromTemporaryStorage(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL));
   }
 }

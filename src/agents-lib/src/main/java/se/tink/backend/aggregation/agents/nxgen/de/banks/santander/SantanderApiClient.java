@@ -100,23 +100,12 @@ public class SantanderApiClient {
           e.toString(), SantanderConstants.LOGTAG.SANTANDER_ACCOUNT_PARSING_ERROR);
     }
 
-    storage.put(
-        SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL,
-        response.getAccountResultEntity().getLocalContractDetail());
-    storage.put(
-        SantanderConstants.STORAGE.LOCAL_CONTRACT_TYPE,
-        response.getAccountResultEntity().getLocalContractType());
-    storage.put(
-        SantanderConstants.STORAGE.COMPANY_ID, response.getAccountResultEntity().getCompanyId());
-
     return response;
   }
 
-  public TransactionsResponse fetchTransactions(Date fromDate, Date toDate) {
+  public TransactionsResponse fetchTransactions(
+      Date fromDate, Date toDate, String contractDetail, String contractType, String companyId) {
     String token = getTokenFromStorage();
-    String contractDetail = storage.get(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL);
-    String contractType = storage.get(SantanderConstants.STORAGE.LOCAL_CONTRACT_TYPE);
-    String companyId = storage.get(SantanderConstants.STORAGE.COMPANY_ID);
 
     TransactionQueryEntity queryEntity =
         new TransactionQueryEntity(fromDate, toDate, contractType, contractDetail, companyId);
@@ -134,13 +123,13 @@ public class SantanderApiClient {
     return response;
   }
 
-  public CardDetailsResponse fetchCardInfo(String pan) {
+  public CardDetailsResponse fetchCardInfo(String pan, String localContractDetail) {
     String token = getTokenFromStorage();
 
     String requestData =
         SerializationUtils.serializeToString(
             new CardDetailsRequest(
-                storage.get(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL),
+                localContractDetail,
                 SantanderConstants.QUERYPARAMS.DIALECT_DE,
                 SantanderConstants.QUERYPARAMS.LANGUAGE_DE,
                 pan));
@@ -150,13 +139,13 @@ public class SantanderApiClient {
         .post(CardDetailsResponse.class);
   }
 
-  public CreditTransactionsResponse fetchCardTransactions() {
+  public CreditTransactionsResponse fetchCardTransactions(String localContractDetail) {
     String token = getTokenFromStorage();
 
     String requestData =
         SerializationUtils.serializeToString(
             new CreditTransactionsRequest(
-                storage.get(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL),
+                localContractDetail,
                 "",
                 SantanderConstants.INDMPX_L,
                 SantanderConstants.QUERYPARAMS.DIALECT_DE,
