@@ -98,6 +98,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -109,7 +110,6 @@ import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
@@ -310,7 +310,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
      */
     private SessionResponseBody authenticateWithBankId()
             throws BankIdException, LoginException, AuthorizationException {
-        String requestId = initBankID(String.format(INIT_BANKID_LOGIN_URL, credentials.getField(Field.Key.USERNAME)));
+        String requestId = initBankIDAuthenticate();
 
         collectBankID(String.format(AUTHENTICATE_COLLECT_URL, requestId));
 
@@ -501,7 +501,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
     private void signInvoice(final String invoiceId) throws BankIdException, LoginException,
             AuthorizationException {
-        String requestId = initBankID(String.format(INIT_EINVOICE_SIGN_URL, invoiceId));
+        String requestId = initBankIDSignEInvoice(invoiceId);
 
         collectBankID(String.format(SIGN_TRANSFER_COLLECT_URL, requestId));
 
@@ -1241,8 +1241,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             return;
         }
 
-        String requestId = initBankID(INIT_TRANSFER_SIGN_URL, InitSignRequest.bundled());
-        openBankID();
+        String requestId = initBankIDSignTransfer();
 
         collectBankID(String.format(SIGN_TRANSFER_COLLECT_URL, requestId));
         SignedAssignmentList assignments = getSignedAssignmentsList(requestId);
@@ -1310,35 +1309,35 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         return upcomingTransactionsResponse.getBody();
     }
 
-    private String initBankID(String url) throws BankIdException {
+    private String initBankIDAuthenticate() throws BankIdException {
+        String url = String.format(INIT_BANKID_LOGIN_URL, credentials.getField(Field.Key.USERNAME));
+        return initBankID(url, false);
+    }
+
+    private String initBankIDSignEInvoice(String invoiceId) throws BankIdException {
+        String url = String.format(INIT_EINVOICE_SIGN_URL, invoiceId);
+        return initBankID(url, true);
+    }
+
+    private String initBankIDSignTransfer() throws BankIdException {
+        String url = INIT_TRANSFER_SIGN_URL;
+        return initBankID(url, true);
+    }
+
+    private String initBankID(String url, boolean useAutostartToken) throws BankIdException {
         try {
             InitBankIdResponse bankIdResponse = createClientRequest(url)
                     .post(InitBankIdResponse.class);
 
             String requestId = extractRequestIdFrom(bankIdResponse);
-            String autostartToken = bankIdResponse.getBody().getAutostartToken();
+            String autostartToken = null;
+            if (useAutostartToken) {
+                autostartToken = bankIdResponse.getBody().getAutostartToken();
+            }
 
             context.openBankId(autostartToken, false);
 
             return requestId;
-        } catch (UniformInterfaceException e) {
-            ClientResponse response = e.getResponse();
-
-            if (Objects.equal(response.getStatus(), 409)) {
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
-            }
-
-            throw e;
-        }
-    }
-
-    private String initBankID(String url, InitSignRequest requestData) throws BankIdException {
-        try {
-            InitBankIdResponse bankIdResponse = createClientRequest(url)
-                    .type(MediaType.APPLICATION_JSON)
-                    .post(InitBankIdResponse.class, requestData);
-
-            return extractRequestIdFrom(bankIdResponse);
         } catch (UniformInterfaceException e) {
             ClientResponse response = e.getResponse();
 
