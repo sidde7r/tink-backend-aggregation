@@ -180,6 +180,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private final MetricRegistry register;
     private DateTime securityTokenLastUpdated;
     private final Set<String> availableAccountIds;
+    private final HashMap<String, Double> custodyAccountCashValueMap;
 
     // cache
     private Map<ProductEntity, Account> productEntityAccountMap = null;
@@ -196,6 +197,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.transferMessageFormatter = new TransferMessageFormatter(this.catalog,
                 TRANSFER_MESSAGE_LENGTH_CONFIG, new StringNormalizerSwedish(".,?'-/:()+"));
         this.register = context.getMetricRegistry();
+        custodyAccountCashValueMap = new HashMap<>();
     }
 
     /**
@@ -951,8 +953,11 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                     return;
                 }
 
+                String accountNumber = StringUtils.removeNonAlphaNumeric(custodyAccount.getAccountNumber());
+
                 Account account = custodyAccount.toAccount();
-                Portfolio portfolio = custodyAccount.toPortfolio();
+                Portfolio portfolio = custodyAccount.toPortfolio(
+                        custodyAccountCashValueMap.getOrDefault(accountNumber, 0.0));
 
                 List<Instrument> instruments = Lists.newArrayList();
                 custodyAccount.getHoldings()
@@ -1024,6 +1029,17 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         productEntityAccountMap = new HashMap<>();
         try {
             InitialContextResponse contextResponse = getInitialContext();
+            CustodyAccountsResponse custodyAccountsResponse = createClientRequest(
+                    this.market.getSavingsEndpoint() + "/CustodyAccounts",
+                    this.securityToken)
+                    .type(MediaType.APPLICATION_JSON_TYPE)
+                    .get(CustodyAccountsResponse.class);
+
+            custodyAccountsResponse.getCustodyAccounts()
+                    .stream()
+                    .map(CustodyAccount::getAccountNumber)
+                    .map(StringUtils::removeNonAlphaNumeric)
+                    .forEach(number -> custodyAccountCashValueMap.put(number, 0.0));
 
             if (contextResponse == null) {
                 return Collections.emptyMap();
@@ -1031,6 +1047,24 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
             for (ProductEntity productEntity : contextResponse
                     .getProductsOfTypes(PRODUCT_TYPE_ACCOUNT, PRODUCT_TYPE_CARD)) {
+
+                // If account belongs to a custody account we store it so that it can represent the
+                // cash value of that investment. We skip constructing an account from it.
+                // This value is retrieved in this::refreshInvestmentAccounts.
+                if (productEntity.getProductNumber() != null && productEntity.getProductNumber().containsKey("$")) {
+
+                    String productNumber = productEntity.getProductNumber().get("$").toString();
+                    if (custodyAccountCashValueMap.containsKey(productNumber)) {
+
+                        Double cashValue = parseAmount(productEntity
+                                .getBalance()
+                                .get("$")
+                                .toString());
+                        custodyAccountCashValueMap.put(productNumber, cashValue);
+                        continue;
+                    }
+                }
+
                 Optional<Account> account = constructAccount(productEntity);
 
                 if (!account.isPresent()) {

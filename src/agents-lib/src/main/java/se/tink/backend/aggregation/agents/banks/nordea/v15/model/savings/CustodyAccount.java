@@ -104,10 +104,11 @@ public class CustodyAccount {
         return account;
     }
 
-    public Portfolio toPortfolio() {
+    public Portfolio toPortfolio(Double cashValue) {
         Portfolio portfolio = new Portfolio();
 
         portfolio.setTotalProfit(getProfit());
+        portfolio.setCashValue(cashValue);
         portfolio.setType(getPortfolioType());
         portfolio.setRawType(getName());
         portfolio.setTotalProfit(getProfit());
