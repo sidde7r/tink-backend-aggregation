@@ -1083,13 +1083,13 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             break;
 
         case CHECKING_ACCOUNTS:
-        case SAVINGS_ACCOUNTS:
+        case SAVING_ACCOUNTS:
         case CREDITCARD_ACCOUNTS:
             updateAccountsPerType(item);
             break;
 
         case CHECKING_TRANSACTIONS:
-        case SAVINGS_TRANSACTIONS:
+        case SAVING_TRANSACTIONS:
         case CREDITCARD_TRANSACTIONS:
             updateTransactionsPerAccountType(item);
             break;

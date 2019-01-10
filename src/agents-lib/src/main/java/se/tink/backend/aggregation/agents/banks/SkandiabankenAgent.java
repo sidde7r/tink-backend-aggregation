@@ -577,13 +577,13 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CHECKING_ACCOUNTS:
-        case SAVINGS_ACCOUNTS:
+        case SAVING_ACCOUNTS:
         case CREDITCARD_ACCOUNTS:
             updateAccountsPerType(item);
             break;
 
         case CHECKING_TRANSACTIONS:
-        case SAVINGS_TRANSACTIONS:
+        case SAVING_TRANSACTIONS:
         case CREDITCARD_TRANSACTIONS:
             updateTransactionsPerAccountType(item);
             break;
