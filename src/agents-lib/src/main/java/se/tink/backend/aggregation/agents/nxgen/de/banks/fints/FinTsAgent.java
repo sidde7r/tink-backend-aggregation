@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
@@ -81,16 +80,7 @@ public class FinTsAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        FinTsCreditCardFetcher creditCardFetcher = new FinTsCreditCardFetcher(apiClient);
-
-        return Optional.of(
-                new CreditCardRefreshController(
-                        this.metricRefreshController,
-                        this.updateController,
-                        creditCardFetcher,
-                        new TransactionFetcherController<>(
-                                this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(creditCardFetcher))));
+        return Optional.empty();
     }
 
     @Override
