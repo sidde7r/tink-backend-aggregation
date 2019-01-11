@@ -23,6 +23,10 @@ public class BankIdBodyEntity {
         return status;
     }
 
+    public String getAutostartToken() {
+        return autostartToken;
+    }
+
     public String getSessionId() {
         return Optional.ofNullable(sessionId)
                 .orElseThrow(() -> new IllegalStateException("Expected sessionId to be set but it was null"));

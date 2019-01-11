@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.AcceptEInvoiceTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.FinishEInvoiceSignRequest;
@@ -39,8 +40,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.AssignmentsBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.RecipientsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.AssignmentsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.RecipientsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.TransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -85,19 +86,17 @@ public class IcaBankenApiClient {
                 .getRequestId();
     }
 
-    public String initEInvoiceBankId(String invoiceId) {
+    public BankIdBodyEntity initEInvoiceBankId(String invoiceId) {
         return createPostRequest(IcaBankenConstants.Urls.INIT_EINVOICE_SIGN
                 .parameter(IcaBankenConstants.IdTags.INVOICE_ID_TAG, invoiceId))
                 .post(BankIdResponse.class)
-                .getBody()
-                .getRequestId();
+                .getBody();
     }
 
-    public String initTransferSign() {
+    public BankIdBodyEntity initTransferSign() {
         return createPostRequest(IcaBankenConstants.Urls.INIT_TRANSFER_SIGN)
                 .post(BankIdResponse.class)
-                .getBody()
-                .getRequestId();
+                .getBody();
     }
 
     public BankIdResponse pollBankId(String reference) {

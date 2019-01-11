@@ -90,9 +90,9 @@ public class IcaBankenEInvoiceExecutor implements ApproveEInvoiceExecutor {
     }
 
     private void signEInvoice(String invoiceId) {
-        String requestId = apiClient.initEInvoiceBankId(invoiceId);
-        executorHelper.poll(requestId);
-        finishEInvoiceSign(requestId, invoiceId);
+        String reference = executorHelper.signEInvoice(invoiceId);
+
+        finishEInvoiceSign(reference, invoiceId);
     }
 
     private void finishEInvoiceSign(String requestId, String invoiceId) {
