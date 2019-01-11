@@ -1,0 +1,117 @@
+[
+    {
+        "accountBalanceEntity": {
+            "Amount": {
+                "Amount": "4053.15",
+                "Currency": "GBP"
+            },
+            "CreditDebitIndicator": "Credit",
+            "CreditLine": [
+                {
+                    "Amount": {
+                        "Amount": "3500.00",
+                        "Currency": "GBP"
+                    },
+                    "Included": true,
+                    "Type": "Pre-Agreed"
+                }
+            ]
+        },
+        "expectedBalance": 553.15,
+        "expectedAvailableCredit": null
+    },
+    {
+        "accountBalanceEntity": {
+            "Amount": {
+                "Amount": "0.00",
+                "Currency": "GBP"
+            },
+            "CreditDebitIndicator": "Credit",
+            "CreditLine": [
+                {
+                    "Included": true,
+                    "Amount": {
+                        "Amount": "0.00",
+                        "Currency": "GBP"
+                    },
+                    "Type": "Available"
+                },
+                {
+                    "Included": true,
+                    "Amount": {
+                        "Amount": "500.00",
+                        "Currency": "GBP"
+                    },
+                    "Type": "Credit"
+                },
+                {
+                    "Included": true,
+                    "Amount": {
+                        "Amount": "500.00",
+                        "Currency": "GBP"
+                    },
+                    "Type": "Pre-Agreed"
+                }
+            ]
+        },
+        "expectedBalance": -500,
+        "expectedAvailableCredit": 0
+    },
+    {
+        "accountBalanceEntity": {
+            "Amount": {
+                "Amount": "1977.34",
+                "Currency": "GBP"
+            },
+            "CreditDebitIndicator": "Credit",
+            "CreditLine": [
+                {
+                    "Amount": {
+                        "Amount": "500.00",
+                        "Currency": "GBP"
+                    },
+                    "Included": true,
+                    "Type": "Pre-Agreed"
+                }
+            ]
+        },
+        "expectedBalance": 1477.34,
+        "expectedAvailableCredit": null
+    },
+    {
+        "accountBalanceEntity": {
+            "Amount": {
+                "Amount": "150.15",
+                "Currency": "GBP"
+            },
+            "CreditDebitIndicator": "Credit",
+            "CreditLine": []
+        },
+        "expectedBalance": 150.15,
+        "expectedAvailableCredit": null
+    },
+    {
+        "accountBalanceEntity": {
+            "Amount": {
+                "Amount": "150.15",
+                "Currency": "GBP"
+            },
+            "CreditDebitIndicator": "Debit",
+            "CreditLine": [ ]
+        },
+        "expectedBalance": -150.15,
+        "expectedAvailableCredit": null
+    },
+    {
+        "accountBalanceEntity": {
+            "Amount": {
+                "Amount": "-150.15",
+                "Currency": "GBP"
+            },
+            "CreditDebitIndicator": "Debit",
+            "CreditLine": [ ]
+        },
+        "expectedBalance": -150.15,
+        "expectedAvailableCredit": null
+    }
+]

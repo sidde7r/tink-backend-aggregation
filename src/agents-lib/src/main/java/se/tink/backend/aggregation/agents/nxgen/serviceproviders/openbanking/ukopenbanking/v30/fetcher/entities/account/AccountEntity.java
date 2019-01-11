@@ -77,7 +77,7 @@ public class AccountEntity implements IdentifiableAccount {
         return CreditCardAccount
                 .builder(account.getUniqueIdentifier(),
                         balance.getBalance(),
-                        balance.getAvaliableCredit()
+                        balance.getAvailableCredit()
                                 .orElseThrow(() -> new IllegalStateException(
                                         "CreditCardAccount has no credit.")))
                 .setAccountNumber(account.getUniqueIdentifier())

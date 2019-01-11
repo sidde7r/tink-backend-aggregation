@@ -55,5 +55,6 @@ public abstract class UkOpenBankingV20Constants extends UkOpenBankingConstants {
 
     public static class ModelAttributes {
         public static final String SCHEME_NAME = "SchemeName";
+        public static final String CREDIT_LINE_TYPE = "Type";
     }
 }
