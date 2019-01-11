@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.santander.fetcher.tran
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.core.Amount;
 
 @JsonObject
@@ -13,16 +12,16 @@ public class Cards {
   private String accountAlias;
 
   @JsonProperty("fecha")
-  private String fecha;
+  private String date;
 
   @JsonProperty("cestaNegocio")
-  private String cestaNegocio;
+  private String businessBasket;
 
   @JsonProperty("subProducto")
-  private SubProducto subProducto;
+  private SubProduct subProducto;
 
   @JsonProperty("listContenidos")
-  private List<ListContenidosItem> listContenidos;
+  private List<ListContentItem> listContenidos;
 
   @JsonProperty("accountType")
   private String accountType;
@@ -31,10 +30,10 @@ public class Cards {
   private String accountNumberSort;
 
   @JsonProperty("cestaPresentacion")
-  private String cestaPresentacion;
+  private String presentation;
 
   @JsonProperty("panTarjeta")
-  private String panTarjeta;
+  private String cardPan;
 
   @JsonProperty("accountNumber")
   private AccountNumber accountNumber;
@@ -55,8 +54,8 @@ public class Cards {
   }
 
 
-  public String getPanTarjeta() {
-    return panTarjeta;
+  public String getCardPan() {
+    return cardPan;
   }
 
   public String getLocalContractType() {
@@ -68,6 +67,6 @@ public class Cards {
   }
 
   public String getCompanyId() {
-    return subProducto.gettIPODEPRODUCTO().geteMPRESA();
+    return subProducto.gettIPODEPRODUCTO().getCompany();
   }
 }

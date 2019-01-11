@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class SubProducto {
+public class SubProduct {
 
   @JsonProperty("SUBTIPO_DE_PRODUCTO")
   private String sUBTIPODEPRODUCTO;
 
   @JsonProperty("TIPO_DE_PRODUCTO")
-  private TIPODEPRODUCTO tIPODEPRODUCTO;
+  private KindOfProduct tIPODEPRODUCTO;
 
   public String getsUBTIPODEPRODUCTO() {
     return sUBTIPODEPRODUCTO;
   }
 
-  public TIPODEPRODUCTO gettIPODEPRODUCTO() {
+  public KindOfProduct gettIPODEPRODUCTO() {
     return tIPODEPRODUCTO;
   }
 }

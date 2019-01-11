@@ -10,5 +10,5 @@ public class SubtipoProducto {
   private String sUBTIPODEPRODUCTO;
 
   @JsonProperty("TIPO_DE_PRODUCTO")
-  private TIPODEPRODUCTO tIPODEPRODUCTO;
+  private KindOfProduct tIPODEPRODUCTO;
 }

@@ -33,7 +33,7 @@ public class SantanderCreditCardFetcher
     for (ListTarjetasItem item : response.getAccountResultEntity().getListCredit()) {
       CardDetailsResponse creditInfoResponse =
           client.fetchCardInfo(
-              item.getCards().getPanTarjeta(), item.getCards().getDetailContractLocal());
+              item.getCards().getCardPan(), item.getCards().getDetailContractLocal());
       res.add(creditInfoResponse.toCreditCardAccount(item.getCards().getDetailContractLocal()));
     }
 

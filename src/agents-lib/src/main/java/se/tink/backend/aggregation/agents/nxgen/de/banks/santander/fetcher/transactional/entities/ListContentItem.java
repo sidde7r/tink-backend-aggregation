@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ListContenidosItem {
+public class ListContentItem {
 
   @JsonProperty("contenido")
   private Content contenido;
