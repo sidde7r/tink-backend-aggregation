@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.fetcher.creditcard;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.fetcher.entities.AlandsBankenCard;
@@ -14,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class AlandsBankenCreditCardFetcher implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
+    private static final Logger LOG = LoggerFactory.getLogger(AlandsBankenCreditCardFetcher.class);
 
     private final AlandsBankenApiClient client;
 
@@ -23,9 +27,14 @@ public class AlandsBankenCreditCardFetcher implements AccountFetcher<CreditCardA
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return this.client.fetchCards().stream().filter(AlandsBankenCard::isCreditCard)
-                .map(AlandsBankenCard::toCreditCardAccount)
-                .collect(Collectors.toList());
+        try {
+            return this.client.fetchCards().stream().filter(AlandsBankenCard::isCreditCard)
+                    .map(AlandsBankenCard::toCreditCardAccount)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            LOG.info("Error fetching credit cards: " + e.getMessage());
+            return Collections.emptyList();
+        }
     }
 
     @Override
