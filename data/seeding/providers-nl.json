@@ -20,7 +20,7 @@
       "className": "nxgen.nl.banks.bunq.BunqAgent",
       "credentialsType": "PASSWORD",
       "displayName": "bunq",
-      "fields":[
+      "fields": [
         {
           "description": "API Key",
           "masked": true,
@@ -42,7 +42,7 @@
       "className": "nxgen.nl.banks.bunq.BunqAgent",
       "credentialsType": "PASSWORD",
       "displayName": "bunq - sandbox",
-      "fields":[
+      "fields": [
         {
           "description": "API Key",
           "masked": true,
@@ -67,17 +67,17 @@
       "displayName": "Test Password",
       "groupDisplayName": "Test Password",
       "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          },
-          {
-              "description": "Password",
-              "masked": true,
-              "sensitive": true,
-              "name": "password"
-          }
+        {
+          "description": "Username",
+          "immutable": true,
+          "name": "username"
+        },
+        {
+          "description": "Password",
+          "masked": true,
+          "sensitive": true,
+          "name": "password"
+        }
       ],
       "multiFactor": true,
       "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -85,19 +85,19 @@
       "status": "ENABLED",
       "transactional": true,
       "type": "TEST"
-  },
-  {
+    },
+    {
       "name": "nl-test-multi-supplemental",
       "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Test Multi-Supplemental",
       "groupDisplayName": "Test Multi-Supplemental",
       "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          }
+        {
+          "description": "Username",
+          "immutable": true,
+          "name": "username"
+        }
       ],
       "multiFactor": true,
       "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
@@ -105,6 +105,21 @@
       "status": "ENABLED",
       "transactional": true,
       "type": "TEST"
-  }
+    },
+    {
+      "name": "nl-ics-oauth2",
+      "displayName": "ICS",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.nl.creditcards.ICS.ICSAgent",
+      "passwordHelpText": null,
+      "transactional": "true",
+      "tutorialUrl": null,
+      "fields": [],
+      "payload": "abn https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    }
   ]
 }

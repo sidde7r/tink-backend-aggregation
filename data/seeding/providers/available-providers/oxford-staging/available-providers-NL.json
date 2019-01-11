@@ -3,6 +3,7 @@
   "providers" : [
     "nl-abnamro",
     "nl-bunq",
-    "nl-bunq-apikey"
+    "nl-bunq-apikey",
+    "nl-ics-oauth2"
   ]
 }
