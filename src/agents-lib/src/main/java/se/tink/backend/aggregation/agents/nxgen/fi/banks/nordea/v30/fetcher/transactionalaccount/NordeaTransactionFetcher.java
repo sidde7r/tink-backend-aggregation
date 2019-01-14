@@ -17,7 +17,7 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
 
     private static final long TRANSACTION_FETCHER_BACKOFF = 2500;
     private static final int MAX_RETRY_ATTEMPTS = 2;
-    private static final int GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS = 700;
+    private static final int GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS = 500;
 
     private final NordeaFiApiClient apiClient;
 
