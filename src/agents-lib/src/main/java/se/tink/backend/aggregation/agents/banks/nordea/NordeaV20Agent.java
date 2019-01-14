@@ -963,7 +963,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                     if (!custodyAccount.getCurrency().equalsIgnoreCase(this.market.getCurrency())) {
                         this.log.warn(String.format("%s is the only supported currency. Currency was %s",
                                 this.market.getCurrency(), custodyAccount.getCurrency()));
-                        return;
+                        continue;
                     }
 
                     String accountNumber = StringUtils.removeNonAlphaNumeric(custodyAccount.getAccountNumber());
