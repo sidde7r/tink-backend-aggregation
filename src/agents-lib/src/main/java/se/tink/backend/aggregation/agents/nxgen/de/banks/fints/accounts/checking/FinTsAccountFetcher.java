@@ -23,7 +23,8 @@ public class FinTsAccountFetcher implements AccountFetcher<TransactionalAccount>
     public Collection<TransactionalAccount> fetchAccounts() {
         apiClient.getAccounts()
                 .stream()
-                .filter(sepaAccount -> sepaAccount.getExtensions().contains(FinTsConstants.Segments.HKSAL))
+                .filter(sepaAccount -> sepaAccount.getExtensions() != null &&
+                        sepaAccount.getExtensions().contains(FinTsConstants.Segments.HKSAL))
                 .forEach(apiClient::getBalance);
 
         return apiClient.getSepaAccounts().stream()
