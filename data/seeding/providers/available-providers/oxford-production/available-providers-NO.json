@@ -2,6 +2,7 @@
   "clusterid" : "oxford-production",
   "providers" : [
     "danskebank-no",
+    "nordea-no",
     "no-aasen-sparebank",
     "no-afjord-sparebank",
     "no-andebu-sparebank",
