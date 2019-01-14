@@ -104,6 +104,7 @@ public class NordeaAgentUtils {
         addAccountType("SE0001", "Fn-konto", AccountTypes.CHECKING);
         addAccountType("SE0002", "Ombudskonto", AccountTypes.CHECKING);
         addAccountType("SE0004", "Synskadekonto", AccountTypes.CHECKING);
+        addAccountType("SE0029", "Företagskonto", AccountTypes.CHECKING);
         addAccountType("SE0005", "Utlandslönekonto", AccountTypes.CHECKING);
         addAccountType("SE1101", "Private Bankingkonto", AccountTypes.CHECKING);
         addAccountType("SE0100", "Personkonto Solo", AccountTypes.CHECKING);
@@ -116,7 +117,6 @@ public class NordeaAgentUtils {
         addAccountType("SE0304", "Synskadekonto", AccountTypes.CHECKING);
         addAccountType("SE0402", "IPS cash account", AccountTypes.CHECKING);
         addAccountType("SE0500", "Depålikvidkonto", AccountTypes.CHECKING);
-        addAccountType("SE0501", "ISK Trader likvidkonto", AccountTypes.CHECKING);
         addAccountType("SE0502", "Ombudskonto", AccountTypes.CHECKING);
         addAccountType("SE0600", "Pgkonto Privat", AccountTypes.CHECKING);
         addAccountType("SE0606", "Eplusgiro Privat", AccountTypes.CHECKING);
@@ -284,6 +284,11 @@ public class NordeaAgentUtils {
         addAccountType("SE4300", "ISK Classic likvidkonto", AccountTypes.SAVINGS);
         // NOTE: There is no hit for SE4309, since the description of SE4300 changed (2.8.0), guess it might be a
         // mistake that SE4309 is actually SE4300.
+        addAccountType("SE0037", "Boflex Pension", AccountTypes.PENSION);
+        addAccountType("SE0052", "ISK Depålikvidkonto", AccountTypes.SAVINGS);
+        addAccountType("SE0059", "Aktielikvidkonto", AccountTypes.SAVINGS);
+        addAccountType("SE1102", "ISK likvidkonto", AccountTypes.SAVINGS);
+        addAccountType("SE1109", "Sparkonto", AccountTypes.PENSION);
         addAccountType("SE4309", "ISK Classic likvidkonto", AccountTypes.SAVINGS);
         addAccountType("SE4400", "Skatteutjämningskonto", AccountTypes.SAVINGS);
         addAccountType("SE4401", "Skogskonto", AccountTypes.SAVINGS);
@@ -305,6 +310,7 @@ public class NordeaAgentUtils {
         addAccountType("SE4610", "Bonuskonto, utgåva", AccountTypes.SAVINGS);
 
         addAccountType("SE4611", "Tillväxtkonto", AccountTypes.SAVINGS);
+        addAccountType("SE0501", "ISK Trader likvidkonto", AccountTypes.SAVINGS);
         addAccountType("SE4700", "Planeringskonto 2 År", AccountTypes.SAVINGS);
         addAccountType("SE4800", "Planeringskonto 3 År", AccountTypes.SAVINGS);
         addAccountType("SE4900", "Planeringskonto 4 År", AccountTypes.SAVINGS);
@@ -451,6 +457,8 @@ public class NordeaAgentUtils {
         addAccountType("SE00165", "Konvertibellån", AccountTypes.LOAN);
         addAccountType("SE00183", "Investeringslån", AccountTypes.LOAN);
         addAccountType("SE00200", "Bolån", AccountTypes.LOAN, Loan.Type.MORTGAGE);
+        addAccountType("SE00210", "Företagslån Nordea Bank", AccountTypes.LOAN);
+        addAccountType("SE00220", "Företagslån Hypotek", AccountTypes.LOAN);
         addAccountType("SE00301", "Vinstandelslån", AccountTypes.LOAN);
         addAccountType("SE00302", "Värdestegringslån", AccountTypes.LOAN);
         addAccountType("SE00303", "Konverteringslån", AccountTypes.LOAN);
