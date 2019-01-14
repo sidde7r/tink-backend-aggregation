@@ -83,6 +83,10 @@ public class AggregationControllerAggregationClient {
         return getUpdateService(hostConfiguration).updateAccount(request);
     }
 
+    public Account updateAccountMetaData(HostConfiguration hostConfiguration, String accountId, se.tink.backend.core.Account account) {
+        return getUpdateService(hostConfiguration).updateAccountMetaData(accountId, account);
+    }
+
     public Response updateTransferDestinationPatterns(HostConfiguration hostConfiguration,
             UpdateTransferDestinationPatternsRequest request) {
         return getUpdateService(hostConfiguration).updateTransferDestinationPatterns(request);
