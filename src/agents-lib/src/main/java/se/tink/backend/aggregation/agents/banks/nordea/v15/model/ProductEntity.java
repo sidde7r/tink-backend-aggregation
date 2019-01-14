@@ -6,6 +6,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Sets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.libraries.account.AccountIdentifier;
@@ -35,10 +36,6 @@ public class ProductEntity implements GeneralAccountEntity {
 
     public Map<String, Object> getAccountType() {
         return accountType;
-    }
-
-    public Map<String, Object> getBalance() {
-        return balance;
     }
 
     public Map<String, Object> getBranchId() {
@@ -73,10 +70,6 @@ public class ProductEntity implements GeneralAccountEntity {
         return productId;
     }
 
-    public Map<String, Object> getProductNumber() {
-        return productNumber;
-    }
-
     public Map<String, Object> getProductType() {
         return productType;
     }
@@ -87,6 +80,22 @@ public class ProductEntity implements GeneralAccountEntity {
 
     public Map<String, Object> getWarningCode() {
         return warningCode;
+    }
+
+    public Optional<String> getBalance() {
+
+        if (balance != null && balance.containsKey("$")) {
+            return Optional.of(balance.get("$").toString());
+        }
+        return Optional.empty();
+    }
+
+    public Optional<String> getProductNumber() {
+
+        if (productNumber != null && productNumber.containsKey("$")) {
+            return Optional.of(productNumber.get("$").toString());
+        }
+        return Optional.empty();
     }
 
     public void setAccountType(Map<String, Object> accountType) {

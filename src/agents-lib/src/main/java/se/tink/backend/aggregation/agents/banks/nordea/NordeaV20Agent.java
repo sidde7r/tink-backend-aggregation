@@ -37,6 +37,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
@@ -645,9 +646,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private Optional<Account> constructAccount(ProductEntity productEntity) throws IOException {
         Account account = new Account();
 
-        if (productEntity.getBalance() != null && productEntity.getBalance().containsKey("$")) {
-            account.setBalance(parseAmount(productEntity.getBalance().get("$").toString()));
-        }
+        productEntity.getBalance()
+                .ifPresent(balance -> account.setBalance(parseAmount(balance)));
 
         if (productEntity.getNickName() != null && productEntity.getNickName().containsKey("$")) {
             account.setName(productEntity.getNickName().get("$").toString());
@@ -918,9 +918,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
     private void refreshInvestmentAccounts() throws IOException {
 
-        CustodyAccountsResponse response = createClientRequest(this.market.getSavingsEndpoint() + "/CustodyAccounts",
-                this.securityToken)
-                .type(MediaType.APPLICATION_JSON_TYPE).get(CustodyAccountsResponse.class);
+        CustodyAccountsResponse response = getCustodyAccounts();
 
         // The Custody Account Service at Nordea isn't very stable. Returning silently from error "MBS0110" or "MBS9001"
         // (Your custody accounts cannot be shown at the moment. Please try again later) as it is more important
@@ -936,41 +934,57 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             return;
         }
 
-        for (CustodyAccount custodyAccount : response.getCustodyAccounts()) {
-            try {
+        InitialContextResponse contextResponse = getInitialContext();
 
-                if (custodyAccount == null) {
-                    continue;
+        if (contextResponse != null) {
+            for (ProductEntity account : contextResponse.getProductsOfTypes(PRODUCT_TYPE_ACCOUNT)) {
+
+                Optional<String> productNumber = account.getProductNumber();
+                Optional<String> balance = account.getBalance();
+
+                if (productNumber.isPresent() && balance.isPresent()) {
+                    custodyAccountCashValueMap.put(
+                            StringUtils.removeNonAlphaNumeric(productNumber.get()),
+                            parseAmount(balance.get()));
                 }
+            }
 
-                Preconditions.checkState(custodyAccount.hasValidBankId(),
-                        "Unexpected account.bankid '%s' for account.name '%s'. Reformatted?",
-                        custodyAccount.getAccountId(), custodyAccount.getName());
+            for (CustodyAccount custodyAccount : response.getCustodyAccounts()) {
+                try {
 
-                if (!custodyAccount.getCurrency().equalsIgnoreCase(this.market.getCurrency())) {
-                    this.log.warn(String.format("%s is the only supported currency. Currency was %s",
-                            this.market.getCurrency(), custodyAccount.getCurrency()));
-                    return;
+                    if (custodyAccount == null) {
+                        continue;
+                    }
+
+                    Preconditions.checkState(custodyAccount.hasValidBankId(),
+                            "Unexpected account.bankid '%s' for account.name '%s'. Reformatted?",
+                            custodyAccount.getAccountId(), custodyAccount.getName());
+
+                    if (!custodyAccount.getCurrency().equalsIgnoreCase(this.market.getCurrency())) {
+                        this.log.warn(String.format("%s is the only supported currency. Currency was %s",
+                                this.market.getCurrency(), custodyAccount.getCurrency()));
+                        return;
+                    }
+
+                    String accountNumber = StringUtils.removeNonAlphaNumeric(custodyAccount.getAccountNumber());
+
+                    Account account = custodyAccount.toAccount();
+                    Portfolio portfolio = custodyAccount.toPortfolio(
+                            custodyAccountCashValueMap.getOrDefault(accountNumber, 0.0));
+
+                    List<Instrument> instruments = Lists.newArrayList();
+                    custodyAccount.getHoldings()
+                            .forEach(holdingsEntity -> {
+                                holdingsEntity.toInstrument(custodyAccount.getCurrency())
+                                        .ifPresent(instruments::add);
+                            });
+                    portfolio.setInstruments(instruments);
+
+                    this.context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                } catch (Exception e) {
+                    // Don't fail the whole refresh just because we failed updating investment data but log error.
+                    this.log.error("Caught exception while updating investment data", e);
                 }
-
-                String accountNumber = StringUtils.removeNonAlphaNumeric(custodyAccount.getAccountNumber());
-
-                Account account = custodyAccount.toAccount();
-                Portfolio portfolio = custodyAccount.toPortfolio(
-                        custodyAccountCashValueMap.getOrDefault(accountNumber, 0.0));
-
-                List<Instrument> instruments = Lists.newArrayList();
-                custodyAccount.getHoldings()
-                        .forEach(holdingsEntity -> {
-                            holdingsEntity.toInstrument(custodyAccount.getCurrency())
-                                    .ifPresent(instruments::add);
-                        });
-                portfolio.setInstruments(instruments);
-
-                this.context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
-            } catch (Exception e) {
-                // Don't fail the whole refresh just because we failed updating investment data but log error.
-                this.log.error("Caught exception while updating investment data", e);
             }
         }
     }
@@ -1029,17 +1043,13 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         productEntityAccountMap = new HashMap<>();
         try {
             InitialContextResponse contextResponse = getInitialContext();
-            CustodyAccountsResponse custodyAccountsResponse = createClientRequest(
-                    this.market.getSavingsEndpoint() + "/CustodyAccounts",
-                    this.securityToken)
-                    .type(MediaType.APPLICATION_JSON_TYPE)
-                    .get(CustodyAccountsResponse.class);
+            CustodyAccountsResponse custodyAccountsResponse = getCustodyAccounts();
 
-            custodyAccountsResponse.getCustodyAccounts()
+            Set<String> custodyAccountSet = custodyAccountsResponse.getCustodyAccounts()
                     .stream()
                     .map(CustodyAccount::getAccountNumber)
                     .map(StringUtils::removeNonAlphaNumeric)
-                    .forEach(number -> custodyAccountCashValueMap.put(number, 0.0));
+                    .collect(Collectors.toSet());
 
             if (contextResponse == null) {
                 return Collections.emptyMap();
@@ -1048,30 +1058,15 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             for (ProductEntity productEntity : contextResponse
                     .getProductsOfTypes(PRODUCT_TYPE_ACCOUNT, PRODUCT_TYPE_CARD)) {
 
-                // If account belongs to a custody account we store it so that it can represent the
-                // cash value of that investment. We skip constructing an account from it.
-                // This value is retrieved in this::refreshInvestmentAccounts.
-                if (productEntity.getProductNumber() != null && productEntity.getProductNumber().containsKey("$")) {
-
-                    String productNumber = productEntity.getProductNumber().get("$").toString();
-                    if (custodyAccountCashValueMap.containsKey(productNumber)) {
-
-                        Double cashValue = parseAmount(productEntity
-                                .getBalance()
-                                .get("$")
-                                .toString());
-                        custodyAccountCashValueMap.put(productNumber, cashValue);
-                        continue;
-                    }
-                }
-
-                Optional<Account> account = constructAccount(productEntity);
-
-                if (!account.isPresent()) {
+                // Skip accounts that belongs to an investment (liquidity accounts).
+                // This account will represent the cashValue in that investment, see this::refreshInvestmentAccounts.
+                Optional<String> productNumber = productEntity.getProductNumber();
+                if (productNumber.isPresent() && custodyAccountSet.contains(productNumber.get())) {
                     continue;
                 }
 
-                productEntityAccountMap.put(productEntity, account.get());
+                constructAccount(productEntity)
+                        .ifPresent(account -> productEntityAccountMap.put(productEntity, account));
             }
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -1325,6 +1320,13 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         BeneficiaryListResponse response = createJsonRequest(url, BeneficiaryListResponse.class);
 
         return response.getBeneficiaryListOut().getBeneficiaries();
+    }
+
+    private CustodyAccountsResponse getCustodyAccounts() {
+        return createClientRequest(this.market.getSavingsEndpoint() + "/CustodyAccounts",
+                this.securityToken)
+                .type(MediaType.APPLICATION_JSON_TYPE)
+                .get(CustodyAccountsResponse.class);
     }
 
     @Override
