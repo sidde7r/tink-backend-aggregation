@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.Payment;
 
-import java.util.List;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
@@ -8,6 +8,9 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entiti
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.BeneficiariesContacts;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.preparetransfer.PrepareRoot;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import java.util.List;
+
 import static junit.framework.TestCase.assertTrue;
 
 public class ParseTest  extends BelfiusTest {
@@ -27,7 +30,7 @@ public class ParseTest  extends BelfiusTest {
 
         assertTrue(isBeneficiary("BE11111111111111", beneficiaries));
         BelfiusPaymentResponse bpr = SerializationUtils.deserializeFromString(BelfiusPaymentTestData.SIGN_REQUIRE, BelfiusPaymentResponse.class);
-        assertTrue(bpr.requireSign());
+        assertTrue(bpr.isErrorMessageIdentifier());
         SignProtocolResponse spr = SerializationUtils.deserializeFromString(BelfiusPaymentTestData.signPrep, SignProtocolResponse.class);
         assertTrue(spr.cardReaderAllowed());
         spr = SerializationUtils.deserializeFromString(BelfiusPaymentTestData.PAYMENT_REQUEST, SignProtocolResponse.class);
@@ -46,10 +49,27 @@ public class ParseTest  extends BelfiusTest {
     }
 
     @Test
-    public void doublePaymentCheckTest() {
+    public void doublePaymentCheckDutchTest() {
         BelfiusPaymentResponse bpr = SerializationUtils.deserializeFromString(BelfiusPaymentTestData.SIGN_REQUIRE, BelfiusPaymentResponse.class);
-        assertTrue(bpr.isErrorOrContinueChangeButtonDoublePayment());
+        assertTrue(bpr.isErrorMessageIdentifier());
     }
 
+    @Test
+    public void doublePaymentCheckFrenchTest() {
+        BelfiusPaymentResponse bpr = SerializationUtils.deserializeFromString(BelfiusPaymentTestData.SIGN2_REQUIRE_FRENCH, BelfiusPaymentResponse.class);
+        assertTrue(bpr.isErrorMessageIdentifier());
+    }
+
+    @Test
+    public void shouldGetErrorMessageFromSignResponse() {
+        SignProtocolResponse spr = SerializationUtils.deserializeFromString(BelfiusPaymentTestData.SIGN2_REQUIRE_FRENCH, SignProtocolResponse.class);
+        Assert.assertEquals(
+                "Attention!  Vous avez déjà introduit un virement similaire. Si vous souhaitez poursuivre " +
+                        "l'exécution de ce virement, veuillez cliquer sur le bouton 'Continuer'. " +
+                        "Sinon, veuillez cliquer sur le bouton 'Modifier'.\n"
+                        + "(MOBILEBANKINGTRANSFERCREATION   /12DB/000000)" +
+                        " ERROR IN OperationMobileBankingTransferCreation (RK9HI510/12DB/000000)",
+                (spr).getErrorMessage());
+    }
 
 }

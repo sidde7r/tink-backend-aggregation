@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol;
 
-import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
@@ -9,6 +8,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ScreenUpdat
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.Text;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.Widget;
 import se.tink.backend.aggregation.annotations.JsonObject;
+
+import java.util.List;
 
 @JsonObject
 public class SignProtocolResponse extends BelfiusResponse {
@@ -66,7 +67,11 @@ public class SignProtocolResponse extends BelfiusResponse {
         return MessageResponse.invalidBeneficiarySign(this);
     }
 
-    public boolean signingRequired() {
-        return MessageResponse.requireSign(this);
+    public boolean requireSignWeeklyLimit() {
+        return MessageResponse.requireSignOfWeeklyLimit(this);
+    }
+
+    public String getErrorMessage() {
+        return MessageResponse.getErrorMessage(this);
     }
 }

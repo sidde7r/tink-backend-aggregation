@@ -6,12 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BelfiusPaymentResponse extends BelfiusResponse {
-    public boolean isErrorOrContinueChangeButtonDoublePayment() {
-        return MessageResponse.changeButtonErrorOrDoubleMessageIdentifier(this);
-    }
-
-    public boolean requireSign() {
-        return MessageResponse.requireSign(this);
+    public boolean isErrorMessageIdentifier() {
+        return MessageResponse.isErrorMessageIdentifier(this);
     }
 
     public boolean requireSignOfBeneficiary() {
