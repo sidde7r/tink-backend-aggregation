@@ -303,8 +303,12 @@ public class FinTsApiClient {
         }
         FinTsResponse getBalanceResponse = sendMessage(this.getMessageGetBalance(account));
 
+        // We cannot fetch the balance for all account types
         if (!getBalanceResponse.isSuccess()) {
-            throw new IllegalStateException(getBalanceResponse.toString());
+            String accountNumber = account.getAccountNo();
+            LONGLOGGER.warnExtraLong(String.format("Cannot fetch balance AccountNumber: %s , AccounType: %s", account.getAccountNo(), account.getAccountType()), FinTsConstants.LogTags.ERROR_CANNOT_FETCH_ACCOUNT_BALANCE);
+            //If we cannot fetch balance, we most likely cannot fetch transactions. Removing them from the list of accounts
+            this.sepaAccounts.removeIf(x -> x.getAccountNo().equalsIgnoreCase(accountNumber));
         }
 
         List<String> segments = getBalanceResponse.findSegments(FinTsConstants.Segments.HISAL);
