@@ -51984,6 +51984,7 @@
     {
       "name": "de-test-password",
       "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+      "displayDescription": "Password",
       "credentialsType": "PASSWORD",
       "displayName": "Test Password",
       "groupDisplayName": "Test Password",
@@ -52010,6 +52011,7 @@
   {
       "name": "de-test-multi-supplemental",
       "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+      "displayDescription": "Password",
       "credentialsType": "PASSWORD",
       "displayName": "Test Multi-Supplemental",
       "groupDisplayName": "Test Multi-Supplemental",
