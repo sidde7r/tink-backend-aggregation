@@ -70,6 +70,7 @@ public class FinTsApiClient {
 
         String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")),
                 StandardCharsets.ISO_8859_1);
+
         FinTsResponse response = new FinTsResponse(plainResponse);
 
         this.messageNumber++;
@@ -430,9 +431,11 @@ public class FinTsApiClient {
             return "";
         }
         nextLine = mt940Scanner.nextLine();
-        if (nextLine.startsWith(FinTsConstants.SegData.MT940_MULTIPURPOSE_FIELD)) {
-            tag86.append(nextLine.substring(4));
+        while (!nextLine.startsWith(FinTsConstants.SegData.MT940_MULTIPURPOSE_FIELD)) {
+            nextLine = mt940Scanner.nextLine();
         }
+        tag86.append(nextLine.substring(4));
+
         while (mt940Scanner.hasNextLine()) {
             nextLine = mt940Scanner.nextLine();
             if (!nextLine.startsWith(":")) {
