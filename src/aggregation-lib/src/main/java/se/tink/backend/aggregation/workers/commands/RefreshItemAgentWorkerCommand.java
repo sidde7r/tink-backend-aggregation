@@ -174,6 +174,16 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                         context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
                     }
                     break;
+                case INVESTMENT_TRANSACTIONS:
+                    for (Map.Entry<String, List<Transaction>> accountTransactions :
+                            ((RefreshInvestmentAccountsExecutor) agent)
+                                    .fetchInvestmentTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.cacheTransactions(
+                                accountTransactions.getKey(), accountTransactions.getValue());
+                    }
+                    break;
                 default:
                     throw new IllegalStateException(
                             String.format("Invalid refreshable item detected %s", item.name()));

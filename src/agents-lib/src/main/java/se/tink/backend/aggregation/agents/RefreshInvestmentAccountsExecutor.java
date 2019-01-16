@@ -12,4 +12,11 @@ public interface RefreshInvestmentAccountsExecutor {
      * @return fetch accounts response
      */
     FetchInvestmentAccountsResponse fetchInvestmentAccounts();
+
+    /**
+     * Fetch investment transactions
+     *
+     * @return fetch transactions response
+     */
+    FetchTransactionsResponse fetchInvestmentTransactions();
 }
