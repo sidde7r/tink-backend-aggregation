@@ -23,22 +23,12 @@ public class IngAtTransactionalAccountParser {
         return doc;
     }
 
-    /** Converts e.g. "€ 1.234,56" -> 1234.56 */
-    private static double valueFromAmountString(final String amountString) {
-        return Double.parseDouble(
-                amountString
-                        .replaceAll("\\s+", "")
-                        .replace("€", "")
-                        .replace(".", "")
-                        .replace(",", "."));
-    }
-
     public Amount getAmount() {
         final Element e = doc.select(String.format("h3:contains(%s)", "Kontostand")).first();
         final Element p = e.parent().parent();
         final Element b = p.select("span:matches(€?\\s*\\-?\\d)").first();
 
-        return new Amount("EUR", valueFromAmountString(b.text()));
+        return IngAtAmmountParser.toAmount(b.text());
     }
 
     private String getAccountIdentifier(final String type) {
