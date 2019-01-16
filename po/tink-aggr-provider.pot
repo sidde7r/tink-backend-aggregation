@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-15 11:19PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2019-01-15 17:37PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -17,643 +17,29 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-# data/seeding/providers-ro.json
-msgid "Passcode"
+# data/seeding/providers-nl.json
+msgid "API Key"
 msgstr ""
 
-# data/seeding/providers-ro.json
+# data/seeding/providers-nl.json
 msgid "Password"
 msgstr ""
 
-# data/seeding/providers-ro.json
-msgid "Phone number"
-msgstr ""
-
-# data/seeding/providers-ro.json
-msgid "Please enter your four digit passcode."
-msgstr ""
-
-# data/seeding/providers-ro.json
-msgid ""
-"Please enter your full phone number in international format, starting with "
-"'+' and including country code. Example: +49 NNN NNN NNNN"
-msgstr ""
-
-# data/seeding/providers-ro.json
-msgid "Use the same password as you would in your bank's mobile app."
-msgstr ""
-
-# data/seeding/providers-ro.json
+# data/seeding/providers-nl.json
 msgid ""
 "Use the same username and password as you would in the bank's mobile app."
 msgstr ""
 
-# data/seeding/providers-ro.json
+# data/seeding/providers-nl.json
 msgid "Username"
 msgstr ""
 
-# data/seeding/providers-at.json
-msgid "Customer number"
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid "PIN"
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid ""
-"Please enter your full phone number in international format, starting with "
-"'+' and including country code. Example: +34 NNN NNN NNNN"
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid "Signatory number"
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid ""
-"Use the same credentials as when you log in to americanexpress.at. You can "
-"order new passwords at [American Express](https://global.americanexpress.com/"
-"myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_AT)."
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid "Use the same username as you would in your bank's mobile app."
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid "User code"
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid "User name"
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid "User number"
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid ""
-"You will soon receive a message on your s Identity App.\n"
-"Open s Identity and sign.\n"
-"Then open Tink and press Submit"
-msgstr ""
-
-# data/seeding/providers-at.json
-msgid "s Identity Verification code"
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid "Card reader"
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid "Mobile BankID"
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid "NNNN"
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid "Please enter a valid social security number."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid "Please enter four digits."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid "Social security number"
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"To connect your bank, you need to identify yourself using Mobile BankID."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"To connect your broker, you need to identify yourself using Mobile BankID."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"To connect your credit card, you need to identify yourself using Mobile "
-"BankID."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid "Token generator"
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"Use the same code that you use in the bank's mobile app after you log in "
-"with Bank ID once. If you forgot your code, you can choose a new one in the "
-"bank's mobile app. By filling in this, transactions can be downloaded "
-"automatically in the background, so you do not need to use Bank ID every "
-"time."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"Use the same username and password as you would in the broker's mobile app."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"Use the same username and password as you would in the card issuer's mobile "
-"app."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid "YYYYMMDDNNNN"
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"You use Mobile BankID the same way as in the bank's mobile app. If you have "
-"a personal code for simplified login, we recommend using it instead of "
-"Mobile BankID."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"You use the same 4-digit PIN as when you log in at the service provider's "
-"web site."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"You use the same 4-digit service code as for the bank's mobile app. You also "
-"need access to your token generator to create a screen code."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"You use your card reader and personal code the same way as you would in the "
-"bank's mobile app."
-msgstr ""
-
-# data/seeding/providers-se.json
-msgid ""
-"You use your social security number and PIN the same way as when you log in "
-"to the bank's mobile app."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "CPR no./User no."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "CPR or NemID number."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "CPR or User number."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "Mobile code"
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "NNNNNN"
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "NemID Login"
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "Pin Code"
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid ""
-"Please authenticate yourself using the same credentials you normally use in "
-"your bank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "Please enter 6 digits."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "Service code"
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid ""
-"Use the same 4 digit service code you use in your Danske Bank mobile app."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid ""
-"Use the same mobile code you use in your Jyske Bank mobile app. You select "
-"your mobile code on jyskenetbank.dk under administration \"Agreements and "
-"mobile\"."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "Use the same pin code as you would in your bank's mobile app."
-msgstr ""
-
-# data/seeding/providers-dk.json
-msgid "User-ID"
-msgstr ""
-
-# data/seeding/providers-fr.json
-msgid "Account number (11 digits)"
-msgstr ""
-
-# data/seeding/providers-fr.json
-msgid "App passcode (4 digits)"
-msgstr ""
-
-# data/seeding/providers-fr.json
-msgid "App passcode was incorrect. Please try again."
-msgstr ""
-
-# data/seeding/providers-fr.json
-msgid "Personal code (6 digits)"
-msgstr ""
-
-# data/seeding/providers-fr.json
-msgid ""
-"Please enter your full phone number in international format, starting with "
-"'+' and including country code. Example: +33 NNN NNN NNNN"
-msgstr ""
-
-# data/seeding/providers-fr.json
-msgid "Sign in with your account number, personal code, and app pass code."
-msgstr ""
-
-# data/seeding/providers-fr.json
-msgid "Your account number was incorrect. Please try again."
-msgstr ""
-
-# data/seeding/providers-fr.json
-msgid "Your personal code was incorrect. Please try again."
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Access Code"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "DDMMYYYY"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "DNI/NIE ID number"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Date of birth (DDMMYYYY)"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "N for NIE, C for NIF, P for Passport, I for Other Documents"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "NIF/NIE ID number"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Use the same credentials as when using the ING Direct app."
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Use the same credentials as when using the mobile bank app."
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid ""
-"Use the same credentials as when you log in to americanexpress.es. You can "
-"order new passwords at [American Express](https://global.americanexpress.com/"
-"myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES)."
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "User"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Username type"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Your 4 digit online PIN"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Your 6 digit online PIN"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Your 8 digit online PIN"
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid "Your NIE, NIF, passport number etc."
-msgstr ""
-
-# data/seeding/providers-es.json
-msgid ""
-"Your user number can be the 16 numbers of any of your cards Visa Sendo or "
-"debit, the user 16 numbers provided with your provisional password or a "
-"personal identification, which can contain letters and numbers, that you "
-"have generated."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
-msgid "Personal code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
-msgid ""
-"You use the same PIN as for Länsförsäkringars internet service or mobile "
-"app. If you do not have a PIN you can order one via Länsförsäkringars "
-"customer service (phone 0771-666 555 and hold for personal service)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
-msgid ""
-"You use the same personal code as for SEBs mobile app. You can order a new "
-"code from the internet bank. More info at [SEB](http://www.seb.se/pow/wcp/"
-"index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID"
-"%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
-msgid ""
-"You use the same username and password as when you log in to avanza.se. You "
-"can order a new username and password at [Avanza](https://www.avanza.se/aza/"
-"login/forgotten.jsp)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
-msgid ""
-"In order to use Commerzbank with Tink, please authenticate yourself using "
-"the same credentials you normally use in Commerzbank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
-msgid ""
-"In order to use DKB with Tink, please authenticate yourself using the same "
-"credentials you normally use in DKB's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
-msgid "Please enter 5 to 8 characters."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
-msgid "Username or user number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
-msgid ""
-"You use the same username and password as you use on americanexpress.com in "
-"order to verify your identity."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-NL.json
-msgid "API Key"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-NL.json
-msgid "Login name"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-staging/provider-override-NL.json
+# data/seeding/providers-nl.json
 msgid "You get the API key from your bunq app by going to Profile > Security."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-LV.json
-msgid "Client Code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-LV.json
-msgid "Key/code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-NO.json
-msgid "DDMMYYNNNN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-NO.json
-msgid "You use the same 4-digit service code as for Danske Banks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-GR.json
-msgid "Security code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-GR.json
-msgid "Subscription code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-GR.json
-msgid "extraPIN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Customer ID"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Date of birth"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "NNNNN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "NNNNNNNN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "NNNNNNNNNN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Open24 number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Personal Access Number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Personal access code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Please enter 10 digits."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Please enter 5 digits."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Please enter 8 digits."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "Registration number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
-msgid "YYYYMMDD"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "Please enter six digits."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 4-digit mobile code as for BankNordiks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 4-digit mobile code as for Basisbanks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Broager Sparekasses mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 4-digit mobile code as for Handelsbankens mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 4-digit mobile code as for Jutlander Banks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Rønde Sparekasses mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Spar Nord Bankaktieselskabs "
-"mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Sparekassen Bredebros mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Sparekassen Djurslands mobile "
-"app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Sparekassen Fyns mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Sparekassen Kronjyllands mobile "
-"app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Sparekassen Vendsyssels mobile "
-"app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Sparekassen for Nr. Nebel og "
-"Omegns mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 4-digit mobile code as for Swedbanks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 4-digit mobile code as for Vorbasse-Hejnsvig Sparekasses "
-"mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 6-digit mobile code as for Alm Brand Banks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 6-digit mobile code as for Djurslands Banks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 6-digit mobile code as for Jyske Banks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 6-digit mobile code as for Nordjyske Banks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 6-digit mobile code as for Ringkjøbing Landbobankens mobile "
-"app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 6-digit mobile code as for Skjern Banks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid ""
-"You use the same 6-digit mobile code as for Sparekassen Sjællands mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
-msgid "You use the same 6-digit mobile code as for Sydbanks mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
-msgid ""
-"In order to use CIC with Tink, please authenticate yourself using the same "
-"credentials you normally use in CIC's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
-msgid ""
-"In order to use Crédit Mutuel du Bretagne with Tink, please authenticate "
-"yourself using the same credentials you normally use in Crédit Mutuel du "
-"Bretagne's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
-msgid ""
-"In order to use Crédit Mutuel du Sud-Ouest with Tink, please authenticate "
-"yourself using the same credentials you normally use in Crédit Mutuel du Sud-"
-"Ouest's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
-msgid ""
-"In order to use Crédit Mutuel with Tink, please authenticate yourself using "
-"the same credentials you normally use in Crédit Mutuel's mobile banking app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "Card reader"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -667,11 +53,35 @@ msgid ""
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "Mobile BankID"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid "NNN"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "NNNN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "PIN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "Personal code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "Please enter a valid social security number."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid "Please enter four digits, or leave blank."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "Please enter four digits."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -681,6 +91,14 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid "Please enter three digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "Service code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "Social security number"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -850,6 +268,14 @@ msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to Supreme Cards website. You "
 "will return to Tink when you have authenticated yourself."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "User-ID"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid "YYYYMMDDNNNN"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -1077,6 +503,14 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
+"You use the same personal code as for SEBs mobile app. You can order a new "
+"code from the internet bank. More info at [SEB](http://www.seb.se/pow/wcp/"
+"index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID"
+"%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
 "You use the same self-service code as when you log in to IKANO Korts "
 "website. The self-service code is your IVR code, located on your invoice."
 msgstr ""
@@ -1109,6 +543,13 @@ msgstr ""
 msgid ""
 "You use the same username and password as when you log in to Coops website "
 "or mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
+msgid ""
+"You use the same username and password as when you log in to avanza.se. You "
+"can order a new username and password at [Avanza](https://www.avanza.se/aza/"
+"login/forgotten.jsp)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -1172,6 +613,115 @@ msgid ""
 "to Forex Banks mobile app."
 msgstr ""
 
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-NO.json
+msgid "DDMMYYNNNN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-NO.json
+msgid "You use the same 4-digit service code as for Danske Banks mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "NNNNNN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "NNNNNNNN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "Please enter four to six digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "Please enter your user-id."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "You use the same PIN (4 digits) as for Nordeas mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "You use the same bank codes as in OP-Pohjolas mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "You use the same bank codes as in POP Pankkis mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "You use the same bank codes as in S-Pankkis mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid "You use the same bank codes as in Säästöpankkins mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
+msgid ""
+"You use your Finnish user-ID and password the same way as when you log in to "
+"Ålandsbankens mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
+msgid ""
+"In order to use American Express with Tink, please authenticate yourself "
+"using the same credentials you normally use in American Express' mobile app "
+"or at their website."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
+msgid ""
+"In order to use Citibank with Tink, please authenticate yourself using the "
+"same credentials you normally use in Citibank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
+msgid ""
+"In order to use Danske Bank with Tink, please authenticate yourself using "
+"the same credentials you normally use in Danske Bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
+msgid "Passcode"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
+msgid "User Name"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-PT.json
+msgid "Access code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-PT.json
+msgid "Please enter digits only."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-PT.json
+msgid "Secret code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-PT.json
+msgid "Username or access number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GR.json
+msgid "Please enter 6 digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GR.json
+msgid "Security code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GR.json
+msgid "Subscription code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-GR.json
+msgid "extraPIN"
+msgstr ""
+
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-RO.json
 msgid "Login ID"
 msgstr ""
@@ -1214,12 +764,6 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
 msgid ""
-"In order to use Citibank with Tink, please authenticate yourself using the "
-"same credentials you normally use in Citibank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
-msgid ""
 "In order to use Itaú Unibanco with Tink, please authenticate yourself using "
 "the same credentials you normally use in Itaú Unibanco's mobile banking app."
 msgstr ""
@@ -1240,38 +784,72 @@ msgstr ""
 msgid "Password for your account."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid "Please enter four to six digits."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-CZ.json
+msgid "Client number"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid "Please enter your user-id."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-CZ.json
+msgid "Identification number"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid "You use the same PIN (4 digits) as for Nordeas mobile app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IT.json
+msgid "Client code"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid "You use the same bank codes as in OP-Pohjolas mobile app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IT.json
+msgid "Date of birth"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid "You use the same bank codes as in POP Pankkis mobile app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IT.json
+msgid "Please enter 8 digits."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid "You use the same bank codes as in S-Pankkis mobile app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IT.json
+msgid "User code"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid "You use the same bank codes as in Säästöpankkins mobile app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IT.json
+msgid "YYYYMMDD"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-FI.json
-msgid ""
-"You use your Finnish user-ID and password the same way as when you log in to "
-"Ålandsbankens mobile app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "Customer ID"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "Customer number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "NNNNN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "NNNNNNNNNN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "Open24 number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "Personal Access Number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "Personal access code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "Please enter 10 digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "Please enter 5 digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-IE.json
+msgid "Registration number"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-PL.json
@@ -1290,27 +868,50 @@ msgstr ""
 msgid "ID or username"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-IT.json
-msgid "Client code"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
+msgid ""
+"In order to use CIC with Tink, please authenticate yourself using the same "
+"credentials you normally use in CIC's mobile banking app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-CZ.json
-msgid "Client number"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
+msgid ""
+"In order to use Crédit Mutuel du Bretagne with Tink, please authenticate "
+"yourself using the same credentials you normally use in Crédit Mutuel du "
+"Bretagne's mobile banking app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-CZ.json
-msgid "Identification number"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
+msgid ""
+"In order to use Crédit Mutuel du Sud-Ouest with Tink, please authenticate "
+"yourself using the same credentials you normally use in Crédit Mutuel du Sud-"
+"Ouest's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
+msgid ""
+"In order to use Crédit Mutuel with Tink, please authenticate yourself using "
+"the same credentials you normally use in Crédit Mutuel's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-LV.json
+msgid "Client Code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-LV.json
+msgid "Key/code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-LV.json
+msgid "Login name"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
+msgid "Access Code"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
 msgid "DBS iB Secure PIN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
-msgid ""
-"In order to use American Express with Tink, please authenticate yourself "
-"using the same credentials you normally use in American Express' mobile app "
-"or at their website."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
@@ -1338,85 +939,243 @@ msgid ""
 "Breeze's mobile banking app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "CPR or NemID number."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "Mobile code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "Please enter six digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 4-digit mobile code as for BankNordiks mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 4-digit mobile code as for Basisbanks mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
 msgid ""
-"In order to use Danske Bank with Tink, please authenticate yourself using "
-"the same credentials you normally use in Danske Bank's mobile banking app."
+"You use the same 4-digit mobile code as for Broager Sparekasses mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
-msgid "User Name"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 4-digit mobile code as for Handelsbankens mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-PT.json
-msgid "Access code"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 4-digit mobile code as for Jutlander Banks mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-PT.json
-msgid "Please enter digits only."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Rønde Sparekasses mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-PT.json
-msgid "Secret code"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Spar Nord Bankaktieselskabs "
+"mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/oxford-production/provider-override-PT.json
-msgid "Username or access number"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Sparekassen Bredebros mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "(8 digits)"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Sparekassen Djurslands mobile "
+"app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "4 - 7 digits"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Sparekassen Fyns mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "DDMMYYNNNNN"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Sparekassen Kronjyllands mobile "
+"app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "Light Login"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Sparekassen Vendsyssels mobile "
+"app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "Mobile number"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Sparekassen for Nr. Nebel og "
+"Omegns mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "National ID number"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 4-digit mobile code as for Swedbanks mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "PIN code"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 4-digit mobile code as for Vorbasse-Hejnsvig Sparekasses "
+"mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "Please enter a valid PIN code"
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 6-digit mobile code as for Alm Brand Banks mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "Please enter a valid mobile phone number."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 6-digit mobile code as for Djurslands Banks mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "Please enter a valid national ID number."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 6-digit mobile code as for Jyske Banks mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "Use the same PIN code as you would in Danske Bank's mobile app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 6-digit mobile code as for Nordjyske Banks mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-NO.json
-msgid "Use the same PIN code as you would in your bank's mobile app."
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 6-digit mobile code as for Ringkjøbing Landbobankens mobile "
+"app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 6-digit mobile code as for Skjern Banks mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid ""
+"You use the same 6-digit mobile code as for Sparekassen Sjællands mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-production/provider-override-DK.json
+msgid "You use the same 6-digit mobile code as for Sydbanks mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"To connect your bank, you need to identify yourself using Mobile BankID."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"To connect your broker, you need to identify yourself using Mobile BankID."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"To connect your credit card, you need to identify yourself using Mobile "
+"BankID."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid "Token generator"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"Use the same code that you use in the bank's mobile app after you log in "
+"with Bank ID once. If you forgot your code, you can choose a new one in the "
+"bank's mobile app. By filling in this, transactions can be downloaded "
+"automatically in the background, so you do not need to use Bank ID every "
+"time."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"Use the same username and password as you would in the broker's mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"Use the same username and password as you would in the card issuer's mobile "
+"app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"You use Mobile BankID the same way as in the bank's mobile app. If you have "
+"a personal code for simplified login, we recommend using it instead of "
+"Mobile BankID."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"You use the same 4-digit PIN as when you log in at the service provider's "
+"web site."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"You use the same 4-digit service code as for the bank's mobile app. You also "
+"need access to your token generator to create a screen code."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"You use the same PIN as for Länsförsäkringars internet service or mobile "
+"app. If you do not have a PIN you can order one via Länsförsäkringars "
+"customer service (phone 0771-666 555 and hold for personal service)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"You use your card reader and personal code the same way as you would in the "
+"bank's mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-SE.json
+msgid ""
+"You use your social security number and PIN the same way as when you log in "
+"to the bank's mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
+msgid ""
+"In order to use Commerzbank with Tink, please authenticate yourself using "
+"the same credentials you normally use in Commerzbank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
+msgid ""
+"In order to use DKB with Tink, please authenticate yourself using the same "
+"credentials you normally use in DKB's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
+msgid "Please enter 5 to 8 characters."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
+msgid "Username or user number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-DE.json
+msgid ""
+"You use the same username and password as you use on americanexpress.com in "
+"order to verify your identity."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/oxford-staging/provider-override-AT.json
+msgid "User number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid "Mobilt BankID"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as at Norwegian's website. More info at "
@@ -1424,7 +1183,7 @@ msgid ""
 "bankid)."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as in Handelsbankens mobile app. More info at "
@@ -1432,48 +1191,48 @@ msgid ""
 "qF01AA1F3402ECCE2C12581A0003CC76F)."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as in SEBs mobile app. You will return to Tink "
 "when you have authenticated yourself. More info at [SEB](http://www.seb.se)."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as on Collector Banks website."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to JET MasterCards website."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "You use Mobile BankID the same way as for Länsförsäkringars internet service "
 "or mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "You use Mobile BankID the same way as in Danske Banks mobile app. You can "
 "order a new Mobile BankID at the internet bank."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "You use Mobile BankID the same way as in ICAbankens mobile app. You can "
 "order Mobile BankID at the internet bank."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid "You use Mobile BankID the same way as in Marginalen Banks mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "You use Mobile BankID the same way as in Skandiabankens mobile app. You can "
 "order Mobile BankID at the internet bank. Read more at [Skandiabanken]"
@@ -1481,7 +1240,7 @@ msgid ""
 "planboken/Sa-har-ansluter-du-dig/)."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "You use Mobile BankID the same way as in Swedbanks mobile app. If you have a "
 "personal code for simplified login, we recommend that you use that instead "
@@ -1490,52 +1249,743 @@ msgid ""
 "use Mobile BankID to log in to Tink every time."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
+# data/seeding/providers/overriding-providers/newport-production/provider-override-SE.json
 msgid ""
 "You use the same password as when you log in to Supreme Cards website. If "
 "you do not remember your password, you can reset it by calling customer "
 "service: 077-440 44 77."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
+msgid ""
+"To connect your bank you need to authenticate with Mobile BankID. You use "
+"Mobile BankID the same way as in Handelsbankens mobile app. More info at "
+"[Handelsbanken](http://www.handelsbanken.se/shb/INeT/IStartSv.nsf/FrameSet?"
+"OpenView&amp;iddef=&amp;navid=A_Sjalvbetjaning_-_Effektivisera&amp;sa=/Shb/"
+"Inet/ICentSv.nsf/Default/q6C11BD80287CAC54C125772A0028E9E8)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
+msgid ""
+"To connect your bank you need to authenticate with Mobile BankID. You use "
+"Mobile BankID the same way as in Sparbanken Syds mobile app. You will return "
+"to Tink when you have authenticated yourself. Read more at [Sparbanken Syd]"
+"(https://internetbanken.sparbankensyd.se/BankIDLogin/Sidor/login.aspx)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
+msgid ""
+"You use the same self-service code as when you log in to Skoda My Account. "
+"The self-service code is your IVR code, located on your statement."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
+msgid ""
+"You use the same username and password as when you use Rikskortets app or "
+"log in to the website. You can order a new code at the [website](https://www."
+"edenred.se/sv/System/Glomt-losenord/)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
+msgid ""
+"You use your Swedish user-ID and password the same way as when you log in to "
+"csn.se. You can order a new code at [CSN](https://www.csn.se/bas/ekund/"
+"personligKod.do)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
+msgid ""
+"You use your card reader and personal code the same way as for "
+"Handelsbankens mobile app. More info at [Handelsbanken](http://www."
+"handelsbanken.se/shb/INeT/IStartSv.nsf/FrameSet?OpenView&amp;iddef=&amp;"
+"navid=A_Sjalvbetjaning_-_Effektivisera&amp;sa=/SHB/Inet/ICentSv.nsf/Default/"
+"q6C11BD80287CAC54C125772A0028E9E8)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-EE.json
+msgid "Password or PIN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-ES.json
+msgid "Document number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-ES.json
+msgid "ID number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-ES.json
+msgid "ID, passport or residence card"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-ES.json
+msgid "User"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-ES.json
+msgid ""
+"Your user number can be the 16 numbers of any of your cards Visa Sendo or "
+"debit, the user 16 numbers provided with your provisional password or a "
+"personal identification, which can contain letters and numbers, that you "
+"have generated."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HU.json
+msgid "Direct ID"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HU.json
+msgid "ID Code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "(8 digits)"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "4 - 7 digits"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "DDMMYYNNNNN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "Light Login"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "Mobile number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "National ID number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "PIN code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "Please enter a valid PIN code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "Please enter a valid mobile phone number."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "Please enter a valid national ID number."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "Use the same PIN code as you would in Danske Bank's mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-NO.json
+msgid "Use the same PIN code as you would in your bank's mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
 msgid "NNNN NNNN"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
 msgid "Online bank signup password"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
-msgid "Please input a 4-digit Service Code."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
 msgid "Please input a 4-digit password."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
-msgid "Please input a 8-digit Username."
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
+msgid "Please input a 8-digit username."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
 msgid "Please input a valid username."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
-msgid "Please input the password also used for web login."
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
+msgid "Please input the password also used for the web login."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
 msgid ""
 "Use the same User-ID and password as you would in your bank's mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
+msgid "Use the same password as you would in your bank's mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FI.json
 msgid ""
-"You use you card reader and personal code like you do in Handelsbanken's  "
+"You use your card reader and personal code like you do in Handelsbanken's "
 "mobile app. For more information visit [Handelsbanken](https://www."
 "handelsbanken.fi/shb/inet/Icentfi.nsf/vlookupfirstpage/sv_handelsbankenfi?"
 "Opendocument)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "Branch"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "For 6-digit PIN please enter the first 5 digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid ""
+"In order to use Deutsche Bank with Tink, please authenticate yourself using "
+"the same credentials you normally use in Deutsche Bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid ""
+"In order to use Postbank with Tink, please authenticate yourself using the "
+"same credentials you normally use in Postbank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid ""
+"In order to use Sparkasse with Tink, please authenticate yourself using the "
+"same credentials you normally use in Sparkasse's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid ""
+"In order to use VR-Bank with Tink, please authenticate yourself using the "
+"same credentials you normally use in VR-Bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "NN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "NNNNNNN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "NR-NetKey or alias"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "Online-Banking PIN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "Please enter 2 digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "Please enter 7 digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "Sub-account"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+msgid "XXXXX"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/"
+"BEL_CardReader.png) Login using your Belfius Card Reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN."
+"png) Press\n"
+"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter the security code []"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/"
+"BEL_CardReader.png) Sign using your Belfius Card Reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN."
+"png) Press\n"
+"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter the security code []"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN."
+"png) Press\n"
+"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) "
+"Enter your PIN and press\n"
+"4$ Enter the following number []"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
+"ING_IDENTIFY.png) Press\n"
+"3$ Enter your PIN\n"
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) "
+"Press\n"
+"5$ Enter the response code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/"
+"KBC_CardReader.png) Insert your bank card into the KBC card reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
+"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
+"png) Tap\n"
+"3$ Enter your start code []"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/"
+"KBC_CardReader.png) Insert your bank card into the card reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN."
+"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN."
+"png) Tap\n"
+"3$ Enter the start code []"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/"
+"KBC_CardReader.png) Insert your bank card into the card reader\n"
+"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
+"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
+"png) Tap\n"
+"3$ Enter the start code []"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter your PIN\n"
+"5$ Enter the login code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Want to register your device?\n"
+"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter your PIN\n"
+"6$ Enter the signature code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Want to sign for the beneficiary?\n"
+"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter the control code []"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Want to sign for the transfer?\n"
+"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Amount []"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
+"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
+"png) Tap\n"
+"5$ Enter the amount, including the digits after the decimal sign\n"
+"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
+"Tap to confirm\n"
+"7$ Enter your PIN\n"
+"8$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
+"Tap\n"
+"9$ Enter the sign code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
+"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
+"png) Tap\n"
+"5$ Enter your PIN\n"
+"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
+"Tap\n"
+"7$ Enter the sign code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
+"Tap\n"
+"5$ Enter your secret code\n"
+"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
+"Tap\n"
+"7$ Enter the login code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN."
+"png) And press\n"
+"6$ Enter your RESPONSE code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
+"Enter your PIN\n"
+"7$ Enter the signature code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Access Token"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Beneficiary Name"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Card ID"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Card number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Challenge"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Control Code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Description Code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "ING ID"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Name"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Number of your bank card"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"Please authenticate yourself with your Belfius credentials. You will also "
+"need your Belfius card reader to finish the authentication."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"Please authenticate yourself with your ING credentials. You will also need "
+"your ING card reader to finish the authentication. By connecting to this "
+"bank, you confirm that you have accepted the bank’s [terms and conditions]‌‌‌"
+"(https://www.ing.be/static/legacy/SiteCollectionDocuments/"
+"GeneralRegulationsNewEN.pdf)."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"Please authenticate yourself with your KBC credentials. You will also need "
+"your KBC card reader to finish the authentication."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "Response Code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid ""
+"You have not transferred money to this account before. Please supply the "
+"name of the owner to the account in the field below"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BE.json
+msgid "You have to enter your full card number and control number. 17 digits."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SI.json
+msgid "One-time password"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-PT.json
+msgid "Access number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-PT.json
+msgid "Multi-channel key"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid "Card Number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid "Card Password"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid "Different from the card password"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid ""
+"In order to use Alelo with Tink, please authenticate yourself using the same "
+"credentials you normally use in Alelo's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid ""
+"In order to use Banrisul with Tink, please authenticate yourself using the "
+"same credentials you normally use in Banrisul's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid ""
+"In order to use Cielo with Tink, please authenticate yourself using the same "
+"credentials you normally use in Cielo's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid ""
+"In order to use HSBC Bank with Tink, please authenticate yourself using the "
+"same credentials you normally use in HSBC Bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid ""
+"In order to use Itaúcard with Tink, please authenticate yourself using the "
+"same credentials you normally use in Itaúcard's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-BR.json
+msgid "Property Number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-CZ.json
+msgid "Login number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-CZ.json
+msgid "One Time Code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid "CRN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid ""
+"In order to use Axis Bank with Tink, please authenticate yourself using the "
+"same credentials you normally use in Axis Bank's internet banking."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid ""
+"In order to use Canara Bank with Tink, please authenticate yourself using "
+"the same credentials you normally use in CanaraBank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid ""
+"In order to use Citibank with Tink, please authenticate yourself using the "
+"same credentials you normally use in Citibank's mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid ""
+"In order to use HDFC Bank with Tink, please authenticate yourself using the "
+"same credentials you normally use in HDFC Bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid ""
+"In order to use ICICI Bank with Tink, please authenticate yourself using the "
+"same credentials you normally use in ICICI Bank's internet banking or "
+"Pockets mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid ""
+"In order to use Kotak Mahindra Bank with Tink, please authenticate yourself "
+"using the same credentials you normally use in Kotak Mahindra Bank's "
+"internet banking."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid ""
+"In order to use Punjab National Bank with Tink, please authenticate yourself "
+"using the same credentials you normally use in Punjab National Bank's mobile "
+"banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid ""
+"In order to use State Bank with Tink, please authenticate yourself using the "
+"same credentials you normally use in State Bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid "Internet banking password"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid "Internet banking username"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid "MPIN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IN.json
+msgid "Password IPIN"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HR.json
+msgid "APPLI 1"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HR.json
+msgid "From PBZmToken app, card reader or Digipass."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HR.json
+msgid "From card reader, Digipass or mToken."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HR.json
+msgid "From mToken app or Display Card."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HR.json
+msgid "Token Serial Number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HR.json
+msgid "Token number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-HR.json
+msgid "Token serial number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IE.json
+msgid "Membership Number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-IE.json
+msgid "Surname"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-PL.json
+msgid "Identifier"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-AT.json
+msgid "Signatory Number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FR.json
+msgid ""
+"In order to use Crédit Mutuel Massif Central with Tink, please authenticate "
+"yourself using the same credentials you normally use in Crédit Mutuel Massif "
+"Central's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FR.json
+msgid ""
+"In order to use Crédit du Nord with Tink, please authenticate yourself using "
+"the same credentials you normally use in Crédit du Nord's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SG.json
+msgid ""
+"In order to use Alipay with Tink, please authenticate yourself using the "
+"same credentials you normally use in Alipay's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SG.json
+msgid ""
+"In order to use DBS Bank with Tink, please authenticate yourself using the "
+"same credentials you normally use in DBS Bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SG.json
+msgid ""
+"In order to use POSB Bank with Tink, please authenticate yourself using the "
+"same credentials you normally use in POSB Bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SG.json
+msgid ""
+"In order to use Standard Chartered with Tink, please authenticate yourself "
+"using the same credentials you normally use in Standard Chartered's mobile "
+"banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SG.json
+msgid ""
+"In order to use United Overseas Bank with Tink, please authenticate yourself "
+"using the same credentials you normally use in United Overseas Bank's mobile "
+"banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DK.json
+msgid "CPR no./User no."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DK.json
+msgid "CPR or User number."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DK.json
+msgid "NemID Login"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DK.json
+msgid "Pin Code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DK.json
+msgid ""
+"Please authenticate yourself using the same credentials you normally use in "
+"your bank's mobile banking app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DK.json
+msgid ""
+"Use the same 4 digit service code you use in your Danske Bank mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DK.json
+msgid ""
+"Use the same mobile code you use in your Jyske Bank mobile app. You select "
+"your mobile code on jyskenetbank.dk under administration \"Agreements and "
+"mobile\"."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DK.json
+msgid "Use the same pin code as you would in your bank's mobile app."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/leeds-production/provider-override-NL.json
+msgid "Contracts"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/kirkby-staging/provider-override-NO.json
@@ -1553,124 +2003,7 @@ msgstr ""
 msgid "Please enter a valid activation code."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/kirkby-staging/provider-override-FI.json
-msgid "Please input a 8-digit username."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/kirkby-staging/provider-override-FI.json
-msgid "Please input the password also used for the web login."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/kirkby-staging/provider-override-FI.json
-msgid ""
-"You use you card reader and personal code like you do in Handelsbanken's "
-"mobile app. For more information visit [Handelsbanken](https://www."
-"handelsbanken.fi/shb/inet/Icentfi.nsf/vlookupfirstpage/sv_handelsbankenfi?"
-"Opendocument)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IE.json
-msgid "Membership Number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IE.json
-msgid "Surname"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
-msgid ""
-"Please authenticate yourself using the same credentials you normally use in "
-"CIC's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
-msgid ""
-"Please authenticate yourself using the same credentials you normally use in "
-"CM's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
-msgid ""
-"Please authenticate yourself using the same credentials you normally use in "
-"MonaBanq's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid "CRN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid ""
-"In order to use Axis Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in Axis Bank's internet banking."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid ""
-"In order to use Canara Bank with Tink, please authenticate yourself using "
-"the same credentials you normally use in CanaraBank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid ""
-"In order to use Citibank with Tink, please authenticate yourself using the "
-"same credentials you normally use in Citibank's mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid ""
-"In order to use HDFC Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in HDFC Bank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid ""
-"In order to use ICICI Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in ICICI Bank's internet banking or "
-"Pockets mobile app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid ""
-"In order to use Kotak Mahindra Bank with Tink, please authenticate yourself "
-"using the same credentials you normally use in Kotak Mahindra Bank's "
-"internet banking."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid ""
-"In order to use Punjab National Bank with Tink, please authenticate yourself "
-"using the same credentials you normally use in Punjab National Bank's mobile "
-"banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid ""
-"In order to use State Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in State Bank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid "Internet banking password"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid "Internet banking username"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid "MPIN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-IN.json
-msgid "Password IPIN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-AT.json
-msgid "Signatory Number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
+# data/seeding/providers/overriding-providers/leeds-staging/provider-override-SE.json
 msgid ""
 "The same code you use in Nordeas mobile app after you have logged in with "
 "BankID once. If you have forgotten your code you can pick a new one in "
@@ -1678,102 +2011,81 @@ msgid ""
 "automatically in the background, so you do not have to use BankID every time."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
+# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
 msgid ""
-"To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as in Handelsbankens mobile app. More info at "
-"[Handelsbanken](http://www.handelsbanken.se/shb/INeT/IStartSv.nsf/FrameSet?"
-"OpenView&amp;iddef=&amp;navid=A_Sjalvbetjaning_-_Effektivisera&amp;sa=/Shb/"
-"Inet/ICentSv.nsf/Default/q6C11BD80287CAC54C125772A0028E9E8)."
+"1. Insert your ING bank card into ![](https://Card-Reader_ING@2x.png) the "
+"ING Card Reader.\n"
+"2. Press ![](https://BT_Identify_ING@2x.png)\n"
+"3. Enter your PIN and press ![](https://BT_OK_ING@2x.png)\n"
+"4. Enter the respond code in the field below"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
+# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
 msgid ""
-"To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as in Sparbanken Syds mobile app. You will return "
-"to Tink when you have authenticated yourself. Read more at [Sparbanken Syd]"
-"(https://internetbanken.sparbankensyd.se/BankIDLogin/Sidor/login.aspx)."
+"By connecting to this bank, you confirm that you have accepted the bank’s "
+"[terms and conditions](https://www.ing.be/static/legacy/"
+"SiteCollectionDocuments/GeneralRegulationsNewEN.pdf)."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
+# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
+msgid "In order to authenticate yourself you will need your KBC card reader."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
 msgid ""
-"You use the same parsonal code as for SEBs mobile app. You can order a new "
-"code from the internet bank. More info at [SEB](http://www.seb.se/pow/wcp/"
-"index.asp?ss=/pow/wcp/templates/sebarticle.cfmc.asp%3FDUID"
-"%3DDUID_FD94998C1B31C6BFC1257823003993B2%26sitekey%3Dseb.se)."
+"Please authenticate yourself using the same credentials you normally use in "
+"your bank's mobile banking app. You will also need your %s card reader to "
+"finish the authentication."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
+# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
+msgid "Response code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "DDMMYYYY"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "DNI/NIE ID number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "Date of birth (DDMMYYYY)"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "NIF/NIE ID number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "Phone number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "Please enter your four digit passcode."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
 msgid ""
-"You use the same username and password as when you use Rikskortets app or "
-"log in to the website. You can order a new code at the [website](https://www."
-"edenred.se/sv/System/Glomt-losenord/)."
+"Please enter your full phone number in international format, starting with "
+"'+' and including country code. Example: +34 NNN NNN NNNN"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
-msgid ""
-"You use your Swedish user-ID and password the same way as when you log in to "
-"csn.se. You can order a new code at [CSN](https://www.csn.se/bas/ekund/"
-"personligKod.do)."
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "Use the same credentials as when using the ING Direct app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
-msgid ""
-"You use your card reader and personal code the same way as for "
-"Handelsbankens mobile app. More info at [Handelsbanken](http://www."
-"handelsbanken.se/shb/INeT/IStartSv.nsf/FrameSet?OpenView&amp;iddef=&amp;"
-"navid=A_Sjalvbetjaning_-_Effektivisera&amp;sa=/SHB/Inet/ICentSv.nsf/Default/"
-"q6C11BD80287CAC54C125772A0028E9E8)."
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "Use the same credentials as when using the mobile bank app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SI.json
-msgid "One-time password"
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "Your 6 digit online PIN"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid "Card Number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid "Card Password"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid "Different from the card password"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid ""
-"In order to use Alelo with Tink, please authenticate yourself using the same "
-"credentials you normally use in Alelo's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid ""
-"In order to use Banrisul with Tink, please authenticate yourself using the "
-"same credentials you normally use in Banrisul's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid ""
-"In order to use Cielo with Tink, please authenticate yourself using the same "
-"credentials you normally use in Cielo's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid ""
-"In order to use HSBC Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in HSBC Bank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid ""
-"In order to use Itaúcard with Tink, please authenticate yourself using the "
-"same credentials you normally use in Itaúcard's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BR.json
-msgid "Property Number"
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-ES.json
+msgid "Your 8 digit online PIN"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-production/provider-override-DE.json
@@ -1802,339 +2114,56 @@ msgstr ""
 msgid "Username (suffixed with auth number, default is 001)"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-PL.json
-msgid "Identifier"
-msgstr ""
-
 # data/seeding/providers/overriding-providers/farnham-production/provider-override-UK.json
 msgid ""
 "Please enter your full phone number in international format, starting with "
 "'+' and including country code. Example: +44 NNN NNN NNNN"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-CZ.json
-msgid "Login number"
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
+msgid "Account number (11 digits)"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-CZ.json
-msgid "One Time Code"
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
+msgid "App passcode (4 digits)"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HR.json
-msgid "APPLI 1"
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
+msgid "App passcode was incorrect. Please try again."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HR.json
-msgid "From PBZmToken app, card reader or Digipass."
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
+msgid "Personal code (6 digits)"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HR.json
-msgid "From card reader, Digipass or mToken."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HR.json
-msgid "From mToken app or Display Card."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HR.json
-msgid "Token Serial Number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HR.json
-msgid "Token number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HR.json
-msgid "Token serial number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SG.json
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
 msgid ""
-"In order to use Alipay with Tink, please authenticate yourself using the "
-"same credentials you normally use in Alipay's mobile banking app."
+"Please authenticate yourself using the same credentials you normally use in "
+"CIC's mobile banking app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SG.json
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
 msgid ""
-"In order to use DBS Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in DBS Bank's mobile banking app."
+"Please authenticate yourself using the same credentials you normally use in "
+"CM's mobile banking app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SG.json
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
 msgid ""
-"In order to use POSB Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in POSB Bank's mobile banking app."
+"Please authenticate yourself using the same credentials you normally use in "
+"MonaBanq's mobile banking app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SG.json
-msgid ""
-"In order to use Standard Chartered with Tink, please authenticate yourself "
-"using the same credentials you normally use in Standard Chartered's mobile "
-"banking app."
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
+msgid "Sign in with your account number, personal code, and app pass code."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-SG.json
-msgid ""
-"In order to use United Overseas Bank with Tink, please authenticate yourself "
-"using the same credentials you normally use in United Overseas Bank's mobile "
-"banking app."
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
+msgid "Your account number was incorrect. Please try again."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/"
-"BEL_CardReader.png) Login using your Belfius Card Reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_LOGIN."
-"png) Press\n"
-"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Enter the security code []"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/"
-"BEL_CardReader.png) Sign using your Belfius Card Reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_SIGN."
-"png) Press\n"
-"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Enter the security code []"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
-"ING_CardReader.png) Insert your ING bank card in your ING Card Reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN."
-"png) Press\n"
-"3$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) "
-"Enter your PIN and press\n"
-"4$ Enter the following number []"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
-"ING_CardReader.png) Insert your ING bank card into the ING Card Reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/"
-"ING_IDENTIFY.png) Press\n"
-"3$ Enter your PIN\n"
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_OK.png) "
-"Press\n"
-"5$ Enter the response code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_CardReader.png) Insert your bank card into the KBC card reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
-"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
-"png) Tap\n"
-"3$ Enter your start code []"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_CardReader.png) Insert your bank card into the card reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN."
-"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_LOGIN."
-"png) Tap\n"
-"3$ Enter the start code []"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"1$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/"
-"KBC_CardReader.png) Insert your bank card into the card reader\n"
-"2$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
-"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_SIGN."
-"png) Tap\n"
-"3$ Enter the start code []"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Enter your PIN\n"
-"5$ Enter the login code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Want to register your device?\n"
-"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Enter your PIN\n"
-"6$ Enter the signature code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Want to sign for the beneficiary?\n"
-"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Enter the control code []"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Want to sign for the transfer?\n"
-"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Amount []"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
-"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
-"png) Tap\n"
-"5$ Enter the amount, including the digits after the decimal sign\n"
-"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
-"Tap to confirm\n"
-"7$ Enter your PIN\n"
-"8$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
-"Tap\n"
-"9$ Enter the sign code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
-"png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK."
-"png) Tap\n"
-"5$ Enter your PIN\n"
-"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
-"Tap\n"
-"7$ Enter the sign code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
-"Tap\n"
-"5$ Enter your secret code\n"
-"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) "
-"Tap\n"
-"7$ Enter the login code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"5$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/ING/ING_SIGN."
-"png) And press\n"
-"6$ Enter your RESPONSE code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/BEL/BEL_OK.png) "
-"Enter your PIN\n"
-"7$ Enter the signature code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Access Token"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Beneficiary Name"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Card ID"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Card number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Challenge"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Control Code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Description Code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "ING ID"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "NNNNNNN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Name"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Number of your bank card"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"Please authenticate yourself with your Belfius credentials. You will also "
-"need your Belfius card reader to finish the authentication."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"Please authenticate yourself with your ING credentials. You will also need "
-"your ING card reader to finish the authentication. By connecting to this "
-"bank, you confirm that you have accepted the bank’s [terms and conditions]‌‌‌"
-"(https://www.ing.be/static/legacy/SiteCollectionDocuments/"
-"GeneralRegulationsNewEN.pdf)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"Please authenticate yourself with your KBC credentials. You will also need "
-"your KBC card reader to finish the authentication."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "Response Code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid ""
-"You have not transferred money to this account before. Please supply the "
-"name of the owner to the account in the field below"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-BE.json
-msgid "You have to enter your full card number and control number. 17 digits."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-PT.json
-msgid "Access number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-PT.json
-msgid "Multi-channel key"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HU.json
-msgid "Direct ID"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-HU.json
-msgid "ID Code"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-production/provider-override-EE.json
-msgid "Password or PIN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-production/provider-override-NL.json
-msgid "Contracts"
+# data/seeding/providers/overriding-providers/farnham-production/provider-override-FR.json
+msgid "Your personal code was incorrect. Please try again."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/kirkby-production/provider-override-NO.json
@@ -2161,6 +2190,26 @@ msgstr ""
 msgid ""
 "You log in the same way as with Nordeas mobile app. You can order a new "
 "Mobile BankID in the internet bank."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/kirkby-production/provider-override-FI.json
+msgid "You use the same login information as when you log in to op.fi."
+msgstr ""
+
+# data/seeding/providers/overriding-providers/kirkby-production/provider-override-BE.json
+msgid "Digipass code"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/kirkby-production/provider-override-BE.json
+msgid "Digipass serial number"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/kirkby-production/provider-override-BE.json
+msgid "Digipass token"
+msgstr ""
+
+# data/seeding/providers/overriding-providers/kirkby-production/provider-override-BE.json
+msgid "Subscription number"
 msgstr ""
 
 # data/seeding/providers/overriding-providers/kirkby-production/provider-override-DK.json
@@ -2265,156 +2314,67 @@ msgstr ""
 msgid "You use the same PIN as for Nykredits mobile app."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/kirkby-production/provider-override-FI.json
-msgid "You use the same login information as when you log in to op.fi."
+# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+msgid "Please input a 4-digit Service Code."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/kirkby-production/provider-override-BE.json
-msgid "Digipass code"
+# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+msgid "Please input a 8-digit Username."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/kirkby-production/provider-override-BE.json
-msgid "Digipass serial number"
+# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
+msgid "Please input the password also used for web login."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/kirkby-production/provider-override-BE.json
-msgid "Digipass token"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/kirkby-production/provider-override-BE.json
-msgid "Subscription number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-ES.json
-msgid "Document number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-ES.json
-msgid "ID number"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-ES.json
-msgid "ID, passport or residence card"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FR.json
+# data/seeding/providers/overriding-providers/newport-staging/provider-override-FI.json
 msgid ""
-"In order to use Crédit Mutuel Massif Central with Tink, please authenticate "
-"yourself using the same credentials you normally use in Crédit Mutuel Massif "
-"Central's mobile banking app."
+"You use your card reader and personal code like you do in Handelsbanken's  "
+"mobile app. For more information visit [Handelsbanken](https://www."
+"handelsbanken.fi/shb/inet/Icentfi.nsf/vlookupfirstpage/sv_handelsbankenfi?"
+"Opendocument)."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-FR.json
+# data/seeding/providers-ee.json
+msgid "User name"
+msgstr ""
+
+# data/seeding/providers-de.json
+msgid "Direct B@nking Number"
+msgstr ""
+
+# data/seeding/providers-de.json
 msgid ""
-"In order to use Crédit du Nord with Tink, please authenticate yourself using "
-"the same credentials you normally use in Crédit du Nord's mobile banking app."
+"Please enter your full phone number in international format, starting with "
+"'+' and including country code. Example: +49 NNN NNN NNNN"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-SE.json
+# data/seeding/providers-de.json
+msgid "Use the same PIN as you would in your bank's mobile app."
+msgstr ""
+
+# data/seeding/providers-de.json
 msgid ""
-"You use the same self-service code as when you log in to Skoda My Account. "
-"The self-service code is your IVR code, located on your statement."
+"Use the same credentials as when you log in to americanexpress.de. You can "
+"order new passwords at [American Express](https://global.americanexpress.com/"
+"myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_DE)."
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "Branch"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "For 6-digit PIN please enter the first 5 digits."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+# data/seeding/providers-de.json
 msgid ""
-"In order to use Deutsche Bank with Tink, please authenticate yourself using "
-"the same credentials you normally use in Deutsche Bank's mobile banking app."
+"Use the same password as you would in your bank's web login.. The account "
+"number shall be suffixed with three digit auth number, default 001"
 msgstr ""
 
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
+# data/seeding/providers-uk.json
 msgid ""
-"In order to use Postbank with Tink, please authenticate yourself using the "
-"same credentials you normally use in Postbank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid ""
-"In order to use Sparkasse with Tink, please authenticate yourself using the "
-"same credentials you normally use in Sparkasse's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid ""
-"In order to use VR-Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in VR-Bank's mobile banking app."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "NN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "NR-NetKey or alias"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "Online-Banking PIN"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "Please enter 2 digits."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "Please enter 7 digits."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "Sub-account"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/farnham-staging/provider-override-DE.json
-msgid "XXXXX"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
-msgid ""
-"1. Insert your ING bank card into ![](https://Card-Reader_ING@2x.png) the "
-"ING Card Reader.\n"
-"2. Press ![](https://BT_Identify_ING@2x.png)\n"
-"3. Enter your PIN and press ![](https://BT_OK_ING@2x.png)\n"
-"4. Enter the respond code in the field below"
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
-msgid ""
-"By connecting to this bank, you confirm that you have accepted the bank’s "
-"[terms and conditions](https://www.ing.be/static/legacy/"
-"SiteCollectionDocuments/GeneralRegulationsNewEN.pdf)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
-msgid "In order to authenticate yourself you will need your KBC card reader."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
-msgid ""
-"Please authenticate yourself using the same credentials you normally use in "
-"your bank's mobile banking app. You will also need your %s card reader to "
-"finish the authentication."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/leeds-staging/provider-override-BE.json
-msgid "Response code"
+"You will now be redirected to your bank. After logging in using your bank "
+"details you will be taken back to the Tink app!"
 msgstr ""
 
 # data/seeding/providers-no.json
 msgid ""
 "In order to use SpareBank 1 with Tink, please authenticate yourself with "
 "Mobile BankID."
-msgstr ""
-
-# data/seeding/providers-development.json
-msgid "This agent will return zero accounts and transcations."
 msgstr ""
 
 # data/seeding/providers-be.json
@@ -2663,33 +2623,65 @@ msgid ""
 "Enter the control code from the reader"
 msgstr ""
 
+# data/seeding/providers-fr.json
+msgid ""
+"Please enter your full phone number in international format, starting with "
+"'+' and including country code. Example: +33 NNN NNN NNNN"
+msgstr ""
+
+# data/seeding/providers-es.json
+msgid "N for NIE, C for NIF, P for Passport, I for Other Documents"
+msgstr ""
+
+# data/seeding/providers-es.json
+msgid ""
+"Use the same credentials as when you log in to americanexpress.es. You can "
+"order new passwords at [American Express](https://global.americanexpress.com/"
+"myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES)."
+msgstr ""
+
+# data/seeding/providers-es.json
+msgid "Username type"
+msgstr ""
+
+# data/seeding/providers-es.json
+msgid "Your 4 digit online PIN"
+msgstr ""
+
+# data/seeding/providers-es.json
+msgid "Your NIE, NIF, passport number etc."
+msgstr ""
+
+# data/seeding/providers-development.json
+msgid "This agent will return zero accounts and transcations."
+msgstr ""
+
+# data/seeding/providers-at.json
+msgid "Signatory number"
+msgstr ""
+
+# data/seeding/providers-at.json
+msgid ""
+"Use the same credentials as when you log in to americanexpress.at. You can "
+"order new passwords at [American Express](https://global.americanexpress.com/"
+"myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_AT)."
+msgstr ""
+
+# data/seeding/providers-at.json
+msgid "Use the same username as you would in your bank's mobile app."
+msgstr ""
+
+# data/seeding/providers-at.json
+msgid ""
+"You will soon receive a message on your s Identity App.\n"
+"Open s Identity and sign.\n"
+"Then open Tink and press Submit"
+msgstr ""
+
+# data/seeding/providers-at.json
+msgid "s Identity Verification code"
+msgstr ""
+
 # data/seeding/providers-fi.json
 msgid "Nordea Codes App"
-msgstr ""
-
-# data/seeding/providers-uk.json
-msgid ""
-"You will now be redirected to your bank. After logging in using your bank "
-"details you will be taken back to the Tink app!"
-msgstr ""
-
-# data/seeding/providers-de.json
-msgid "Direct B@nking Number"
-msgstr ""
-
-# data/seeding/providers-de.json
-msgid "Use the same PIN as you would in your bank's mobile app."
-msgstr ""
-
-# data/seeding/providers-de.json
-msgid ""
-"Use the same credentials as when you log in to americanexpress.de. You can "
-"order new passwords at [American Express](https://global.americanexpress.com/"
-"myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_DE)."
-msgstr ""
-
-# data/seeding/providers-de.json
-msgid ""
-"Use the same password as you would in your bank's web login.. The account "
-"number shall be suffixed with three digit auth number, default 001"
 msgstr ""
