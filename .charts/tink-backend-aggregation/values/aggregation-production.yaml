@@ -34,3 +34,5 @@ agents:
       cleanBankId: true
 
   mountSignatureKeyPair: true
+
+  icsConfiguration: true
