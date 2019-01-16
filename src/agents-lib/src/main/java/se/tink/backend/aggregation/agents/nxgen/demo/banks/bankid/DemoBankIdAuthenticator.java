@@ -21,7 +21,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
     private final Credentials credentials;
     private final boolean successfulAuthentication;
     private int attempt = 0;
-    String demoUserName = "180012121212";
+    String demoUserName = "18001212";
 
     public DemoBankIdAuthenticator(Credentials credentials, boolean successfulAuthentication) {
         this.credentials = credentials;
@@ -30,11 +30,10 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
 
     @Override
     public String init(String ssn) throws BankIdException {
-        if (Strings.isNullOrEmpty(ssn) || !ssn.equals(demoUserName)) {
+        if (Strings.isNullOrEmpty(ssn) || ssn.length() < 12 || !ssn.contains(demoUserName)) {
             throw new BankIdException(BankIdError.USER_VALIDATION_ERROR);
         }
 
-        System.out.println(String.format("Init BankID with social security number: \"%s\"", ssn));
         return RandomStringUtils.randomAscii(10);
     }
 
