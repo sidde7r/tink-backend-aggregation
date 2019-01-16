@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.system.rpc.Portfolio;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -47,6 +49,11 @@ public class DanskeUtils {
             .put(ClearingNumber.Bank.SVERIGES_RIKSBANK, "1000SVERIGES RIKSBANK")
             .put(ClearingNumber.Bank.SWEDBANK, "8000SWEDBANK")
             .put(ClearingNumber.Bank.ALANDSBANKEN, "2300ÅLANDSBANKEN")
+            .build();
+
+    public static final TypeMapper<Portfolio.Type> PORTFOLIO_TYPE_MAPPER = TypeMapper.<Portfolio.Type>builder()
+            .put(Portfolio.Type.DEPOT, "Depå")
+            .put(Portfolio.Type.ISK, "Investeringssparkonto")
             .build();
 
     public static String getBankId(AccountIdentifier accountIdentifier) {

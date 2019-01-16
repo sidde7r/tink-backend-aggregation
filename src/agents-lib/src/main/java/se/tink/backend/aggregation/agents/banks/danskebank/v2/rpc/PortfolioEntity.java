@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
+import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Portfolio;
@@ -105,10 +107,14 @@ public class PortfolioEntity {
     public Portfolio toPortfolio() {
         Portfolio portfolio = new Portfolio();
 
+        Portfolio.Type type = DanskeUtils.PORTFOLIO_TYPE_MAPPER
+                .translate(getPortfolioType())
+                .orElse(Portfolio.Type.DEPOT);
+
         portfolio.setRawType(getPortfolioType());
         portfolio.setTotalProfit(getChangeValue());
         portfolio.setTotalValue(getTotalValue());
-        portfolio.setType(Portfolio.Type.DEPOT);
+        portfolio.setType(type);
         portfolio.setUniqueIdentifier(getPortfolioId());
 
         return portfolio;
