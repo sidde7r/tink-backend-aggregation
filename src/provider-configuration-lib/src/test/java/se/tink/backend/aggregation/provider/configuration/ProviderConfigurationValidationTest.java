@@ -247,6 +247,15 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                                 && !field.isMasked());
     }
 
+    @Ignore("Ignored until we have fixed the two offending providers")
+    @Test
+    public void validateCardNumberFieldsAreImmutable() {
+        validateFields(
+                (conf, field) ->
+                        StringUtils.equalsIgnoreCase(field.getDescription(), "card number")
+                                && !field.isImmutable());
+    }
+
     @Test
     public void validateMinLengthLessThanOrEqualToMaxLength() {
         validateFields(
