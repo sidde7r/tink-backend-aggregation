@@ -36,3 +36,8 @@ data:
     substitute-secret ABN_PRODUCTION_ENROLLMENT_URL "$ABN_PRODUCTION_ENROLLMENT_URL"
     substitute-secret ABN_PRODUCTION_ENROLLMENT_API_KEY "$ABN_PRODUCTION_ENROLLMENT_API_KEY"
     substitute-secret MYSQL_PASSWORD "$MYSQL_PASSWORD"
+    substitute-secret ICS_CLIENT_ID "$ICS_CLIENT_ID"
+    substitute-secret ICS_CLIENT_SECRET "$ICS_CLIENT_SECRET"
+    substitute-secret ICS_CLIENT_SSL_CERT "$ICS_CLIENT_SSL_CERT"
+    substitute-secret ICS_CA_CERT "$ICS_CA_CERT"
+    substitute-secret ICS_ROOT_CA_PASSWORD "$ICS_ROOT_CA_PASSWORD"

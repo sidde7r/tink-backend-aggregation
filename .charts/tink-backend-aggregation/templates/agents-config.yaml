@@ -48,6 +48,16 @@ data:
           regNumber: "FINTS_REG_NUMBER"
         {{- end }}
 
+        {{- if $agentsConfig.icsConfiguration }}
+        icsConfiguration:
+          abn:
+            clientId: "ICS_CLIENT_ID"
+            clientSecret: "ICS_CLIENT_SECRET"
+            clientSSLCertificate: "ICS_CLIENT_SSL_CERT"
+            rootCACertificate: "ICS_CA_CERT"
+            rootCAPassword: "ICS_ROOT_CA_PASSWORD"
+        {{- end }}
+
         {{- if $agentsConfig.abnAmro }}
         {{- range $name, $env := dict "abnAmroProduction" "production" "abnAmroStaging" "staging" }}
         {{- $envConfig := index $agentsConfig.abnAmro $env }}
