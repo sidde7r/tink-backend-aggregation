@@ -17,6 +17,8 @@ public class BelfiusConstants {
             .put("F0", AccountTypes.CREDIT_CARD)
             .build();
     public static final String TRANSACTION_BANK_NAME = "Belfius Belgium";
+    public static final int MAX_NUMBER_OF_TRANSACTION_PAGES = 100;
+    public static final int FIRST_TRANSACTION_PAGE = 0;
 
     public static class UrlParameter {
         public static final String MACHINE_IDENTIFIER = "machineIdentifier";
