@@ -1,8 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class IngAtConstants {
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER = AccountTypeMapper.builder()
+            .put(AccountTypes.CHECKING, "CHECKING")
+            .put(AccountTypes.SAVINGS, "SAVINGS")
+            .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
+            .build();
+
     public static final class Url {
         public static final URL AUTH_START = new URL("https://banking.ing.at/online-banking/");
         public static final URL LOGOUT = new URL("https://banking.ing.at/online-banking/wicket/logout");
