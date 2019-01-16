@@ -1,6 +1,8 @@
 build_flags:
   --javacopt="-g"
   --test_output=streamed
+  --action_env=PATH
+  --action_env=LD_LIBRARY_PATH
 
 directories:
   .
