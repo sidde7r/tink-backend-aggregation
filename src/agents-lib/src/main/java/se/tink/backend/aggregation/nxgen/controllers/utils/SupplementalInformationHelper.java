@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.utils;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.utils.StringUtils;
@@ -117,5 +120,17 @@ public class SupplementalInformationHelper {
      */
     private String formatChallenge(final String challenge) {
         return StringUtils.insertPeriodically(challenge.replaceAll("\\s+", ""), ' ', 4);
+    }
+
+    public Map<String, String> askSupplementalInformation(Field... fields) throws SupplementalInfoException {
+        return supplementalInformationController.askSupplementalInformation(fields);
+    }
+
+    public Optional<Map<String, String>> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
+        return supplementalInformationController.waitForSupplementalInformation(key, waitFor, unit);
+    }
+
+    public void openThirdPartyApp(ThirdPartyAppAuthenticationPayload payload) {
+        supplementalInformationController.openThirdPartyApp(payload);
     }
 }
