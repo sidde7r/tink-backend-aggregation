@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.rp
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -39,18 +39,18 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     private final Catalog catalog;
     private final PersistentStorage persistentStorage;
     private final FortisApiClient apiClient;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private static final AggregationLogger LOGGER = new AggregationLogger(FortisAuthenticator.class);
 
     public FortisAuthenticator(
             Catalog catalog,
             PersistentStorage persistentStorage,
             FortisApiClient apiClient,
-            SupplementalInformationController supplementalInformationController) {
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.catalog = catalog;
         this.persistentStorage = persistentStorage;
         this.apiClient = apiClient;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
@@ -301,7 +301,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
 
     private String waitForSupplementalInformation(Field... fields)
             throws SupplementalInfoException {
-        return supplementalInformationController
+        return supplementalInformationHelper
                 .askSupplementalInformation(fields)
                 .get("e-signature");
     }

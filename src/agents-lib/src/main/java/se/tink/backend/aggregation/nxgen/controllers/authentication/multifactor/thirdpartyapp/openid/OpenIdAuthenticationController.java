@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -41,7 +41,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     private static final Base64.Encoder encoder = Base64.getUrlEncoder();
 
     private final PersistentStorage persistentStorage;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
 
@@ -50,11 +50,11 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     private OAuth2Token clientAccessToken;
 
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
-            SupplementalInformationController supplementalInformationController,
+            SupplementalInformationHelper supplementalInformationHelper,
             OpenIdApiClient apiClient,
             OpenIdAuthenticator authenticator) {
         this.persistentStorage = persistentStorage;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
 
@@ -157,7 +157,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException,
             AuthorizationException {
 
-        Map<String, String> callbackData = supplementalInformationController.waitForSupplementalInformation(
+        Map<String, String> callbackData = supplementalInformationHelper.waitForSupplementalInformation(
                 formatSupplementalKey(state),
                 WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES

@@ -60,11 +60,11 @@ public class MonzoAgent extends NextGenerationAgent {
         MonzoAuthenticator authenticator = new MonzoAuthenticator(apiClient, persistentStorage);
 
         OAuth2AuthenticationController controller = new OAuth2AuthenticationController(persistentStorage,
-                supplementalInformationController, authenticator);
+                supplementalInformationHelper, authenticator);
 
         ThirdPartyAppAuthenticationController<String> thirdParty = new ThirdPartyAppAuthenticationController<>(
                 controller,
-                supplementalInformationController);
+                supplementalInformationHelper);
 
         return new AutoAuthenticationController(request, context, thirdParty, controller);
     }

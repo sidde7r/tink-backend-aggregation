@@ -198,7 +198,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                         new UkOpenBankingBankTransferExecutor(
                                 catalog,
                                 credentials,
-                                supplementalInformationController,
+                                supplementalInformationHelper,
                                 softwareStatement,
                                 providerConfiguration,
                                 paymentsHttpClient,

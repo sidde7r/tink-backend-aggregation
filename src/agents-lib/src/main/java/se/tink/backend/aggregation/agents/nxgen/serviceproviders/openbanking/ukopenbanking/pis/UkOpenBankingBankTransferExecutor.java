@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.ProviderConfiguration;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration.SoftwareStatement;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -32,7 +32,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
     private final Catalog catalog;
     private final Credentials credentials;
     private final UkOpenBankingApiClient apiClient;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final SoftwareStatement softwareStatement;
     private final ProviderConfiguration providerConfiguration;
     private final UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> ukOpenBankingAccountFetcher;
@@ -41,7 +41,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
     public UkOpenBankingBankTransferExecutor(
             Catalog catalog,
             Credentials credentials,
-            SupplementalInformationController supplementalInformationController,
+            SupplementalInformationHelper supplementalInformationHelper,
             SoftwareStatement softwareStatement,
             ProviderConfiguration providerConfiguration,
             TinkHttpClient httpClient,
@@ -49,7 +49,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             UkOpenBankingPis ukOpenBankingPis) {
         this.catalog = catalog;
         this.credentials = credentials;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.softwareStatement = softwareStatement;
         this.providerConfiguration = providerConfiguration;
         this.ukOpenBankingAccountFetcher = ukOpenBankingAccountFetcher;
@@ -128,14 +128,14 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
 
         OpenIdAuthenticationController openIdAuthenticationController = new OpenIdAuthenticationController(
                 dummyStorage,
-                supplementalInformationController,
+                supplementalInformationHelper,
                 apiClient,
                 paymentAuthenticator
         );
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(openIdAuthenticationController,
-                        supplementalInformationController
+                        supplementalInformationHelper
                 );
 
         try {

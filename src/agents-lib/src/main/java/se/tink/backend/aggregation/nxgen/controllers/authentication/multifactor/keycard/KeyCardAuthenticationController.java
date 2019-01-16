@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
@@ -21,22 +21,22 @@ public class KeyCardAuthenticationController implements MultiFactorAuthenticator
     private static final int DEFAULT_KEY_CARD_VALUE_LENGTH = 6;
 
     private final Catalog catalog;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final KeyCardAuthenticator authenticator;
     private final int keyCardValueLength;
 
     private static final String KEYCARD_VALUE_FIELD_KEY = "keyCardValue";
 
     public KeyCardAuthenticationController(Catalog catalog,
-            SupplementalInformationController supplementalInformationController, KeyCardAuthenticator authenticator) {
-        this(catalog, supplementalInformationController, authenticator, DEFAULT_KEY_CARD_VALUE_LENGTH);
+            SupplementalInformationHelper supplementalInformationHelper, KeyCardAuthenticator authenticator) {
+        this(catalog, supplementalInformationHelper, authenticator, DEFAULT_KEY_CARD_VALUE_LENGTH);
     }
 
     public KeyCardAuthenticationController(Catalog catalog,
-            SupplementalInformationController supplementalInformationController,
+            SupplementalInformationHelper supplementalInformationHelper,
             KeyCardAuthenticator authenticator, int keyCardValueLength) {
         this.catalog = Preconditions.checkNotNull(catalog);
-        this.supplementalInformationController = Preconditions.checkNotNull(supplementalInformationController);
+        this.supplementalInformationHelper = Preconditions.checkNotNull(supplementalInformationHelper);
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.keyCardValueLength = keyCardValueLength;
     }
@@ -61,7 +61,7 @@ public class KeyCardAuthenticationController implements MultiFactorAuthenticator
 
         KeyCardInitValues keyCardInitValues = authenticator.init(username, password);
 
-        Map<String, String> supplementalInformation = supplementalInformationController
+        Map<String, String> supplementalInformation = supplementalInformationHelper
                 .askSupplementalInformation(getKeyCardIndexField(keyCardInitValues), getKeyCardValueField());
 
         authenticator.authenticate(supplementalInformation.get(KEYCARD_VALUE_FIELD_KEY));

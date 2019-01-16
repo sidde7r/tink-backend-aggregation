@@ -46,7 +46,7 @@ public class SdcNoAgent extends SdcAgent {
                 sdcSessionStorage, agentConfiguration, credentials, sdcPersistentStorage);
 
         SmsOtpAuthenticationPasswordController smsOtpController = new SmsOtpAuthenticationPasswordController(catalog,
-                supplementalInformationController, noSmsOtpAuthenticator);
+                supplementalInformationHelper, noSmsOtpAuthenticator);
 
         return new AutoAuthenticationController(request, context, smsOtpController,
                 noAutoAuthenticator);

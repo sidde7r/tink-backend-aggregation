@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
@@ -20,15 +20,15 @@ public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticat
     private static final String OTP_VALUE_FIELD_KEY = "otpValue";
 
     private final Catalog catalog;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final SmsOtpAuthenticator<T> authenticator;
     private final int otpValueLength;
 
     public SmsOtpAuthenticationController(Catalog catalog,
-            SupplementalInformationController supplementalInformationController,
+            SupplementalInformationHelper supplementalInformationHelper,
             SmsOtpAuthenticator<T> authenticator, int otpValueLength) {
         this.catalog = Preconditions.checkNotNull(catalog);
-        this.supplementalInformationController = Preconditions.checkNotNull(supplementalInformationController);
+        this.supplementalInformationHelper = Preconditions.checkNotNull(supplementalInformationHelper);
         this.authenticator = Preconditions.checkNotNull(authenticator);
         Preconditions.checkArgument(otpValueLength > 0);
         this.otpValueLength = otpValueLength;
@@ -53,7 +53,7 @@ public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticat
 
         T initValues = authenticator.init(username);
 
-        Map<String, String> supplementalInformation = supplementalInformationController
+        Map<String, String> supplementalInformation = supplementalInformationHelper
                 .askSupplementalInformation(getOtpField());
 
         authenticator.authenticate(supplementalInformation.get(OTP_VALUE_FIELD_KEY), initValues);
