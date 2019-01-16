@@ -6,12 +6,13 @@ public class IngAtAmmountParser {
 
     /** Converts e.g. "€ 1.234,56" -> 1234.56 */
     public static Amount toAmount(final String amountString) {
-        double amount = Double.parseDouble(
-                amountString
-                        .replaceAll("\\s+", "")
-                        .replace("€", "")
-                        .replace(".", "")
-                        .replace(",", "."));
+        double amount =
+                Double.parseDouble(
+                        amountString
+                                .replaceAll("\\s+", "")
+                                .replace("€", "")
+                                .replace(".", "")
+                                .replace(",", "."));
         return new Amount("EUR", amount);
     }
 }

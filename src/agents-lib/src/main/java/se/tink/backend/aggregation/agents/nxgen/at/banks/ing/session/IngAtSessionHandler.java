@@ -45,7 +45,8 @@ public class IngAtSessionHandler implements SessionHandler {
         if (keepAliveResponse.getRequest().getUrl().get().contains("timeExpired")) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
-        if (new IngAtSessionExpiredParser(keepAliveResponse.getBody(String.class)).isSessionExpired()) {
+        if (new IngAtSessionExpiredParser(keepAliveResponse.getBody(String.class))
+                .isSessionExpired()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

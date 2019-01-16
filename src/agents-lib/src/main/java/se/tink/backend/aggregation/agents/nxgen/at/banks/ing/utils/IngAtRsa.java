@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.spec.RSAPublicKeySpec;
 
@@ -17,8 +16,15 @@ public class IngAtRsa {
     private boolean canEncrypt;
     private boolean canDecrypt;
 
-    public IngAtRsa(final BigInteger N, final int E, final BigInteger D, final BigInteger P, final BigInteger Q,
-            final BigInteger Dmp1, final BigInteger Dmq1, final BigInteger Coeff) {
+    public IngAtRsa(
+            final BigInteger N,
+            final int E,
+            final BigInteger D,
+            final BigInteger P,
+            final BigInteger Q,
+            final BigInteger Dmp1,
+            final BigInteger Dmq1,
+            final BigInteger Coeff) {
         this.n = N;
         this.e = E;
         this.d = D;
@@ -32,22 +38,52 @@ public class IngAtRsa {
     }
 
     public IngAtRsa(RSAPublicKeySpec rsaPublicKeySpec) {
-        this(rsaPublicKeySpec.getModulus(), rsaPublicKeySpec.getPublicExponent().intValue(), null, null, null, null, null, null);
+        this(
+                rsaPublicKeySpec.getModulus(),
+                rsaPublicKeySpec.getPublicExponent().intValue(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 
     public static IngAtRsa parsePublicKey(final String n, final String e) {
-        return (new IngAtRsa(new BigInteger(n, 16), Integer.parseInt(e), null, null, null, null, null, null));
+        return (new IngAtRsa(
+                new BigInteger(n, 16), Integer.parseInt(e), null, null, null, null, null, null));
     }
 
-    public static IngAtRsa parsePrivateKey(final String n, final String e, final String d, final String p,
-            final String q, final String Dmp1, final String Dmq1, final String Coeff) {
+    public static IngAtRsa parsePrivateKey(
+            final String n,
+            final String e,
+            final String d,
+            final String p,
+            final String q,
+            final String Dmp1,
+            final String Dmq1,
+            final String Coeff) {
         if (p == null || p.equals("")) {
-            return (new IngAtRsa(new BigInteger(n, 16), Integer.parseInt(e), new BigInteger(d, 16), null, null, null,
-                    null, null));
+            return (new IngAtRsa(
+                    new BigInteger(n, 16),
+                    Integer.parseInt(e),
+                    new BigInteger(d, 16),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null));
         }
 
-        return (new IngAtRsa(new BigInteger(n, 16), Integer.parseInt(e), new BigInteger(d, 16), new BigInteger(p, 16),
-                new BigInteger(q, 16), new BigInteger(Dmp1), new BigInteger(Dmq1), new BigInteger(Coeff)));
+        return (new IngAtRsa(
+                new BigInteger(n, 16),
+                Integer.parseInt(e),
+                new BigInteger(d, 16),
+                new BigInteger(p, 16),
+                new BigInteger(q, 16),
+                new BigInteger(Dmp1),
+                new BigInteger(Dmq1),
+                new BigInteger(Coeff)));
     }
 
     private static byte[] pkcs1unpad(final BigInteger src, final int n) {
@@ -58,14 +94,12 @@ public class IngAtRsa {
             i++;
         }
 
-        if (((b.length - i) != (n - 1)) || (b[i] != 0x2))
-            return null;
+        if (((b.length - i) != (n - 1)) || (b[i] != 0x2)) return null;
 
         i++;
 
         while (b[i] != 0) {
-            if (++i >= b.length)
-                return null;
+            if (++i >= b.length) return null;
         }
         final byte[] out = new byte[b.length - (i + 1)];
         int p = 0;
@@ -84,24 +118,24 @@ public class IngAtRsa {
         int k = 0;
         int adjustedBl = n.bitLength();
         switch (b) {
-        case 2:
-            k = 1;
-            break;
-        case 4:
-            k = 2;
-            break;
-        case 16:
-            k = 4;
-            break;
-        case 64:
-            k = 6;
-            adjustedBl = (int) (12 * Math.floor((n.bitLength() + 11) / 12));
-            break;
-        case 256:
-            k = 8;
-            break;
-        default:
-            throw new IllegalArgumentException("Invalid block size " + b);
+            case 2:
+                k = 1;
+                break;
+            case 4:
+                k = 2;
+                break;
+            case 16:
+                k = 4;
+                break;
+            case 64:
+                k = 6;
+                adjustedBl = (int) (12 * Math.floor((n.bitLength() + 11) / 12));
+                break;
+            case 256:
+                k = 8;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid block size " + b);
         }
 
         return (int) (Math.floor(adjustedBl + k - 1) / k);

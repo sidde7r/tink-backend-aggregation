@@ -10,10 +10,14 @@ public class AccountEntity {
     private String currency;
     private String balance;
 
-    private AccountEntity() {
-    }
+    private AccountEntity() {}
 
-    public AccountEntity(final String username, final String iban, final String accountType, final String currency, final String balance) {
+    public AccountEntity(
+            final String username,
+            final String iban,
+            final String accountType,
+            final String currency,
+            final String balance) {
         this.username = username;
         this.iban = iban;
         this.accountType = accountType;

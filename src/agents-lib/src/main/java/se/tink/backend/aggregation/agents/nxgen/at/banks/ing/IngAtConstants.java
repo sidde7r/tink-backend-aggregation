@@ -5,17 +5,22 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class IngAtConstants {
-    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER = AccountTypeMapper.builder()
-            .put(AccountTypes.CHECKING, "CHECKING")
-            .put(AccountTypes.SAVINGS, "SAVINGS")
-            .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
-            .build();
+    public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
+            AccountTypeMapper.builder()
+                    .put(AccountTypes.CHECKING, "CHECKING")
+                    .put(AccountTypes.SAVINGS, "SAVINGS")
+                    .put(AccountTypes.CREDIT_CARD, "CREDIT_CARD")
+                    .build();
 
     public static final class Url {
         public static final URL AUTH_START = new URL("https://banking.ing.at/online-banking/");
-        public static final URL LOGOUT = new URL("https://banking.ing.at/online-banking/wicket/logout");
-        public static final URL ACCOUNT_PREFIX = new URL("https://banking.ing.at/online-banking/wicket/wicket/");
-        public static final URL PASSWORD = new URL("https://banking.ing.at/online-banking/wicket/login?0-1.IFormSubmitListener-login~card-password_form");
+        public static final URL LOGOUT =
+                new URL("https://banking.ing.at/online-banking/wicket/logout");
+        public static final URL ACCOUNT_PREFIX =
+                new URL("https://banking.ing.at/online-banking/wicket/wicket/");
+        public static final URL PASSWORD =
+                new URL(
+                        "https://banking.ing.at/online-banking/wicket/login?0-1.IFormSubmitListener-login~card-password_form");
     }
 
     public static final class Messages {
@@ -23,7 +28,8 @@ public class IngAtConstants {
     }
 
     public static class Header {
-        public static final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0";
+        public static final String USER_AGENT =
+                "Mozilla/5.0 (X11; Linux x86_64; rv:63.0) Gecko/20100101 Firefox/63.0";
     }
 
     public enum Storage {

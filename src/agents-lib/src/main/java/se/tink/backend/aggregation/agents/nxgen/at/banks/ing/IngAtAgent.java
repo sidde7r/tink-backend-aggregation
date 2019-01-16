@@ -30,10 +30,12 @@ public class IngAtAgent extends NextGenerationAgent {
     private final IngAtSessionStorage ingAtSessionStorage;
     private final IngAtApiClient apiClient;
 
-    public IngAtAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public IngAtAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.ingAtSessionStorage = new IngAtSessionStorage(sessionStorage);
-        this.apiClient = new IngAtApiClient(this.client, request.getProvider(), this.ingAtSessionStorage);
+        this.apiClient =
+                new IngAtApiClient(this.client, request.getProvider(), this.ingAtSessionStorage);
     }
 
     @Override
@@ -48,17 +50,18 @@ public class IngAtAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         return Optional.of(
                 new TransactionalAccountRefreshController(
-                    metricRefreshController,
-                    updateController,
-                    new IngAtTransactionalAccountFetcher(apiClient, ingAtSessionStorage),
-                    new TransactionFetcherController<>(
-                            this.transactionPaginationHelper,
-                            new TransactionDatePaginationController<>(
-                                    new IngAtTransactionFetcher(apiClient, ingAtSessionStorage))
-                )));
+                        metricRefreshController,
+                        updateController,
+                        new IngAtTransactionalAccountFetcher(apiClient, ingAtSessionStorage),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new IngAtTransactionFetcher(
+                                                apiClient, ingAtSessionStorage)))));
     }
 
     @Override
@@ -71,11 +74,8 @@ public class IngAtAgent extends NextGenerationAgent {
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionDatePaginationController<>(
-                                        new IngAtCreditCardTransactionFetcher(apiClient, ingAtSessionStorage)
-                                )
-                        )
-                )
-        );
+                                        new IngAtCreditCardTransactionFetcher(
+                                                apiClient, ingAtSessionStorage)))));
     }
 
     @Override
@@ -94,7 +94,8 @@ public class IngAtAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

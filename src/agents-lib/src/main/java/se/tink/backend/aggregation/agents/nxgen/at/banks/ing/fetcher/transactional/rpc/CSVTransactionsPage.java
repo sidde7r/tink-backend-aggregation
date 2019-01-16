@@ -53,7 +53,8 @@ public final class CSVTransactionsPage implements PaginatorResponse {
         final double incomingValue = toValue(incomingAmount);
 
         if (Math.min(outgoingValue, incomingValue) != 0.0) {
-            logger.warn("Found a transaction where both the outgoing and incoming amounts were nonzero");
+            logger.warn(
+                    "Found a transaction where both the outgoing and incoming amounts were nonzero");
         }
 
         final double amountValue = incomingValue - outgoingValue;

@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IngAtDateRangeTransactionsParser {
     private Document ajaxDoc;
@@ -38,16 +39,20 @@ public class IngAtDateRangeTransactionsParser {
         for (Element t : tables) {
             final String description = t.select("p[class=transaction-name__text]").first().text();
             final String date = t.select("p[class=transaction-name__date]").first().text();
-            final String amount = t.select("p[class=transaction-name__amount]").first().text()
-                    .replaceAll("\\s+", "")
-                    .replace("€", "")
-                    .replace(".", "")
-                    .replace(",", ".");
-            final Transaction transaction = new Transaction.Builder()
-                    .setAmount(new Amount("EUR", Double.parseDouble(amount)))
-                    .setDate(dateParser.parse(date))
-                    .setDescription(description)
-                    .build();
+            final String amount =
+                    t.select("p[class=transaction-name__amount]")
+                            .first()
+                            .text()
+                            .replaceAll("\\s+", "")
+                            .replace("€", "")
+                            .replace(".", "")
+                            .replace(",", ".");
+            final Transaction transaction =
+                    new Transaction.Builder()
+                            .setAmount(new Amount("EUR", Double.parseDouble(amount)))
+                            .setDate(dateParser.parse(date))
+                            .setDescription(description)
+                            .build();
             res.add(transaction);
         }
         return res;

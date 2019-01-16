@@ -22,10 +22,7 @@ public class IngAtCreditCardTransactionFetcher
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(
-            CreditCardAccount account,
-            Date fromDate,
-            Date toDate) {
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
         final Optional<WebLoginResponse> webLoginResponse = sessionStorage.getWebLoginResponse();
         webLoginResponse.orElseThrow(
                 () ->

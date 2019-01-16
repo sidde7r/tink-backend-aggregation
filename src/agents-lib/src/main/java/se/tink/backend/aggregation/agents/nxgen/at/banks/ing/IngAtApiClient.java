@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.WebLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.rpc.CreditCardTransactionPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.rpc.CSVTransactionsPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtAntiCacheParser;
@@ -334,9 +333,7 @@ public final class IngAtApiClient {
     // where <NUMBER1>, <NUMBER2>, <NUMBER3> are placeholders.
 
     public PaginatorResponse getTransactionsResponse(
-            final TransactionalAccount account,
-            final Date fromDate,
-            final Date toDate) {
+            final TransactionalAccount account, final Date fromDate, final Date toDate) {
 
         switch (account.getType()) {
             case CHECKING:
@@ -373,7 +370,8 @@ public final class IngAtApiClient {
         requestDateRange(exportResponse, fromDate, toDate);
         currentPage =
                 pageNumberFromAjaxLocation(exportResponse.getHeaders().getFirst("Ajax-Location"));
-        final HttpResponse responseFormDownload = requestFormDownload(currentPage, fromDate, toDate);
+        final HttpResponse responseFormDownload =
+                requestFormDownload(currentPage, fromDate, toDate);
 
         downloadCount += 1; // TODO
 
@@ -393,9 +391,7 @@ public final class IngAtApiClient {
     }
 
     private PaginatorResponse getCheckingTransactionsResponse(
-            final TransactionalAccount account,
-            final Date fromDate,
-            final Date toDate) {
+            final TransactionalAccount account, final Date fromDate, final Date toDate) {
 
         refreshCurrentPage();
 
@@ -523,9 +519,7 @@ public final class IngAtApiClient {
     }
 
     private HttpResponse requestDateRange(
-            final HttpResponse message,
-            final Date fromDate,
-            final Date toDate) {
+            final HttpResponse message, final Date fromDate, final Date toDate) {
 
         final int currentPageNo =
                 pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));
