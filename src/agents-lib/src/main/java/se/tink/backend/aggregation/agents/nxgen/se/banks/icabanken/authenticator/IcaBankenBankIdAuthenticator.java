@@ -17,7 +17,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
 
-    String autostarttoken;
+    private String autostarttoken;
 
     public IcaBankenBankIdAuthenticator(IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage) {
         this.apiClient = apiClient;
