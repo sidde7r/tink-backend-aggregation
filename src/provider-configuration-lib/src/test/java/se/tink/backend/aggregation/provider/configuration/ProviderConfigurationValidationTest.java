@@ -227,6 +227,16 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
         assertThat(results).isEmpty();
     }
 
+    @Ignore("Ignored until we have fixed all 1109 offending providers")
+    @Test
+    public void validatePasswordFieldsAreSensitive() {
+        validateFields(
+                (conf, field) ->
+                        conf.getCredentialsType() == CredentialsTypes.PASSWORD
+                                && Objects.equals(field.getName(), "password")
+                                && !field.isSensitive());
+    }
+
     @Test
     public void validateMinLengthLessThanOrEqualToMaxLength() {
         validateFields(
