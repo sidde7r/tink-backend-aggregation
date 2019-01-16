@@ -149,7 +149,7 @@ public class AgentWorkerOperationFactory {
         }
     }
 
-    private AgentWorkerCommandMetricState metricState(CredentialsRequest request) {
+    private AgentWorkerCommandMetricState createCommandMetricState(CredentialsRequest request) {
         return new AgentWorkerCommandMetricState(
                 request.getProvider(),
                 request.getCredentials(),
@@ -160,7 +160,7 @@ public class AgentWorkerOperationFactory {
     // Remove `ACCOUNTS` and `TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS` and replace them with
     // appropriate new
     // items.
-    private Set<RefreshableItem> legacyItemsConversion(Set<RefreshableItem> items) {
+    private Set<RefreshableItem> convertLegacyItems(Set<RefreshableItem> items) {
         if (items.contains(RefreshableItem.ACCOUNTS)) {
             items.remove(RefreshableItem.ACCOUNTS);
             items.addAll(RefreshableItem.REFRESHABLE_ITEMS_ACCOUNTS);
@@ -174,12 +174,12 @@ public class AgentWorkerOperationFactory {
         return items;
     }
 
-    private List<AgentWorkerCommand> createPartialRefreshableItems(
+    private List<AgentWorkerCommand> createOrderedRefreshableItemsCommand(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh) {
 
-        itemsToRefresh = legacyItemsConversion(itemsToRefresh);
+        itemsToRefresh = convertLegacyItems(itemsToRefresh);
 
         // Sort the refreshable items
         List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
@@ -202,11 +202,11 @@ public class AgentWorkerOperationFactory {
         if (accountItems.size() > 0) {
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
-                            context, metricState(request)));
+                            context, createCommandMetricState(request)));
         }
 
         for (RefreshableItem item : nonAccountItems) {
-            commands.add(new RefreshItemAgentWorkerCommand(context, item, metricState(request)));
+            commands.add(new RefreshItemAgentWorkerCommand(context, item, createCommandMetricState(request)));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -217,26 +217,26 @@ public class AgentWorkerOperationFactory {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
-                            context, metricState(request)));
+                            context, createCommandMetricState(request)));
         }
 
         // Post refresh processing. Only once per data type (accounts, transactions etcetera)
         if (RefreshableItem.hasAccounts(items)) {
             commands.add(
                     new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.ACCOUNTS, metricState(request)));
+                            context, ProcessableItem.ACCOUNTS, createCommandMetricState(request)));
         }
 
         if (items.contains(RefreshableItem.EINVOICES)) {
             commands.add(
                     new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.EINVOICES, metricState(request)));
+                            context, ProcessableItem.EINVOICES, createCommandMetricState(request)));
         }
 
         if (items.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
             commands.add(
                     new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSFER_DESTINATIONS, metricState(request)));
+                            context, ProcessableItem.TRANSFER_DESTINATIONS, createCommandMetricState(request)));
         }
 
         // Transactions are processed last of the refreshable items since the credential status will
@@ -245,7 +245,7 @@ public class AgentWorkerOperationFactory {
         if (RefreshableItem.hasTransactions(items)) {
             commands.add(
                     new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSACTIONS, metricState(request)));
+                            context, ProcessableItem.TRANSACTIONS, createCommandMetricState(request)));
         }
 
         // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
@@ -320,12 +320,12 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, metricState(request)));
+                        context, loginAgentWorkerCommandState, createCommandMetricState(request)));
         commands.addAll(
-                createPartialRefreshAccounts(request, context, request.getItemsToRefresh()));
+                createRefreshAccountsCommand(request, context, request.getItemsToRefresh()));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         commands.addAll(
-                createPartialRefreshableItems(request, context, request.getItemsToRefresh()));
+                createOrderedRefreshableItemsCommand(request, context, request.getItemsToRefresh()));
 
         log.debug("Created refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -352,14 +352,14 @@ public class AgentWorkerOperationFactory {
         String operationName = "execute-transfer";
 
         List<AgentWorkerCommand> commands =
-                createPartialTransferBase(
+                createTransferBaseCommand(
                         clientInfo, request, context, operationName, controllerWrapper);
         commands.addAll(
-                createPartialRefreshAccounts(
+                createRefreshAccountsCommand(
                         request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         commands.addAll(
-                createPartialRefreshableItems(
+                createOrderedRefreshableItemsCommand(
                         request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
 
         return new AgentWorkerOperation(
@@ -387,10 +387,10 @@ public class AgentWorkerOperationFactory {
         String operationName = "execute-whitelisted-transfer";
 
         List<AgentWorkerCommand> commands =
-                createPartialTransferBase(
+                createTransferBaseCommand(
                         clientInfo, request, context, operationName, controllerWrapper);
         commands.addAll(
-                createPartialWhitelistRefreshableItems(
+                createWhitelistRefreshableItemsCommand(
                         request,
                         context,
                         RefreshableItem.REFRESHABLE_ITEMS_ALL,
@@ -400,7 +400,7 @@ public class AgentWorkerOperationFactory {
                 agentWorkerOperationState, operationName, request, commands, context);
     }
 
-    private List<AgentWorkerCommand> createPartialTransferBase(
+    private List<AgentWorkerCommand> createTransferBaseCommand(
             ClientInfo clientInfo,
             TransferRequest request,
             AgentWorkerCommandContext context,
@@ -424,8 +424,8 @@ public class AgentWorkerOperationFactory {
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler),
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, metricState(request)),
-                new TransferAgentWorkerCommand(context, request, metricState(request)));
+                        context, loginAgentWorkerCommandState, createCommandMetricState(request)),
+                new TransferAgentWorkerCommand(context, request, createCommandMetricState(request)));
     }
 
     public AgentWorkerOperation createOperationCreateCredentials(
@@ -569,19 +569,19 @@ public class AgentWorkerOperationFactory {
     }
 
     // for each account type,
-    private List<AgentWorkerCommand> createPartialRefreshAccounts(
+    private List<AgentWorkerCommand> createRefreshAccountsCommand(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh) {
 
-        List<RefreshableItem> items = RefreshableItem.sort(legacyItemsConversion(itemsToRefresh));
+        List<RefreshableItem> items = RefreshableItem.sort(convertLegacyItems(itemsToRefresh));
 
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         for (RefreshableItem item : items) {
             if (RefreshableItem.isAccount(item)) {
                 commands.add(
-                        new RefreshItemAgentWorkerCommand(context, item, metricState(request)));
+                        new RefreshItemAgentWorkerCommand(context, item, createCommandMetricState(request)));
             }
         }
 
@@ -644,9 +644,9 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, metricState(request)));
+                        context, loginAgentWorkerCommandState, createCommandMetricState(request)));
         commands.addAll(
-                createPartialWhitelistRefreshableItems(
+                createWhitelistRefreshableItemsCommand(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
 
         log.debug("Created whitelist refresh operation chain for credential");
@@ -704,23 +704,23 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState));
         commands.add(
                 new LoginAgentWorkerCommand(
-                        context, loginAgentWorkerCommandState, metricState(request)));
+                        context, loginAgentWorkerCommandState, createCommandMetricState(request)));
         commands.addAll(
-                createPartialWhitelistRefreshableItems(
+                createWhitelistRefreshableItemsCommand(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationMetricName, request, commands, context);
     }
 
-    private ImmutableList<AgentWorkerCommand> createPartialWhitelistRefreshableItems(
+    private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsCommand(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh,
             ControllerWrapper controllerWrapper) {
 
         // Convert legacy items to corresponding new refreshable items
-        itemsToRefresh = legacyItemsConversion(itemsToRefresh);
+        itemsToRefresh = convertLegacyItems(itemsToRefresh);
 
         // Sort the refreshable items
         List<RefreshableItem> items = RefreshableItem.sort(itemsToRefresh);
@@ -741,7 +741,7 @@ public class AgentWorkerOperationFactory {
         // === START REFRESHING ===
         if (accountItems.size() > 0) {
             // Start refreshing all account items
-            commands.addAll(createPartialRefreshAccounts(request, context, accountItems));
+            commands.addAll(createRefreshAccountsCommand(request, context, accountItems));
 
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
@@ -758,7 +758,7 @@ public class AgentWorkerOperationFactory {
             commands.add(new SelectAccountsToAggregateCommand(context, request));
             commands.add(
                     new SendAccountsToUpdateServiceAgentWorkerCommand(
-                            context, metricState(request)));
+                            context, createCommandMetricState(request)));
         }
 
         // Add all refreshable items that aren't accounts to refresh them.
@@ -768,7 +768,7 @@ public class AgentWorkerOperationFactory {
                         item ->
                                 commands.add(
                                         new RefreshItemAgentWorkerCommand(
-                                                context, item, metricState(request))));
+                                                context, item, createCommandMetricState(request))));
         // === END REFRESHING ===
 
         // === START PROCESSING ===
@@ -776,19 +776,19 @@ public class AgentWorkerOperationFactory {
         if (RefreshableItem.hasAccounts(items)) {
             commands.add(
                     new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.ACCOUNTS, metricState(request)));
+                            context, ProcessableItem.ACCOUNTS, createCommandMetricState(request)));
         }
 
         if (items.contains(RefreshableItem.EINVOICES)) {
             commands.add(
                     new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.EINVOICES, metricState(request)));
+                            context, ProcessableItem.EINVOICES, createCommandMetricState(request)));
         }
 
         if (items.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
             commands.add(
                     new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSFER_DESTINATIONS, metricState(request)));
+                            context, ProcessableItem.TRANSFER_DESTINATIONS, createCommandMetricState(request)));
         }
 
         // Transactions are processed last of the refreshable items since the credential status will
@@ -797,7 +797,7 @@ public class AgentWorkerOperationFactory {
         if (RefreshableItem.hasTransactions(items)) {
             commands.add(
                     new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSACTIONS, metricState(request)));
+                            context, ProcessableItem.TRANSACTIONS, createCommandMetricState(request)));
         }
         // === END PROCESSING ===
 
