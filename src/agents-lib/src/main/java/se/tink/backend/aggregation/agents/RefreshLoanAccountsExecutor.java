@@ -12,4 +12,11 @@ public interface RefreshLoanAccountsExecutor {
      * @return fetch accounts response
      */
     FetchLoanAccountsResponse fetchLoanAccounts();
+
+    /**
+     * Fetch loan transaction.
+     *
+     * @return fetch transaction response
+     */
+    FetchTransactionsResponse fetchLoanTransactions();
 }
