@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks;
 
 import com.google.common.collect.Maps;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Assert;
@@ -9,20 +10,20 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
+import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
-import se.tink.libraries.account.identifiers.TestAccount;
-import se.tink.libraries.social.security.TestSSN;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.social.security.TestSSN;
 
 public class LansforsakringarAgentTest extends AbstractAgentTest<LansforsakringarAgent> {
     public LansforsakringarAgentTest() {
@@ -56,9 +57,16 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
         LansforsakringarAgent agent = (LansforsakringarAgent) factory
                 .create(cls, createRefreshInformationRequest(credentials), testContext);
         agent.login();
-        for (RefreshableItem item : RefreshableItem.values()) {
-            agent.refresh(item);
-        }
+        List<Account> accounts = agent.fetchCheckingAccounts().getAccounts();
+        agent.fetchSavingsAccounts();
+        agent.fetchCheckingTransactions();
+        agent.fetchSavingsTransactions();
+        agent.fetchCreditCardAccounts();
+        agent.fetchCreditCardTransactions();
+        agent.fetchEInvoices();
+        agent.fetchTransferDestinations(accounts);
+        agent.fetchLoanAccounts();
+        agent.fetchInvestmentAccounts();
         agent.keepAlive();
         agent.logout();
         agent.close();
