@@ -5,26 +5,13 @@
 # Use the new Skylark version of git_repository. This uses the system's native
 # git client which supports fancy key formats and key passphrases.
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
 git_repository(
     name = "dropwizard_jersey",
     commit = "0c2f90f4358e262d0fe0af3f6d31eb0fa3cabc40",
     remote = "git@github.com:tink-ab/dropwizard.git",
 )
-
-# Docker dependencies
-git_repository(
-    name = "io_bazel_rules_docker",
-    remote = "https://github.com/bazelbuild/rules_docker.git",
-    commit = "9dd92c73e7c8cf07ad5e0dca89a3c3c422a3ab7d" # v0.3.0"
-)
-
-load(
-    "@io_bazel_rules_docker//container:container.bzl",
-    "container_pull",
-    container_repositories = "repositories",
-)
-
 
 git_repository(
     name = "tink_httpcore_4_4_9",
@@ -44,7 +31,37 @@ git_repository(
     commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a"
 )
 
+# Docker dependencies
+http_archive(
+    name = "io_bazel_rules_docker",
+    sha256 = "aed1c249d4ec8f703edddf35cbe9dfaca0b5f5ea6e4cd9e83e99f3b0d1136c3d",
+    strip_prefix = "rules_docker-0.7.0",
+    urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
+)
+
+load("@io_bazel_rules_docker//toolchains/docker:toolchain.bzl",
+    docker_toolchain_configure="toolchain_configure"
+)
+docker_toolchain_configure(
+  name = "docker_config",
+  # OPTIONAL: Path to a directory which has a custom docker client config.json.
+  # See https://docs.docker.com/engine/reference/commandline/cli/#configuration-files
+  # for more details.
+  client_config="/path/to/docker/client/config",
+)
+
+# This is NOT needed when going through the language lang_image
+# "repositories" function(s).
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
 container_repositories()
+
+load(
+    "@io_bazel_rules_docker//container:container.bzl",
+    "container_pull",
+)
 
 container_pull(
     name = "openjdk-jdk8",
@@ -85,9 +102,9 @@ http_file(
 # which is the proto-compiler.
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "cef7f1b5a7c5fba672bec2a319246e8feba471f04dcebfe362d55930ee7c1c30",
-    strip_prefix = "protobuf-3.5.0",
-    urls = ["https://github.com/google/protobuf/archive/v3.5.0.zip"],
+    sha256 = "9510dd2afc29e7245e9e884336f848c8a6600a14ae726adb6befdb4f786f0be2",
+    strip_prefix = "protobuf-3.6.1.3",
+    urls = ["https://github.com/google/protobuf/archive/v3.6.1.3.zip"],
 )
 
 bind(
@@ -119,21 +136,6 @@ maven_jar(
     artifact = "com.google.errorprone:error_prone_annotations:2.0.11",
     sha1 = "3624d81fca4e93c67f43bafc222b06e1b1e3b260",
 )
-
-# CSS SASS
-http_archive(
-    name = "io_bazel_rules_sass",
-    urls = ["https://github.com/bazelbuild/rules_sass/archive/0.0.3.zip"],
-    sha256 = "8fa98e7b48a5837c286a1ea254b5a5c592fced819ee9fe4fdd759768d97be868",
-    strip_prefix = "rules_sass-0.0.3",
-)
-
-load("@io_bazel_rules_sass//sass:sass.bzl", "sass_repositories")
-
-# This imports the SASS compiler using the io_bazel_rules_sass build rules.
-# It is using sha256 checksums, so it's fine - but if upgrading make sure to
-# make sure that the new version is doing the same.
-sass_repositories()
 
 ## Maven jar imports
 # Same as above, always make sure to specify a checksum. To check what is using
