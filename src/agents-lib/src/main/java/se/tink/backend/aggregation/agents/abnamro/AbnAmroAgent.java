@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.abnamro;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Uninterruptibles;
@@ -9,7 +10,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import se.tink.backend.aggregation.agents.AbstractAgent;
@@ -28,6 +31,7 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.core.enums.AccountExclusion;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
@@ -60,13 +64,14 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private AbnAmroConfiguration abnAmroConfiguration;
     private Map<Long, CreditCardAccountEntity> accountEntities = Maps.newHashMap();
     private List<Account> accounts = null;
+    private List<Account> existingAccounts = null;
 
     public AbnAmroAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
-
         this.user = request.getUser();
         this.credentials = request.getCredentials();
         this.catalog = Catalog.getCatalog(user.getLocale());
+        this.existingAccounts = request.getAccounts();
     }
 
     @Override
@@ -198,9 +203,11 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     }
 
     private void updateAllCreditCardAccounts(RefreshableItem type) {
-        getAccounts().stream()
+        List<Account> importedAccounts = getAccounts();
+        importedAccounts.stream()
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
                 .forEach(a -> updateCreditCardAccount(a, type));
+        closeExcludeOldDuplicateICSAccounts(importedAccounts);
     }
 
     private List<Account> getAccounts() {
@@ -318,6 +325,22 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 .filter(TransactionContainerEntity::isInEUR)
                 .map(TransactionMapper::toTransaction)
                 .collect(Collectors.toList());
+    }
+
+    private void closeExcludeOldDuplicateICSAccounts(List<Account> importedAccounts) {
+        existingAccounts.stream()
+                .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
+                .filter(a -> importedAccounts.stream().anyMatch(isOldICSAccount(a)))
+                .forEach(a -> {
+                    a.setAccountExclusion(AccountExclusion.AGGREGATION);
+                    a.setClosed(true);
+                    context.sendAccountToUpdateService(a.getBankId());
+                });
+    }
+
+    private Predicate<Account> isOldICSAccount(Account possiblyOld) {
+        return newlyImported -> !Strings.isNullOrEmpty(newlyImported.getPayload()) &&
+                newlyImported.getPayload().contains(possiblyOld.getBankId());
     }
 
     @Override
