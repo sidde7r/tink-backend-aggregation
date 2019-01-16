@@ -17,7 +17,8 @@ public class RefreshExecutorUtils {
             .put(RefreshableItem.CREDITCARD_TRANSACTIONS, RefreshCreditCardAccountsExecutor.class)
             .put(RefreshableItem.LOAN_ACCOUNTS, RefreshLoanAccountsExecutor.class)
             .put(RefreshableItem.LOAN_TRANSACTIONS, RefreshLoanAccountsExecutor.class)
-            .put(RefreshableItem.INVESTMENT_ACCOUNTS, RefreshInvestmentAccountsExecutor.class).build();
+            .put(RefreshableItem.INVESTMENT_ACCOUNTS, RefreshInvestmentAccountsExecutor.class)
+            .put(RefreshableItem.INVESTMENT_TRANSACTIONS, RefreshInvestmentAccountsExecutor.class).build();
 
     public static Class getRefreshExecutor(RefreshableItem item) {
         return REFRESHABLEITEM_EXECUTOR_MAP.get(item);
