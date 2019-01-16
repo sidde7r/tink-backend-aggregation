@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.IngAtPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.IngAtCreditCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.IngAtCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.IngAtTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.IngAtTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.session.IngAtSessionHandler;
@@ -59,7 +61,19 @@ public class IngAtAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new IngAtCreditCardAccountFetcher(apiClient, ingAtSessionStorage),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new IngAtCreditCardTransactionFetcher(apiClient, ingAtSessionStorage)
+                                )
+                        )
+                )
+        );
     }
 
     @Override

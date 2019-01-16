@@ -4,10 +4,12 @@ import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.WebLoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.rpc.CreditCardTransactionPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.rpc.CSVTransactionsPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtAntiCacheParser;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtOpeningDateParser;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -378,6 +380,18 @@ public final class IngAtApiClient {
         downloadCount += 1; // TODO
 
         return extractAccountOpeningDate(responseFormDownload.getBody(String.class));
+    }
+
+    public PaginatorResponse getTransactionsResponse(final CreditCardAccount account) {
+        switch (account.getType()) {
+            case CREDIT_CARD:
+                return getCreditCardTransactionResponse(account);
+        }
+        throw new IllegalStateException("Unexpected transaction type");
+    }
+
+    private PaginatorResponse getCreditCardTransactionResponse(final CreditCardAccount account) {
+        return new CreditCardTransactionPage(account);
     }
 
     private PaginatorResponse getCheckingTransactionsResponse(

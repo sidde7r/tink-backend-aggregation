@@ -27,6 +27,14 @@ public class Hash {
         return sha1AsHex(data.getBytes());
     }
 
+    public static String sha256AsHex(final byte[]... datas) {
+        return Hex.encodeHexString(sha("SHA-256", datas));
+    }
+
+    public static String sha256AsHex(final String data) {
+        return sha256AsHex(data.getBytes());
+    }
+
     public static byte[] sha1(final String data) {
         return sha("SHA-1", data.getBytes());
     }

@@ -29,6 +29,7 @@ public class IngAtConstants {
     public enum Storage {
         ACCOUNT_INDEX,
         CURRENT_URL,
-        WEB_LOGIN_RESPONSE;
+        WEB_LOGIN_RESPONSE,
+        TRANSACTIONS
     }
 }
