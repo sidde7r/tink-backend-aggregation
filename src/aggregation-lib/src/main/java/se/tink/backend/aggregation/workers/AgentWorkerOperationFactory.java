@@ -294,6 +294,7 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
+        //Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
