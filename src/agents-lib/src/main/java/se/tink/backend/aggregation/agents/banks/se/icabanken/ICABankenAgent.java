@@ -1311,7 +1311,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
     private String initBankIDAuthenticate() throws BankIdException {
         String url = String.format(INIT_BANKID_LOGIN_URL, credentials.getField(Field.Key.USERNAME));
-        return initBankID(url, false);
+        return initBankID(url, true);
     }
 
     private String initBankIDSignEInvoice(String invoiceId) throws BankIdException {
