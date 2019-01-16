@@ -4,7 +4,6 @@ import com.google.api.client.repackaged.com.google.common.base.Strings;
 import io.netty.util.internal.StringUtil;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
@@ -165,37 +164,6 @@ public class SEPAAccount {
                 .setBankIdentifier(getBlz() + getAccountNo())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .build();
-    }
-
-    public CreditCardAccount toTinkCreditCardAccount() {
-        verifyCreditCardAccount();
-
-        CreditCardAccount.Builder<?, ?> builder = CreditCardAccount.builder(
-                getBlz() + getAccountNo(),
-                getAmount(getCurrency(), getBalance()),
-                getAmount(getCurrency(), getAccountLimit()))
-                .setHolderName(new HolderName(getHolderName()))
-                .setName(getProductName())
-                .setAccountNumber(getAccountNo());
-
-        if (!StringUtil.isNullOrEmpty(getIban())) {
-            builder.addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()));
-        }
-
-        return builder.build();
-
-    }
-
-    private Amount getAmount(String currency, String amount) {
-        Double amountValue = StringUtil.isNullOrEmpty(amount) ? 0.0 : StringUtils.parseAmount(amount);
-        return new Amount(currency, amountValue);
-    }
-
-    private void verifyCreditCardAccount() {
-        if (!AccountTypes.CREDIT_CARD.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType))) {
-            throw new IllegalStateException(
-                    String.format("Invalid accountType %d for credit card account", accountType));
-        }
     }
 
     private String getHolderName() {
