@@ -51,7 +51,8 @@ public class ICSAgent extends NextGenerationAgent {
   public void setConfiguration(AgentsServiceConfiguration configuration) {
     super.setConfiguration(configuration);
     ICSConfiguration icsConfiguration =
-        configuration.getIntegrations().getIcsConfiguration(clientName).get();
+        configuration.getIntegrations().getIcsConfiguration(clientName)
+                .orElseThrow(() -> new IllegalArgumentException("Missing ICS configuration"));
 
     if (icsConfiguration == null || !icsConfiguration.isValid()) {
       throw new IllegalStateException("ICS Configuration is invalid!");
