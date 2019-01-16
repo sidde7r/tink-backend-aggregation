@@ -40,7 +40,7 @@
   "nxgen.de.banks.fidor.FidorAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
   "nxgen.de.banks.fints.FinTsAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
   "nxgen.de.banks.hvb.HVBAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
-  "nxgen.de.banks.santander.SantanderAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS"],
+  "nxgen.de.banks.santander.SantanderAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS"],
   "nxgen.de.banks.targo.TargoBankDEAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS"],
   "nxgen.de.creditcards.amex.AmericanExpressDEAgent": ["CREDIT_CARDS"],
   "nxgen.demo.banks.bankid.BankIdDemoAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS", "INVESTMENTS"],
