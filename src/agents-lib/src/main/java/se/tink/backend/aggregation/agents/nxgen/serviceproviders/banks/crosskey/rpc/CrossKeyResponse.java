@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -9,8 +8,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyMessage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.entities.ResponseMessage;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class CrossKeyResponse {
 
     private ResponseMessage status;
@@ -59,6 +59,7 @@ public class CrossKeyResponse {
         Optional<CrossKeyError> error = status.getErrors().stream()
                 .map(errorTag -> CrossKeyMessage.find(errorTag, unexpectedFailure))
                 .findFirst();
+
         if (error.isPresent()) { // can't throw non-RuntimeException from java.util.function.Consumer.
             CrossKeyError crossKeyError = error.get();
             // Have to satisfy method signature...

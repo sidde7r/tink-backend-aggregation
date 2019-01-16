@@ -63,11 +63,15 @@ public class CrossKeyAutoAuthenticator implements PasswordAuthenticator, AutoAut
         }
 
         if (response.incorrectPassword()) {
+            persistentStorage.clearDeviceCredentials();
             LOG.warn("The password was incorrect");
+            throw SessionError.SESSION_EXPIRED.exception();
         } else if (response.isIncorrectDevice()) {
             persistentStorage.clearDeviceCredentials();
             LOG.warn("The token or device id was not recognized");
+            throw SessionError.SESSION_EXPIRED.exception();
         }
+
         response.validate(() -> new UnexpectedFailureException(response, "Failure on auto authentication"));
 
         persistentStorage.persist(response);
