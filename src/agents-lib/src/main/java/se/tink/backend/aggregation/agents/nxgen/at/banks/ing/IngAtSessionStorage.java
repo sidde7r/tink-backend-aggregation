@@ -13,7 +13,6 @@ public class IngAtSessionStorage {
         this.sessionStorage = sessionStorage;
     }
 
-
     public Optional<WebLoginResponse> getWebLoginResponse() {
         return sessionStorage.get(IngAtConstants.Storage.WEB_LOGIN_RESPONSE.name(), WebLoginResponse.class);
     }

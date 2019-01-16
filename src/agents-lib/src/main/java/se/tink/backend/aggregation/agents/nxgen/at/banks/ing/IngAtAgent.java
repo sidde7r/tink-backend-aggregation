@@ -49,13 +49,15 @@ public class IngAtAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
-                updateController,
-                new IngAtTransactionalAccountFetcher(apiClient, ingAtSessionStorage),
-                new TransactionFetcherController<>(
-                        this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new IngAtTransactionFetcher(apiClient, ingAtSessionStorage))
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                    metricRefreshController,
+                    updateController,
+                    new IngAtTransactionalAccountFetcher(apiClient, ingAtSessionStorage),
+                    new TransactionFetcherController<>(
+                            this.transactionPaginationHelper,
+                            new TransactionDatePaginationController<>(
+                                    new IngAtTransactionFetcher(apiClient, ingAtSessionStorage))
                 )));
     }
 
