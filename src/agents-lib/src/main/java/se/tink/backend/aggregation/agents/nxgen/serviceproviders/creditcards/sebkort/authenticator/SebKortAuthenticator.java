@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator;
 
+import java.util.Optional;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,5 +83,10 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
             }
             throw e;
         }
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
     }
 }

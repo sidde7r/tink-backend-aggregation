@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator;
 
 import com.google.common.base.Strings;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -65,5 +66,10 @@ public class HandelsbankenBankIdAuthenticator implements BankIdAuthenticator<Ini
             sessionStorage.persist(applicationEntryPoint);
         }
         return bankIdStatus;
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
     }
 }

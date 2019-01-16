@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
 import java.util.Objects;
+import java.util.Optional;
 import org.apache.commons.lang.RandomStringUtils;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -46,6 +47,11 @@ public class NextGenerationDemoAuthenticator implements BankIdAuthenticator<Stri
 
         attempt++;
         return status;
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
     }
 
     @Override

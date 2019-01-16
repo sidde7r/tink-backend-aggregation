@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.authenticator;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -61,6 +62,11 @@ public class AvanzaBankIdAuthenticator implements BankIdAuthenticator<BankIdInit
         }
 
         return status;
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
     }
 
     public List<BankIdCompleteResponse> complete(BankIdCollectResponse reference)

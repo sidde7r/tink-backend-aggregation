@@ -54,7 +54,10 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
 
         T reference = authenticator.init(ssn);
 
-        context.openBankId(null, waitOnBankId);
+        context.openBankId(authenticator
+                .getAutostartToken()
+                .orElse(null),
+                waitOnBankId);
 
         poll(reference);
     }

@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
@@ -15,6 +17,8 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
 
+    String autostarttoken;
+
     public IcaBankenBankIdAuthenticator(IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage) {
         this.apiClient = apiClient;
         this.icaBankenSessionStorage = icaBankenSessionStorage;
@@ -23,7 +27,9 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     @Override
     public String init(String ssn) throws BankIdException {
         try {
-            return apiClient.initBankId(ssn);
+            BankIdBodyEntity response = apiClient.initBankId(ssn);
+            autostarttoken = response.getAutostartToken();
+            return response.getRequestId();
         } catch (HttpResponseException e) {
             if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
                 throw BankIdError.ALREADY_IN_PROGRESS.exception();
@@ -44,6 +50,11 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
         }
 
         return bankIdStatus;
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.ofNullable(autostarttoken);
     }
 
     private BankIdResponse getPollResponse(String reference) throws BankIdException {
