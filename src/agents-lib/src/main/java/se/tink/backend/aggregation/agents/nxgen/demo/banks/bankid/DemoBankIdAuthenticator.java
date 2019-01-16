@@ -30,7 +30,7 @@ public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, Pas
 
     @Override
     public String init(String ssn) throws BankIdException {
-        if (Strings.isNullOrEmpty(ssn) || ssn.length() < 12 || !ssn.contains(demoUserName)) {
+        if (Strings.isNullOrEmpty(ssn)  || !ssn.contains(demoUserName)) {
             throw new BankIdException(BankIdError.USER_VALIDATION_ERROR);
         }
 
