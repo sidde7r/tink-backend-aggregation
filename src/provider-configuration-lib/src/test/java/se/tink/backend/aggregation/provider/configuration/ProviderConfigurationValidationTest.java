@@ -3,16 +3,24 @@ package se.tink.backend.aggregation.provider.configuration;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Ignore;
+import org.junit.Test;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.core.CredentialsTypes;
+import se.tink.backend.core.Field;
+import se.tink.libraries.pair.Pair;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import org.junit.Test;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProviderConfigurationValidationTest extends ProviderConfigurationServiceTestBase {
@@ -162,5 +170,69 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
         Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
         providerCapabilityClassNames.removeAll(agentCapabilityClassNames);
         assertThat(providerCapabilityClassNames).isEmpty();
+    }
+
+    // TODO No need to execute more than once
+    private Set<Pair<String, Pair<ProviderConfiguration, Field>>> providerRows() {
+        return enabledProvidersOnCluster
+                .keySet()
+                .stream()
+                .map(
+                        clusterId ->
+                                Pair.of(
+                                        clusterId,
+                                        enabledProvidersOnCluster.getOrDefault(
+                                                clusterId, Collections.emptySet())))
+                .flatMap(pair -> pair.second.stream().map(second -> Pair.of(pair.first, second)))
+                .map(
+                        pair ->
+                                Pair.of(
+                                        pair.first,
+                                        getProviderConfigurationForCluster(
+                                                pair.first, pair.second)))
+                .flatMap(
+                        pair ->
+                                pair.second
+                                        .getFields()
+                                        .stream()
+                                        .map(
+                                                field ->
+                                                        Pair.of(
+                                                                pair.first,
+                                                                Pair.of(pair.second, field))))
+                .collect(Collectors.toSet());
+    }
+
+    private static List<String> collectRows(
+            Set<Pair<String, Pair<ProviderConfiguration, Field>>> triples) {
+        return triples.stream()
+                .map(triple -> String.format("%s:%s", triple.first, triple.second.first.getName()))
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    /** @throws AssertionError if there exists a provider field that satisfies the predicate */
+    private void validateFields(BiPredicate<ProviderConfiguration, Field> isInvalidField) {
+        Set<Pair<String, Pair<ProviderConfiguration, Field>>> triples = providerRows();
+
+        Set<Pair<String, Pair<ProviderConfiguration, Field>>> violations =
+                triples.stream()
+                        .filter(
+                                triple ->
+                                        isInvalidField.test(
+                                                triple.second.first, triple.second.second))
+                        .collect(Collectors.toSet());
+        List<String> results = collectRows(violations);
+
+        assertThat(results).isEmpty();
+    }
+
+    @Test
+    public void validateMinLengthLessThanOrEqualToMaxLength() {
+        validateFields(
+                (conf, field) ->
+                        field.getMinLength() != null
+                                && field.getMaxLength() != null
+                                && field.getMinLength() > field.getMaxLength());
     }
 }
