@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional;
 
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusUpcomingTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
@@ -26,6 +27,7 @@ public class BelfiusTransactionalAccountFetcher implements
         UpcomingTransactionFetcher<TransactionalAccount> {
 
     private final BelfiusApiClient apiClient;
+    private int numberOfTransactionPages;
 
     public BelfiusTransactionalAccountFetcher(BelfiusApiClient apiClient) {
         this.apiClient = apiClient;
@@ -42,41 +44,37 @@ public class BelfiusTransactionalAccountFetcher implements
 
     @Override
     public void resetState() {
-
+        numberOfTransactionPages = 0;
     }
 
     @Override
     public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
-        List<Transaction> transactionsAll = new ArrayList<>();
         String key = account.getBankIdentifier();
-        boolean initialRequest = true;
         FetchTransactionsResponse response;
+        response = apiClient.fetchTransactions(key,
+                BelfiusConstants.FIRST_TRANSACTION_PAGE == numberOfTransactionPages);
 
-        do {
-            response = apiClient.fetchTransactions(key, initialRequest);
-
-            List<Transaction> transactionsPage = response.stream()
+        List<Transaction> transactionsPage = response.stream()
                     .map(BelfiusTransaction::toTinkTransaction)
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
-            transactionsAll.addAll(transactionsPage);
-            initialRequest = false;
+        numberOfTransactionPages++;
 
-        } while (response.hasNext());
-
-        return PaginatorResponseImpl.create(transactionsAll, false);
+        return PaginatorResponseImpl.create(transactionsPage,
+                response.hasNext()
+                        && numberOfTransactionPages < BelfiusConstants.MAX_NUMBER_OF_TRANSACTION_PAGES);
     }
 
     @Override
     public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
         List<UpcomingTransaction> transactionsAll = new ArrayList<>();
         String key = account.getBankIdentifier();
-        boolean initialRequest = true;
+        boolean initialUpcomingTransactionRequest = true;
         FetchUpcomingTransactionsResponse response;
 
         do {
-            response = apiClient.fetchUpcomingTransactions(key, initialRequest);
+            response = apiClient.fetchUpcomingTransactions(key, initialUpcomingTransactionRequest);
 
             List<UpcomingTransaction> transactionsPage = response.stream()
                     .map(BelfiusUpcomingTransaction::toTinkUpcomingTransaction)
@@ -84,7 +82,7 @@ public class BelfiusTransactionalAccountFetcher implements
                     .collect(Collectors.toList());
 
             transactionsAll.addAll(transactionsPage);
-            initialRequest = false;
+            initialUpcomingTransactionRequest = false;
 
         } while (response.hasNext());
 
