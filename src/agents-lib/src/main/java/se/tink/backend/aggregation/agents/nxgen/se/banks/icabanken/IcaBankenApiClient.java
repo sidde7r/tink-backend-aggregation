@@ -78,12 +78,11 @@ public class IcaBankenApiClient {
         return request;
     }
 
-    public String initBankId(String ssn) {
+    public BankIdBodyEntity initBankId(String ssn) {
         return createPostRequest(
                 IcaBankenConstants.Urls.LOGIN_BANKID.parameter(IcaBankenConstants.IdTags.IDENTIFIER_TAG, ssn))
                 .post(BankIdResponse.class)
-                .getBody()
-                .getRequestId();
+                .getBody();
     }
 
     public BankIdBodyEntity initEInvoiceBankId(String invoiceId) {

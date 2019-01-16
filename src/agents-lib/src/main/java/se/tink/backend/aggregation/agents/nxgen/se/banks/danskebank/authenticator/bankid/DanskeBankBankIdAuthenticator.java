@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticat
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Optional;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -122,6 +123,11 @@ public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticat
             default:
                 throw new IllegalStateException(pollResponse.getStatus());
         }
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
     }
 
     @Override

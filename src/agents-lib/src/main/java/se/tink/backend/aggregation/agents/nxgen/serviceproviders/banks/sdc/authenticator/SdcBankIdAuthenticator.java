@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -51,5 +52,10 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
 
             throw e;
         }
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
     }
 }
