@@ -7,16 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SubProduct {
 
   @JsonProperty("SUBTIPO_DE_PRODUCTO")
-  private String sUBTIPODEPRODUCTO;
+  private String productSubtitle;
 
   @JsonProperty("TIPO_DE_PRODUCTO")
-  private KindOfProduct tIPODEPRODUCTO;
+  private KindOfProduct kindOfProduct;
 
-  public String getsUBTIPODEPRODUCTO() {
-    return sUBTIPODEPRODUCTO;
+  public String getProductSubtitle() {
+    return productSubtitle;
   }
 
-  public KindOfProduct gettIPODEPRODUCTO() {
-    return tIPODEPRODUCTO;
+  public KindOfProduct getKindOfProduct() {
+    return kindOfProduct;
   }
 }

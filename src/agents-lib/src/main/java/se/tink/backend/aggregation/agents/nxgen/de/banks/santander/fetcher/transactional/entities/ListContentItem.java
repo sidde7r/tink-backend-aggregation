@@ -7,5 +7,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ListContentItem {
 
   @JsonProperty("contenido")
-  private Content contenido;
+  private Content content;
 }

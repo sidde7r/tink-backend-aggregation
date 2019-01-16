@@ -18,10 +18,10 @@ public class Cards {
   private String businessBasket;
 
   @JsonProperty("subProducto")
-  private SubProduct subProducto;
+  private SubProduct subProduct;
 
   @JsonProperty("listContenidos")
-  private List<ListContentItem> listContenidos;
+  private List<ListContentItem> listContentItem;
 
   @JsonProperty("accountType")
   private String accountType;
@@ -67,6 +67,6 @@ public class Cards {
   }
 
   public String getCompanyId() {
-    return subProducto.gettIPODEPRODUCTO().getCompany();
+    return subProduct.getKindOfProduct().getCompany();
   }
 }
