@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -44,19 +45,15 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
 
     @Override
     public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
-        String panNr = credentials.getField(Field.Key.USERNAME);
-
-        if (Strings.isNullOrEmpty(panNr)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
-
+        String panNr = verifyCredentialsNotNullOrEmpty(credentials.getField(Field.Key.USERNAME));
         apiClient.prepareSession();
         registerLogon(panNr);
 
         String signingId = apiClient.enrollDevice();
         String signTypeId = apiClient.signTypeManual(signingId);
         String signChallengeCode = apiClient.signChallenge(signTypeId, signingId);
-        String signResponseCode = supplementalInformationHelper.waitForSignCodeChallengeResponse(signChallengeCode);
+        String signResponseCode = verifyCredentialsNotNullOrEmpty(
+                supplementalInformationHelper.waitForSignCodeChallengeResponse(signChallengeCode));
         String finalSigningId = apiClient.signValidation(signResponseCode, panNr, signingId);
         EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse = enrollDeviceRoundTwo(finalSigningId);
 
@@ -67,10 +64,17 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         login(device);
     }
 
+    private String verifyCredentialsNotNullOrEmpty(String value) throws LoginException {
+        if (Strings.isNullOrEmpty(value) || value.trim().isEmpty()) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+        return value;
+    }
+
     private void registerLogon(String panNr) throws AuthenticationException, AuthorizationException {
         String challengeCode = apiClient.challenge();
-        String responseCode = supplementalInformationHelper.waitForLoginChallengeResponse(challengeCode);
-
+        String responseCode =verifyCredentialsNotNullOrEmpty(
+                supplementalInformationHelper.waitForLoginChallengeResponse(challengeCode));
         try {
             apiClient.registerLogon(panNr, responseCode);
         } catch (IllegalStateException e) {
