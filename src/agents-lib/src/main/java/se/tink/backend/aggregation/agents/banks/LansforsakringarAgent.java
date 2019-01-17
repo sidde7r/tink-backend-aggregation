@@ -1409,6 +1409,8 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
                             hasMoreTransactions = transactionListResponse.getHasMore();
                             currentPage = transactionListResponse.getNextSequenceNumber();
                         }
+                        // TODO how to remove the usage of context here?
+                        context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
                     } while (hasMoreTransactions);
                     accountTransactions.put(account.getBankId(), transactions);
                 });
@@ -1487,6 +1489,8 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
                         hasMoreTransactions = transactionListResponse.hasMorePages();
                         currentPage++;
                     }
+                    // TODO how to remove the usage of context here?
+                    context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
                 } while (hasMoreTransactions);
 
                 accountTransactions.put(account.getBankId(), transactions);
