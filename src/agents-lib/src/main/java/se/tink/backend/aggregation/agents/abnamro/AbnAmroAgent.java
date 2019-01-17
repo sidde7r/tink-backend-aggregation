@@ -182,7 +182,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
+        case SAVINGS_ACCOUNTS:
             updateAccountPerType(item);
             break;
         case CREDITCARD_ACCOUNTS:

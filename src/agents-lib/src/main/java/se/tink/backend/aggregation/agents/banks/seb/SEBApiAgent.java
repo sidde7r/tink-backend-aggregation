@@ -305,12 +305,12 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             break;
 
         case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
+        case SAVINGS_ACCOUNTS:
             updateAccountsPerType(item);
             break;
 
         case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
+        case SAVINGS_TRANSACTIONS:
             updateTransactionsPerAccountType(item, context, customerId);
             break;
 

@@ -120,11 +120,11 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
     @Override
     public void refresh(RefreshableItem item) {
         switch (item) {
-        case SAVING_ACCOUNTS:
+        case SAVINGS_ACCOUNTS:
             refreshSavingsAccounts(getAccounts());
             break;
 
-        case SAVING_TRANSACTIONS:
+        case SAVINGS_TRANSACTIONS:
             // NOTE:
             // Last commit SHA related to this agent with transaction aggregation: feb1e91f9028a0a76e997b12146e2e4f1867e6d2
             // Though, since there are some transactions that are sent in other currencies we cannot get a complete view of

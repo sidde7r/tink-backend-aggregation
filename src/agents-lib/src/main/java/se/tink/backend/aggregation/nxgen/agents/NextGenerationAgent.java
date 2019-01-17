@@ -168,7 +168,7 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
 
         // We cannot at this layer distinguish between CHECKING and SAVINGS accounts. Future improvement.
         case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
+        case SAVINGS_ACCOUNTS:
             if (hasRefreshedCheckingAccounts) {
                 break;
             }
@@ -179,7 +179,7 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
 
         // We cannot at this layer distinguish between CHECKING and SAVINGS transactions. Future improvement.
         case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
+        case SAVINGS_TRANSACTIONS:
             if (hasRefreshedCheckingTransactions) {
                 break;
             }
