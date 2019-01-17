@@ -6,7 +6,7 @@ metadata:
   namespace: aggregation
 data:
   config.yml: |
-    agentServiceConfiguration:
+    agentsServiceConfiguration:
       excludedDebugClusters:
         excludedClusters:
           - local-development
