@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
-import java.util.Optional;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
@@ -25,6 +25,8 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
+import java.util.Optional;
+
 public class BelfiusAgent extends NextGenerationAgent {
 
     private final BelfiusApiClient apiClient;
@@ -34,7 +36,7 @@ public class BelfiusAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
-        this.apiClient = new BelfiusApiClient(this.client, belfiusSessionStorage);
+        this.apiClient = new BelfiusApiClient(this.client, belfiusSessionStorage, getBelfiusLocale(request.getUser().getLocale()));
     }
 
     @Override
@@ -71,6 +73,14 @@ public class BelfiusAgent extends NextGenerationAgent {
                                 transactionPaginationHelper,
                                 transactionalAccountFetcher,
                                 transactionalAccountFetcher)));
+    }
+
+    private String getBelfiusLocale(String userLocale) {
+        if (Strings.isNullOrEmpty(userLocale)) {
+            return BelfiusConstants.Request.LOCALE_DUTCH; }
+        if (userLocale.toLowerCase().contains(BelfiusConstants.TINK_FRENCH)) {
+            return BelfiusConstants.Request.LOCALE_FRENCH; }
+        return BelfiusConstants.Request.LOCALE_DUTCH;
     }
 
     @Override

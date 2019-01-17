@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.MessageResponseDeserializer;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -36,6 +37,24 @@ public class MessageResponse extends ResponseEntity {
         }
     }
 
+    public static String getErrorMessage(BelfiusResponse response) {
+        if(response == null){
+            return "";
+        }
+
+        MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
+        if (messageResponse == null) {
+            return "";
+        }
+        String errorMessage = messageResponse.getMessageContent();
+        String messageDetail = messageResponse.getMessageDetail();
+        if (!Strings.isNullOrEmpty(messageDetail)) {
+            String[] split = messageDetail.split("\\R");
+            errorMessage = errorMessage.concat(" " + split[0]);
+        }
+        return errorMessage;
+    }
+
     private boolean isWrongCredentialsMessage() {
         return BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE.equalsIgnoreCase(messageType)
                 && !messageDetail.contains(BelfiusConstants.ErrorCodes.WRONG_CREDENTIALS_CODE);
@@ -57,7 +76,7 @@ public class MessageResponse extends ResponseEntity {
                 || (messageTarget != null && messageTarget.equalsIgnoreCase("internal")));
     }
 
-    public static boolean changeButtonErrorOrDoubleMessageIdentifier(BelfiusResponse response) {
+    public static boolean isErrorMessageIdentifier(BelfiusResponse response) {
         MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
         if (messageResponse == null) {
             return false;
@@ -65,15 +84,12 @@ public class MessageResponse extends ResponseEntity {
         String messageDetail = messageResponse.getMessageDetail();
         String messageType = messageResponse.getMessageType();
         String messageTarget = messageResponse.getMessageTarget();
-        String messageContent = messageResponse.getMessageContent();
         return (messageDetail != null && messageDetail.contains("ERROR"))
                 || (messageType != null && messageType.equalsIgnoreCase("warning"))
-                || (messageTarget != null && messageTarget.equalsIgnoreCase("internal"))
-                || (messageContent != null && messageContent.contains(BelfiusConstants.Messages.IDENTICAL_PAYMENT)
-                && messageContent.contains(BelfiusConstants.Messages.CONTINUE_CHANGE_BUTTON));
+                || (messageTarget != null && messageTarget.equalsIgnoreCase("internal"));
     }
 
-    public static boolean findError(BelfiusResponse response, String message, String errorCode){
+    public static boolean findError(BelfiusResponse response, String errorCode){
         if(response == null){
             return false;
         }
@@ -84,38 +100,35 @@ public class MessageResponse extends ResponseEntity {
         }
 
         String messageContent = messageResponse.getMessageContent();
+        String messageDetail = messageResponse.getMessageDetail();
         return containsError(messageResponse)
-                && (messageContent != null
-                && (messageContent.contains(message) || message.equals(""))
-                && (messageContent.contains(errorCode) || errorCode.equals("")));
+                && ((messageContent != null && (messageContent.contains(errorCode))
+                || (messageDetail != null && (messageDetail.contains(errorCode)))));
     }
 
-    public static boolean requireSign(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.SIGNING_REQUIRED, "");
+    public static boolean requireSignOfWeeklyLimit(BelfiusResponse response) {
+        return findError(response, BelfiusConstants.ErrorCodes.WEEKLY_LIMIT)
+                || findError(response, BelfiusConstants.ErrorCodes.BENEFICIARY_WEEKLY_LIMIT);
     }
 
     public static boolean requireSignOfBeneficiaryLimit(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.ADD_BENEFICIARY_LIMIT, "");
-    }
-
-    public static boolean beneficiaryOverWeeklyLimit(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.ADD_BENEFICIARY_WEEKLY_LIMIT, "");
+        return findError(response, BelfiusConstants.ErrorCodes.BENEFICIARY_LIMIT);
     }
 
     public static boolean transferSignFailed(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.TRANSFER_SIGN_FAILED, BelfiusConstants.ErrorCodes.ERROR_SIGN_CODE);
+        return findError(response, BelfiusConstants.ErrorCodes.ERROR_SIGN_CODE);
     }
 
     public static boolean transferSignTempError(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.SIGN_TEMP_ERROR, BelfiusConstants.ErrorCodes.SIGN_TEMP_ERROR_CODE);
+        return findError(response, BelfiusConstants.ErrorCodes.SIGN_TEMP_ERROR_CODE);
     }
 
     public static boolean weeklyCardLimitCode(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.WEEKLY_READER_LIMIT, BelfiusConstants.ErrorCodes.WEEKLY_READER_LIMIT_CODE);
+        return findError(response, BelfiusConstants.ErrorCodes.WEEKLY_READER_LIMIT_CODE);
     }
 
     public static boolean invalidBeneficiarySign(BelfiusResponse response) {
-        return findError(response, BelfiusConstants.Messages.INVALID_SIGN_BENEFICIARY, BelfiusConstants.ErrorCodes.INVBALID_SIGN_BENEFICIARY_CODE);
+        return findError(response, BelfiusConstants.ErrorCodes.INVBALID_SIGN_BENEFICIARY_CODE);
     }
 
     public String getMessageContent() {

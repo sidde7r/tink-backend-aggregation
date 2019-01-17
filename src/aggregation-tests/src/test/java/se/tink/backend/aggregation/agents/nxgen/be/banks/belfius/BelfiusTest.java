@@ -1,19 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.IOException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.framework.ProviderConfigModel;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.i18n.Catalog;
+
+import java.io.File;
+import java.io.IOException;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
@@ -29,7 +30,7 @@ public class BelfiusTest {
     protected BelfiusAuthenticator setupAuthentication(PersistentStorage persistentStorage, Credentials credentials) {
         this.apiClient = spy(
                 new BelfiusApiClient(new TinkHttpClient(null, credentials),
-                        new BelfiusSessionStorage(new SessionStorage()))
+                        new BelfiusSessionStorage(new SessionStorage()), BelfiusConstants.Request.LOCALE_DUTCH)
         );
         ProviderConfigModel marketProviders = readProvidersConfiguration("be");
         Provider provider = marketProviders.getProvider("be-belfius-cardreader");

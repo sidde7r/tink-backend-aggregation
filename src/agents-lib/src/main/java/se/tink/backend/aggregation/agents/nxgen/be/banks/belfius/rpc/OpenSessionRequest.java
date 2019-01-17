@@ -57,10 +57,10 @@ public class OpenSessionRequest extends RequestEntity {
         return this.attributes;
     }
 
-    public static OpenSessionRequest create() {
+    public static OpenSessionRequest create(String locale) {
         OpenSessionRequest request = new OpenSessionRequest();
         request.applicationType = BelfiusConstants.Request.APPLICATION_TYPE;
-        request.locale = BelfiusConstants.Request.LOCALE;
+        request.locale = locale;
         request.attributes = new OpenSessionRequest.Attributes();
         request.attributes.application = BelfiusConstants.Request.APPLICATION_ID;
         request.attributes.appRelease = BelfiusConstants.Request.APP_RELEASE;

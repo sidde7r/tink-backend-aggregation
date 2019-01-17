@@ -20,6 +20,8 @@ public class BelfiusConstants {
     public static final int MAX_NUMBER_OF_TRANSACTION_PAGES = 100;
     public static final int FIRST_TRANSACTION_PAGE = 0;
 
+    public static final String TINK_FRENCH = "fr";
+
     public static class UrlParameter {
         public static final String MACHINE_IDENTIFIER = "machineIdentifier";
     }
@@ -223,7 +225,8 @@ public class BelfiusConstants {
         public static final String AGGREGATED_EXECUTION_MODE = "aggregated";
 
         public static final String APPLICATION_TYPE = "native";
-        public static final String LOCALE = "nl_BE";
+        public static final String LOCALE_DUTCH = "nl_BE";
+        public static final String LOCALE_FRENCH = "fr_BE";
         public static final String APP_RELEASE = "07430";
         public static final String PLATFORM = "I";
         public static final String TYPE_DEVICE = "PHONE";
@@ -271,18 +274,6 @@ public class BelfiusConstants {
         }
     }
 
-    public static class Messages {
-        public static final String IDENTICAL_PAYMENT = "identieke overschrijving ingevoerd";
-        public static final String CONTINUE_CHANGE_BUTTON = " knop 'Verder' te drukken, zoniet druk op de knop 'Wijzigen";
-        public static final String SIGNING_REQUIRED = "Daarom moet u even ondertekenen";
-        public static final String ADD_BENEFICIARY_LIMIT = "De limiet voor uw begunstigde is overschreden. Daarom moet u even ondertekenen.";
-        public static final String ADD_BENEFICIARY_WEEKLY_LIMIT = "De weeklimiet voor \"Mijn begunstigden\" werd bereikt. Daarom moet u even ondertekenen.";
-        public static final String TRANSFER_SIGN_FAILED = "De ondertekening van uw transactie is ongeldig";
-        public static final String SIGN_TEMP_ERROR = "Door een technisch probleem is deze functie tijdelijk niet beschikbaar.";
-        public static final String WEEKLY_READER_LIMIT = "De weeklimiet voor betalingen met de Belfius-kaartlezer werd bereikt";
-        public static final String INVALID_SIGN_BENEFICIARY = "De handtekening van uw transactie is ongeldig";
-    }
-
     public static class Fetcher {
         public static class CreditCards {
             public static final LogTag LOGTAG = LogTag.from("#be_belfius_creditcard");
@@ -300,7 +291,15 @@ public class BelfiusConstants {
         public static final String ERROR_EMPTY_SIGN_CODE = "GE9KT58O/90AA/";
         public static final String WRONG_CARD_NUMBER_CODE = "GE9KT082/1502";
         public static final String SIGN_TEMP_ERROR_CODE = "12DB/000000";
+        public static final String IDENTICAL_PAYMENT = "12DB/000000";
         public static final String WEEKLY_READER_LIMIT_CODE = "1000/AMW036";
+        public static final String BENEFICIARY_LIMIT = "1000/NOBENE";
+        public static final String WEEKLY_LIMIT = "1208/000000";
+        public static final String BENEFICIARY_WEEKLY_LIMIT = "1000/AMW033";
         public static final String INVBALID_SIGN_BENEFICIARY_CODE = "90AC/000000";
+    }
+
+    public static class Transfer {
+        public static final LogTag LOGTAG = LogTag.from("#be_belfius_transfer");
     }
 }

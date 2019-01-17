@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
-import javax.ws.rs.core.HttpHeaders;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.AuthenticateWithCodeRequest;
@@ -61,6 +60,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
@@ -69,16 +69,18 @@ public class BelfiusApiClient {
 
     private final TinkHttpClient client;
     private final BelfiusSessionStorage sessionStorage;
+    private final String locale;
 
-    public BelfiusApiClient(TinkHttpClient client, BelfiusSessionStorage sessionStorage) {
+    public BelfiusApiClient(TinkHttpClient client, BelfiusSessionStorage sessionStorage, String locale) {
         this.client = client;
         this.sessionStorage = sessionStorage;
+        this.locale = locale;
     }
 
     public void openSession() {
         this.sessionStorage.clearSessionData();
         SessionOpenedResponse sessionOpenedResponse = post(BelfiusConstants.Url.GEPA_RENDERING_URL,
-                OpenSessionResponse.class, OpenSessionRequest.create())
+                OpenSessionResponse.class, OpenSessionRequest.create(this.locale))
                 .getSessionData();
 
         this.sessionStorage.putSessionData(sessionOpenedResponse.getSessionId(),

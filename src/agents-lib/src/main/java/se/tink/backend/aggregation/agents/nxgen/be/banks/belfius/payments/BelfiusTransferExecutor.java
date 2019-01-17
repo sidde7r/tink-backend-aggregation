@@ -1,20 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol.SignProtocolResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -23,6 +20,13 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.i18n.Catalog;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
+
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils.createTransferSignature;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils.getFormattedAmount;
 
@@ -33,6 +37,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private BelfiusApiClient apiClient;
+    private static final AggregationLogger LOGGER = new AggregationLogger(BelfiusTransferExecutor.class);
 
     public BelfiusTransferExecutor(BelfiusApiClient apiClient,
             BelfiusSessionStorage belfiusSessionStorage,
@@ -70,25 +75,23 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
                 .executePayment(ownAccount, transfer, createClientSha(transfer),
                         transfer.getMessageType().equals(MessageType.STRUCTURED));
 
-        boolean paymentRequireSigning = paymentResponse.requireSign();
-
         if (paymentResponse.requireSignOfBeneficiary()) {
             addBeneficiary(transfer, transfer.getMessageType().equals(MessageType.STRUCTURED));
-            paymentRequireSigning = false;
         }
 
-        if (paymentResponse.isErrorOrContinueChangeButtonDoublePayment()) {
+        // If there was an error it might have been fixed by addBeneficiary but the addBeneficiary response
+        // does not give enough information. The error could also be a double payment warning.
+        // Pressing double payment will give us more information.
+        if (paymentResponse.isErrorMessageIdentifier()) {
             SignProtocolResponse signProtocolResponse = apiClient.doublePayment();
-            if (signProtocolResponse.signingRequired()){
-                paymentRequireSigning = true;
+            if (signProtocolResponse.requireSignWeeklyLimit()) {
+                signPayments();
             } else if (signProtocolResponse.isError()) {
+                LOGGER.warnExtraLong(String.format("Signing response: %s", signProtocolResponse.getErrorMessage()),
+                        BelfiusConstants.Transfer.LOGTAG);
                 throw createFailedTransferException(TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED,
                         TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED);
             }
-        }
-
-        if (paymentRequireSigning) {
-            signPayments();
         }
 
         if (immediateTransfer && sourceAccountBalance.isLessThan(transfer.getAmount().doubleValue())) {
