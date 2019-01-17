@@ -1536,11 +1536,6 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvo
     }
 
     @Override
-    public FetchTransactionsResponse fetchLoanTransactions() {
-        return new FetchTransactionsResponse(Collections.emptyMap());
-    }
-
-    @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         Map<Account, AccountFeatures> investmentAccounts = new HashMap<>();
 
