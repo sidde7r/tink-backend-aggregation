@@ -33,6 +33,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.enums.AccountExclusion;
+import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
@@ -208,7 +209,10 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         importedAccounts.stream()
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
                 .forEach(a -> updateCreditCardAccount(a, type));
-        closeExcludeOldDuplicateICSAccounts(importedAccounts);
+
+        if (request.getUser().getFlags().contains(FeatureFlags.ABN_AMRO_ICS_DUPLICATE_FIX)) {
+            closeExcludeOldDuplicateICSAccounts(importedAccounts);
+        }
     }
 
     private List<Account> getAccounts() {
