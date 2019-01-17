@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents;
 import java.util.List;
 import se.tink.backend.aggregation.rpc.Account;
 
-public class FetchAccountsResponse {
+public class RefreshAccountsResponse {
     private List<Account> accounts;
 
     public List<Account> getAccounts() {
