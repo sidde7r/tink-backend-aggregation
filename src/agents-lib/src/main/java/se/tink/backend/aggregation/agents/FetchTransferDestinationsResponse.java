@@ -6,14 +6,14 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.account.TransferDestinationPattern;
 
 public class FetchTransferDestinationsResponse {
-    private final Map<Account, List<TransferDestinationPattern>> transferDestinations;
-
-    public FetchTransferDestinationsResponse(
-            Map<Account, List<TransferDestinationPattern>> transferDestinations) {
-        this.transferDestinations = transferDestinations;
-    }
+    private Map<Account, List<TransferDestinationPattern>> transferDestinations;
 
     public Map<Account, List<TransferDestinationPattern>> getTransferDestinations() {
         return transferDestinations;
+    }
+
+    public void setTransferDestinations(
+            Map<Account, List<TransferDestinationPattern>> transferDestinations) {
+        this.transferDestinations = transferDestinations;
     }
 }
