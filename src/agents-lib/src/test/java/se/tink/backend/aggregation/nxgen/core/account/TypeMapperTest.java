@@ -49,7 +49,7 @@ public final class TypeMapperTest {
         Assert.assertEquals(mapper.translate("CHECKING_ACCOUNT"), Optional.of(AccountTypes.CHECKING));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void ensureIgnore_withAlreadyMappedValue_throwsException() {
         final TypeMapper<AccountTypes> mapper = TypeMapper.<AccountTypes>builder()
                 .put(AccountTypes.CHECKING, "SAVINGS_ACCOUNT")
@@ -57,7 +57,7 @@ public final class TypeMapperTest {
                 .build();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void ensureIgnore_withAlreadyMappedValueButDifferingCapitalisation_throwsException() {
         final TypeMapper<AccountTypes> mapper = TypeMapper.<AccountTypes>builder()
                 .put(AccountTypes.CHECKING, "SAVINGS_ACCOUNT")

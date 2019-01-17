@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -23,20 +24,18 @@ public class TypeMapper<V> {
 
         ignoredKeys = builder.getIgnoredKeys()
                 .stream()
-                .map(TypeMapper::toKeyString)
+                .map(String::toLowerCase)
                 .collect(Collectors.toSet());
 
         ImmutableMap.Builder<String, V> tmpTranslator = ImmutableMap.builder();
-        for (Map.Entry<V, Object[]> entry : builder.getReversed().entrySet()) {
-            for (Object key : entry.getValue()) {
-                String stringKey = toKeyString(key);
+        for (Map.Entry<V, List<String>> entry : builder.getReversed().entrySet()) {
 
-                if (ignoredKeys.contains(stringKey)) {
-                    throw new IllegalArgumentException(String.format("Key %s is both mapped and ignored.", stringKey));
-                }
-
-                tmpTranslator.put(stringKey, entry.getKey());
-            }
+            entry.getValue()
+                    .stream()
+                    .map(String::toLowerCase)
+                    .peek(key -> Preconditions.checkState(!ignoredKeys.contains(key),
+                            String.format("Key %s is both mapped and ignored.", key)))
+                    .forEach(key -> tmpTranslator.put(key, entry.getKey()));
         }
         translator = tmpTranslator.build();
     }
@@ -45,40 +44,32 @@ public class TypeMapper<V> {
         return new Builder<>();
     }
 
-    private static String toKeyString(Object accountTypeKey) {
-        return String.valueOf(accountTypeKey).toLowerCase();
-    }
-
-    protected boolean verify(Object key, V value) {
+    protected boolean verify(String key, V value) {
         Optional<V> translated = translate(key);
         return translated.isPresent() && translated.get() == value;
     }
 
-    protected boolean verify(Object key, Collection<V> values) {
+    protected boolean verify(String key, Collection<V> values) {
         Optional<V> translated = translate(key);
         return translated.isPresent() && values.contains(translated.get());
     }
 
-    public Optional<V> translate(Object typeKey) {
+    public Optional<V> translate(String typeKey) {
 
-        if (ignoredKeys.contains(toKeyString(typeKey))) {
-            return Optional.empty();
-        }
+        typeKey = typeKey.toLowerCase();
+        Optional<V> type = Optional.ofNullable(translator.get(typeKey));
 
-        V type = translator.get(toKeyString(typeKey));
-
-        if (type == null) {
+        if (!type.isPresent() && ignoredKeys.contains(typeKey)) {
             logger.warn("Unknown account type for key: {}", typeKey);
-            return Optional.empty();
-        } else {
-            return Optional.of(type);
         }
+
+        return type;
     }
 
     public static class Builder<V> {
 
-        private final Map<V, Object[]> reversed = new HashMap<>();
-        private final Set<Object> ignoredKeys = new HashSet<>();
+        private final Map<V, List<String>> reversed = new HashMap<>();
+        private final Set<String> ignoredKeys = new HashSet<>();
 
         public TypeMapper<V> build() {
             return new TypeMapper<>(this);
@@ -87,24 +78,25 @@ public class TypeMapper<V> {
         /**
          * Known keys, and the account type they should be mapped to.
          */
-        public Builder<V> put(V value, Object... keys) {
-            reversed.put(value, keys);
+        public Builder<V> put(V value, String... keys) {
+
+            reversed.put(value, Arrays.asList(keys));
             return this;
         }
 
         /**
          * Known keys that should not be mapped to any specific account type.
          */
-        public Builder<V> ignoreKeys(Object... keys) {
+        public Builder<V> ignoreKeys(String... keys) {
             ignoredKeys.addAll(Arrays.asList(keys));
             return this;
         }
 
-        private Map<V, Object[]> getReversed() {
+        private Map<V, List<String>> getReversed() {
             return reversed;
         }
 
-        private Set<Object> getIgnoredKeys() {
+        private Set<String> getIgnoredKeys() {
             return ignoredKeys;
         }
     }
