@@ -1309,7 +1309,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
             response.addDestinations(getTransferAccountDestinations(accountEntities, updatedAccounts));
             response.addDestinations(getPaymentAccountDestinations(accountEntities, updatedAccounts));
 
-            refreshTransferDestinationsResponse.setTransferDestinations(response.getDestinations());
+            refreshTransferDestinationsResponse.setRefreshedTransferDestinations(response.getDestinations());
             return refreshTransferDestinationsResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -1331,7 +1331,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
                 .filter(set -> type.isAccountType(set.getValue().getType()))
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
-        refreshAccountsResponse.setAccounts(refreshedAccounts);
+        refreshAccountsResponse.setRefreshedList(refreshedAccounts);
         return refreshAccountsResponse;
     }
 
@@ -1412,7 +1412,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
                     } while (hasMoreTransactions);
                     accountTransactions.put(account.getBankId(), transactions);
                 });
-        refreshCheckingTransactionsResponse.setTransactions(accountTransactions);
+        refreshCheckingTransactionsResponse.setRefreshedTransactions(accountTransactions);
         return refreshCheckingTransactionsResponse;
     }
 
@@ -1433,7 +1433,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
                 }
                 cards.add(cardEntity.getAccount());
             }
-            refreshAccountsResponse.setAccounts(cards);
+            refreshAccountsResponse.setRefreshedList(cards);
             return refreshAccountsResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -1491,7 +1491,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
 
                 accountTransactions.put(account.getBankId(), transactions);
             }
-            refreshTransactionsResponse.setTransactions(accountTransactions);
+            refreshTransactionsResponse.setRefreshedTransactions(accountTransactions);
             return refreshTransactionsResponse;
         } catch (Exception e) {
             throw new IllegalStateException(e);
@@ -1531,7 +1531,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
                 log.warn("Was not able to retrieve loan: " + e.getMessage());
             }
         }
-        refreshLoanAccountsResponse.setAccounts(loanAccounts);
+        refreshLoanAccountsResponse.setRefreshedItems(loanAccounts);
         return refreshLoanAccountsResponse;
     }
 
@@ -1554,7 +1554,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshExecu
             // Just catch and exit gently
             log.warn("Caught exception while logging investment data", e);
         }
-        refreshInvestmentAccountsResponse.setAccounts(investmentAccounts);
+        refreshInvestmentAccountsResponse.setRefreshedItems(investmentAccounts);
         return refreshInvestmentAccountsResponse;
     }
 

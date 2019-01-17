@@ -76,19 +76,19 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                             context.updateTransferDestinationPatterns(
                                     ((RefreshExecutor) agent)
                                             .refreshTransferDestinations(context.getUpdatedAccounts())
-                                            .getTransferDestinations());
+                                            .getRefreshedTransferDestinations());
                             break;
                         case CHECKING_ACCOUNTS:
                             context.cacheAccounts(
                                     ((RefreshExecutor) agent)
                                             .refreshCheckingAccounts()
-                                            .getAccounts());
+                                            .getRefreshedList());
                             break;
                         case CHECKING_TRANSACTIONS:
                             for (Map.Entry<String, List<Transaction>> accountTransactions :
                                     ((RefreshExecutor) agent)
                                             .refreshCheckingTransactions()
-                                            .getTransactions()
+                                            .getRefreshedTransactions()
                                             .entrySet()) {
                                 context.cacheTransactions(
                                         accountTransactions.getKey(),
@@ -99,13 +99,13 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                             context.cacheAccounts(
                                     ((RefreshExecutor) agent)
                                             .refreshSavingAccounts()
-                                            .getAccounts());
+                                            .getRefreshedList());
                             break;
                         case SAVING_TRANSACTIONS:
                             for (Map.Entry<String, List<Transaction>> accountTransactions :
                                     ((RefreshExecutor) agent)
                                             .refreshSavingTransactions()
-                                            .getTransactions()
+                                            .getRefreshedTransactions()
                                             .entrySet()) {
                                 context.cacheTransactions(
                                         accountTransactions.getKey(),
@@ -116,13 +116,13 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                             context.cacheAccounts(
                                     ((RefreshExecutor) agent)
                                             .refreshCreditCardAccounts()
-                                            .getAccounts());
+                                            .getRefreshedList());
                             break;
                         case CREDITCARD_TRANSACTIONS:
                             for (Map.Entry<String, List<Transaction>> accountTransactions :
                                     ((RefreshExecutor) agent)
                                             .refreshCreditCardTransactions()
-                                            .getTransactions()
+                                            .getRefreshedTransactions()
                                             .entrySet()) {
                                 context.cacheTransactions(
                                         accountTransactions.getKey(),
@@ -133,7 +133,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                             for (Map.Entry<Account, AccountFeatures> loanAccount :
                                     ((RefreshExecutor) agent)
                                             .refreshLoanAccounts()
-                                            .getAccounts()
+                                            .getRefreshedItems()
                                             .entrySet()) {
                                 context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
                             }
@@ -142,7 +142,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                             for (Map.Entry<Account, AccountFeatures> loanAccount :
                                     ((RefreshExecutor) agent)
                                             .refreshInvestmentAccounts()
-                                            .getAccounts()
+                                            .getRefreshedItems()
                                             .entrySet()) {
                                 context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
                             }
