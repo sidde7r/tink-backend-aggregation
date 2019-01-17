@@ -29,20 +29,14 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.RefreshExecutor;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -147,15 +141,7 @@ import static se.tink.backend.aggregation.rpc.RefreshableItem.CHECKING_TRANSACTI
 import static se.tink.backend.aggregation.rpc.RefreshableItem.SAVINGS_ACCOUNTS;
 import static se.tink.backend.aggregation.rpc.RefreshableItem.SAVINGS_TRANSACTIONS;
 
-public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvoiceExecutor,
-                                                                    RefreshTransferDestinationExecutor,
-                                                                    RefreshCheckingAccountsExecutor,
-                                                                    RefreshSavingsAccountsExecutor,
-                                                                    RefreshCreditCardAccountsExecutor,
-                                                                    RefreshLoanAccountsExecutor,
-                                                                    RefreshInvestmentAccountsExecutor,
-                                                                    TransferExecutor,
-                                                                    PersistentLogin {
+public class LansforsakringarAgent extends AbstractAgent implements RefreshExecutor, TransferExecutor, PersistentLogin {
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
     private static final DisplayAccountIdentifierFormatter GIRO_FORMATTER = new DisplayAccountIdentifierFormatter();
     private static final TypeReference<HashMap<String, Object>> TYPE_MAP_REF = new TypeReference<HashMap<String, Object>>() {
