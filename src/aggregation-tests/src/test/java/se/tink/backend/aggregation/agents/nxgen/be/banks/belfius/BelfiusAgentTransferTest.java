@@ -22,18 +22,16 @@ import java.util.Optional;
 
 @Ignore
 public class BelfiusAgentTransferTest {
-    private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
+    private final ArgumentHelper helper = new ArgumentHelper(
+            "tink.username",
+            "tink.password",
+            "sourceaccount",
+            "destinationaccount",
+            "destinationname");
 
-    //private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
     // Transfer tests will make actual transfers verify before running.
     // https://www.belfius.be/retail/nl/mijn-belfius/index.aspx#pan=cardNr
     // Check with concerned and remember to keep accounting.
-    private static final String SOURCE_CHECKING_ACCOUNT = "";
-    private static final String OWN_SAVINGS_ACCOUNT_NOT_ALLOWED_TO_TRANSFER_TO = ""; // Sparrekking +
-    private static final String OWN_SAVINGS_ACCOUNT = ""; // Sparrekking
-    private static final String OWN_NAME_FOR_DESTINATION = "";
-    private static final String EXTERNAL_ACCOUNT = "";
-    private static final String EXTERNAL_ACCOUNT_NAME_MANDATORY = "";
     private static final int AMOUNT_LAGOM = 10;
     private static final int AMOUNT_SMALL = 1;
     private static final int AMOUNT_LARGE_REQUIRES_SIGN_OF_AMOUNT = 2001; // Check if rules changed
@@ -41,6 +39,12 @@ public class BelfiusAgentTransferTest {
     private static final Optional<Date> INSTANT_TRANSFER = Optional.empty();
     private static final Optional<Date> TRANSFER_NEXT_WEEK = Optional.of(Date.from(LocalDate.now()
             .plus(1, ChronoUnit.WEEKS).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+    private String sourceCheckingAccount;
+    private String ownSavingsAccountNotAllowedToTransferTo; // Sparrekking +
+    private String ownSavingsAccount; // Sparrekking
+    private String ownNameForDestination;
+    private String externalAccount;
+    private String externalAccountNameMandatory;
 
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-belfius-cardreader")
@@ -61,49 +65,62 @@ public class BelfiusAgentTransferTest {
                 .build();
     }
 
-    @Ignore // Please check that SOURCE_CHECKING_ACCOUNT and OWN_SAVINGS_ACCOUNT_NOT_ALLOWED_TO_TRANSFER_TO set up
+    @Ignore// Please check that sourceCheckingAccount and ownSavingsAccountNotAllowedToTransferTo set up
     @Test(expected = TransferExecutionException.class)
     public void testTransferToSavingsAccountThatIsNotAllowed() throws Exception {
+        sourceCheckingAccount = helper.get("sourceaccount");
+        ownSavingsAccountNotAllowedToTransferTo = helper.get("destinationaccount");
+        ownNameForDestination = helper.get("destinationname");
         Amount amount = Amount.inEUR(AMOUNT_SMALL);
-        SepaEurIdentifier sourceChecking = new SepaEurIdentifier(SOURCE_CHECKING_ACCOUNT);
-        SepaEurIdentifier destionationSparrekingPlus = new SepaEurIdentifier(OWN_SAVINGS_ACCOUNT_NOT_ALLOWED_TO_TRANSFER_TO);
-        String destName = OWN_NAME_FOR_DESTINATION;
+        SepaEurIdentifier sourceChecking = new SepaEurIdentifier(sourceCheckingAccount);
+        SepaEurIdentifier destionationSparrekingPlus = new SepaEurIdentifier(ownSavingsAccountNotAllowedToTransferTo);
+        String destName = ownNameForDestination;
         String message = "Spaarrekkening PLUS Tink trans " + toHumanAmount(amount);
         Transfer transfer = createTransfer(amount, sourceChecking, message, destionationSparrekingPlus, destName, INSTANT_TRANSFER);
         buildWithCredentials().testBankTransfer(transfer);
     }
 
-    @Ignore // Please check that SOURCE_CHECKING_ACCOUNT and OWN_SAVINGS_ACCOUNT set up
+    @Ignore // Please check that sourceCheckingAccount and ownSavingsAccount set up
     @Test
     public void testTransferToSavingsAccountThatIsAllowed() throws Exception {
+        sourceCheckingAccount = helper.get("sourceaccount");
+        ownSavingsAccount = helper.get("destinationaccount");
+        ownNameForDestination = helper.get("destinationname");
         Amount amount = Amount.inEUR(AMOUNT_SMALL);
-        SepaEurIdentifier sourceChecking = new SepaEurIdentifier(SOURCE_CHECKING_ACCOUNT);
-        SepaEurIdentifier destionationSparreking = new SepaEurIdentifier(OWN_SAVINGS_ACCOUNT);
-        String destName = OWN_NAME_FOR_DESTINATION;
+        SepaEurIdentifier sourceChecking = new SepaEurIdentifier(sourceCheckingAccount);
+        SepaEurIdentifier destionationSparreking = new SepaEurIdentifier(ownSavingsAccount);
+        String destName = ownNameForDestination;
         String message = "Spaarrekkening Tink trans " + toHumanAmount(amount);
         Transfer transfer = createTransfer(amount, sourceChecking, message, destionationSparreking, destName, INSTANT_TRANSFER);
         buildWithCredentials().testBankTransfer(transfer);
     }
 
-    @Ignore// Please check that SOURCE_CHECKING_ACCOUNT Beneficiaries and EXTERNAL_ACCOUNT set up
+    @Ignore// Please check that sourceCheckingAccount Beneficiaries and externalAccount set up
     @Test
     public void testTransferToRegisteredExternalAccountThatIsAllowed() throws Exception {
+        sourceCheckingAccount = helper.get("sourceaccount");
+        externalAccount = helper.get("destinationaccount");
+        externalAccountNameMandatory = helper.get("destinationname");
         Amount amount = Amount.inEUR(AMOUNT_LARGE_REQUIRES_SIGN_OF_AMOUNT_OR_BENEFICIARY);
-        SepaEurIdentifier sourceChecking = new SepaEurIdentifier(SOURCE_CHECKING_ACCOUNT);
-        SepaEurIdentifier externalAccount = new SepaEurIdentifier(EXTERNAL_ACCOUNT);
-        String destName = EXTERNAL_ACCOUNT_NAME_MANDATORY;
+        SepaEurIdentifier sourceChecking = new SepaEurIdentifier(sourceCheckingAccount);
+        SepaEurIdentifier externalAccount = new SepaEurIdentifier(this.externalAccount);
+        String destName = externalAccountNameMandatory;
         String message = "Tink trans " + toHumanAmount(amount);
         Transfer transfer = createTransfer(amount, sourceChecking, message, externalAccount, destName, TRANSFER_NEXT_WEEK);
         buildWithCredentials().testBankTransfer(transfer);
     }
 
-    @Ignore // Please check that SOURCE_CHECKING_ACCOUNT Beneficiaries and EXTERNAL_ACCOUNT set up
+    @Ignore // Please check that sourceCheckingAccount Beneficiaries and externalAccount set up
     @Test
     public void testTransferToUnRegisteredExternalAccountThatIsAllowed() throws Exception {
+        sourceCheckingAccount = helper.get("sourceaccount");
+        externalAccount = helper.get("destinationaccount");
+        externalAccountNameMandatory = helper.get("destinationname");
+
         Amount amount = Amount.inEUR(AMOUNT_LARGE_REQUIRES_SIGN_OF_AMOUNT_OR_BENEFICIARY);
-        SepaEurIdentifier sourceChecking = new SepaEurIdentifier(SOURCE_CHECKING_ACCOUNT);
-        SepaEurIdentifier externalAccount = new SepaEurIdentifier(EXTERNAL_ACCOUNT);
-        String destName = EXTERNAL_ACCOUNT_NAME_MANDATORY;
+        SepaEurIdentifier sourceChecking = new SepaEurIdentifier(sourceCheckingAccount);
+        SepaEurIdentifier externalAccount = new SepaEurIdentifier(this.externalAccount);
+        String destName = externalAccountNameMandatory;
         String message = "Tink trans " + toHumanAmount(amount);
         Transfer transfer = createTransfer(amount, sourceChecking, message, externalAccount, destName, INSTANT_TRANSFER);
         buildWithCredentials().testBankTransfer(transfer);
