@@ -29,7 +29,7 @@ data:
       integrations:
         sbab:
           signBaseUrl: https://secure.sbab.se
-        ukOpenBankingJson: UKOPENBANKINGJSON
+        ukOpenBankingJson: "UKOPENBANKINGJSON"
 
         {{- if $agentsConfig.proxyUri }}
         proxyUri: "{{ $agentsConfig.proxyUri }}"
