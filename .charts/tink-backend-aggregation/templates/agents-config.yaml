@@ -11,10 +11,11 @@ data:
         excludedClusters:
           - local-development
 
+      {{- if $agentsConfig.mountSignatureKeyPair }}
       signatureKeyPair:
-        {{- $signatureKeyPath := ($agentsConfig.mountSignatureKeyPair | default false) | ternary "/etc/tink-signature-key" "data/test/cryptography" }}
-        privateKeyPath: "{{ $signatureKeyPath }}/private_rsa_key.pem"
-        publicKeyPath: "{{ $signatureKeyPath }}/public_rsa_key.pem"
+        privateKeyPath: "/etc/tink-signature-key/private_rsa_key.pem"
+        publicKeyPath: "/etc/tink-signature-key/public_rsa_key.pem"
+      {{- end }}
 
       creditsafe:
         username: CREDITSAFE_USERNAME
