@@ -338,6 +338,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 .forEach(a -> {
                     a.setAccountExclusion(AccountExclusion.AGGREGATION);
                     a.setClosed(true);
+                    context.cacheAccount(a);
                     context.sendAccountToUpdateService(a.getBankId());
                 });
     }
