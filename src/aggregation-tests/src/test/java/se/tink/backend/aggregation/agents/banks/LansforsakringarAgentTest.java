@@ -58,9 +58,9 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
                 .create(cls, createRefreshInformationRequest(credentials), testContext);
         agent.login();
         List<Account> accounts = agent.fetchCheckingAccounts().getAccounts();
-        agent.fetchSavingsAccounts();
+        agent.fetchSavingAccounts();
         agent.fetchCheckingTransactions();
-        agent.fetchSavingsTransactions();
+        agent.fetchSavingTransactions();
         agent.fetchCreditCardAccounts();
         agent.fetchCreditCardTransactions();
         agent.fetchEInvoices();

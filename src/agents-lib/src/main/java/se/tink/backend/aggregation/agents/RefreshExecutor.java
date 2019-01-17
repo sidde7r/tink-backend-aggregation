@@ -8,10 +8,10 @@ public interface RefreshExecutor {
     FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> updatedAccounts);
 
     FetchAccountsResponse fetchCheckingAccounts();
-    FetchAccountsResponse fetchSavingsAccounts();
+    FetchAccountsResponse fetchSavingAccounts();
     FetchAccountsResponse fetchCreditCardAccounts();
     FetchTransactionsResponse fetchCheckingTransactions();
-    FetchTransactionsResponse fetchSavingsTransactions();
+    FetchTransactionsResponse fetchSavingTransactions();
     FetchTransactionsResponse fetchCreditCardTransactions();
 
     FetchLoanAccountsResponse fetchLoanAccounts();

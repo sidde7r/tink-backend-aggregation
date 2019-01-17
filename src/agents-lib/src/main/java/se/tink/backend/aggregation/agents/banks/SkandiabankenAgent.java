@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +74,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Instrument;
@@ -83,6 +86,7 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin, RefreshableItemExecutor {
     private static final int MAX_PAGES_LIMIT = 150;
@@ -577,13 +581,13 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CHECKING_ACCOUNTS:
-        case SAVINGS_ACCOUNTS:
+        case SAVING_ACCOUNTS:
         case CREDITCARD_ACCOUNTS:
             updateAccountsPerType(item);
             break;
 
         case CHECKING_TRANSACTIONS:
-        case SAVINGS_TRANSACTIONS:
+        case SAVING_TRANSACTIONS:
         case CREDITCARD_TRANSACTIONS:
             updateTransactionsPerAccountType(item);
             break;
