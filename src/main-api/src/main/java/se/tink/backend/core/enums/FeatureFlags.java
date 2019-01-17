@@ -63,6 +63,9 @@ public class FeatureFlags {
     // across the board. // jelgh 2018-11-15
     public static final String MULTI_CURRENCY_PHASE_1 = "MULTI_CURRENCY_PHASE_1";
 
+    // Flag for rolling the ICS duplication fix
+    public static final String ABN_AMRO_ICS_DUPLICATE_FIX = "ABN_AMRO_ICS_DUPLICATE_FIX";
+
     /**
      * A feature groups hold information what flags are included
      * and what client version are required.
