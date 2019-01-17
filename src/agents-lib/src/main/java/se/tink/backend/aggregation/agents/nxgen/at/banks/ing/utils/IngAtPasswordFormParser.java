@@ -32,4 +32,3 @@ public class IngAtPasswordFormParser {
         return formBuilder.build();
     }
 }
-

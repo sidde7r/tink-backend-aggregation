@@ -3,11 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.WebLoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.rpc.CreditCardTransactionPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.rpc.CSVTransactionsPage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtAntiCacheParser;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtOpeningDateParser;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -332,20 +333,17 @@ public final class IngAtApiClient {
     // where <NUMBER1>, <NUMBER2>, <NUMBER3> are placeholders.
 
     public PaginatorResponse getTransactionsResponse(
-            final WebLoginResponse webLoginResponse,
-            final TransactionalAccount account,
-            final Date fromDate,
-            final Date toDate) {
+            final TransactionalAccount account, final Date fromDate, final Date toDate) {
 
         switch (account.getType()) {
             case CHECKING:
                 if (!accountOpeningDates.containsKey(account.getAccountNumber())) {
-                    final Date openingDate = getAccountOpeningDate(webLoginResponse, account);
+                    final Date openingDate = getAccountOpeningDate();
                     accountOpeningDates.put(account.getAccountNumber(), openingDate);
                 }
                 return getCheckingTransactionsResponse(account, fromDate, toDate);
             case SAVINGS:
-                return getSavingsTransactionsResponse(webLoginResponse, account);
+                return getSavingsTransactionsResponse(account);
         }
         throw new IllegalStateException("Unexpected transaction type");
     }
@@ -360,30 +358,40 @@ public final class IngAtApiClient {
         }
     }
 
-    private Date getAccountOpeningDate(
-            final WebLoginResponse webLoginResponse, final TransactionalAccount account) {
+    private Date getAccountOpeningDate() {
         final HttpResponse exportResponse = requestExport();
-        final HttpResponse responseCsvDownloadPage = redirect(exportResponse);
+        redirect(exportResponse);
 
         // Most certainly didn't have transactions from before Jesus was born
         final Date fromDate = new GregorianCalendar(1, 1, 1).getTime();
         // TODO tell my ancestors to update this by year 10000 AD
         final Date toDate = new GregorianCalendar(10000, 1, 1).getTime();
 
-        requestDateRange(exportResponse, account, fromDate, toDate);
+        requestDateRange(exportResponse, fromDate, toDate);
         currentPage =
                 pageNumberFromAjaxLocation(exportResponse.getHeaders().getFirst("Ajax-Location"));
-        final HttpResponse responseFormDownload = requestFormDownload(currentPage, fromDate, toDate);
+        final HttpResponse responseFormDownload =
+                requestFormDownload(currentPage, fromDate, toDate);
 
         downloadCount += 1; // TODO
 
         return extractAccountOpeningDate(responseFormDownload.getBody(String.class));
     }
 
+    public PaginatorResponse getTransactionsResponse(final CreditCardAccount account) {
+        switch (account.getType()) {
+            case CREDIT_CARD:
+                return getCreditCardTransactionResponse(account);
+        }
+        throw new IllegalStateException("Unexpected transaction type");
+    }
+
+    private PaginatorResponse getCreditCardTransactionResponse(final CreditCardAccount account) {
+        return new CreditCardTransactionPage(account);
+    }
+
     private PaginatorResponse getCheckingTransactionsResponse(
-            final TransactionalAccount account,
-            final Date fromDate,
-            final Date toDate) {
+            final TransactionalAccount account, final Date fromDate, final Date toDate) {
 
         refreshCurrentPage();
 
@@ -469,8 +477,7 @@ public final class IngAtApiClient {
         return response;
     }
 
-    private PaginatorResponse getSavingsTransactionsResponse(
-            final WebLoginResponse webLoginResponse, final TransactionalAccount account) {
+    private PaginatorResponse getSavingsTransactionsResponse(final TransactionalAccount account) {
         final int pageNo = 0;
 
         final HttpResponse selectAccountResponse = selectAccount(account, pageNo);
@@ -481,10 +488,7 @@ public final class IngAtApiClient {
         // All savings transactions are on a single page (CSV file)
         final boolean canFetchMore = false;
 
-        final CSVTransactionsPage csvPaginatorResponse =
-                new CSVTransactionsPage(antiCacheResponse.getBody(String.class), canFetchMore);
-
-        return csvPaginatorResponse;
+        return new CSVTransactionsPage(antiCacheResponse.getBody(String.class), canFetchMore);
     }
 
     private HttpResponse requestExport() {
@@ -515,10 +519,7 @@ public final class IngAtApiClient {
     }
 
     private HttpResponse requestDateRange(
-            final HttpResponse message,
-            final TransactionalAccount account,
-            final Date fromDate,
-            final Date toDate) {
+            final HttpResponse message, final Date fromDate, final Date toDate) {
 
         final int currentPageNo =
                 pageNumberFromAjaxLocation(message.getHeaders().getFirst("Ajax-Location"));

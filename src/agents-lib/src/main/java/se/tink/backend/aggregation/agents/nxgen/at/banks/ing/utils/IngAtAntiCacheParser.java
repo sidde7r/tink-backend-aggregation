@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

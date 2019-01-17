@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.IngAtPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.IngAtCreditCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit.IngAtCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.IngAtTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional.IngAtTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.session.IngAtSessionHandler;
@@ -28,10 +30,12 @@ public class IngAtAgent extends NextGenerationAgent {
     private final IngAtSessionStorage ingAtSessionStorage;
     private final IngAtApiClient apiClient;
 
-    public IngAtAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public IngAtAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.ingAtSessionStorage = new IngAtSessionStorage(sessionStorage);
-        this.apiClient = new IngAtApiClient(this.client, request.getProvider(), this.ingAtSessionStorage);
+        this.apiClient =
+                new IngAtApiClient(this.client, request.getProvider(), this.ingAtSessionStorage);
     }
 
     @Override
@@ -46,20 +50,32 @@ public class IngAtAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
-                updateController,
-                new IngAtTransactionalAccountFetcher(apiClient, ingAtSessionStorage),
-                new TransactionFetcherController<>(
-                        this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new IngAtTransactionFetcher(apiClient, ingAtSessionStorage))
-                )));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new IngAtTransactionalAccountFetcher(apiClient, ingAtSessionStorage),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new IngAtTransactionFetcher(
+                                                apiClient, ingAtSessionStorage)))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new IngAtCreditCardAccountFetcher(apiClient, ingAtSessionStorage),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new IngAtCreditCardTransactionFetcher(
+                                                apiClient, ingAtSessionStorage)))));
     }
 
     @Override
@@ -78,7 +94,8 @@ public class IngAtAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

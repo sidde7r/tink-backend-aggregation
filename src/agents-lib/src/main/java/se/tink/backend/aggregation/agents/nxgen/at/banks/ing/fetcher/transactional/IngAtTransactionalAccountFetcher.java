@@ -35,14 +35,7 @@ public class IngAtTransactionalAccountFetcher implements AccountFetcher<Transact
     }
 
     private static boolean isTransactionalAccountType(AccountReferenceEntity r) {
-        final String type = r.getType();
-        switch (type.toUpperCase()) {
-            case "CHECKING":
-            case "SAVINGS":
-                return true;
-        }
-        logger.warn("Unknown account type: {}", type);
-        return false;
+        return IngAtConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(r.getType());
     }
 
     @Override
@@ -58,7 +51,7 @@ public class IngAtTransactionalAccountFetcher implements AccountFetcher<Transact
                 webLoginResponse
                         .getAccountReferenceEntities()
                         .stream()
-                        .filter(r -> isTransactionalAccountType(r))
+                        .filter(IngAtTransactionalAccountFetcher::isTransactionalAccountType)
                         .collect(Collectors.toList());
         final Collection<TransactionalAccount> res = new ArrayList<>();
         for (AccountReferenceEntity accountReference : transactionalAccountReferences) {

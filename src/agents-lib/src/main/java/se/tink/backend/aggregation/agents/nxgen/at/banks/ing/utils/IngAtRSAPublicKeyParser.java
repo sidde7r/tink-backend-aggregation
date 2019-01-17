@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
-import java.math.BigInteger;
-import java.security.spec.RSAPublicKeySpec;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attributes;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
+
+import java.math.BigInteger;
+import java.security.spec.RSAPublicKeySpec;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class IngAtRSAPublicKeyParser {
     private Document doc;
