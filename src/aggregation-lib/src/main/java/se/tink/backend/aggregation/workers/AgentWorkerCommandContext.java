@@ -116,7 +116,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         TARGET_ACCOUNT_TYPES.forEach(accountType -> {
             if (allAvailableAccountsByUniqueId.values().stream()
                     .noneMatch(pair -> pair.first.getType() == accountType)) {
-                metricRegistry.meter(
+                getMetricRegistry().meter(
                         MetricId.newId("no_accounts_fetched")
                                 .label(defaultMetricLabels)
                                 .label("type", accountType.toString())

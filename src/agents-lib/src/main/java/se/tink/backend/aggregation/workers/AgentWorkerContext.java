@@ -49,7 +49,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
 
 
-    protected final MetricRegistry metricRegistry;
     private Catalog catalog;
     protected CuratorFramework coordinationClient;
     protected CredentialsRequest request;
@@ -92,17 +91,13 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             this.catalog = Catalog.getCatalog(request.getUser().getProfile().getLocale());
         }
 
-        this.metricRegistry = metricRegistry;
+        this.setMetricRegistry(metricRegistry);
 
         this.supplementalInformationController = supplementalInformationController;
         this.controllerWrapper = controllerWrapper;
 
     }
 
-
-    public MetricRegistry getMetricRegistry() {
-        return metricRegistry;
-    }
 
     @Override
     public void clear() {
@@ -290,11 +285,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         }
 
         allAvailableAccountsByUniqueId.put(account.getBankId(), new Pair<>(account, accountFeaturesToCache));
-    }
-
-    @Override
-    public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
-        return Optional.ofNullable(allAvailableAccountsByUniqueId.get(uniqueAccountId)).map(p -> p.second);
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {
