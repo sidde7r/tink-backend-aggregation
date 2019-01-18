@@ -2,19 +2,32 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.RefreshMetricNameFactory;
+import se.tink.backend.system.rpc.AccountFeatures;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.metrics.MetricId;
 
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
@@ -59,8 +72,10 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 Agent agent = context.getAgent();
                 if (agent instanceof RefreshableItemExecutor) {
                     ((RefreshableItemExecutor) agent).refresh(item);
-                } else {
+                } else if (agent instanceof DeprecatedRefreshExecutor){
                     ((DeprecatedRefreshExecutor) agent).refresh();
+                } else {
+                    executeSegregatedRefresher(agent, item);
                 }
                 action.completed();
             } catch (Exception e) {
@@ -74,6 +89,106 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
         }
 
         return AgentWorkerCommandResult.CONTINUE;
+    }
+
+    private void executeSegregatedRefresher(Agent agent, RefreshableItem item) {
+        Class executorKlass = RefreshExecutorUtils.getRefreshExecutor(item);
+        if (executorKlass == null) {
+            throw new NotImplementedException(String.format("No implementation for %s", item.name()));
+        }
+        // Segregated refresh executor
+        if (agent.getAgentClass().isAssignableFrom(executorKlass)) {
+            switch (item) {
+                case EINVOICES:
+                    context.updateEinvoices(((RefreshEInvoiceExecutor) agent).fetchEInvoices().getEInvoices());
+                    break;
+                case TRANSFER_DESTINATIONS:
+                    context.updateTransferDestinationPatterns(
+                            ((RefreshTransferDestinationExecutor) agent)
+                                    .fetchTransferDestinations(context.getUpdatedAccounts())
+                                    .getTransferDestinations());
+                    break;
+                case CHECKING_ACCOUNTS:
+                    context.cacheAccounts(((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts());
+                    break;
+                case CHECKING_TRANSACTIONS:
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshCheckingAccountsExecutor) agent)
+                                    .fetchCheckingTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(
+                                accountTransactions.getKey(), accountTransactions.getValue());
+                    }
+                    break;
+                case SAVING_ACCOUNTS:
+                    context.cacheAccounts(((RefreshSavingsAccountsExecutor) agent).fetchSavingsAccounts().getAccounts());
+                    break;
+                case SAVING_TRANSACTIONS:
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshSavingsAccountsExecutor) agent)
+                                    .fetchSavingsTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(accountTransactions.getKey(), accountTransactions.getValue());
+                    }
+                    break;
+                case CREDITCARD_ACCOUNTS:
+                    context.cacheAccounts(
+                            ((RefreshCreditCardAccountsExecutor) agent).fetchCreditCardAccounts().getAccounts());
+                    break;
+                case CREDITCARD_TRANSACTIONS:
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshCreditCardAccountsExecutor) agent)
+                                    .fetchCreditCardTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(accountTransactions.getKey(), accountTransactions.getValue());
+                    }
+                    break;
+                case LOAN_ACCOUNTS:
+                    for (Map.Entry<Account, AccountFeatures> loanAccount :
+                            ((RefreshLoanAccountsExecutor) agent)
+                                    .fetchLoanAccounts()
+                                    .getAccounts()
+                                    .entrySet()) {
+                        context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
+                    }
+                    break;
+                case LOAN_TRANSACTIONS:
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshLoanAccountsExecutor) agent)
+                                    .fetchLoanTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(
+                                accountTransactions.getKey(), accountTransactions.getValue());
+                    }
+                    break;
+                case INVESTMENT_ACCOUNTS:
+                    for (Map.Entry<Account, AccountFeatures> loanAccount :
+                            ((RefreshInvestmentAccountsExecutor) agent)
+                                    .fetchInvestmentAccounts()
+                                    .getAccounts()
+                                    .entrySet()) {
+                        context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
+                    }
+                    break;
+                case INVESTMENT_TRANSACTIONS:
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshInvestmentAccountsExecutor) agent)
+                                    .fetchInvestmentTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(
+                                accountTransactions.getKey(), accountTransactions.getValue());
+                    }
+                    break;
+                default:
+                    throw new IllegalStateException(
+                            String.format("Invalid refreshable item detected %s", item.name()));
+            }
+        }
     }
 
     @Override

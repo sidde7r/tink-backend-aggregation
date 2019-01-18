@@ -101,4 +101,5 @@ public enum RefreshableItem {
     public static boolean hasTransactions(Collection<RefreshableItem> items) {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_TRANSACTIONS);
     }
+
 }

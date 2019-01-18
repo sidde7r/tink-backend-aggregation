@@ -254,11 +254,11 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                 // - 00012 "Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta oss om problemet kvarstår."
                 // - 00019 "Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta oss om problemet kvarstår."
                 throw new IllegalStateException(
-                                String.format(
-                                        "#login-refactoring - LF - Login failed with errorCode: %s, errorMessage: %s",
-                                        errorCode,
-                                        errorMessage
-                                )
+                        String.format(
+                                "#login-refactoring - LF - Login failed with errorCode: %s, errorMessage: %s",
+                                errorCode,
+                                errorMessage
+                        )
                 );
             }
         }
@@ -1141,7 +1141,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
      */
     private void validateTransactionClientResponse(ClientResponse clientResponse) throws TransferExecutionException {
         if (clientResponse.getStatus() == 400 && clientResponse.getHeaders().getFirst("Error-Message") != null) {
-                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message")).build();
         } else if (clientResponse.getStatus() != 200) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
@@ -1397,7 +1397,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
             List<Instrument> instruments = Lists.newArrayList();
             // Add funds
             funds.getSecurityHoldings().getFunds().forEach(fundEntity ->
-                fundEntity.toInstrument().ifPresent(instruments::add));
+                    fundEntity.toInstrument().ifPresent(instruments::add));
 
             // Add stocks
             stocks.getSecurityHoldings().getShares().forEach(shareEntity -> {

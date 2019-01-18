@@ -13,16 +13,16 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
-import se.tink.libraries.account.identifiers.TestAccount;
-import se.tink.libraries.social.security.TestSSN;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.social.security.TestSSN;
 
 public class LansforsakringarAgentTest extends AbstractAgentTest<LansforsakringarAgent> {
     public LansforsakringarAgentTest() {
