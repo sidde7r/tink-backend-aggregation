@@ -235,7 +235,7 @@ def main():
     # ]
     all_components = create_statuspage_request("GET", COMPONENTS_PATH)
     if len(all_components.json()) == 0:
-        logger.warning("The number of total components was zero")
+        logger.error("The number of total components was zero")
         return 1
 
     # Example:
