@@ -5,13 +5,14 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.system.rpc.AccountFeatures;
 
 public class FetchLoanAccountsResponse {
-    private Map<Account, AccountFeatures> accounts;
+    private final Map<Account, AccountFeatures> accounts;
+
+    public FetchLoanAccountsResponse(
+            Map<Account, AccountFeatures> accounts) {
+        this.accounts = accounts;
+    }
 
     public Map<Account, AccountFeatures> getAccounts() {
         return accounts;
-    }
-
-    public void setAccounts(Map<Account, AccountFeatures> accounts) {
-        this.accounts = accounts;
     }
 }

@@ -5,13 +5,14 @@ import java.util.Map;
 import se.tink.backend.system.rpc.Transaction;
 
 public class FetchTransactionsResponse {
-    private Map<String, List<Transaction>> transactions;
+    private final Map<String, List<Transaction>> transactions;
+
+    public FetchTransactionsResponse(
+            Map<String, List<Transaction>> transactions) {
+        this.transactions = transactions;
+    }
 
     public Map<String, List<Transaction>> getTransactions() {
         return transactions;
-    }
-
-    public void setTransactions(Map<String, List<Transaction>> transactions) {
-        this.transactions = transactions;
     }
 }

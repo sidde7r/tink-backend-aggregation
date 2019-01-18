@@ -4,13 +4,13 @@ import java.util.List;
 import se.tink.backend.aggregation.rpc.Account;
 
 public class FetchAccountsResponse {
-    private List<Account> accounts;
+    private final List<Account> accounts;
+
+    public FetchAccountsResponse(List<Account> accounts) {
+        this.accounts = accounts;
+    }
 
     public List<Account> getAccounts() {
         return accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
     }
 }
