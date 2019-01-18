@@ -302,6 +302,7 @@
                     "hint": "NNNN",
                     "sensitive": true,
                     "name": "password",
+                    "numeric": true,
                     "masked": true,
                     "pattern": "([0-9]{4})",
                     "maxLength": 4,
