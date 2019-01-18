@@ -1355,7 +1355,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvo
     }
 
     private FetchTransactionsResponse refreshTransactionalAccountTransactions(RefreshableItem type) {
-        Map<String, List<Transaction>> accountTransactions = new HashMap<>();
+        Map<Account, List<Transaction>> accountTransactions = new HashMap<>();
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
                 .forEach(set -> {
@@ -1417,7 +1417,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvo
                             currentPage = transactionListResponse.getNextSequenceNumber();
                         }
                     } while (hasMoreTransactions);
-                    accountTransactions.put(account.getBankId(), transactions);
+                    accountTransactions.put(account, transactions);
                 });
         return new FetchTransactionsResponse(accountTransactions);
     }
@@ -1446,7 +1446,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvo
 
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
-        Map<String, List<Transaction>> accountTransactions = new HashMap<>();
+        Map<Account, List<Transaction>> accountTransactions = new HashMap<>();
         try {
             List<CardEntity> cardEntities = fetchCardEntities();
 
@@ -1492,7 +1492,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvo
                     }
                 } while (hasMoreTransactions);
 
-                accountTransactions.put(account.getBankId(), transactions);
+                accountTransactions.put(account, transactions);
             }
             return new FetchTransactionsResponse(accountTransactions);
         } catch (Exception e) {
