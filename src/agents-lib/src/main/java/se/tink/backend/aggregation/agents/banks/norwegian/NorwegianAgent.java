@@ -325,7 +325,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
             }
         } while (!isContentWithRefresh(account, transactions));
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private boolean isReservedPurchaseOrNotBilledPayment(TransactionEntity transactionEntity) {

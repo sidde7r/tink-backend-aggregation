@@ -306,7 +306,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
 
         List<Transaction> transactions = refreshTransactions(account);
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private List<Transaction> refreshTransactions(Account account) {

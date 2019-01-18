@@ -113,7 +113,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
         switch (item) {
         case CHECKING_ACCOUNTS:
             List<AccountEntity> accounts = getAccounts();
-            context.cacheAccounts(accounts.stream()
+            financialDataCacher.cacheAccounts(accounts.stream()
                     .filter(AccountEntity::isAccountPersonal)
                     .map(AccountEntity::toTinkAccount)
                     .collect(Collectors.toList()));
@@ -125,7 +125,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
                 }
                 List<TransactionEntity> transactions = apiClient.fetchTransactions(account.getProductIdentifier());
 
-                context.updateTransactions(
+                financialDataCacher.updateTransactions(
                         account.toTinkAccount(),
                         transactions.stream()
                                 .map(TransactionEntity::toTinkTransaction)

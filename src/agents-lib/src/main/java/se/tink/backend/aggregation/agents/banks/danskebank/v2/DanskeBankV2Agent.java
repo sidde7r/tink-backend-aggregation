@@ -692,7 +692,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
     private void updateAccountsPerType(RefreshableItem type) {
         getAccountMap().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.cacheAccount(set.getValue()));
+                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerType(RefreshableItem type) {
@@ -745,7 +745,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
             getAccountMap().entrySet().stream()
                     .filter(set -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(set.getValue().getType()))
                     .forEach(set ->
-                            context.cacheAccount(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
+                            financialDataCacher.cacheAccount(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
                     );
             break;
         }
@@ -832,14 +832,14 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
             if (portfolioPapers.getStatus().getStatusCode() != OK_STATUS_CODE ||
                     portfolioPapers.getPapers() == null) {
-                context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
             }
 
             List<Instrument> instruments = Lists.newArrayList();
             portfolioPapers.getPapers().forEach(paperEntity -> paperEntity.toInstrument().ifPresent(instruments::add));
             portfolio.setInstruments(instruments);
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -856,7 +856,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
         transactions = filterFauxDoubleCharges(transactions);
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private List<Transaction> fetchTransactions(AccountEntity accountEntity, Account account, TransactionType type) {

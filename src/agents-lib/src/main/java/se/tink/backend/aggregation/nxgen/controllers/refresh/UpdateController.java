@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -23,6 +24,7 @@ public class UpdateController {
     private static final AggregationLogger log = new AggregationLogger(UpdateController.class);
 
     private final AgentContext baseContext;
+    private final FinancialDataCacher financialDataCacher;
     protected final String currency;
     private final HashSet<Account> accounts = Sets.newHashSet();
     private final LoanInterpreter loanInterpreter;
@@ -30,6 +32,7 @@ public class UpdateController {
 
     public UpdateController(AgentContext baseContext, MarketCode market, String currency, User user) {
         this.baseContext = baseContext;
+        this.financialDataCacher = baseContext;
         this.loanInterpreter = LoanInterpreter.getInstance(market);
         this.currency = currency;
         this.user = user;
@@ -61,7 +64,7 @@ public class UpdateController {
             log.warn("Updating an already updated account");
         }
 
-        baseContext.cacheAccount(account.toSystemAccount(user), accountFeatures);
+        financialDataCacher.cacheAccount(account.toSystemAccount(user), accountFeatures);
 
         accounts.add(account);
         return true;
@@ -71,7 +74,7 @@ public class UpdateController {
         if (!updateAccount(account)) {
             return false;
         }
-        baseContext.updateTransactions(account.toSystemAccount(user), transactions.stream()
+        financialDataCacher.updateTransactions(account.toSystemAccount(user), transactions.stream()
                 .map(t -> t.toSystemTransaction(user))
                 .collect(Collectors.toList()));
 
@@ -83,7 +86,7 @@ public class UpdateController {
             return false;
         }
 
-        baseContext.cacheTransactions(
+        financialDataCacher.cacheTransactions(
                 account.toSystemAccount(user).getBankId(),
                 transactions
                         .stream()

@@ -110,7 +110,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
 
         try {
             List<Account> accounts = apiClient.fetchAccounts();
-            context.cacheAccounts(accounts);
+            financialDataCacher.cacheAccounts(accounts);
 
             for (Account account : accounts) {
                 List<Transaction> transactions = apiClient.getTransactionsFor(account);
@@ -140,7 +140,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
                 }
 
                 log.info(account, "Finished fetching transactions for account");
-                context.updateTransactions(account, transactions);
+                financialDataCacher.updateTransactions(account, transactions);
             }
         } catch (CardNotFoundException e) {
             stopLoginAttempt("Inga kort för det angivna personnumret hittades, vänligen kontrollera personnumret och försök igen");

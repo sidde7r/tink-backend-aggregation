@@ -984,7 +984,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         } while (!transactionsResponse.getBody().isNoMoreTransactions()
                 && !isContentWithRefresh(account, transactions));
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private TransferResponse redoTransferWithValidDate(TransferRequest transferRequest,
@@ -1113,7 +1113,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
             portfolio.setInstruments(instruments);
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         }
     }
     
@@ -1192,14 +1192,14 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         Account account = loanEntity.toAccount();
         Loan loan = loanEntity.toLoan();
 
-        context.cacheAccount(account, AccountFeatures.createForLoan(loan));
+        financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
     }
 
     private void updateAccount(MortgageEntity mortgageEntity) throws Exception {
         Account account = mortgageEntity.toAccount();
         Loan loan = mortgageEntity.toLoan();
 
-        context.cacheAccount(account, AccountFeatures.createForLoan(loan));
+        financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
     }
 
     private Optional<RecipientEntity> tryFindRegisteredDestinationAccount(AccountIdentifier destination) {

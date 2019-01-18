@@ -176,7 +176,7 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
                     .map(TransactionMapper::toTransaction)
                     .collect(Collectors.toList());
 
-            context.updateTransactions(account, transactions);
+            financialDataCacher.updateTransactions(account, transactions);
         }
     }
 }

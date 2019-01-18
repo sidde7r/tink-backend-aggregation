@@ -375,7 +375,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
             // Important that no RetryableError are thrown after this. Otherwise we risk have the AgentContext in an
             // inconsistent state when we are retrying.
 
-            context.updateTransactions(account, parser.getTransactionsByAccountNumber().get(accountNumber));
+            financialDataCacher.updateTransactions(account, parser.getTransactionsByAccountNumber().get(accountNumber));
         }
     }
 

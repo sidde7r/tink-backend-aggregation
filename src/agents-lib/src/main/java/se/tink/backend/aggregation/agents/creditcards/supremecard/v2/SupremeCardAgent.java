@@ -343,7 +343,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CREDITCARD_ACCOUNTS:
-            context.cacheAccount(getAccount());
+            financialDataCacher.cacheAccount(getAccount());
             break;
 
         case CREDITCARD_TRANSACTIONS:
@@ -398,7 +398,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
         } while (failCounter < 3 && !isContentWithRefresh(account,
                 transactions));
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private enum UserMessage implements LocalizableEnum {

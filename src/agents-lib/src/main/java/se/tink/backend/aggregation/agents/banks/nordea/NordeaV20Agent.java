@@ -798,7 +798,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         transactions.addAll(upcomingTransactions);
 
         this.context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
-        return this.context.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
+        return this.financialDataCacher.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
                 .sortedCopy(transactions));
     }
 
@@ -890,7 +890,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         }
 
         this.context.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
-        return this.context.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
+        return this.financialDataCacher.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
                 .sortedCopy(transactionsList));
     }
 
@@ -913,7 +913,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             assets.setLoans(Lists.newArrayList(loan));
         }
 
-        this.context.cacheAccount(account, assets);
+        this.financialDataCacher.cacheAccount(account, assets);
     }
 
     private void refreshInvestmentAccounts() throws IOException {
@@ -980,7 +980,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                             });
                     portfolio.setInstruments(instruments);
 
-                    this.context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                    this.financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
                 } catch (Exception e) {
                     // Don't fail the whole refresh just because we failed updating investment data but log error.
                     this.log.error("Caught exception while updating investment data", e);
@@ -1078,7 +1078,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.cacheAccount(set.getValue()));
+                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type) {

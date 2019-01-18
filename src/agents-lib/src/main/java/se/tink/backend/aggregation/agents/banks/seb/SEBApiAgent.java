@@ -288,7 +288,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.cacheAccount(set.getValue()));
+                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
 
     }
 
@@ -375,7 +375,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             portfolio.setInstruments(instruments);
             portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -443,7 +443,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
             account.setBalance(portfolio.getTotalValue());
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -500,7 +500,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             portfolio.setInstruments(instruments);
             portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -1224,7 +1224,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
         ctx.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
-        return ctx.updateTransactions(account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
+        return financialDataCacher.updateTransactions(account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type, AgentContext ctx, String customerId) {
@@ -1272,7 +1272,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                     "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
             ctx.updateStatus(CredentialsStatus.UPDATING, account, transactions);
-            ctx.updateTransactions(account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
+            financialDataCacher.updateTransactions(account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
         }
     }
 
@@ -1297,7 +1297,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
         if (bankId.isPresent()) {
             account.setBankId(bankId.get());
-            context.cacheAccount(account);
+            financialDataCacher.cacheAccount(account);
         }
     }
 
@@ -1349,7 +1349,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                         Account account = pcbw2591.toAccount();
                         Loan loan = pcbw2591.toLoan();
 
-                        context.cacheAccount(account, AccountFeatures.createForLoan(loan));
+                        financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
                     }
                 }
             }
@@ -1361,7 +1361,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                         continue;
                     }
 
-                    context.cacheAccount(blancoLoan.toAccount(), AccountFeatures.createForLoan(blancoLoan.toLoan()));
+                    financialDataCacher.cacheAccount(blancoLoan.toAccount(), AccountFeatures.createForLoan(blancoLoan.toLoan()));
                 }
             }
         }

@@ -167,14 +167,14 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
                 }
                 if (loanDetails == null) {
                     // something went wrong when we tried to fetch loanDetails
-                    context.cacheAccount(tinkAccount);
+                    financialDataCacher.cacheAccount(tinkAccount);
                     continue;
                 }
                 Loan loan = loanDetails.toTinkLoan();
-                context.cacheAccount(tinkAccount, AccountFeatures.createForLoan(loan));
+                financialDataCacher.cacheAccount(tinkAccount, AccountFeatures.createForLoan(loan));
             } else {
                 tinkAccounts.add(tinkAccount);
-                context.cacheAccount(tinkAccount);
+                financialDataCacher.cacheAccount(tinkAccount);
             }
         }
         return tinkAccounts;
@@ -258,7 +258,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     private void updateTransactionsFor(Account account, List<Transaction> transactions) {
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private String requestOneTimeCodeFromUser(String oneTimeCodePosition) throws Exception {
