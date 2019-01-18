@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.system.rpc.Transaction;
 
-public class RefreshTransactionsResponse {
+public class FetchTransactionsResponse {
     private Map<String, List<Transaction>> transactions;
 
     public Map<String, List<Transaction>> getTransactions() {

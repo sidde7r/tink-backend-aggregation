@@ -4,16 +4,16 @@ import java.util.List;
 import se.tink.backend.aggregation.rpc.Account;
 
 public interface RefreshExecutor {
-    RefreshEInvoicesResponse refreshEInvoices();
-    RefreshTransferDestinationsResponse refreshTransferDestinations(List<Account> updatedAccounts);
+    FetchEInvoicesResponse fetchEInvoices();
+    FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> updatedAccounts);
 
-    RefreshAccountsResponse refreshCheckingAccounts();
-    RefreshAccountsResponse refreshSavingAccounts();
-    RefreshAccountsResponse refreshCreditCardAccounts();
-    RefreshTransactionsResponse refreshCheckingTransactions();
-    RefreshTransactionsResponse refreshSavingTransactions();
-    RefreshTransactionsResponse refreshCreditCardTransactions();
+    FetchAccountsResponse fetchCheckingAccounts();
+    FetchAccountsResponse fetchSavingAccounts();
+    FetchAccountsResponse fetchCreditCardAccounts();
+    FetchTransactionsResponse fetchCheckingTransactions();
+    FetchTransactionsResponse fetchSavingTransactions();
+    FetchTransactionsResponse fetchCreditCardTransactions();
 
-    RefreshLoanAccountsResponse refreshLoanAccounts();
-    RefreshInvestmentAccountsResponse refreshInvestmentAccounts();
+    FetchLoanAccountsResponse fetchLoanAccounts();
+    FetchInvestmentAccountsResponse fetchInvestmentAccounts();
 }
