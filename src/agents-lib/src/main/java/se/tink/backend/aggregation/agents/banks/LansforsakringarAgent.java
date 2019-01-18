@@ -144,8 +144,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 import static se.tink.backend.aggregation.rpc.RefreshableItem.CHECKING_ACCOUNTS;
 import static se.tink.backend.aggregation.rpc.RefreshableItem.CHECKING_TRANSACTIONS;
-import static se.tink.backend.aggregation.rpc.RefreshableItem.SAVINGS_ACCOUNTS;
-import static se.tink.backend.aggregation.rpc.RefreshableItem.SAVINGS_TRANSACTIONS;
+import static se.tink.backend.aggregation.rpc.RefreshableItem.SAVING_ACCOUNTS;
+import static se.tink.backend.aggregation.rpc.RefreshableItem.SAVING_TRANSACTIONS;
 
 public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvoiceExecutor,
                                                                     RefreshTransferDestinationExecutor,
@@ -1332,7 +1332,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvo
     }
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
-        return this.refreshTransactionalAccounts(SAVINGS_ACCOUNTS);
+        return this.refreshTransactionalAccounts(SAVING_ACCOUNTS);
     }
 
     private FetchAccountsResponse refreshTransactionalAccounts(RefreshableItem type) {
@@ -1351,7 +1351,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshEInvo
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        return this.refreshTransactionalAccountTransactions(SAVINGS_TRANSACTIONS);
+        return this.refreshTransactionalAccountTransactions(SAVING_TRANSACTIONS);
     }
 
     private FetchTransactionsResponse refreshTransactionalAccountTransactions(RefreshableItem type) {

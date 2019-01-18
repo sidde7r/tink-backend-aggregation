@@ -159,11 +159,11 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
             }
             break;
 
-        case SAVINGS_ACCOUNTS:
+        case SAVING_ACCOUNTS:
             updateAccounts();
             break;
 
-        case SAVINGS_TRANSACTIONS:
+        case SAVING_TRANSACTIONS:
             try {
                 for (Account account : toTinkAccounts(getAccounts())) {
                     List<Transaction> transactions = fetchTransactions(account);

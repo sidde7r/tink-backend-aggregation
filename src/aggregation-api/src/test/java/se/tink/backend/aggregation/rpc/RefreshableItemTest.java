@@ -11,13 +11,13 @@ public class RefreshableItemTest {
 
     private static final Ordering<RefreshableItem> REFRESHABLE_ITEM_ORDERING = Ordering.explicit(ImmutableList.of(
             RefreshableItem.CHECKING_ACCOUNTS,
-            RefreshableItem.SAVINGS_ACCOUNTS,
+            RefreshableItem.SAVING_ACCOUNTS,
             RefreshableItem.CREDITCARD_ACCOUNTS,
             RefreshableItem.LOAN_ACCOUNTS,
             RefreshableItem.INVESTMENT_ACCOUNTS,
 
             RefreshableItem.CHECKING_TRANSACTIONS,
-            RefreshableItem.SAVINGS_TRANSACTIONS,
+            RefreshableItem.SAVING_TRANSACTIONS,
             RefreshableItem.CREDITCARD_TRANSACTIONS,
             RefreshableItem.LOAN_TRANSACTIONS,
             RefreshableItem.INVESTMENT_TRANSACTIONS,
@@ -36,12 +36,12 @@ public class RefreshableItemTest {
         List<RefreshableItem> sorted = REFRESHABLE_ITEM_ORDERING.sortedCopy(unsorted);
 
         Assert.assertEquals(RefreshableItem.CHECKING_ACCOUNTS, sorted.get(0));
-        Assert.assertEquals(RefreshableItem.SAVINGS_ACCOUNTS, sorted.get(1));
+        Assert.assertEquals(RefreshableItem.SAVING_ACCOUNTS, sorted.get(1));
         Assert.assertEquals(RefreshableItem.CREDITCARD_ACCOUNTS, sorted.get(2));
         Assert.assertEquals(RefreshableItem.LOAN_ACCOUNTS, sorted.get(3));
         Assert.assertEquals(RefreshableItem.INVESTMENT_ACCOUNTS, sorted.get(4));
         Assert.assertEquals(RefreshableItem.CHECKING_TRANSACTIONS, sorted.get(5));
-        Assert.assertEquals(RefreshableItem.SAVINGS_TRANSACTIONS, sorted.get(6));
+        Assert.assertEquals(RefreshableItem.SAVING_TRANSACTIONS, sorted.get(6));
         Assert.assertEquals(RefreshableItem.CREDITCARD_TRANSACTIONS, sorted.get(7));
         Assert.assertEquals(RefreshableItem.LOAN_TRANSACTIONS, sorted.get(8));
         Assert.assertEquals(RefreshableItem.INVESTMENT_TRANSACTIONS, sorted.get(9));
@@ -65,11 +65,11 @@ public class RefreshableItemTest {
     @Test
     public void testOrderingAccountsAndTransferDestinations() {
         List<RefreshableItem> unsorted = Lists.newArrayList(RefreshableItem.TRANSFER_DESTINATIONS,
-                RefreshableItem.SAVINGS_ACCOUNTS);
+                RefreshableItem.SAVING_ACCOUNTS);
 
         List<RefreshableItem> sorted = REFRESHABLE_ITEM_ORDERING.sortedCopy(unsorted);
 
-        Assert.assertEquals(RefreshableItem.SAVINGS_ACCOUNTS, sorted.get(0));
+        Assert.assertEquals(RefreshableItem.SAVING_ACCOUNTS, sorted.get(0));
         Assert.assertEquals(RefreshableItem.TRANSFER_DESTINATIONS, sorted.get(1));
     }
 }
