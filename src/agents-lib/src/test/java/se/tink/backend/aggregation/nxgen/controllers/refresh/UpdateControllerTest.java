@@ -88,9 +88,9 @@ public final class UpdateControllerTest {
             Preconditions.checkNotNull(accountUniqueId); // Necessary until we make @Nonnull throw the exception
         }
 
-        @Override
         public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
             return Optional.ofNullable(accountFeatures);
         }
+
     }
 }
