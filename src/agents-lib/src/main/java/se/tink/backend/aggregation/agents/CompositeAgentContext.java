@@ -8,7 +8,11 @@ import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 
 
 // Temporary interface until we decompose completely
-public interface IAgentContext extends FinancialDataCacher, StatusUpdater, SupplementalRequester, SystemUpdater,
+public interface CompositeAgentContext extends
+        FinancialDataCacher,
+        StatusUpdater,
+        SupplementalRequester,
+        SystemUpdater,
         AgentAggregatorIdentifier {
 
     void clear();

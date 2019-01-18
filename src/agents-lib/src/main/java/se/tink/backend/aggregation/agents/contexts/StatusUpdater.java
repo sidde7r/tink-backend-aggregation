@@ -12,6 +12,10 @@ public interface StatusUpdater {
 
     void updateStatus(CredentialsStatus status, String statusPayload, boolean statusFromProvider);
 
+    Map<String, Integer> getTransactionCountByEnabledAccount();
+
+    Catalog getCatalog();
+
     default void updateStatus(CredentialsStatus status, String statusPayload) {
         updateStatus(status, statusPayload, true);
     }
@@ -27,8 +31,6 @@ public interface StatusUpdater {
 
         updateStatus(status, createStatusPayload());
     }
-
-    Map<String, Integer> getTransactionCountByEnabledAccount();
 
     default String createStatusPayload() {
         Catalog catalog = getCatalog();
@@ -64,7 +66,5 @@ public interface StatusUpdater {
 
         return builder.toString();
     }
-
-    Catalog getCatalog();
 
 }

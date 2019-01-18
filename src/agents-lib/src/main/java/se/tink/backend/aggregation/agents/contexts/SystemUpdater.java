@@ -15,6 +15,7 @@ public interface SystemUpdater {
     void processTransactions();
 
     Account sendAccountToUpdateService(String uniqueId);
+
     void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);
 
     void updateCredentialsExcludingSensitiveInformation(Credentials credentials,

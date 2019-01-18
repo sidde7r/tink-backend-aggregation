@@ -7,7 +7,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.libraries.metrics.MetricRegistry;
 
-public abstract class AgentContext implements IAgentContext {
+public abstract class AgentContext implements CompositeAgentContext {
     private Map<String, Integer> transactionCountByEnabledAccount = Maps.newHashMap();
     protected ByteArrayOutputStream logOutputStream = new ByteArrayOutputStream();
     protected boolean isTestContext = false;
