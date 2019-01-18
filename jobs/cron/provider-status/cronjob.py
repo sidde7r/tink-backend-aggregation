@@ -161,14 +161,14 @@ def process_component(component_name, component_status, provider_metric_value):
     if component_status == new_status:
         return
 
-    logger.info("The status has changed, updating status [%s] -> [%s]", component_status, new_status)
+    logger.info("The status has changed for [%s], updating status [%s] -> [%s]", component_name, component_status, new_status)
 
     payload = build_update_component_status_request_body(new_status)
     r = create_statuspage_request("PUT", COMPONENTS_PATH, body = json.dumps(payload))
     if r.status_code == 200:
         logger.info("Successfully updated the status to [%s]", new_status)
     else:
-        logger.warning("Status updated failed with statusCode [%s] and message [%s]", r.status_code, r.json()['error'])
+        logger.warning("Status updated of component [%s] failed with statusCode [%s] and message [%s]", component_name, r.status_code, r.json()['error'])
 
 
 def main():
