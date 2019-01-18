@@ -2724,7 +2724,7 @@
       "maxLength" : 4,
       "minLength" : 4,
       "name" : "password",
-      "numeric" : false,
+      "numeric" : true,
       "optional" : false,
       "options" : null,
       "pattern" : "([0-9]{4})",
