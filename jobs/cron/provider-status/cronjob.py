@@ -24,7 +24,7 @@ GROUP_IDS = {
 PROMETHEUS_API_BASE = "http://prometheus.monitoring-prometheus.svc.cluster.local:9090/api/v1/query"
 
 ### Queries
-PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production', className!~'abnamro.*|.*abstract.*|demo.DemoAgent'}) by (provider, market)"
+PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', environment='production', provider!~'.*abstract.*', className!~'abnamro.*|demo.DemoAgent|nxgen.demo.*|fraud.CreditSafeAgent'}) by (provider, market)"
 INSTANCES_QUERY = "sum(up{job='tink-aggregation', environment='production'})"
 
 # LOGGING
@@ -146,29 +146,30 @@ def build_missing_components_request(name, status, group_id):
 def group_by_group_id(all_components):
     components_by_group_id = defaultdict(dict)
     for component in all_components:
-        components_by_group_id[component["group_id"]].update({component["name"]: component["status"]})
+        components_by_group_id[component["group_id"]].update({component["name"]: (component["id"], component["status"])})
     return components_by_group_id
 
 
-def process_component(component_name, component_status, provider_metric_value):
+def process_component(component_name, component_info, provider_metric_value):
     if provider_metric_value == None:
         logger.warning("Component exists but there are no metrics available - Provider name: [{}]".format(component_name))
         return
-
+    component_id = component_info[0]
+    component_status = component_info[1]
     new_status = calculate_status(provider_metric_value)
 
     # Only update the status if is acctually have changed
     if component_status == new_status:
         return
 
-    logger.info("The status has changed, updating status [%s] -> [%s]", component_status, new_status)
+    logger.info("The status has changed for [%s], updating status [%s] -> [%s]", component_name, component_status, new_status)
 
     payload = build_update_component_status_request_body(new_status)
-    r = create_statuspage_request("PUT", COMPONENTS_PATH, body = json.dumps(payload))
+    r = create_statuspage_request("PUT", COMPONENTS_PATH + component_id, body = json.dumps(payload))
     if r.status_code == 200:
         logger.info("Successfully updated the status to [%s]", new_status)
     else:
-        logger.warning("Status updated failed with statusCode [%s] and message [%s]", r.status_code, r.json()['error'])
+        logger.warning("Status updated of component [%s] failed with statusCode [%s] and message [%s]", component_name, r.status_code, r.json()['error'])
 
 
 def main():
@@ -245,9 +246,9 @@ def main():
     # Example:
     # {
     #   "group_id_1": {
-    #       "component-1": "status",
-    #       "component-2": "status",
-    #       "component-3": "status",
+    #       "component-1": ("id", "status"),
+    #       "component-2": ("id", "status"),
+    #       "component-3": ("id", "status"),
     #       ...
     #   }
     # }
@@ -261,9 +262,9 @@ def main():
 
         available_component_names = set()
 
-        for component_name, component_status in components.items():
+        for component_name, component_info in components.items():
             provider_metric_value = provider_metrics.get(component_name, None)
-            process_component(component_name, component_status, provider_metric_value)
+            process_component(component_name, component_info, provider_metric_value)
 
         # Check if there are any providers in the metrics that don't have an corresponding component
         # OBS! Do not change order of the comparison since it gives what is available in the first set but not the last
