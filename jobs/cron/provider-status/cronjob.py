@@ -28,13 +28,8 @@ PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', envi
 INSTANCES_QUERY = "sum(up{job='tink-aggregation', environment='production'})"
 
 # LOGGING
+logging.basicConfig(stream=sys.stdout, level=logging.ERROR)
 logger = logging.getLogger('statuspage_provider_status')
-logger.setLevel(logging.DEBUG)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-console_format = logging.Formatter("%(asctime)s [%(levelname)s]: %(message)s")
-console_handler.setFormatter(console_format)
-logger.addHandler(console_handler)
 
 
 # SCRIPT
