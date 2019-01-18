@@ -5,13 +5,13 @@ import java.util.Map;
 import se.tink.backend.system.rpc.Transaction;
 
 public class RefreshTransactionsResponse {
-    private Map<String, List<Transaction>> refreshedTransactions;
+    private Map<String, List<Transaction>> transactions;
 
-    public Map<String, List<Transaction>> getRefreshedTransactions() {
-        return refreshedTransactions;
+    public Map<String, List<Transaction>> getTransactions() {
+        return transactions;
     }
 
-    public void setRefreshedTransactions(Map<String, List<Transaction>> refreshedTransactions) {
-        this.refreshedTransactions = refreshedTransactions;
+    public void setTransactions(Map<String, List<Transaction>> transactions) {
+        this.transactions = transactions;
     }
 }

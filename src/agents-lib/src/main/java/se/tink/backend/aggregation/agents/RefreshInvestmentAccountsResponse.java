@@ -5,13 +5,13 @@ import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.system.rpc.AccountFeatures;
 
 public class RefreshInvestmentAccountsResponse {
-    private Map<Account, AccountFeatures> refreshedItems;
+    private Map<Account, AccountFeatures> accounts;
 
-    public Map<Account, AccountFeatures> getRefreshedItems() {
-        return refreshedItems;
+    public Map<Account, AccountFeatures> getAccounts() {
+        return accounts;
     }
 
-    public void setRefreshedItems(Map<Account, AccountFeatures> refreshedItems) {
-        this.refreshedItems = refreshedItems;
+    public void setAccounts(Map<Account, AccountFeatures> accounts) {
+        this.accounts = accounts;
     }
 }
