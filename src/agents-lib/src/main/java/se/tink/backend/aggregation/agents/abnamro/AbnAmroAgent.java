@@ -67,6 +67,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private Map<Long, CreditCardAccountEntity> accountEntities = Maps.newHashMap();
     private List<Account> accounts = null;
     private List<Account> existingAccounts = null;
+    private final Integer OLD_ICS_ID_LENGTH = 16;
 
     public AbnAmroAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
@@ -335,6 +336,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private void closeExcludeOldDuplicateICSAccounts(List<Account> importedAccounts) {
         existingAccounts.stream()
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
+                .filter(a -> a.getBankId().length() == OLD_ICS_ID_LENGTH)
                 .filter(a -> importedAccounts.stream().anyMatch(isOldICSAccount(a)))
                 .forEach(a -> {
                     a.setAccountExclusion(AccountExclusion.AGGREGATION);
