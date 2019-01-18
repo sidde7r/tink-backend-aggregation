@@ -28,7 +28,7 @@ PROVIDERS_QUERY = "sum(tink_circuit_broken_providers{cluster='aggregation', envi
 INSTANCES_QUERY = "sum(up{job='tink-aggregation', environment='production'})"
 
 # LOGGING
-logging.basicConfig(stream=sys.stdout, level=logging.ERROR)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger('statuspage_provider_status')
 
 
