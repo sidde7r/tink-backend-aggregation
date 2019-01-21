@@ -42,9 +42,12 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
         clientName = request.getProvider().getPayload();
     }
 
+    protected NordeaPersistentStorage getNordeaPersistentStorage() {
+        return nordeaPersistentStorage;
+    }
+
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-//        client.setDebugProxy("http://127.0.0.1:8888");
     }
 
     @Override

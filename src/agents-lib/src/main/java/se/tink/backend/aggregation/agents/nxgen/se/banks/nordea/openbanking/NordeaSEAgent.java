@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.openbanking.tran
 import se.tink.backend.aggregation.agents.nxgen.se.banks.nordea.openbanking.transactionalaccount.NordeaSETransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.NordeaBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.NordeaPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.NordeaSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.authenticator.NordeaBankIDAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.transactionalaccount.NordeaAccountParser;
@@ -19,6 +18,7 @@ public class NordeaSEAgent extends NordeaBaseAgent {
 
     public NordeaSEAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        getNordeaPersistentStorage().setCountry(NordeaSEConstants.COUNTRY);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class NordeaSEAgent extends NordeaBaseAgent {
         return new BankIdAuthenticationController<>(context,
                 new NordeaBankIDAuthenticator(apiClient,
                         new NordeaSessionStorage(sessionStorage),
-                        new NordeaPersistentStorage(persistentStorage)));
+                        getNordeaPersistentStorage()));
     }
 
     @Override

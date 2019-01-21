@@ -31,4 +31,12 @@ public class NordeaPersistentStorage {
     public void setRedirectUrl(String redirectUrl) {
         persistentStorage.put(NordeaBaseConstants.Storage.REDIRECT_URL, redirectUrl);
     }
+
+    public String getCountry() {
+        return persistentStorage.get(NordeaBaseConstants.Storage.COUNTRY);
+    }
+
+    public void setCountry(String country) {
+        persistentStorage.put(NordeaBaseConstants.Storage.COUNTRY, country);
+    }
 }

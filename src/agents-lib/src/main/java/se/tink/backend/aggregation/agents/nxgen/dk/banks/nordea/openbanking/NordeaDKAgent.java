@@ -5,8 +5,6 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.openbanking.tran
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.openbanking.transactionalaccount.NordeaDKTransactionParser;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v3.NordeaBaseAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v3.NordeaBaseApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v3.NordeaBaseConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v3.NordeaPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v3.NordeaSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v3.authenticator.NordeaOauthAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v3.transactionalaccount.NordeaAccountParser;
@@ -21,7 +19,7 @@ public class NordeaDKAgent extends NordeaBaseAgent {
 
     public NordeaDKAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        persistentStorage.put(NordeaBaseConstants.Storage.COUNTRY, "DK");
+        getNordeaPersistentStorage().setCountry(NordeaDKConstants.COUNTRY);
     }
 
     @Override
@@ -29,7 +27,7 @@ public class NordeaDKAgent extends NordeaBaseAgent {
 
         OAuth2Authenticator oauthAuthenticator = new NordeaOauthAuthenticator(apiClient,
                 new NordeaSessionStorage(sessionStorage),
-                new NordeaPersistentStorage(persistentStorage));
+                getNordeaPersistentStorage());
 
         return OAuth2AuthenticationFlow.create(request, context,
                 persistentStorage, supplementalInformationController,

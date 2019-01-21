@@ -6,7 +6,6 @@ public class NordeaPersistentStorage {
     private final PersistentStorage persistentStorage;
 
     public NordeaPersistentStorage(PersistentStorage persistentStorage) {
-
         this.persistentStorage = persistentStorage;
     }
 
@@ -34,5 +33,9 @@ public class NordeaPersistentStorage {
 
     public String getCountry() {
         return persistentStorage.get(NordeaBaseConstants.Storage.COUNTRY);
+    }
+
+    public void setCountry(String country) {
+        persistentStorage.put(NordeaBaseConstants.Storage.COUNTRY, country);
     }
 }
