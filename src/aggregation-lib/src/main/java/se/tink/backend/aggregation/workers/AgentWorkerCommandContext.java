@@ -192,6 +192,12 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
     }
 
     private void compareAccountsBeforeAndAfterUpdate() {
+
+        if (!(request instanceof RefreshInformationRequest)) {
+            // If it's not a refresh it shouldn't get here, but good to return anyway
+            return;
+        }
+        
         List<Account> accountsBeforeRefresh = request.getAccounts();
         List<Account> accountsFoundByAgent = allAvailableAccountsByUniqueId
                 .values()
@@ -203,11 +209,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         // If it's 0 accounts before, it means that we are **probably** trying to refresh this credentials for the first time (but not 100% of the time).
         if (accountsBeforeRefresh.size() == 0 && accountsFoundByAgent.size() == 0) {
             zeroAccountsFoundDuringRefreshTotal.inc();
-            return;
-        }
-
-        if (!(request instanceof RefreshInformationRequest)) {
-            // If it's not a refresh it shouldn't get here, but good to return anyway
             return;
         }
 
