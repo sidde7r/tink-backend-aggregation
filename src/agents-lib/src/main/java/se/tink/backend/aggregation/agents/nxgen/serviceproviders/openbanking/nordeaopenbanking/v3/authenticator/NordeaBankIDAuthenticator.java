@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v3.authenticator;
 
 import java.security.SecureRandom;
+import java.util.Optional;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -40,6 +41,11 @@ public class NordeaBankIDAuthenticator implements BankIdAuthenticator<InitAuthRe
         InitAuthResponse response = apiClient.initAuthorization(request);
 
         return response;
+    }
+
+    @Override
+    public Optional<String> getAutostartToken() {
+        return Optional.empty();
     }
 
     @Override
