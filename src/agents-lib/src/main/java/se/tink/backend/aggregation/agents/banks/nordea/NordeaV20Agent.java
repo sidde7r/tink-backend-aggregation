@@ -524,7 +524,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setSupplementalInformation(null);
         this.credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        this.context.requestSupplementalInformation(this.credentials, false);
+        this.supplementalRequester.requestSupplementalInformation(this.credentials, false);
 
         // Confirm that Nordea authenticated the the account.
 
@@ -1657,7 +1657,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         this.credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = this.context.requestSupplementalInformation(this.credentials, true);
+        String supplementalInformation = this.supplementalRequester.requestSupplementalInformation(this.credentials, true);
 
         this.log.info("Supplemental Information response is: " + supplementalInformation);
 
@@ -1901,7 +1901,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setSupplementalInformation(null);
         this.credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        this.context.requestSupplementalInformation(this.credentials, false);
+        this.supplementalRequester.requestSupplementalInformation(this.credentials, false);
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
 
@@ -2067,7 +2067,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         this.credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = this.context.requestSupplementalInformation(this.credentials, true);
+        String supplementalInformation = this.supplementalRequester.requestSupplementalInformation(this.credentials, true);
 
         if (Strings.isNullOrEmpty(supplementalInformation)) {
             return null;
@@ -2095,7 +2095,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         this.credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = this.context.requestSupplementalInformation(this.credentials, true);
+        String supplementalInformation = this.supplementalRequester.requestSupplementalInformation(this.credentials, true);
 
         if (Strings.isNullOrEmpty(supplementalInformation)) {
             return null;

@@ -633,7 +633,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                             rfa, status, initiateBankIdResponse.getMessage()));
         }
 
-        context.openBankId(null, false);
+        supplementalRequester.openBankId(null, false);
 
         collectBankId(initiateBankIdResponse);
     }
@@ -1990,7 +1990,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     }
 
     private void requestSupplementalBankId() {
-        context.openBankId(null, false);
+        supplementalRequester.openBankId(null, false);
     }
 
     private boolean deleteTransferFromOutbox(TransferListEntity transferQueuedUp) {

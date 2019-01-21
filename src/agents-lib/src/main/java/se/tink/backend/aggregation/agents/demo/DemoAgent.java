@@ -113,7 +113,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
                 credentials.setStatusPayload(null);
                 credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-                context.requestSupplementalInformation(credentials, false);
+                supplementalRequester.requestSupplementalInformation(credentials, false);
 
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
             }
@@ -330,7 +330,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 

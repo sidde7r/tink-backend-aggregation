@@ -276,7 +276,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         for (int i = 0; i < BANKID_MAX_ATTEMPTS; i++) {
             BankIdStatus bankIdStatus = authenticationClient.getLoginStatus();
@@ -435,7 +435,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
     private void requestBankIdSupplemental() {
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     @Override

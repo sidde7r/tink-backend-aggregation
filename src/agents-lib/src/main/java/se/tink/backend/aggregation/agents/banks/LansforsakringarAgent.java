@@ -268,7 +268,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             ClientResponse clientLoginResponse = createPostRequest(BANKID_COLLECT_URL,
@@ -773,7 +773,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
             credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
             credentials.setStatusPayload(null);
-            context.requestSupplementalInformation(credentials, false);
+            supplementalRequester.requestSupplementalInformation(credentials, false);
 
             ClientResponse bankIdResponse = createGetRequest(SEND_UNSIGNED_PAYMENT_URL);
             validateTransactionClientResponse(bankIdResponse);
@@ -888,7 +888,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         credentials.setStatusPayload(null);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         ClientResponse sendPaymentClientResponse = createPostRequest(SIGN_PAYMENT_SEND_PAYMENT_URL, paymentRequest);
         validateTransactionClientResponse(sendPaymentClientResponse);
@@ -1079,7 +1079,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
     private void signAndValidatePayment(PaymentRequest paymentRequest) throws BankIdException {
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         credentials.setStatusPayload(null);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         collectTransferResponse(SEND_PAYMENT_URL, paymentRequest);
     }
@@ -1252,7 +1252,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
     }
@@ -1731,7 +1731,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 

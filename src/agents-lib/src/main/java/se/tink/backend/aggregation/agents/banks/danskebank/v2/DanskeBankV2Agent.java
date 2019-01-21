@@ -444,7 +444,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         challengeResponseRequest.setChallengeData(challenge.getChallengeData());
 
         if (challenge.isBankId()) {
-            context.openBankId();
+            supplementalRequester.openBankId();
 
             String orderReference = getOrderReferenceFromChallenge(challenge);
             verifyBankId(BankIdServiceType.VERIFYSIGN, orderReference);
@@ -568,7 +568,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         InitBankIdRequest initBankIdRequest = new InitBankIdRequest(loginId);
         InitBankIdResponse initBankIdResponse = apiClient.bankIdInitAuth(initBankIdRequest);
 
-        context.openBankId();
+        supplementalRequester.openBankId();
 
         String orderReference = initBankIdResponse.getOrderReference();
         verifyBankId(BankIdServiceType.VERIFYAUTH, orderReference);
@@ -910,7 +910,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 

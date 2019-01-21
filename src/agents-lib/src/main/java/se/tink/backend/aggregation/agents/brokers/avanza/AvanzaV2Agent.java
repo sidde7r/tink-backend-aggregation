@@ -134,7 +134,7 @@ public class AvanzaV2Agent extends AbstractAgent
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
 

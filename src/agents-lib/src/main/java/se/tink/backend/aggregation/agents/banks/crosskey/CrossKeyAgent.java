@@ -119,7 +119,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     private void openBankIdAppWith(String token) {
         credentials.setSupplementalInformation(Preconditions.checkNotNull(token));
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     /**
@@ -269,7 +269,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
         Optional<String> oneTimeCode = SupplementalInformationUtils.getResponseFields(supplementalInformation, "response");
 
         if (!oneTimeCode.isPresent()) {

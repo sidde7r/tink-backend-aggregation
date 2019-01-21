@@ -146,7 +146,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
         credentials.setSupplementalInformation(Preconditions.checkNotNull(autoStartToken));
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     /**

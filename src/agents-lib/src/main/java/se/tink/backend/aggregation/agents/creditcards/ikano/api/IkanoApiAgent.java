@@ -157,7 +157,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     private void stopLoginAttempt(String message) {

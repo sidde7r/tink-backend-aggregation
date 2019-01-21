@@ -285,7 +285,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 
@@ -1335,7 +1335,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
                 autostartToken = bankIdResponse.getBody().getAutostartToken();
             }
 
-            context.openBankId(autostartToken, false);
+            supplementalRequester.openBankId(autostartToken, false);
 
             return requestId;
         } catch (UniformInterfaceException e) {

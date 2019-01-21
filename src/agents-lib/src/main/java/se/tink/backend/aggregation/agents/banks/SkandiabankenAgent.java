@@ -753,7 +753,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     private void openBankID(Optional<String> autostartToken) {
         credentials.setSupplementalInformation(autostartToken.orElse(null));
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     private enum UserMessage implements LocalizableEnum {

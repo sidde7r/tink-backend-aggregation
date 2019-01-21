@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.bankid;
 
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -12,10 +13,12 @@ public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatB
 
     private final Credentials credentials;
     private final AgentContext context;
+    private final SupplementalRequester supplementalRequester;
 
     public CredentialsSignicatBankIdAuthenticationHandler(Credentials credentials, AgentContext context) {
         this.credentials = credentials;
         this.context = context;
+        this.supplementalRequester = context;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class CredentialsSignicatBankIdAuthenticationHandler implements SignicatB
             credentials.setSupplementalInformation(null);
             credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-            context.requestSupplementalInformation(credentials, false);
+            supplementalRequester.requestSupplementalInformation(credentials, false);
             break;
         default:
             log.error("Unknown authentication status: " + status);

@@ -95,7 +95,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(Lists.newArrayList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        String response = context.requestSupplementalInformation(credentials);
+        String response = supplementalRequester.requestSupplementalInformation(credentials);
 
         return SupplementalInformationUtils.getResponseFields(response, supplementalResponseKey);
     }

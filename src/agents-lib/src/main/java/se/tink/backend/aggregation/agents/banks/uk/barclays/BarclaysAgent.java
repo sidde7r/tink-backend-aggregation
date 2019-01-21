@@ -49,7 +49,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
         CredentialsStatus oldStatus = credentials.getStatus();
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-        String supplementalInformation = context.requestSupplementalInformation(credentials);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials);
         if (supplementalInformation == null) {
             // maybe throw an exception instead
             return null;

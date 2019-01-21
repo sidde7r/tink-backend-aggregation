@@ -142,7 +142,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         String bankIdCompleteUrl = collectBankId(orderBankIdResponse, bankIdUrl);
 
