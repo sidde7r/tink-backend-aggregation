@@ -62,6 +62,11 @@ public class OpenbankAuthenticator implements Authenticator {
                 ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
 
                 if (errorResponse.hasErrorCode(
+                        OpenbankConstants.ErrorCodes.INCORRECT_CREDENTIALS)) {
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                }
+
+                if (errorResponse.hasErrorCode(
                         OpenbankConstants.ErrorCodes.INVALID_LOGIN_USERNAME_TYPE)) {
                     throw new IllegalStateException(
                             String.format(

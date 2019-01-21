@@ -67,8 +67,8 @@ public abstract class OpenbankConstants {
 
         // The following formats of usernames matches (regex) NIE/NIF:
         //  [0-9]+[A-Z]
-        public static final String NIE = "N";
-        public static final String NIF = "C";
+        public static final String NIE = "C";
+        public static final String NIF = "N";
 
         public static final String PASSPORT = "P";
         public static final String OTHER_DOCUMENT = "I";
@@ -97,6 +97,7 @@ public abstract class OpenbankConstants {
 
     public static class ErrorCodes {
         public static final String INVALID_LOGIN_USERNAME_TYPE = "NotNull";
+        public static final String INCORRECT_CREDENTIALS = "bad.input.credentials.incorrect";
     }
 
     public static class LogTags {

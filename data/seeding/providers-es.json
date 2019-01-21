@@ -336,7 +336,7 @@
           "description": "Username",
           "immutable": true,
           "numeric": false,
-          "helpText": "Your NIE, NIF, passport number etc."
+          "helpText": "NIF, NIE, passport number, or other document."
         },
         {
           "name": "username-type",
@@ -345,7 +345,7 @@
           "pattern": "([NCPI]{1})",
           "minLength": 1,
           "maxLength": 1,
-          "helpText": "N for NIE, C for NIF, P for Passport, I for Other Documents"
+          "helpText": "N for NIF, C for NIE, P for Passport, I for Other Documents"
         },
         {
           "name": "password",
