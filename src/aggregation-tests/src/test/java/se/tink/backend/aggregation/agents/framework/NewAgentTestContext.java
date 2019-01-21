@@ -193,7 +193,6 @@ public class NewAgentTestContext extends AgentContext {
         accountFeaturesByBankId.put(account.getBankId(), accountFeatures);
     }
 
-    @Override
     public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountIdentifier) {
         return Optional.ofNullable(accountFeaturesByBankId.get(uniqueAccountIdentifier));
     }

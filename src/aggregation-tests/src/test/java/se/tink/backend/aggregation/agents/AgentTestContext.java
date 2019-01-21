@@ -169,7 +169,6 @@ public class AgentTestContext extends AgentContext {
         accountsByBankId.put(account.getBankId(), account);
     }
 
-    @Override
     public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountId) {
         throw new NotImplementedException("Account features need to be cached to be retrievable");
     }
