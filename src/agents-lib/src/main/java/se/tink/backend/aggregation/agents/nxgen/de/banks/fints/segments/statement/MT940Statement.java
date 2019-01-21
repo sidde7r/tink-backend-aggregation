@@ -11,6 +11,7 @@ import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
+import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsDateParser;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
@@ -29,21 +30,8 @@ public class MT940Statement {
     private String tag_86;
 
     public Date getDate() {
-        String date = null;
-        try {
-            date = tag_61.substring(0, 6);
-            return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE_COMPACT.parse(date);
-        } catch (Exception e) {
-            return dateFallback(date);
-        }
-    }
-
-    //Sparkasse sometimes sends invalid dates such as 180229
-    //This date is not valid since 2018 is not a leap year, and February 29 is a leap day
-    public Date dateFallback(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMdd");
-        LocalDate localDate = LocalDate.parse(date, formatter);
-        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        LocalDate date = FinTsDateParser.parseDate(tag_61);
+        return FinTsDateParser.toDate(date);
     }
 
     private double getAmount() {
