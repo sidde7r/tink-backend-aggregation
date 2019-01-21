@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
@@ -41,12 +42,14 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
     private List<Account> accountsInContext;
     private final Catalog catalog;
     private final ControllerWrapper controllerWrapper;
+    private final SystemUpdater systemUpdater;
 
     public RequestUserOptInAccountsAgentWorkerCommand(AgentWorkerCommandContext context,
             ConfigureWhitelistInformationRequest request,
             ControllerWrapper controllerWrapper) {
         this.context = context;
         this.statusUpdater = context;
+        this.systemUpdater = context;
         this.request = request;
         this.credentials = request.getCredentials();
         this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
@@ -96,7 +99,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         }
 
         credentials.setStatus(CredentialsStatus.UPDATING);
-        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
         // Add the optIn account id:s to the context to use them when doing the refresh and processing.
         context.addOptInAccountUniqueId(supplementalResponse.entrySet().stream()
@@ -131,7 +134,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         }
 
         credentials.setStatus(CredentialsStatus.UPDATING);
-        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
         // Check if the empty response is correct or not.
         boolean isCorrect = supplementalInformation.entrySet().stream()
@@ -170,7 +173,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
         }
 
         credentials.setStatus(CredentialsStatus.UPDATING);
-        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
         // Send supplemental information request to get the optIn account id:s
         List<String> optInAccounts = supplementalInformation.entrySet().stream()

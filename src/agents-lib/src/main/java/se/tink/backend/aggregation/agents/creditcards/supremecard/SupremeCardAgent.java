@@ -257,7 +257,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
             }
         } else {
             this.request.getCredentials().setPayload(userIdentifier);
-            context.updateCredentialsExcludingSensitiveInformation(this.request.getCredentials(), false);
+            systemUpdater.updateCredentialsExcludingSensitiveInformation(this.request.getCredentials(), false);
         }
         return true;
     }

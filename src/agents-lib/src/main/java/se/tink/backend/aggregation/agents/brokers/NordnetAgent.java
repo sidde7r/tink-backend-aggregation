@@ -170,7 +170,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
         case PASSWORD:
             if (Strings.isNullOrEmpty(credentials.getField(Field.Key.PASSWORD))) {
                 credentials.setType(CredentialsTypes.MOBILE_BANKID);
-                context.updateCredentialsExcludingSensitiveInformation(credentials, false);
+                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
             }
             break;
         default:

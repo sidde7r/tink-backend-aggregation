@@ -151,7 +151,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             credentials.setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
         }
 
-        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
         return bcNumber.isPresent();
     }
@@ -244,7 +244,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
             // on getting transactions ingested in the connector.
             log.info(account, "Waiting for updates from the connector...");
-            context.setWaitingOnConnectorTransactions(true);
+            systemUpdater.setWaitingOnConnectorTransactions(true);
         }
     }
 

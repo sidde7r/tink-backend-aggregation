@@ -714,9 +714,9 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
-            response.addDestinations(getTransferAccountDestinations(context.getUpdatedAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(context.getUpdatedAccounts()));
-            context.updateTransferDestinationPatterns(response.getDestinations());
+            response.addDestinations(getTransferAccountDestinations(systemUpdater.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(systemUpdater.getUpdatedAccounts()));
+            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
             break;
 
         case CHECKING_ACCOUNTS:
@@ -775,7 +775,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
                 log.warn("Validation failed when trying to save e-invoice", e);
             }
         }
-        context.updateEinvoices(eInvoices);
+        systemUpdater.updateEinvoices(eInvoices);
     }
 
     private Map<Account, List<TransferDestinationPattern>> getPaymentAccountDestinations(List<Account> updatedAccounts) {

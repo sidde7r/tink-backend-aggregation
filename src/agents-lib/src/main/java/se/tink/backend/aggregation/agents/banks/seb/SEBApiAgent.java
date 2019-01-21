@@ -953,7 +953,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
             }
         }
         credentials.setPayload(customerIdString);
-        context.updateCredentialsExcludingSensitiveInformation(credentials, false);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
     }
 
     @Override
@@ -1370,10 +1370,10 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     public void updateTransferDestinations() {
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-        response.addDestinations(getTransferAccountDestinations(context.getUpdatedAccounts()));
-        response.addDestinations(getPaymentAccountDestinations(context.getUpdatedAccounts()));
+        response.addDestinations(getTransferAccountDestinations(systemUpdater.getUpdatedAccounts()));
+        response.addDestinations(getPaymentAccountDestinations(systemUpdater.getUpdatedAccounts()));
 
-        context.updateTransferDestinationPatterns(response.getDestinations());
+        systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
     }
 
     private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(List<Account> updatedAccounts) {
@@ -2036,7 +2036,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                 .from(eInvoiceEntities)
                 .transform(EInvoiceListEntity.TO_TRANSFER));
 
-        context.updateEinvoices(eInvoices);
+        systemUpdater.updateEinvoices(eInvoices);
     }
 
     private List<EInvoiceListEntity> fetchEInvoiceEntities() throws IllegalStateException {

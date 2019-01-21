@@ -384,7 +384,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
             financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
 
             if (updateAmortizationDocument) {
-                context.updateDocument(getAmortizationDocumentation(loan.getLoanNumber()));
+                systemUpdater.updateDocument(getAmortizationDocumentation(loan.getLoanNumber()));
             }
         }
     }
@@ -425,11 +425,11 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         Map<Account, List<TransferDestinationPattern>> transferPatterns = new TransferDestinationPatternBuilder()
                 .setSourceAccounts(accountEntities)
                 .setDestinationAccounts(recipientEntities)
-                .setTinkAccounts(context.getUpdatedAccounts())
+                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
                 .build();
 
-        context.updateTransferDestinationPatterns(transferPatterns);
+        systemUpdater.updateTransferDestinationPatterns(transferPatterns);
     }
 
     private void requestBankIdSupplemental() {

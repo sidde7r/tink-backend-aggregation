@@ -460,7 +460,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                 eInvoices.add(eInvoice.toTransfer());
             }
 
-            context.updateEinvoices(eInvoices);
+            systemUpdater.updateEinvoices(eInvoices);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -1674,10 +1674,10 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
             TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            response.addDestinations(getTransferAccountDestinations(accountEntities, context.getUpdatedAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(accountEntities, context.getUpdatedAccounts()));
+            response.addDestinations(getTransferAccountDestinations(accountEntities, systemUpdater.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(accountEntities, systemUpdater.getUpdatedAccounts()));
 
-            context.updateTransferDestinationPatterns(response.getDestinations());
+            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

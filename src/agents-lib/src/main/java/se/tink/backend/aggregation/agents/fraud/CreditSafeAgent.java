@@ -156,7 +156,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
                 content.setPersonIdentityNumber(credentials.getUsername());
                 detailsContent.add(content);
 
-                context.updateFraudDetailsContent(detailsContent);
+                systemUpdater.updateFraudDetailsContent(detailsContent);
 
                 log.info(knownErrorMessage);
                 statusUpdater.updateStatus(CredentialsStatus.UPDATING);
@@ -225,7 +225,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         detailsContent.addAll(extractCompanyEngagementContent(companyEngagementList));
 
 
-        context.updateFraudDetailsContent(detailsContent);
+        systemUpdater.updateFraudDetailsContent(detailsContent);
     }
 
     /**
