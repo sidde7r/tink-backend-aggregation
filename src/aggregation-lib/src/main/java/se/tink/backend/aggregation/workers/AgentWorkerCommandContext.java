@@ -231,7 +231,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
                 //      the client is not refreshing this RefreshableItem. (not a problem)
                 // But it's not something that we expect happening on multiple users at the same time. (problem)
                 accountsNotBeingSentToSystemTotal.inc();
-                log.warn(String.format("accountid %s is missing from the ones sent to system.", idBeforeRefresh));
+                log.warn("accountid {} is missing from the ones sent to system.", idBeforeRefresh);
             }
         }
 
