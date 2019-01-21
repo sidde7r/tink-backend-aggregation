@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
+import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -28,6 +29,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     protected AgentsServiceConfiguration configuration;
     protected final JerseyClientFactory clientFactory;
     protected final AgentContext context;
+    protected final AgentAggregatorIdentifier agentAggregatorIdentifier;
     protected final CredentialsRequest request;
     protected final AggregationLogger log;
     protected final FinancialDataCacher financialDataCacher;
@@ -35,6 +37,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     protected AbstractAgent(CredentialsRequest request, AgentContext context) {
         this.request = request;
         this.context = context;
+        this.agentAggregatorIdentifier = context;
         this.financialDataCacher = context;
         this.clientFactory = new JerseyClientFactory();
 
@@ -42,7 +45,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     }
 
     public AggregatorInfo getAggregatorInfo() {
-        return context.getAggregatorInfo();
+        return agentAggregatorIdentifier.getAggregatorInfo();
     }
 
     @Override
