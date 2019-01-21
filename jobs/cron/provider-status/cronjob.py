@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import requests, json, logging, sys, getopt, os
+import requests, json, logging, sys, getopt, os, time
 from collections import defaultdict
 
 # STATUS PAGE
@@ -171,6 +171,13 @@ def main():
     if not STATUSPAGE_API_KEY:
         logger.error("Missing api key")
         return 1
+
+    # We have seen that the job fails on the first try many times.
+    # The theory is that the job starts faster than the outgoing
+    # connections are opened. Hence we've added this sleep to
+    # ensure that everything get the time to start up.
+    logger.info("Sleeping for thirdy seconds before starting.")
+    time.sleep(30)
 
     logger.info("Starting cronjob to calculate provider statistics")
 
