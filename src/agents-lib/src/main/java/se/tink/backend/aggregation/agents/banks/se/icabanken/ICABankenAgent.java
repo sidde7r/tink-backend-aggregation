@@ -954,7 +954,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             }
         }
 
-        context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
         TransactionListResponse transactionsResponse = null;
 
@@ -980,7 +980,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
                 transactions.add(transactionEntity.toTransaction());
             }
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
         } while (!transactionsResponse.getBody().isNoMoreTransactions()
                 && !isContentWithRefresh(account, transactions));
 

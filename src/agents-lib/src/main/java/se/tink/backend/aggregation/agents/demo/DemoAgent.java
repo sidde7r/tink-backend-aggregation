@@ -288,7 +288,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             Transaction t = transferToTransaction(transfer);
             transactions.add(t);
 
-            context.updateStatus(CredentialsStatus.UPDATING);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING);
             financialDataCacher.updateTransactions(findAccountForIdentifier(transfer.getSource()), transactions);
             context.processTransactions();
         }
@@ -388,7 +388,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
     private void loginWithBankId(Credentials credentials) throws BankIdException {
         boolean authenticated = authenticateWithBankId(credentials);
-        context.updateStatus(credentials.getStatus(), credentials.getStatusPayload());
+        statusUpdater.updateStatus(credentials.getStatus(), credentials.getStatusPayload());
         if (!authenticated) {
             throw BankIdError.CANCELLED.exception();
         }

@@ -555,7 +555,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                             currentPage = transactionListResponse.getNextSequenceNumber();
                         }
 
-                        context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+                        statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
                     } while (hasMoreTransactions);
 
                     financialDataCacher.updateTransactions(account, transactions);
@@ -634,7 +634,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                     currentPage++;
                 }
 
-                context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+                statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
             } while (hasMoreTransactions);
 
             financialDataCacher.updateTransactions(account, transactions);

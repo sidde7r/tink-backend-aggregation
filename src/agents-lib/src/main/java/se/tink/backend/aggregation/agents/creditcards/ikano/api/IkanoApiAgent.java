@@ -162,7 +162,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
 
     private void stopLoginAttempt(String message) {
         log.info(message);
-        context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, message);
+        statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, message);
     }
 
     public static class CardNotFoundException extends Exception {}

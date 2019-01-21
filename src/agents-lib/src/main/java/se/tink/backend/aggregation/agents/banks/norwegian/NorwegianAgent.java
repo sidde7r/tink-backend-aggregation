@@ -312,7 +312,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
                     .map(TransactionEntity::toTransaction)
                     .forEach(transactions::add);
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
             month--;
             if (month == 0) {

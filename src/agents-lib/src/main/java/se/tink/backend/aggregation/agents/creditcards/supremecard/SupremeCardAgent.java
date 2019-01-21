@@ -231,7 +231,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
                 UserResponse.class);
 
         if (userResponse.getData() == null) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, "No user information.");
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, "No user information.");
             return false;
         }
         
@@ -249,7 +249,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
 
         if (previousUserIdentifier != null) {
             if (!Objects.equal(userIdentifier, previousUserIdentifier)) {
-                context.updateStatus(
+                statusUpdater.updateStatus(
                         CredentialsStatus.AUTHENTICATION_ERROR,
                         context.getCatalog().getString(
                                 "Wrong BankID signature. Did you log in with the wrong personnummer?"));
@@ -335,7 +335,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
                 transactions.add(transactionEntity.toTransaction());
             }
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
             if (isContentWithRefresh(account, transactions)) {
                 break;

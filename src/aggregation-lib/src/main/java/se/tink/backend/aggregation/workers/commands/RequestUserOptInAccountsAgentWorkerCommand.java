@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRequest;
@@ -26,12 +27,13 @@ import se.tink.libraries.i18n.Catalog;
 /**
  * TODO adding metrics if necessary
  **/
-public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerCommand{
+public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerCommand {
     private static final Logger log = LoggerFactory.getLogger(RequestUserOptInAccountsAgentWorkerCommand.class);
     private static final String IS_CORRECT = "isCorrect";
     private static final String TRUE = "true";
 
     private final AgentWorkerCommandContext context;
+    private final StatusUpdater statusUpdater;
     private final ConfigureWhitelistInformationRequest request;
     private final Credentials credentials;
     private final SupplementalInformationController supplementalInformationController;
@@ -44,6 +46,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
             ConfigureWhitelistInformationRequest request,
             ControllerWrapper controllerWrapper) {
         this.context = context;
+        this.statusUpdater = context;
         this.request = request;
         this.credentials = request.getCredentials();
         this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
@@ -88,7 +91,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // Abort if the supplemental information is null or empty.
         if (supplementalResponse == null || supplementalResponse.isEmpty()) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
@@ -123,7 +126,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // Abort if the supplemental information is null or empty.
         if (supplementalInformation == null || supplementalInformation.isEmpty()) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 
@@ -162,7 +165,7 @@ public class RequestUserOptInAccountsAgentWorkerCommand extends AgentWorkerComma
 
         // Abort if the supplemental information is null or empty.
         if (supplementalInformation == null || supplementalInformation.isEmpty()) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR);
             return AgentWorkerCommandResult.ABORT;
         }
 

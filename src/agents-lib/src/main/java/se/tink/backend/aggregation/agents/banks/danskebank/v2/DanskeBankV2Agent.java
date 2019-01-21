@@ -870,7 +870,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
                 transactions.add(transactionEntity.toTransaction());
             }
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
         } while (!isContentWithRefresh(account, transactions) && accountResponse.isMoreTransactions());
 
         return transactions;

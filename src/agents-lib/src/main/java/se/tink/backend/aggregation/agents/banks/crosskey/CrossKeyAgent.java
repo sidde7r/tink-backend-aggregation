@@ -134,7 +134,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
         }
         hasRefreshed = true;
 
-        context.updateStatus(CredentialsStatus.UPDATING);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING);
         List<Account> accounts;
 
         try {

@@ -778,7 +778,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 transactionsMap.putAll(transactionsPage);
                 transactions = Lists.newArrayList(transactionsMap.values());
 
-                this.context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+                this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
                 // See if we're content with the data we have.
 
@@ -797,7 +797,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         transactions.addAll(upcomingTransactions);
 
-        this.context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+        this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
         return this.financialDataCacher.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
                 .sortedCopy(transactions));
     }
@@ -867,7 +867,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 transactionsMap.putAll(transactionsPage);
                 transactionsList = Lists.newArrayList(transactionsMap.values());
 
-                this.context.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
+                this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
 
                 // Either construct the date object to start fetching the historical card transactions, or go back
                 // another month.
@@ -889,7 +889,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             }
         }
 
-        this.context.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
+        this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
         return this.financialDataCacher.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
                 .sortedCopy(transactionsList));
     }
@@ -1002,9 +1002,9 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void updateStatus(String code) {
         try {
 
-            this.context.updateStatus(NordeaErrorUtils.getErrorStatus(code), NordeaErrorUtils.getErrorMessage(code));
+            this.statusUpdater.updateStatus(NordeaErrorUtils.getErrorStatus(code), NordeaErrorUtils.getErrorMessage(code));
         } catch (Exception e) {
-            this.context.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            this.statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             this.log.error("Could not update status", e);
         }
     }

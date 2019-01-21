@@ -57,7 +57,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
 
         // we must reset the credential status in order to request supplemental info multiple times
         credentials.setStatus(oldStatus);
-        context.updateStatus(oldStatus);
+        statusUpdater.updateStatus(oldStatus);
 
         // updateStatus is an asynchronous call, must wait a bit
         Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);

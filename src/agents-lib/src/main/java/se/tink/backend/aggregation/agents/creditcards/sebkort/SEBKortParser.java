@@ -424,7 +424,7 @@ public class SEBKortParser extends AgentParsingUtils {
         // Not updating this, since we currently are retrying SEB-kort fetching. Would
         // look weird for clients to see "3 accounts updated" jump to "1 account updated".
         /*if(context != null)
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);*/
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);*/
     }
 
 }

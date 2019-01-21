@@ -218,7 +218,7 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
                 break;
             }
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
         }
     }
 

@@ -339,7 +339,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         List<InvoiceBillingUnitEntity> invoiceBillingUnits = fetchInvoiceBillingUnits();
 
         if (invoiceBillingUnits == null) {
-            context.updateStatus(CredentialsStatus.UPDATED, "Det finns inga fakturor att hämta.");
+            statusUpdater.updateStatus(CredentialsStatus.UPDATED, "Det finns inga fakturor att hämta.");
             return;
         }
 

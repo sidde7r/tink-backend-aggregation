@@ -392,7 +392,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
             accumulatedTransactions.addAll(getListOfTransactions(accountEntity));
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, accumulatedTransactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, accumulatedTransactions);
 
             // Prepare for a possible next loop.
 

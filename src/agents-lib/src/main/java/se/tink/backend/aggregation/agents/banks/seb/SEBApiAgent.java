@@ -1222,7 +1222,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
 
         transactions.addAll(upcomingAccountTransactions);
 
-        ctx.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
         return financialDataCacher.updateTransactions(account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
     }
@@ -1271,7 +1271,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                                     "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")),
                     "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
-            ctx.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
             financialDataCacher.updateTransactions(account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
         }
     }
@@ -1340,7 +1340,7 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
         }
 
         if (response.d == null || response.d.VODB == null) {
-            context.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
         } else {
             // PCBW2581 is null if there are no mortgages
             if (response.d.VODB.PCBW2581 != null) {

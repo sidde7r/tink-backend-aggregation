@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -51,6 +52,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private final AgentWorkerCommandMetricState metrics;
     private final LoginAgentWorkerCommandState state;
     private final AgentWorkerCommandContext context;
+    private final StatusUpdater statusUpdater;
     private final Credentials credentials;
     private final User user;
     private Agent agent;
@@ -61,6 +63,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             AgentWorkerCommandMetricState metrics) {
         final CredentialsRequest request = context.getRequest();
         this.context = context;
+        this.statusUpdater = context;
         this.state = state;
         this.metrics = metrics.init(this);
         this.credentials = request.getCredentials();
@@ -82,7 +85,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             if (context.getRequest().getType() == CredentialsRequestType.TRANSFER
                     && credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR) {
 
-                context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, context.getCatalog().getString(
+                statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, context.getCatalog().getString(
                         "Invalid credentials status. Update the credentials before retrying the operation."));
                 result = AgentWorkerCommandResult.ABORT;
 
@@ -154,7 +157,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
                         LOCK_FORMAT_BANKID_REFRESH, user.getId()));
 
                 if (!lock.acquire(2, TimeUnit.MINUTES)) {
-                    context.updateStatus(CredentialsStatus.UNCHANGED);
+                    statusUpdater.updateStatus(CredentialsStatus.UNCHANGED);
                     log.warn("Login failed due not able to acquire lock");
                     action.failed();
 
@@ -189,23 +192,23 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             }
         } catch(BankIdException e) {
             // The way frontend works now the message will not be displayed to the user.
-            context.updateStatus(CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
+            statusUpdater.updateStatus(CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
             action.cancelled();
             return AgentWorkerCommandResult.ABORT;
         } catch(BankServiceException e) {
             // The way frontend works now the message will not be displayed to the user.
-            context.updateStatus(CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
+            statusUpdater.updateStatus(CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
             action.unavailable();
             return AgentWorkerCommandResult.ABORT;
         } catch (AuthenticationException | AuthorizationException e) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR,
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR,
                     context.getCatalog().getString(e.getUserMessage()));
             action.cancelled();
             return AgentWorkerCommandResult.ABORT;
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            context.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             action.failed();
             return AgentWorkerCommandResult.ABORT;
 

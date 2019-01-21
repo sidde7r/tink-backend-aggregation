@@ -154,7 +154,7 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
         }
 
         if (errorMessageBuilder.hasExceptions()) {
-            context.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessageBuilder.build());
+            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessageBuilder.build());
         }
     }
 
