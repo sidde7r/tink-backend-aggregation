@@ -176,7 +176,7 @@ def main():
     # The theory is that the job starts faster than the outgoing
     # connections are opened. Hence we've added this sleep to
     # ensure that everything get the time to start up.
-    logger.info("Sleeping for thirdy seconds before starting.")
+    logger.info("Sleeping for thirty seconds before starting.")
     time.sleep(30)
 
     logger.info("Starting cronjob to calculate provider statistics")
