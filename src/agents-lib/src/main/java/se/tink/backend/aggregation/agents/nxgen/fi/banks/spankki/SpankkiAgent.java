@@ -48,7 +48,7 @@ public class SpankkiAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         KeyCardAuthenticationController keyCardCtrl = new KeyCardAuthenticationController(this.catalog,
-                this.supplementalInformationController,
+                this.supplementalInformationHelper,
                 new SpankkiKeyCardAuthenticator(this.apiClient, this.spankkiPersistentStorage,
                         this.spankkiSessionStorage
                 ), SpankkiConstants.Authentication.KEY_CARD_VALUE_LENGTH);

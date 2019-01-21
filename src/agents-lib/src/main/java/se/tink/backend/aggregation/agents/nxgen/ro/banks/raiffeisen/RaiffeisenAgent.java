@@ -49,7 +49,7 @@ public class RaiffeisenAgent extends NextGenerationAgent {
                 context,
                 new ThirdPartyAppAuthenticationController<>(
                         oAuth2AuthenticationController,
-                        supplementalInformationController
+                        supplementalInformationHelper
                 ),
                 oAuth2AuthenticationController);
     }

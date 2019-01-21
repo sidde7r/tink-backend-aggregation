@@ -47,7 +47,7 @@ public class AktiaAgent extends NextGenerationAgent {
                 credentials.getField(Field.Key.USERNAME));
 
         return new AutoAuthenticationController(request, context,
-                new KeyCardAuthenticationController(catalog, supplementalInformationController,
+                new KeyCardAuthenticationController(catalog, supplementalInformationHelper,
                         AktiaKeyCardAuthenticator.createKeyCardAuthenticator(supplementalInformationHelper, catalog,
                                 apiClient, credentials, sessionStorage, encapClient)),
                 new AktiaAutoAuthenticator(encapClient, apiClient, credentials));

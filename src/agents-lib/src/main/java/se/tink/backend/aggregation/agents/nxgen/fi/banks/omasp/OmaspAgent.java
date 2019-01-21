@@ -43,7 +43,7 @@ public class OmaspAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new AutoAuthenticationController(request, context,
-                new KeyCardAuthenticationController(catalog, supplementalInformationController,
+                new KeyCardAuthenticationController(catalog, supplementalInformationHelper,
                         new OmaspKeyCardAuthenticator(apiClient, persistentStorage, credentials)),
                 new OmaspAutoAuthenticator(apiClient, persistentStorage, credentials));
     }

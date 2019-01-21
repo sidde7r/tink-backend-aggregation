@@ -51,7 +51,7 @@ public class OpBankAgent extends NextGenerationAgent {
     public Authenticator constructAuthenticator() {
         return new AutoAuthenticationController(request, context,
                 new KeyCardAuthenticationController(catalog,
-                        supplementalInformationController,
+                        supplementalInformationHelper,
                         new OpAuthenticator(bankClient, opBankPersistentStorage, credentials),
                         OpBankConstants.KEYCARD_PIN_LENGTH),
                 new OpAutoAuthenticator(bankClient, opBankPersistentStorage, credentials));

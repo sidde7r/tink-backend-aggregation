@@ -116,7 +116,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                 request,
                 context,
                 persistentStorage,
-                supplementalInformationController,
+                supplementalInformationHelper,
                 authenticator,
                 apiClient
         );

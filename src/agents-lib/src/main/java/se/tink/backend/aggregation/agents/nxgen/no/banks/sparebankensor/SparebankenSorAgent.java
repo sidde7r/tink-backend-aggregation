@@ -66,7 +66,7 @@ public class SparebankenSorAgent extends NextGenerationAgent {
                 credentials.getField(Field.Key.USERNAME));
 
         SparebankenSorMultiFactorAuthenticator multiFactorAuthenticator =
-                new SparebankenSorMultiFactorAuthenticator(apiClient, encapClient, supplementalInformationController,
+                new SparebankenSorMultiFactorAuthenticator(apiClient, encapClient, supplementalInformationHelper,
                         catalog, sessionStorage, credentials.getField(Field.Key.MOBILENUMBER));
 
         SparebankenSorAutoAuthenticator autoAuthenticator = new SparebankenSorAutoAuthenticator(
