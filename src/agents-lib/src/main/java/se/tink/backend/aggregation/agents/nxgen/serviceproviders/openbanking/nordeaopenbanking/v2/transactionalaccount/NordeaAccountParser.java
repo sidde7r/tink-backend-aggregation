@@ -28,12 +28,8 @@ public class NordeaAccountParser {
 
     // defaults to IBAN
     protected String getAccountNumber(AccountEntity accountEntity) {
-        return Optional.ofNullable(accountEntity.getAccountNumbers()).orElse(Collections.emptyList()).stream()
-                .filter(accountNumberEntity ->
-                        NordeaBaseConstants.Account.ACCOUNT_NUMBER_IBAN.equalsIgnoreCase(accountNumberEntity.getType())
-                && hasContent(accountNumberEntity.getValue()))
-                .map(AccountNumbersEntity::getValue)
-                .findFirst().orElseThrow(() -> new IllegalStateException("No account number found"));
+        return findAccountNumberByType(accountEntity, NordeaBaseConstants.Account.ACCOUNT_NUMBER_IBAN)
+                .orElseThrow(() -> new IllegalStateException("No account number found"));
     }
 
     // sometimes we get a transactions link, sometimes not
@@ -63,5 +59,15 @@ public class NordeaAccountParser {
 
     protected boolean hasContent(String s) {
         return !noContent(s);
+    }
+
+    protected Optional<String> findAccountNumberByType(AccountEntity accountEntity, final String accountNumberType) {
+
+        return Optional.ofNullable(accountEntity.getAccountNumbers()).orElse(Collections.emptyList()).stream()
+                .filter(accountNumberEntity ->
+                        accountNumberType.equalsIgnoreCase(accountNumberEntity.getType())
+                                && hasContent(accountNumberEntity.getValue()))
+                .map(AccountNumbersEntity::getValue)
+                .findFirst();
     }
 }

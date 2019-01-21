@@ -10,12 +10,12 @@ public class NordeaBaseConstants {
 
     public static class Url {
         private static final String API_BASE_URL = "https://api.nordeaopenbanking.com";
-        private static final String API_VERSION = "/v3";
+        private static final String API_VERSION = "/v3/";
 
-        public static final URL ACCOUNTS = new URL(API_BASE_URL + API_VERSION + "/accounts");
-        public static final URL AUTHORIZE_DECOUPLED = new URL(API_BASE_URL + API_VERSION + "/authorize-decoupled");
-        public static final URL AUTHORIZE = new URL(API_BASE_URL + API_VERSION + "/authorize");
-        public static final URL ACCESS_TOKEN = new URL(API_BASE_URL + API_VERSION + "/authorize/token");
+        public static final URL ACCOUNTS = new URL(API_BASE_URL + API_VERSION + "accounts");
+        public static final URL AUTHORIZE_DECOUPLED = new URL(API_BASE_URL + API_VERSION + "authorize-decoupled");
+        public static final URL AUTHORIZE = new URL(API_BASE_URL + API_VERSION + "authorize");
+        public static final URL ACCESS_TOKEN = new URL(API_BASE_URL + API_VERSION + "authorize/token");
 
 
         public static URL getUrlForLink(String path) {
@@ -23,7 +23,7 @@ public class NordeaBaseConstants {
         }
 
         public static String getTransactionPathForAccount(String accountId) {
-            return String.format("%s/accounts/%s/transactions", API_VERSION, accountId);
+            return String.format("%saccounts/%s/transactions", API_VERSION, accountId);
         }
     }
 

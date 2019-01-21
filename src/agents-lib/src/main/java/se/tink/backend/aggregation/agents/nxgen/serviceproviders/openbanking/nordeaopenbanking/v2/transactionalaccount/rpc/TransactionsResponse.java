@@ -23,7 +23,6 @@ public class TransactionsResponse extends NordeaResponseBase {
         return new NordeaTransactionPaginatorResponse(transactionParser, response);
     }
 
-
     public static class NordeaTransactionPaginatorResponse implements TransactionKeyPaginatorResponse<LinkEntity> {
         private TransactionsResponseEntity response;
         private NordeaTransactionParser transactionParser;
