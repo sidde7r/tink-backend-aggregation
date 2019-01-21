@@ -44,7 +44,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
     protected Agent agent;
 
     protected final Counter refreshTotal;
-    protected final Counter incosistencyBetweelAccountsTotal;
+    protected final Counter inconsistencyBetweelAccountsTotal;
     protected final Counter zeroAccountsFoundDuringRefreshTotal;
     protected final Counter accountsNotBeingSentToSystemTotal;
     protected final MetricId.MetricLabels defaultMetricLabels;
@@ -89,8 +89,8 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
                 MetricId.newId("accounts_refresh")
                         .label(defaultMetricLabels));
 
-        incosistencyBetweelAccountsTotal = metricRegistry.meter(
-                MetricId.newId("incosistency_between_accounts")
+        inconsistencyBetweelAccountsTotal = metricRegistry.meter(
+                MetricId.newId("inconsistency_between_accounts")
                         .label(defaultMetricLabels));
 
         zeroAccountsFoundDuringRefreshTotal = metricRegistry.meter(
@@ -216,7 +216,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         //      that an account on the credentials closed. (not a problem)
         // But it's  not something that we expect happening on multiple users at the same time. (problem)
         if (accountsFoundByAgent.size() != accountsBeforeRefresh.size()) {
-            incosistencyBetweelAccountsTotal.inc();
+            inconsistencyBetweelAccountsTotal.inc();
             return;
         }
 
