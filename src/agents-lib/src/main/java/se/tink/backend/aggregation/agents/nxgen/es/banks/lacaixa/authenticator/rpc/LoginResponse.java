@@ -6,6 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LoginResponse {
 
-    @JsonProperty
+    @JsonProperty("estado")
     private String status;
 }
