@@ -87,8 +87,6 @@ java_library(
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_headers:api-headers",
 
-        # Proto serialization util
-        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
