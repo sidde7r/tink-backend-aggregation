@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.skandiabanken.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountEntity {
@@ -353,6 +354,11 @@ public class AccountEntity {
     public void setCreditUsed(String creditUsed) {
         this.creditUsed = creditUsed;
     }
+
+    @JsonIgnore
+    public boolean isInvestment() {
+		return accountType == 9;
+	}
 
     public Account toAccount() {
 		Account account = new Account();

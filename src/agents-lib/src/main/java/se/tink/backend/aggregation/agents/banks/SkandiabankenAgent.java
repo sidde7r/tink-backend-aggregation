@@ -513,6 +513,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
             return Collections.emptyMap();
         }
         accounts = response.getBankAccounts().stream()
+                .filter(a -> !a.isInvestment())
                 .collect(Collectors.toMap(Function.identity(), AccountEntity::toAccount));
         return accounts;
     }
