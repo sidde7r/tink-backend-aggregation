@@ -77,11 +77,10 @@ public class AccountEntity {
 
     public CreditCardAccount toTinkCreditCardAccount() {
 
-        return CreditCardAccount.builder(number, new Amount(IberCajaConstants.currency, balance),
+        return CreditCardAccount.builder(number, new Amount(IberCajaConstants.currency, disposed),
                 new Amount(IberCajaConstants.currency, limit))
                 .setAccountNumber(number)
                 .setBankIdentifier(number)
-                .setBalance(new Amount(IberCajaConstants.currency, balance))
                 .setName(alias)
                 .build();
     }
