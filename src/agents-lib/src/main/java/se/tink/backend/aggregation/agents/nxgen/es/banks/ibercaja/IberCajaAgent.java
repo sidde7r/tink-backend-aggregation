@@ -32,7 +32,7 @@ public class IberCajaAgent extends NextGenerationAgent {
 
     public IberCajaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new IberCajaApiClient(client);
+        apiClient = new IberCajaApiClient(client, sessionStorage);
     }
 
     @Override
@@ -50,9 +50,8 @@ public class IberCajaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        IberCajaAccountFetcher accountFetcher = new IberCajaAccountFetcher(apiClient, sessionStorage);
-        IberCajaTransactionalFetcher transactionalFetcher = new IberCajaTransactionalFetcher(apiClient,
-                sessionStorage);
+        IberCajaAccountFetcher accountFetcher = new IberCajaAccountFetcher(apiClient);
+        IberCajaTransactionalFetcher transactionalFetcher = new IberCajaTransactionalFetcher(apiClient);
 
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
                 updateController,
@@ -64,9 +63,9 @@ public class IberCajaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        IberCajaCreditCardFetcher creditCardFetcher = new IberCajaCreditCardFetcher(apiClient, sessionStorage);
-        IberCajaCreditCardTransactionalFetcher transactionalFetcher = new IberCajaCreditCardTransactionalFetcher(
-                apiClient, sessionStorage);
+        IberCajaCreditCardFetcher creditCardFetcher = new IberCajaCreditCardFetcher(apiClient);
+        IberCajaCreditCardTransactionalFetcher transactionalFetcher =
+                new IberCajaCreditCardTransactionalFetcher(apiClient);
 
         return Optional.of(new CreditCardRefreshController(metricRefreshController,
                 updateController,
@@ -80,8 +79,7 @@ public class IberCajaAgent extends NextGenerationAgent {
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
 
-        IberCajaInvestmentAccountFetcher investmentAccountFetcher = new IberCajaInvestmentAccountFetcher(apiClient,
-                sessionStorage);
+        IberCajaInvestmentAccountFetcher investmentAccountFetcher = new IberCajaInvestmentAccountFetcher(apiClient);
         return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController,
                 investmentAccountFetcher));
     }
