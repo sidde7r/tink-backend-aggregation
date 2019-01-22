@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.core.User;
-import se.tink.backend.rpc.abnamro.AuthenticatedRequest;
+import se.tink.libraries.abnamro.client.rpc.AuthenticatedRequest;
 
 public class AbnAmroLegacyUserUtils {
 

@@ -1,4 +1,4 @@
-package se.tink.backend.rpc.abnamro;
+package se.tink.libraries.abnamro.client.rpc;
 
 public interface AuthenticatedRequest {
 
