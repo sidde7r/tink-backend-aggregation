@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.enums.AccountExclusion;
 import se.tink.backend.core.transfer.TransferDestination;
-import se.tink.backend.serialization.TypeReferences;
+import se.tink.libraries.serialization.TypeReferences;
 import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;

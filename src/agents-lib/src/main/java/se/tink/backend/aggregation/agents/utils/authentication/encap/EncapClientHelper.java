@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap.entities.Au
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.ActivationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.serialization.TypeReferences;
+import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class EncapClientHelper {
