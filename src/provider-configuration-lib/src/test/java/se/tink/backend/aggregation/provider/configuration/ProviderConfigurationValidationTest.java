@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -174,22 +175,25 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
 
     // TODO No need to execute more than once
     private Set<Pair<String, Pair<ProviderConfiguration, Field>>> providerRows() {
+        Function<String, Pair<String, Set<String>>> clusterToClusterAndProviderStrings =
+                clusterId ->
+                        Pair.of(
+                                clusterId,
+                                enabledProvidersOnCluster.getOrDefault(
+                                        clusterId, Collections.emptySet()));
+
+        Function<Pair<String, String>, Pair<String, ProviderConfiguration>> stringToProviderConfig =
+                pair ->
+                        Pair.of(
+                                pair.first,
+                                getProviderConfigurationForCluster(pair.first, pair.second));
+
         return enabledProvidersOnCluster
                 .keySet()
                 .stream()
-                .map(
-                        clusterId ->
-                                Pair.of(
-                                        clusterId,
-                                        enabledProvidersOnCluster.getOrDefault(
-                                                clusterId, Collections.emptySet())))
+                .map(clusterToClusterAndProviderStrings)
                 .flatMap(pair -> pair.second.stream().map(second -> Pair.of(pair.first, second)))
-                .map(
-                        pair ->
-                                Pair.of(
-                                        pair.first,
-                                        getProviderConfigurationForCluster(
-                                                pair.first, pair.second)))
+                .map(stringToProviderConfig)
                 .flatMap(
                         pair ->
                                 pair.second
