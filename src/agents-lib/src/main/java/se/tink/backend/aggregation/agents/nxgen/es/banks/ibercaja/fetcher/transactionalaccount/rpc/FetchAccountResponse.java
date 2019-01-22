@@ -14,24 +14,24 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 public class FetchAccountResponse {
 
     @JsonProperty("Productos")
-    private List<AccountEntity> transactionalAccounts;
+    private List<AccountEntity> accounts;
 
     public List<TransactionalAccount> getAccounts() {
-        return transactionalAccounts.stream()
+        return accounts.stream()
                 .filter(entity -> IberCajaConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(entity.getType()))
                 .map(AccountEntity::toTinkAccount)
                 .collect(Collectors.toList());
     }
 
     public List<InvestmentAccount> getInvestmentAccounts() {
-        return transactionalAccounts.stream()
+        return accounts.stream()
                 .filter(entity -> IberCajaConstants.ACCOUNT_TYPE_MAPPER.isInvestmentAccount(entity.getType()))
                 .map(AccountEntity::toTinkInvestmentAccount)
                 .collect(Collectors.toList());
     }
 
     public List<CreditCardAccount> getCreditCardAccounts() {
-        return transactionalAccounts.stream()
+        return accounts.stream()
                 .filter(entity -> IberCajaConstants.ACCOUNT_TYPE_MAPPER.isCreditCardAccount(entity.getType()))
                 .filter(entity -> IberCajaConstants.CARD_TYPE_MAPPER.isCreditCardAccount(entity.getTypeCard()))
                 .map(AccountEntity::toTinkCreditCardAccount)
