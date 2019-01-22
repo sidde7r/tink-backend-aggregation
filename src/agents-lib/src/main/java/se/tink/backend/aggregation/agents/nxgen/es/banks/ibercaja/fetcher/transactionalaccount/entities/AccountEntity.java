@@ -28,6 +28,8 @@ public class AccountEntity {
     private double balance;
     @JsonProperty("Limite")
     private double limit;
+    @JsonProperty("Dispuesto")
+    private double disposed;
     @JsonProperty("IBAN")
     private String iban;
 
@@ -45,17 +47,32 @@ public class AccountEntity {
 
     public InvestmentAccount toTinkInvestmentAccount() {
 
-        Portfolio portfolio = new Portfolio();
-        portfolio.setType(Portfolio.Type.DEPOT);
+        Portfolio portfolio = toTinkPortfolio();
 
         return InvestmentAccount.builder(iban)
                 .setAccountNumber(number)
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .setBankIdentifier(number)
                 .setName(alias)
-                .setBalance(new Amount(IberCajaConstants.currency, balance))
                 .setPortfolios(Collections.singletonList(portfolio))
+                .setCashBalance(new Amount(IberCajaConstants.currency, balance))
                 .build();
+    }
+
+    private Portfolio toTinkPortfolio() {
+
+        // Ibercaja seem to use the same model for all types of accounts, can not find more portfolio data
+        // for our ambassador credentials. Hopefully logging for accounts with active investments will yield
+        // more info.
+
+        Portfolio portfolio = new Portfolio();
+
+        portfolio.setUniqueIdentifier(iban);
+        portfolio.setType(Portfolio.Type.DEPOT);
+        portfolio.setCashValue(balance);   // this is a guessing game, will probably need to be revised.
+        portfolio.setTotalValue(disposed); // this is a guessing game, will probably need to be revised.
+
+        return portfolio;
     }
 
     public CreditCardAccount toTinkCreditCardAccount() {
