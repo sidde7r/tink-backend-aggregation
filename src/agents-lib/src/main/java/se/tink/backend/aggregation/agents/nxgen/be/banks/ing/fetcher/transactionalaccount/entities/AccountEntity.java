@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.google.api.client.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
@@ -226,8 +229,16 @@ public class AccountEntity {
                 .setName(type)
                 .setBankIdentifier(bbanNumber)
                 .addIdentifier(new SepaEurIdentifier(ibanNumber))
-                .setHolderName(loginResponse.getCustomerHolderName().orElse(null))
+                .setHolderName(getHolderName(loginResponse))
                 .build();
+    }
+
+    private HolderName getHolderName(final LoginResponseEntity loginResponse) {
+        // If the name of the account holder is empty, fall back on customer holder name.
+        if (Strings.isNullOrEmpty(name)) {
+            return loginResponse.getCustomerHolderName().orElse(null);
+        }
+        return new HolderName(name);
     }
 
     private AccountTypes getTinkAccountType() {

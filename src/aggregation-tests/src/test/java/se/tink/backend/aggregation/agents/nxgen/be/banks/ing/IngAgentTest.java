@@ -1,27 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 import se.tink.backend.aggregation.rpc.Field;
 
-@Ignore
 public class IngAgentTest {
 
-    private static final String USERNAME = "";
-    private static final String CARD_ID = "";
+    private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.cardId");
 
-    private final AgentIntegrationTest.Builder builder =
-            new AgentIntegrationTest.Builder("be", "be-ing-cardreader")
-                    .addCredentialField(Field.Key.USERNAME, USERNAME)
-                    .addCredentialField("cardId", CARD_ID)
-                    .loadCredentialsBefore(true)
-                    .saveCredentialsAfter(true);
+    @Before
+    public void before() {
+        helper.before();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentHelper.afterClass();
+    }
 
     @Test
     public void testRefresh() throws Exception {
-        builder.build()
+        new AgentIntegrationTest.Builder("be", "be-ing-cardreader")
+                .addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
+                .addCredentialField("cardId", helper.get("tink.cardId"))
+                .loadCredentialsBefore(true)
+                .saveCredentialsAfter(true)
+                .build()
                 .testRefresh();
     }
 }
