@@ -30,8 +30,6 @@ public class IberCajaApiClient {
     public SessionResponse initializeSession(SessionRequest sessionRequest) throws LoginException {
 
         String response = createRequest(IberCajaConstants.Urls.INIT_LOGIN)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
                 .post(String.class, sessionRequest);
 
         SessionResponse sessionResponse = SerializationUtils.deserializeFromString(response, SessionResponse.class);
@@ -50,8 +48,6 @@ public class IberCajaApiClient {
         return createRequest(IberCajaConstants.Urls.LOGIN)
                 .header(IberCajaConstants.Headers.USER, user)
                 .header(IberCajaConstants.Headers.TICKET, ticket)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
                 .post(LoginResponse.class, loginRequest);
     }
 
@@ -60,8 +56,6 @@ public class IberCajaApiClient {
         return createRequest(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .header(IberCajaConstants.Headers.USER, user)
                 .header(IberCajaConstants.Headers.TICKET, ticket)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
                 .get(FetchAccountResponse.class);
     }
 
@@ -74,8 +68,6 @@ public class IberCajaApiClient {
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_END_DATE, dateMax)
                 .header(IberCajaConstants.Headers.USER, user)
                 .header(IberCajaConstants.Headers.TICKET, ticket)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
                 .get(TransactionalDetailsResponse.class);
     }
 
@@ -84,8 +76,6 @@ public class IberCajaApiClient {
         return createRequest(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .header(IberCajaConstants.Headers.USER, user)
                 .header(IberCajaConstants.Headers.TICKET, ticket)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
                 .get(FetchAccountResponse.class);
     }
 
@@ -96,8 +86,6 @@ public class IberCajaApiClient {
                         IberCajaConstants.DefaultRequestParams.IS_SPECIALIST)
                 .header(IberCajaConstants.Headers.USER, user)
                 .header(IberCajaConstants.Headers.TICKET, ticket)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
                 .get(String.class);
     }
 
@@ -106,8 +94,6 @@ public class IberCajaApiClient {
         return createRequest(IberCajaConstants.Urls.FETCH_MAIN_ACCOUNT)
                 .header(IberCajaConstants.Headers.USER, user)
                 .header(IberCajaConstants.Headers.TICKET, ticket)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
                 .get(FetchAccountResponse.class);
     }
 
@@ -123,8 +109,6 @@ public class IberCajaApiClient {
                 .queryParam(IberCajaConstants.QueryParams.REQUEST_END_DATE, dateMax)
                 .header(IberCajaConstants.Headers.USER, user)
                 .header(IberCajaConstants.Headers.TICKET, ticket)
-                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
-                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL)
                 .get(CreditCardResponse.class);
     }
 
@@ -146,7 +130,9 @@ public class IberCajaApiClient {
         return httpClient
                 .request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .header(IberCajaConstants.Headers.PLAYBACK_MODE,
+                        IberCajaConstants.DefaultRequestParams.PLAYBACK_MODE_REAL);
     }
 
 }
