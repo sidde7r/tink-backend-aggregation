@@ -1,6 +1,7 @@
 {
   "clusterid" : "oxford-production",
   "providers" : [
+    "es-americanexpress-password",
     "es-bancopopular-password",
     "es-bancosabadell-password",
     "es-bancosantander-password",
