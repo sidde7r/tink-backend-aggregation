@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyKeyCardAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyInvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionalAccountFetcher;
@@ -45,7 +45,6 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugProxy("http://127.0.0.1:8888");
         client.addMessageReader(new CrossKeyMessageBodyReader(CrossKeyAgent.class.getPackage()));
     }
 
@@ -54,8 +53,8 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
 
         return new AutoAuthenticationController(request, context,
                 new KeyCardAuthenticationController(catalog,
-                        supplementalInformationController,
-                        new CrossKeyAuthenticator(apiClient, agentConfiguration, agentPersistentStorage, credentials),
+                        supplementalInformationHelper,
+                        new CrossKeyKeyCardAuthenticator(apiClient, agentConfiguration, agentPersistentStorage, credentials),
                         CrossKeyConstants.MultiFactorAuthentication.KEYCARD_PIN_LENGTH),
                 new CrossKeyAutoAuthenticator(this.apiClient, agentPersistentStorage, this.credentials));
     }
@@ -84,7 +83,7 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(new InvestmentRefreshController(this.metricRefreshController, this.updateController,
-                new CrossKeyInvestmentsFetcher(this.apiClient)));
+                new CrossKeyInvestmentsFetcher(this.apiClient, agentConfiguration)));
     }
 
     @Override

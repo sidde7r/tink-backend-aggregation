@@ -17,14 +17,14 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.rpc.Credentials;
 
-public class CrossKeyAuthenticator implements KeyCardAuthenticator {
+public class CrossKeyKeyCardAuthenticator implements KeyCardAuthenticator {
 
     private final CrossKeyApiClient apiClient;
     private final CrossKeyConfiguration agentConfiguration;
     private final CrossKeyPersistentStorage persistentStorage;
     private final Credentials credentials;
 
-    public CrossKeyAuthenticator(CrossKeyApiClient apiClient, CrossKeyConfiguration agentConfiguration,
+    public CrossKeyKeyCardAuthenticator(CrossKeyApiClient apiClient, CrossKeyConfiguration agentConfiguration,
             CrossKeyPersistentStorage persistentStorage, Credentials credentials) {
         this.apiClient = apiClient;
         this.agentConfiguration = agentConfiguration;
@@ -64,6 +64,6 @@ public class CrossKeyAuthenticator implements KeyCardAuthenticator {
 
         addDevice.validate(() -> new UnexpectedFailureException(addDevice, "Failure on adding of new device"));
 
-        persistentStorage.persist(addDevice);
+        persistentStorage.persistDeviceIdAndToken(addDevice);
     }
 }
