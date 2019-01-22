@@ -227,6 +227,11 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
         assertThat(results).isEmpty();
     }
 
+    private static boolean isCardNumberField(Field field) {
+        return StringUtils.equalsIgnoreCase(field.getName(), "cardid")
+                && StringUtils.equalsIgnoreCase(field.getDescription(), "card number");
+    }
+
     @Ignore("Ignored until we have fixed all 1109 offending providers")
     @Test
     public void validatePasswordFieldsAreSensitive() {
@@ -250,28 +255,19 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     @Ignore("Ignored until we have fixed all 8 offending providers")
     @Test
     public void validateCardNumberFieldsAreSensitive() {
-        validateFields(
-                (conf, field) ->
-                        StringUtils.equalsIgnoreCase(field.getDescription(), "card number")
-                                && !field.isSensitive());
+        validateFields((conf, field) -> isCardNumberField(field) && !field.isSensitive());
     }
 
     @Ignore("Ignored until we have fixed the two offending providers")
     @Test
     public void validateCardNumberFieldsAreImmutable() {
-        validateFields(
-                (conf, field) ->
-                        StringUtils.equalsIgnoreCase(field.getDescription(), "card number")
-                                && !field.isImmutable());
+        validateFields((conf, field) -> isCardNumberField(field) && !field.isImmutable());
     }
 
     @Ignore("Ignored until we have fixed the offending provider")
     @Test
     public void validateCardNumberFieldsAreNumeric() {
-        validateFields(
-                (conf, field) ->
-                        StringUtils.equalsIgnoreCase(field.getDescription(), "card number")
-                                && !field.isNumeric());
+        validateFields((conf, field) -> isCardNumberField(field) && !field.isNumeric());
     }
 
     @Test
