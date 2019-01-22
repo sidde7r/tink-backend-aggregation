@@ -74,6 +74,6 @@ public class CrossKeyAutoAuthenticator implements PasswordAuthenticator, AutoAut
 
         response.validate(() -> new UnexpectedFailureException(response, "Failure on auto authentication"));
 
-        persistentStorage.persist(response);
+        persistentStorage.persistDeviceToken(response);
     }
 }

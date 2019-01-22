@@ -33,12 +33,12 @@ public class CrossKeyPersistentStorage {
         persistentStorage.remove(CrossKeyConstants.Storage.DEVICE_ID);
     }
 
-    public void persist(AddDeviceResponse addDeviceResponse) {
+    public void persistDeviceIdAndToken(AddDeviceResponse addDeviceResponse) {
         storeToken(addDeviceResponse.getToken());
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_ID, addDeviceResponse.getDeviceId());
     }
 
-    public void persist(LoginWithTokenResponse response) {
+    public void persistDeviceToken(LoginWithTokenResponse response) {
         storeToken(response.getDeviceToken());
     }
 
