@@ -37,8 +37,6 @@ public class IberCajaAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-
-        //client.setDebugProxy("http://127.0.0.1:8888");
     }
 
     @Override
