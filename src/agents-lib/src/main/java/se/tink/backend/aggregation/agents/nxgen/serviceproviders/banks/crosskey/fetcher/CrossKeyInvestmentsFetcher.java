@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.investment.entities.InstrumentDetailsEntity;
@@ -21,9 +22,11 @@ public class CrossKeyInvestmentsFetcher implements AccountFetcher<InvestmentAcco
             CrossKeyInvestmentsFetcher.class);
 
     private final CrossKeyApiClient client;
+    private final CrossKeyConfiguration agentConfiguration;
 
-    public CrossKeyInvestmentsFetcher(CrossKeyApiClient client) {
+    public CrossKeyInvestmentsFetcher(CrossKeyApiClient client, CrossKeyConfiguration agentConfiguration) {
         this.client = client;
+        this.agentConfiguration = agentConfiguration;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class CrossKeyInvestmentsFetcher implements AccountFetcher<InvestmentAcco
                     if (!account.isKnownPortfolioType()) {
                         logPortfolioData(account);
                     }
-                    return account.toInvestmentAccount(fetchPortfolio(account));
+                    return account.toInvestmentAccount(agentConfiguration, fetchPortfolio(account));
                 })
                 .collect(Collectors.toList());
     }

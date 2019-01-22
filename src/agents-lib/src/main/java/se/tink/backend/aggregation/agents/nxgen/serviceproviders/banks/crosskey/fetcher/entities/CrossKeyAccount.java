@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities;
 
 import com.google.common.base.Strings;
-import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.entities.LoanDetailsEntity;
@@ -10,12 +9,8 @@ import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
 import se.tink.backend.system.rpc.Portfolio;
-import se.tink.libraries.account.identifiers.FinnishIdentifier;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 @JsonObject
 public class CrossKeyAccount {
@@ -66,22 +61,8 @@ public class CrossKeyAccount {
         return type == AccountTypes.INVESTMENT;
     }
 
-    public InvestmentAccount toInvestmentAccount(Portfolio portfolio) {
-        HolderName accountHolderName = null;
-        if (!Strings.isNullOrEmpty(accountOwnerName)) {
-            accountHolderName = new HolderName(accountOwnerName);
-        }
-
-        return InvestmentAccount.builder(accountId)
-                .setCashBalance(new Amount(currency, 0))
-                .setAccountNumber(bbanFormatted)
-                .setName(accountNickname)
-                .addIdentifier(new IbanIdentifier(bic, accountNumber))
-                .addIdentifier(new FinnishIdentifier(bban))
-                .setBankIdentifier(accountId)
-                .setHolderName(accountHolderName)
-                .setPortfolios(Collections.singletonList(portfolio))
-                .build();
+    public InvestmentAccount toInvestmentAccount(CrossKeyConfiguration agentConfiguration, Portfolio portfolio) {
+        return agentConfiguration.parseInvestmentAccount(this, portfolio);
     }
 
     public boolean isKnownPortfolioType() {
