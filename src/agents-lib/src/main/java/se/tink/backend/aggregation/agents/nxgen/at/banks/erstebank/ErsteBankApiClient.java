@@ -138,7 +138,7 @@ public class ErsteBankApiClient {
 
         getRequestWithHeaders(ErsteBankConstants.URLS.SPARKASSE_BASE,
                 ErsteBankConstants.URLS.LOGOUT, MediaType.APPLICATION_JSON, bearer)
-                .get(HttpResponse.class);
+                .delete(HttpResponse.class);
     }
 
     public void saveToken(TokenEntity tokenEntity) {
