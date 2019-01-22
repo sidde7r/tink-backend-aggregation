@@ -38,9 +38,7 @@ public class CrossKeyCreditCardFetcher
         try {
             String deviceId = persistentStorage.getDeviceId();
             CardsResponse cardsResponse = client.fetchCards(new CardsRequest(deviceId));
-            if (cardsResponse != null &&
-                    (cardsResponse.getCards().size() > 0 || cardsResponse.hasData())
-                    ) {
+            if (hasCreditCardData(cardsResponse)) {
                 LOG.info("User has some kind of card ");
                 LOG.info(SerializationUtils.serializeToString(cardsResponse));
             }
@@ -62,5 +60,10 @@ public class CrossKeyCreditCardFetcher
                 .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions);
+    }
+
+    private boolean hasCreditCardData(CardsResponse cardsResponse) {
+        return cardsResponse != null &&
+                (cardsResponse.getCards().size() > 0 || cardsResponse.hasData());
     }
 }
