@@ -317,8 +317,11 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
 
         } catch (UniformInterfaceException e) {
-            log.error("Account update request failed, response: " +
-                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
+            log.error(
+                    "Account update request failed, response: "
+                            + (e.getResponse().hasEntity()
+                                    ? e.getResponse().getEntity(String.class)
+                                    : ""));
             throw e;
         }
 
