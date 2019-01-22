@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.banks;
 
 import com.google.common.collect.Maps;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import org.apache.http.impl.cookie.BasicClientCookie;
 import org.junit.Assert;
@@ -10,9 +9,9 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.banks.lansforsakringar.Session;
-import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.TransferType;
@@ -57,16 +56,9 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
         LansforsakringarAgent agent = (LansforsakringarAgent) factory
                 .create(cls, createRefreshInformationRequest(credentials), testContext);
         agent.login();
-        List<Account> accounts = agent.fetchCheckingAccounts().getAccounts();
-        agent.fetchSavingsAccounts();
-        agent.fetchCheckingTransactions();
-        agent.fetchSavingsTransactions();
-        agent.fetchCreditCardAccounts();
-        agent.fetchCreditCardTransactions();
-        agent.fetchEInvoices();
-        agent.fetchTransferDestinations(accounts);
-        agent.fetchLoanAccounts();
-        agent.fetchInvestmentAccounts();
+        for (RefreshableItem item : RefreshableItem.values()) {
+            agent.refresh(item);
+        }
         agent.keepAlive();
         agent.logout();
         agent.close();
