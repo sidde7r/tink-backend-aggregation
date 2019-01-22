@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.TransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBankenFormatUtils;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.Field;
@@ -43,14 +43,14 @@ public class IcaBankenExecutorHelper {
     private IcaBankenApiClient apiClient;
     private final AgentContext context;
     private final Catalog catalog;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     public IcaBankenExecutorHelper(IcaBankenApiClient apiClient, AgentContext context, Catalog catalog,
-            SupplementalInformationController supplementalInformationController) {
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.context = context;
         this.catalog = catalog;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     public AccountEntity findSourceAccount(final AccountIdentifier source, Collection<AccountEntity> accounts) {
@@ -136,7 +136,7 @@ public class IcaBankenExecutorHelper {
 
     private String askUserForDestinationName() {
         try {
-            Map<String, String> nameResponse = supplementalInformationController
+            Map<String, String> nameResponse = supplementalInformationHelper
                     .askSupplementalInformation(getNameInputField());
             String destinationName = nameResponse.get(IcaBankenConstants.Transfers.RECIPIENT_NAME_FIELD_NAME);
 

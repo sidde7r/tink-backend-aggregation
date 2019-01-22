@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -31,7 +31,7 @@ public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdP
     private static final Base64.Encoder encoder = Base64.getUrlEncoder();
 
     private final PersistentStorage persistentStorage;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final OAuth2Authenticator authenticator;
 
     private final String state;
@@ -41,10 +41,10 @@ public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdP
     private static final long WAIT_FOR_MINUTES = 9;
 
     public OAuth2AuthenticationController(PersistentStorage persistentStorage,
-            SupplementalInformationController supplementalInformationController,
+            SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator) {
         this.persistentStorage = persistentStorage;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.authenticator = authenticator;
 
         this.state = generateRandomState();
@@ -114,7 +114,7 @@ public class OAuth2AuthenticationController implements AutoAuthenticator, ThirdP
     public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException,
             AuthorizationException {
 
-        Map<String, String> callbackData = supplementalInformationController.waitForSupplementalInformation(
+        Map<String, String> callbackData = supplementalInformationHelper.waitForSupplementalInformation(
                 formatSupplementalKey(state),
                 WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES

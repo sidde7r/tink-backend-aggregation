@@ -46,7 +46,7 @@ public class NordeaFiAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
         return new ThirdPartyAppAuthenticationController<>(
                 new NordeaCodesAuthenticator(apiClient, sessionStorage),
-                supplementalInformationController);
+                supplementalInformationHelper);
     }
 
     @Override

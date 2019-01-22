@@ -43,13 +43,13 @@ public class RaiffeisenAgent extends NextGenerationAgent {
         RaiffeisenOAuth2Authenticator authenticator = new RaiffeisenOAuth2Authenticator(raiffeisenApiClient);
         OAuth2AuthenticationController oAuth2AuthenticationController = new OAuth2AuthenticationController(
                 persistentStorage,
-                supplementalInformationController, authenticator);
+                supplementalInformationHelper, authenticator);
         return new AutoAuthenticationController(
                 request,
                 context,
                 new ThirdPartyAppAuthenticationController<>(
                         oAuth2AuthenticationController,
-                        supplementalInformationController
+                        supplementalInformationHelper
                 ),
                 oAuth2AuthenticationController);
     }

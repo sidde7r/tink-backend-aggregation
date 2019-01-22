@@ -126,7 +126,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     @Override
     protected Optional<TransferController> constructTransferController() {
         SwedbankTransferHelper transferHelper = new SwedbankTransferHelper(context, catalog,
-                supplementalInformationController, apiClient);
+                supplementalInformationHelper, apiClient);
         SwedbankDefaultBankTransferExecutorNxgen transferExecutor = new SwedbankDefaultBankTransferExecutorNxgen(
                 catalog, apiClient, transferHelper);
         SwedbankDefaultPaymentExecutor paymentExecutor = new SwedbankDefaultPaymentExecutor(catalog, apiClient,

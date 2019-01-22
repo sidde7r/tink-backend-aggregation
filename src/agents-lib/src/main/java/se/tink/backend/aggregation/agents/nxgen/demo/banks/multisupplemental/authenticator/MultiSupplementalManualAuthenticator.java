@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
@@ -37,12 +37,12 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
                     + "Enter the security code and press Ok. "
                     + "Provide the given return code in the input field to continue \n";
 
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final static Random random = new Random();
 
-    public MultiSupplementalManualAuthenticator(SupplementalInformationController supplementalInformationController,
+    public MultiSupplementalManualAuthenticator(SupplementalInformationHelper supplementalInformationHelper,
             Catalog catalog) {
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
 
         this.catalog = catalog;
     }
@@ -88,7 +88,7 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
         }
 
         checkAnswers(
-                supplementalInformationController.askSupplementalInformation(
+                supplementalInformationHelper.askSupplementalInformation(
                         newField(loginDesciptionField, "Security Code" ,  String.format("%04d", random.nextInt(10000)), catalog.getString(descriptionCode)),
                         newField(loginInputField, "Input Code", null)),
                 code1,
@@ -97,7 +97,7 @@ public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenti
         );
 
         checkAnswers(
-                supplementalInformationController.askSupplementalInformation(
+                supplementalInformationHelper.askSupplementalInformation(
                         newField(loginChallengeField, "Login Code", String.format("%04d", random.nextInt(10000)), catalog.getString(secondDescriptionCode)),
                         newField(loginChallengeInputField, "Input Code", null)),
                 code2,

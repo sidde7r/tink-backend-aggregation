@@ -72,12 +72,12 @@ public class ICSAgent extends NextGenerationAgent {
     ICSOAuthAuthenticator authenticator = new ICSOAuthAuthenticator(icsApiClient);
     OAuth2AuthenticationController oAuth2AuthenticationController =
         new OAuth2AuthenticationController(
-            persistentStorage, supplementalInformationController, authenticator);
+            persistentStorage, supplementalInformationHelper, authenticator);
     return new AutoAuthenticationController(
         request,
         context,
         new ThirdPartyAppAuthenticationController<>(
-            oAuth2AuthenticationController, supplementalInformationController),
+            oAuth2AuthenticationController, supplementalInformationHelper),
         oAuth2AuthenticationController);
   }
 

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
@@ -18,22 +18,22 @@ import se.tink.libraries.i18n.LocalizableKey;
 public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuthenticator {
 
     private final ThirdPartyAppAuthenticator<T> authenticator;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final int maxPollAttempts;
 
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
 
     public ThirdPartyAppAuthenticationController(ThirdPartyAppAuthenticator<T> authenticator,
-            SupplementalInformationController supplementalInformationController) {
-        this(authenticator, supplementalInformationController, DEFAULT_MAX_ATTEMPTS);
+            SupplementalInformationHelper supplementalInformationHelper) {
+        this(authenticator, supplementalInformationHelper, DEFAULT_MAX_ATTEMPTS);
     }
 
     public ThirdPartyAppAuthenticationController(ThirdPartyAppAuthenticator<T> authenticator,
-            SupplementalInformationController supplementalInformationController, int maxPollAttempts) {
+            SupplementalInformationHelper supplementalInformationHelper, int maxPollAttempts) {
         Preconditions.checkArgument(maxPollAttempts > 0);
         this.authenticator = authenticator;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.maxPollAttempts = maxPollAttempts;
     }
 
@@ -46,7 +46,7 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
         ThirdPartyAppAuthenticationPayload payload = authenticator.getAppPayload();
         Preconditions.checkNotNull(payload);
 
-        supplementalInformationController.openThirdPartyApp(payload);
+        supplementalInformationHelper.openThirdPartyApp(payload);
     }
 
     private ThirdPartyAppException decorateException(ThirdPartyAppStatus status, ThirdPartyAppError error) {

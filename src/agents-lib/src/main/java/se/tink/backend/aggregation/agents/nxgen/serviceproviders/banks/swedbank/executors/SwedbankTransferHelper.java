@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.Field;
@@ -33,14 +33,14 @@ public class SwedbankTransferHelper {
 
     private final AgentContext context;
     private final Catalog catalog;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankDefaultApiClient apiClient;
 
     public SwedbankTransferHelper(AgentContext context, Catalog catalog,
-            SupplementalInformationController supplementalInformationController, SwedbankDefaultApiClient apiClient) {
+            SupplementalInformationHelper supplementalInformationHelper, SwedbankDefaultApiClient apiClient) {
         this.context = context;
         this.catalog = catalog;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
     }
 
@@ -157,7 +157,7 @@ public class SwedbankTransferHelper {
 
         Field nameField = getNameField();
         try {
-            Map<String, String> answers = supplementalInformationController.askSupplementalInformation(nameField);
+            Map<String, String> answers = supplementalInformationHelper.askSupplementalInformation(nameField);
             return Optional.ofNullable(answers.get("name"));
         } catch (SupplementalInfoException e) {
             return Optional.empty();

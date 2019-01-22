@@ -34,7 +34,7 @@ public class DanskeBankFIAgent extends DanskeBankAgent {
 
         return new AutoAuthenticationController(request, context,
                 new KeyCardAuthenticationController(
-                        catalog, supplementalInformationController, danskeBankChallengeAuthenticator),
+                        catalog, supplementalInformationHelper, danskeBankChallengeAuthenticator),
                 danskeBankChallengeAuthenticator);
     }
 }

@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.authentica
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.authenticator.rpc.LoginWithoutTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.authenticator.rpc.LoginWithoutTokenResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
@@ -26,15 +26,15 @@ public class AlandsBankenMultifFactorAuthenticator implements MultiFactorAuthent
 
     private final AlandsBankenApiClient client;
     private final AlandsBankenPersistentStorage persistentStorage;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
 
     public AlandsBankenMultifFactorAuthenticator(
             AlandsBankenApiClient client,
             AlandsBankenPersistentStorage persistentStorage,
-            SupplementalInformationController supplementalInformationController) {
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.client = client;
         this.persistentStorage = persistentStorage;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class AlandsBankenMultifFactorAuthenticator implements MultiFactorAuthent
         );
         challenge.validate(() -> new UnexpectedFailureException(challenge, "Failure on login"));
 
-        Map<String, String> supplementalInformation = supplementalInformationController.askSupplementalInformation(
+        Map<String, String> supplementalInformation = supplementalInformationHelper.askSupplementalInformation(
                 getKeyField(challenge), getTokenField());
 
         ConfirmTanCodeResponse confirmation = client.confirmTanCode(

@@ -44,7 +44,7 @@ public abstract class SamlinkAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new AutoAuthenticationController(request, context,
-                new KeyCardAuthenticationController(catalog, supplementalInformationController,
+                new KeyCardAuthenticationController(catalog, supplementalInformationHelper,
                         new SamlinkKeyCardAuthenticator(apiClient, samlinkPersistentStorage, credentials)),
                 new SamlinkAutoAuthenticator(apiClient, samlinkPersistentStorage, credentials));
     }

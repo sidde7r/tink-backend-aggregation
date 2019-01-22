@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenti
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticatorNO;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.Field;
@@ -37,18 +37,18 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
 
     private final SparebankenSorApiClient apiClient;
     private final EncapClient encapClient;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final Catalog catalog;
     private final SessionStorage sessionStorage;
     private final String mobilenumber;
     private int pollWaitCounter;
 
     public SparebankenSorMultiFactorAuthenticator(SparebankenSorApiClient apiClient, EncapClient encapClient,
-            SupplementalInformationController supplementalInformationController, Catalog catalog,
+            SupplementalInformationHelper supplementalInformationHelper, Catalog catalog,
             SessionStorage sessionStorage, String mobilenumber) {
         this.apiClient = apiClient;
         this.encapClient = encapClient;
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.catalog = catalog;
         this.sessionStorage = sessionStorage;
         this.mobilenumber = mobilenumber;
@@ -128,7 +128,7 @@ public class SparebankenSorMultiFactorAuthenticator implements BankIdAuthenticat
                     "Sparebanken Sor - Something went wrong when sending request for getting activation code via sms");
         }
 
-        Map<String, String> activationCodeResponse = supplementalInformationController.askSupplementalInformation(
+        Map<String, String> activationCodeResponse = supplementalInformationHelper.askSupplementalInformation(
                 getActivationCodeField());
 
         evryToken = encapClient.activateAndAuthenticateUser(

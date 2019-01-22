@@ -42,7 +42,7 @@ public class RevolutAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         SmsOtpAuthenticationPasswordController smsOtpAuthenticationController =
-                new SmsOtpAuthenticationPasswordController<>(catalog, supplementalInformationController,
+                new SmsOtpAuthenticationPasswordController<>(catalog, supplementalInformationHelper,
                         new RevolutMultifactorAuthenticator(apiClient, persistentStorage), 6);
 
         return new AutoAuthenticationController(request, context, smsOtpAuthenticationController,

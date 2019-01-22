@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -30,17 +31,17 @@ import java.util.Map;
 public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
     private static final String KEYCARD_VALUE_FIELD_KEY = "keyCardValue";
     private static final int DEFAULT_KEY_CARD_VALUE_LENGTH = 6;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final Catalog catalog;
     private final AktiaApiClient apiClient;
     private final Credentials credentials;
     private final SessionStorage sessionStorage;
     private final EncapClient encapClient;
 
-    private AktiaKeyCardAuthenticator(SupplementalInformationController supplementalInformationController,
+    private AktiaKeyCardAuthenticator(SupplementalInformationHelper supplementalInformationHelper,
                                      Catalog catalog, AktiaApiClient apiClient, Credentials credentials,
                                      SessionStorage sessionStorage, EncapClient encapClient) {
-        this.supplementalInformationController = supplementalInformationController;
+        this.supplementalInformationHelper = supplementalInformationHelper;
         this.catalog = catalog;
         this.apiClient = apiClient;
         this.credentials = credentials;
@@ -49,10 +50,10 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
     }
 
     public static AktiaKeyCardAuthenticator createKeyCardAuthenticator(
-            SupplementalInformationController supplementalInformationController, Catalog catalog,
+            SupplementalInformationHelper supplementalInformationHelper, Catalog catalog,
             AktiaApiClient apiClient, Credentials credentials, SessionStorage sessionStorage, EncapClient encapClient) {
         return new AktiaKeyCardAuthenticator(
-                supplementalInformationController, catalog, apiClient, credentials, sessionStorage, encapClient);
+                supplementalInformationHelper, catalog, apiClient, credentials, sessionStorage, encapClient);
     }
 
     @Override
@@ -123,7 +124,7 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
         apiClient.productsSummary();
 
         // == START Device pinning ==
-        Map<String, String> challengeResponse = supplementalInformationController.askSupplementalInformation(
+        Map<String, String> challengeResponse = supplementalInformationHelper.askSupplementalInformation(
                 getKeyCardIndexField(otpInfo), getKeyCardValueField());
 
         OtpDevicePinningResponse otpDevicePinningResponse = apiClient.deviceRegistration(

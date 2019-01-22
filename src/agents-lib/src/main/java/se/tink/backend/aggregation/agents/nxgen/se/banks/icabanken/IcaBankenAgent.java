@@ -134,7 +134,7 @@ public class IcaBankenAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferController> constructTransferController() {
         IcaBankenExecutorHelper executorHelper = new IcaBankenExecutorHelper(apiClient, context, catalog,
-                supplementalInformationController);
+                supplementalInformationHelper);
 
         return Optional.of(
                 new TransferController(

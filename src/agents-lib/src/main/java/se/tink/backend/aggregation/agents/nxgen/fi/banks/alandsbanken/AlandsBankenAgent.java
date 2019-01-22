@@ -47,7 +47,7 @@ public class AlandsBankenAgent extends NextGenerationAgent {
         AlandsBankenPersistentStorage persistentStorage = new AlandsBankenPersistentStorage(this.persistentStorage);
         return new AutoAuthenticationController(this.request, this.context,
                 new AlandsBankenMultifFactorAuthenticator(this.bankClient, persistentStorage,
-                        this.supplementalInformationController),
+                        this.supplementalInformationHelper),
                 new AlandsBankenAutoAuthenticator(this.bankClient, persistentStorage, this.credentials)
         );
     }

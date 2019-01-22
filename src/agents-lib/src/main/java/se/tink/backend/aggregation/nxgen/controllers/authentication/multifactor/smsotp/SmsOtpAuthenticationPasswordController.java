@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
@@ -21,20 +21,20 @@ public class SmsOtpAuthenticationPasswordController<T> implements MultiFactorAut
     private static final String OTP_VALUE_FIELD_KEY = "otpValue";
 
     private final Catalog catalog;
-    private final SupplementalInformationController supplementalInformationController;
+    private final SupplementalInformationHelper supplementalInformationHelper;
     private final SmsOtpAuthenticatorPassword<T> authenticator;
     private final int otpValueLength;
 
     public SmsOtpAuthenticationPasswordController(Catalog catalog,
-            SupplementalInformationController supplementalInformationController, SmsOtpAuthenticatorPassword<T> authenticator) {
-        this(catalog, supplementalInformationController, authenticator, DEFAULT_OTP_VALUE_LENGTH);
+            SupplementalInformationHelper supplementalInformationHelper, SmsOtpAuthenticatorPassword<T> authenticator) {
+        this(catalog, supplementalInformationHelper, authenticator, DEFAULT_OTP_VALUE_LENGTH);
     }
 
     public SmsOtpAuthenticationPasswordController(Catalog catalog,
-            SupplementalInformationController supplementalInformationController,
+            SupplementalInformationHelper supplementalInformationHelper,
             SmsOtpAuthenticatorPassword<T> authenticator, int otpValueLength) {
         this.catalog = Preconditions.checkNotNull(catalog);
-        this.supplementalInformationController = Preconditions.checkNotNull(supplementalInformationController);
+        this.supplementalInformationHelper = Preconditions.checkNotNull(supplementalInformationHelper);
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.otpValueLength = otpValueLength;
     }
@@ -59,7 +59,7 @@ public class SmsOtpAuthenticationPasswordController<T> implements MultiFactorAut
 
         T initValues = authenticator.init(username, password);
 
-        Map<String, String> supplementalInformation = supplementalInformationController
+        Map<String, String> supplementalInformation = supplementalInformationHelper
                 .askSupplementalInformation(getOtpField());
 
         authenticator.authenticate(supplementalInformation.get(OTP_VALUE_FIELD_KEY), initValues);

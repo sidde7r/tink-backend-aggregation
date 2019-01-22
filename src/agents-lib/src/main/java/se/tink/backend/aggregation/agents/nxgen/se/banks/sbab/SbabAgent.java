@@ -71,9 +71,9 @@ public class SbabAgent extends NextGenerationAgent {
         return new ThirdPartyAppAuthenticationController<>(
                 new OAuth2AuthenticationController(
                         persistentStorage,
-                        supplementalInformationController,
+                        supplementalInformationHelper,
                         new SbabAuthenticator(apiClient, sessionStorage, persistentStorage)),
-                supplementalInformationController);
+                supplementalInformationHelper);
     }
 
     @Override

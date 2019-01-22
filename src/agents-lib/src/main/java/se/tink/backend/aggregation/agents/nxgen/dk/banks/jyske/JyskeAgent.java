@@ -45,7 +45,7 @@ public class JyskeAgent extends NextGenerationAgent {
         JyskePersistentStorage persistentStorage = new JyskePersistentStorage(this.persistentStorage);
 
         return new AutoAuthenticationController(request, context,
-                new KeyCardAuthenticationController(catalog, supplementalInformationController,
+                new KeyCardAuthenticationController(catalog, supplementalInformationHelper,
                         new JyskeKeyCardAuthenticator(apiClient, persistentStorage)),
                 new JyskeAutoAuthenticator(apiClient, persistentStorage, credentials));
     }
