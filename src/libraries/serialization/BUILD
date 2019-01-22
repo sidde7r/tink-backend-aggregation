@@ -1,5 +1,5 @@
 java_library(
-    name = "serialization-utils",
+    name = "serialization",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [

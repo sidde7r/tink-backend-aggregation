@@ -4,7 +4,7 @@ java_binary(
     main_class = "se.tink.backend.aggregation.UkobRegisterCommand",
     deps = [
         "//:agents-lib",
-        "//src/libraries/serialization_utils:serialization-utils",
+        "//src/libraries/serialization:serialization",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
     ],
 )
