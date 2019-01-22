@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.rpc.Field;
 
+@Ignore
 public class AlandsBankenFIAgentTest {
     private static final String USERNAME = "";
     private static final String PASSWORD = "";
