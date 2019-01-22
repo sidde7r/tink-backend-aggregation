@@ -15,24 +15,24 @@ public class IberCajaInvestmentAccountFetcher implements AccountFetcher<Investme
 
     private static final Logger logger = LoggerFactory.getLogger(IberCajaInvestmentAccountFetcher.class);
     private final IberCajaApiClient bankClient;
-    private final SessionStorage storage;
+    private final SessionStorage sessionStorage;
 
     public IberCajaInvestmentAccountFetcher(IberCajaApiClient bankClient,
-            SessionStorage storage) {
+            SessionStorage sessionStorage) {
         this.bankClient = bankClient;
-        this.storage = storage;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        FetchAccountResponse fetchAccount = bankClient
-                .fetchInvestmentAccounList(storage.get(TICKET), storage.get(USERNAME));
-        Collection<InvestmentAccount> investmentAccounts = fetchAccount.getInvestmentAccounts();
+        FetchAccountResponse accounts = bankClient
+                .fetchInvestmentAccounList(sessionStorage.get(TICKET), sessionStorage.get(USERNAME));
+        Collection<InvestmentAccount> investmentAccounts = accounts.getInvestmentAccounts();
 
         for (InvestmentAccount i : investmentAccounts) {
             String investmentResponse = bankClient
-                    .fetchInvestmentTransactionDetails(i.getBankIdentifier(), storage.get(TICKET),
-                            storage.get(USERNAME));
+                    .fetchInvestmentTransactionDetails(i.getBankIdentifier(), sessionStorage.get(TICKET),
+                            sessionStorage.get(USERNAME));
             logger.info(investmentResponse);
         }
 
