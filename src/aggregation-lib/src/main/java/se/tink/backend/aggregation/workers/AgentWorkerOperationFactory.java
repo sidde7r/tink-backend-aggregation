@@ -174,7 +174,7 @@ public class AgentWorkerOperationFactory {
         return items;
     }
 
-    private List<AgentWorkerCommand> createOrderedRefreshableItemsCommand(
+    private List<AgentWorkerCommand> createOrderedRefreshableItemsCommands(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh) {
@@ -322,10 +322,10 @@ public class AgentWorkerOperationFactory {
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)));
         commands.addAll(
-                createRefreshAccountsCommand(request, context, request.getItemsToRefresh()));
+                createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         commands.addAll(
-                createOrderedRefreshableItemsCommand(request, context, request.getItemsToRefresh()));
+                createOrderedRefreshableItemsCommands(request, context, request.getItemsToRefresh()));
 
         log.debug("Created refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -352,14 +352,14 @@ public class AgentWorkerOperationFactory {
         String operationName = "execute-transfer";
 
         List<AgentWorkerCommand> commands =
-                createTransferBaseCommand(
+                createTransferBaseCommands(
                         clientInfo, request, context, operationName, controllerWrapper);
         commands.addAll(
-                createRefreshAccountsCommand(
+                createRefreshAccountsCommands(
                         request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         commands.addAll(
-                createOrderedRefreshableItemsCommand(
+                createOrderedRefreshableItemsCommands(
                         request, context, RefreshableItem.REFRESHABLE_ITEMS_ALL));
 
         return new AgentWorkerOperation(
@@ -387,10 +387,10 @@ public class AgentWorkerOperationFactory {
         String operationName = "execute-whitelisted-transfer";
 
         List<AgentWorkerCommand> commands =
-                createTransferBaseCommand(
+                createTransferBaseCommands(
                         clientInfo, request, context, operationName, controllerWrapper);
         commands.addAll(
-                createWhitelistRefreshableItemsCommand(
+                createWhitelistRefreshableItemsCommands(
                         request,
                         context,
                         RefreshableItem.REFRESHABLE_ITEMS_ALL,
@@ -400,7 +400,7 @@ public class AgentWorkerOperationFactory {
                 agentWorkerOperationState, operationName, request, commands, context);
     }
 
-    private List<AgentWorkerCommand> createTransferBaseCommand(
+    private List<AgentWorkerCommand> createTransferBaseCommands(
             ClientInfo clientInfo,
             TransferRequest request,
             AgentWorkerCommandContext context,
@@ -569,7 +569,7 @@ public class AgentWorkerOperationFactory {
     }
 
     // for each account type,
-    private List<AgentWorkerCommand> createRefreshAccountsCommand(
+    private List<AgentWorkerCommand> createRefreshAccountsCommands(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh) {
@@ -646,7 +646,7 @@ public class AgentWorkerOperationFactory {
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)));
         commands.addAll(
-                createWhitelistRefreshableItemsCommand(
+                createWhitelistRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
 
         log.debug("Created whitelist refresh operation chain for credential");
@@ -706,14 +706,14 @@ public class AgentWorkerOperationFactory {
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)));
         commands.addAll(
-                createWhitelistRefreshableItemsCommand(
+                createWhitelistRefreshableItemsCommands(
                         request, context, request.getItemsToRefresh(), controllerWrapper));
 
         return new AgentWorkerOperation(
                 agentWorkerOperationState, operationMetricName, request, commands, context);
     }
 
-    private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsCommand(
+    private ImmutableList<AgentWorkerCommand> createWhitelistRefreshableItemsCommands(
             CredentialsRequest request,
             AgentWorkerCommandContext context,
             Set<RefreshableItem> itemsToRefresh,
@@ -741,7 +741,7 @@ public class AgentWorkerOperationFactory {
         // === START REFRESHING ===
         if (accountItems.size() > 0) {
             // Start refreshing all account items
-            commands.addAll(createRefreshAccountsCommand(request, context, accountItems));
+            commands.addAll(createRefreshAccountsCommands(request, context, accountItems));
 
             // If this is an optIn request we request the caller do supply supplemental information
             // with the
