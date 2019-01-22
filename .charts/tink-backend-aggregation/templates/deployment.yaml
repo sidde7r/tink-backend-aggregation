@@ -1,3 +1,4 @@
+{{- $clusterName := printf "%s-%s" .Values.Cluster .Values.Environment }}
 {{- $agentsConfig := .Values.agents | default dict }}
 apiVersion: apps/v1
 kind: Deployment
@@ -17,6 +18,7 @@ spec:
       labels:
         app: aggregation-service
       annotations:
+        iam.amazonaws.com/role: "{{ $clusterName }}/aggregation-{{ $clusterName }}"
         # Force rollout of new pods if the config has changed
         checksum/aggregation-config: {{ include (print $.Template.BasePath "/aggregation-config.yaml") . | sha256sum }}
         checksum/agents-config: {{ include (print $.Template.BasePath "/agents-config.yaml") . | sha256sum }}
