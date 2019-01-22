@@ -56,7 +56,7 @@ import se.tink.backend.core.DocumentIdentifier;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.serialization.TypeReferences;
+import se.tink.libraries.serialization.TypeReferences;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Transaction;

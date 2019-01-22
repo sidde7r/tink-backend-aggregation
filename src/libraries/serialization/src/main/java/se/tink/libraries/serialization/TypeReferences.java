@@ -1,4 +1,4 @@
-package se.tink.backend.serialization;
+package se.tink.libraries.serialization;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.awt.Point;
