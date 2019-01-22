@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.rpc.Field;
 public class AsLhvAgentTest {
     private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
 
-    private static final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("ee",
+    private final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("ee",
             "ee-aslhv-password")
             .loadCredentialsBefore(false)
             .saveCredentialsAfter(false);

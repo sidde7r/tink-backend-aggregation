@@ -675,6 +675,7 @@ junit_test(
         ":provider-configuration-api",
         ":provider-configuration-lib",
         "//src/libraries/metrics",
+        "//src/libraries/pair",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",

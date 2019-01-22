@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.rpc.Field;
 public class ArgentaAgentTest {
     private static final String USERNAME = "";
 
-    private static final AgentIntegrationTest.Builder builder =
+    private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-argenta-cardreader")
                     .addCredentialField(Field.Key.USERNAME, USERNAME)
                     .loadCredentialsBefore(true)

@@ -234,7 +234,7 @@
         },
         {
           "description": "Security code",
-          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter the security code.\nPress 'OK'.\nThe following message is displayed on the card reader 'Register your device?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
+          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter the security code.\nPress 'OK'.\nThe following message is displayed on the card reader: 'Register your device?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
           "immutable": true,
           "masked": false,
           "name": "signcodedescription"
