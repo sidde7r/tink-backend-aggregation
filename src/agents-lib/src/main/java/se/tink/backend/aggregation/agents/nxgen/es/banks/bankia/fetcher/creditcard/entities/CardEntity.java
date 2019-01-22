@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -36,5 +34,21 @@ public class CardEntity {
         if (creditLimit.toTinkAmount().isPositive()) {
             return availableBalance.toTinkAmount().subtract(creditLimit.toTinkAmount());
         } return availableBalance.toTinkAmount();
+    }
+
+    public ContractEntity getContract() {
+        return contract;
+    }
+
+    public boolean isInformedBalance() {
+        return informedBalance;
+    }
+
+    public AmountEntity getAvailableBalance() {
+        return availableBalance;
+    }
+
+    public AmountEntity getCreditLimit() {
+        return creditLimit;
     }
 }
