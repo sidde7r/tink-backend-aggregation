@@ -13,8 +13,12 @@
     "passwordHelpText" : "Please authenticate yourself with your Belfius credentials. You will also need your Belfius card reader to finish the authentication.",
     "payload" : null,
     "popular" : false,
-    "refreshFrequency" : 4.0,
+    "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
+    "refreshschedule": {
+      "from": "23:00",
+      "to": "07:00"
+    },
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -238,8 +242,12 @@
     "passwordHelpText" : "Please authenticate yourself with your KBC credentials. You will also need your KBC card reader to finish the authentication.",
     "payload" : null,
     "popular" : false,
-    "refreshFrequency" : 4.0,
+    "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
+    "refreshschedule": {
+      "from": "23:00",
+      "to": "07:00"
+    },
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -332,8 +340,12 @@
     "passwordHelpText" : "Please authenticate yourself with your ING credentials. You will also need your ING card reader to finish the authentication. By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions]‌‌‌(https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
     "payload" : null,
     "popular" : false,
-    "refreshFrequency" : 4.0,
+    "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
+    "refreshschedule": {
+      "from": "23:00",
+      "to": "07:00"
+    },
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -422,8 +434,12 @@
     "passwordHelpText" : null,
     "payload" : null,
     "popular" : false,
-    "refreshFrequency" : 4.0,
+    "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
+    "refreshschedule": {
+      "from": "23:00",
+      "to": "07:00"
+    },
     "status" : "OBSOLETE",
     "transactional" : true,
     "type" : "BANK",
