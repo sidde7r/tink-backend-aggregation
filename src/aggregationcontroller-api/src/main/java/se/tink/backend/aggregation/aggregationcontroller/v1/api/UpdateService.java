@@ -58,14 +58,14 @@ public interface UpdateService {
      * refer to <code>updateAccount</code> on <code>POST /accounts/update</code>.
      *
      * @param accountId the id of the account to update
-     * @param account the new account of which meta data will be copied from
+     * @param newBankId bankId in new format
      * @return
      */
     @PUT
-    @Path("/accounts/{id}/meta")
+    @Path("/accounts/{id}/bankid")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Account updateAccountMetaData(@PathParam(value = "id") String accountId, se.tink.backend.core.Account account);
+    Account updateAccountMetaData(@PathParam(value = "id") String accountId, String newBankId);
 
     @POST
     @Path("/accounts/transfer-destinations/update")

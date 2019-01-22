@@ -60,8 +60,8 @@ public class ControllerWrapper {
         return client.updateAccount(configuration, request);
     }
 
-    public Account updateAccountMetaData(String accountId, se.tink.backend.core.Account account) {
-        return client.updateAccountMetaData(configuration, accountId, account);
+    public Account updateAccountMetaData(String accountId, String newBankId) {
+        return client.updateAccountMetaData(configuration, accountId, newBankId);
     }
 
     public Response updateTransferDestinationPatterns(
