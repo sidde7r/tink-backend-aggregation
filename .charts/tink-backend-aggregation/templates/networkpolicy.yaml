@@ -13,6 +13,17 @@ spec:
 
   ingress:
   - ports:
+    - protocol: TCP
+      port: metrics
+    from:
+    - podSelector:
+        matchLabels:
+          app: prometheus
+    - namespaceSelector:
+        matchLabels:
+          service: monitoring-prometheus
+
+  - ports:
     - port: 8443
       protocol: TCP
     from:
