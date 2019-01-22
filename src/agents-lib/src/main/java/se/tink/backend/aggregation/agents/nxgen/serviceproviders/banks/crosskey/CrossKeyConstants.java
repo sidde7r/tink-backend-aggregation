@@ -44,13 +44,9 @@ public class CrossKeyConstants {
     }
 
     public static final class MultiFactorAuthentication {
-        public static final String TAN = "tan";
         public static final int KEYCARD_PIN_LENGTH = 4;
         public static final String USER_DEVICE_NAME = "iOS / 10.2";
         public static final String DEVICE_INFO = "iPhone9,3";
-        public static final String TAN_INVALID = "TAN_INVALID";
-        public static final String PIN_CODE_INVALID = "PIN_CODE_INVALID";
-        public static final String USER_LOCKED = "USER_LOCKED";
     }
 
     public static final class Storage {
@@ -74,11 +70,11 @@ public class CrossKeyConstants {
     }
 
     public static final class Fetcher {
-        public static final LogTag LOAN_LOGGING = LogTag.from("#loan_logging_crosskey");
+        public static final LogTag LOAN_LOGGING = LogTag.from("#loan_crosskey");
         public static final LogTag INVESTMENT_PORTFOLIO_LOGGING = LogTag.from
-                ("#investment-portfolio-logging-crosskey");
+                ("#investment_portfolio_crosskey");
         public static final LogTag INVESTMENT_INSTRUMENT_LOGGING = LogTag.from
-                ("#investment-instrument-logging-crosskey");
+                ("#investment_instrument_crosskey");
 
         public static final class Account {
             public static final String CHECK = "check";

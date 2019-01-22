@@ -11,11 +11,13 @@ public class AlandsBankenSEConstants {
     }
 
     public static final class Fetcher {
-        public static final LogTag LOAN_LOGGING = LogTag.from("#loan_logging_alandsbank_se");
+        public static final LogTag TRANSACTION_LOGGING = LogTag.from
+                ("#transaction_alandsbank_se");
+        public static final LogTag LOAN_LOGGING = LogTag.from("#loan_alandsbank_se");
         public static final LogTag INVESTMENT_PORTFOLIO_LOGGING = LogTag.from
-                ("#investment-portfolio-logging-alandsbank-se");
+                ("#investment_portfolio_alandsbank_se");
         public static final LogTag INVESTMENT_INSTRUMENT_LOGGING = LogTag.from
-                ("#investment-instrument-logging-alandsbank-se");
+                ("#investment_instrument_alandsbank_se");
     }
 
     public enum EndUserMessage implements LocalizableEnum {
