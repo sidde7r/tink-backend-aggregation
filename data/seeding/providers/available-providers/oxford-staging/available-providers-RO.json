@@ -1,11 +1,10 @@
 {
   "clusterid" : "oxford-staging",
   "providers" : [
-    "ro-raiffeisen-bank",
     "ro-raiffeisen-oauth2",
     "ro-n26-password",
     "ro-revolut-password",
-    "ro-test-password",	
+    "ro-test-password",
     "ro-test-multi-supplemental"
   ]
 }

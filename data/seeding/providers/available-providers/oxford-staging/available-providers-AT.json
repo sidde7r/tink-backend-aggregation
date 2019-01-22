@@ -2,7 +2,6 @@
   "clusterid" : "oxford-staging",
   "providers" : [
     "at-volksbank-password",
-    "at-bank-austria",
     "at-raiffeisen0-password",
     "at-raiffeisen1-password",
     "at-raiffeisen2-password",
@@ -18,10 +17,9 @@
     "at-n26-password",
     "at-revolut-password",
     "at-americanexpress-password",
-    "at-raiffeisen-bank",
     "at-erstebank-password",
     "at-erstebank-thirdparty",
-    "at-test-password", 
+    "at-test-password",
     "at-test-multi-supplemental"
   ]
 }
