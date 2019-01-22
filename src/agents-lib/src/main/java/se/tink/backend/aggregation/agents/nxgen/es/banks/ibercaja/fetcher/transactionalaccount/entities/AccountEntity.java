@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Arrays;
+import java.util.Collections;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
@@ -53,8 +53,8 @@ public class AccountEntity {
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .setBankIdentifier(number)
                 .setName(alias)
-                .setPortfolios(Arrays.asList(portfolio))
                 .setBalance(new Amount(IberCajaConstants.currency, balance))
+                .setPortfolios(Collections.singletonList(portfolio))
                 .build();
     }
 
