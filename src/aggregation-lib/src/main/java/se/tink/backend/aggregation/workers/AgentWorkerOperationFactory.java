@@ -42,7 +42,6 @@ import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
@@ -51,8 +50,8 @@ import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCom
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
@@ -207,9 +206,7 @@ public class AgentWorkerOperationFactory {
         }
 
         for (RefreshableItem item : nonAccountItems) {
-            commands.add(
-                    new RefreshItemAgentWorkerCommand(
-                            context, item, createCommandMetricState(request)));
+            commands.add(new RefreshItemAgentWorkerCommand(context, item, createCommandMetricState(request)));
         }
 
         // FIXME: remove when Handelsbanken and Avanza have been moved to the nextgen agents. (TOP
@@ -254,7 +251,7 @@ public class AgentWorkerOperationFactory {
         CryptoWrapper cryptoWrapper =
                 cryptoConfigurationDao.getCryptoWrapperOfClientName(clientInfo.getClientName());
 
-        // Please be aware that the order of adding commands is meaningful
+        //Please be aware that the order of adding commands is meaningful
         List<AgentWorkerCommand> commands = Lists.newArrayList();
 
         String metricsName = (request.isManual() ? "refresh-manual" : "refresh-auto");
@@ -294,8 +291,7 @@ public class AgentWorkerOperationFactory {
                 createRefreshAccountsCommands(request, context, request.getItemsToRefresh()));
         commands.add(new SelectAccountsToAggregateCommand(context, request));
         commands.addAll(
-                createOrderedRefreshableItemsCommands(
-                        request, context, request.getItemsToRefresh()));
+                createOrderedRefreshableItemsCommands(request, context, request.getItemsToRefresh()));
 
         log.debug("Created refresh operation chain for credential");
         return new AgentWorkerOperation(
@@ -386,8 +382,6 @@ public class AgentWorkerOperationFactory {
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
                 new LockAgentWorkerCommand(context),
-                new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper),
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationName, reportMetricsAgentWorkerCommandState),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
@@ -401,8 +395,7 @@ public class AgentWorkerOperationFactory {
                 new InstantiateAgentWorkerCommand(context, instantiateAgentWorkerCommandState),
                 new LoginAgentWorkerCommand(
                         context, loginAgentWorkerCommandState, createCommandMetricState(request)),
-                new TransferAgentWorkerCommand(
-                        context, request, createCommandMetricState(request)));
+                new TransferAgentWorkerCommand(context, request, createCommandMetricState(request)));
     }
 
     public AgentWorkerOperation createOperationCreateCredentials(
@@ -495,9 +488,6 @@ public class AgentWorkerOperationFactory {
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
-                new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper));
-        commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, "keep-alive", reportMetricsAgentWorkerCommandState));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
@@ -561,8 +551,7 @@ public class AgentWorkerOperationFactory {
         for (RefreshableItem item : items) {
             if (RefreshableItem.isAccount(item)) {
                 commands.add(
-                        new RefreshItemAgentWorkerCommand(
-                                context, item, createCommandMetricState(request)));
+                        new RefreshItemAgentWorkerCommand(context, item, createCommandMetricState(request)));
             }
         }
 
@@ -619,7 +608,6 @@ public class AgentWorkerOperationFactory {
                 new UpdateCredentialsStatusAgentWorkerCommand(
                         controllerWrapper, request.getCredentials(), request.getProvider(), context,
                         c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
-
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
@@ -680,9 +668,6 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
-        commands.add(
-                new MigrateCredentialsAndAccountsWorkerCommand(
-                        context.getRequest(), controllerWrapper));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationMetricName, reportMetricsAgentWorkerCommandState));

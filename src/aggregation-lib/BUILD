@@ -123,7 +123,9 @@ junit_test(
     deps = [
         "//src/agents-api",
         "//src/agents-lib",
+        "//src/agents-api",
         "//src/aggregation-api",
+        "//src/aggregationcontroller-api",
         "//src/aggregation-lib",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account_identifier:account-identifier",
