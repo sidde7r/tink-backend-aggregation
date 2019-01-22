@@ -15,6 +15,10 @@
     "popular" : false,
     "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
+    "refreshschedule": {
+      "from": "23:00",
+      "to": "07:00"
+    },
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -240,6 +244,10 @@
     "popular" : false,
     "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
+    "refreshschedule": {
+      "from": "23:00",
+      "to": "07:00"
+    },
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -334,6 +342,10 @@
     "popular" : false,
     "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
+    "refreshschedule": {
+      "from": "23:00",
+      "to": "07:00"
+    },
     "status" : "ENABLED",
     "transactional" : true,
     "type" : "BANK",
@@ -424,6 +436,10 @@
     "popular" : false,
     "refreshFrequency" : 1.0,
     "refreshFrequencyFactor" : 1.0,
+    "refreshschedule": {
+      "from": "23:00",
+      "to": "07:00"
+    },
     "status" : "OBSOLETE",
     "transactional" : true,
     "type" : "BANK",
