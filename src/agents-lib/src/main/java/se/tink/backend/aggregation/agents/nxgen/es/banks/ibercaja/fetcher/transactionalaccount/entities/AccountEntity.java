@@ -17,7 +17,7 @@ public class AccountEntity {
     @JsonProperty("Numero")
     private String number;
     @JsonProperty("Tipo")
-    private int kind;
+    private int type;
     @JsonProperty("TipoTarjeta")
     private int typeCard;
     @JsonProperty("EmisorTarjeta")
@@ -33,7 +33,7 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
 
-        return TransactionalAccount.builder(IberCajaConstants.ACCOUNT_TYPE_MAPPER.translate(kind).get(), iban,
+        return TransactionalAccount.builder(IberCajaConstants.ACCOUNT_TYPE_MAPPER.translate(type).get(), iban,
                 new Amount(IberCajaConstants.currency, balance))
                 .setAccountNumber(number)
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
@@ -70,12 +70,10 @@ public class AccountEntity {
     }
 
     public int getType() {
-
-        return kind;
+        return type;
     }
 
     public int getTypeCard() {
-
         return typeCard;
     }
 }
