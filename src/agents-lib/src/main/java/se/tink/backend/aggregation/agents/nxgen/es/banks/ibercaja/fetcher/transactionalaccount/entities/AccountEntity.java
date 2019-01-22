@@ -37,7 +37,7 @@ public class AccountEntity {
 
         return TransactionalAccount.builder(IberCajaConstants.ACCOUNT_TYPE_MAPPER.translate(type).get(), iban,
                 new Amount(IberCajaConstants.currency, balance))
-                .setAccountNumber(number)
+                .setAccountNumber(iban)
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .setBankIdentifier(number)
                 .setBalance(new Amount(IberCajaConstants.currency, balance))
