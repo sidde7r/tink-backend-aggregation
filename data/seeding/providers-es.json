@@ -5,21 +5,12 @@
     {
       "name": "es-americanexpress-password",
       "className": "nxgen.es.creditcards.amex.AmericanExpressESAgent",
-      "groupDisplayName": "American Express",
       "displayName": "American Express",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "CREDIT_CARD",
-      "multiFactor": false,
-      "popular": false,
       "transactional": true,
-      "currency": "EUR",
-      "market": "ES",
       "passwordHelpText": "Use the same credentials as when you log in to americanexpress.es. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES).",
-      "payload": "ES",
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-
       "fields": [
         {
           "description": "Username",
@@ -41,7 +32,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": true,
       "transactional": true,
       "fields": [
@@ -72,7 +62,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": true,
       "transactional": true,
       "fields": [
@@ -97,7 +86,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": true,
       "transactional": true,
       "fields": [
@@ -122,7 +110,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": true,
       "transactional": true,
       "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
@@ -152,7 +139,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": true,
       "transactional": true,
       "fields": [
@@ -174,13 +160,10 @@
     {
       "name": "es-ibercaja-password",
       "className": "nxgen.es.banks.ibercaja.IberCajaAgent",
-      "groupDisplayName": "IberCaja",
       "displayName": "IberCaja",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
-      "popular": false,
       "transactional": true,
       "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
@@ -205,11 +188,8 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": true,
       "transactional": true,
-      "payload": null,
-      "tutorialUrl": null,
       "passwordHelpText": null,
       "fields": [
         {
@@ -233,7 +213,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": true,
       "transactional": true,
       "passwordHelpText": "Use the same credentials as when using the ING Direct app.",
@@ -273,11 +252,8 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": true,
       "transactional": true,
-      "payload": null,
-      "tutorialUrl": null,
       "passwordHelpText": null,
       "fields": [
         {
@@ -302,7 +278,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
       "popular": false,
       "transactional": true,
       "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
@@ -327,8 +302,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
-      "popular": false,
       "transactional": true,
       "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
       "fields": [
@@ -395,13 +368,10 @@
     {
       "name": "es-targobank-password",
       "className": "nxgen.es.banks.targo.TargoBankESAgent",
-      "groupDisplayName": "TargoBank",
       "displayName": "TargoBank",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "multiFactor": false,
-      "popular": false,
       "transactional": true,
       "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
