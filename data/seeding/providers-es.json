@@ -6,7 +6,7 @@
       "name": "es-americanexpress-password",
       "className": "nxgen.es.creditcards.amex.AmericanExpressESAgent",
       "displayName": "American Express",
-      "status": "ENABLED",
+      "status": "DISABLED",
       "credentialsType": "PASSWORD",
       "type": "CREDIT_CARD",
       "transactional": true,
