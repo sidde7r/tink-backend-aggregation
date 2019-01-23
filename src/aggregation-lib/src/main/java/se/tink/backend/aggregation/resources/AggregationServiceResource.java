@@ -65,7 +65,7 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public Credentials createCredentials(CreateCredentialsRequest request, ClientInfo clientInfo) {
         AgentWorkerOperation createCredentialsOperation = agentWorkerCommandFactory
-                .createCreateCredentialsOperation(request, clientInfo);
+                .createOperationCreateCredentials(request, clientInfo);
 
         createCredentialsOperation.run();
 
@@ -104,7 +104,7 @@ public class AggregationServiceResource implements AggregationService {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
-        agentWorker.execute(agentWorkerCommandFactory.createConfigureWhitelistOperation(request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createOperationConfigureWhitelist(request, clientInfo));
     }
 
     @Override
@@ -127,13 +127,13 @@ public class AggregationServiceResource implements AggregationService {
             HttpResponseHelper.error(Response.Status.BAD_REQUEST);
         }
 
-        agentWorker.execute(agentWorkerCommandFactory.createWhitelistRefreshOperation(request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createOperationWhitelistRefresh(request, clientInfo));
     }
 
     @Override
     public void refreshInformation(final RefreshInformationRequest request, ClientInfo clientInfo) throws Exception {
         if (request.isManual()) {
-            agentWorker.execute(agentWorkerCommandFactory.createRefreshOperation(request, clientInfo));
+            agentWorker.execute(agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
         } else {
             if (producer.isAvailable()) {
                 producer.send(new RefreshInformation(request, clientInfo));
@@ -145,23 +145,23 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createExecuteTransferOperation(request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
     }
 
     @Override
     public void whitelistedTransfer(final WhitelistedTransferRequest request, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createExecuteWhitelistedTransferOperation(request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createOperationExecuteWhitelistedTransfer(request, clientInfo));
     }
 
     @Override
     public void keepAlive(KeepAliveRequest request, ClientInfo clientInfo) throws Exception {
-        agentWorker.execute(agentWorkerCommandFactory.createKeepAliveOperation(request, clientInfo));
+        agentWorker.execute(agentWorkerCommandFactory.createOperationKeepAlive(request, clientInfo));
     }
 
     @Override
     public Credentials updateCredentials(UpdateCredentialsRequest request, ClientInfo clientInfo) {
         AgentWorkerOperation updateCredentialsOperation = agentWorkerCommandFactory
-                .createUpdateOperation(request, clientInfo);
+                .createOperationUpdate(request, clientInfo);
 
         updateCredentialsOperation.run();
 
@@ -193,7 +193,7 @@ public class AggregationServiceResource implements AggregationService {
             ClientInfo clientInfo) {
         try {
             agentWorker.execute(agentWorkerCommandFactory
-                    .createReEncryptCredentialsOperation(reencryptCredentialsRequest, clientInfo));
+                    .createOperationReEncryptCredentials(reencryptCredentialsRequest, clientInfo));
         } catch (Exception e) {
             HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
         }
