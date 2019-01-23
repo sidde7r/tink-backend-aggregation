@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands.migrations;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -19,13 +20,12 @@ public abstract class AgentVersionMigration {
     protected void migrateAccounts(
             final ControllerWrapper controllerWrapper,
             CredentialsRequest request,
-            List<se.tink.backend.agents.rpc.Account> accounts) {
-        for (Account account : accounts) {
-            int index = accounts.indexOf(account);
-            Account newAccount = migrateAccount(controllerWrapper, account);
-            request.getAccounts().remove(index);
-            request.getAccounts().add(index, newAccount);
-        }
+            List<Account> accounts) {
+        List<Account> accountList =
+                accounts.stream()
+                        .map(a -> migrateAccount(controllerWrapper, a))
+                        .collect(Collectors.toList());
+        request.setAccounts(accountList);
     }
 
     protected Account migrateAccount(final ControllerWrapper controllerWrapper, Account account) {

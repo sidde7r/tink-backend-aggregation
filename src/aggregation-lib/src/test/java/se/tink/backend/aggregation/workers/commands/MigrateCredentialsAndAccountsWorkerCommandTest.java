@@ -80,11 +80,6 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
         AtomicBoolean migrateDataCalled = new AtomicBoolean(false);
 
         MigrateCredentialsAndAccountsWorkerCommand command = createCommand(createRequest(), Lists.newArrayList(new AgentVersionMigration() {
-            @Override
-            public double percentToMigrate() {
-                percentToMigrateCalled.set(true);
-                return 0;
-            }
 
             @Override
             public boolean shouldChangeRequest(CredentialsRequest request) {
@@ -195,7 +190,6 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
                 }
             }
         }));
-
         AgentWorkerCommandResult result = command.execute();
         // this verifies a specific implementation instead of just input/output. But it'll do for now
         verify(wrapper, Mockito.atLeastOnce()).updateAccount(argumentCaptor.capture());

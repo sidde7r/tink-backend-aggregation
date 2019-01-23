@@ -45,11 +45,6 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
                 continue;
             }
 
-            if (random.nextDouble() > migration.percentToMigrate()) {
-                // random chance didn't pick this request
-                continue;
-            }
-
             migrate(migration);
         }
 
