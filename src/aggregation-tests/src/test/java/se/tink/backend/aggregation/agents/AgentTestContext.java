@@ -295,8 +295,6 @@ public class AgentTestContext extends AgentContext {
         log.info(String.format("Identifier: %s", contianer.getIdentifier()));
         log.info(
                 "-------------------------------------------------------DOCUMENT---------------------------------------------------------------------");
-        // never used.
-        return;
     }
 
     public void processEinvoices() {

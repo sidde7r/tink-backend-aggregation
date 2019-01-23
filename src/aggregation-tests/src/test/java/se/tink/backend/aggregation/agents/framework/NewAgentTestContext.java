@@ -292,8 +292,7 @@ public class NewAgentTestContext extends AgentContext {
 
     @Override
     public void updateDocument(DocumentContainer contianer) {
-        // never used
-        return;
+        // noop
     }
 
     public void processEinvoices() {
