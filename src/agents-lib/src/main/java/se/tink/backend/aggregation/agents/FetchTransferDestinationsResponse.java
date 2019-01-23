@@ -5,6 +5,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.core.account.TransferDestinationPattern;
 
+// TODO can we use TransferDestinationResponse?
 public class FetchTransferDestinationsResponse {
     private final Map<Account, List<TransferDestinationPattern>> transferDestinations;
 
