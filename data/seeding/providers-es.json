@@ -167,6 +167,7 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
+      "popular": true,
       "transactional": true,
       "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
@@ -191,7 +192,6 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
-      "popular": true,
       "transactional": true,
       "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
@@ -308,6 +308,7 @@
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
+      "popular": true,
       "transactional": true,
       "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
