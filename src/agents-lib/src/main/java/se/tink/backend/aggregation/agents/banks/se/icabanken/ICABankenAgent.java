@@ -1430,6 +1430,11 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
                 CollectBankIdResponse bankIdResponse = response.getEntity(CollectBankIdResponse.class);
 
                 if (response.getStatus() == 409) {
+
+                    if (bankIdResponse.getBody().isTimeOut()) {
+                        throw BankIdError.TIMEOUT.exception();
+                    }
+
                     if (bankIdResponse.getBody().isFailure()) {
                         throw BankIdError.CANCELLED.exception();
                     }
