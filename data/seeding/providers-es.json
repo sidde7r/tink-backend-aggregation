@@ -5,50 +5,41 @@
     {
       "name": "es-americanexpress-password",
       "className": "nxgen.es.creditcards.amex.AmericanExpressESAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "EUR",
       "displayName": "American Express",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "groupDisplayName": "American Express",
-      "market": "ES",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.es. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES).",
-      "payload": "ES",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "es-bancopopular-password",
-      "displayName": "Banco Popular",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.popular.BancoPopularAgent",
+      "type": "CREDIT_CARD",
       "transactional": true,
+      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.es. You can order a new password at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES).",
       "fields": [
         {
           "name": "username",
-          "description": "User",
-          "immutable": true,
-          "helpText": "Your user number can be the 16 numbers of any of your cards Visa Sendo or debit, the user 16 numbers provided with your provisional password or a personal identification, which can contain letters and numbers, that you have generated."
+          "description": "Username",
+          "immutable": true
+        },
+        {
+          "name": "password",
+          "description": "Password",
+          "masked": true,
+          "sensitive": true
+        }
+      ]
+    },
+    {
+      "name": "es-bancopopular-password",
+      "className": "nxgen.es.banks.popular.BancoPopularAgent",
+      "displayName": "Banco Popular",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "type": "BANK",
+      "popular": true,
+      "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+      "fields": [
+        {
+          "name": "username",
+          "description": "Username",
+          "immutable": true
         },
         {
           "name": "password",
@@ -60,29 +51,29 @@
           "maxLength": 6,
           "hint": "NNNNNN",
           "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
+          "patternError": "Please enter your 6 digit online PIN."
         }
       ]
     },
     {
       "name": "es-bancosabadell-password",
+      "className": "nxgen.es.banks.sabadell.SabadellAgent",
       "displayName": "Banco de Sabadell",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.sabadell.SabadellAgent",
+      "type": "BANK",
+      "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "DNI/NIE",
           "immutable": true
         },
         {
           "name": "password",
-          "description": "Access Code",
+          "description": "Password",
           "masked": true,
           "sensitive": true,
           "numeric": true
@@ -91,18 +82,18 @@
     },
     {
       "name": "es-bancosantander-password",
+      "className": "nxgen.es.banks.santander.SantanderEsAgent",
       "displayName": "Banco Santander",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.santander.SantanderEsAgent",
+      "type": "BANK",
+      "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "NIF/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -116,19 +107,18 @@
     },
     {
       "name": "es-bankia-password",
+      "className": "nxgen.es.banks.bankia.BankiaAgent",
       "displayName": "Bankia",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.bankia.BankiaAgent",
-      "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
+      "type": "BANK",
+      "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -136,28 +126,28 @@
           "description": "Password",
           "masked": true,
           "sensitive": true,
-          "pattern": "([0-9]{8})",
           "numeric": true,
+          "pattern": "([0-9]{8})",
           "minLength": 8,
           "maxLength": 8,
-          "helpText": "Your 8 digit online PIN"
+          "patternError": "Please enter your 8 digit online PIN."
         }
       ]
     },
     {
       "name": "es-bbva-password",
+      "className": "nxgen.es.banks.bbva.BbvaAgent",
       "displayName": "BBVA",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.bbva.BbvaAgent",
+      "type": "BANK",
+      "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -172,26 +162,23 @@
     },
     {
       "name": "es-ibercaja-password",
+      "className": "nxgen.es.banks.ibercaja.IberCajaAgent",
       "displayName": "IberCaja",
-      "groupDisplayName": "IberCaja",
-      "popular": false,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.ibercaja.IberCajaAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "type": "BANK",
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
-          "description": "Username",
           "name": "username",
+          "description": "Username",
           "immutable": true
         },
         {
+          "name": "password",
           "description": "Password",
           "masked": true,
-          "name": "password",
           "sensitive": true,
           "minLength": 1
         }
@@ -199,21 +186,19 @@
     },
     {
       "name": "es-imaginbank-password",
+      "className": "nxgen.es.banks.imaginbank.ImaginBankAgent",
       "displayName": "ImaginBank",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.imaginbank.ImaginBankAgent",
-      "passwordHelpText": null,
+      "type": "BANK",
+      "popular": true,
       "transactional": true,
-      "payload": null,
-      "tutorialUrl": null,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "User number",
+          "numeric": true,
           "immutable": true
         },
         {
@@ -221,25 +206,25 @@
           "description": "Password",
           "masked": true,
           "sensitive": true,
+          "numeric": true,
           "minLength": 1
         }
       ]
     },
     {
       "name": "es-ing-password",
+      "className": "nxgen.es.banks.ing.IngAgent",
       "displayName": "ING",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.ing.IngAgent",
-      "passwordHelpText": "Use the same credentials as when using the ING Direct app.",
+      "type": "BANK",
+      "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -248,40 +233,37 @@
           "pattern": "[0-3][0-9][0-1][0-9][1-2][9|0][0-9][0-9]",
           "hint": "DDMMYYYY",
           "numeric": true,
+          "immutable": true,
           "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+          "maxLength": 8
         },
         {
           "name": "password",
           "description": "Password",
           "masked": true,
           "sensitive": true,
-          "pattern": "([0-9]{6})",
           "numeric": true,
           "minLength": 6,
           "maxLength": 6,
-          "helpText": "Your 6 digit online PIN"
+          "pattern": "([0-9]{6})",
+          "patternError": "Please enter your 6 digit online PIN."
         }
       ]
     },
     {
       "name": "es-lacaixa-password",
+      "className": "nxgen.es.banks.lacaixa.LaCaixaAgent",
       "displayName": "LaCaixa",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.lacaixa.LaCaixaAgent",
-      "passwordHelpText": null,
+      "type": "BANK",
+      "popular": true,
       "transactional": true,
-      "payload": null,
-      "tutorialUrl": null,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -289,22 +271,22 @@
           "description": "Password",
           "masked": true,
           "sensitive": true,
+          "numeric": true,
           "minLength": 1
         }
       ]
     },
     {
       "name": "es-n26-password",
-      "displayName": "N26",
+      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
       "groupDisplayName": "N26",
-      "popular": false,
-      "type": "BANK",
+      "displayName": "N26",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "type": "BANK",
+      "popular": false,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "description": "Username",
@@ -321,27 +303,22 @@
     },
     {
       "name": "es-openbank-password",
+      "className": "nxgen.es.banks.openbank.OpenbankAgent",
       "displayName": "Openbank",
-      "popular": false,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.openbank.OpenbankAgent",
-      "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
+      "type": "BANK",
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
           "description": "Username",
-          "immutable": true,
-          "numeric": false,
-          "helpText": "NIF, NIE, passport number, or other document."
+          "immutable": true
         },
         {
           "name": "username-type",
           "description": "Username type",
-          "numeric": false,
           "pattern": "([NCPI]{1})",
           "minLength": 1,
           "maxLength": 1,
@@ -356,7 +333,7 @@
           "numeric": true,
           "minLength": 4,
           "maxLength": 4,
-          "helpText": "Your 4 digit online PIN"
+          "patternError": "Please enter your 4 digit online PIN."
         }
       ]
     },
@@ -364,8 +341,12 @@
       "name": "es-revolut-password",
       "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
       "displayName": "Revolut",
+      "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": true,
+      "transactional": true,
+      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
       "fields": [
         {
           "description": "Phone number",
@@ -385,34 +366,27 @@
           "maxLength": 4,
           "patternError": "Please enter your four digit passcode."
         }
-      ],
-      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
+      ]
     },
     {
       "name": "es-targobank-password",
+      "className": "nxgen.es.banks.targo.TargoBankESAgent",
       "displayName": "TargoBank",
-      "groupDisplayName": "TargoBank",
-      "popular": false,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.es.banks.targo.TargoBankESAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "type": "BANK",
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
-          "description": "Username",
           "name": "username",
+          "description": "Username",
           "immutable": true
         },
         {
+          "name": "password",
           "description": "Password",
           "masked": true,
-          "name": "password",
           "sensitive": true
         }
       ]
