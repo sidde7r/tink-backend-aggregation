@@ -10,8 +10,10 @@ import com.amazonaws.services.sqs.model.AmazonSQSException;
 import com.amazonaws.services.sqs.model.CreateQueueRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlResult;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.libraries.queue.sqs.configuration.SqsQueueConfiguration;
@@ -81,20 +83,30 @@ public class SqsQueue {
         }
     }
 
+    // The retrying is necessary since the IAM access in Kubernetes is not instant.
+    // The IAM access is necessary to get access to the queue.
     private boolean isQueueCreated(CreateQueueRequest createRequest) {
-        try {
-            sqs.createQueue(createRequest);
-        } catch (AmazonSQSException e) {
-            if (!e.getErrorCode().equals("QueueAlreadyExists")) {
-                logger.warn("Queue already exists.");
-            }
-            // Reach this if the configurations are invalid
-        } catch (SdkClientException e) {
-            logger.error("No SQS with the current configurations is available.");
-            return false;
-        }
+        int retries = 0;
 
-        return true;
+        do {
+            try {
+                sqs.createQueue(createRequest);
+                return true;
+            } catch (AmazonSQSException e) {
+                if (!e.getErrorCode().equals("QueueAlreadyExists")) {
+                    logger.warn("Queue already exists.");
+                }
+                return true;
+                // Reach this if the configurations are invalid
+            } catch (SdkClientException e) {
+                logger.warn("No SQS with the current configurations is available, sleeping 1 second and then retrying.");
+                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+                retries++;
+            }
+        } while (retries < 10);
+
+        logger.error("No SQS with the current configurations is available.");
+        return false;
     }
 
     private boolean validLocalConfiguration(SqsQueueConfiguration configuration) {
