@@ -4,7 +4,6 @@ import com.datastax.driver.core.utils.UUIDs;
 import com.google.common.base.Preconditions;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import java.util.UUID;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -65,66 +64,6 @@ public class Loan implements Comparable<Loan>, Serializable {
     @Override
     public int compareTo(Loan o) {
         return new Long(id.timestamp()).compareTo(new Long(o.id.timestamp()));
-    }
-
-    public boolean hasUpdatedSince(Loan prev) {
-        Preconditions.checkNotNull(prev);
-        Preconditions.checkArgument(accountId.equals(prev.getAccountId()));
-
-        if (balance != null && prev.balance == null) {
-            return true;
-        }
-        if (balance != null && prev.balance != null && balance.doubleValue() != prev.balance.doubleValue()) {
-            return true;
-        }
-        if (interest != null && prev.interest == null) {
-            return true;
-        }
-        if (interest != null && prev.interest != null && interest.doubleValue() != prev.interest.doubleValue()) {
-            return true;
-        }
-        if (amortized != null && prev.amortized == null) {
-            return true;
-        }
-        if (amortized != null && prev.amortized != null && amortized.doubleValue() != prev.amortized.doubleValue()) {
-            return true;
-        }
-        if (name != null && prev.name == null) {
-            return true;
-        }
-        if (name != null && !name.equals(prev.name)) {
-            return true;
-        }
-        if (nextDayOfTermsChange != null && prev.nextDayOfTermsChange == null) {
-            return true;
-        }
-        if (nextDayOfTermsChange != null && prev.nextDayOfTermsChange != null &&
-                nextDayOfTermsChange.getTime() != prev.getNextDayOfTermsChange().getTime()) {
-            return true;
-        }
-        if (providerName != null && prev.providerName == null) {
-            return true;
-        }
-        if (providerName != null && !providerName.equals(prev.providerName)) {
-            return true;
-        }
-        if (type != null && prev.type == null) {
-            return true;
-        }
-        if (type != null && !type.equals(prev.type)) {
-            return true;
-        }
-        if (!Objects.equals(loanNumber, prev.getLoanNumber())) {
-            return true;
-        }
-        if (!Objects.equals(monthlyAmortization, prev.getMonthlyAmortization())) {
-            return true;
-        }
-        if (!prev.isUserModifiedType() && isUserModifiedType()) {
-            return true;
-        }
-
-        return false;
     }
 
     public UUID getAccountId() {
@@ -374,12 +313,5 @@ public class Loan implements Comparable<Loan>, Serializable {
         this.type = type;
     }
 
-    public Boolean getUserModifiedType() {
-        return userModifiedType;
-    }
-
-    public void setUserModifiedType(Boolean userModifiedType) {
-        this.userModifiedType = userModifiedType;
-    }
 }
 
