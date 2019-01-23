@@ -367,6 +367,7 @@ java_binary(
         ":aggregationcontroller-api",
         ":main-api",
         "//src/libraries/auth",
+        "//src/libraries/console_json_logger",
         "//src/libraries/discovery",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils:dropwizard-utils",
