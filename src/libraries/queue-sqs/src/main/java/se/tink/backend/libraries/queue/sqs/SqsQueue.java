@@ -61,12 +61,12 @@ public class SqsQueue {
             )))
                     .build();
 
-            this.isAvailable = isQueueAvailable(createRequest);
+            this.isAvailable = isQueueCreated(createRequest);
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
             sqs = amazonSQSClientBuilder.build();
             this.url = configuration.getUrl();
-            this.isAvailable = isQueueAvailable(createRequest);
+            this.isAvailable = isQueueCreated(createRequest);
         }
     }
 
@@ -81,7 +81,7 @@ public class SqsQueue {
         }
     }
 
-    private boolean isQueueAvailable(CreateQueueRequest create_request){
+    private boolean isQueueCreated(CreateQueueRequest create_request){
         try {
             sqs.createQueue(create_request);
         } catch (AmazonSQSException e) {
