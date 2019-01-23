@@ -58,7 +58,7 @@
     {
       "name": "es-bancosabadell-password",
       "className": "nxgen.es.banks.sabadell.SabadellAgent",
-      "displayName": "Banco de Sabadell",
+      "displayName": "Banco Sabadell",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
       "type": "BANK",
