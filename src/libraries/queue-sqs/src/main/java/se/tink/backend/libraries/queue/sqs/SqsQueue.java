@@ -97,7 +97,7 @@ public class SqsQueue {
         return true;
     }
 
-    public boolean validLocalConfiguration(SqsQueueConfiguration configuration) {
+    private boolean validLocalConfiguration(SqsQueueConfiguration configuration) {
         return Objects.nonNull(configuration) &&
                 Objects.nonNull(configuration.getQueueName()) &&
                 Objects.nonNull(configuration.getAwsAccessKeyId()) &&
