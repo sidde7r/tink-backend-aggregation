@@ -70,7 +70,7 @@ public class SqsQueue {
         }
     }
 
-    private String getQueueUrl(String name){
+    private String getQueueUrl(String name) {
         try {
             GetQueueUrlRequest getQueueUrlRequest = new GetQueueUrlRequest(name);
             GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
@@ -81,7 +81,7 @@ public class SqsQueue {
         }
     }
 
-    private boolean isQueueCreated(CreateQueueRequest createRequest){
+    private boolean isQueueCreated(CreateQueueRequest createRequest) {
         try {
             sqs.createQueue(createRequest);
         } catch (AmazonSQSException e) {
@@ -97,7 +97,7 @@ public class SqsQueue {
         return true;
     }
 
-    public boolean validLocalConfiguration(SqsQueueConfiguration configuration){
+    public boolean validLocalConfiguration(SqsQueueConfiguration configuration) {
         return Objects.nonNull(configuration) &&
                 Objects.nonNull(configuration.getQueueName()) &&
                 Objects.nonNull(configuration.getAwsAccessKeyId()) &&
@@ -105,7 +105,7 @@ public class SqsQueue {
                 configuration.getRegion().equals(LOCAL_REGION);
     }
 
-    public void consumed(){
+    public void consumed() {
         this.consumed.inc();
     }
 
