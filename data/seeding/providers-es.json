@@ -5,9 +5,21 @@
     {
       "name": "es-americanexpress-password",
       "className": "nxgen.es.creditcards.amex.AmericanExpressESAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "EUR",
+      "groupDisplayName": "American Express",
       "displayName": "American Express",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "type": "CREDIT_CARD",
+      "multiFactor": false,
+      "popular": false,
+      "transactional": true,
+      "currency": "EUR",
+      "market": "ES",
+      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.es. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES).",
+      "payload": "ES",
+      "refreshFrequency": 1,
+      "refreshFrequencyFactor": 1,
+
       "fields": [
         {
           "description": "Username",
@@ -20,28 +32,17 @@
           "sensitive": true,
           "name": "password"
         }
-      ],
-      "groupDisplayName": "American Express",
-      "market": "ES",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.es. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES).",
-      "payload": "ES",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
+      ]
     },
     {
       "name": "es-bancopopular-password",
+      "className": "nxgen.es.banks.popular.BancoPopularAgent",
       "displayName": "Banco Popular",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.popular.BancoPopularAgent",
+      "popular": true,
       "transactional": true,
       "fields": [
         {
@@ -66,13 +67,13 @@
     },
     {
       "name": "es-bancosabadell-password",
+      "className": "nxgen.es.banks.sabadell.SabadellAgent",
       "displayName": "Banco de Sabadell",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.sabadell.SabadellAgent",
+      "popular": true,
       "transactional": true,
       "fields": [
         {
@@ -91,13 +92,13 @@
     },
     {
       "name": "es-bancosantander-password",
+      "className": "nxgen.es.banks.santander.SantanderEsAgent",
       "displayName": "Banco Santander",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.santander.SantanderEsAgent",
+      "popular": true,
       "transactional": true,
       "fields": [
         {
@@ -116,15 +117,15 @@
     },
     {
       "name": "es-bankia-password",
+      "className": "nxgen.es.banks.bankia.BankiaAgent",
       "displayName": "Bankia",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.bankia.BankiaAgent",
-      "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
+      "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
       "fields": [
         {
           "name": "username",
@@ -146,13 +147,13 @@
     },
     {
       "name": "es-bbva-password",
+      "className": "nxgen.es.banks.bbva.BbvaAgent",
       "displayName": "BBVA",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.bbva.BbvaAgent",
+      "popular": true,
       "transactional": true,
       "fields": [
         {
@@ -172,16 +173,16 @@
     },
     {
       "name": "es-ibercaja-password",
-      "displayName": "IberCaja",
+      "className": "nxgen.es.banks.ibercaja.IberCajaAgent",
       "groupDisplayName": "IberCaja",
-      "popular": false,
-      "type": "BANK",
+      "displayName": "IberCaja",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.ibercaja.IberCajaAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "popular": false,
       "transactional": true,
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
         {
           "description": "Username",
@@ -199,17 +200,17 @@
     },
     {
       "name": "es-imaginbank-password",
+      "className": "nxgen.es.banks.imaginbank.ImaginBankAgent",
       "displayName": "ImaginBank",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.imaginbank.ImaginBankAgent",
-      "passwordHelpText": null,
+      "popular": true,
       "transactional": true,
       "payload": null,
       "tutorialUrl": null,
+      "passwordHelpText": null,
       "fields": [
         {
           "name": "username",
@@ -227,15 +228,15 @@
     },
     {
       "name": "es-ing-password",
+      "className": "nxgen.es.banks.ing.IngAgent",
       "displayName": "ING",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.ing.IngAgent",
-      "passwordHelpText": "Use the same credentials as when using the ING Direct app.",
+      "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same credentials as when using the ING Direct app.",
       "fields": [
         {
           "name": "username",
@@ -267,17 +268,17 @@
     },
     {
       "name": "es-lacaixa-password",
+      "className": "nxgen.es.banks.lacaixa.LaCaixaAgent",
       "displayName": "LaCaixa",
-      "popular": true,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.lacaixa.LaCaixaAgent",
-      "passwordHelpText": null,
+      "popular": true,
       "transactional": true,
       "payload": null,
       "tutorialUrl": null,
+      "passwordHelpText": null,
       "fields": [
         {
           "name": "username",
@@ -295,16 +296,16 @@
     },
     {
       "name": "es-n26-password",
-      "displayName": "N26",
+      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
       "groupDisplayName": "N26",
-      "popular": false,
-      "type": "BANK",
+      "displayName": "N26",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "popular": false,
       "transactional": true,
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
         {
           "description": "Username",
@@ -321,15 +322,15 @@
     },
     {
       "name": "es-openbank-password",
+      "className": "nxgen.es.banks.openbank.OpenbankAgent",
       "displayName": "Openbank",
-      "popular": false,
-      "type": "BANK",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.openbank.OpenbankAgent",
-      "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
+      "popular": false,
       "transactional": true,
+      "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
       "fields": [
         {
           "name": "username",
@@ -364,8 +365,12 @@
       "name": "es-revolut-password",
       "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
       "displayName": "Revolut",
+      "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": true,
+      "transactional": true,
+      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
       "fields": [
         {
           "description": "Phone number",
@@ -385,24 +390,20 @@
           "maxLength": 4,
           "patternError": "Please enter your four digit passcode."
         }
-      ],
-      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
+      ]
     },
     {
       "name": "es-targobank-password",
-      "displayName": "TargoBank",
+      "className": "nxgen.es.banks.targo.TargoBankESAgent",
       "groupDisplayName": "TargoBank",
-      "popular": false,
-      "type": "BANK",
+      "displayName": "TargoBank",
       "status": "ENABLED",
       "credentialsType": "PASSWORD",
+      "type": "BANK",
       "multiFactor": false,
-      "className": "nxgen.es.banks.targo.TargoBankESAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "popular": false,
       "transactional": true,
+      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "fields": [
         {
           "description": "Username",
