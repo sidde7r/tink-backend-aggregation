@@ -81,9 +81,9 @@ public class SqsQueue {
         }
     }
 
-    private boolean isQueueCreated(CreateQueueRequest create_request){
+    private boolean isQueueCreated(CreateQueueRequest createRequest){
         try {
-            sqs.createQueue(create_request);
+            sqs.createQueue(createRequest);
         } catch (AmazonSQSException e) {
             if (!e.getErrorCode().equals("QueueAlreadyExists")) {
                 logger.warn("Queue already exists.");
