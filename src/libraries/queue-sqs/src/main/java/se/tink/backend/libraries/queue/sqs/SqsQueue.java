@@ -105,8 +105,7 @@ public class SqsQueue {
             }
         } while (retries < 10);
 
-        logger.error("No SQS with the current configurations is available.");
-        return false;
+        throw new IllegalStateException("No SQS with the current configurations is available.");
     }
 
     private boolean validLocalConfiguration(SqsQueueConfiguration configuration) {
