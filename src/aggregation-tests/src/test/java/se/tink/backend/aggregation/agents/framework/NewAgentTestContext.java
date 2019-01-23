@@ -43,7 +43,6 @@ import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.LoanDetails;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.system.rpc.UpdateDocumentResponse;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -292,9 +291,9 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     @Override
-    public UpdateDocumentResponse updateDocument(DocumentContainer contianer) {
-        // Not in scope for this test
-        return UpdateDocumentResponse.createSuccessful(contianer.getIdentifier(), UUID.randomUUID(), "url");
+    public void updateDocument(DocumentContainer contianer) {
+        // never used
+        return;
     }
 
     public void processEinvoices() {

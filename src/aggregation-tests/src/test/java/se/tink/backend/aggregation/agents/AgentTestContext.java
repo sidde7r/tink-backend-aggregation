@@ -28,7 +28,6 @@ import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.system.rpc.UpdateDocumentResponse;
 import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -290,13 +289,14 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public UpdateDocumentResponse updateDocument(DocumentContainer contianer) {
+    public void updateDocument(DocumentContainer contianer) {
         log.info(
                 "-------------------------------------------------------DOCUMENT---------------------------------------------------------------------");
         log.info(String.format("Identifier: %s", contianer.getIdentifier()));
         log.info(
                 "-------------------------------------------------------DOCUMENT---------------------------------------------------------------------");
-        return UpdateDocumentResponse.createSuccessful(contianer.getIdentifier(), UUID.randomUUID(), "url");
+        // never used.
+        return;
     }
 
     public void processEinvoices() {

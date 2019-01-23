@@ -18,6 +18,7 @@ import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
+import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -38,12 +39,10 @@ import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.AccountFeatures;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.backend.system.rpc.UpdateDocumentResponse;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.uuid.UUIDUtils;
 
 public class AgentWorkerContext extends AgentContext implements Managed {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerContext.class);
@@ -435,23 +434,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     @Override
-    public UpdateDocumentResponse updateDocument(DocumentContainer container) {
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest updateDocumentRequest =
-                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest();
+    public void updateDocument(DocumentContainer container) {
+        UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest();
         updateDocumentRequest.setUserId(request.getUser().getId());
         updateDocumentRequest.setDocumentContainer(container);
 
-        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse updateDocumentResponse;
-        updateDocumentResponse = controllerWrapper.updateDocument(updateDocumentRequest);
-
-        if (updateDocumentResponse.isSuccessfullyStored()) {
-            return UpdateDocumentResponse.createSuccessful(
-                    updateDocumentResponse.getDocumentIdentifier(),
-                    UUIDUtils.fromString(updateDocumentResponse.getToken()),
-                    updateDocumentResponse.getFullUrl());
-        } else {
-            return UpdateDocumentResponse.createUnSuccessful();
-        }
+        controllerWrapper.updateDocument(updateDocumentRequest);
     }
 
     @Override
