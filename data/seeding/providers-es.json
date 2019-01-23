@@ -10,18 +10,18 @@
       "credentialsType": "PASSWORD",
       "type": "CREDIT_CARD",
       "transactional": true,
-      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.es. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES).",
+      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.es. You can order a new password at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES).",
       "fields": [
         {
+          "name": "username",
           "description": "Username",
-          "immutable": true,
-          "name": "username"
+          "immutable": true
         },
         {
+          "name": "password",
           "description": "Password",
           "masked": true,
-          "sensitive": true,
-          "name": "password"
+          "sensitive": true
         }
       ]
     },
@@ -34,12 +34,12 @@
       "type": "BANK",
       "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "User",
-          "immutable": true,
-          "helpText": "Your user number can be the 16 numbers of any of your cards Visa Sendo or debit, the user 16 numbers provided with your provisional password or a personal identification, which can contain letters and numbers, that you have generated."
+          "description": "Username",
+          "immutable": true
         },
         {
           "name": "password",
@@ -51,7 +51,7 @@
           "maxLength": 6,
           "hint": "NNNNNN",
           "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
+          "patternError": "Please enter your 6 digit online PIN."
         }
       ]
     },
@@ -64,15 +64,16 @@
       "type": "BANK",
       "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "DNI/NIE",
           "immutable": true
         },
         {
           "name": "password",
-          "description": "Access Code",
+          "description": "Password",
           "masked": true,
           "sensitive": true,
           "numeric": true
@@ -88,10 +89,11 @@
       "type": "BANK",
       "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "NIF/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -112,11 +114,11 @@
       "type": "BANK",
       "popular": true,
       "transactional": true,
-      "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -124,11 +126,11 @@
           "description": "Password",
           "masked": true,
           "sensitive": true,
-          "pattern": "([0-9]{8})",
           "numeric": true,
+          "pattern": "([0-9]{8})",
           "minLength": 8,
           "maxLength": 8,
-          "helpText": "Your 8 digit online PIN"
+          "patternError": "Please enter your 8 digit online PIN."
         }
       ]
     },
@@ -141,10 +143,11 @@
       "type": "BANK",
       "popular": true,
       "transactional": true,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -165,17 +168,17 @@
       "credentialsType": "PASSWORD",
       "type": "BANK",
       "transactional": true,
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
-          "description": "Username",
           "name": "username",
+          "description": "Username",
           "immutable": true
         },
         {
+          "name": "password",
           "description": "Password",
           "masked": true,
-          "name": "password",
           "sensitive": true,
           "minLength": 1
         }
@@ -190,11 +193,12 @@
       "type": "BANK",
       "popular": true,
       "transactional": true,
-      "passwordHelpText": null,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "User number",
+          "numeric": true,
           "immutable": true
         },
         {
@@ -202,6 +206,7 @@
           "description": "Password",
           "masked": true,
           "sensitive": true,
+          "numeric": true,
           "minLength": 1
         }
       ]
@@ -215,11 +220,11 @@
       "type": "BANK",
       "popular": true,
       "transactional": true,
-      "passwordHelpText": "Use the same credentials as when using the ING Direct app.",
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -228,20 +233,20 @@
           "pattern": "[0-3][0-9][0-1][0-9][1-2][9|0][0-9][0-9]",
           "hint": "DDMMYYYY",
           "numeric": true,
+          "immutable": true,
           "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+          "maxLength": 8
         },
         {
           "name": "password",
           "description": "Password",
           "masked": true,
           "sensitive": true,
-          "pattern": "([0-9]{6})",
           "numeric": true,
           "minLength": 6,
           "maxLength": 6,
-          "helpText": "Your 6 digit online PIN"
+          "pattern": "([0-9]{6})",
+          "patternError": "Please enter your 6 digit online PIN."
         }
       ]
     },
@@ -254,11 +259,11 @@
       "type": "BANK",
       "popular": true,
       "transactional": true,
-      "passwordHelpText": null,
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
-          "description": "DNI/NIE ID number",
+          "description": "Username",
           "immutable": true
         },
         {
@@ -266,6 +271,7 @@
           "description": "Password",
           "masked": true,
           "sensitive": true,
+          "numeric": true,
           "minLength": 1
         }
       ]
@@ -280,7 +286,7 @@
       "type": "BANK",
       "popular": false,
       "transactional": true,
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "description": "Username",
@@ -303,19 +309,16 @@
       "credentialsType": "PASSWORD",
       "type": "BANK",
       "transactional": true,
-      "passwordHelpText": "Use the same credentials as when using the mobile bank app.",
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
           "name": "username",
           "description": "Username",
-          "immutable": true,
-          "numeric": false,
-          "helpText": "NIF, NIE, passport number, or other document."
+          "immutable": true
         },
         {
           "name": "username-type",
           "description": "Username type",
-          "numeric": false,
           "pattern": "([NCPI]{1})",
           "minLength": 1,
           "maxLength": 1,
@@ -330,7 +333,7 @@
           "numeric": true,
           "minLength": 4,
           "maxLength": 4,
-          "helpText": "Your 4 digit online PIN"
+          "patternError": "Please enter your 4 digit online PIN."
         }
       ]
     },
@@ -373,17 +376,17 @@
       "credentialsType": "PASSWORD",
       "type": "BANK",
       "transactional": true,
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
       "fields": [
         {
-          "description": "Username",
           "name": "username",
+          "description": "Username",
           "immutable": true
         },
         {
+          "name": "password",
           "description": "Password",
           "masked": true,
-          "name": "password",
           "sensitive": true
         }
       ]
