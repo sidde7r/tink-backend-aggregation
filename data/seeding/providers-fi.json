@@ -62,33 +62,6 @@
       "fields": [
         {
           "description": "Username",
-          "hint": "NNNNNNNN",
-          "name": "username",
-          "numeric": true,
-          "minLength": 1
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password"
-        }
-      ],
-      "name": "fi-op-codecard",
-      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.fi.banks.op.OpBankAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "OP",
-      "fields": [
-        {
-          "description": "Username",
           "name": "username",
           "minLength": 1
         },
