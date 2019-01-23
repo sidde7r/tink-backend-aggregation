@@ -38,10 +38,9 @@ data:
         org.apache.http.client.protocol.ResponseProcessCookies: ERROR
         tink.org.apache.http.client.protocol.ResponseProcessCookies: ERROR
       appenders:
-        - type: console
+        - type: console-json
           threshold: ALL
           timeZone: Europe/Stockholm
-          logFormat: '%magenta(%date{"yyyy-MM-dd HH:mm:ss,SSSXXX"}) %highlight(%level) [%thread] R:%X{requestId} C:%X{clusterId} UID:%X{userId} CID:%X{credentialsId} P:%X{providerName} A:%X{agentName} %blue(%logger) %message%n%xException'
 
     prometheus:
       port: 9130
