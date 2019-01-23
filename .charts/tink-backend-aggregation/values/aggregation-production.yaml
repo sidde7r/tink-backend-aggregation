@@ -2,7 +2,7 @@ podCpuRequest: "500m"
 podCpuLimit: "1"
 podMemoryRequest: "6Gi"
 podMemoryLimit: "6Gi"
-heapSize: "4Gi"
+heapSize: "4G"
 replicas: 10
 
 nodeZones:
