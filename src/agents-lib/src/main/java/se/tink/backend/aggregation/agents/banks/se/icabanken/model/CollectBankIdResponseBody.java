@@ -9,6 +9,7 @@ public class CollectBankIdResponseBody {
 
     private static final String STATUS_SUCCESS = "Ok";
     private static final String STATUS_FAILURE = "Failed";
+    private static final String STATUS_TIMEOUT = "TimedOut";
 
     @JsonProperty("Status")
     private String status;
@@ -39,6 +40,10 @@ public class CollectBankIdResponseBody {
 
     public boolean isFailure() {
         return Objects.equal(status, STATUS_FAILURE);
+    }
+
+    public boolean isTimeOut() {
+        return STATUS_TIMEOUT.equalsIgnoreCase(status);
     }
 
     public String getRequestId() {
