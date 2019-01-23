@@ -6,6 +6,7 @@ import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.messagebodyreaders.CrossKeyMessageBodyReader;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.apache.commons.io.IOUtils.toInputStream;
