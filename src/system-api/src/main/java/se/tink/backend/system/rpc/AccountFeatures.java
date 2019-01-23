@@ -27,16 +27,6 @@ public class AccountFeatures {
         return assets;
     }
 
-    public static AccountFeatures createForLoans(List<Loan> loans) {
-        AccountFeatures assets = createEmpty();
-
-        if (loans != null) {
-            assets.setLoans(loans);
-        }
-
-        return assets;
-    }
-
     public static AccountFeatures createForPortfolios(Portfolio portfolio) {
         AccountFeatures features = createEmpty();
 

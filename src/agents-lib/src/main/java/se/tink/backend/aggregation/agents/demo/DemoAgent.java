@@ -246,7 +246,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             loan.setType(Loan.Type.BLANCO);
         }
 
-        return AccountFeatures.createForLoans(Lists.newArrayList(loan));
+        return AccountFeatures.createForLoan(loan);
     }
 
     @Override
