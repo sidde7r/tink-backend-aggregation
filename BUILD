@@ -486,6 +486,7 @@ junit_test(
         ":aggregation-api",
         ":main-api",
         ":system-api",
+        "//src/agents-models",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/account_identifier:account-identifier-test",
