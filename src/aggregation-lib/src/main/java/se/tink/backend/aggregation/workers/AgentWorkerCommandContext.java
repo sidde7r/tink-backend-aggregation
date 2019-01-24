@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
+import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperation;
@@ -43,6 +44,9 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
     protected Agent agent;
 
     protected final Counter refreshTotal;
+    protected final Counter inconsistencyBetweelAccountsTotal;
+    protected final Counter zeroAccountsFoundDuringRefreshTotal;
+    protected final Counter accountsNotBeingSentToSystemTotal;
     protected final MetricId.MetricLabels defaultMetricLabels;
 
     protected static final Set<AccountTypes> TARGET_ACCOUNT_TYPES = new HashSet<>(Arrays.asList(
@@ -83,6 +87,18 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
         refreshTotal = metricRegistry.meter(
                 MetricId.newId("accounts_refresh")
+                        .label(defaultMetricLabels));
+
+        inconsistencyBetweelAccountsTotal = metricRegistry.meter(
+                MetricId.newId("inconsistency_between_accounts")
+                        .label(defaultMetricLabels));
+
+        zeroAccountsFoundDuringRefreshTotal = metricRegistry.meter(
+                MetricId.newId("zero_accounts_found_during_refresh")
+                        .label(defaultMetricLabels));
+
+        accountsNotBeingSentToSystemTotal = metricRegistry.meter(
+                MetricId.newId("accounts_not_being_sent_to_system")
                         .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
@@ -167,9 +183,60 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
 
     public void sendAllCachedAccountsToUpdateService() {
+
+        compareAccountsBeforeAndAfterUpdate();
+
         for (String uniqueId : allAvailableAccountsByUniqueId.keySet()) {
             sendAccountToUpdateService(uniqueId);
         }
+    }
+
+    private void compareAccountsBeforeAndAfterUpdate() {
+
+        if (!(request instanceof RefreshInformationRequest)) {
+            // If it's not a refresh it shouldn't get here, but good to return anyway
+            return;
+        }
+        
+        List<Account> accountsBeforeRefresh = request.getAccounts();
+        List<Account> accountsFoundByAgent = allAvailableAccountsByUniqueId
+                .values()
+                .stream()
+                .map(p -> p.first)
+                .collect(Collectors.toList());
+
+        // If it was 0 before and 0 found something might be wrong (maybe not though)
+        // If it's 0 accounts before, it means that we are **probably** trying to refresh this credentials for the first time (but not 100% of the time).
+        if (accountsBeforeRefresh.size() == 0 && accountsFoundByAgent.size() == 0) {
+            zeroAccountsFoundDuringRefreshTotal.inc();
+            return;
+        }
+
+        // If the number of accounts sent to system are different than the accounts that we received in the request,
+        //      that might mean that the user has a new account in the credentials. (not a problem)
+        //      that an account on the credentials closed. (not a problem)
+        // But it's  not something that we expect happening on multiple users at the same time. (problem)
+        if (accountsFoundByAgent.size() != accountsBeforeRefresh.size()) {
+            inconsistencyBetweelAccountsTotal.inc();
+            return;
+        }
+
+        List<String> accountIdsBeforeRefresh = accountsBeforeRefresh.stream().map(Account::getId).collect(Collectors.toList());
+        List<String> accountIdsFoundByAgent  = accountsFoundByAgent.stream().map(Account::getId).collect(Collectors.toList());
+
+        for (String idBeforeRefresh : accountIdsBeforeRefresh) {
+            if (!accountIdsFoundByAgent.contains(idBeforeRefresh)) {
+
+                // An account that existed before is not getting sent to system. This happen happen when
+                //      the user closed an account on their credentials. (not a problem)
+                //      the client is not refreshing this RefreshableItem. (not a problem)
+                // But it's not something that we expect happening on multiple users at the same time. (problem)
+                accountsNotBeingSentToSystemTotal.inc();
+                log.warn("accountid {} is missing from the ones sent to system.", idBeforeRefresh);
+            }
+        }
+
+        // TODO: Have 3 different metrics for ids, COMPLETE_MATCH, PARTIAL_MISMATCH, COMPLETE_MISMATCH, increment accordingly
     }
 
     public Agent getAgent() {

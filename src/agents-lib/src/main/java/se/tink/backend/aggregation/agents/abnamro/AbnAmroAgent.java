@@ -209,10 +209,8 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         importedAccounts.stream()
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
                 .forEach(a -> updateCreditCardAccount(a, type));
-
-        if (request.getUser().getFlags().contains(FeatureFlags.ABN_AMRO_ICS_DUPLICATE_FIX)) {
+        
             closeExcludeOldDuplicateICSAccounts(importedAccounts);
-        }
     }
 
     private List<Account> getAccounts() {
@@ -338,7 +336,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 .filter(a -> a.getBankId().length() == OLD_ICS_ID_LENGTH)
                 .filter(a -> importedAccounts.stream().anyMatch(isOldICSAccount(a)))
                 .forEach(a -> {
-                    a.setAccountExclusion(AccountExclusion.AGGREGATION);
+                    a.setExcluded(true);
                     a.setClosed(true);
                     context.cacheAccount(a);
                     context.sendAccountToUpdateService(a.getBankId());
