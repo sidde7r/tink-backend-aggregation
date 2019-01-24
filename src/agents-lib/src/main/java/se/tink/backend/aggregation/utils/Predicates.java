@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public class Predicates {
-    public static Predicate<String> containsCaseInsensitive(final String string) {
+    static Predicate<String> containsCaseInsensitive(final String string) {
         final String stringLowerCase = string != null ? string.toLowerCase() : null;
 
         return value -> {
