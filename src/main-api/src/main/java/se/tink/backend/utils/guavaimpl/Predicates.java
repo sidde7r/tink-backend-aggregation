@@ -1,7 +1,7 @@
 package se.tink.backend.utils.guavaimpl;
 
-import com.google.common.base.Predicate;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 public class Predicates {
     public static Predicate<String> containsCaseInsensitive(final String string) {

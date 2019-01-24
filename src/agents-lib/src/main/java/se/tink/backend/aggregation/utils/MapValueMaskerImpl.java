@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.utils;
 
-import java.util.Optional;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
 import se.tink.backend.utils.guavaimpl.Predicates;
@@ -32,7 +31,7 @@ public class MapValueMaskerImpl implements MapValueMasker {
             }
 
             if (whiteListedKeys.isPresent()) {
-                if (Iterables.any(whiteListedKeys.get(), Predicates.containsCaseInsensitive(key))) {
+                if (whiteListedKeys.get().stream().anyMatch(Predicates.containsCaseInsensitive(key))) {
                     return value;
                 } else {
                     return MASK;
@@ -53,7 +52,7 @@ public class MapValueMaskerImpl implements MapValueMasker {
                 }
 
                 if (whiteListedKeys.isPresent()) {
-                    if (Iterables.any(whiteListedKeys.get(), Predicates.containsCaseInsensitive(key))) {
+                    if (whiteListedKeys.get().stream().anyMatch(Predicates.containsCaseInsensitive(key))) {
                         return values;
                     } else {
                         return getMaskedCollectionOfSameSize(values.size());
