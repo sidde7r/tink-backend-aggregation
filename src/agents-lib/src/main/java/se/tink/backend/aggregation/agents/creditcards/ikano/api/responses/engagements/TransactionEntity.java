@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
-import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.system.rpc.TransactionTypes;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 
 import java.text.ParseException;

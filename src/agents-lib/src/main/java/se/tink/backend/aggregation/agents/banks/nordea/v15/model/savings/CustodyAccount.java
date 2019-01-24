@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.banks.nordea.v20.model.investments.HoldingsEntity;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

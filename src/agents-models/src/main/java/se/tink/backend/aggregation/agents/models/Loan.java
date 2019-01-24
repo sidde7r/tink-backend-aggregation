@@ -1,6 +1,5 @@
-package se.tink.backend.system.rpc;
+package se.tink.backend.aggregation.agents.models;
 
-import com.datastax.driver.core.utils.UUIDs;
 import com.google.common.base.Preconditions;
 import java.io.Serializable;
 import java.util.Date;
@@ -32,34 +31,6 @@ public class Loan implements Comparable<Loan>, Serializable {
     private Double monthlyAmortization;
     private LoanDetails loanDetails;
     private Boolean userModifiedType;
-
-    public Loan() {
-        this.id = UUIDs.timeBased();
-    }
-
-    public Loan(Loan toCopy) {
-        this.id = UUIDs.timeBased();
-
-        setAccountId(toCopy.getAccountId());
-        setAmortized(toCopy.getAmortized());
-        setBalance(toCopy.getBalance());
-        setCredentialsId(toCopy.getCredentialsId());
-        setInitialBalance(toCopy.getInitialBalance());
-        setInitialDate(toCopy.getInitialDate());
-        setInterest(toCopy.getInterest());
-        setName(toCopy.getName());
-        setNextDayOfTermsChange(toCopy.getNextDayOfTermsChange());
-        setNumMonthsBound(toCopy.getNumMonthsBound());
-        setProviderName(toCopy.getProviderName());
-        setSerializedLoanResponse(toCopy.getSerializedLoanResponse());
-        setType(toCopy.getType());
-        setUpdated(toCopy.getUpdated());
-        setUserId(toCopy.getUserId());
-        setLoanNumber(toCopy.getLoanNumber());
-        setMonthlyAmortization(toCopy.getMonthlyAmortization());
-        setLoanDetails(toCopy.getLoanDetails());
-        setUserModifiedType(toCopy.isUserModifiedType());
-    }
 
     @Override
     public int compareTo(Loan o) {

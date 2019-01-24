@@ -46,7 +46,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 /**
  * Agent will import data from Bank Norwegian. It is only possible to have one credit-card per person at Norwegian

@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class SdcConstants {
 

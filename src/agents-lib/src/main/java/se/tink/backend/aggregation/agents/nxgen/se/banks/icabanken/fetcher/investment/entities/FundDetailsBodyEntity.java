@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class FundDetailsBodyEntity {

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.google.common.base.MoreObjects;
 import java.util.List;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class UpdateTransactionsRequest {
     private List<Transaction> transactions;

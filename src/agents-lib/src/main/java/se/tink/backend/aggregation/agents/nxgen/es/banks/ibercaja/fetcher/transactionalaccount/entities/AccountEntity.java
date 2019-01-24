@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.core.Amount;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject

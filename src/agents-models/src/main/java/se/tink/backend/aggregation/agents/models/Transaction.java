@@ -1,17 +1,13 @@
-package se.tink.backend.system.rpc;
+package se.tink.backend.aggregation.agents.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.MoreObjects;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import se.tink.libraries.strings.StringUtils;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Transaction implements Comparable<Transaction>, Cloneable {
+public class Transaction  {
 
     public static class Fields {
         public static final String AccountId = "accountId";
@@ -34,7 +30,6 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
     private double originalAmount;
     private Map<TransactionPayloadTypes, String> payload;
 
-    @JsonIgnore
     private String payloadSerialized;
 
     private boolean pending;
@@ -49,20 +44,6 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
         if (id == null) {
             id = StringUtils.generateUUID();
         }
-    }
-
-    @Override
-    public Transaction clone() {
-        try {
-            return (Transaction) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public int compareTo(Transaction other) {
-        return id.compareTo(other.id);
     }
 
     public String getAccountId() {
@@ -195,16 +176,4 @@ public class Transaction implements Comparable<Transaction>, Cloneable {
         this.upcoming = upcoming;
     }
 
-    @Override
-    public String toString() {
-        generateIdIfMissing();
-        return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("credentialsId", credentialsId)
-                .add("accountId", accountId)
-                .add("date", getDate())
-                .add("amount", getAmount())
-                .add("description", getDescription())
-                .toString();
-    }
 }

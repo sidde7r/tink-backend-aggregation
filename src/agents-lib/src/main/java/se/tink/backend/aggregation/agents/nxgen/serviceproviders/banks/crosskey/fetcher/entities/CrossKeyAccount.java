@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class CrossKeyAccount {

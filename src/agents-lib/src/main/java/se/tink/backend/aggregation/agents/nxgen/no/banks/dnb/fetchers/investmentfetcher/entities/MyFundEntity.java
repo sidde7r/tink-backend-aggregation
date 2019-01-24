@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class MyFundEntity {

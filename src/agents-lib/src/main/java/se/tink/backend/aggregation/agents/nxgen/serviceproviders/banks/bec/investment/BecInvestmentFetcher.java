@@ -20,9 +20,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecInvestmentFetcher implements AccountFetcher<InvestmentAccount> {

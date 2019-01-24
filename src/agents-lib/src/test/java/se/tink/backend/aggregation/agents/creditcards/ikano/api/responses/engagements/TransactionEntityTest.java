@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.date.DateUtils;
 
 import java.text.ParseException;

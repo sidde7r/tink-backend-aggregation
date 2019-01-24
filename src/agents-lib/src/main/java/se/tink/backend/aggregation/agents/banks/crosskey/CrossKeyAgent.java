@@ -27,9 +27,9 @@ import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.system.rpc.AccountFeatures;
-import se.tink.backend.system.rpc.Loan;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExecutor {

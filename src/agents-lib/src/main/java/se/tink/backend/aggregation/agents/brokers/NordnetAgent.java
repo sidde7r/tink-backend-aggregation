@@ -30,9 +30,9 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.system.rpc.AccountFeatures;
-import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class NordnetAgent extends AbstractAgent implements RefreshableItemExecutor {
     private static final int MAX_ATTEMPTS = 60;

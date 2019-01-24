@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcCo
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
-import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class SdcSecurityModel {

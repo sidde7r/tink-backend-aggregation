@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 public class SecurityHolding extends BaseResponse {
 

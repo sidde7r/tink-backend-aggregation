@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 /** The result of validating the set of criteria. */
 public final class ValidationResult {

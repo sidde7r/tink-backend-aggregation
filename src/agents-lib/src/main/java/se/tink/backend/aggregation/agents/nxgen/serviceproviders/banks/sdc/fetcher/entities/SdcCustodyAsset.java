@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class SdcCustodyAsset {

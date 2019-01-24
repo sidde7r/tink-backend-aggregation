@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class PositionEntity {

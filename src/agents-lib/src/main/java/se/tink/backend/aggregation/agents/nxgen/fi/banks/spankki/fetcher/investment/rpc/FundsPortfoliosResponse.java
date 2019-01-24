@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.rpc.SpankkiResp
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.core.Amount;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class FundsPortfoliosResponse extends SpankkiResponse {
