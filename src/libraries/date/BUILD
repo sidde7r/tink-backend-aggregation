@@ -5,14 +5,14 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/log:log",
-        
+        "//src/libraries/log",
+
         # Date libraries
         "//third_party:de_jollyday_jollyday",
         "//third_party:org_pojava_pojava",
         "//third_party:commons_lang_commons_lang",
         "//third_party:org_apache_commons_commons_lang3",
-        
+
         # Annotations
         "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:io_protostuff_protostuff_api",
@@ -28,16 +28,13 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         ":date",
-
-        "//third_party:junit_junit",
-        "//third_party:pl_pragmatists_junitparams",
-        "//third_party:org_assertj_assertj_core",
         "//third_party:com_google_guava_guava",
-        
         "//third_party:commons_lang_commons_lang",
-        "//third_party:org_apache_commons_commons_lang3",
-        
         "//third_party:joda_time_joda_time",
+        "//third_party:junit_junit",
+        "//third_party:org_apache_commons_commons_lang3",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_pojava_pojava",
+        "//third_party:pl_pragmatists_junitparams",
     ],
 )

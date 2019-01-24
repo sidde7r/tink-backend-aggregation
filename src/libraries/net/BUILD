@@ -5,7 +5,7 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/log:log",
+        "//src/libraries/log",
         "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         # todo, don't have dependency on dropwizard
         "//third_party:io_dropwizard_dropwizard_core",

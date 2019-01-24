@@ -3,28 +3,22 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-
-        "//third_party:org_springframework_data_spring_data_commons",
-        "//third_party:org_springframework_data_spring_data_jpa",
-        "//third_party:org_springframework_spring_expression",
-        "//third_party:org_springframework_spring_core",
-
-        "//third_party:org_codehaus_jackson_jackson_core_asl",
-
-        "//third_party:org_hibernate_hibernate_annotations",
-        "//third_party:org_hibernate_hibernate_validator",
-        "//third_party:org_hibernate_hibernate_entitymanager",
-        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
-        "//third_party:javax_validation_validation_api",
-
+        "//third_party:c3p0_c3p0",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
-
-        "//third_party:c3p0_c3p0",
         "//third_party:com_google_code_findbugs_jsr305",
-
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:org_codehaus_jackson_jackson_core_asl",
+        "//third_party:org_hibernate_hibernate_annotations",
+        "//third_party:org_hibernate_hibernate_entitymanager",
+        "//third_party:org_hibernate_hibernate_validator",
+        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+        "//third_party:org_springframework_data_spring_data_commons",
+        "//third_party:org_springframework_data_spring_data_jpa",
+        "//third_party:org_springframework_spring_core",
+        "//third_party:org_springframework_spring_expression",
     ],
 )

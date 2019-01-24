@@ -8,4 +8,3 @@ java_library(
         "//third_party:com_google_guava_guava",
     ],
 )
-

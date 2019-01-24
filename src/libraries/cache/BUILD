@@ -3,12 +3,11 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/metrics:metrics",
         "//src/libraries/concurrency",
         "//src/libraries/executor_utils:executor-utils",
+        "//src/libraries/metrics",
         "//third_party:com_google_guava_guava",
-        "//third_party:org_slf4j_slf4j_api",
         "//third_party:net_spy_spymemcached",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
-

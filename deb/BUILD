@@ -1,4 +1,4 @@
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar", "pkg_deb")
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
 
 # TODO: as there is no data deb this section is repetitive
 # data pkgs
@@ -56,14 +56,14 @@ pkg_tar(
 
 pkg_tar(
     name = "aggregation_bin_tar",
-    srcs = ["//:renamed-aggregation-deploy-jar"],
+    srcs = ["//src/aggregation-service:renamed-aggregation-deploy-jar"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
 )
 
 pkg_tar(
     name = "provider_configuration_bin_tar",
-    srcs = ["//:renamed-provider-configuration-deploy-jar"],
+    srcs = ["//src/provider-configuration-service:renamed-provider-configuration-deploy-jar"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-provider-configuration",
 )
@@ -74,24 +74,24 @@ pkg_tar(
 
 pkg_tar(
     name = "aggregation_tar",
+    visibility = ["//visibility:public"],
     deps = [
         ":aggregation_bin_tar",
         ":aggregation_data_tar",
         ":aggregation_system_tar",
-        ":phantomjs_bin_tar",
         ":libkbc_wbaes_bin_tar",
+        ":phantomjs_bin_tar",
     ],
-    visibility = ["//visibility:public"],
 )
 
 pkg_tar(
     name = "provider_configuration_tar",
+    visibility = ["//visibility:public"],
     deps = [
         ":provider_configuration_bin_tar",
         ":provider_configuration_data_tar",
         ":provider_configuration_system_tar",
     ],
-    visibility = ["//visibility:public"],
 )
 
 # end package tars
@@ -102,10 +102,6 @@ pkg_deb(
     name = "aggregation",
     architecture = "amd64",
     data = ":aggregation_tar",
-    description = "Tink Backend Aggregation",
-    homepage = "https://tink.se",
-    maintainer = "Tink AB <support@tink.se>",
-    package = "tink-backend-aggregation",
     depends = [
         "imagemagick",
         "tesseract-ocr",
@@ -113,6 +109,10 @@ pkg_deb(
         "xvfb",
         "libm4ri-0.0.20140914",
     ],
+    description = "Tink Backend Aggregation",
+    homepage = "https://tink.se",
+    maintainer = "Tink AB <support@tink.se>",
+    package = "tink-backend-aggregation",
     postinst = ":control/postinst",
     preinst = ":control/preinst",
     prerm = ":control/prerm",

@@ -3,11 +3,10 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/metrics:metrics",
-        "//src/libraries/serialization:serialization",
-        "//third_party:com_google_inject_guice",
+        "//src/libraries/metrics",
+        "//src/libraries/serialization",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
-
+        "//third_party:com_google_inject_guice",
     ],
 )
