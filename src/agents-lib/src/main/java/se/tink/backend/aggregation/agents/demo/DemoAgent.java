@@ -46,12 +46,12 @@ import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.system.rpc.AccountFeatures;
-import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.system.rpc.Loan;
-import se.tink.backend.system.rpc.Portfolio;
-import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.system.rpc.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.account.AccountIdentifier;
@@ -238,7 +238,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             loan.setName("Bolån");
             loan.setBalance(-2300000D);
             loan.setNumMonthsBound(1);
-            loan.setType(se.tink.backend.system.rpc.Loan.Type.MORTGAGE);
+            loan.setType(Loan.Type.MORTGAGE);
         } else {
             loan.setInterest(0.9);
             loan.setName("Blanco");

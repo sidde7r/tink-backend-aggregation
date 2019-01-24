@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.aggregation.agents.models.Loan;
 import java.io.IOException;
 import java.text.ParseException;
 

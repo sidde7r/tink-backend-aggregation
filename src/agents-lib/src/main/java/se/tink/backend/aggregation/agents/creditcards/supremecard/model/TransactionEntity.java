@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.creditcards.supremecard.model;
 
 import com.google.common.base.Objects;
-import se.tink.backend.system.rpc.TransactionTypes;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.strings.StringUtils;
 
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEn
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.core.Amount;
-import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class PortfolioDetailsResponse extends OpBankResponseEntity {

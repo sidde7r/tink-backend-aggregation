@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.utils;
 
 import java.util.Comparator;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class TransactionOrdering {
     /**

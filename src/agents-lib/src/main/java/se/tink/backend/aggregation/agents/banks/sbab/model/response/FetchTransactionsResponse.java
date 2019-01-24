@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 
 import com.google.api.client.util.Lists;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 import java.util.List;
 

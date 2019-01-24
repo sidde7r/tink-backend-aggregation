@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.GroupEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.SecurityEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
-import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.aggregation.agents.models.Loan;
 
 public final class DanskeBankPredicates {
     public static Predicate<AccountEntity> knownCheckingAccountProducts(List<String> checkingAccountProducts) {

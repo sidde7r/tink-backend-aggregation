@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 @Ignore
 public class AmericanExpressFIAgentTest extends NextGenerationBaseAgentTest<AmericanExpressFIAgent> {

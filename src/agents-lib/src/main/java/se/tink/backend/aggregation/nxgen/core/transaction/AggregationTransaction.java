@@ -9,11 +9,12 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.Amount;
 import se.tink.backend.core.enums.FeatureFlags;
-import se.tink.backend.system.rpc.TransactionPayloadTypes;
-import se.tink.backend.system.rpc.TransactionTypes;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -51,8 +52,8 @@ public abstract class AggregationTransaction {
         return TransactionTypes.DEFAULT;
     }
 
-    public se.tink.backend.system.rpc.Transaction toSystemTransaction(User user) {
-        se.tink.backend.system.rpc.Transaction transaction = new se.tink.backend.system.rpc.Transaction();
+    public Transaction toSystemTransaction(User user) {
+        Transaction transaction = new Transaction();
 
         transaction.setAmount(getAmount().getValue());
         transaction.setDescription(getDescription());

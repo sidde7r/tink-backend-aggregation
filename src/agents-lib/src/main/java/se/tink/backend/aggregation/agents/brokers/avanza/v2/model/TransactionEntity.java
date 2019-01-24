@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.brokers.avanza.v2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDate;
-import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.system.rpc.TransactionTypes;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
