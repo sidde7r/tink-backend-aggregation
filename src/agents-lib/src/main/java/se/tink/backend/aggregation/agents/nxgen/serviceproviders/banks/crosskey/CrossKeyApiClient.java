@@ -44,6 +44,8 @@ public class CrossKeyApiClient {
 
     public CrossKeyResponse initSession() {
         return buildRequest(CrossKeyConstants.Url.SYSTEM_STATUS_URI)
+                .queryParam(CrossKeyConstants.Query.APP_ID, CrossKeyConstants.AutoAuthentication.APP_VERSION)
+                .queryParam(CrossKeyConstants.Query.LANGUAGE, CrossKeyConstants.AutoAuthentication.LANGUAGE)
                 .get(CrossKeyResponse.class);
     }
 
