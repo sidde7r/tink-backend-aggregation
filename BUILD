@@ -10,7 +10,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         ":main-api",
-        ":system-api",
+        "//src/agents-models",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/creditsafe_consumer_monitoring",
@@ -130,6 +130,7 @@ java_library(
         ":aggregation-api",
         ":main-api",
         ":system-api",
+        "//src/agents-models",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",
