@@ -14,11 +14,9 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.ProcessAccountsR
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.SupplementalInformationResponse;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateApplicationRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentResponse;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateProductInformationRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.aggregation.rpc.Account;
@@ -99,20 +97,6 @@ public interface UpdateService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     UpdateDocumentResponse updateDocument(UpdateDocumentRequest request);
-
-    @POST
-    @Path("/product/information")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response updateProductInformation(UpdateProductInformationRequest updateProductInformationRequest);
-
-    @POST
-    @Path("/application")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response updateApplication(UpdateApplicationRequest updateApplicationRequest);
 
     @POST
     @Path("/fraud/update")
