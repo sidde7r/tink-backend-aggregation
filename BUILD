@@ -279,6 +279,7 @@ java_library(
         ":aggregation-api",
         ":aggregationcontroller-api",
         ":main-api",
+        "//src/agents-models",
         ":system-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account_identifier:account-identifier",
