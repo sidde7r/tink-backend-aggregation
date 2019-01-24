@@ -53,11 +53,10 @@ import se.tink.backend.core.FraudIdentityContent;
 import se.tink.backend.core.FraudIncomeContent;
 import se.tink.backend.core.FraudNonPaymentContent;
 import se.tink.backend.core.FraudRealEstateEngagementContent;
-import se.tink.backend.utils.StringUtils;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
-
+import se.tink.libraries.strings.StringUtils;
 
 @SuppressWarnings("unused")
 public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshExecutor {

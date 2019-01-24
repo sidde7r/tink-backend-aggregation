@@ -5,7 +5,7 @@ import com.google.common.base.Objects;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.utils.MarketParameters;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardDetailsEntity {

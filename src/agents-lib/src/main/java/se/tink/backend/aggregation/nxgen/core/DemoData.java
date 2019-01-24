@@ -27,7 +27,7 @@ import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.DateUtils;

@@ -20,8 +20,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.ame
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.libraries.strings.StringUtils;
 
 public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenticator {
 

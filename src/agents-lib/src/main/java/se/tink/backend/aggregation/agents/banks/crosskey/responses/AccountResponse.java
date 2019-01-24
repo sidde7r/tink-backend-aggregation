@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.banks.crosskey.utils.CrossKeyUtils;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountResponse {

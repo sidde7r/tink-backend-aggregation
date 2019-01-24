@@ -15,7 +15,7 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferEntity {

@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MobileBankingEncryptionHelper;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateSessionRequest {
