@@ -113,7 +113,7 @@ public class AbnAmroUtils {
         public static final Function<RejectedContractEntity, Long> REJECTED_CONTRACT_TO_CONTRACT_NUMBER = RejectedContractEntity::getContractNumber;
     }
 
-    // Complement to se.tink.backend.utils.guavaimpl.Predicates
+    // Complement to se.tink.backend.aggregation.utils.Predicates
     public static class Predicates {
         public static final Predicate<ContractEntity> IS_VALID_CONTRACT_ENTITY = contractEntity -> AbnAmroAccountValidator
                 .validate(contractEntity).isValid();
