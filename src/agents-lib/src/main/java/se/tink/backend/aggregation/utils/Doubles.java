@@ -1,4 +1,4 @@
-package se.tink.backend.utils;
+package se.tink.backend.aggregation.utils;
 
 import com.google.common.math.DoubleMath;
 
