@@ -78,11 +78,11 @@ import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
+import se.tink.libraries.strings.StringUtils;
 
 public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin, RefreshableItemExecutor {
     private static final int MAX_PAGES_LIMIT = 150;

@@ -8,7 +8,7 @@ import com.google.common.base.MoreObjects;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction implements Comparable<Transaction>, Cloneable {

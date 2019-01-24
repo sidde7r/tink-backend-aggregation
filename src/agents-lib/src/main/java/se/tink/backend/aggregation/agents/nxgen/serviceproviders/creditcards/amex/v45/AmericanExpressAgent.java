@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class AmericanExpressAgent extends NextGenerationAgent {
 

@@ -30,9 +30,9 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
-import se.tink.backend.utils.StringUtils;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @Entity
 @Table(name = "credentials")

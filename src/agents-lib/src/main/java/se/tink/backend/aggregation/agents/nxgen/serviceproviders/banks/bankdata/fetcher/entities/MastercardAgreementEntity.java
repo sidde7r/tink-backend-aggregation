@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class MastercardAgreementEntity {

@@ -136,7 +136,6 @@ import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.date.DateUtils;
@@ -146,6 +145,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.social.security.SocialSecurityNumber;
+import se.tink.libraries.strings.StringUtils;
 
 public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecutor, PersistentLogin, TransferExecutor {
 

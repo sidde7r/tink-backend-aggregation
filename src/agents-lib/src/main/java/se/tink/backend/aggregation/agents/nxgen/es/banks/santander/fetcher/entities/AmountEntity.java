@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 @XmlRootElement

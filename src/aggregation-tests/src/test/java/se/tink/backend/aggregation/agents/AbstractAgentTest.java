@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigurationBase {
     protected Class<T> cls;

@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class CrossKeyUtils {
     public static String generateUdIdFor(String username) {

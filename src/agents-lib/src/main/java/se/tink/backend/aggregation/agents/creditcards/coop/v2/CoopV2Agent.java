@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class CoopV2Agent extends AbstractAgent implements RefreshableItemExecutor {
     private static ImmutableSortedSet<Integer> TRANSACTION_PAGE_SIZES = ImmutableSortedSet

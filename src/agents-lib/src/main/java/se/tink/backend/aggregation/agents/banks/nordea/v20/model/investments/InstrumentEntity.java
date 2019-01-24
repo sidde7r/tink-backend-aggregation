@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.nordea.v20.model.investments;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InstrumentEntity {

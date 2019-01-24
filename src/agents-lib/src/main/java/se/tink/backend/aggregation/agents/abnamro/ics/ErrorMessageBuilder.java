@@ -9,11 +9,11 @@ import com.google.common.collect.TreeMultimap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.abnamro.client.exceptions.IcsException;
 import se.tink.libraries.abnamro.client.model.ErrorEntity;
 import se.tink.libraries.abnamro.utils.AbnAmroUtils;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.strings.StringUtils;
 
 /**
  * Build a user friendly error message for ICS credit cards.

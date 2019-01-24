@@ -10,8 +10,8 @@ import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.strings.StringUtils;
 
 public class TransactionEntity {
     private static final ThreadSafeDateFormat FORMAT_SLASH_SEPARATED_DATE =

@@ -25,9 +25,9 @@ import se.tink.backend.core.Credentials;
 import se.tink.backend.core.User;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.libraries.log.legacy.LogUtils;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.abnamro.client.model.ContractEntity;
 import se.tink.libraries.abnamro.client.model.RejectedContractEntity;
+import se.tink.libraries.strings.StringUtils;
 
 public class AbnAmroUtils {
 
