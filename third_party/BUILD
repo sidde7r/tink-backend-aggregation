@@ -112,11 +112,11 @@ java_library(
     name = "com_amazonaws_aws_java_sdk_s3",
     visibility = ["//visibility:public"],
     exports = [
-      "@com_amazonaws_aws_java_sdk_core//jar",
-      "@com_amazonaws_aws_java_sdk_s3//jar",
-      "@com_amazonaws_aws_java_sdk_code_generator//jar",
-      "@com_amazonaws_jmespath_java//jar",
-      "@com_amazonaws_aws_java_sdk_kms//jar",
+        "@com_amazonaws_aws_java_sdk_code_generator//jar",
+        "@com_amazonaws_aws_java_sdk_core//jar",
+        "@com_amazonaws_aws_java_sdk_kms//jar",
+        "@com_amazonaws_aws_java_sdk_s3//jar",
+        "@com_amazonaws_jmespath_java//jar",
     ],
 )
 
@@ -459,6 +459,7 @@ java_library(
         "@com_google_code_gson_gson//jar",
     ],
 )
+
 java_library(
     name = "com_google_guava_guava",
     visibility = ["//visibility:public"],
@@ -1710,7 +1711,6 @@ java_library(
     name = "net_sourceforge_htmlunit_htmlunit",
     visibility = ["//visibility:public"],
     exports = [
-
         "@commons_codec_commons_codec//jar",
         "@commons_collections_commons_collections//jar",
         "@commons_io_commons_io//jar",
@@ -1955,13 +1955,11 @@ java_library(
     name = "org_apache_httpcomponents_httpclient",
     visibility = ["//visibility:public"],
     exports = [
-        "@org_apache_httpcomponents_httpclient//jar",
         "@commons_codec_commons_codec//jar",
+        "@org_apache_httpcomponents_httpclient//jar",
         "@org_apache_httpcomponents_httpcore//jar",
     ],
 )
-
-
 
 java_import(
     name = "com_amazonaws_aws_java_sdk_sqs",
@@ -1973,12 +1971,11 @@ java_import(
     visibility = ["//visibility:public"],
     exports = [
         "@com_amazonaws_aws_java_sdk_code_generator//jar",
-        "@com_amazonaws_jmespath_java//jar",
-        "@tink_httpcore_4_4_9//:tink_httpcore_4_4_9",
-        "@tink_httpclient_4_5_5//:tink_httpclient_4_5_5",
         "@com_amazonaws_aws_java_sdk_core//jar",
         "@com_amazonaws_aws_java_sdk_sqs//jar",
-
+        "@com_amazonaws_jmespath_java//jar",
+        "@tink_httpclient_4_5_5",
+        "@tink_httpcore_4_4_9",
     ],
 )
 
@@ -1989,6 +1986,7 @@ java_library(
         "@org_apache_httpcomponents_httpcore//jar",
     ],
 )
+
 java_library(
     name = "org_apache_httpcomponents_httpmime",
     visibility = ["//visibility:public"],

@@ -6,16 +6,16 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         # Log
-        "//src/libraries/log:log",
+        "//src/libraries/log",
 
         # Auth
-        "//src/libraries/auth:auth",
-        
+        "//src/libraries/auth",
+
         # Message builder
-        "//src/libraries/access_logging:access_logging",
+        "//src/libraries/access_logging",
 
         # Metrics (Prometheus)
-        "//src/libraries/metrics:metrics",
+        "//src/libraries/metrics",
 
         # Guava
         "//third_party:com_google_guava_guava",
@@ -46,9 +46,8 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         ":jersey-log",
-
+        "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
-        "//third_party:com_google_guava_guava",
     ],
 )

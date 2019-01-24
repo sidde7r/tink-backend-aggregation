@@ -5,9 +5,8 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/log:log",
         "//src/libraries/http:http-annotations",
-
+        "//src/libraries/log",
         "//third_party:com_google_guava_guava",
         "//third_party:com_lambdaworks_scrypt",
         "//third_party:com_yubico_yubico_validation_client2",
@@ -21,9 +20,8 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         ":auth",
-
+        "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
-        "//third_party:com_google_guava_guava",
     ],
 )

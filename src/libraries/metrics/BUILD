@@ -7,18 +7,18 @@ java_library(
     deps = [
         # Guava
         "//third_party:com_google_guava_guava",
-        
+
         # Guice
         "//third_party:com_google_inject_guice",
-        
+
         # Prometheus
         "//third_party:io_prometheus_simpleclient",
         "//third_party:io_prometheus_simpleclient_hotspot",
         "//third_party:io_prometheus_simpleclient_servlet",
-  
+
         # Slf4j
         "//third_party:org_slf4j_slf4j_api",
-        
+
         # JSR 305
         "//third_party:com_google_code_findbugs_jsr305",
 
@@ -45,7 +45,6 @@ junit_test(
     ],
     deps = [
         ":metrics",
-
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "//third_party:com_google_guava_guava",
@@ -53,8 +52,6 @@ junit_test(
         # Prometheus
         "//third_party:io_prometheus_simpleclient",
         "//third_party:io_prometheus_simpleclient_common",
-
         "//third_party:org_mockito_mockito_core",
     ],
 )
-

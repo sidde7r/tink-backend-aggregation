@@ -1,8 +1,8 @@
 java_binary(
     name = "ukob-register",
     srcs = glob(["src/main/java/se/tink/backend/aggregation/UkobRegisterCommand.java"]),
-    visibility = ["//visibility:public"],
     main_class = "se.tink.backend.aggregation.UkobRegisterCommand",
+    visibility = ["//visibility:public"],
     deps = [
         "//src/agents-lib",
         "//src/libraries/serialization",
