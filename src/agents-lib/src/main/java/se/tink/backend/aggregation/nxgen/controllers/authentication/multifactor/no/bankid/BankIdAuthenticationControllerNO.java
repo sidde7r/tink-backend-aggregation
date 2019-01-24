@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -27,10 +28,12 @@ public class BankIdAuthenticationControllerNO implements MultiFactorAuthenticato
     private static final AggregationLogger log = new AggregationLogger(BankIdAuthenticationControllerNO.class);
     private final BankIdAuthenticatorNO authenticator;
     private final AgentContext context;
+    private final SupplementalRequester supplementalRequester;
 
     public BankIdAuthenticationControllerNO(AgentContext context, BankIdAuthenticatorNO authenticator) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.context = Preconditions.checkNotNull(context);
+        this.supplementalRequester = Preconditions.checkNotNull(context);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class BankIdAuthenticationControllerNO implements MultiFactorAuthenticato
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(Lists.newArrayList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        context.requestSupplementalInformation(credentials, true);
+        supplementalRequester.requestSupplementalInformation(credentials, true);
     }
 
     public void poll() throws AuthenticationException, AuthorizationException {

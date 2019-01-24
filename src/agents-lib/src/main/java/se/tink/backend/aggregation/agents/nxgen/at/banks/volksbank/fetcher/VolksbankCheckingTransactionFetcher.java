@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class VolksbankCheckingTransactionFetcher
         implements TransactionDatePaginator<TransactionalAccount>, PaginatorResponse {

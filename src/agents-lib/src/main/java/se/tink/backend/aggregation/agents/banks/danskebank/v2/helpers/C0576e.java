@@ -4,7 +4,7 @@ import com.google.common.base.Charsets;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MobileBankingEncryptionHelper;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 /* renamed from: com.danskebank.core.h.e.a.e */
 public class C0576e extends C0575g {

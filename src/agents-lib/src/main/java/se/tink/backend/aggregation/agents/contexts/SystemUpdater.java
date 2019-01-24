@@ -8,7 +8,6 @@ import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.system.rpc.UpdateDocumentResponse;
 
 public interface SystemUpdater {
 
@@ -23,8 +22,7 @@ public interface SystemUpdater {
 
     void updateFraudDetailsContent(List<FraudDetailsContent> detailsContent);
 
-
-    UpdateDocumentResponse updateDocument(DocumentContainer container);
+    void updateDocument(DocumentContainer container);
 
     List<Account> getUpdatedAccounts();
 

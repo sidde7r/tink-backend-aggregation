@@ -121,7 +121,6 @@ import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -132,6 +131,7 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class ICABankenAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
         PersistentLogin {
@@ -285,7 +285,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 
@@ -954,7 +954,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             }
         }
 
-        context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
         TransactionListResponse transactionsResponse = null;
 
@@ -980,11 +980,11 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
                 transactions.add(transactionEntity.toTransaction());
             }
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
         } while (!transactionsResponse.getBody().isNoMoreTransactions()
                 && !isContentWithRefresh(account, transactions));
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private TransferResponse redoTransferWithValidDate(TransferRequest transferRequest,
@@ -1004,19 +1004,19 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
         try {
             response.addDestinations(
-                    getTransferAccountDestinations(context.getUpdatedAccounts(), accountEntities, recipientEntities));
+                    getTransferAccountDestinations(systemUpdater.getUpdatedAccounts(), accountEntities, recipientEntities));
             response.addDestinations(
-                    getPaymentAccountDestinations(context.getUpdatedAccounts(), accountEntities, recipientEntities));
+                    getPaymentAccountDestinations(systemUpdater.getUpdatedAccounts(), accountEntities, recipientEntities));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
 
-        context.updateTransferDestinationPatterns(response.getDestinations());
+        systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
     }
 
     private void updateEInvoices() {
         List<Transfer> einvoices = fetchEInvoices().getBody().toTinkTransfers(catalog);
-        context.updateEinvoices(einvoices);
+        systemUpdater.updateEinvoices(einvoices);
     }
 
     private List<AccountEntity> getAccounts() {
@@ -1113,7 +1113,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
 
             portfolio.setInstruments(instruments);
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         }
     }
     
@@ -1192,14 +1192,14 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         Account account = loanEntity.toAccount();
         Loan loan = loanEntity.toLoan();
 
-        context.cacheAccount(account, AccountFeatures.createForLoan(loan));
+        financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
     }
 
     private void updateAccount(MortgageEntity mortgageEntity) throws Exception {
         Account account = mortgageEntity.toAccount();
         Loan loan = mortgageEntity.toLoan();
 
-        context.cacheAccount(account, AccountFeatures.createForLoan(loan));
+        financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
     }
 
     private Optional<RecipientEntity> tryFindRegisteredDestinationAccount(AccountIdentifier destination) {
@@ -1335,7 +1335,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
                 autostartToken = bankIdResponse.getBody().getAutostartToken();
             }
 
-            context.openBankId(autostartToken, false);
+            supplementalRequester.openBankId(autostartToken, false);
 
             return requestId;
         } catch (UniformInterfaceException e) {
@@ -1430,6 +1430,11 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
                 CollectBankIdResponse bankIdResponse = response.getEntity(CollectBankIdResponse.class);
 
                 if (response.getStatus() == 409) {
+
+                    if (bankIdResponse.getBody().isTimeOut()) {
+                        throw BankIdError.TIMEOUT.exception();
+                    }
+
                     if (bankIdResponse.getBody().isFailure()) {
                         throw BankIdError.CANCELLED.exception();
                     }

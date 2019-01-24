@@ -48,6 +48,7 @@ java_library(
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/libraries/serialization:serialization",
+        "//src/libraries/strings:strings",
         "//src/libraries/uuid",
         "//third_party:c3p0_c3p0",
         "//third_party:com_datastax_cassandra_cassandra_driver_core",
@@ -87,8 +88,6 @@ java_library(
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_headers:api-headers",
 
-        # Proto serialization util
-        "//src/libraries/protobuf_serialization_utils:protobuf-serialization-utils",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -367,6 +366,7 @@ java_binary(
         ":aggregationcontroller-api",
         ":main-api",
         "//src/libraries/auth",
+        "//src/libraries/console_json_logger",
         "//src/libraries/discovery",
         "//src/libraries/draining",
         "//src/libraries/dropwizard_utils:dropwizard-utils",

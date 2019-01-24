@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.strings.StringUtils;
 
 public class VolksbankCheckingAccountFetcher implements AccountFetcher<TransactionalAccount> {
 

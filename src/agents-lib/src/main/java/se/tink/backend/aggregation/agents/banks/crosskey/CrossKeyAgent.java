@@ -119,7 +119,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     private void openBankIdAppWith(String token) {
         credentials.setSupplementalInformation(Preconditions.checkNotNull(token));
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     /**
@@ -134,7 +134,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
         }
         hasRefreshed = true;
 
-        context.updateStatus(CredentialsStatus.UPDATING);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING);
         List<Account> accounts;
 
         try {
@@ -167,14 +167,14 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
                 }
                 if (loanDetails == null) {
                     // something went wrong when we tried to fetch loanDetails
-                    context.cacheAccount(tinkAccount);
+                    financialDataCacher.cacheAccount(tinkAccount);
                     continue;
                 }
                 Loan loan = loanDetails.toTinkLoan();
-                context.cacheAccount(tinkAccount, AccountFeatures.createForLoan(loan));
+                financialDataCacher.cacheAccount(tinkAccount, AccountFeatures.createForLoan(loan));
             } else {
                 tinkAccounts.add(tinkAccount);
-                context.cacheAccount(tinkAccount);
+                financialDataCacher.cacheAccount(tinkAccount);
             }
         }
         return tinkAccounts;
@@ -258,7 +258,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     private void updateTransactionsFor(Account account, List<Transaction> transactions) {
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private String requestOneTimeCodeFromUser(String oneTimeCodePosition) throws Exception {
@@ -269,7 +269,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
         Optional<String> oneTimeCode = SupplementalInformationUtils.getResponseFields(supplementalInformation, "response");
 
         if (!oneTimeCode.isPresent()) {

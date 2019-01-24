@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
@@ -42,6 +43,7 @@ public class IcaBankenExecutorHelper {
 
     private IcaBankenApiClient apiClient;
     private final AgentContext context;
+    private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
@@ -49,6 +51,7 @@ public class IcaBankenExecutorHelper {
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.context = context;
+        this.supplementalRequester = context;
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
@@ -190,7 +193,7 @@ public class IcaBankenExecutorHelper {
             BankIdBodyEntity bankIdResponse = apiClient.initTransferSign();
             String reference = bankIdResponse.getRequestId();
 
-            context.openBankId(bankIdResponse.getAutostartToken(), false);
+            supplementalRequester.openBankId(bankIdResponse.getAutostartToken(), false);
             poll(reference);
             assertSuccessfulSign(reference);
         } catch (Exception initialException) {
@@ -213,7 +216,7 @@ public class IcaBankenExecutorHelper {
         BankIdBodyEntity bankIdResponse = apiClient.initEInvoiceBankId(invoiceId);
         String reference = bankIdResponse.getRequestId();
 
-        context.openBankId(bankIdResponse.getAutostartToken(), false);
+        supplementalRequester.openBankId(bankIdResponse.getAutostartToken(), false);
         poll(reference);
 
         return reference;

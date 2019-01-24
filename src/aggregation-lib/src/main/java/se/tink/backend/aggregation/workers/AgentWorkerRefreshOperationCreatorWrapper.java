@@ -19,7 +19,7 @@ public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable {
     @Override
     public void run() {
         AgentWorkerOperation agentWorkerOperation = agentWorkerCommandFactory
-                .createRefreshOperation(request, clientInfo);
+                .createOperationRefresh(request, clientInfo);
         agentWorkerOperation.run();
     }
 

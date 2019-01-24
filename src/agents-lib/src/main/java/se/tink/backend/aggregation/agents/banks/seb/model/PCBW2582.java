@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.system.rpc.Loan;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PCBW2582 {

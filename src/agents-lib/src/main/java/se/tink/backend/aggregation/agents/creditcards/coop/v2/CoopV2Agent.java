@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class CoopV2Agent extends AbstractAgent implements RefreshableItemExecutor {
     private static ImmutableSortedSet<Integer> TRANSACTION_PAGE_SIZES = ImmutableSortedSet
@@ -70,12 +70,12 @@ public class CoopV2Agent extends AbstractAgent implements RefreshableItemExecuto
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CREDITCARD_ACCOUNTS:
-            getAccounts().forEach(accountEntity -> context.cacheAccount(parseAccount(accountEntity)));
+            getAccounts().forEach(accountEntity -> financialDataCacher.cacheAccount(parseAccount(accountEntity)));
             break;
         case CREDITCARD_TRANSACTIONS:
             getAccounts().forEach(accountEntity -> {
                 Account account = parseAccount(accountEntity);
-                context.updateTransactions(account, getTransactions(account, accountEntity));
+                financialDataCacher.updateTransactions(account, getTransactions(account, accountEntity));
             });
             break;
         }

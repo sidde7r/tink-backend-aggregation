@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SupplementalInfoError;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -19,10 +20,12 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class SupplementalInformationController {
 
     private final AgentContext context;
+    private  final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
 
     public SupplementalInformationController(AgentContext context, Credentials credentials) {
         this.context = context;
+        this.supplementalRequester = context;
         this.credentials = credentials;
     }
 
@@ -44,7 +47,7 @@ public class SupplementalInformationController {
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         String supplementalInformation =
-                Optional.ofNullable(Strings.emptyToNull(context.requestSupplementalInformation(credentials)))
+                Optional.ofNullable(Strings.emptyToNull(supplementalRequester.requestSupplementalInformation(credentials)))
                         .orElseThrow(SupplementalInfoError.NO_VALID_CODE::exception);
 
         return Optional.ofNullable(
@@ -60,6 +63,6 @@ public class SupplementalInformationController {
 
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
         credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 }

@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class AmountParser {
 

@@ -30,11 +30,11 @@ import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.backend.utils.StringUtils;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 import static java.time.temporal.TemporalAdjusters.next;
 

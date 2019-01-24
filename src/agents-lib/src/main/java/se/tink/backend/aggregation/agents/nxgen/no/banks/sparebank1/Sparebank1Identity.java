@@ -11,8 +11,8 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class Sparebank1Identity {
     private static final String STORAGE_KEY_DEVICEID = "deviceId";

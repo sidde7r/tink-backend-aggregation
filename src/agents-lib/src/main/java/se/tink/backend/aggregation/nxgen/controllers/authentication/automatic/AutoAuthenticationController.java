@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
 import com.google.common.base.Preconditions;
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -16,14 +17,14 @@ import se.tink.backend.aggregation.rpc.CredentialsTypes;
 
 public class AutoAuthenticationController implements TypedAuthenticator {
     private final CredentialsRequest request;
-    private final AgentContext context;
+    private final SystemUpdater systemUpdater;
     private final MultiFactorAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
 
     public AutoAuthenticationController(CredentialsRequest request, AgentContext context,
             MultiFactorAuthenticator manualAuthenticator, AutoAuthenticator autoAuthenticator) {
         this.request = Preconditions.checkNotNull(request);
-        this.context = Preconditions.checkNotNull(context);
+        this.systemUpdater = Preconditions.checkNotNull(context);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
         this.autoAuthenticator = Preconditions.checkNotNull(autoAuthenticator);
     }
@@ -45,7 +46,7 @@ public class AutoAuthenticationController implements TypedAuthenticator {
                 auto(credentials);
             }
         } finally {
-            context.updateCredentialsExcludingSensitiveInformation(credentials, false);
+            systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 

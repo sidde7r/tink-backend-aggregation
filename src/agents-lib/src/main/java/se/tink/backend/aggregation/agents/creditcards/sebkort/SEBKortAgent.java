@@ -136,7 +136,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         // Validate authentication.
 
@@ -339,7 +339,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         List<InvoiceBillingUnitEntity> invoiceBillingUnits = fetchInvoiceBillingUnits();
 
         if (invoiceBillingUnits == null) {
-            context.updateStatus(CredentialsStatus.UPDATED, "Det finns inga fakturor att hämta.");
+            statusUpdater.updateStatus(CredentialsStatus.UPDATED, "Det finns inga fakturor att hämta.");
             return;
         }
 
@@ -375,7 +375,7 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
             // Important that no RetryableError are thrown after this. Otherwise we risk have the AgentContext in an
             // inconsistent state when we are retrying.
 
-            context.updateTransactions(account, parser.getTransactionsByAccountNumber().get(accountNumber));
+            financialDataCacher.updateTransactions(account, parser.getTransactionsByAccountNumber().get(accountNumber));
         }
     }
 

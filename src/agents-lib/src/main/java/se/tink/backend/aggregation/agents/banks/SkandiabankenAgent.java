@@ -78,11 +78,11 @@ import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
+import se.tink.libraries.strings.StringUtils;
 
 public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin, RefreshableItemExecutor {
     private static final int MAX_PAGES_LIMIT = 150;
@@ -392,7 +392,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
             accumulatedTransactions.addAll(getListOfTransactions(accountEntity));
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, accumulatedTransactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, accumulatedTransactions);
 
             // Prepare for a possible next loop.
 
@@ -558,14 +558,14 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
             portfolio.setCashValue(investmentResponse.getDisposableAmount());
             portfolio.setInstruments(instruments);
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.cacheAccount(set.getValue()));
+                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type) {
@@ -633,7 +633,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
             }
         }
 
-        context.updateTransactions(account, accumulatedTransactions);
+        financialDataCacher.updateTransactions(account, accumulatedTransactions);
     }
 
     private List<Transaction> getListOfTransactions(AccountEntity accountEntity) {
@@ -696,7 +696,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         }
 
         credentials.setPayload(customerIdString);
-        context.updateCredentialsExcludingSensitiveInformation(credentials, false);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
         customerId = loginResponse.getId();
 
@@ -753,7 +753,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     private void openBankID(Optional<String> autostartToken) {
         credentials.setSupplementalInformation(autostartToken.orElse(null));
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     private enum UserMessage implements LocalizableEnum {

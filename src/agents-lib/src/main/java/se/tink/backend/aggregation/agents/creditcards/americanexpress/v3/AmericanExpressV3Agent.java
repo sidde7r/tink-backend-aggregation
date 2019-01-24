@@ -90,11 +90,11 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
 
             getTransactions(cardEntity, transactions, account);
 
-            context.updateTransactions(account, transactions);
+            financialDataCacher.updateTransactions(account, transactions);
         }
 
         for (SubCard subCard : subCardsByCardNumber.values()) {
-            context.updateTransactions(subCard.getAccount(), subCard.getTransactions());
+            financialDataCacher.updateTransactions(subCard.getAccount(), subCard.getTransactions());
         }
     }
 
@@ -218,7 +218,7 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
                 break;
             }
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
         }
     }
 

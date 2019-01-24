@@ -8,6 +8,7 @@ import java.util.function.Function;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankDefaultApiClient;
@@ -32,6 +33,7 @@ import se.tink.libraries.i18n.Catalog;
 public class SwedbankTransferHelper {
 
     private final AgentContext context;
+    private final SupplementalRequester supplementalRequester;
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankDefaultApiClient apiClient;
@@ -39,13 +41,14 @@ public class SwedbankTransferHelper {
     public SwedbankTransferHelper(AgentContext context, Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper, SwedbankDefaultApiClient apiClient) {
         this.context = context;
+        this.supplementalRequester = context;
         this.catalog = catalog;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
     }
 
     public LinksEntity collectBankId(AbstractBankIdSignResponse bankIdSignResponse) {
-        context.openBankId(null, false);
+        supplementalRequester.openBankId(null, false);
 
         for (int i = 0; i < SwedbankBaseConstants.BankId.MAX_ATTEMPTS; i++) {
             SwedbankBaseConstants.BankIdResponseStatus signingStatus = bankIdSignResponse.getBankIdStatus();

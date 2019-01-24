@@ -86,32 +86,6 @@ public class LoanDetails {
         return Objects.hashCode(accountId, coApplicant, applicants, loanSecurity);
     }
 
-    public boolean hasUpdatedSince(LoanDetails previousLoanDetails) {
-        Preconditions.checkNotNull(previousLoanDetails);
-        Preconditions.checkArgument(accountId.equals(previousLoanDetails.accountId));
-
-        if (coApplicant != null && previousLoanDetails.coApplicant == null) {
-            return true;
-        }
-        if (coApplicant != null && !Objects.equal(coApplicant, previousLoanDetails.coApplicant)) {
-            return true;
-        }
-        if (applicants != null && previousLoanDetails.applicants == null) {
-            return true;
-        }
-        if (applicants != null && !Objects.equal(applicants, previousLoanDetails.applicants)) {
-            return true;
-        }
-        if (loanSecurity != null && previousLoanDetails.loanSecurity == null) {
-            return true;
-        }
-        if (loanSecurity != null && !Objects.equal(loanSecurity, previousLoanDetails.loanSecurity)) {
-            return true;
-        }
-
-        return false;
-    }
-
     public Boolean getCoApplicant() {
         return coApplicant;
     }

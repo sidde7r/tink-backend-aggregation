@@ -95,7 +95,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(Lists.newArrayList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
-        String response = context.requestSupplementalInformation(credentials);
+        String response = supplementalRequester.requestSupplementalInformation(credentials);
 
         return SupplementalInformationUtils.getResponseFields(response, supplementalResponseKey);
     }
@@ -112,7 +112,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
             }
 
             credentials.setField(Field.Key.USERNAME, ssn.get());
-            context.updateCredentialsExcludingSensitiveInformation(credentials, false);
+            systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
             // Due to a bug in the app, we aren't able to prompt BankID after a supplemental information request
             // So instead we need to abort the current login operation and ask the user to try again
@@ -343,7 +343,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
     public void refresh(RefreshableItem item) {
         switch (item) {
         case CREDITCARD_ACCOUNTS:
-            context.cacheAccount(getAccount());
+            financialDataCacher.cacheAccount(getAccount());
             break;
 
         case CREDITCARD_TRANSACTIONS:
@@ -398,7 +398,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
         } while (failCounter < 3 && !isContentWithRefresh(account,
                 transactions));
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private enum UserMessage implements LocalizableEnum {

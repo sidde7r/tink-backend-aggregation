@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-import se.tink.backend.utils.StringUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class SavingsAccountParsingUtils {
 

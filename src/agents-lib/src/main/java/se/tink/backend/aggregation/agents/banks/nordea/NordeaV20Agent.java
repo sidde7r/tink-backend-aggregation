@@ -131,7 +131,6 @@ import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.backend.utils.Doubles;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -141,6 +140,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
@@ -524,7 +524,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setSupplementalInformation(null);
         this.credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        this.context.requestSupplementalInformation(this.credentials, false);
+        this.supplementalRequester.requestSupplementalInformation(this.credentials, false);
 
         // Confirm that Nordea authenticated the the account.
 
@@ -778,7 +778,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 transactionsMap.putAll(transactionsPage);
                 transactions = Lists.newArrayList(transactionsMap.values());
 
-                this.context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+                this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
                 // See if we're content with the data we have.
 
@@ -797,8 +797,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         transactions.addAll(upcomingTransactions);
 
-        this.context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
-        return this.context.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
+        this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+        return this.financialDataCacher.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
                 .sortedCopy(transactions));
     }
 
@@ -867,7 +867,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 transactionsMap.putAll(transactionsPage);
                 transactionsList = Lists.newArrayList(transactionsMap.values());
 
-                this.context.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
+                this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
 
                 // Either construct the date object to start fetching the historical card transactions, or go back
                 // another month.
@@ -889,8 +889,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             }
         }
 
-        this.context.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
-        return this.context.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
+        this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
+        return this.financialDataCacher.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
                 .sortedCopy(transactionsList));
     }
 
@@ -913,7 +913,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             assets.setLoans(Lists.newArrayList(loan));
         }
 
-        this.context.cacheAccount(account, assets);
+        this.financialDataCacher.cacheAccount(account, assets);
     }
 
     private void refreshInvestmentAccounts() throws IOException {
@@ -980,7 +980,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                             });
                     portfolio.setInstruments(instruments);
 
-                    this.context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                    this.financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
                 } catch (Exception e) {
                     // Don't fail the whole refresh just because we failed updating investment data but log error.
                     this.log.error("Caught exception while updating investment data", e);
@@ -992,7 +992,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void updateCredentialsType(CredentialsTypes type) {
         if (type != this.credentials.getType()) {
             this.credentials.setType(type);
-            this.context.updateCredentialsExcludingSensitiveInformation(this.credentials, false);
+            this.systemUpdater.updateCredentialsExcludingSensitiveInformation(this.credentials, false);
         }
     }
 
@@ -1002,9 +1002,9 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void updateStatus(String code) {
         try {
 
-            this.context.updateStatus(NordeaErrorUtils.getErrorStatus(code), NordeaErrorUtils.getErrorMessage(code));
+            this.statusUpdater.updateStatus(NordeaErrorUtils.getErrorStatus(code), NordeaErrorUtils.getErrorMessage(code));
         } catch (Exception e) {
-            this.context.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
+            this.statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR);
             this.log.error("Could not update status", e);
         }
     }
@@ -1078,7 +1078,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
     private void updateAccountsPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.cacheAccount(set.getValue()));
+                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerAccountType(RefreshableItem type) {
@@ -1230,7 +1230,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         TransferDestinationsResponse response = new TransferDestinationsResponse();
 
         Map<Account, List<TransferDestinationPattern>> internalOnly = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getUpdatedAccounts())
+                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
                 .setSourceAccounts(internalOnlySourceAccounts)
                 .setDestinationAccounts(internalOnlyDestinationAccounts)
                 .build();
@@ -1238,7 +1238,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         response.addDestinations(internalOnly);
 
         Map<Account, List<TransferDestinationPattern>> external = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getUpdatedAccounts())
+                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
                 .setSourceAccounts(sourceAccounts)
                 .setDestinationAccounts(destinationAccounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
@@ -1247,7 +1247,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         response.addDestinations(external);
 
         Map<Account, List<TransferDestinationPattern>> payments = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(context.getUpdatedAccounts())
+                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
                 .setSourceAccounts(paymentSourceAccounts)
                 .setDestinationAccounts(paymentDestinationAccounts)
                 .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)
@@ -1256,7 +1256,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         response.addDestinations(payments);
 
-        context.updateTransferDestinationPatterns(response.getDestinations());
+        systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
     }
 
     private void updateEInvoices() throws Exception {
@@ -1280,7 +1280,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 .transform(PaymentPair.TO_PAYMENTDETAILS)
                 .transform(PaymentDetailsResponseOut.TO_EINVOICE_TRANSFER));
 
-        context.updateEinvoices(eInvoices);
+        systemUpdater.updateEinvoices(eInvoices);
     }
 
     private InitialContextResponse getInitialContext() {
@@ -1657,7 +1657,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         this.credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = this.context.requestSupplementalInformation(this.credentials, true);
+        String supplementalInformation = this.supplementalRequester.requestSupplementalInformation(this.credentials, true);
 
         this.log.info("Supplemental Information response is: " + supplementalInformation);
 
@@ -1901,7 +1901,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setSupplementalInformation(null);
         this.credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        this.context.requestSupplementalInformation(this.credentials, false);
+        this.supplementalRequester.requestSupplementalInformation(this.credentials, false);
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
 
@@ -2067,7 +2067,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         this.credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = this.context.requestSupplementalInformation(this.credentials, true);
+        String supplementalInformation = this.supplementalRequester.requestSupplementalInformation(this.credentials, true);
 
         if (Strings.isNullOrEmpty(supplementalInformation)) {
             return null;
@@ -2095,7 +2095,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         this.credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         this.credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = this.context.requestSupplementalInformation(this.credentials, true);
+        String supplementalInformation = this.supplementalRequester.requestSupplementalInformation(this.credentials, true);
 
         if (Strings.isNullOrEmpty(supplementalInformation)) {
             return null;

@@ -21,8 +21,8 @@ import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.FraudDetailsContentType;
 import se.tink.backend.core.User;
 import se.tink.backend.core.UserProfile;
-import se.tink.backend.utils.StringUtils;
 import se.tink.credentials.demo.DemoCredentials;
+import se.tink.libraries.strings.StringUtils;
 
 public class CreditSafeAgentTest extends AbstractAgentTest<CreditSafeAgent> {
 

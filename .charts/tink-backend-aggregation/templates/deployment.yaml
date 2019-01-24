@@ -253,6 +253,8 @@ spec:
           initialDelaySeconds: 60
 
         volumeMounts:
+        - name: tmp
+          mountPath: /tmp
         - name: altered-config-volume
           mountPath: /etc/tink
         - name: bnppf-cert
@@ -284,4 +286,6 @@ spec:
           secretName: signature-request-key
       {{- end }}
       - name: altered-config-volume
+        emptyDir: {}
+      - name: tmp
         emptyDir: {}

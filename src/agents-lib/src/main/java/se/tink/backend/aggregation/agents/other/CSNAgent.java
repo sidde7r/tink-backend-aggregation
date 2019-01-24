@@ -112,7 +112,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
                                     "\\d{12}: Lån före 1989 \\(studiemedel\\)")),
                     "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
 
-            this.context.cacheAccount(account);
+            this.financialDataCacher.cacheAccount(account);
         } while (matcher.find());
     }
 

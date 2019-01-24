@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.List;
 import se.tink.backend.core.UserConnectedService;
 import se.tink.backend.core.enums.FeatureFlags;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 
 /**
  * Aggregation RPC User

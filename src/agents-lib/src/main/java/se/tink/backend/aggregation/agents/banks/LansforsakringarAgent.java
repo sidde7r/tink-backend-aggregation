@@ -118,7 +118,6 @@ import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -129,6 +128,7 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class LansforsakringarAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
@@ -268,7 +268,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             ClientResponse clientLoginResponse = createPostRequest(BANKID_COLLECT_URL,
@@ -460,7 +460,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                 eInvoices.add(eInvoice.toTransfer());
             }
 
-            context.updateEinvoices(eInvoices);
+            systemUpdater.updateEinvoices(eInvoices);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -555,10 +555,10 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                             currentPage = transactionListResponse.getNextSequenceNumber();
                         }
 
-                        context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+                        statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
                     } while (hasMoreTransactions);
 
-                    context.updateTransactions(account, transactions);
+                    financialDataCacher.updateTransactions(account, transactions);
                 });
     }
 
@@ -634,10 +634,10 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                     currentPage++;
                 }
 
-                context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+                statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
             } while (hasMoreTransactions);
 
-            context.updateTransactions(account, transactions);
+            financialDataCacher.updateTransactions(account, transactions);
         }
     }
 
@@ -665,7 +665,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                 Account account = details.toAccount();
                 Loan loan = details.toLoan(detailsString);
 
-                context.cacheAccount(account, AccountFeatures.createForLoan(loan));
+                financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
             } catch (Exception e) {
                 log.warn("Was not able to retrieve loan: " + e.getMessage());
             }
@@ -773,7 +773,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
             credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
             credentials.setStatusPayload(null);
-            context.requestSupplementalInformation(credentials, false);
+            supplementalRequester.requestSupplementalInformation(credentials, false);
 
             ClientResponse bankIdResponse = createGetRequest(SEND_UNSIGNED_PAYMENT_URL);
             validateTransactionClientResponse(bankIdResponse);
@@ -888,7 +888,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         credentials.setStatusPayload(null);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         ClientResponse sendPaymentClientResponse = createPostRequest(SIGN_PAYMENT_SEND_PAYMENT_URL, paymentRequest);
         validateTransactionClientResponse(sendPaymentClientResponse);
@@ -1079,7 +1079,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
     private void signAndValidatePayment(PaymentRequest paymentRequest) throws BankIdException {
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         credentials.setStatusPayload(null);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         collectTransferResponse(SEND_PAYMENT_URL, paymentRequest);
     }
@@ -1252,7 +1252,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         collectTransferResponse(BANKID_COLLECT_DIRECT_TRANSFER_URL, transferRequest);
     }
@@ -1439,7 +1439,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
             portfolio.setInstruments(instruments);
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         }
     }
 
@@ -1482,7 +1482,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         });
         portfolio.setInstruments(instruments);
 
-        context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+        financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
     }
 
     private <T> T createGetRequestFromUrlAndDepotNumber(Class<T> responseClass, String url, String depotNumber)
@@ -1572,7 +1572,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         });
         portfolio.setInstruments(instruments);
 
-        context.cacheAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
+        financialDataCacher.cacheAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
     }
 
     private InstrumentDetailsResponse getInstrumentDetails(String depotNumber, String isin)
@@ -1613,7 +1613,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
     private void updateAccountPerType(RefreshableItem type) {
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.cacheAccount(set.getValue()));
+                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
     }
 
     @Override
@@ -1674,10 +1674,10 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
 
             TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            response.addDestinations(getTransferAccountDestinations(accountEntities, context.getUpdatedAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(accountEntities, context.getUpdatedAccounts()));
+            response.addDestinations(getTransferAccountDestinations(accountEntities, systemUpdater.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(accountEntities, systemUpdater.getUpdatedAccounts()));
 
-            context.updateTransferDestinationPatterns(response.getDestinations());
+            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -1697,7 +1697,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         List<AccountEntity> accountEntities = fetchAccountEntities();
 
         for (AccountEntity accountEntity : accountEntities) {
-            context.cacheAccount(accountEntity.toAccount());
+            financialDataCacher.cacheAccount(accountEntity.toAccount());
         }
     }
 
@@ -1713,7 +1713,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                 continue;
             }
 
-            context.cacheAccount(cardEntity.getAccount());
+            financialDataCacher.cacheAccount(cardEntity.getAccount());
         }
     }
 
@@ -1731,7 +1731,7 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 

@@ -45,7 +45,7 @@ public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor 
     public void refresh(RefreshableItem item) {
         switch (item) {
         case INVESTMENT_ACCOUNTS:
-            details.getAccounts().forEach(accountEntity -> context.cacheAccount(accountEntity.toAccount()));
+            details.getAccounts().forEach(accountEntity -> financialDataCacher.cacheAccount(accountEntity.toAccount()));
             break;
 
         case INVESTMENT_TRANSACTIONS:
@@ -69,7 +69,7 @@ public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor 
                 transactionsForAccount.add(transactionEntity.toTransaction());
             }
 
-            context.updateTransactions(accountEntity.toAccount(), transactionsForAccount);
+            financialDataCacher.updateTransactions(accountEntity.toAccount(), transactionsForAccount);
         }
     }
 

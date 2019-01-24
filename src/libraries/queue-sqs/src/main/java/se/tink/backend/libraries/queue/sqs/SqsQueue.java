@@ -10,8 +10,10 @@ import com.amazonaws.services.sqs.model.AmazonSQSException;
 import com.amazonaws.services.sqs.model.CreateQueueRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlRequest;
 import com.amazonaws.services.sqs.model.GetQueueUrlResult;
+import com.google.common.util.concurrent.Uninterruptibles;
 import com.google.inject.Inject;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.libraries.queue.sqs.configuration.SqsQueueConfiguration;
@@ -61,16 +63,16 @@ public class SqsQueue {
             )))
                     .build();
 
-            this.isAvailable = isQueueAvailable(createRequest);
+            this.isAvailable = isQueueCreated(createRequest);
             this.url = this.isAvailable ? getQueueUrl(configuration.getQueueName()) : "";
         } else {
             sqs = amazonSQSClientBuilder.build();
             this.url = configuration.getUrl();
-            this.isAvailable = isQueueAvailable(createRequest);
+            this.isAvailable = isQueueCreated(createRequest);
         }
     }
 
-    private String getQueueUrl(String name){
+    private String getQueueUrl(String name) {
         try {
             GetQueueUrlRequest getQueueUrlRequest = new GetQueueUrlRequest(name);
             GetQueueUrlResult getQueueUrlResult = sqs.getQueueUrl(getQueueUrlRequest);
@@ -81,23 +83,32 @@ public class SqsQueue {
         }
     }
 
-    private boolean isQueueAvailable(CreateQueueRequest create_request){
-        try {
-            sqs.createQueue(create_request);
-        } catch (AmazonSQSException e) {
-            if (!e.getErrorCode().equals("QueueAlreadyExists")) {
-                logger.warn("Queue already exists.");
-            }
-            // Reach this if the configurations are invalid
-        } catch (SdkClientException e) {
-            logger.error("No SQS with the current configurations is available.");
-            return false;
-        }
+    // The retrying is necessary since the IAM access in Kubernetes is not instant.
+    // The IAM access is necessary to get access to the queue.
+    private boolean isQueueCreated(CreateQueueRequest createRequest) {
+        int retries = 0;
 
-        return true;
+        do {
+            try {
+                sqs.createQueue(createRequest);
+                return true;
+            } catch (AmazonSQSException e) {
+                if (!e.getErrorCode().equals("QueueAlreadyExists")) {
+                    logger.warn("Queue already exists.");
+                }
+                return true;
+                // Reach this if the configurations are invalid
+            } catch (SdkClientException e) {
+                logger.warn("No SQS with the current configurations is available, sleeping 1 second and then retrying.");
+                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+                retries++;
+            }
+        } while (retries < 10);
+
+        throw new IllegalStateException("No SQS with the current configurations is available.");
     }
 
-    public boolean validLocalConfiguration(SqsQueueConfiguration configuration){
+    private boolean validLocalConfiguration(SqsQueueConfiguration configuration) {
         return Objects.nonNull(configuration) &&
                 Objects.nonNull(configuration.getQueueName()) &&
                 Objects.nonNull(configuration.getAwsAccessKeyId()) &&
@@ -105,7 +116,7 @@ public class SqsQueue {
                 configuration.getRegion().equals(LOCAL_REGION);
     }
 
-    public void consumed(){
+    public void consumed() {
         this.consumed.inc();
     }
 

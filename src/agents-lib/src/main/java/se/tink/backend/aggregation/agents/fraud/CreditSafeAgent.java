@@ -53,11 +53,10 @@ import se.tink.backend.core.FraudIdentityContent;
 import se.tink.backend.core.FraudIncomeContent;
 import se.tink.backend.core.FraudNonPaymentContent;
 import se.tink.backend.core.FraudRealEstateEngagementContent;
-import se.tink.backend.utils.StringUtils;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
-
+import se.tink.libraries.strings.StringUtils;
 
 @SuppressWarnings("unused")
 public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -156,10 +155,10 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
                 content.setPersonIdentityNumber(credentials.getUsername());
                 detailsContent.add(content);
 
-                context.updateFraudDetailsContent(detailsContent);
+                systemUpdater.updateFraudDetailsContent(detailsContent);
 
                 log.info(knownErrorMessage);
-                context.updateStatus(CredentialsStatus.UPDATING);
+                statusUpdater.updateStatus(CredentialsStatus.UPDATING);
 
             } else {
 
@@ -167,13 +166,13 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
                         error.getRejectComment() + " - " + error.getCauseOfReject();
 
                 log.warn("CreditSafe refresh gave error:" + errorMessage);
-                context.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessage);
+                statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessage);
             }
             return;
 
         }
 
-        context.updateStatus(CredentialsStatus.UPDATING);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING);
 
         // Pars XMl data to structured format.
 
@@ -225,7 +224,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         detailsContent.addAll(extractCompanyEngagementContent(companyEngagementList));
 
 
-        context.updateFraudDetailsContent(detailsContent);
+        systemUpdater.updateFraudDetailsContent(detailsContent);
     }
 
     /**
@@ -939,7 +938,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         }
 
         credentials.setSupplementalInformation(null);
-        context.updateStatus(CredentialsStatus.UPDATING);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING);
         
         return true;
     }

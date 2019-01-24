@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
 import com.google.common.util.concurrent.RateLimiter;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Provider;
@@ -28,15 +29,18 @@ import se.tink.backend.aggregation.rpc.Credentials;
  * </ul>
  * That is, operations that are high-throughput should probably use a circuit breaker.
  */
-public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
+public class
+CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
     private static final AggregationLogger log = new AggregationLogger(CircuitBreakerAgentWorkerCommand.class);
 
     private CircuitBreakerAgentWorkerCommandState state;
     private AgentWorkerCommandContext context;
+    private StatusUpdater statusUpdater;
     private boolean wasCircuitBreaked;
 
     public CircuitBreakerAgentWorkerCommand(AgentWorkerCommandContext context, CircuitBreakerAgentWorkerCommandState state) {
         this.context = context;
+        this.statusUpdater = context;
         this.state = state;
     }
 
@@ -63,7 +67,7 @@ public class CircuitBreakerAgentWorkerCommand extends AgentWorkerCommand {
             // If we acquire a rate limiter the operation will continue as if the provider is not circuit broken.
             if (!rateLimiter.tryAcquire()) {
                 if (Objects.equal(circuitBreakerConfiguration.getMode(), CircuitBreakerMode.ENABLED)) {
-                    context.updateStatus(
+                    statusUpdater.updateStatus(
                             CredentialsStatus.TEMPORARY_ERROR,
                             Catalog.format(
                                     context.getCatalog().getString("We are currently having technical issues with {0}. Please try again later."),

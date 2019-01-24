@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.rpc.CrossKeyError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public enum CrossKeyMessage implements CrossKeyError {
