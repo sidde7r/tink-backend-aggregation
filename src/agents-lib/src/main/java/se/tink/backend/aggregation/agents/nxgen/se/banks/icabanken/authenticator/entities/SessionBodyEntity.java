@@ -34,4 +34,8 @@ public class SessionBodyEntity {
     public StaticDataEntity getStaticData() {
         return staticData;
     }
+
+    public boolean mustUpdateInformationAtBank() {
+        return customer != null && customer.mustUpdateInformationAtBank();
+    }
 }

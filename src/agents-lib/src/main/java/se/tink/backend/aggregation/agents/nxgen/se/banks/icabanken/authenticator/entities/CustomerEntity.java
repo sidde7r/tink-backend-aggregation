@@ -47,4 +47,8 @@ public class CustomerEntity {
     public KdkEntity getKdk() {
         return kdk;
     }
+
+    boolean mustUpdateInformationAtBank() {
+        return kdk != null && kdk.isMustUpdate();
+    }
 }

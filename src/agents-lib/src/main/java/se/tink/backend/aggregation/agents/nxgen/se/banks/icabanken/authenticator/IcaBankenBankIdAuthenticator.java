@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.SessionBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
@@ -63,6 +64,12 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             persistNewDeviceApplicationIdIfMissing();
 
             SessionBodyEntity sessionBodyEntity = apiClient.fetchSessionInfo();
+
+            if (sessionBodyEntity.mustUpdateInformationAtBank()) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                        IcaBankenConstants.UserMessage.KNOW_YOUR_CUSTOMER.getKey());
+            }
+
             persistUserInstallationIdIfMissing(sessionBodyEntity);
         }
 
