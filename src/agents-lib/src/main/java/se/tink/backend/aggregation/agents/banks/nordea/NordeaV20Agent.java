@@ -130,7 +130,7 @@ import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.backend.system.rpc.TransactionTypes;
-import se.tink.backend.utils.Doubles;
+import se.tink.backend.aggregation.utils.Doubles;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
