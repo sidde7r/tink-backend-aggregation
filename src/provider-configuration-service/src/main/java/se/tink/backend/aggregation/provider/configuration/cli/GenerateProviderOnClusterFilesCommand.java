@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 /*
     run this command using bazel :
-        bazel run --jvmopt="-Dclusterid=oxford-staging -Dpath=$(pwd)" -- //:provider-configuration generate-provider-override-on-cluster etc/development-minikube-provider-configuration-server.yml
+        bazel run --jvmopt="-Dclusterid=oxford-staging -Dpath=$(pwd)" -- :provider-configuration generate-provider-override-on-cluster etc/development-minikube-provider-configuration-server.yml
     note that this command will generate all files in the same directory. files will be looking like:
     available-providers-AT.json ...
     provider-override-AT.json ...

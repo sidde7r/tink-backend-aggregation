@@ -5,12 +5,12 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//:main-api", #todo, we don't want dependency towards main-api here. 
+        "//src/main-api", #todo, we don't want dependency towards main-api here.
         "//src/libraries/date:date",
         "//src/libraries/log:log",
         "//src/libraries/metrics:metrics",
         "//src/libraries/net:net",
-        "//src/libraries/serialization:serialization",
+        "//src/libraries/serialization",
         "//src/libraries/strings:strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
@@ -27,7 +27,7 @@ junit_test(
     name = "abn_amro-test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        "//:main-api", #todo, we don't want dependency towards main-api here. 
+        "//src/main-api", #todo, we don't want dependency towards main-api here.
         "//third_party:com_google_guava_guava",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",

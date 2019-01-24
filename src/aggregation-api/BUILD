@@ -1,0 +1,56 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+java_library(
+    name = "aggregation-api",
+    srcs = glob(["src/main/**/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/agents-models",
+        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/api_annotations:api-annotations",
+        "//src/libraries/creditsafe_consumer_monitoring",
+        "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/generic_application:generic-application",
+        "//src/libraries/http:http-annotations",
+        "//src/libraries/http_client:http-client",
+        "//src/libraries/jersey_utils:jersey-utils",
+        "//src/libraries/metrics",
+        "//src/libraries/serialization",
+        "//src/libraries/strings",
+        "//src/libraries/uuid",
+        "//src/main-api",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:commons_codec_commons_codec",
+        "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:joda_time_joda_time",
+        "//third_party:org_hibernate_hibernate_annotations",
+        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+    ],
+)
+
+junit_test(
+    name = "aggregation-api-test",
+    srcs = glob(["src/test/**/*.java"]),
+    data = ["//data:tink-ca"],
+    runtime_deps = [
+        "//third_party:ch_qos_logback_logback_classic",
+    ],
+    deps = [
+        "//src/aggregation-api",
+        "//src/libraries/api_annotations:api-annotations",
+        "//src/libraries/api_annotations:api-annotations-testlib-test",
+        "//src/main-api",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_sun_jersey_jersey_client",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_javassist_javassist",
+        "//third_party:org_reflections_reflections",
+    ],
+)

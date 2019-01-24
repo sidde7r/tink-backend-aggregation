@@ -7,6 +7,6 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//src/libraries/account_identifier:account-identifier",
-        "//:main-api"
+        "//src/main-api"
     ],
 )
