@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.IcaBankenTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.filter.IcaBankenFilter;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
@@ -35,11 +36,13 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 public class IcaBankenAgent extends NextGenerationAgent {
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
+    private final IcabankenPersistentStorage icaBankenPersistentStorage;
 
     public IcaBankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.icaBankenSessionStorage = new IcaBankenSessionStorage(sessionStorage);
-        this.apiClient = new IcaBankenApiClient(client, icaBankenSessionStorage);
+        this.icaBankenPersistentStorage = new IcabankenPersistentStorage(persistentStorage);
+        this.apiClient = new IcaBankenApiClient(client, icaBankenSessionStorage, icaBankenPersistentStorage);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class IcaBankenAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(context,
-                new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage));
+                new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage, icaBankenPersistentStorage));
     }
 
     @Override

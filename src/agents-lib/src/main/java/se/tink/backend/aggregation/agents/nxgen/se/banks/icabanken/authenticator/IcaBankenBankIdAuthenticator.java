@@ -1,27 +1,34 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator;
 
 import java.util.Optional;
+import com.google.common.base.Strings;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.SessionBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import org.apache.http.HttpStatus;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String> {
     private final IcaBankenApiClient apiClient;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
+    private final IcabankenPersistentStorage icabankenPersistentStorage;
 
     private String autostarttoken;
 
-    public IcaBankenBankIdAuthenticator(IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage) {
+    public IcaBankenBankIdAuthenticator(IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage,
+            IcabankenPersistentStorage icabankenPersistentStorage) {
         this.apiClient = apiClient;
         this.icaBankenSessionStorage = icaBankenSessionStorage;
+        this.icabankenPersistentStorage = icabankenPersistentStorage;
     }
 
     @Override
@@ -47,6 +54,11 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
 
         if (bankIdStatus == BankIdStatus.DONE) {
             icaBankenSessionStorage.saveSessionId(response.getBody().getSessionId());
+
+            persistNewDeviceApplicationIdIfMissing();
+
+            SessionBodyEntity sessionBodyEntity = apiClient.fetchSessionInfo();
+            persistUserInstallationIdIfMissing(sessionBodyEntity);
         }
 
         return bankIdStatus;
@@ -66,6 +78,33 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             }
 
             throw e;
+        }
+    }
+
+    /**
+     * The application id seems to be random generated from the app installation UUID, so if this is first time for the
+     * credential we won't have any deviceApplicationId stored from before. Then generate one for this credential.
+     *
+     * This ID is later used as query param when upon fetching the SessionResponse.
+     */
+    private void persistNewDeviceApplicationIdIfMissing() {
+        String deviceApplicationId = icabankenPersistentStorage.getDeviceApplicationId();
+
+        if (Strings.isNullOrEmpty(deviceApplicationId)) {
+            deviceApplicationId = UUIDUtils.generateUUID();
+            icabankenPersistentStorage.saveDeviceApplicationId(deviceApplicationId);
+        }
+    }
+
+    /**
+     * After the userInstallationId has been set it is added to the headers of all requests.
+     */
+    private void persistUserInstallationIdIfMissing(SessionBodyEntity sessionBodyEntity) {
+        String userInstallationId = icabankenPersistentStorage.getUserInstallationId();
+
+        if (Strings.isNullOrEmpty(userInstallationId)) {
+            userInstallationId = sessionBodyEntity.getCustomer().getUserInstallationId();
+            icabankenPersistentStorage.saveUserInstallationId(userInstallationId);
         }
     }
 }

@@ -11,6 +11,7 @@ public class IcaBankenConstants {
 
         public static final URL LOGIN_BANKID = new URL(HOST + "/api/session/login/bankid/{identifier}");
         public static final URL KEEP_ALIVE = new URL(HOST + "/api/session/heartbeat");
+        public static final URL SESSION = new URL(HOST + "/api/session");
         public static final URL SIGN_TRANSFER_COLLECT_URL =new URL(HOST + "/api/bankId/sign/collect/{requestId}");
         public static final URL ACCOUNTS = new URL(HOST + "/api/accounts");
         public static final URL DEPOTS = new URL(HOST + "/api/depots");
@@ -62,6 +63,8 @@ public class IcaBankenConstants {
     }
 
     public static final class IdTags {
+        public static final String DEVICE_APPLICATION_ID = "deviceApplicationId";
+        public static final String USER_INSTALLATION_ID = "userInstallationId";
         public static final String SESSION_ID_TAG = "sessionId";
         public static final String IDENTIFIER_TAG = "identifier";
         public static final String TO_DATE_TAG = "toDate";
