@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.DocumentContainer;
-import se.tink.backend.rpc.TinkMediaType;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -43,6 +42,7 @@ public class UserDataClient extends SBABClient {
     private static final String LOAN_URL = SECURE_BASE_URL + "/secure-rest/rest/lan";
     private static final String AMORTIZATION_DOCUMENTATION_URL = SECURE_BASE_URL + "/secure-rest/rest/amorteringskrav/ejomfattad/%s";
     private static final String LOAN_DETAILS_URL = SECURE_BASE_URL + "/privat/lan/mina_lan/detaljer.html?lanenummer=%s";
+    private static final String APPLICATION_PDF = "application/pdf";
 
     public UserDataClient(Client client, Credentials credentials, String userAgent) {
         super(client, credentials, userAgent);
@@ -261,7 +261,7 @@ public class UserDataClient extends SBABClient {
                 url, String.format(LOAN_DETAILS_URL, loanId), MediaType.APPLICATION_OCTET_STREAM)
                 .get(ClientResponse.class);
 
-         return new DocumentContainer(TinkMediaType.APPLICATION_PDF, response.getEntityInputStream());
+         return new DocumentContainer(APPLICATION_PDF, response.getEntityInputStream());
     }
 
     private Optional<LoanResponse> getLoanResponse() throws Exception {
