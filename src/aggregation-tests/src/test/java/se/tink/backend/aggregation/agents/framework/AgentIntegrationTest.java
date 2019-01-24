@@ -63,7 +63,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private final NewAgentTestContext context;
 
-
     private AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
@@ -86,8 +85,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return false;
         }
 
-        Optional<Credentials> optionalCredential = AgentTestServerClient.loadCredential(provider.getName(),
-                credential.getId());
+        Optional<Credentials> optionalCredential =
+                AgentTestServerClient.loadCredential(provider.getName(), credential.getId());
 
         optionalCredential.ifPresent(c -> this.credential = c);
 
@@ -108,14 +107,19 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
     }
 
     private RefreshInformationRequest createRefreshInformationRequest() {
-        return new RefreshInformationRequest(user, provider, credential, requestFlagManual, requestFlagCreate,
+        return new RefreshInformationRequest(
+                user,
+                provider,
+                credential,
+                requestFlagManual,
+                requestFlagCreate,
                 requestFlagUpdate);
     }
 
     private Agent createAgent(CredentialsRequest credentialsRequest) {
         try {
-            AggregationServiceConfiguration aggregationServiceConfiguration = CONFIGURATION_FACTORY.build(
-                    new File("etc/development.yml"));
+            AggregationServiceConfiguration aggregationServiceConfiguration =
+                    CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
             configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
             AgentFactory factory = new AgentFactory(configuration);
 
@@ -198,7 +202,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             if (RefreshableItem.hasAccounts(sortedItems)) {
                 context.processAccounts();
             } else {
-                Assert.assertTrue(systemUpdater.getUpdatedAccounts().isEmpty());
+                Assert.assertTrue(context.getUpdatedAccounts().isEmpty());
             }
 
             if (RefreshableItem.hasTransactions(sortedItems)) {
@@ -219,8 +223,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());
             }
         } else {
-            throw new AssertionError(String.format("%s does not implement a refresh interface.",
-                    agent.getClass().getSimpleName()));
+            throw new AssertionError(
+                    String.format(
+                            "%s does not implement a refresh interface.",
+                            agent.getClass().getSimpleName()));
         }
 
         log.info("Done with refresh.");
@@ -230,13 +236,15 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Executing bank transfer.");
 
         if (agent instanceof TransferExecutorNxgen) {
-            ((TransferExecutorNxgen)agent).execute(transfer);
+            ((TransferExecutorNxgen) agent).execute(transfer);
         } else if (agent instanceof TransferExecutor) {
-            ((TransferExecutor)agent).execute(transfer);
+            ((TransferExecutor) agent).execute(transfer);
 
         } else {
-            throw new AssertionError(String.format("%s does not implement a transfer executor interface.",
-                    agent.getClass().getSimpleName()));
+            throw new AssertionError(
+                    String.format(
+                            "%s does not implement a transfer executor interface.",
+                            agent.getClass().getSimpleName()));
         }
 
         log.info("Done with bank transfer.");
@@ -254,7 +262,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                 requestFlagUpdate = false;
             }
         } else {
-            // If the credential failed to load (perhaps none previously stored) AND the flags were not overridden
+            // If the credential failed to load (perhaps none previously stored) AND the flags were
+            // not overridden
             // == Create new credential
             if (requestFlagCreate == null) {
                 requestFlagCreate = true;
@@ -343,7 +352,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         private ProviderConfigModel readProvidersConfiguration(String market) {
-            String providersFilePath = "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
+            String providersFilePath =
+                    "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
             File providersFile = new File(providersFilePath);
             try {
                 return mapper.readValue(providersFile, ProviderConfigModel.class);
@@ -468,7 +478,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return this;
         }
 
-        public Builder addRefreshableItems(RefreshableItem ...items) {
+        public Builder addRefreshableItems(RefreshableItem... items) {
             this.refreshableItems.addAll(Arrays.asList(items));
             return this;
         }
