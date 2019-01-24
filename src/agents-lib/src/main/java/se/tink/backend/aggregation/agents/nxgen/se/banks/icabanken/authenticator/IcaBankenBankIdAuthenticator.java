@@ -1,19 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator;
 
-import java.util.Optional;
 import com.google.common.base.Strings;
+import java.util.Optional;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.SessionBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.entities.ResponseStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.uuid.UUIDUtils;
 
@@ -47,7 +52,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     }
 
     @Override
-    public BankIdStatus collect(String reference) throws AuthenticationException {
+    public BankIdStatus collect(String reference) throws AuthenticationException, AuthorizationException {
 
         BankIdResponse response = getPollResponse(reference);
         BankIdStatus bankIdStatus = response.getBankIdStatus();
@@ -69,15 +74,47 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
         return Optional.ofNullable(autostarttoken);
     }
 
-    private BankIdResponse getPollResponse(String reference) throws BankIdException {
+    private BankIdResponse getPollResponse(String reference)
+            throws AuthenticationException, AuthorizationException {
+
         try {
             return apiClient.pollBankId(reference);
         } catch (HttpResponseException e) {
-            if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
-                throw BankIdError.INTERRUPTED.exception();
+            HttpResponse response = e.getResponse();
+
+            if (response != null && response.getStatus() == HttpStatus.SC_CONFLICT) {
+                handleKnownErrors(response);
             }
 
             throw e;
+        }
+    }
+
+    private void handleKnownErrors(HttpResponse response)
+            throws AuthenticationException, AuthorizationException {
+
+        BankIdResponse bankIdResponse = response.getBody(BankIdResponse.class);
+        BankIdBodyEntity bankIdBodyEntity = bankIdResponse.getBody();
+
+        // If body is empty we look for error cause in the response status
+        if (bankIdBodyEntity.getStatus() == null) {
+            ResponseStatusEntity responseStatus = bankIdResponse.getResponseStatus();
+
+            if (responseStatus.isNotACustomer()) {
+                throw LoginError.NOT_CUSTOMER.exception();
+            }
+
+            if (responseStatus.isInterrupted()) {
+                throw BankIdError.INTERRUPTED.exception();
+            }
+
+            if (responseStatus.isNotVerified()) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
+            }
+        }
+
+        if (bankIdBodyEntity.isTimeOut()) {
+            throw BankIdError.TIMEOUT.exception();
         }
     }
 

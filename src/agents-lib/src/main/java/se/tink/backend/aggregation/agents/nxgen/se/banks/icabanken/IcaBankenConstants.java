@@ -56,6 +56,10 @@ public class IcaBankenConstants {
         public static final String PENDING = "pending";
         public static final String OK = "ok";
         public static final String ABORTED = "aborted";
+        public static final String TIMEOUT = "timedout";
+        public static final String NOT_A_CUSTOMER = "no active accounts";
+        public static final String INTERRUPTED = "signing not found";
+        public static final String NOT_VERIFIED = "konto har ännu inte blivit verifierat";
     }
 
     public static final class StatusCodes {
