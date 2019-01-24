@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.DocumentContainer;
-import se.tink.backend.rpc.TinkMediaType;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
