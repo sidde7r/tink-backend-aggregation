@@ -1,4 +1,4 @@
-package se.tink.backend.utils.guavaimpl;
+package se.tink.backend.aggregation.utils;
 
 import java.util.Objects;
 import java.util.function.Predicate;

@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
-import se.tink.backend.utils.guavaimpl.Predicates;
 
 public class MapValueMaskerImpl implements MapValueMasker {
     private static final String MASK = "***MASKED***";
