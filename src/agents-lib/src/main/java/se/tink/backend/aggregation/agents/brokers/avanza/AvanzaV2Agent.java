@@ -12,6 +12,8 @@ import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,7 +26,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.Headers;
 import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.InstrumentTypes;
@@ -74,7 +79,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 
 /** Latest verified version: iOS v2.12.0 */
 public class AvanzaV2Agent extends AbstractAgent
-        implements RefreshableItemExecutor, PersistentLogin {
+        implements RefreshInvestmentAccountsExecutor, PersistentLogin {
     private String authenticationToken;
     private Client client;
     private Credentials credentials;
@@ -241,50 +246,6 @@ public class AvanzaV2Agent extends AbstractAgent
         }
     }
 
-    private void refreshAccounts() {
-        if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
-            session.getAuthenticationSessions()
-                    .forEach(
-                            bankIDAuthenticationSession -> {
-                                ensureValidBankIDSession(bankIDAuthenticationSession);
-                                updateInvestmentAccounts(bankIDAuthenticationSession);
-                            });
-        } else {
-            log.error(
-                    String.format(
-                            "Credential type %s is not supported",
-                            request.getCredentials().getType().name()));
-        }
-    }
-
-    private void refreshTransactions() {
-        if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
-            session.getAuthenticationSessions()
-                    .forEach(
-                            bankIDAuthenticationSession -> {
-                                ensureValidBankIDSession(bankIDAuthenticationSession);
-                                updateAccountsAndTransactions(bankIDAuthenticationSession);
-                            });
-        } else {
-            log.error(
-                    String.format(
-                            "Credential type %s is not supported",
-                            request.getCredentials().getType().name()));
-        }
-    }
-
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-            case INVESTMENT_ACCOUNTS:
-                refreshAccounts();
-                break;
-            case INVESTMENT_TRANSACTIONS:
-                refreshTransactions();
-                break;
-        }
-    }
-
     private void ensureValidBankIDSession(String bankIDAuthenticationSession) {
         Preconditions.checkNotNull(bankIDAuthenticationSession);
 
@@ -339,54 +300,6 @@ public class AvanzaV2Agent extends AbstractAgent
                 .get(responseType);
     }
 
-    private void updateInvestmentAccounts(String authenticationSession) {
-        accountOverview
-                .getAccounts()
-                .forEach(
-                        accountEntity -> {
-                            // Only tradable accounts have instruments
-                            if (!accountEntity.isTradable()) {
-                                return;
-                            }
-
-                            String accountId = accountEntity.getAccountId();
-
-                            AccountDetailsEntity accountDetailsEntity =
-                                    fetchAccountDetails(accountId, authenticationSession);
-                            Account account = accountDetailsEntity.toAccount(accountEntity);
-
-                            PositionResponse positionResponse =
-                                    fetchInvestmentsPositions(accountId, authenticationSession);
-                            InvestmentTransactionsResponse investmentTransactionsResponse =
-                                    fetchInvestmentTransactions(
-                                            accountId,
-                                            LocalDate.now().format(DateTimeFormatter.ISO_DATE),
-                                            authenticationSession);
-
-                            Map<String, String> isinByName =
-                                    investmentTransactionsResponse.getIsinByName();
-
-                            Portfolio portfolio = positionResponse.toPortfolio();
-                            // Add the money available for buying instruments
-                            portfolio.setCashValue(accountDetailsEntity.getBuyingPower());
-                            List<Instrument> instruments = Lists.newArrayList();
-                            positionResponse
-                                    .getInstrumentPositions()
-                                    .forEach(
-                                            aggregatePositionEntityWithInstrumentType(
-                                                    authenticationSession,
-                                                    isinByName,
-                                                    instruments));
-                            portfolio.setInstruments(instruments);
-
-                            account.setBalance(
-                                    account.getBalance() + accountDetailsEntity.getBuyingPower());
-
-                            financialDataCacher.cacheAccount(
-                                    account, AccountFeatures.createForPortfolios(portfolio));
-                        });
-    }
-
     private Consumer<PositionAggregationEntity> aggregatePositionEntityWithInstrumentType(
             String authenticationSession,
             Map<String, String> isinByName,
@@ -423,32 +336,6 @@ public class AvanzaV2Agent extends AbstractAgent
                     .toInstrument(instrumentType, market, isinByName.get(positionEntity.getName()))
                     .ifPresent(instruments::add);
         };
-    }
-
-    private void updateAccountsAndTransactions(String authenticationSession) {
-        accountOverview
-                .getAccounts()
-                .forEach(
-                        accountEntity -> {
-                            String accountId = accountEntity.getAccountId();
-
-                            AccountDetailsEntity accountDetailsEntity =
-                                    fetchAccountDetails(accountId, authenticationSession);
-                            Account account = accountDetailsEntity.toAccount(accountEntity);
-
-                            // Hack to get the correct name for SparkontoPlus accounts.
-                            if (Objects.equals(
-                                    accountDetailsEntity.getAccountType(), "SparkontoPlus")) {
-                                account.setName(
-                                        accountDetailsEntity.getAccountTypeName()
-                                                + accountEntity.getSparkontoPlusType());
-                            }
-
-                            List<Transaction> transactions =
-                                    getTransactions(account, accountId, authenticationSession);
-
-                            financialDataCacher.updateTransactions(account, transactions);
-                        });
     }
 
     private List<Transaction> getTransactions(
@@ -651,4 +538,120 @@ public class AvanzaV2Agent extends AbstractAgent
 
         credentials.removePersistentSession();
     }
+
+    ////// Refresh Executor Refactor //////
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return fetchAccounts();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return fetchTransactions();
+    }
+
+    private FetchInvestmentAccountsResponse fetchAccounts() {
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
+            session.getAuthenticationSessions()
+                    .forEach(
+                            bankIDAuthenticationSession -> {
+                                ensureValidBankIDSession(bankIDAuthenticationSession);
+                                accountOverview
+                                    .getAccounts()
+                                    .forEach(
+                                        accountEntity -> {
+                                            // Only tradable accounts have instruments
+                                            if (!accountEntity.isTradable()) {
+                                                return;
+                                            }
+
+                                            String accountId = accountEntity.getAccountId();
+
+                                            AccountDetailsEntity accountDetailsEntity =
+                                                    fetchAccountDetails(accountId, bankIDAuthenticationSession);
+                                            Account account = accountDetailsEntity.toAccount(accountEntity);
+
+                                            PositionResponse positionResponse =
+                                                    fetchInvestmentsPositions(accountId, bankIDAuthenticationSession);
+                                            InvestmentTransactionsResponse investmentTransactionsResponse =
+                                                    fetchInvestmentTransactions(
+                                                            accountId,
+                                                            LocalDate.now().format(DateTimeFormatter.ISO_DATE),
+                                                            bankIDAuthenticationSession);
+
+                                            Map<String, String> isinByName =
+                                                    investmentTransactionsResponse.getIsinByName();
+
+                                            Portfolio portfolio = positionResponse.toPortfolio();
+                                            // Add the money available for buying instruments
+                                            portfolio.setCashValue(accountDetailsEntity.getBuyingPower());
+                                            List<Instrument> instruments = Lists.newArrayList();
+                                            positionResponse
+                                                    .getInstrumentPositions()
+                                                    .forEach(
+                                                            aggregatePositionEntityWithInstrumentType(
+                                                                    bankIDAuthenticationSession,
+                                                                    isinByName,
+                                                                    instruments));
+                                            portfolio.setInstruments(instruments);
+
+                                            account.setBalance(
+                                                    account.getBalance() + accountDetailsEntity.getBuyingPower());
+
+                                            accounts.put(
+                                                    account, AccountFeatures.createForPortfolios(portfolio));
+                                        });
+                            });
+            return new FetchInvestmentAccountsResponse(accounts);
+        } else {
+            log.error(
+                    String.format(
+                            "Credential type %s is not supported",
+                            request.getCredentials().getType().name()));
+            return new FetchInvestmentAccountsResponse(Collections.emptyMap());
+        }
+    }
+    private FetchTransactionsResponse fetchTransactions() {
+        Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
+        if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
+            session.getAuthenticationSessions()
+                    .forEach(
+                            bankIDAuthenticationSession -> {
+                                ensureValidBankIDSession(bankIDAuthenticationSession);
+                                accountOverview
+                                        .getAccounts()
+                                        .forEach(
+                                                accountEntity -> {
+                                                    String accountId = accountEntity.getAccountId();
+
+                                                    AccountDetailsEntity accountDetailsEntity =
+                                                            fetchAccountDetails(accountId, bankIDAuthenticationSession);
+                                                    Account account = accountDetailsEntity.toAccount(accountEntity);
+
+                                                    // Hack to get the correct name for SparkontoPlus accounts.
+                                                    if (Objects.equals(
+                                                            accountDetailsEntity.getAccountType(), "SparkontoPlus")) {
+                                                        account.setName(
+                                                                accountDetailsEntity.getAccountTypeName()
+                                                                        + accountEntity.getSparkontoPlusType());
+                                                    }
+
+                                                    List<Transaction> transactions =
+                                                            getTransactions(account, accountId, bankIDAuthenticationSession);
+
+                                                    transactionsMap.put(account, transactions);
+                                                });
+                            });
+            return new FetchTransactionsResponse(transactionsMap);
+        } else {
+            log.error(
+                    String.format(
+                            "Credential type %s is not supported",
+                            request.getCredentials().getType().name()));
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+    }
+    ///////////////////////////////////////
 }
