@@ -48,6 +48,7 @@ java_library(
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/libraries/serialization:serialization",
+        "//src/libraries/strings:strings",
         "//src/libraries/uuid",
         "//third_party:c3p0_c3p0",
         "//third_party:com_datastax_cassandra_cassandra_driver_core",

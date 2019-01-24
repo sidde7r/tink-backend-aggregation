@@ -121,7 +121,6 @@ import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.system.rpc.Portfolio;
 import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
@@ -132,6 +131,7 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 
 public class ICABankenAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
         PersistentLogin {

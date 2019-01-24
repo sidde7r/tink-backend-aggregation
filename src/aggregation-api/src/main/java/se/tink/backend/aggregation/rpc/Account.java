@@ -20,11 +20,11 @@ import se.tink.backend.core.AccountFlag;
 import se.tink.backend.core.enums.AccountExclusion;
 import se.tink.backend.core.transfer.TransferDestination;
 import se.tink.libraries.serialization.TypeReferences;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 
 /**
  * Today two way mapping between Aggregation's Account and core account forces
