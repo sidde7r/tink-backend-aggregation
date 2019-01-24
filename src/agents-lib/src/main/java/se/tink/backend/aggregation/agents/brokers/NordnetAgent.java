@@ -65,7 +65,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
                 return;
             }
 
-            context.cacheAccount(accountEntity.toAccount(AccountTypes.SAVINGS));
+            financialDataCacher.cacheAccount(accountEntity.toAccount(AccountTypes.SAVINGS));
         });
     }
 
@@ -90,7 +90,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
             Optional<PositionsResponse> positions = apiClient.getPositions();
 
             if (!positions.isPresent()) {
-                context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
                 return;
             }
 
@@ -103,7 +103,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
             }
             portfolio.setInstruments(instruments);
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -170,7 +170,7 @@ public class NordnetAgent extends AbstractAgent implements RefreshableItemExecut
         case PASSWORD:
             if (Strings.isNullOrEmpty(credentials.getField(Field.Key.PASSWORD))) {
                 credentials.setType(CredentialsTypes.MOBILE_BANKID);
-                context.updateCredentialsExcludingSensitiveInformation(credentials, false);
+                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
             }
             break;
         default:

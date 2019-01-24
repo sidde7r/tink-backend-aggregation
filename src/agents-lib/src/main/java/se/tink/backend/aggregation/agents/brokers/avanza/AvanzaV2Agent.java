@@ -134,7 +134,7 @@ public class AvanzaV2Agent extends AbstractAgent
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
 
@@ -383,7 +383,7 @@ public class AvanzaV2Agent extends AbstractAgent
                             account.setBalance(
                                     account.getBalance() + accountDetailsEntity.getBuyingPower());
 
-                            context.cacheAccount(
+                            financialDataCacher.cacheAccount(
                                     account, AccountFeatures.createForPortfolios(portfolio));
                         });
     }
@@ -448,7 +448,7 @@ public class AvanzaV2Agent extends AbstractAgent
                             List<Transaction> transactions =
                                     getTransactions(account, accountId, authenticationSession);
 
-                            context.updateTransactions(account, transactions);
+                            financialDataCacher.updateTransactions(account, transactions);
                         });
     }
 

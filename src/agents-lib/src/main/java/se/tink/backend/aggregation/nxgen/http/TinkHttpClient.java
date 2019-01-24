@@ -45,6 +45,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -71,6 +72,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
+    private final AgentAggregatorIdentifier agentAggregatorIdentifier;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -158,6 +160,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
             @Nullable SignatureKeyPair signatureKeyPair) {
         this.context = context;
+        this.agentAggregatorIdentifier = context;
         this.credentials = credentials;
 
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
@@ -181,8 +184,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         addFilter(this.persistentHeaderFilter);
 
         // The context should only be null if the HttpClient if used for a test
-        this.aggregator = Objects.isNull(context) ?
-                AggregatorInfo.getAggregatorForTesting() : context.getAggregatorInfo();
+        this.aggregator = Objects.isNull(agentAggregatorIdentifier) ?
+                AggregatorInfo.getAggregatorForTesting() : agentAggregatorIdentifier.getAggregatorInfo();
 
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);

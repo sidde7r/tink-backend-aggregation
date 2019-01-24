@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
@@ -38,6 +39,7 @@ public class AgentWorkerOperation implements Runnable {
     private String operationMetricName;
     private CredentialsRequest request;
     private AgentWorkerOperationState state;
+    private SystemUpdater systemUpdater;
 
     public AgentWorkerOperation(AgentWorkerOperationState state, String operationMetricName, CredentialsRequest request,
             List<AgentWorkerCommand> commands, AgentWorkerContext context) {
@@ -45,6 +47,7 @@ public class AgentWorkerOperation implements Runnable {
         this.request = request;
         this.commands = commands;
         this.context = context;
+        this.systemUpdater = context;
         this.state = state;
     }
 
@@ -134,7 +137,7 @@ public class AgentWorkerOperation implements Runnable {
 
                 credentials.setStatus(CredentialsStatus.TEMPORARY_ERROR);
                 credentials.setStatusPayload(null);
-                context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
                 break;
             }

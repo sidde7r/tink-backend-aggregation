@@ -444,7 +444,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         challengeResponseRequest.setChallengeData(challenge.getChallengeData());
 
         if (challenge.isBankId()) {
-            context.openBankId();
+            supplementalRequester.openBankId();
 
             String orderReference = getOrderReferenceFromChallenge(challenge);
             verifyBankId(BankIdServiceType.VERIFYSIGN, orderReference);
@@ -568,7 +568,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         InitBankIdRequest initBankIdRequest = new InitBankIdRequest(loginId);
         InitBankIdResponse initBankIdResponse = apiClient.bankIdInitAuth(initBankIdRequest);
 
-        context.openBankId();
+        supplementalRequester.openBankId();
 
         String orderReference = initBankIdResponse.getOrderReference();
         verifyBankId(BankIdServiceType.VERIFYAUTH, orderReference);
@@ -692,7 +692,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
     private void updateAccountsPerType(RefreshableItem type) {
         getAccountMap().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> context.cacheAccount(set.getValue()));
+                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
     }
 
     private void updateTransactionsPerType(RefreshableItem type) {
@@ -714,9 +714,9 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
-            response.addDestinations(getTransferAccountDestinations(context.getUpdatedAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(context.getUpdatedAccounts()));
-            context.updateTransferDestinationPatterns(response.getDestinations());
+            response.addDestinations(getTransferAccountDestinations(systemUpdater.getUpdatedAccounts()));
+            response.addDestinations(getPaymentAccountDestinations(systemUpdater.getUpdatedAccounts()));
+            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
             break;
 
         case CHECKING_ACCOUNTS:
@@ -745,7 +745,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
             getAccountMap().entrySet().stream()
                     .filter(set -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(set.getValue().getType()))
                     .forEach(set ->
-                            context.cacheAccount(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
+                            financialDataCacher.cacheAccount(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
                     );
             break;
         }
@@ -775,7 +775,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
                 log.warn("Validation failed when trying to save e-invoice", e);
             }
         }
-        context.updateEinvoices(eInvoices);
+        systemUpdater.updateEinvoices(eInvoices);
     }
 
     private Map<Account, List<TransferDestinationPattern>> getPaymentAccountDestinations(List<Account> updatedAccounts) {
@@ -832,14 +832,14 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
             if (portfolioPapers.getStatus().getStatusCode() != OK_STATUS_CODE ||
                     portfolioPapers.getPapers() == null) {
-                context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+                financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
             }
 
             List<Instrument> instruments = Lists.newArrayList();
             portfolioPapers.getPapers().forEach(paperEntity -> paperEntity.toInstrument().ifPresent(instruments::add));
             portfolio.setInstruments(instruments);
 
-            context.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
         });
     }
 
@@ -856,7 +856,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
 
         transactions = filterFauxDoubleCharges(transactions);
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private List<Transaction> fetchTransactions(AccountEntity accountEntity, Account account, TransactionType type) {
@@ -870,7 +870,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
                 transactions.add(transactionEntity.toTransaction());
             }
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
         } while (!isContentWithRefresh(account, transactions) && accountResponse.isMoreTransactions());
 
         return transactions;
@@ -910,7 +910,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 

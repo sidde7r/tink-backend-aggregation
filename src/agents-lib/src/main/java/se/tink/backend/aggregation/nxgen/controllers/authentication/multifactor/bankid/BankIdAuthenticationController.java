@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
@@ -24,6 +25,7 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
     private static final AggregationLogger log = new AggregationLogger(BankIdAuthenticationController.class);
     private final BankIdAuthenticator<T> authenticator;
     private final AgentContext context;
+    private final SupplementalRequester supplementalRequester;
     private final boolean waitOnBankId;
 
     public BankIdAuthenticationController(AgentContext context, BankIdAuthenticator<T> authenticator) {
@@ -34,6 +36,7 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
             boolean waitOnBankId) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.context = Preconditions.checkNotNull(context);
+        this.supplementalRequester = Preconditions.checkNotNull(context);
         this.waitOnBankId = waitOnBankId;
     }
 
@@ -54,7 +57,7 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
 
         T reference = authenticator.init(ssn);
 
-        context.openBankId(authenticator
+        supplementalRequester.openBankId(authenticator
                 .getAutostartToken()
                 .orElse(null),
                 waitOnBankId);

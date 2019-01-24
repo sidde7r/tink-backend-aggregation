@@ -99,7 +99,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
                 credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, response.getAccessToken());
                 credentials.setSensitivePayload(Field.Key.PASSWORD, response.getRefreshToken());
 
-                context.updateCredentialsExcludingSensitiveInformation(credentials, false);
+                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
                 apiClient.rememberAccessToken(response.getAccessToken());
 
                 return true;
@@ -115,7 +115,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
         credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, null);
         credentials.setSensitivePayload(Field.Key.PASSWORD, null);
         credentials.setStatus(CredentialsStatus.UNCHANGED);
-        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
         return false;
     }
@@ -135,7 +135,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
                 credentials.setSensitivePayload(Field.Key.PASSWORD, authenticationResponse.getRefreshToken());
                 credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, authenticationResponse.getAccessToken());
 
-                context.updateCredentialsExcludingSensitiveInformation(credentials, false);
+                systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
                 apiClient.rememberAccessToken(authenticationResponse.getAccessToken());
                 return;
@@ -152,20 +152,20 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
         switch (item) {
         case SAVING_ACCOUNTS:
             List<Account> accounts = apiClient.getAccounts();
-            context.cacheAccounts(accounts);
+            financialDataCacher.cacheAccounts(accounts);
             break;
 
         case SAVING_TRANSACTIONS:
             for (Account account : apiClient.getAccounts()) {
                 List<Transaction> transactions = apiClient.fetchTransactionsFor(account);
 
-                context.updateTransactions(account, transactions);
+                financialDataCacher.updateTransactions(account, transactions);
             }
             break;
 
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
-            for (Account account : context.getUpdatedAccounts()) {
+            for (Account account : systemUpdater.getUpdatedAccounts()) {
                 SwedishIdentifier withdrawalIdentifier = apiClient.getWithdrawalIdentifierFor(account);
 
                 if (withdrawalIdentifier == null) {
@@ -176,7 +176,7 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
                 response.addDestination(account, pattern);
             }
 
-            context.updateTransferDestinationPatterns(response.getDestinations());
+            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
             break;
         }
     }

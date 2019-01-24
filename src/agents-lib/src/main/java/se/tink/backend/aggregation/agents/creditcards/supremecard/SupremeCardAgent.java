@@ -146,7 +146,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
         credentials.setSupplementalInformation(Preconditions.checkNotNull(autoStartToken));
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     /**
@@ -231,7 +231,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
                 UserResponse.class);
 
         if (userResponse.getData() == null) {
-            context.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, "No user information.");
+            statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, "No user information.");
             return false;
         }
         
@@ -249,7 +249,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
 
         if (previousUserIdentifier != null) {
             if (!Objects.equal(userIdentifier, previousUserIdentifier)) {
-                context.updateStatus(
+                statusUpdater.updateStatus(
                         CredentialsStatus.AUTHENTICATION_ERROR,
                         context.getCatalog().getString(
                                 "Wrong BankID signature. Did you log in with the wrong personnummer?"));
@@ -257,7 +257,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
             }
         } else {
             this.request.getCredentials().setPayload(userIdentifier);
-            context.updateCredentialsExcludingSensitiveInformation(this.request.getCredentials(), false);
+            systemUpdater.updateCredentialsExcludingSensitiveInformation(this.request.getCredentials(), false);
         }
         return true;
     }
@@ -306,7 +306,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
 
         List<Transaction> transactions = refreshTransactions(account);
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private List<Transaction> refreshTransactions(Account account) {
@@ -335,7 +335,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
                 transactions.add(transactionEntity.toTransaction());
             }
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
             if (isContentWithRefresh(account, transactions)) {
                 break;

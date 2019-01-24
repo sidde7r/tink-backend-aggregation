@@ -109,7 +109,7 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
             transactions.add(t);
         }
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     @Override

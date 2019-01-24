@@ -21,6 +21,8 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
+import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
+import se.tink.backend.aggregation.aggregationcontroller.v1.core.HostConfiguration;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
@@ -149,7 +151,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
             credentials.setStatus(CredentialsStatus.AUTHENTICATION_ERROR);
         }
 
-        context.updateCredentialsExcludingSensitiveInformation(credentials, true);
+        systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, true);
 
         return bcNumber.isPresent();
     }
@@ -233,14 +235,14 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private void updateAccount(Account account) {
         // Update the account. This will call system which will subscribe the account towards ABN AMRO if it is
         // a new account.
-        context.cacheAccount(account);
+        financialDataCacher.cacheAccount(account);
         account = context.sendAccountToUpdateService(account.getBankId());
 
         if (AbnAmroAgentUtils.isSubscribed(account)) {
             // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
             // on getting transactions ingested in the connector.
             log.info(account, "Waiting for updates from the connector...");
-            context.setWaitingOnConnectorTransactions(true);
+            systemUpdater.setWaitingOnConnectorTransactions(true);
         }
     }
 
@@ -252,7 +254,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 account.setBalance(getCreditCardBalance(account));
             }
 
-            context.cacheAccount(account);
+            financialDataCacher.cacheAccount(account);
             context.sendAccountToUpdateService(account.getBankId());
 
             if (shouldFetchTransactions) {
@@ -270,7 +272,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     private void refreshCreditCardTransactions(Account account) throws IcsException {
         Long accountNumber = getCreditCardContractNumber(account);
         List<Transaction> transactions = getCreditCardTransactions(accountNumber);
-        context.cacheTransactions(account.getBankId(), transactions);
+        financialDataCacher.cacheTransactions(account.getBankId(), transactions);
     }
 
     private Double getCreditCardBalance(Account account) throws IcsException {
@@ -338,7 +340,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 .forEach(a -> {
                     a.setExcluded(true);
                     a.setClosed(true);
-                    context.cacheAccount(a);
+                    financialDataCacher.cacheAccount(a);
                     context.sendAccountToUpdateService(a.getBankId());
                 });
     }

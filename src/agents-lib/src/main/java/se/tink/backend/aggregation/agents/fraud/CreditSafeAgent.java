@@ -155,10 +155,10 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
                 content.setPersonIdentityNumber(credentials.getUsername());
                 detailsContent.add(content);
 
-                context.updateFraudDetailsContent(detailsContent);
+                systemUpdater.updateFraudDetailsContent(detailsContent);
 
                 log.info(knownErrorMessage);
-                context.updateStatus(CredentialsStatus.UPDATING);
+                statusUpdater.updateStatus(CredentialsStatus.UPDATING);
 
             } else {
 
@@ -166,13 +166,13 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
                         error.getRejectComment() + " - " + error.getCauseOfReject();
 
                 log.warn("CreditSafe refresh gave error:" + errorMessage);
-                context.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessage);
+                statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessage);
             }
             return;
 
         }
 
-        context.updateStatus(CredentialsStatus.UPDATING);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING);
 
         // Pars XMl data to structured format.
 
@@ -224,7 +224,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         detailsContent.addAll(extractCompanyEngagementContent(companyEngagementList));
 
 
-        context.updateFraudDetailsContent(detailsContent);
+        systemUpdater.updateFraudDetailsContent(detailsContent);
     }
 
     /**
@@ -938,7 +938,7 @@ public class CreditSafeAgent extends AbstractAgent implements DeprecatedRefreshE
         }
 
         credentials.setSupplementalInformation(null);
-        context.updateStatus(CredentialsStatus.UPDATING);
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING);
         
         return true;
     }

@@ -142,7 +142,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         String bankIdCompleteUrl = collectBankId(orderBankIdResponse, bankIdUrl);
 
@@ -312,7 +312,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
                     .map(TransactionEntity::toTransaction)
                     .forEach(transactions::add);
 
-            context.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
             month--;
             if (month == 0) {
@@ -325,7 +325,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
             }
         } while (!isContentWithRefresh(account, transactions));
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private boolean isReservedPurchaseOrNotBilledPayment(TransactionEntity transactionEntity) {

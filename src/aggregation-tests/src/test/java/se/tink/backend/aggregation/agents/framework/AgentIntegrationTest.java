@@ -198,7 +198,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             if (RefreshableItem.hasAccounts(sortedItems)) {
                 context.processAccounts();
             } else {
-                Assert.assertTrue(context.getUpdatedAccounts().isEmpty());
+                Assert.assertTrue(systemUpdater.getUpdatedAccounts().isEmpty());
             }
 
             if (RefreshableItem.hasTransactions(sortedItems)) {

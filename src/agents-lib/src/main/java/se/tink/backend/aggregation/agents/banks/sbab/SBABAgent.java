@@ -167,7 +167,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
             try {
                 for (Account account : toTinkAccounts(getAccounts())) {
                     List<Transaction> transactions = fetchTransactions(account);
-                    context.updateTransactions(account, transactions);
+                    financialDataCacher.updateTransactions(account, transactions);
                 }
             } catch (Exception e) {
                 throw new IllegalStateException(e);
@@ -276,7 +276,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
 
         for (int i = 0; i < BANKID_MAX_ATTEMPTS; i++) {
             BankIdStatus bankIdStatus = authenticationClient.getLoginStatus();
@@ -356,7 +356,7 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
     }
 
     private void updateAccounts() {
-        context.cacheAccounts(toTinkAccounts(getAccounts()));
+        financialDataCacher.cacheAccounts(toTinkAccounts(getAccounts()));
     }
 
     private List<Account> toTinkAccounts(List<AccountEntity> sbabAccounts) {
@@ -381,10 +381,10 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         for (Account account : loanAccountMapping.keySet()) {
             Loan loan = loanAccountMapping.get(account);
-            context.cacheAccount(account, AccountFeatures.createForLoan(loan));
+            financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
 
             if (updateAmortizationDocument) {
-                context.updateDocument(getAmortizationDocumentation(loan.getLoanNumber()));
+                systemUpdater.updateDocument(getAmortizationDocumentation(loan.getLoanNumber()));
             }
         }
     }
@@ -425,17 +425,17 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         Map<Account, List<TransferDestinationPattern>> transferPatterns = new TransferDestinationPatternBuilder()
                 .setSourceAccounts(accountEntities)
                 .setDestinationAccounts(recipientEntities)
-                .setTinkAccounts(context.getUpdatedAccounts())
+                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
                 .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
                 .build();
 
-        context.updateTransferDestinationPatterns(transferPatterns);
+        systemUpdater.updateTransferDestinationPatterns(transferPatterns);
     }
 
     private void requestBankIdSupplemental() {
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        context.requestSupplementalInformation(credentials, false);
+        supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     @Override

@@ -49,7 +49,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
         CredentialsStatus oldStatus = credentials.getStatus();
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
-        String supplementalInformation = context.requestSupplementalInformation(credentials);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials);
         if (supplementalInformation == null) {
             // maybe throw an exception instead
             return null;
@@ -57,7 +57,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
 
         // we must reset the credential status in order to request supplemental info multiple times
         credentials.setStatus(oldStatus);
-        context.updateStatus(oldStatus);
+        statusUpdater.updateStatus(oldStatus);
 
         // updateStatus is an asynchronous call, must wait a bit
         Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
@@ -113,7 +113,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
         switch (item) {
         case CHECKING_ACCOUNTS:
             List<AccountEntity> accounts = getAccounts();
-            context.cacheAccounts(accounts.stream()
+            financialDataCacher.cacheAccounts(accounts.stream()
                     .filter(AccountEntity::isAccountPersonal)
                     .map(AccountEntity::toTinkAccount)
                     .collect(Collectors.toList()));
@@ -125,7 +125,7 @@ public class BarclaysAgent extends AbstractAgent implements RefreshableItemExecu
                 }
                 List<TransactionEntity> transactions = apiClient.fetchTransactions(account.getProductIdentifier());
 
-                context.updateTransactions(
+                financialDataCacher.updateTransactions(
                         account.toTinkAccount(),
                         transactions.stream()
                                 .map(TransactionEntity::toTinkTransaction)

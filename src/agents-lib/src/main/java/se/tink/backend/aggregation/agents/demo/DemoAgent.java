@@ -113,7 +113,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
                 credentials.setStatusPayload(null);
                 credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-                context.requestSupplementalInformation(credentials, false);
+                supplementalRequester.requestSupplementalInformation(credentials, false);
 
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
             }
@@ -174,7 +174,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     private void updateTransactionsPerType(RefreshableItem type) {
         getAccounts().stream()
                 .filter(account -> type.isAccountType(account.getType()))
-                .forEach(account -> context.updateTransactions(account, getTransactions(account)));
+                .forEach(account -> financialDataCacher.updateTransactions(account, getTransactions(account)));
     }
 
     @Override
@@ -183,7 +183,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         case TRANSFER_DESTINATIONS:
             TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            for (Account account : context.getUpdatedAccounts()) {
+            for (Account account : systemUpdater.getUpdatedAccounts()) {
                 response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
                         AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
                 response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
@@ -191,11 +191,11 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
                 response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
                         AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
             }
-            context.updateTransferDestinationPatterns(response.getDestinations());
+            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
             break;
 
         case EINVOICES:
-            context.updateEinvoices(getEInvoices());
+            systemUpdater.updateEinvoices(getEInvoices());
             break;
 
         case CHECKING_ACCOUNTS:
@@ -213,13 +213,13 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         case LOAN_ACCOUNTS:
             getAccounts().stream()
                     .filter(account -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> context.cacheAccount(account, createLoanAsset(account)));
+                    .forEach(account -> financialDataCacher.cacheAccount(account, createLoanAsset(account)));
             break;
 
         case INVESTMENT_ACCOUNTS:
             getAccounts().stream()
                     .filter(account -> RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> context.cacheAccount(account,
+                    .forEach(account -> financialDataCacher.cacheAccount(account,
                             AccountFeatures.createForPortfolios(generateFakePortolio(account))));
             break;
         }
@@ -288,8 +288,8 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             Transaction t = transferToTransaction(transfer);
             transactions.add(t);
 
-            context.updateStatus(CredentialsStatus.UPDATING);
-            context.updateTransactions(findAccountForIdentifier(transfer.getSource()), transactions);
+            statusUpdater.updateStatus(CredentialsStatus.UPDATING);
+            financialDataCacher.updateTransactions(findAccountForIdentifier(transfer.getSource()), transactions);
             context.processTransactions();
         }
     }
@@ -330,7 +330,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = context.requestSupplementalInformation(credentials, true);
+        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 
@@ -388,7 +388,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
     private void loginWithBankId(Credentials credentials) throws BankIdException {
         boolean authenticated = authenticateWithBankId(credentials);
-        context.updateStatus(credentials.getStatus(), credentials.getStatusPayload());
+        statusUpdater.updateStatus(credentials.getStatus(), credentials.getStatusPayload());
         if (!authenticated) {
             throw BankIdError.CANCELLED.exception();
         }

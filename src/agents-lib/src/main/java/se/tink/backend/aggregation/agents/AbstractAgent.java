@@ -5,6 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
+import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
+import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
+import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
+import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -27,19 +32,29 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     protected AgentsServiceConfiguration configuration;
     protected final JerseyClientFactory clientFactory;
     protected final AgentContext context;
+    protected final AgentAggregatorIdentifier agentAggregatorIdentifier;
+    protected final StatusUpdater statusUpdater;
+    protected final SupplementalRequester supplementalRequester;
+    protected final SystemUpdater systemUpdater;
     protected final CredentialsRequest request;
     protected final AggregationLogger log;
+    protected final FinancialDataCacher financialDataCacher;
 
     protected AbstractAgent(CredentialsRequest request, AgentContext context) {
         this.request = request;
         this.context = context;
+        this.agentAggregatorIdentifier = context;
+        this.statusUpdater = context;
+        this.financialDataCacher = context;
+        this.supplementalRequester = context;
+        this.systemUpdater = context;
         this.clientFactory = new JerseyClientFactory();
 
         this.log = new AggregationLogger(getAgentClass());
     }
 
     public AggregatorInfo getAggregatorInfo() {
-        return context.getAggregatorInfo();
+        return agentAggregatorIdentifier.getAggregatorInfo();
     }
 
     @Override
@@ -183,7 +198,7 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
         credentials.setSupplementalInformation(autostartToken);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
-        this.context.requestSupplementalInformation(credentials, false);
+        this.supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
     protected void openBankID() {
@@ -195,6 +210,6 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(payload));
         credentials.setStatus(CredentialsStatus.AWAITING_THIRD_PARTY_APP_AUTHENTICATION);
 
-        this.context.requestSupplementalInformation(credentials, false);
+        this.supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 }

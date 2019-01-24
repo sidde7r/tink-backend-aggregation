@@ -144,7 +144,7 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
         Account account = getAccount();
         List<Transaction> transactions = getTransactions();
 
-        context.updateTransactions(account, transactions);
+        financialDataCacher.updateTransactions(account, transactions);
     }
 
     private void ensureLoginDoneOnThisInstance() {
