@@ -97,7 +97,7 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
             throw new NotImplementedException(String.format("No implementation for %s", item.name()));
         }
         // Segregated refresh executor
-        if (agent.getAgentClass().isAssignableFrom(executorKlass)) {
+        if (executorKlass.isAssignableFrom(agent.getAgentClass())) {
             switch (item) {
                 case EINVOICES:
                     context.updateEinvoices(((RefreshEInvoiceExecutor) agent).fetchEInvoices().getEInvoices());
