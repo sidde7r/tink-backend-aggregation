@@ -10,13 +10,18 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.Provider;
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class HandelsbankenBankIdMigrationNoClearingNumberTest {
 
-    public static final String PRVIDER_NAME = "handelsbanken-bankid";
+    public static final String PROVIDER_NAME = "handelsbanken-bankid";
     public static final String NEW_AGENT_NAME = HandelsbankenSEAgent.class.getCanonicalName();
     public static final String OLD_AGENT_NAME = "HandelsbankenV6";
     private HandelsbankenBankIdMigrationNoClearingNumber migration;
@@ -29,8 +34,11 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
     @Before
     public void setUp() throws Exception {
         this.migration = new HandelsbankenBankIdMigrationNoClearingNumber();
-        this.request = Mockito.mock(CredentialsRequest.class);
-        this.provider = Mockito.mock(Provider.class);
+
+        //        this.provider = Mockito.mock(Provider.class);
+        this.provider = new Provider();
+        this.provider.setName(PROVIDER_NAME);
+
         this.accountList = Lists.newArrayList();
 
         this.oldFormat = new Account();
@@ -41,26 +49,37 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
         this.newFormat = this.oldFormat.clone();
         this.newFormat.setBankId("12345678");
 
-        Mockito.when(request.getProvider()).thenReturn(provider);
-        Mockito.when(request.getAccounts()).thenReturn(this.accountList);
+        this.request =
+                new CredentialsRequest() {
+                    @Override
+                    public boolean isManual() {
+                        return true;
+                    }
+
+                    @Override
+                    public CredentialsRequestType getType() {
+                        return CredentialsRequestType.UPDATE;
+                    }
+                };
+        this.request.setAccounts(accountList);
+        this.request.setProvider(provider);
     }
 
     @Test
     public void shouldChangeRequest_yes() {
-        Mockito.when(provider.getName()).thenReturn(PRVIDER_NAME);
-        Mockito.when(provider.getClassName()).thenReturn(OLD_AGENT_NAME);
+        provider.setClassName(OLD_AGENT_NAME);
         assertTrue(this.migration.shouldChangeRequest(this.request));
     }
 
     @Test
     public void shouldChangeRequest_differentProvider_no() {
-        Mockito.when(provider.getName()).thenReturn(PRVIDER_NAME + 'x');
+        provider.setName(PROVIDER_NAME + 'x');
         assertFalse(this.migration.shouldChangeRequest(this.request));
     }
 
     @Test
     public void shouldChangeRequest_sameAgent_no() {
-        Mockito.when(provider.getClassName()).thenReturn(NEW_AGENT_NAME);
+        provider.setClassName(NEW_AGENT_NAME);
         assertFalse(this.migration.shouldChangeRequest(this.request));
     }
 
@@ -80,11 +99,20 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
 
     @Test
     public void migrateData() {
-        Mockito.when(provider.getName()).thenReturn(PRVIDER_NAME);
-        Mockito.when(provider.getClassName()).thenReturn(OLD_AGENT_NAME);
         this.accountList.add(this.oldFormat);
-        this.migration.migrateData(Mockito.mock(ControllerWrapper.class), request);
 
+        ControllerWrapper wrapper = Mockito.mock(ControllerWrapper.class);
+        when(wrapper.updateAccountMetaData(any(String.class), any(String.class)))
+                .thenReturn(this.newFormat);
 
+        this.migration.migrateData(wrapper, request);
+
+        verify(wrapper).updateAccountMetaData(this.oldFormat.getId(), this.newFormat.getBankId());
+
+        assertEquals(request.getAccounts().size(), 1);
+        assertEquals(
+                request.getAccounts().get(0).getAccountNumber(), this.newFormat.getAccountNumber());
+        assertEquals(request.getAccounts().get(0).getBankId(), this.newFormat.getBankId());
+        assertEquals(request.getAccounts().get(0).getId(), this.newFormat.getId());
     }
 }
