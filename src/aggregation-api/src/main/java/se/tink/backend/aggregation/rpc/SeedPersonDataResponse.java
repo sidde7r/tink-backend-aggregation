@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.rpc;
 
-import se.tink.backend.core.FraudDetailsContent;
+import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import java.util.List;
 
 public class SeedPersonDataResponse {

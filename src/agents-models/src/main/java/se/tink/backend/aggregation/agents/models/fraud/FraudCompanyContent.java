@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.backend.aggregation.agents.models.fraud;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;

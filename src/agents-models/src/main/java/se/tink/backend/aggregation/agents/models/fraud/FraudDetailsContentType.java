@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.backend.aggregation.agents.models.fraud;
 
 public enum FraudDetailsContentType {
     IDENTITY,
