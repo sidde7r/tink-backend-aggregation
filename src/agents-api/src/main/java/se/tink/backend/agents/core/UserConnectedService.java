@@ -1,6 +1,8 @@
-package se.tink.backend.core;
+package se.tink.backend.agents.rpc;
 
 import io.protostuff.Tag;
+import se.tink.backend.core.UserConnectedServiceStates;
+import se.tink.backend.core.UserConnectedServiceTypes;
 
 public class UserConnectedService {
     @Tag(1)
