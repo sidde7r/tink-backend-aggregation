@@ -65,7 +65,8 @@ public class LaCaixaConstants {
         public static final String STATUS_FILTER = "A";
         public static final String LIQUIDATION_FILTER = "S";
         public static final String ZERO_BALANCE_CONTRACTS = "N";
-        public static final String GLOBAL_POSITION_TYPE = "P";
+        public static final String GLOBAL_POSITION_TYPE_P = "P"; // only la caixa engagements
+        public static final String GLOBAL_POSITION_TYPE_A = "A"; // la caixa and imagin engagemants
     }
 
     public static class QueryParams {

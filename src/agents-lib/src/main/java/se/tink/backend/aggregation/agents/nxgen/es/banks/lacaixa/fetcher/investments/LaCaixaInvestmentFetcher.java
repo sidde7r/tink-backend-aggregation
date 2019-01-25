@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.entities.PortfolioEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.EngagementResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
@@ -34,7 +36,14 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
         try {
             UserDataResponse userDataResponse = apiClient.fetchUserData();
 
-            Map<String, String> contractToCode = apiClient.fetchEngagements().getProductCodeByContractNumber();
+            EngagementResponse engagements = apiClient
+                    .fetchEngagements(LaCaixaConstants.DefaultRequestParams.GLOBAL_POSITION_TYPE_P);
+
+            // not used, only for logging
+            EngagementResponse engagementsA = apiClient
+                    .fetchEngagements(LaCaixaConstants.DefaultRequestParams.GLOBAL_POSITION_TYPE_A);
+
+            Map<String, String> contractToCode = engagements.getProductCodeByContractNumber();
             List<PortfolioEntity> portfolios = getPortfolios();
 
             if (portfolios.size() > 0) {
@@ -42,7 +51,8 @@ public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccoun
             }
 
             return portfolios.stream()
-                    .map(portfolioEntity -> parseInvestmentAccount(userDataResponse.getHolderName(), contractToCode, portfolioEntity))
+                    .map(portfolioEntity -> parseInvestmentAccount(userDataResponse.getHolderName(), contractToCode,
+                            portfolioEntity))
                     .collect(Collectors.toList());
         } catch (Exception e) {
             LOG.error("Unable to fetch investments", e);

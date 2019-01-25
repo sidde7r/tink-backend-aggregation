@@ -91,12 +91,12 @@ public class LaCaixaApiClient {
                 .get(AccountTransactionResponse.class);
     }
 
-    public EngagementResponse fetchEngagements() {
+    public EngagementResponse fetchEngagements(String globalPositionType) {
         return createRequest(LaCaixaConstants.Urls.FETCH_ENGAGEMENTS)
                 .queryParam(LaCaixaConstants.QueryParams.ZERO_BALANCE_CONTRACTS,
                         LaCaixaConstants.DefaultRequestParams.ZERO_BALANCE_CONTRACTS)
                 .queryParam(LaCaixaConstants.QueryParams.GLOBAL_POSITION_TYPE,
-                        LaCaixaConstants.DefaultRequestParams.GLOBAL_POSITION_TYPE)
+                        globalPositionType)
                 .get(EngagementResponse.class);
     }
 
