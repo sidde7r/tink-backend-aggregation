@@ -4,9 +4,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ErrorResponse {
-    private String message;
+  private String message;
 
-    public String getMessage() {
-        return message;
-    }
+  public String getMessage() {
+    return message;
+  }
 }
