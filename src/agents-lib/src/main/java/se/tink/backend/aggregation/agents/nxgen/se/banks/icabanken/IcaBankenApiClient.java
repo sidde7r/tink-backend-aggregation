@@ -9,7 +9,9 @@ import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.BankIdBodyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.entities.SessionBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.BankIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.authenticator.rpc.SessionInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.AcceptEInvoiceTransferRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.FinishEInvoiceSignRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.einvoice.rpc.UpdateEInvoiceRequest;
@@ -44,6 +46,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.RecipientsResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.TransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcaBankenSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.storage.IcabankenPersistentStorage;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -56,10 +59,13 @@ public class IcaBankenApiClient {
 
     private final TinkHttpClient client;
     private final IcaBankenSessionStorage icaBankenSessionStorage;
+    private final IcabankenPersistentStorage icabankenPersistentStorage;
 
-    public IcaBankenApiClient(TinkHttpClient client, IcaBankenSessionStorage icaBankenSessionStorage) {
+    public IcaBankenApiClient(TinkHttpClient client, IcaBankenSessionStorage icaBankenSessionStorage,
+            IcabankenPersistentStorage icabankenPersistentStorage) {
         this.client = client;
         this.icaBankenSessionStorage = icaBankenSessionStorage;
+        this.icabankenPersistentStorage = icabankenPersistentStorage;
     }
 
     private RequestBuilder createPostRequest(URL url) {
@@ -73,6 +79,12 @@ public class IcaBankenApiClient {
 
         if (!Strings.isNullOrEmpty(sessionId)) {
             request.header(IcaBankenConstants.IdTags.SESSION_ID_TAG, sessionId);
+        }
+
+        String userInstallationId = icabankenPersistentStorage.getUserInstallationId();
+
+        if (!Strings.isNullOrEmpty(userInstallationId)) {
+            request.header(IcaBankenConstants.IdTags.USER_INSTALLATION_ID, userInstallationId);
         }
 
         return request;
@@ -108,6 +120,14 @@ public class IcaBankenApiClient {
         return createRequest(IcaBankenConstants.Urls.SIGN_TRANSFER_COLLECT_URL
                 .parameter(IcaBankenConstants.IdTags.REQUEST_ID_TAG, requestId))
                 .get(BankIdResponse.class);
+    }
+
+    public SessionBodyEntity fetchSessionInfo() {
+        return createRequest(IcaBankenConstants.Urls.SESSION)
+                .queryParam(IcaBankenConstants.IdTags.DEVICE_APPLICATION_ID,
+                        icabankenPersistentStorage.getDeviceApplicationId())
+                .get(SessionInfoResponse.class)
+                .getBody();
     }
 
     public AccountsEntity fetchAccounts() {
@@ -255,5 +275,4 @@ public class IcaBankenApiClient {
         createPostRequest(IcaBankenConstants.Urls.TRANSFER_DESTINATIONS)
                 .post(RecipientsResponse.class, recipientEntity);
     }
-
 }

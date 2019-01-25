@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -22,5 +23,20 @@ public class ResponseStatusEntity {
 
     public String getClientMessage() {
         return clientMessage;
+    }
+
+    public boolean isNotACustomer() {
+        return serverMessage != null &&
+                serverMessage.toLowerCase().contains(IcaBankenConstants.BankIdStatus.NOT_A_CUSTOMER);
+    }
+
+    public boolean isInterrupted() {
+        return serverMessage != null &&
+                serverMessage.toLowerCase().contains(IcaBankenConstants.BankIdStatus.INTERRUPTED);
+    }
+
+    public boolean isNotVerified() {
+        return clientMessage != null &&
+                clientMessage.toLowerCase().contains(IcaBankenConstants.BankIdStatus.NOT_VERIFIED);
     }
 }

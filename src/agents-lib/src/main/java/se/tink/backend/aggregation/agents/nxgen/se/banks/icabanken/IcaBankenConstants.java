@@ -11,6 +11,7 @@ public class IcaBankenConstants {
 
         public static final URL LOGIN_BANKID = new URL(HOST + "/api/session/login/bankid/{identifier}");
         public static final URL KEEP_ALIVE = new URL(HOST + "/api/session/heartbeat");
+        public static final URL SESSION = new URL(HOST + "/api/session");
         public static final URL SIGN_TRANSFER_COLLECT_URL =new URL(HOST + "/api/bankId/sign/collect/{requestId}");
         public static final URL ACCOUNTS = new URL(HOST + "/api/accounts");
         public static final URL DEPOTS = new URL(HOST + "/api/depots");
@@ -55,6 +56,10 @@ public class IcaBankenConstants {
         public static final String PENDING = "pending";
         public static final String OK = "ok";
         public static final String ABORTED = "aborted";
+        public static final String TIMEOUT = "timedout";
+        public static final String NOT_A_CUSTOMER = "no active accounts";
+        public static final String INTERRUPTED = "signing not found";
+        public static final String NOT_VERIFIED = "konto har ännu inte blivit verifierat";
     }
 
     public static final class StatusCodes {
@@ -62,6 +67,8 @@ public class IcaBankenConstants {
     }
 
     public static final class IdTags {
+        public static final String DEVICE_APPLICATION_ID = "deviceApplicationId";
+        public static final String USER_INSTALLATION_ID = "userInstallationId";
         public static final String SESSION_ID_TAG = "sessionId";
         public static final String IDENTIFIER_TAG = "identifier";
         public static final String TO_DATE_TAG = "toDate";
@@ -145,7 +152,7 @@ public class IcaBankenConstants {
     }
 
     public enum UserMessage implements LocalizableEnum {
-        KNOW_YOUR_CUSTOMER(new LocalizableKey("To be able to refresh your accounts you need to update your customer info in the ICA bank app.")),
+        KNOW_YOUR_CUSTOMER(new LocalizableKey("To be able to refresh your accounts you need to update your customer info in your bank app.")),
         EINVOICE_MODIFIED_IN_BANK_APP(new LocalizableKey("If the e-invoice has been modified in the ICA Banken app, please refresh you credentials.")),
         BANKID_TRANSFER_INTERRUPTED(new LocalizableKey("Another BankId authentication was initiated while signing the transfer. Please try again."));
 
