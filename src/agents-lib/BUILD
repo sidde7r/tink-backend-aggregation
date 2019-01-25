@@ -103,6 +103,7 @@ junit_test(
         "//src/agents-lib",
         "//src/agents-models",
         "//src/aggregation-api",
+        "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/account_identifier:account-identifier-test",
