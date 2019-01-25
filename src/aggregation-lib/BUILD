@@ -113,6 +113,7 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
+        "//src/agents-api",
         "//src/agents-lib",
         "//src/aggregation-api",
         "//src/aggregation-lib",
