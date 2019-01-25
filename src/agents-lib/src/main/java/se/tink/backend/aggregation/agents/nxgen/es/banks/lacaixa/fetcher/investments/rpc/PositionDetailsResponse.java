@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.invest
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Map;
+import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.BalanceEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.system.rpc.Instrument;
 
 @JsonObject
 public class PositionDetailsResponse {
