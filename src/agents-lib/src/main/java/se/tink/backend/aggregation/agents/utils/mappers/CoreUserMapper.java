@@ -21,13 +21,13 @@ public class CoreUserMapper {
      * ModelMapper for {@link se.tink.backend.core.User} to Aggregation RPC User
      */
     @VisibleForTesting
-    static final TypeMap<User, se.tink.backend.aggregation.rpc.User> aggregationUserMap = new ModelMapper()
-            .createTypeMap(User.class, se.tink.backend.aggregation.rpc.User.class);
+    static final TypeMap<User, se.tink.backend.agents.rpc.User> aggregationUserMap = new ModelMapper()
+            .createTypeMap(User.class, se.tink.backend.agents.rpc.User.class);
 
     /**
      * Utility function to convert core User to the API user for the Aggregation service
      */
-    public static se.tink.backend.aggregation.rpc.User toAggregationUser(User user) {
+    public static se.tink.backend.agents.rpc.User toAggregationUser(User user) {
         return aggregationUserMap.map(user);
     }
 }

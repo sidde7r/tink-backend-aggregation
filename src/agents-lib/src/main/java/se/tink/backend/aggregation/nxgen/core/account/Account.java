@@ -15,10 +15,10 @@ import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.User;
 import se.tink.libraries.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.FeatureFlags;
+import se.tink.backend.agents.rpc.User;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

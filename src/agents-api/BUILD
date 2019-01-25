@@ -5,7 +5,6 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/strings",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/serialization",
         "//src/libraries/uuid",

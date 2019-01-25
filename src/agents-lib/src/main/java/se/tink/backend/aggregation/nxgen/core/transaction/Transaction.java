@@ -5,9 +5,9 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import se.tink.backend.aggregation.rpc.User;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.agents.rpc.User;
 
 public class Transaction extends AggregationTransaction {
     private final boolean pending;

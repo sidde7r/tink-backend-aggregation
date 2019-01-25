@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import org.apache.commons.codec.binary.Hex;
 import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.User;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

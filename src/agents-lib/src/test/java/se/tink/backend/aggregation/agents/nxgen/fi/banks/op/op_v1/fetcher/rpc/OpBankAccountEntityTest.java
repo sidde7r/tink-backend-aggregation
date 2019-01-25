@@ -4,7 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankAccountEntity;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.User;
+import se.tink.backend.agents.rpc.User;
+
 import static junit.framework.TestCase.assertEquals;
 
 public class OpBankAccountEntityTest {

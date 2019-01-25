@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.rpc;
 
+import se.tink.backend.agents.rpc.User;
 
 /**
  * Since all requests to agent implementations need a credentials to be able to instantiate the AgentContext, we

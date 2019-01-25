@@ -322,12 +322,4 @@ public class AbnAmroUtils {
 
         return Optional.of(credentials.getPayload());
     }
-
-    public static boolean shouldUseNewIcsAccountFormat(User user) {
-        return shouldUseNewIcsAccountFormat(user.getFlags());
-    }
-
-    public static boolean shouldUseNewIcsAccountFormat(List<String> featureFlags) {
-        return featureFlags.contains(FeatureFlags.ABN_AMRO_ICS_NEW_ACCOUNT_FORMAT);
-    }
 }
