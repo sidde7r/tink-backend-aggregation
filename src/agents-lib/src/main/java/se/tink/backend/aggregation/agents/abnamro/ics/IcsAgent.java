@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.FeatureFlags;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroIcsCredentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -24,7 +25,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.rpc.User;
+import se.tink.backend.agents.rpc.User;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.abnamro.ics.retry.RetryerBuilder;
 import se.tink.backend.aggregation.agents.models.Transaction;
@@ -158,6 +159,10 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
         }
     }
 
+    public static boolean shouldUseNewIcsAccountFormat(List<String> featureFlags) {
+        return featureFlags.contains(FeatureFlags.ABN_AMRO_ICS_NEW_ACCOUNT_FORMAT);
+    }
+
     /**
      * Retrieve transactions for a specific contract that belongs to a customer (Bank Customer Number)
      */
@@ -169,7 +174,7 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
             CreditCardAccountEntity creditCardAccount = entity.getCreditCardAccount();
 
             Account account = AccountMapper.toAccount(creditCardAccount,
-                    AbnAmroUtils.shouldUseNewIcsAccountFormat(user.getFlags()));
+                    shouldUseNewIcsAccountFormat(user.getFlags()));
 
             List<Transaction> transactions = creditCardAccount.getTransactions().stream()
                     .filter(TransactionContainerEntity::isInEUR)
