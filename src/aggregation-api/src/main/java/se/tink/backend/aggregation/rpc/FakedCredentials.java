@@ -7,6 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Map;
 import se.tink.backend.agents.rpc.User;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+
 
 /**
  * Immutable credentials object that's supposed to be used only as hack when needing a credentials instance, but

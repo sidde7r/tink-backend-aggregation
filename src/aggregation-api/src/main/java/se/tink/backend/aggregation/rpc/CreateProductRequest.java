@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import se.tink.backend.agents.rpc.User;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.application.GenericApplication;
 import se.tink.backend.core.signableoperation.SignableOperation;
 

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.rpc;
 
 import se.tink.backend.agents.rpc.User;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class DeleteCredentialsRequest extends CredentialsRequest {
     public DeleteCredentialsRequest(User user, Provider provider, Credentials credentials) {

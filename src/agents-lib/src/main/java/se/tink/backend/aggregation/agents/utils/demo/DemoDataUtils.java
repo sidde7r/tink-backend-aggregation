@@ -92,7 +92,7 @@ public class DemoDataUtils {
         return "EUR";
     }
 
-    public static List<Account> readAccounts(File file, se.tink.backend.aggregation.rpc.Credentials credentials) throws IOException {
+    public static List<Account> readAccounts(File file, se.tink.backend.agents.rpc.Credentials credentials) throws IOException {
         return readAccounts(file, CoreCredentialsMapper.fromAggregationCredentials(credentials));
     }
 
