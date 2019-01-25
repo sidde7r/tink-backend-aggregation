@@ -20,16 +20,13 @@ import se.tink.libraries.date.DateUtils;
 public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     private Credentials credentials;
-    private SBABAgent agent;
 
-    public SBABAgentTest() throws Exception {
+    public SBABAgentTest() {
         super(SBABAgent.class);
 
         credentials = createCredentials(TestSSN.TOLVAN, null, CredentialsTypes.MOBILE_BANKID);
 
         testContext = new AgentTestContext(credentials);
-        agent = (SBABAgent) factory
-                .create(SBABAgent.class, createRefreshInformationRequest(credentials, new Provider()), testContext);
     }
 
     @Test
@@ -225,18 +222,4 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
         testTransferException(credentials, transfer);
     }
 
-    /**
-     * This is to be able to use a client without SSL validation when testing mortgages.
-     */
-    private void switchToMortgageTestAgent(String ssn) throws Exception {
-        if (ssn == null) {
-            ssn = TestSSN.TOLVAN;
-        }
-
-        Provider provider = new Provider();
-        provider.setPayload("{\"isSwitchMortgageProviderTest\":\"true\"}");
-        credentials = createCredentials(ssn, null, CredentialsTypes.MOBILE_BANKID);
-        agent = (SBABAgent) factory
-                .create(SBABAgent.class, createRefreshInformationRequest(credentials, provider), testContext);
-    }
 }
