@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model.account.create.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.agents.rpc.Field;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class QuestionEntity {

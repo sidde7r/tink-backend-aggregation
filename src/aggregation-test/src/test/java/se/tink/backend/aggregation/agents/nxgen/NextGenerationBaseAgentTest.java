@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen;
 
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.agents.rpc.ProviderTypes;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentTestContext;
@@ -7,8 +9,6 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.aggregation.rpc.ProviderTypes;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 

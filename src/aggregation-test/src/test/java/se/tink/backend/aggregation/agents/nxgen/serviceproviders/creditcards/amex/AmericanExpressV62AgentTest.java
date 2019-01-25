@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.nxgen.agents.se.serviceproviders.creditcards
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 
 @Ignore

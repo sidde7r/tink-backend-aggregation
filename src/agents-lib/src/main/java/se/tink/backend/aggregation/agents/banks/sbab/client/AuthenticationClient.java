@@ -7,12 +7,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.PollBankIdResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.Field;
 
 public class AuthenticationClient extends SBABClient {
 

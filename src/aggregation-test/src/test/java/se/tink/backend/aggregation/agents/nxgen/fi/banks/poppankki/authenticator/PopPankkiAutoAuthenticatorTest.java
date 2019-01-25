@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki.authenticato
 
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.poppankki.PopPankkiConstants;
@@ -17,7 +18,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 
 public class PopPankkiAutoAuthenticatorTest extends NextGenerationBaseAgentTest {

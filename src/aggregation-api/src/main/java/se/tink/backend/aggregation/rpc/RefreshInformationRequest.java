@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
 import se.tink.backend.agents.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
 
 public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty

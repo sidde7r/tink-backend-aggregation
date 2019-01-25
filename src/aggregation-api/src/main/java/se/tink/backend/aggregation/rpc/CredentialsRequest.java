@@ -11,6 +11,7 @@ import org.apache.commons.codec.binary.Hex;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

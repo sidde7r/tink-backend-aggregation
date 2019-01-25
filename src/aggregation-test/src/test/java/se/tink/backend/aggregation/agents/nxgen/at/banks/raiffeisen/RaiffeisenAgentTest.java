@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen;
 
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.rpc.Field;
 
 public class RaiffeisenAgentTest {
     @Test

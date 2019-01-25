@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.brokers.lysa.model;
 
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import java.util.Date;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionEntity {

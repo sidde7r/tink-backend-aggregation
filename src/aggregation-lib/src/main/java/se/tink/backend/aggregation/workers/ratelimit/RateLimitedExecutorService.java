@@ -10,7 +10,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.dropwizard.lifecycle.Managed;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import se.tink.backend.aggregation.rpc.Provider;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.concurrency.ListenableThreadPoolExecutor;
 import se.tink.libraries.concurrency.NamedRunnable;
 import se.tink.libraries.metrics.utils.MetricsUtils;

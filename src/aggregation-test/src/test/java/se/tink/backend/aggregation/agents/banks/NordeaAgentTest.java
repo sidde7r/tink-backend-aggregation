@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgent;
 import se.tink.backend.aggregation.agents.banks.nordea.Session;
@@ -21,7 +22,6 @@ import se.tink.backend.aggregation.agents.banks.nordea.v15.model.TransactionList
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.savings.CustodyAccount;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.helper.transfer.stubs.TransferStub;
 import se.tink.libraries.account.identifiers.TestAccount;

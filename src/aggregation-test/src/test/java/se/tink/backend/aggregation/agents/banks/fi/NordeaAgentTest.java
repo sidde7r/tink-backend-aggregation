@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.banks.fi;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgent;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgentUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.savings.CustodyAccount;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.transfer.Transfer;

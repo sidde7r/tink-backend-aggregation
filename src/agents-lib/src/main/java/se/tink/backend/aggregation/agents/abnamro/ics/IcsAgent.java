@@ -126,7 +126,6 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
         String bcNumber = abnAmroIcsCredentials.getBcNumber();
         Set<Long> contractNumbers = abnAmroIcsCredentials.getContractNumbers();
 
-        Preconditions.checkNotNull(bacNumber);
 
         if (contractNumbers.isEmpty()) {
             return;

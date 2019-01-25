@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.base.Objects;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.TransferRequest;
@@ -11,7 +12,6 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.utils.MetricsUtils;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;

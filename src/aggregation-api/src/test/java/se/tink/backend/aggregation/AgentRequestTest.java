@@ -3,8 +3,8 @@ package se.tink.backend.aggregation;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.agents.rpc.User;
 

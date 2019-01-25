@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.au
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Field;
 import se.tink.libraries.i18n.Catalog;
 
 public class MultiSupplementalManualAuthenticator implements MultiFactorAuthenticator {

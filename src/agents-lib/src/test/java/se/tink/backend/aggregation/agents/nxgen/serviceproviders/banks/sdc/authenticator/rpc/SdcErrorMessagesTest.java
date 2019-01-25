@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.auth
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sdcno.SdcNoConfiguration;
-import se.tink.backend.aggregation.rpc.Provider;
 
 public class SdcErrorMessagesTest {
     private SdcNoConfiguration agentConfiguration;

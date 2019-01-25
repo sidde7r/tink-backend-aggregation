@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator
 import com.google.common.base.Strings;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.Field;
 
 public class OpenbankAuthenticator implements Authenticator {
     private final OpenbankApiClient apiClient;
