@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.Lin
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject
 public class PortfolioEntity {

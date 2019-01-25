@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.aggregation.agents.models.Loan;
 
 public class LoanDetailsEntityTest {
     private static final ObjectMapper MAPPER = new ObjectMapper();

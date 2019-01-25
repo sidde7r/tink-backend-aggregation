@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.system.rpc.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 
 public class Transaction extends AggregationTransaction {
     private final boolean pending;
@@ -36,8 +36,8 @@ public class Transaction extends AggregationTransaction {
         return externalId;
     }
 
-    public se.tink.backend.system.rpc.Transaction toSystemTransaction(User user) {
-        se.tink.backend.system.rpc.Transaction transaction = super.toSystemTransaction(user);
+    public se.tink.backend.aggregation.agents.models.Transaction toSystemTransaction(User user) {
+        se.tink.backend.aggregation.agents.models.Transaction transaction = super.toSystemTransaction(user);
 
         transaction.setPending(isPending());
         if (!Strings.isNullOrEmpty(getExternalId())) {

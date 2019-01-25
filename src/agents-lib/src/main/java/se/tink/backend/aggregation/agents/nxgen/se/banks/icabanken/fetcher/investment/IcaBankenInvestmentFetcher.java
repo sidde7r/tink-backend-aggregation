@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.inves
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class IcaBankenInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final IcaBankenApiClient apiClient;

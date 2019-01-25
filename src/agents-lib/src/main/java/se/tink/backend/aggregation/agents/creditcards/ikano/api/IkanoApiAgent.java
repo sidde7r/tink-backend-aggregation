@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private final IkanoApiClient apiClient;

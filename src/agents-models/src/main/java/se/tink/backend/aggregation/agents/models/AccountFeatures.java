@@ -1,4 +1,4 @@
-package se.tink.backend.system.rpc;
+package se.tink.backend.aggregation.agents.models;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;

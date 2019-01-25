@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.system.rpc.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
 
 public class UpdateController {
     private static final AggregationLogger log = new AggregationLogger(UpdateController.class);

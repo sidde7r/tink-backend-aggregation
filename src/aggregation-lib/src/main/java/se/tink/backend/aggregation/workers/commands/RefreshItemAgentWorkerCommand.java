@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.RefreshMetricNameFactory;
-import se.tink.backend.system.rpc.AccountFeatures;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.metrics.MetricId;
 
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {

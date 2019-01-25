@@ -28,8 +28,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.system.rpc.Instrument;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class NordeaDkParser extends NordeaV20Parser {
     private static final Joiner REGEXP_OR_JOINER = Joiner.on("|");

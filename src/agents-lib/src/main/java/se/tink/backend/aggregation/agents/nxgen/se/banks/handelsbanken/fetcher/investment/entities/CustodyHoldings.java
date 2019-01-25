@@ -4,7 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
 public class CustodyHoldings implements SecurityHoldingContainer.InstrumentEnricher {
