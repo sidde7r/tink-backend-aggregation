@@ -5,6 +5,7 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/libraries/strings",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/serialization",
         "//src/libraries/uuid",
@@ -14,5 +15,6 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_google_guava_guava",
+        "//third_party:io_protostuff_protostuff_api",
     ],
 )
