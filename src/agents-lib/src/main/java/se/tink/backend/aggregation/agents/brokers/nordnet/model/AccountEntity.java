@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.system.rpc.Portfolio;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject

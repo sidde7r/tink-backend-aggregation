@@ -8,7 +8,7 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

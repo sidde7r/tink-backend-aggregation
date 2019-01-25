@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.core.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.system.rpc.Portfolio;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class PensionDetailsResponse extends BaseResponse {

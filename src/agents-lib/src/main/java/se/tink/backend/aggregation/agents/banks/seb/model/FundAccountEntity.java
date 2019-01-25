@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Optional;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.system.rpc.Portfolio;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FundAccountEntity {

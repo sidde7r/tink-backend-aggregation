@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 
 import java.util.Collection;
 

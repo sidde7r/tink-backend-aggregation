@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.nordea;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.system.rpc.Loan;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NordeaAgentUtilsTest {

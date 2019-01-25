@@ -9,7 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgentUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaHashMapDeserializer;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PaymentEntity {

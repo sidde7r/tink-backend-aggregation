@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.system.rpc.Portfolio;
 
 public class BankdataConstants {
     public static final String MARKET_CURRENCY = "dkk";

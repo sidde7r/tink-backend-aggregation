@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.contexts;
 import java.util.List;
 import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.AccountFeatures;
+import se.tink.backend.system.rpc.Transaction;
 
 public interface FinancialDataCacher {
 

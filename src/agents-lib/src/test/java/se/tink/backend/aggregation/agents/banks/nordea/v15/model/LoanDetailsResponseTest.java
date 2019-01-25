@@ -6,7 +6,7 @@ import java.text.ParseException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.system.rpc.Loan;
 
 public class LoanDetailsResponseTest {
     private static final String ITEM = "{\"getLoanDetailsOut\":{\"loanData\":{\"localNumber\":{\"$\":\"1337\"},\"currency\":{\"$\":\"SEK\"},\"granted\":{\"$\":\"-30000.00\"},\"balance\":{\"$\":\"-18000.00\"},\"interestTermEnds\":{},\"interest\":{\"$\":\"4.55\"},\"paymentAccount\":{\"$\":\"1337\"},\"paymentFrequency\":{\"$\":\"PERIOD_01\"}},\"followingPayment\":{\"date\":{\"$\":\"2016-09-28T09:29:40.722+02:00\"},\"interest\":{\"$\":\"69.00\"},\"expenses\":{\"$\":\"0.00\"},\"total\":{\"$\":\"569.00\"},\"amortisation\":{\"$\":\"500.00\"}},\"latestPayment\":{\"date\":{\"$\":\"2016-08-28T09:29:40.722+02:00\"},\"interest\":{\"$\":\"71.00\"},\"expenses\":{\"$\":\"0.00\"},\"total\":{\"$\":\"571.00\"},\"amortisation\":{\"$\":\"500.00\"}}}}";

@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 
 import java.util.Collections;
 import java.util.List;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionResponse {

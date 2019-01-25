@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.core.Account;
+import se.tink.backend.system.rpc.AccountFeatures;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateAccountRequest {

@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model;
 import java.text.ParseException;
 import java.util.List;
 
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 

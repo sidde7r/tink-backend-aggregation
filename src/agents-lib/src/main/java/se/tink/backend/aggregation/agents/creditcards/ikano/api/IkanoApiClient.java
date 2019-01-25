@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.regist
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoCrypt;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 
 public class IkanoApiClient {
     private Client client;

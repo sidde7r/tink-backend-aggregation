@@ -28,8 +28,8 @@ import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionG
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;

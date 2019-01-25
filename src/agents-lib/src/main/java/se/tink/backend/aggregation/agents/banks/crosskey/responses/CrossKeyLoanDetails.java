@@ -11,8 +11,8 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.models.LoanDetails;
+import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.system.rpc.LoanDetails;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

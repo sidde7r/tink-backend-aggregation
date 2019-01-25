@@ -18,9 +18,9 @@ import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.Amount;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.AccountFeatures;
+import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.system.rpc.Transaction;
 
 @RunWith(MockitoJUnitRunner.class)
 public final class UpdateControllerTest {

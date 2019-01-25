@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.system.rpc.Instrument;
 
 @JsonObject
 public class OpBankBondsEntity {

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.banks.crosskey.responses;
 
 import com.google.common.collect.Lists;
 import java.util.List;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 
 public class TransactionsResponse extends BaseResponse {
     public List<TransactionResponse> transactions;

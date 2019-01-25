@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.system.rpc.Instrument;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
@@ -148,7 +148,7 @@ public class DetailedHoldingEntity {
 
         instrument.setAverageAcquisitionPriceFromAmount(
                 Optional.ofNullable(acquisitionValue)
-                        .map(AmountEntity::toAmountModel)
+                        .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setCurrency(
                 Optional.ofNullable(marketValue)
@@ -157,16 +157,16 @@ public class DetailedHoldingEntity {
         instrument.setIsin(isinCode);
         instrument.setMarketValueFromAmount(
                 Optional.ofNullable(marketValue)
-                        .map(AmountEntity::toAmountModel)
+                        .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setName(name);
         instrument.setPriceFromAmount(
                 Optional.of(fundRate)
-                        .map(AmountEntity::toAmountModel)
+                        .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setProfitFromAmount(
                 Optional.ofNullable(changeOfValue)
-                        .map(AmountEntity::toAmountModel)
+                        .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setQuantity(StringUtils.parseAmountEU(numberOfFundParts));
         instrument.setType(Instrument.Type.FUND);
@@ -185,7 +185,7 @@ public class DetailedHoldingEntity {
 
         instrument.setAverageAcquisitionPriceFromAmount(
                 Optional.ofNullable(acquisitionPrice)
-                        .map(AmountEntity::toAmountModel)
+                        .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setCurrency(
                 Optional.ofNullable(numberOrAmount)
@@ -195,16 +195,16 @@ public class DetailedHoldingEntity {
         instrument.setIsin(isin);
         instrument.setMarketValueFromAmount(
                 Optional.ofNullable(marketValue)
-                        .map(AmountEntity::toAmountModel)
+                        .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setName(name);
         instrument.setPriceFromAmount(
                 Optional.of(valuationPrice)
-                        .map(AmountEntity::toAmountModel)
+                        .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setProfitFromAmount(
                 Optional.ofNullable(changeOfValue)
-                        .map(AmountEntity::toAmountModel)
+                        .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setQuantity(StringUtils.parseAmountEU(
                 Optional.ofNullable(numberOrAmount)

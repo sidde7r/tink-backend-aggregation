@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.system.rpc.Loan;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

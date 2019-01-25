@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.text.ParseException;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 

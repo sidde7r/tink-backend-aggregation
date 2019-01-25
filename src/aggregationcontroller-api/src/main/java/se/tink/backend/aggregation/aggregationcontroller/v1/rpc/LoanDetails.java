@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.models;
+package se.tink.backend.system.rpc;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.UUID;
 import se.tink.libraries.serialization.utils.SerializationUtils;

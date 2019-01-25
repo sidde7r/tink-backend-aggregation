@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.system.rpc.Portfolio;
 
 @JsonObject
 public class PortfolioEntity {

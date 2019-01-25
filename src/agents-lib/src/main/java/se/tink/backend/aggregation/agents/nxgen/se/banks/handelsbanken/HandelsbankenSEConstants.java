@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.system.rpc.Portfolio;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class HandelsbankenSEConstants {

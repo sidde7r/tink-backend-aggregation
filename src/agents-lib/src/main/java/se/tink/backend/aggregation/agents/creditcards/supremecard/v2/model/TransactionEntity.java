@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.system.rpc.TransactionTypes;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {

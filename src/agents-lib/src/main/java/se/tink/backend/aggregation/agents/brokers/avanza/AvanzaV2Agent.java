@@ -67,10 +67,11 @@ import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.AccountFeatures;
+import se.tink.backend.system.rpc.Instrument;
+import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.InstrumentTypes;
 
 /** Latest verified version: iOS v2.12.0 */
 public class AvanzaV2Agent extends AbstractAgent

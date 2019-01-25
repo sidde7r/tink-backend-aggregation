@@ -2,10 +2,11 @@ package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.system.rpc.Portfolio;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PortfolioEntity {

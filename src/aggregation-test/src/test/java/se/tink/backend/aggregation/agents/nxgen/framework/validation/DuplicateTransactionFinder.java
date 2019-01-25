@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 
 /** Used for finding duplicates in a collection of transactions efficiently. */
 public final class DuplicateTransactionFinder {
