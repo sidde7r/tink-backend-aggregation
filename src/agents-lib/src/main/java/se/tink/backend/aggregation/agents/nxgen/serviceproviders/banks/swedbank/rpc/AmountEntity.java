@@ -34,15 +34,4 @@ public class AmountEntity {
 
         return new Amount(currencyCode, AgentParsingUtils.parseAmount(amount));
     }
-
-    public se.tink.backend.aggregation.agents.models.Amount toAmountModel() {
-
-        if (currencyCode == null || currencyCode.isEmpty()) {
-            return null;
-        }
-
-        return new se.tink.backend.aggregation.agents.models.Amount(currencyCode,
-                AgentParsingUtils.parseAmount(amount));
-    }
-
 }

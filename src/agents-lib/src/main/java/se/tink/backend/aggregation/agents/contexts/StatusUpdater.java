@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.i18n.Catalog;
 
 public interface StatusUpdater {

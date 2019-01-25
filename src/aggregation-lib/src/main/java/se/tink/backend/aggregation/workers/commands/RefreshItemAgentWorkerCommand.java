@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.Agent;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
@@ -24,6 +26,8 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
 import se.tink.backend.aggregation.workers.metrics.RefreshMetricNameFactory;
+import se.tink.backend.system.rpc.AccountFeatures;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.metrics.MetricId;
 
 public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
@@ -108,55 +112,77 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                     context.cacheAccounts(((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts());
                     break;
                 case CHECKING_TRANSACTIONS:
-                    ((RefreshCheckingAccountsExecutor) agent)
-                            .fetchCheckingTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshCheckingAccountsExecutor) agent)
+                                    .fetchCheckingTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(
+                                accountTransactions.getKey(), accountTransactions.getValue());
+                    }
                     break;
                 case SAVING_ACCOUNTS:
                     context.cacheAccounts(((RefreshSavingsAccountsExecutor) agent).fetchSavingsAccounts().getAccounts());
                     break;
                 case SAVING_TRANSACTIONS:
-                    ((RefreshSavingsAccountsExecutor) agent)
-                            .fetchSavingsTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
-
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshSavingsAccountsExecutor) agent)
+                                    .fetchSavingsTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(accountTransactions.getKey(), accountTransactions.getValue());
+                    }
                     break;
                 case CREDITCARD_ACCOUNTS:
                     context.cacheAccounts(
                             ((RefreshCreditCardAccountsExecutor) agent).fetchCreditCardAccounts().getAccounts());
                     break;
                 case CREDITCARD_TRANSACTIONS:
-
-                    ((RefreshCreditCardAccountsExecutor) agent)
-                            .fetchCreditCardTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshCreditCardAccountsExecutor) agent)
+                                    .fetchCreditCardTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(accountTransactions.getKey(), accountTransactions.getValue());
+                    }
                     break;
                 case LOAN_ACCOUNTS:
-                    ((RefreshLoanAccountsExecutor) agent)
-                            .fetchLoanAccounts()
-                            .getAccounts()
-                            .forEach((key, value) -> context.cacheAccount(key, value));
+                    for (Map.Entry<Account, AccountFeatures> loanAccount :
+                            ((RefreshLoanAccountsExecutor) agent)
+                                    .fetchLoanAccounts()
+                                    .getAccounts()
+                                    .entrySet()) {
+                        context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
+                    }
                     break;
                 case LOAN_TRANSACTIONS:
-                    ((RefreshLoanAccountsExecutor) agent)
-                            .fetchLoanTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshLoanAccountsExecutor) agent)
+                                    .fetchLoanTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(
+                                accountTransactions.getKey(), accountTransactions.getValue());
+                    }
                     break;
                 case INVESTMENT_ACCOUNTS:
-                    ((RefreshInvestmentAccountsExecutor) agent)
-                            .fetchInvestmentAccounts()
-                            .getAccounts()
-                            .forEach((key, value) -> context.cacheAccount(key, value));
+                    for (Map.Entry<Account, AccountFeatures> loanAccount :
+                            ((RefreshInvestmentAccountsExecutor) agent)
+                                    .fetchInvestmentAccounts()
+                                    .getAccounts()
+                                    .entrySet()) {
+                        context.cacheAccount(loanAccount.getKey(), loanAccount.getValue());
+                    }
                     break;
                 case INVESTMENT_TRANSACTIONS:
-                    ((RefreshInvestmentAccountsExecutor) agent)
-                            .fetchInvestmentTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
+                    for (Map.Entry<Account, List<Transaction>> accountTransactions :
+                            ((RefreshInvestmentAccountsExecutor) agent)
+                                    .fetchInvestmentTransactions()
+                                    .getTransactions()
+                                    .entrySet()) {
+                        context.updateTransactions(
+                                accountTransactions.getKey(), accountTransactions.getValue());
+                    }
                     break;
                 default:
                     throw new IllegalStateException(

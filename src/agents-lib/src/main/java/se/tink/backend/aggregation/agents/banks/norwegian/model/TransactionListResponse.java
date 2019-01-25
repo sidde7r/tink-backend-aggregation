@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 
 public class TransactionListResponse extends ArrayList<TransactionEntity> {
 

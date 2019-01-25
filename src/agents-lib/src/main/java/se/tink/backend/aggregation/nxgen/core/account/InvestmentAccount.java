@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.core.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.system.rpc.Portfolio;
 
 public class InvestmentAccount extends Account {
     public static final ImmutableList<AccountTypes> ALLOWED_ACCOUNT_TYPES =

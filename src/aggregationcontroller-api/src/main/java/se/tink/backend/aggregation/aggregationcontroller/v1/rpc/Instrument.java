@@ -1,7 +1,11 @@
-package se.tink.backend.aggregation.agents.models;
+package se.tink.backend.system.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Optional;
+import se.tink.backend.core.Amount;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Instrument {
 
     public enum Type {
@@ -129,22 +133,27 @@ public class Instrument {
         this.rawType = rawType;
     }
 
+    @JsonIgnore
     public void setAverageAcquisitionPriceFromAmount(Amount averageAcquisitionPrice) {
         this.averageAcquisitionPrice = getAmountValue(averageAcquisitionPrice);
     }
 
+    @JsonIgnore
     public void setMarketValueFromAmount(Amount marketValue) {
         this.marketValue = getAmountValue(marketValue);
     }
 
+    @JsonIgnore
     public void setPriceFromAmount(Amount price) {
         this.price = getAmountValue(price);
     }
 
+    @JsonIgnore
     public void setProfitFromAmount(Amount profit) {
         this.profit = getAmountValue(profit);
     }
 
+    @JsonIgnore
     private static Double getAmountValue(Amount amount) {
         return Optional.ofNullable(amount)
                 .map(Amount::getValue)

@@ -7,9 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import com.google.common.base.Function;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.system.rpc.TransactionPayloadTypes;
+import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.strings.StringUtils;
 

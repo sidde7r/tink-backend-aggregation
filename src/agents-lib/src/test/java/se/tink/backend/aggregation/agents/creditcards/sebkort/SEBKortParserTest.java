@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.creditcards.sebkort.model.SummaryTrans
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionGroupEntity;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 

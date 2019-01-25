@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.abnamro.ics.mappers;
 
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.abnamro.client.model.creditcards.TransactionContainerEntity;
 import se.tink.libraries.abnamro.utils.AbnAmroUtils;
 

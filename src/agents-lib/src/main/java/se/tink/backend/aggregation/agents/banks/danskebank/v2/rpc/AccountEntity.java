@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
-import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.system.rpc.Loan;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.banks.seb.utilities;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.system.rpc.TransactionTypes;
 
 public class SEBAgentUtilsTest {
 

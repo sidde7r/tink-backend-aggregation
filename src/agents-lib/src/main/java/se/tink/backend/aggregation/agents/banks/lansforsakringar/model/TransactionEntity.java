@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

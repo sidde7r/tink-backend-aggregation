@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.date.ThreadSafeDateFormat;

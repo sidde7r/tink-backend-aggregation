@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entit
 
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.system.rpc.Instrument;
 
 @JsonObject
 public class SecuritiesEntity {

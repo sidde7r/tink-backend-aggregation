@@ -7,7 +7,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.system.rpc.Loan;
 
 public class SEBLoanTest {
     private static final String LOAN_RESPONSE_ITEM = "{\"ROW_ID\":1,\"KONTRAKTNR\":\"1337\",\"KTOSLAG_TXT\":\"BOLÅN - BOTTENLÅN MED BUNDEN RÄNTA\",\"SKULD\":47000.00,\"RTE_SATS\":1.760,\"NASTA_FFDAT\":\"2016-09-28\",\"BELOPP\":1069.00,\"LANTAGARE1\":\"NAMN NAMNSSON\",\"LANTAGARE2\":\"\",\"FLER_LANTAGARE_FL\":\"N\",\"RTE_FF_DATUM\":\"2019-04-28\",\"INBETSATT\":\"DEBITERAS  KONTO 31337\",\"OBJBETD1\":\"Örebro\",\"OBJBETD2\":\"Ålsjön\",\"OBJBETD3\":\"3\",\"OBJBETD4\":\"\",\"AMORTERING\":1000.00,\"RANTA\":69.00,\"DRJBEL\":0.00,\"OVRAVGBEL\":0.00,\"KUNDNR_LOP_NR\":\"001\",\"LANTAGARE_FL\":\"1\",\"DATSLUTBET\":\"2019-04-28\",\"DATRTEJUST\":\"\",\"AVISERING_FL\":\"J\",\"FORFALL_KOD\":\"01\",\"AVI_TXT\":\"VARJE MÅNAD\"}";

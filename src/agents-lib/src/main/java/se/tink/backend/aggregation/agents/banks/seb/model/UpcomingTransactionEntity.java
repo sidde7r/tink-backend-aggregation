@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 import se.tink.libraries.date.DateUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.ThreadSafeDateFormat;

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.system.rpc.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

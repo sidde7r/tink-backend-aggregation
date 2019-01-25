@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.system.rpc.Transaction;
 
 public class FetchTransactionsResponse {
     private final Map<Account, List<Transaction>> transactions;

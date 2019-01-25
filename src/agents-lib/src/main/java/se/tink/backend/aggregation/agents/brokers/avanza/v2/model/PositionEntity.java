@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.brokers.avanza.v2.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.InstrumentTypes;
-import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.system.rpc.Instrument;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PositionEntity {
