@@ -16,7 +16,6 @@ java_library(
         "//src/libraries/dropwizard_utils:dropwizard-utils",
         "//src/libraries/metrics",
         "//src/main-api",
-        "//src/system-api",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:com_netflix_governator",

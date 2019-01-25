@@ -19,7 +19,6 @@ java_library(
         "//src/libraries/strings",
         "//src/libraries/uuid",
         "//src/main-api",
-        "//src/system-api",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_google_guava_guava",

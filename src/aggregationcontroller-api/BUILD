@@ -10,7 +10,6 @@ java_library(
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/main-api",
-        "//src/system-api",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

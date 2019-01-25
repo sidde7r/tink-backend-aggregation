@@ -38,7 +38,6 @@ junit_test(
         "//src/libraries/transfer_stub:transfer-stub-test",
         "//src/libraries/uuid",
         "//src/main-api",
-        "//src/system-api",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:commons_io_commons_io",
