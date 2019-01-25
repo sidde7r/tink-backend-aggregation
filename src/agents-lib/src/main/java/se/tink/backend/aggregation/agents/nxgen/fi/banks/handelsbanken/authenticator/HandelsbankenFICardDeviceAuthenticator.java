@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 
 public class HandelsbankenFICardDeviceAuthenticator implements MultiFactorAuthenticator {

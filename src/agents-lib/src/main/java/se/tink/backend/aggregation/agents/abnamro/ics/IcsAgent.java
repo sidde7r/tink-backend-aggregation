@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.agents.rpc.User;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -125,7 +126,7 @@ public class IcsAgent extends AbstractAgent implements RefreshableItemExecutor {
         String bcNumber = abnAmroIcsCredentials.getBcNumber();
         Set<Long> contractNumbers = abnAmroIcsCredentials.getContractNumbers();
 
-        Preconditions.checkNotNull(bcNumber);
+        Preconditions.checkNotNull(bacNumber);
 
         if (contractNumbers.isEmpty()) {
             return;

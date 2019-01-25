@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.creditcards;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.SEBKortAgent;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.social.security.TestSSN;
 

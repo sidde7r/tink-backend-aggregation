@@ -6,7 +6,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.targo.TargoBankDEAgent;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 
 @Ignore

@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.banks.nordea.v15.model.InitialContextR
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.TransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.savings.CustodyAccount;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.helper.transfer.stubs.TransferStub;

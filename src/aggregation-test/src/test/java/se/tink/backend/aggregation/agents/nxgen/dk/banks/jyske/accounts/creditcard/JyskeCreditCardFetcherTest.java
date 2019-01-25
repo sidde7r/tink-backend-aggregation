@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.Jys
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

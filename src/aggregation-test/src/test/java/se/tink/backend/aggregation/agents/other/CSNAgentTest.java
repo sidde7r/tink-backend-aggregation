@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.other;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 
 public class CSNAgentTest extends AbstractAgentTest<CSNAgent> {
 	public CSNAgentTest() {
