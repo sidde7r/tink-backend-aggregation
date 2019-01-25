@@ -1,21 +1,11 @@
-package se.tink.backend.core;
+package se.tink.backend.aggregation.agents.models.fraud;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import org.apache.commons.beanutils.BeanMap;
-import org.apache.commons.beanutils.PropertyUtilsBean;
-import se.tink.libraries.log.legacy.LogUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FraudCompanyContent extends FraudDetailsContent {
-
-    private static final Set<String> excludedPropertiesForComparison = Sets
-            .newHashSet("contentId", "changeValue", "changeProperty", "directors");
 
     private String orgNumber;
     private String name;
@@ -39,64 +29,6 @@ public class FraudCompanyContent extends FraudDetailsContent {
     private String grossProfitMarginPercentage;
     private String quickRatioPercent;
     private String solidityPercentage;
-
-    private static final LogUtils log = new LogUtils(FraudCompanyContent.class);
-
-    public Map<String, String> findDiff(FraudCompanyContent newCompany) throws Exception {
-        BeanMap map = new BeanMap(this);
-        PropertyUtilsBean propUtils = new PropertyUtilsBean();
-
-        Map<String, String> diffMap = Maps.newHashMap();
-
-        // Compare directors lists.
-
-        for (FraudCompanyDirector newDirector : newCompany.getDirectors()) {
-            boolean exists = false;
-            innerLoop: for (FraudCompanyDirector oldDirector : this.getDirectors()) {
-                if (newDirector.equals(oldDirector)) {
-                    exists = true;
-                    break innerLoop;
-                }
-            }
-            if (!exists) {
-                diffMap.put("director", newDirector.getName());
-            }
-        }
-
-        for (Object propNameObject : map.keySet()) {
-            String propName = (String) propNameObject;
-
-            if (excludedPropertiesForComparison.contains(propName)) {
-                continue;
-            }
-
-            Object propertyOld = propUtils.getProperty(this, propName);
-            Object propertyNew = propUtils.getProperty(newCompany, propName);
-
-            if (propertyNew == null && propertyOld == null) {
-                continue;
-            }
-
-            if (propertyNew == null && propertyOld != null) {
-                log.info(String.format("Objects diff on property %s, old value: %s, new value: %s", propName,
-                        propertyOld, propertyNew));
-                diffMap.put(propName, String.valueOf(propertyNew));
-            }
-
-            if (propertyNew != null && propertyOld == null) {
-                log.info(String.format("Objects diff on property %s, old value: %s, new value: %s", propName,
-                        propertyOld, propertyNew));
-                diffMap.put(propName, String.valueOf(propertyNew));
-            }
-
-            if (!propertyNew.equals(propertyOld)) {
-                log.info(String.format("Objects diff on property %s, old value: %s, new value: %s", propName,
-                        propertyOld, propertyNew));
-                diffMap.put(propName, String.valueOf(propertyNew));
-            }
-        }
-        return diffMap;
-    }
 
     @Override
     public String generateContentId() {
@@ -150,10 +82,6 @@ public class FraudCompanyContent extends FraudDetailsContent {
 
     public void setLatestRegname(String latestRegname) {
         this.latestRegname = latestRegname;
-    }
-
-    public List<FraudCompanyDirector> getDirectors() {
-        return directors;
     }
 
     public void setDirectors(List<FraudCompanyDirector> directors) {

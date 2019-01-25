@@ -1,10 +1,8 @@
-package se.tink.backend.core;
+package se.tink.backend.aggregation.agents.models.fraud;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = false)
 @JsonSubTypes(
@@ -26,7 +24,6 @@ public abstract class FraudDetailsContent {
     public static final int CACHE_EXPIRY = 5 * 60; // 5min
 
     protected String contentId;
-    @Enumerated(EnumType.STRING)
     protected FraudDetailsContentType contentType;
 
     public FraudDetailsContentType getContentType() {
