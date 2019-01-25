@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.pair.Pair;

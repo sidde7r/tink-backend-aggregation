@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;

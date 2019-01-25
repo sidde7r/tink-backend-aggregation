@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.banks.seb.SEBApiAgent;
 import se.tink.backend.aggregation.agents.banks.seb.model.HoldingEntity;
 import se.tink.backend.aggregation.agents.banks.seb.model.Session;
 import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.helper.transfer.stubs.TransferStub;

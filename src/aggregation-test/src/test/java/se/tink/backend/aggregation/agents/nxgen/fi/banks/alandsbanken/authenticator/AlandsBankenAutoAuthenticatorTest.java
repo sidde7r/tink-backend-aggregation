@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithTokenResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.mocks.ResultCaptor;

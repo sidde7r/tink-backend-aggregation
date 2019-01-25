@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.labanquepostale.LaBanquePostaleConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.ImageRecognizer;
 

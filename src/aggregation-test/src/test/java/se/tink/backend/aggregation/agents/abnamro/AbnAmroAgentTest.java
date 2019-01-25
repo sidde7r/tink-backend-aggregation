@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.abnamro;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;

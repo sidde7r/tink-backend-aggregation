@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.se.collector.CollectorAgent;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;

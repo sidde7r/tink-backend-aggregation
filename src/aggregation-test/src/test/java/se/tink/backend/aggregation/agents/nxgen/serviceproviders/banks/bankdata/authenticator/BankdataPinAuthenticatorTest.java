@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataTestConfig;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Provider;
 
 public class BankdataPinAuthenticatorTest {

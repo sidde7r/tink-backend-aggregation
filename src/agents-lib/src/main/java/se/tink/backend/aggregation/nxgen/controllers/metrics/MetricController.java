@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.metrics;
 
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.metrics.MetricId;

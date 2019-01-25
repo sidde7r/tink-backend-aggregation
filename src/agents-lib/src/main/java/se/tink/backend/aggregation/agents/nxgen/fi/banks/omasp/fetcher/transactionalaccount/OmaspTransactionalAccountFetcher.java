@@ -18,7 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
+
 
 public class OmaspTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>, TransactionPagePaginator<TransactionalAccount> {
     private static final AggregationLogger LOGGER = new AggregationLogger(OmaspTransactionalAccountFetcher.class);

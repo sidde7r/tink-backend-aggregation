@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.commands.MetricsCommand;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class AgentWorkerCommandMetricState {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerCommandMetricState.class);

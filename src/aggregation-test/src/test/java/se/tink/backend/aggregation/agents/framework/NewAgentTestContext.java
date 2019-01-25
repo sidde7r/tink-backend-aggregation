@@ -19,8 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidato
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.agents.rpc.User;
 import se.tink.backend.core.DocumentContainer;

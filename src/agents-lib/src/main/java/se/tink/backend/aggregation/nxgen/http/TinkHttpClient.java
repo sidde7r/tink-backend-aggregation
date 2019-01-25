@@ -65,7 +65,7 @@ import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.serialization.utils.SerializationUtils;

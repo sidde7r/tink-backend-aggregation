@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.banks.nordea.v15.model.CardDetailsEnti
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.InitialContextResponse;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.TransactionListResponse;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.savings.CustodyAccount;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;

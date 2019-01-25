@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaConstants;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class AktiaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger log = new AggregationLogger(AktiaInvestmentFetcher.class);

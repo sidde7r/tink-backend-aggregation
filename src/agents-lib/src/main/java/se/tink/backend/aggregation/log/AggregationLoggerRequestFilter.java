@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.slf4j.MDC;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.Provider;

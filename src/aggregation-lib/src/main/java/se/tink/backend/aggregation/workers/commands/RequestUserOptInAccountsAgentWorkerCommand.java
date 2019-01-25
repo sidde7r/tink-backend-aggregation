@@ -16,8 +16,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.OptOutAccountsRe
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;

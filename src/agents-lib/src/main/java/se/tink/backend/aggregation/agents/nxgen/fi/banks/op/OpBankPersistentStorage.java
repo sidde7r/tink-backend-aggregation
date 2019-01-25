@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class OpBankPersistentStorage {
     private final Credentials credentials;

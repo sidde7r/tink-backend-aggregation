@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.workers.commands;
 
 import java.util.Objects;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.ProviderStatuses;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;

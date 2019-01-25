@@ -7,7 +7,7 @@ import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class AgentTestServerClient {
     private static final String PROVIDER_NAME_KEY = "providerName";

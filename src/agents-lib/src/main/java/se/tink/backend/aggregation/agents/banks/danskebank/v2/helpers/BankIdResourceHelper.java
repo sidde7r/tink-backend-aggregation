@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class BankIdResourceHelper {
     // prod_sg_public_url

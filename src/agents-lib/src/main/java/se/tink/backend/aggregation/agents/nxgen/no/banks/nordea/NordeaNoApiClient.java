@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rp
 import se.tink.backend.aggregation.agents.nxgen.no.banks.nordea.authenticator.rpc.init.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17ApiClient;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class NordeaNoApiClient extends NordeaV17ApiClient {
     public NordeaNoApiClient(TinkHttpClient client, Credentials credentials, String marketCode) {

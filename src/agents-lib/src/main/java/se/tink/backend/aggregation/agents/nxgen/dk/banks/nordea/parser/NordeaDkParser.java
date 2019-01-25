@@ -26,8 +26,8 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.libraries.amount.Amount;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 

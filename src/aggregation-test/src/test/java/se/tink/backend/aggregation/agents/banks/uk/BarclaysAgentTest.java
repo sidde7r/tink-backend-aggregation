@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.uk;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.uk.barclays.BarclaysAgent;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 
 public class BarclaysAgentTest extends AbstractAgentTest<BarclaysAgent> {

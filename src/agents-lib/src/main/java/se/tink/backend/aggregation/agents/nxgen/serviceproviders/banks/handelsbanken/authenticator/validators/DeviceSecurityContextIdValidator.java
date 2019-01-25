@@ -7,7 +7,7 @@ import org.joda.time.LocalDate;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public abstract class DeviceSecurityContextIdValidator extends HandelsbankenValidator<BaseResponse> {
     private final Credentials credentials;

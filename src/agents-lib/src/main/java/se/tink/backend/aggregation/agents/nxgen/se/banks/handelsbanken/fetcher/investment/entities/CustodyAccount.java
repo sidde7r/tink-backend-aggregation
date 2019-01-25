@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.libraries.amount.Amount;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class CustodyAccount extends BaseResponse {
     private static final AggregationLogger log = new AggregationLogger(CustodyAccount.class);

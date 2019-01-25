@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngTestConfig;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.MessageType;
 import se.tink.libraries.enums.TransferType;

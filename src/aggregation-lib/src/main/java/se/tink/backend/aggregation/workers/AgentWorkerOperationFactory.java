@@ -20,7 +20,6 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;

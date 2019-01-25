@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.banks.crosskey.responses.BaseResponse;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.requests.RegisterCardRequest;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class RegisteredCards extends BaseResponse {
     private static final AggregationLogger log = new AggregationLogger(RegisteredCards.class);

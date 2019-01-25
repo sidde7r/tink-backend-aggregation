@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class DemoBankIdAuthenticator implements BankIdAuthenticator<String>, PasswordAuthenticator {
     private static final AggregationLogger log = new AggregationLogger(NextGenerationDemoAuthenticator.class);

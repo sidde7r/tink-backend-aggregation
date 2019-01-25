@@ -2,9 +2,8 @@ package se.tink.backend.aggregation.workers.metrics;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.ProviderTypes;

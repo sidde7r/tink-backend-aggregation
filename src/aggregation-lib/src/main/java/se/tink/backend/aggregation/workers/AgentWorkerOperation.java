@@ -9,13 +9,12 @@ import javax.inject.Inject;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.workers.metrics.TimerCacheLoader;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.Timer;
 import se.tink.libraries.metrics.Timer.Context;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class AgentWorkerOperation implements Runnable {
     public static class AgentWorkerOperationState {

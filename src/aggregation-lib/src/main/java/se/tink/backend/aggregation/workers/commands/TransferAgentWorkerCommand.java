@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.utils.CredentialsStringMasker;
 import se.tink.backend.aggregation.utils.StringMasker;

@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.contr
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.i18n.Catalog;
 import static org.junit.Assert.assertFalse;

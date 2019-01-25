@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.a
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 
 public class SamlinkAutoAuthenticator extends SamlinkAuthenticatorBase implements AutoAuthenticator {

@@ -10,7 +10,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.agents.rpc.User;
@@ -21,7 +20,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.commands.exception.EmptyDebugLogException;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
 import se.tink.libraries.uuid.UUIDUtils;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 

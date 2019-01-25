@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.T
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsRequest;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsResponse;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.utils.MarketParameters;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;

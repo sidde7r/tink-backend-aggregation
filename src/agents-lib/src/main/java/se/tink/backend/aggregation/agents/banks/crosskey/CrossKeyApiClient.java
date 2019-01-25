@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.banks.crosskey.responses.LoanDetailsRe
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyLoanDetails;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.TransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 

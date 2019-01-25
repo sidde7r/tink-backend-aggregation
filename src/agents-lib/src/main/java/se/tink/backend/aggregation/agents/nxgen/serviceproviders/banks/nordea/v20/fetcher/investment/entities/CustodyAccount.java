@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.se
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants.Investments;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.strings.StringUtils;
 

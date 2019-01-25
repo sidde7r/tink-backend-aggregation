@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdPollRe
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdStartResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class BankIdSignClient extends SBABClient {
 

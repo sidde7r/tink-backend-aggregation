@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 
 public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenticator {

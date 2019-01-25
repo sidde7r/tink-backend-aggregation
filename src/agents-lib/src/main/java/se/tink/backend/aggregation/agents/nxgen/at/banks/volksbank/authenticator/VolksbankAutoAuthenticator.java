@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankApiC
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.Field;
 
 public class VolksbankAutoAuthenticator implements AutoAuthenticator {

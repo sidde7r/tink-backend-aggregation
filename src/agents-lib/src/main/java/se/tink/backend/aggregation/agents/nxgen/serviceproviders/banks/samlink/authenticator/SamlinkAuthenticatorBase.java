@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.S
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.ErrorResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class SamlinkAuthenticatorBase {
     protected final Credentials credentials;

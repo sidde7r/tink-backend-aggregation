@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class SamlinkKeyCardAuthenticator extends SamlinkAuthenticatorBase implements KeyCardAuthenticator {
     private static final AggregationLogger LOGGER = new AggregationLogger(SamlinkKeyCardAuthenticator.class);
