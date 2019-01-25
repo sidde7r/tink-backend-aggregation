@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.trans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.rpc.IcaSourceType;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class IcaBankenTransferDestinationFetcher implements TransferDestinationFetcher {

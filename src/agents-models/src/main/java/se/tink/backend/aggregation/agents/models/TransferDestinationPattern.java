@@ -1,4 +1,4 @@
-package se.tink.backend.core.account;
+package se.tink.backend.aggregation.agents.models;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ComparisonChain;

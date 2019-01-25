@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 
 public class FetchTransferDestinationsResponse {
     private final Map<Account, List<TransferDestinationPattern>> transferDestinations;

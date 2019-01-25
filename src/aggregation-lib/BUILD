@@ -16,6 +16,7 @@ java_library(
     deps = [
         "//po:i18n",
         "//src/agents-lib",
+        "//src/agents-models",
         "//src/aggregation-api",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",

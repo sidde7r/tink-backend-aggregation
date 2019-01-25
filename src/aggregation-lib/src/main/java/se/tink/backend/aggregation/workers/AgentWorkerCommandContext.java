@@ -29,7 +29,7 @@ import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.libraries.metrics.utils.MetricsUtils;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.libraries.metrics.Counter;
