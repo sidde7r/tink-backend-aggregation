@@ -83,7 +83,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.SwedishGiroType;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;

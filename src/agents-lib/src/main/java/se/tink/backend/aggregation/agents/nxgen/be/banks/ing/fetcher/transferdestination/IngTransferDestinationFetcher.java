@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferdestination.entities.BeneficiaryEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationFetcher;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 

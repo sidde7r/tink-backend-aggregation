@@ -3,6 +3,7 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",

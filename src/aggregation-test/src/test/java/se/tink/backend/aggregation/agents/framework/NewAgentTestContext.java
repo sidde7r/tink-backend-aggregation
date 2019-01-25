@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.FraudDetailsContent;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;

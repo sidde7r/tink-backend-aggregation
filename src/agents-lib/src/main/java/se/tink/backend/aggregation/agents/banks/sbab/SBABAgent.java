@@ -53,7 +53,7 @@ import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.DocumentIdentifier;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.serialization.TypeReferences;
