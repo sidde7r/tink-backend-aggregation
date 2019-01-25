@@ -34,6 +34,10 @@ public class LaCaixaConstants {
 
     }
 
+    public static class ErrorCode {
+        public static String EMPTY_LIST = "ERR_TRXM01_007";
+    }
+
     public static class Urls {
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
