@@ -1,30 +1,16 @@
 package se.tink.backend.core;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Transient;
-import org.hibernate.annotations.Type;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class FraudTransactionContent extends FraudDetailsContent {
 
     // Having duplicate info for ID, but keeping transactionIds for legacy reasons.
     private List<String> transactionIds;
     private List<FraudTransactionEntity> transactions;
-    private String transactionsSerialized;
     private String payload;
-
-    public List<String> getTransactionIds() {
-        return transactionIds;
-    }
-
-    public void setTransactionIds(List<String> transactionIds) {
-        this.transactionIds = transactionIds;
-    }
 
     @Override
     public String generateContentId() {
@@ -44,32 +30,8 @@ public class FraudTransactionContent extends FraudDetailsContent {
         }
     }
 
-    @Transient
     public List<FraudTransactionEntity> getTransactions() {
         return transactions;
-    }
-
-    public void setTransactions(List<FraudTransactionEntity> transactions) {
-        if (transactions == null) {
-            return;
-        }
-
-        this.transactions = transactions;
-
-        if (transactions != null) {
-            transactionsSerialized = SerializationUtils.serializeToString(transactions);
-        }
-    }
-
-    @JsonIgnore
-    @Column(name = "`transactions`")
-    @Type(type = "text")
-    public String getTransactionsSerialized() {
-        if (transactions != null) {
-            return SerializationUtils.serializeToString(transactions);
-        } else {
-            return transactionsSerialized;
-        }
     }
 
     @Override
