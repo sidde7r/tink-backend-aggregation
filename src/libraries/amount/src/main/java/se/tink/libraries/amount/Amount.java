@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.amount;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;

@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
 
 public class HandelsbankenFIAccount extends HandelsbankenAccount {

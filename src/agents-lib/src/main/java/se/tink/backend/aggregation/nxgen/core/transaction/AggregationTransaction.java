@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.backend.system.rpc.TransactionTypes;

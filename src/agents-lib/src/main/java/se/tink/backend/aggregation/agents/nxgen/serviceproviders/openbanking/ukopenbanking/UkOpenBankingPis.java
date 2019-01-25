@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 
 public interface UkOpenBankingPis {

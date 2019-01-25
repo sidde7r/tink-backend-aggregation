@@ -7,7 +7,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.Locale;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject

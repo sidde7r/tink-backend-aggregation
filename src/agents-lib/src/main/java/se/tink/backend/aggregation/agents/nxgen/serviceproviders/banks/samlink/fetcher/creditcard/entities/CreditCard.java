@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.e
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.LinksResponse;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class CreditCard extends LinksResponse {
 

@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.system.rpc.TransactionPayloadTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;

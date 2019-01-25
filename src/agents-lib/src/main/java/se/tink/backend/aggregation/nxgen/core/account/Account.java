@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.core.AccountFlag;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.enums.FeatureFlags;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;

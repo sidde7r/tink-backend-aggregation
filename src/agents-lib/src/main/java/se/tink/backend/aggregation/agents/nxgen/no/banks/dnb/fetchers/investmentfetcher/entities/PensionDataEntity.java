@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.system.rpc.Portfolio;
 
 @JsonObject

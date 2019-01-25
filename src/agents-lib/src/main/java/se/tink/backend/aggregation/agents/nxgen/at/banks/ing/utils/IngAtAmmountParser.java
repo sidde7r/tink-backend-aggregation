@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class IngAtAmmountParser {
 

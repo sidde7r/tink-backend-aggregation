@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.creditcards.amex.fetcher.rpc.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.rpc.TimelineRequest;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class AmericanExpressDEConfiguration implements AmericanExpressV62Configuration {
 

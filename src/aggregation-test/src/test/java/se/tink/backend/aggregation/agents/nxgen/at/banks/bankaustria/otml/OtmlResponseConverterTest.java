@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class OtmlResponseConverterTest {
 

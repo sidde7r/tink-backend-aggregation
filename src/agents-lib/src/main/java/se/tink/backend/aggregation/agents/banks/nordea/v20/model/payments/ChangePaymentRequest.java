@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgentUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.ProductEntity;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChangePaymentRequest {

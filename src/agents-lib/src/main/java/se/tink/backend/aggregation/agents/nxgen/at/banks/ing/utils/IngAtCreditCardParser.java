@@ -4,7 +4,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 import java.util.Objects;
 import java.util.regex.Matcher;

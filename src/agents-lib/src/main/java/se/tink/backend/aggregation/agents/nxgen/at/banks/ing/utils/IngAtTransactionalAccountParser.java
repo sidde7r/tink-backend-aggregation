@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 import java.util.Optional;
 

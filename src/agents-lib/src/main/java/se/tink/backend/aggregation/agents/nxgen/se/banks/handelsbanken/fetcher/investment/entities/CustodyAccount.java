@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class CustodyAccount extends BaseResponse {
     private static final AggregationLogger log = new AggregationLogger(CustodyAccount.class);

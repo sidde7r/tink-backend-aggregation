@@ -6,6 +6,7 @@ java_library(
         "//src/agents-models",
         "//src/aggregation-api",
         "//src/libraries/api_annotations:api-annotations",
+        "//src/libraries/amount:amount",
         "//src/libraries/serialization:serialization",
         "//src/libraries/strings:strings",
         "//src/libraries/uuid:uuid",

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers.GiroParser;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;

@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.Statemen
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.entities.TransactionItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class GetAccountTransactionsResponse extends BaseResponse {

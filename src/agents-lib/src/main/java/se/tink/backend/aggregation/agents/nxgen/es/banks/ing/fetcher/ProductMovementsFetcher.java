@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 abstract class ProductMovementsFetcher<A extends Account, T extends Transaction> implements AccountFetcher<A>,
         TransactionMonthPaginator<A> {

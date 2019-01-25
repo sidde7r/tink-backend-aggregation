@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.deserializers.InterestDeserializer;
 
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject
