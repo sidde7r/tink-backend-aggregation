@@ -4,25 +4,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import org.apache.curator.framework.CuratorFramework;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.models.LoanDetails;
+import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
@@ -36,16 +28,25 @@ import se.tink.backend.core.FraudDetailsContent;
 import se.tink.backend.core.account.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.models.LoanDetails;
-import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import javax.annotation.Nonnull;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class NewAgentTestContext extends AgentContext {
     private static final Logger log = LoggerFactory.getLogger(NewAgentTestContext.class);
@@ -517,6 +518,7 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     public void printCollectedData() {
+        printUserInformation();
         accountsByBankId.forEach((bankId, account) -> {
             printAccountInformation(account);
             printTransactions(bankId);
@@ -525,6 +527,18 @@ public class NewAgentTestContext extends AgentContext {
         });
 
         printTransfers();
+    }
+
+
+    private void printUserInformation() {
+        if (user == null || user.getLocale() == null) {
+            return;
+        }
+        Map<String, String> row = new LinkedHashMap<>();
+        row.put("userid", user.getId());
+        row.put("username", user.getUsername());
+        row.put("locale", user.getLocale());
+        CliPrintUtils.printTable(0, "user", Lists.newArrayList(row));
     }
 
     public void printStatistics() {

@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcDevice;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.EnrollDeviceRoundTwoResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
@@ -28,6 +29,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     private final PersistentStorage persistentStorage;
     private final KbcApiClient apiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
+    private static final AggregationLogger LOGGER = new AggregationLogger(KbcAuthenticator.class);
 
     public KbcAuthenticator(
             final PersistentStorage persistentStorage,
@@ -155,15 +157,27 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
     }
     
     private boolean isIncorrectCardNumber(IllegalStateException e) {
-        return matchesErrorMessage(e, KbcConstants.ErrorMessage.INCORRECT_CARD_NUMBER);
+        if (matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.INCORRECT_CARD_NUMBER)) {
+            return true;
+        }
+        return possibleUnhandledErrorCodeLogAndCheckTextMessage(e, KbcConstants.ErrorMessage.INCORRECT_CARD_NUMBER);
+    }
+
+    private boolean possibleUnhandledErrorCodeLogAndCheckTextMessage(IllegalStateException e, String textMessage) {
+        LOGGER.warnExtraLong(String.format("Error message: %s", e.getMessage()), KbcConstants.LogTags.ERROR_CODE_MESSAGE);
+        return matchesErrorMessage(e, textMessage);
     }
 
     private boolean isNotACustomer(IllegalStateException e) {
-        return matchesErrorMessage(e, KbcConstants.ErrorMessage.NOT_A_CUSTOMER);
+        return possibleUnhandledErrorCodeLogAndCheckTextMessage(e, KbcConstants.ErrorMessage.NOT_A_CUSTOMER);
     }
 
     private boolean isIncorrectLoginCode(IllegalStateException e) {
-        return matchesErrorMessage(e, KbcConstants.ErrorMessage.INCORRECT_LOGIN_CODE);
+        if (matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT)
+            || matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT)) {
+            return true;
+        }
+        return possibleUnhandledErrorCodeLogAndCheckTextMessage(e, KbcConstants.ErrorMessage.INCORRECT_LOGIN_CODE);
     }
 
     private boolean isIncorrectSignCode(IllegalStateException e) {

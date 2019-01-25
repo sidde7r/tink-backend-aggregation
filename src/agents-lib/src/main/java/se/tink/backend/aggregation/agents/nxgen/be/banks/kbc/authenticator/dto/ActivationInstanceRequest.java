@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto;
 
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 
 public class ActivationInstanceRequest {
@@ -92,6 +91,7 @@ public class ActivationInstanceRequest {
         private TypeValuePair deviceId;
         private TypeValuePair challenge;
         private TypeValuePair clientInitialVector;
+        private TypeValuePair language;
 
         public Builder logonId(String logonId) {
             this.logonId = TypeValuePair.createText(logonId);
@@ -143,9 +143,15 @@ public class ActivationInstanceRequest {
             return this;
         }
 
+        public Builder language(String language) {
+            this.language = TypeValuePair.createText(language);
+            return this;
+        }
+
+
         public ActivationInstanceRequest build() {
             return new ActivationInstanceRequest(logonId, applicationTypeCode, companyNo, deviceCode,
-                    encryptedServerNonce, applicationId, TypeValuePair.createText(KbcConstants.LANGUAGE),
+                    encryptedServerNonce, applicationId, language,
                     applicationVersionNo, deviceId, challenge, clientInitialVector);
         }
     }
