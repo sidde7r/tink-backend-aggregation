@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.IngAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.IngCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.IngTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.session.IngSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -18,11 +18,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class IngAgent extends NextGenerationAgent {
 
@@ -62,18 +60,19 @@ public class IngAgent extends NextGenerationAgent {
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
 
-        IngCreditCardFetcher fetcher = new IngCreditCardFetcher(apiClient);
-
-        TransactionMonthPaginationController<CreditCardAccount> paginationController = new TransactionMonthPaginationController<>(
-                fetcher, IngConstants.ZONE_ID);
-
-        TransactionFetcherController<CreditCardAccount> fetcherController = new TransactionFetcherController<>(
-                transactionPaginationHelper, paginationController);
-
-        CreditCardRefreshController refreshController = new CreditCardRefreshController(
-                metricRefreshController, updateController, fetcher, fetcherController);
-
-        return Optional.of(refreshController);
+//        IngCreditCardFetcher fetcher = new IngCreditCardFetcher(apiClient);
+//
+//        TransactionMonthPaginationController<CreditCardAccount> paginationController = new TransactionMonthPaginationController<>(
+//                fetcher, IngConstants.ZONE_ID);
+//
+//        TransactionFetcherController<CreditCardAccount> fetcherController = new TransactionFetcherController<>(
+//                transactionPaginationHelper, paginationController);
+//
+//        CreditCardRefreshController refreshController = new CreditCardRefreshController(
+//                metricRefreshController, updateController, fetcher, fetcherController);
+//
+//        return Optional.of(refreshController);
+        return Optional.empty();
     }
 
     @Override
