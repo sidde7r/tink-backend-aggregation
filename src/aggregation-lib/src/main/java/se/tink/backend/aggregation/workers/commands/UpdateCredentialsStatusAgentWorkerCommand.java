@@ -10,12 +10,12 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 
-public class SetCredentialsStatusToAuthenticatingAgentWorkerCommand extends AgentWorkerCommand {
+public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerCommand {
     private final ControllerWrapper controllerWrapper;
     private final Credentials credentials;
     private final Provider provider;
 
-    public SetCredentialsStatusToAuthenticatingAgentWorkerCommand(ControllerWrapper controllerWrapper,
+    public UpdateCredentialsStatusAgentWorkerCommand(ControllerWrapper controllerWrapper,
             Credentials credentials, Provider provider) {
         this.controllerWrapper = controllerWrapper;
         this.credentials = credentials;

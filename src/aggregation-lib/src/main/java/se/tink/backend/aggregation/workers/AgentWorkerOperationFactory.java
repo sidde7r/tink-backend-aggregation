@@ -50,7 +50,7 @@ import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgen
 import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusToAuthenticatingAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
@@ -304,7 +304,7 @@ public class AgentWorkerOperationFactory {
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
-                new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(
+                new UpdateCredentialsStatusAgentWorkerCommand(
                         controllerWrapper, request.getCredentials(), request.getProvider()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
@@ -631,7 +631,7 @@ public class AgentWorkerOperationFactory {
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
         commands.add(
-                new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(
+                new UpdateCredentialsStatusAgentWorkerCommand(
                         controllerWrapper, request.getCredentials(), request.getProvider()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
