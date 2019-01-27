@@ -102,4 +102,17 @@ public enum RefreshableItem {
         return !Collections.disjoint(items, REFRESHABLE_ITEMS_TRANSACTIONS);
     }
 
+    public static Set<RefreshableItem> convertLegacyItems(Set<RefreshableItem> items) {
+        if (items.contains(RefreshableItem.ACCOUNTS)) {
+            items.remove(RefreshableItem.ACCOUNTS);
+            items.addAll(RefreshableItem.REFRESHABLE_ITEMS_ACCOUNTS);
+        }
+
+        if (items.contains(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS)) {
+            items.remove(RefreshableItem.TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS);
+            items.addAll(RefreshableItem.REFRESHABLE_ITEMS_TRANSACTIONS);
+        }
+
+        return items;
+    }
 }
