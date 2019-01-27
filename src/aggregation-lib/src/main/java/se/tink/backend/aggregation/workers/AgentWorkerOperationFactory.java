@@ -248,20 +248,6 @@ public class AgentWorkerOperationFactory {
                             context, ProcessableItem.TRANSACTIONS, createCommandMetricState(request)));
         }
 
-        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
-        // connector and if
-        // transactions aren't processed in system. The transaction processing in system will set
-        // the status to
-        // `UPDATED` when transactions have been processed and new statistics are generated.
-        // Todo: Remove this dependency
-        commands.add(
-                new SetCredentialsStatusAgentWorkerCommand(
-                        context,
-                        CredentialsStatus.UPDATED,
-                        c ->
-                                !c.isWaitingOnConnectorTransactions()
-                                        && !c.isSystemProcessingTransactions()));
-
         return commands;
     }
 
@@ -303,9 +289,14 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
+        // transactions aren't processed in system. The transaction processing in system will set the status
+        // to `UPDATED` when transactions have been processed and new statistics are generated.
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
-                        controllerWrapper, request.getCredentials(), request.getProvider()));
+                        controllerWrapper, request.getCredentials(), request.getProvider(), context,
+                        c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
@@ -630,9 +621,14 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
+        // transactions aren't processed in system. The transaction processing in system will set the status
+        // to `UPDATED` when transactions have been processed and new statistics are generated.
         commands.add(
                 new UpdateCredentialsStatusAgentWorkerCommand(
-                        controllerWrapper, request.getCredentials(), request.getProvider()));
+                        controllerWrapper, request.getCredentials(), request.getProvider(), context,
+                        c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
@@ -800,20 +796,6 @@ public class AgentWorkerOperationFactory {
                             context, ProcessableItem.TRANSACTIONS, createCommandMetricState(request)));
         }
         // === END PROCESSING ===
-
-        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
-        // connector and if
-        // transactions aren't processed in system. The transaction processing in system will set
-        // the status to
-        // `UPDATED` when transactions have been processed and new statistics are generated.
-        // Todo: Remove this dependency
-        commands.add(
-                new SetCredentialsStatusAgentWorkerCommand(
-                        context,
-                        CredentialsStatus.UPDATED,
-                        c ->
-                                !c.isWaitingOnConnectorTransactions()
-                                        && !c.isSystemProcessingTransactions()));
 
         return commands.build();
     }
