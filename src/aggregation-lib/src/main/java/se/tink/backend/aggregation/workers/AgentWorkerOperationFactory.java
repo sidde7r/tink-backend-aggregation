@@ -221,34 +221,6 @@ public class AgentWorkerOperationFactory {
                             context, createCommandMetricState(request)));
         }
 
-        // Post refresh processing. Only once per data type (accounts, transactions etcetera)
-        if (RefreshableItem.hasAccounts(items)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.ACCOUNTS, createCommandMetricState(request)));
-        }
-
-        if (items.contains(RefreshableItem.EINVOICES)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.EINVOICES, createCommandMetricState(request)));
-        }
-
-        if (items.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSFER_DESTINATIONS, createCommandMetricState(request)));
-        }
-
-        // Transactions are processed last of the refreshable items since the credential status will
-        // be set `UPDATED`
-        // by system when the processing is done.
-        if (RefreshableItem.hasTransactions(items)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSACTIONS, createCommandMetricState(request)));
-        }
-
         return commands;
     }
 
@@ -301,6 +273,10 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
+        commands.add(
+                new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
+                ProcessableItem.fromRefreshableItems(
+                        RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
