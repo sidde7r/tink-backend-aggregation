@@ -38,16 +38,8 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
             return AgentWorkerCommandResult.CONTINUE;
         }
 
-        credentials.setStatus(CredentialsStatus.AUTHENTICATING);
+        updateStatus(CredentialsStatus.AUTHENTICATING);
 
-        Credentials credentialsCopy = credentials.clone();
-        credentialsCopy.clearSensitiveInformation(provider);
-
-        UpdateCredentialsStatusRequest updateCredentialsStatusRequest = new UpdateCredentialsStatusRequest();
-        updateCredentialsStatusRequest.setCredentials(
-                CoreCredentialsMapper.fromAggregationCredentials(credentialsCopy));
-
-        controllerWrapper.updateCredentials(updateCredentialsStatusRequest);
         return AgentWorkerCommandResult.CONTINUE;
     }
 
@@ -63,7 +55,11 @@ public class UpdateCredentialsStatusAgentWorkerCommand extends AgentWorkerComman
         }
 
         log.info("Updating credentials status to UPDATED - Current status: {}", credentials.getStatus());
-        credentials.setStatus(CredentialsStatus.UPDATED);
+        updateStatus(CredentialsStatus.UPDATED);
+    }
+
+    private void updateStatus(CredentialsStatus newStatus) {
+        credentials.setStatus(newStatus);
 
         Credentials credentialsCopy = credentials.clone();
         credentialsCopy.clearSensitiveInformation(provider);
