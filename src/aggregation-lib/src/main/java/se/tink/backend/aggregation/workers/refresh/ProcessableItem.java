@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.workers.refresh;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Ordering;
+import java.util.List;
 import java.util.Set;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 
@@ -37,5 +40,16 @@ public enum ProcessableItem {
         }
 
         return builder.build();
+    }
+
+    // Explicit order of processable items
+    private static final Ordering<ProcessableItem> PROCESSABLE_ITEM_ORDERING = Ordering.explicit(ImmutableList.of(
+            ACCOUNTS,
+            EINVOICES,
+            TRANSFER_DESTINATIONS,
+            TRANSACTIONS));
+
+    public static List<ProcessableItem> sort(Set<ProcessableItem> items) {
+        return PROCESSABLE_ITEM_ORDERING.sortedCopy(items);
     }
 }
