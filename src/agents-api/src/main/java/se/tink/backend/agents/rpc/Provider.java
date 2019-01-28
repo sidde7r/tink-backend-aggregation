@@ -43,7 +43,7 @@ public class Provider implements Cloneable {
             String fieldsSerialized, List<Field> supplementalFields, String groupDisplayName, String market,
             boolean multiFactor, String name, String passwordHelpText, String payload, String phone, boolean popular,
             double refreshFrequency, double refreshFrequencyFactor, ProviderStatuses status, boolean transactional,
-            ProviderTypes type, String url, String tutorialUrl, ImageUrls images, String displayDescription) {
+            ProviderTypes type, String url, String tutorialUrl, String displayDescription) {
         this.capabilitiesSerialized = capabilitiesSerialized;
         this.className = className;
         this.credentialsType = credentialsType;
@@ -67,7 +67,6 @@ public class Provider implements Cloneable {
         this.type = type;
         this.url = url;
         this.tutorialUrl = tutorialUrl;
-        this.images = images;
         this.displayDescription = displayDescription;
     }
 
@@ -122,7 +121,6 @@ public class Provider implements Cloneable {
     private String url;
     // URL to tutorial how to add the specific credential
     private String tutorialUrl;
-    private ImageUrls images;
     // Displayed under the provider name in the app when adding a new credential.
     private String displayDescription;
 
@@ -442,14 +440,6 @@ public class Provider implements Cloneable {
 
     public void setType(ProviderTypes type) {
         this.type = type;
-    }
-
-    public ImageUrls getImages() {
-        return images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     @Override

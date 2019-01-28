@@ -12,7 +12,6 @@ public class TransferDestination {
     private String displayBankName;
     private String displayAccountNumber;
     private URI uri;
-    private ImageUrls images;
     private String name;
     private String type;
     private boolean matchesMultiple;
@@ -39,14 +38,6 @@ public class TransferDestination {
 
     public void setUri(URI uri) {
         this.uri = uri;
-    }
-
-    public ImageUrls getImages() {
-        return images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     public String getName() {

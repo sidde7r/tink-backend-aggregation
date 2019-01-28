@@ -151,12 +151,6 @@ public class FakedCredentials extends Credentials {
 
     @Override
     @JsonIgnore
-    public void setImages(ImageUrls images) {
-        // Not saving on fake credential
-    }
-
-    @Override
-    @JsonIgnore
     public void setNextUpdate(Date nextUpdate) {
         // Not saving on fake credential
     }

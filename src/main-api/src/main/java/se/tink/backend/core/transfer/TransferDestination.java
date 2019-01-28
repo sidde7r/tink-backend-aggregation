@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiModelProperty;
 import java.net.URI;
 import javax.persistence.Transient;
 import se.tink.backend.core.AccountTypes;
-import se.tink.backend.core.ImageUrls;
 
 /**
  * Fields used for creating TransferDestination: uri, name
@@ -29,10 +28,6 @@ public class TransferDestination {
     @Tag(1)
     @ApiModelProperty(name = "uri", value="The uri used to describe this destination.", example = "se-pg://9020900")
     private URI uri;
-    @Tag(7)
-    @Transient
-    @ApiModelProperty(name = "images", hidden = true)
-    private ImageUrls images;
     @Tag(2)
     @ApiModelProperty(name = "name", value="The name of the destination if one exists.", example = "Barncancerfonden")
     private String name;
@@ -73,14 +68,6 @@ public class TransferDestination {
 
     public void setUri(URI uri) {
         this.uri = uri;
-    }
-
-    public ImageUrls getImages() {
-        return images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     public String getName() {
