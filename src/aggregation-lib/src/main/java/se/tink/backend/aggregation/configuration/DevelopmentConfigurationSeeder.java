@@ -6,9 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
-import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.core.ClusterCryptoConfiguration;
 
 public class DevelopmentConfigurationSeeder {
     private static final Logger log = LoggerFactory.getLogger(DevelopmentConfigurationSeeder.class);

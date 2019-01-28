@@ -37,7 +37,6 @@
 	<persistence-unit name="tink-aggregation-api"
 					  transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<class>se.tink.backend.core.ClusterCryptoConfiguration</class>
 		<class>se.tink.backend.aggregation.storage.database.models.CryptoConfiguration</class>
 		<class>se.tink.backend.aggregation.storage.database.models.ClientConfiguration</class>
 		<class>se.tink.backend.aggregation.storage.database.models.AggregatorConfiguration</class>
