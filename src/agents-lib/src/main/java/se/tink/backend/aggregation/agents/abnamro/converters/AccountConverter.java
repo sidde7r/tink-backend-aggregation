@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.abnamro.converters;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountTypesMapper;
 import se.tink.libraries.abnamro.client.model.PfmContractEntity;
 import se.tink.libraries.abnamro.utils.AbnAmroUtils;

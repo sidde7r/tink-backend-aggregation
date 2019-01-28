@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 import se.tink.backend.aggregation.utils.deviceprofile.entity.UserAgentEntity;
 import se.tink.libraries.strings.StringUtils;

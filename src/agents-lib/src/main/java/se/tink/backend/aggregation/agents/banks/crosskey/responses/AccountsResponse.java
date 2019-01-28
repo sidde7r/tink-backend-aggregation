@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.crosskey.responses;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Lists;
 import java.util.List;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountsResponse extends BaseResponse {

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils;
 
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public class FinTsAccountTypeConverter {
     public static AccountTypes getAccountTypeFor(int finTsAccountType) {

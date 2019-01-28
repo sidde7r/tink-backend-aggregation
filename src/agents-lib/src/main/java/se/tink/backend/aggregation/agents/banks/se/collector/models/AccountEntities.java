@@ -5,7 +5,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.List;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountEntities extends ArrayList<AccountEntity> {

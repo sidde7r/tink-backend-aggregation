@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.brokers.lysa.model;
 import java.util.Date;
 import java.util.Map;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 @JsonObject
 public class AccountEntity {

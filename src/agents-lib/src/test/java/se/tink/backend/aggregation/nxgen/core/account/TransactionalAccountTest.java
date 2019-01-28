@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
 import static org.junit.Assert.assertEquals;
 

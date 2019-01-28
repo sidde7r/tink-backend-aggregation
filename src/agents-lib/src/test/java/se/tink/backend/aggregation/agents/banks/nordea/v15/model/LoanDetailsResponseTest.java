@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.Loan;
 
 public class LoanDetailsResponseTest {

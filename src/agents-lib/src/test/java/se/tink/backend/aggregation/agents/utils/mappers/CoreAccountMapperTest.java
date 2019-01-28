@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.utils.mappers;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import se.tink.backend.core.Account;
-import se.tink.backend.core.AccountFlag;
+import se.tink.backend.agents.core.enums.AccountFlag;
 import static org.junit.Assert.assertEquals;
 
 public class CoreAccountMapperTest {
@@ -19,7 +19,7 @@ public class CoreAccountMapperTest {
         account.setHolderName("Thomas Alan Waits");
         account.setFlags(ImmutableList.of(AccountFlag.BUSINESS));
 
-        se.tink.backend.aggregation.rpc.Account aggregationAccount = CoreAccountMapper.toAggregation(account);
+        se.tink.backend.agents.rpc.Account aggregationAccount = CoreAccountMapper.toAggregation(account);
 
         assertEquals("accountNumber", aggregationAccount.getAccountNumber());
         assertEquals("Thomas Alan Waits", aggregationAccount.getHolderName());
@@ -33,7 +33,7 @@ public class CoreAccountMapperTest {
 
     @Test
     public void mappableFromAggregation() {
-        se.tink.backend.aggregation.rpc.Account account = new se.tink.backend.aggregation.rpc.Account();
+        se.tink.backend.agents.rpc.Account account = new se.tink.backend.agents.rpc.Account();
         account.setCredentialsId("credentialsId");
         account.setHolderName("Thomas Alan Waits");
         account.setFlags(ImmutableList.of(AccountFlag.BUSINESS));

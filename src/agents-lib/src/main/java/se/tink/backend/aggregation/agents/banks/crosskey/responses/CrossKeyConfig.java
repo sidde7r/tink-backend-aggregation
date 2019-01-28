@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.banks.crosskey.responses;
 
 import se.tink.backend.aggregation.agents.banks.crosskey.PaginationTypes;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 import java.util.List;
 

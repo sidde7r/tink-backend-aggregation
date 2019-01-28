@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.entities;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.rpc.Account;
 
 @JsonObject
 public class CardEntity {

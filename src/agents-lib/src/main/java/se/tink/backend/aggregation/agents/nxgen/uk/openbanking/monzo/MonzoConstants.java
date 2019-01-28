@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo;
 import java.time.ZoneId;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public class MonzoConstants {
 

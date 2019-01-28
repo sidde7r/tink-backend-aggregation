@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public enum RefreshableItem {
     ACCOUNTS, TRANSACTIONAL_ACCOUNTS_AND_TRANSACTIONS, EINVOICES, TRANSFER_DESTINATIONS,

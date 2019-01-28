@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.op_v1.fetcher.rpc;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankAccountEntity;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.User;
 import static junit.framework.TestCase.assertEquals;
 

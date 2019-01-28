@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 public final class AccountRule implements ValidationRule<Account> {
     private final String ruleIdentifier;

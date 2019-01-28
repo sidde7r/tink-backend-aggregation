@@ -4,7 +4,7 @@ import java.time.ZoneId;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public abstract class OpenbankConstants {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Madrid");

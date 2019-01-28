@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.abnamro.ics.mappers;
 
 import com.google.common.base.Preconditions;
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountEntity;
 import se.tink.libraries.abnamro.utils.AbnAmroUtils;
 

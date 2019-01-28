@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
@@ -78,7 +79,7 @@ public final class UpdateControllerTest {
         AccountFeatures accountFeatures;
 
         @Override
-        public void cacheAccount(final se.tink.backend.aggregation.rpc.Account account,
+        public void cacheAccount(final Account account,
                 final AccountFeatures accountFeatures) {
             this.accountFeatures = accountFeatures;
         }

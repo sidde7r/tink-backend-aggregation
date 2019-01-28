@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.typeguesser;
 
 import com.google.common.collect.ImmutableList;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 abstract class TypeGuesserBase {
     protected final ImmutableList<String> accountTypeSavingsTokens;

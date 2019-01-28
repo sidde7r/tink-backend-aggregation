@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.pair.Pair;
 
 public final class AccountTypePredicateMapperTest {

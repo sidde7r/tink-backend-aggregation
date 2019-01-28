@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.application.GenericApplication;

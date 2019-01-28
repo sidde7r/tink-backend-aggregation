@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.creditcards.coop.v2.model;
 
 import com.google.common.collect.Lists;
 import org.junit.Test;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import static org.assertj.core.api.Assertions.assertThat;
 

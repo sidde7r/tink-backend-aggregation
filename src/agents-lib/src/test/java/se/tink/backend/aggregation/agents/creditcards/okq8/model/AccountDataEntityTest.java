@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.creditcards.okq8.model;
 
 import java.text.ParseException;
 import org.junit.Test;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountDataEntityTest {

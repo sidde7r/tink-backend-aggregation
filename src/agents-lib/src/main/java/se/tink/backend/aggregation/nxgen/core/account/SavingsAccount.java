@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
 
 public class SavingsAccount extends TransactionalAccount {

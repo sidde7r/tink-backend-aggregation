@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engag
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

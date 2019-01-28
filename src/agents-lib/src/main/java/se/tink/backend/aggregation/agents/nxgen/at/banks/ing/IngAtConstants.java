@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public class IngAtConstants {
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
