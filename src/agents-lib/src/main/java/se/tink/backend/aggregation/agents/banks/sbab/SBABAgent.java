@@ -8,41 +8,15 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.util.Precision;
-import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.BankIdMessage;
-import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.FetchAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
-import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.banks.sbab.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.BankIdSignClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.TransferClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.UserDataClient;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedTransferException;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.AccountEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdStartResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.*;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitialTransferResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.MakeTransferResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.SavedRecipientEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -69,10 +43,18 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SBABAgent extends AbstractAgent implements RefreshTransferDestinationExecutor,
-                                                        RefreshSavingsAccountsExecutor,
-                                                        RefreshLoanAccountsExecutor,
-                                                        TransferExecutor {
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class SBABAgent extends AbstractAgent
+        implements RefreshTransferDestinationExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                TransferExecutor {
 
     private final Credentials credentials;
     private final Catalog catalog;
