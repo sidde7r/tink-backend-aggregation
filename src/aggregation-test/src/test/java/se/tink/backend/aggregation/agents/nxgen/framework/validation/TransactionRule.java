@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.framework.validation;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 public final class TransactionRule implements ValidationRule<Transaction> {
     private final String ruleIdentifier;

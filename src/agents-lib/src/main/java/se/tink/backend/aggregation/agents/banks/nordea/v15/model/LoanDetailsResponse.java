@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.text.ParseException;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.aggregation.agents.models.Loan;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement()

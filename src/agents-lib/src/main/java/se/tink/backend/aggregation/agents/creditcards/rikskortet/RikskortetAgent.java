@@ -24,8 +24,8 @@ import se.tink.backend.aggregation.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.system.rpc.Transaction;
-import se.tink.backend.system.rpc.TransactionTypes;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 
 public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private static final File WSDL_FILE = new File("data/agents/rikskortet.wsdl");

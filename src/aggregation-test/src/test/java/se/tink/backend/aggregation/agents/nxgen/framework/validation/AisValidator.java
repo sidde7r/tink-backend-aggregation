@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.system.rpc.Transaction;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 public final class AisValidator {
     private final Set<AisDataRule> aisDataRules;

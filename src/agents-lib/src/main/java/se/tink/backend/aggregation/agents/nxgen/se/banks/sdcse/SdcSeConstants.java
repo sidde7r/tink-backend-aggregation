@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sdcse;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.system.rpc.TransactionTypes;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 
 public class SdcSeConstants {
 

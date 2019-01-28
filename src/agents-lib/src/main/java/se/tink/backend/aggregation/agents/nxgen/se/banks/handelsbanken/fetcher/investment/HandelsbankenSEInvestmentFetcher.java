@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.system.rpc.Portfolio;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class HandelsbankenSEInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final HandelsbankenSEApiClient client;

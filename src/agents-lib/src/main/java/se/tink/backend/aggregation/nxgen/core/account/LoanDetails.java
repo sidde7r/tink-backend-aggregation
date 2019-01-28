@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.libraries.date.DateUtils;
 
 public class LoanDetails {
@@ -155,7 +155,7 @@ public class LoanDetails {
 
         loan.setType(type.toSystemType());
 
-        se.tink.backend.system.rpc.LoanDetails loanDetails = new se.tink.backend.system.rpc.LoanDetails();
+        se.tink.backend.aggregation.agents.models.LoanDetails loanDetails = new se.tink.backend.aggregation.agents.models.LoanDetails();
         loanDetails.setLoanSecurity(security);
         loanDetails.setCoApplicant(hasCoApplicant());
         loanDetails.setApplicants(applicants);

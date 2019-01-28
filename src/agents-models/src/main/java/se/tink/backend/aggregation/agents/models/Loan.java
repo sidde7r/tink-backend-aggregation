@@ -1,4 +1,4 @@
-package se.tink.backend.system.rpc;
+package se.tink.backend.aggregation.agents.models;
 
 import com.datastax.driver.core.utils.UUIDs;
 import com.google.common.base.Preconditions;

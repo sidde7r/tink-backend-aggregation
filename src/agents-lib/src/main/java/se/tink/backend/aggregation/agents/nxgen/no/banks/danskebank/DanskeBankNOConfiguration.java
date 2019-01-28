@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
-import se.tink.backend.system.rpc.Loan;
+import se.tink.backend.aggregation.agents.models.Loan;
 
 public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "nb-NO";
