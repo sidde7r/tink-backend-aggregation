@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 import se.tink.backend.core.Credentials;
 import se.tink.backend.core.CredentialsStatus;
 import se.tink.backend.core.CredentialsTypes;

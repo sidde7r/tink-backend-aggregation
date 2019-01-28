@@ -6,6 +6,7 @@ java_library(
         "//src/agents-api",
         "//src/agents-models",
         "//src/aggregation-api",
+        "//src/libraries/account:rpc",
         "//src/libraries/amount",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/http:http-annotations",

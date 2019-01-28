@@ -21,7 +21,7 @@ import org.joda.time.DateTime;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.Credentials;
 import se.tink.backend.core.SwedishGiroType;

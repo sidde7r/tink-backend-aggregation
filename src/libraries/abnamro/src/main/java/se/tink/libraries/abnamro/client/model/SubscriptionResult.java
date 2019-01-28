@@ -2,7 +2,7 @@ package se.tink.libraries.abnamro.client.model;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 
 public class SubscriptionResult {
     private ImmutableList<Account> subscribedAccounts = ImmutableList.of();

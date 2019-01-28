@@ -6,6 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account:enums",
+        "//src/libraries/account:rpc",
         "//src/libraries/date",
         "//src/libraries/enums",
         "//src/libraries/log",
@@ -30,6 +31,7 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         ":abn_amro",
+        "//src/libraries/account:rpc",
         "//src/main-api",  #todo, we don't want dependency towards main-api here.
         "//third_party:com_google_guava_guava",
         "//third_party:joda_time_joda_time",

@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.account.rpc;
 
 import io.protostuff.Tag;
 import java.util.Date;

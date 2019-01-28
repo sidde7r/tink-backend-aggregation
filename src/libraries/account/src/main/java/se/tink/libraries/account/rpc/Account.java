@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.account.rpc;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,6 +24,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import se.tink.backend.core.Modifiable;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.transfer.rpc.TransferDestination;

@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.backend.core.Credentials;
 import se.tink.backend.core.User;

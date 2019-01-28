@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.utils.mappers;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.account.enums.AccountFlag;
 import static org.junit.Assert.assertEquals;
 

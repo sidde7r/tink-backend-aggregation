@@ -294,7 +294,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         }
     }
 
-    private Map<se.tink.backend.core.Account, List<TransferDestinationPattern>> destinationBySource(
+    private Map<se.tink.libraries.account.rpc.Account, List<TransferDestinationPattern>> destinationBySource(
             Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount) {
         return transferDestinationPatternsByAccount.entrySet().stream()
                 .map(e -> new AbstractMap.SimpleEntry<>(CoreAccountMapper.fromAggregation(e.getKey()), e.getValue()))

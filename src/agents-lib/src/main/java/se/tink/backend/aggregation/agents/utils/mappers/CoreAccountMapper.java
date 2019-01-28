@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.utils.mappers;
 import com.google.common.annotations.VisibleForTesting;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 
 public class CoreAccountMapper {
     @VisibleForTesting

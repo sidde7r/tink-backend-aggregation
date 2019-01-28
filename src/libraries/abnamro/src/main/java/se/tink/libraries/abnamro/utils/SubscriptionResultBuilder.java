@@ -7,7 +7,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import se.tink.libraries.abnamro.client.model.RejectedContractEntity;
 import se.tink.libraries.abnamro.client.model.SubscriptionResult;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 
 public class SubscriptionResultBuilder {
 
