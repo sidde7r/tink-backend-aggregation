@@ -5,19 +5,13 @@ import se.tink.backend.aggregation.storage.database.models.ClientConfiguration;
 import se.tink.backend.aggregation.storage.database.models.ClusterConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
 import se.tink.backend.core.ClusterCryptoConfiguration;
-import se.tink.backend.core.ClusterHostConfiguration;
 
 public class AggregationDevelopmentConfiguration {
-    private ClusterHostConfiguration clusterHostConfiguration;
     private ClusterCryptoConfiguration clusterCryptoConfiguration;
     private ClusterConfiguration clusterConfiguration;
     private ClientConfiguration clientConfiguration;
     private AggregatorConfiguration aggregatorConfiguration;
     private CryptoConfiguration cryptoConfiguration;
-
-    public ClusterHostConfiguration getClusterHostConfiguration() {
-        return clusterHostConfiguration;
-    }
 
     public ClusterCryptoConfiguration getClusterCryptoConfiguration() {
         return clusterCryptoConfiguration;
@@ -32,14 +26,6 @@ public class AggregationDevelopmentConfiguration {
     public CryptoConfiguration getCryptoConfiguration() { return cryptoConfiguration; }
 
     public boolean isValid() {
-        if (this.clusterHostConfiguration == null) {
-            return false;
-        }
-
-        if (!this.clusterHostConfiguration.isValid()) {
-            return false;
-        }
-
         if (this.clusterCryptoConfiguration == null) {
             return false;
         }
