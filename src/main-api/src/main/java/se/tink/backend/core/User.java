@@ -22,7 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.backend.core.enums.FeatureFlags;
+import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.strings.StringUtils;
 
 @Entity

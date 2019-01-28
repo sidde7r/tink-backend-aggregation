@@ -18,8 +18,8 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.enums.MessageType;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.enums.MessageType;
+import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
