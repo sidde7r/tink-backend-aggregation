@@ -39,31 +39,11 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
 
     @Override
     protected void bindRepositories() {
-        bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
         bindSpringBean(CryptoConfigurationsRepository.class);
         bindSpringBean(ClientConfigurationsRepository.class);
         bindSpringBean(AggregatorConfigurationsRepository.class);
         bindSpringBean(ClusterConfigurationsRepository.class);
-    }
-
-    @Provides
-    @Singleton
-    @Named("clusterHostConfigurations")
-    public Map<String, ClusterHostConfiguration> provideClusterHostConfigurations(
-            ClusterHostConfigurationRepository repository) {
-
-        Map<String, ClusterHostConfiguration> clusterHostConfigurations = repository.findAll().stream()
-                .collect(Collectors.toMap(ClusterHostConfiguration::getClusterId, Function.identity()));
-
-        if (developmentConfiguration == null || !developmentConfiguration.isValid()) {
-            return clusterHostConfigurations;
-        }
-
-        ClusterHostConfiguration clusterHostConfiguration = developmentConfiguration.getClusterHostConfiguration();
-        clusterHostConfigurations.put(clusterHostConfiguration.getClusterId(), clusterHostConfiguration);
-
-        return clusterHostConfigurations;
     }
 
     @Provides

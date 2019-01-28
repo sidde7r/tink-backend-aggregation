@@ -27,21 +27,11 @@ public class AggregationRepositoryModule extends RepositoryModule {
 
     @Override
     protected void bindRepositories() {
-        bindSpringBean(ClusterHostConfigurationRepository.class);
         bindSpringBean(ClusterCryptoConfigurationRepository.class);
         bindSpringBean(CryptoConfigurationsRepository.class);
         bindSpringBean(ClientConfigurationsRepository.class);
         bindSpringBean(AggregatorConfigurationsRepository.class);
         bindSpringBean(ClusterConfigurationsRepository.class);
-    }
-
-    @Provides
-    @Singleton
-    @Named("clusterHostConfigurations")
-    public Map<String, ClusterHostConfiguration> provideClusterHostConfigurations(ClusterHostConfigurationRepository repository) {
-        return repository.findAll().stream().collect(
-                Collectors.toMap(ClusterHostConfiguration::getClusterId, Function.identity())
-        );
     }
 
     @Provides
