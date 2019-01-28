@@ -12,7 +12,7 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;

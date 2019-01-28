@@ -13,7 +13,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.libraries.helper.transfer.stubs.TransferStub;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.i18n.Catalog;
 import static org.assertj.core.api.Assertions.assertThat;

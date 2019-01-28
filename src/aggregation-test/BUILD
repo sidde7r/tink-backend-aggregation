@@ -29,6 +29,7 @@ junit_test(
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/date",
         "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/enums",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/i18n",
         "//src/libraries/log",

@@ -24,7 +24,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import se.tink.backend.core.enums.AccountExclusion;
+import se.tink.libraries.enums.AccountExclusion;
 import se.tink.backend.core.transfer.TransferDestination;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.account.AccountIdentifier;

@@ -43,7 +43,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.S
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;

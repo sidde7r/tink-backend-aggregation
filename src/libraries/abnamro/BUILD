@@ -6,6 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/date",
+        "//src/libraries/enums",
         "//src/libraries/log",
         "//src/libraries/metrics",
         "//src/libraries/net",

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.rpc.WhitelistRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
-import se.tink.backend.core.enums.TinkFeature;
+import se.tink.libraries.enums.TinkFeature;
 
 import java.util.List;
 import java.util.Objects;

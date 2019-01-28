@@ -10,6 +10,7 @@ java_library(
         "//src/libraries/api_headers:api-headers",
         "//src/libraries/auth",
         "//src/libraries/date",
+        "//src/libraries/enums",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/giro_validation:giro-validation",

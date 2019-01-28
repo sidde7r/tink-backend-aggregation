@@ -10,6 +10,7 @@ java_library(
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/enums",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",

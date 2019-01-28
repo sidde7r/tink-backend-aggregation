@@ -31,6 +31,7 @@ java_library(
         "//src/libraries/discovered_web_service",
         "//src/libraries/discovery",
         "//src/libraries/draining",
+        "//src/libraries/enums",
         "//src/libraries/executor_utils:executor-utils",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/giro_validation:giro-validation",

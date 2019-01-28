@@ -12,7 +12,7 @@ import java.util.HashMap;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.enums.FeatureFlags;
+import se.tink.libraries.enums.FeatureFlags;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
