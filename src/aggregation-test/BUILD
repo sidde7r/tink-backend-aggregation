@@ -41,7 +41,7 @@ junit_test(
         "//src/libraries/strings",
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
-        "//src/libraries/transfer_stub:transfer-stub-test",
+        "//src/libraries/transfer:stubs",
         "//src/libraries/uuid",
         "//src/main-api",
         "//third_party:com_google_guava_guava",

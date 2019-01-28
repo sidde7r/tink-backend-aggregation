@@ -21,7 +21,7 @@ import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.stubs.TransferStub;
 import se.tink.libraries.social.security.TestSSN;
 
 public class LansforsakringarAgentTest extends AbstractAgentTest<LansforsakringarAgent> {

@@ -129,7 +129,7 @@ junit_test(
         "//src/libraries/strings",
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
-        "//src/libraries/transfer_stub:transfer-stub-test",
+        "//src/libraries/transfer:stubs",
         "//src/main-api",
         "//third_party:com_auth0_java_jwt",
         "//third_party:com_github_rholder_guava_retrying",

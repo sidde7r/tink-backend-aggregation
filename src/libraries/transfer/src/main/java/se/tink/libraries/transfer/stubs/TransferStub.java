@@ -1,4 +1,4 @@
-package se.tink.libraries.helper.transfer.stubs;
+package se.tink.libraries.transfer.stubs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -6,8 +6,8 @@ import java.util.Date;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferStub {
     public static BankTransferBuilder bankTransfer() {

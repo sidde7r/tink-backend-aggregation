@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.stubs.TransferStub;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.rpc.Transfer;

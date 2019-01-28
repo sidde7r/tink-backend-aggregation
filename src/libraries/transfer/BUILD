@@ -25,3 +25,18 @@ java_library(
         "//third_party:org_hibernate_hibernate_entitymanager",
     ],
 )
+
+java_library(
+    name = "stubs",
+    srcs = glob(["src/main/**/stubs/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/amount",
+        "//src/libraries/enums",
+        "//src/libraries/transfer:enums",
+        "//src/libraries/transfer:rpc",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+    ],
+)

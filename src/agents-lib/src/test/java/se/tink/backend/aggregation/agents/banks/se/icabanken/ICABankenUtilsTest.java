@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken;
 
 import org.junit.Test;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.stubs.TransferStub;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 import static org.assertj.core.api.Assertions.assertThat;

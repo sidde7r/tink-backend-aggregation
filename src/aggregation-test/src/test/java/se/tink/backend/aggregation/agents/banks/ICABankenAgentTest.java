@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SessionRespon
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.stubs.TransferStub;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.amount.Amount;
