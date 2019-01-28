@@ -1,25 +1,36 @@
 package se.tink.backend.aggregation.agents.brokers.lysa;
 
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.libraries.social.security.TestSSN;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
+import se.tink.backend.aggregation.rpc.Field;
 
-public class LysaAgentTest extends AbstractAgentTest<LysaAgent> {
-    private Provider provider = new Provider();
+@Ignore
+public class LysaAgentTest
+{
+    private final AgentIntegrationTest.Builder builder =
+            new AgentIntegrationTest.Builder("se", "lysa")
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(true);
+    private final ArgumentHelper helper = new ArgumentHelper("tink.username");
 
-    public LysaAgentTest() {
-        super(LysaAgent.class);
+    @Before
+    public void before() {
+        helper.before();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentHelper.afterClass();
     }
 
     @Test
-    public void testUser1MobileBankId() throws Exception {
-        testAgent(TestSSN.FH, null, CredentialsTypes.MOBILE_BANKID, true);
-    }
-
-    @Override
-    protected Provider constructProvider() {
-        return provider;
+    public void testRefresh() throws Exception {
+        builder.addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
+                .build()
+                .testRefresh();
     }
 }
