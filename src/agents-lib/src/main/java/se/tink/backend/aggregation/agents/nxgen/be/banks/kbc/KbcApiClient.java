@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import com.google.common.primitives.Bytes;
 import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
@@ -54,11 +55,13 @@ import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.security.PublicKey;
@@ -67,10 +70,13 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+import static se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants.DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS;
+
 public class KbcApiClient {
     private final SessionStorage sessionStorage;
     private final TinkHttpClient client;
     private AccountsResponse accountResponse;
+    private static final AggregationLogger LOGGER = new AggregationLogger(KbcApiClient.class);
 
     private KbcApiClient(SessionStorage sessionStorage, TinkHttpClient client) {
         this.sessionStorage = sessionStorage;
@@ -94,16 +100,19 @@ public class KbcApiClient {
         return SerializationUtils.deserializeFromString(cleanString, responseClass);
     }
 
-    private void checkBlockedAccount(HeaderDto header) throws AuthorizationException {
-        String resultValue = getResultCodeOrThrow(header);
+    private void checkBlockedAccount(HeaderDto headerDto, String errorHeader) throws AuthorizationException {
+        String resultValue = getResultCodeOrThrow(headerDto);
         boolean matchesErrorMessages =
                 matchesErrorMessage(
-                                header.getResultMessage(),
+                        headerDto.getResultMessage(),
                                 KbcConstants.ErrorMessage.ACCOUNT_BLOCKED)
                         || matchesErrorMessage(
-                                header.getResultMessage(),
+                        headerDto.getResultMessage(),
                                 KbcConstants.ErrorMessage.ACCOUNT_BLOCKED2);
         if (Objects.equals(KbcConstants.ResultCode.ZERO_TWO, resultValue) && matchesErrorMessages) {
+            LOGGER.warnExtraLong(
+                    String.format("Header: %s Error message:%s", errorHeader, headerDto.getResultMessage()),
+                    KbcConstants.LogTags.ERROR_CODE_MESSAGE);
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
     }
@@ -116,14 +125,18 @@ public class KbcApiClient {
     }
 
     private void verifyDoubleZeroResponseCode(HeaderDto header) {
-        verifyResponseCode(header, KbcConstants.ResultCode.DOUBLE_ZERO);
+        verifyResponseCode(header, KbcConstants.ResultCode.DOUBLE_ZERO, "");
     }
 
     private void verifyResponseCode(HeaderDto header, final String expectedValue) {
+        verifyResponseCode(header, expectedValue, "");
+    }
+
+    private void verifyResponseCode(HeaderDto header, final String expectedValue, String errorHeader) {
         String resultValue = getResultCodeOrThrow(header);
         if (!Objects.equals(expectedValue, resultValue)) {
             notEnoughFundsCancelTransfer(header, resultValue);
-            throwInvalidResultCodeError(header, resultValue);
+            throwInvalidResultCodeError(header, resultValue, errorHeader);
         }
     }
 
@@ -148,14 +161,27 @@ public class KbcApiClient {
                 && e.getValue().toLowerCase().contains(errorMessage);
     }
 
+    private void throwInvalidResultCodeError(HeaderDto header, String resultCode, String errorHeader) {
+        throw new IllegalStateException(formatInvalidResultCodeMessage(header, resultCode, errorHeader));
+    }
+
     private void throwInvalidResultCodeError(HeaderDto header, String resultCode) {
+        throw new IllegalStateException(formatInvalidResultCodeMessage(header, resultCode, ""));
+    }
+
+    private String formatInvalidResultCodeMessage(HeaderDto header, String resultCode, String errorHeader) {
         String resultMessage = Optional.ofNullable(header)
                 .map(HeaderDto::getResultMessage)
                 .map(TypeValuePair::getValue).orElse("");
+        if (Strings.isNullOrEmpty(errorHeader)) {
+            return
+                    String.format("Invalid result code - [ResultCode]: %s - [Message]: %s ",
+                            resultCode, resultMessage);
+        }
 
-        throw new IllegalStateException(
-                String.format("Invalid result code - [ResultCode]: %s - [Message]: %s",
-                        resultCode, resultMessage));
+        return String.format("Invalid result code - [ResultCode]: %s - [ErrorHeader]: %s - [Message]: %s ",
+                resultCode, errorHeader == null ? "" : errorHeader, resultMessage);
+
     }
 
     private void generateAndStoreCipherKey() {
@@ -198,6 +224,7 @@ public class KbcApiClient {
         byte[] cipherBytes = EncodingUtils.decodeBase64String(responseBody);
         byte[] decryptedResponse = AES.decryptCbc(getCipherKey(), getCipherIv(cipherBytes), getCipherBody(cipherBytes));
         String response = new String(decryptedResponse, Charsets.UTF_8);
+        //Uncomment to decrypted response in log LOGGER.infoExtraLong(response, KbcConstants.LogTags.ACCOUNTS);
         return deserializeFromString(response, responseClass);
     }
 
@@ -211,23 +238,58 @@ public class KbcApiClient {
 
     private <T> T post(
             KbcConstants.Url url, Object request, Class<T> responseType) {
-        return post(url, request, responseType, true);
+        return post(url, request, responseType, true, DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS);
+    }
+
+
+    private <T> T post(
+            KbcConstants.Url url, Object request, Class<T> responseType, String requestLocale) {
+        return post(url, request, responseType, true, requestLocale);
     }
 
     private <T> T post(
-            KbcConstants.Url url, Object request, Class<T> responseType, boolean encryptAndEncodeRequest) {
+            KbcConstants.Url url, Object request, Class<T> responseType, boolean encryptAndEncodeRequest, String requestLocale) {
 
-        String completeRequest = request != null && encryptAndEncodeRequest
-                ? encryptAndEncodeRequest(request) : SerializationUtils.serializeToString(request);
-
-        HttpResponse httpResponse = request != null ?
-                client.request(url.get()).post(HttpResponse.class, completeRequest) :
-                client.request(url.get()).post(HttpResponse.class);
+        HttpResponse httpResponse = postRequest(url, request, encryptAndEncodeRequest, requestLocale);
 
         T response = encryptAndEncodeRequest ?
                 decodeAndDecryptResponse(httpResponse, responseType) : cleanResponse(httpResponse, responseType);
 
         return response;
+    }
+
+    private HttpResponse postRequest(KbcConstants.Url url, Object request, boolean encryptAndEncodeRequest, String requestLocale) {
+        String completeRequest = request != null && encryptAndEncodeRequest
+                ? encryptAndEncodeRequest(request) : SerializationUtils.serializeToString(request);
+
+        return request != null ?
+                client.request(url.get()).header(KbcConstants.Headers.ACCEPT_LANG_KEY, requestLocale).post(HttpResponse.class, completeRequest) :
+                client.request(url.get()).header(KbcConstants.Headers.ACCEPT_LANG_KEY, requestLocale).post(HttpResponse.class);
+    }
+
+    private <T> Pair<T, String> postGetResponseAndHeader(
+            KbcConstants.Url url, Object request, Class<T> responseType) {
+        return postGetResponseAndHeader(url, request, responseType, true, KbcConstants.ErrorHeaders.LOGON_ERROR);
+    }
+
+    private <T> Pair<T, String> postGetResponseAndHeader(
+            KbcConstants.Url url, Object request, Class<T> responseType, boolean encryptAndEncodeRequest, String headerKey) {
+
+        HttpResponse httpResponse = postRequest(url, request, encryptAndEncodeRequest, DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS);
+
+        String headerValue = getHeaderValue(headerKey, httpResponse);
+
+        T response = encryptAndEncodeRequest ?
+                decodeAndDecryptResponse(httpResponse, responseType) : cleanResponse(httpResponse, responseType);
+
+        return new Pair<>(response, headerValue);
+    }
+
+    private String getHeaderValue(String headerKey, HttpResponse httpResponse) {
+        if (httpResponse.getHeaders() != null && httpResponse.getHeaders().containsKey(headerKey)) {
+            return httpResponse.getHeaders().getFirst(headerKey);
+        }
+        return "";
     }
 
     // == END PRIVATE METHODS ==
@@ -246,23 +308,26 @@ public class KbcApiClient {
         KeyExchangeRequest request = KeyExchangeRequest.createWithStandardTypes(
                 companyId, appFamily, encryptAndEncodePublicKey());
 
-        KeyExchangeResponse response = post(KbcConstants.Url.KEY_EXCHANGE,
-                request, KeyExchangeResponse.class, false);
-        checkBlockedAccount(response.getHeader());
-        verifyDoubleZeroResponseCode(response.getHeader());
+        Pair<KeyExchangeResponse, String> response = postGetResponseAndHeader(KbcConstants.Url.KEY_EXCHANGE,
+                request, KeyExchangeResponse.class, false, KbcConstants.ErrorHeaders.LOGON_ERROR);
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return response;
+        return response.first;
     }
 
     public String challenge() throws AuthorizationException {
         ChallengeRequest challengeRequest = ChallengeRequest.createWithStandardTypes(
-                KbcConstants.RequestInput.AUTHENTICATION_TYPE, KbcConstants.LANGUAGE);
+                KbcConstants.RequestInput.AUTHENTICATION_TYPE, DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS);
 
-        ChallengeResponse response = post(KbcConstants.Url.CHALLENGE, challengeRequest, ChallengeResponse.class);
-        checkBlockedAccount(response.getHeader());
-        verifyDoubleZeroResponseCode(response.getHeader());
+        Pair<ChallengeResponse, String> response = postGetResponseAndHeader(
+                KbcConstants.Url.CHALLENGE,
+                challengeRequest,
+                ChallengeResponse.class);
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return response.getChallenge().getValue();
+        return response.first.getChallenge().getValue();
     }
 
     public RegisterLogonResponse registerLogon(String username, String challengeResponse)
@@ -271,18 +336,21 @@ public class KbcApiClient {
                 .applicationId(KbcConstants.ApplicationId.REGISTER_LOGON)
                 .captcha(KbcConstants.RequestInput.EMPTY_CAPTCHA)
                 .company(KbcConstants.RequestInput.COMPANY_ID)
-                .language(KbcConstants.LANGUAGE)
+                .language(DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS)
                 .response(challengeResponse)
                 .saveCardNumber(KbcConstants.RequestInput.SAVE_CARD_NUMBER)
                 .ucrType(KbcConstants.RequestInput.UCR_TYPE)
                 .username(username).build();
 
-        RegisterLogonResponse response =
-                post(KbcConstants.Url.REGISTER_LOGON, registerLogonRequest, RegisterLogonResponse.class);
-        checkBlockedAccount(response.getHeader());
-        verifyDoubleZeroResponseCode(response.getHeader());
+        Pair<RegisterLogonResponse, String> response =
+                postGetResponseAndHeader(
+                        KbcConstants.Url.REGISTER_LOGON,
+                        registerLogonRequest,
+                        RegisterLogonResponse.class);
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return response;
+        return response.first;
     }
 
     public PersonalisationResponse personalisation() {
@@ -312,46 +380,52 @@ public class KbcApiClient {
     public String signTypeManual(String signingId) throws AuthorizationException {
         SignRequest signRequest = SignRequest.createWithSigningId(signingId);
 
-        SignTypesResponse signTypesResponse =
-                post(KbcConstants.Url.SIGNING_TYPES, signRequest, SignTypesResponse.class);
-        checkBlockedAccount(signTypesResponse.getHeader());
-        verifyDoubleZeroResponseCode(signTypesResponse.getHeader());
+        Pair<SignTypesResponse, String> response =
+                postGetResponseAndHeader(KbcConstants.Url.SIGNING_TYPES, signRequest, SignTypesResponse.class);
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return signTypesResponse.getSignTypeId(KbcConstants.Predicates.SIGN_TYPE_MANUAL);
+        return response.first.getSignTypeId(KbcConstants.Predicates.SIGN_TYPE_MANUAL);
     }
 
     public String signChallenge(String signTypeId, String signingId) throws AuthorizationException {
         SignChallengeRequest signChallengeRequest = SignChallengeRequest.create(signTypeId, signingId);
 
-        SignChallengeResponse signChallengeResponse =
-                post(KbcConstants.Url.SIGNING_CHALLENGE, signChallengeRequest, SignChallengeResponse.class);
-        checkBlockedAccount(signChallengeResponse.getHeader());
-        verifyDoubleZeroResponseCode(signChallengeResponse.getHeader());
+        Pair<SignChallengeResponse, String> response =
+                postGetResponseAndHeader(
+                        KbcConstants.Url.SIGNING_CHALLENGE,
+                        signChallengeRequest,
+                        SignChallengeResponse.class);
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return signChallengeResponse.getChallenge().getValue();
+        return response.first.getChallenge().getValue();
     }
 
     public String signValidation(String signingResponse, String panNr, String signingId) throws AuthorizationException {
         SignValidationRequest signValidationRequest = SignValidationRequest.create(signingResponse, panNr, signingId);
 
-        SignValidationResponse signValidationResponse =
-                post(KbcConstants.Url.SIGNING_VALIDATION, signValidationRequest, SignValidationResponse.class);
-        checkBlockedAccount(signValidationResponse.getHeader());
-        verifyDoubleZeroResponseCode(signValidationResponse.getHeader());
+        Pair<SignValidationResponse, String> response =
+                postGetResponseAndHeader(
+                        KbcConstants.Url.SIGNING_VALIDATION,
+                        signValidationRequest,
+                        SignValidationResponse.class);
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return signValidationResponse.getHeader().getSigningId().getEncoded();
+        return response.first.getHeader().getSigningId().getEncoded();
     }
 
     public EnrollDeviceRoundTwoResponse enrollDeviceWithSigningId(String signingId) throws AuthorizationException {
         EnrollDeviceRoundTwoRequest enrollDeviceRoundTwoRequest = EnrollDeviceRoundTwoRequest.create(signingId);
 
-        EnrollDeviceRoundTwoResponse enrollDeviceRoundTwoResponse = post(KbcConstants.Url.ENROLL_DEVICE,
+        Pair<EnrollDeviceRoundTwoResponse, String> response = postGetResponseAndHeader(KbcConstants.Url.ENROLL_DEVICE,
                 enrollDeviceRoundTwoRequest,
                 EnrollDeviceRoundTwoResponse.class);
-        checkBlockedAccount(enrollDeviceRoundTwoResponse.getHeader());
-        verifyDoubleZeroResponseCode(enrollDeviceRoundTwoResponse.getHeader());
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return enrollDeviceRoundTwoResponse;
+        return response.first;
     }
 
     public ActivationLicenseResponse activationLicence(KbcDevice device, String iv,
@@ -364,15 +438,15 @@ public class KbcApiClient {
                 .companyNo(KbcConstants.RequestInput.COMPANY_ID)
                 .deviceId(device.getDeviceId())
                 .encryptedClientPublicKeyAndNonce(encryptedClientPublicKeyAndNonce)
-                .language(KbcConstants.LANGUAGE)
+                .language(DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS)
                 .logonId(device.getAccessNumber()).build();
 
-        ActivationLicenseResponse activationLicenseResponse = post(
+        Pair<ActivationLicenseResponse, String> response = postGetResponseAndHeader(
                 KbcConstants.Url.ACTIVATION_LICENSE, activationLicenseRequest, ActivationLicenseResponse.class);
-        checkBlockedAccount(activationLicenseResponse.getHeader());
-        verifyDoubleZeroResponseCode(activationLicenseResponse.getHeader());
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return activationLicenseResponse;
+        return response.first;
     }
 
     public String activationInstance(KbcDevice device, String iv, String encryptedNonce, String challenge,
@@ -388,14 +462,15 @@ public class KbcApiClient {
                 .deviceId(device.getDeviceId())
                 .encryptedServerNonce(encryptedNonce)
                 .logonId(device.getAccessNumber())
+                .language(DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS)
                 .build();
 
-        ActivationInstanceResponse activationInstanceResponse = post(
+        Pair<ActivationInstanceResponse, String> response = postGetResponseAndHeader(
                 KbcConstants.Url.ACTIVATION_INSTANCE, activationInstanceRequest, ActivationInstanceResponse.class);
-        checkBlockedAccount(activationInstanceResponse.getHeader());
-        verifyDoubleZeroResponseCode(activationInstanceResponse.getHeader());
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return activationInstanceResponse.getActivationMessage().getValue();
+        return response.first.getActivationMessage().getValue();
     }
 
     public ActivationVerificationResponse activationVerification(KbcDevice device, String verificationMessage)
@@ -411,16 +486,17 @@ public class KbcApiClient {
                 .activationMessage(device.getActivationMessage())
                 .osVersionNo(KbcConstants.RequestInput.OS_VERSION_NO)
                 .osType(KbcConstants.RequestInput.OS_TYPE)
+                .language(DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS)
                 .fingerprint(device.getFingerprint())
                 .build();
 
-        ActivationVerificationResponse activationVerificationResponse = post(
+        Pair<ActivationVerificationResponse, String> response = postGetResponseAndHeader(
                 KbcConstants.Url.ACTIVATION_VERIFICATION, activationVerificationRequest,
                 ActivationVerificationResponse.class);
-        checkBlockedAccount(activationVerificationResponse.getHeader());
-        verifyDoubleZeroResponseCode(activationVerificationResponse.getHeader());
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return activationVerificationResponse;
+        return response.first;
     }
 
     public String challengeSotp(KbcDevice device) throws AuthorizationException {
@@ -435,14 +511,15 @@ public class KbcApiClient {
                 .setOsVersionNo(KbcConstants.RequestInput.OS_VERSION_NO)
                 .setOsType(KbcConstants.RequestInput.OS_TYPE)
                 .setFingerprint(device.getFingerprint())
+                .setLanguage(DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS)
                 .build();
 
-        ChallengeSotpResponse challengeResponse = post(
+        Pair<ChallengeSotpResponse, String> response = postGetResponseAndHeader(
                 KbcConstants.Url.CHALLENGE_SOTP, challengeRequest, ChallengeSotpResponse.class);
-        checkBlockedAccount(challengeResponse.getHeader());
-        verifyDoubleZeroResponseCode(challengeResponse.getHeader());
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return challengeResponse.getChallenge().getValue();
+        return response.first.getChallenge().getValue();
     }
 
     public LoginSotpResponse loginSotp(KbcDevice device, String otp) throws AuthorizationException {
@@ -458,17 +535,21 @@ public class KbcApiClient {
                 .setWithTouchId(KbcConstants.RequestInput.WITH_TOUCH_ID)
                 .setOsVersion(KbcConstants.RequestInput.OS_VERSION_NO)
                 .setOs(KbcConstants.RequestInput.OS_TYPE)
+                .setLanguage(DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS)
                 .setFingerprint(device.getFingerprint())
                 .build();
 
-        LoginSotpResponse response = post(KbcConstants.Url.LOGIN_SOTP, loginSotpRequest, LoginSotpResponse.class);
-        checkBlockedAccount(response.getHeader());
-        verifyDoubleZeroResponseCode(response.getHeader());
+        Pair<LoginSotpResponse, String> response = postGetResponseAndHeader(
+                KbcConstants.Url.LOGIN_SOTP,
+                loginSotpRequest,
+                LoginSotpResponse.class);
+        checkBlockedAccount(response.first.getHeader(), response.second);
+        verifyDoubleZeroResponseCode(response.first.getHeader());
 
-        return response;
+        return response.first;
     }
 
-    public AccountsResponse fetchAccounts() {
+    public AccountsResponse fetchAccounts(String language) {
         AccountsRequest accountsRequest = AccountsRequest.builder()
                 .setBalanceIndicator(true)
                 .setIncludeReservationsIndicator(true)
@@ -478,13 +559,13 @@ public class KbcApiClient {
                 .setPaymentDashboardIndicator(true)
                 .build();
 
-        this.accountResponse = post(KbcConstants.Url.ACCOUNTS, accountsRequest, AccountsResponse.class);
+        this.accountResponse = post(KbcConstants.Url.ACCOUNTS, accountsRequest, AccountsResponse.class, language);
         verifyDoubleZeroResponseCode(this.accountResponse.getHeader());
 
         return this.accountResponse;
     }
 
-    public TransactionsHistoryResponse fetchTransactions(String accountNo, String repositioningKey) {
+    public TransactionsHistoryResponse fetchTransactions(String accountNo, String repositioningKey, String language) {
         Preconditions.checkNotNull(accountNo);
 
         AgreementDto targetAgreement = this.accountResponse.getAgreements().stream()
@@ -504,7 +585,7 @@ public class KbcApiClient {
                 .setTransactionsQuantity(KbcConstants.RequestInput.TRANSACTIONS_QUANTITY)
                 .build();
         TransactionsHistoryResponse response =
-                post(KbcConstants.Url.TRANSACTIONS_HISTORY, request, TransactionsHistoryResponse.class);
+                post(KbcConstants.Url.TRANSACTIONS_HISTORY, request, TransactionsHistoryResponse.class, language);
         verifyDoubleZeroResponseCode(response.getHeader());
         return response;
     }
@@ -621,7 +702,11 @@ public class KbcApiClient {
         SignChallengeRequest request = SignChallengeRequest.create(signTypeId, signingId);
 
         SigningChallengeUcrResponse response =
-                post(KbcConstants.Url.MOB_A031_SIGNING_CHALLENGE_UCR, request, SigningChallengeUcrResponse.class);
+                post(
+                        KbcConstants.Url.MOB_A031_SIGNING_CHALLENGE_UCR,
+                        request,
+                        SigningChallengeUcrResponse.class,
+                        DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS);
         verifyDoubleZeroResponseCode(response.getHeader());
 
         return response;
@@ -639,7 +724,7 @@ public class KbcApiClient {
     public TransferResponse signTransfer(String signingId, KbcConstants.Url url) {
         SignRequest request = SignRequest.createWithSigningId(signingId);
 
-        TransferResponse response = post(url, request, TransferResponse.class);
+        TransferResponse response = post(url, request, TransferResponse.class, DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS);
         verifyDoubleZeroResponseCode(response.getHeader());
 
         return response;

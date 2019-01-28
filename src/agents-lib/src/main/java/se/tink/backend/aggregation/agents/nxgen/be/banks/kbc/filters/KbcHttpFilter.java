@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.filters;
 
-import java.util.Objects;
-import java.util.Optional;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.nxgen.http.HttpMethod;
@@ -12,6 +8,11 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.Objects;
+import java.util.Optional;
 
 public class KbcHttpFilter extends Filter {
     private String xXsrfToken;
@@ -22,7 +23,6 @@ public class KbcHttpFilter extends Filter {
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
         headers.add(KbcConstants.Headers.COMPANY_KEY, KbcConstants.Headers.COMPANY_VALUE);
         headers.add(KbcConstants.Headers.APPVERSION_KEY, KbcConstants.Headers.APPVERSION_VALUE);
-        headers.add(KbcConstants.Headers.ACCEPT_LANG_KEY, KbcConstants.Headers.ACCEPT_LANG_VALUE);
 
         if (xXsrfToken != null) {
             headers.add(KbcConstants.Headers.X_XSRF_TOKEN, xXsrfToken);

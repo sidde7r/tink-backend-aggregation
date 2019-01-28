@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
@@ -14,12 +11,18 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 public class KbcTransferDestinationFetcher implements TransferDestinationFetcher {
 
     private final KbcApiClient apiClient;
+    private String userLanguage;
 
-    public KbcTransferDestinationFetcher(KbcApiClient apiClient) {
+    public KbcTransferDestinationFetcher(KbcApiClient apiClient, String userLanguage) {
         this.apiClient = apiClient;
+        this.userLanguage = userLanguage;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class KbcTransferDestinationFetcher implements TransferDestinationFetcher
             Collection<Account> tinkAccounts) {
 
         List<AgreementDto> sourceAccounts = apiClient.accountsForTransferToOwn().getAgreements();
-        List<AgreementDto> destinationAccounts = apiClient.fetchAccounts().getAgreements();
+        List<AgreementDto> destinationAccounts = apiClient.fetchAccounts(userLanguage).getAgreements();
 
         return new TransferDestinationPatternBuilder()
                 .setSourceAccounts(sourceAccounts)

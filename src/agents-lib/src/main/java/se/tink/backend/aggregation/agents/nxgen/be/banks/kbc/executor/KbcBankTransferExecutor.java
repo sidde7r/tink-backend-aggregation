@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor;
 
-import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
@@ -15,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.Signin
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.dto.ValidateTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -26,6 +25,10 @@ import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.pair.Pair;
+
+import java.util.List;
+import java.util.Optional;
 
 public class KbcBankTransferExecutor implements BankTransferExecutor {
 

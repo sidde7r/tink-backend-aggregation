@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto;
 
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 
 public class ChallengeSotpRequest {
@@ -120,8 +119,7 @@ public class ChallengeSotpRequest {
             return this;
         }
 
-        public Builder setLanguage(
-                String language) {
+        public Builder setLanguage(String language) {
             this.language = TypeValuePair.createText(language);
             return this;
         }
@@ -169,7 +167,7 @@ public class ChallengeSotpRequest {
 
         public ChallengeSotpRequest build() {
             return new ChallengeSotpRequest(deviceName, applicationTypeCode, logonId,
-                    TypeValuePair.createText(KbcConstants.LANGUAGE), osVersionNo, deviceId,
+                    language, osVersionNo, deviceId,
                     fingerprint, osType, applicationId, companyNo, applicationVersionNo);
         }
     }

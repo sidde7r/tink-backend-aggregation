@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
-import java.util.Optional;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.KbcAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.KbcBankTransferExecutor;
@@ -25,12 +25,19 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
+import java.util.Locale;
+import java.util.Optional;
+
+
+
 public class KbcAgent extends NextGenerationAgent {
     private final KbcApiClient apiClient;
+    private final String kbcLanguage;
     private KbcHttpFilter httpFilter;
 
     public KbcAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
+        kbcLanguage = getKbcLanguage(request.getUser().getLocale());
         this.apiClient = KbcApiClient.create(sessionStorage, client);
     }
 
@@ -52,7 +59,7 @@ public class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        KbcTransactionalAccountFetcher accountFetcher = new KbcTransactionalAccountFetcher(apiClient);
+        KbcTransactionalAccountFetcher accountFetcher = new KbcTransactionalAccountFetcher(apiClient, kbcLanguage);
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
@@ -90,7 +97,7 @@ public class KbcAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
         return Optional.of(new TransferDestinationRefreshController(metricRefreshController, updateController,
-                new KbcTransferDestinationFetcher(apiClient)));
+                new KbcTransferDestinationFetcher(apiClient, kbcLanguage)));
     }
 
     @Override
@@ -112,4 +119,21 @@ public class KbcAgent extends NextGenerationAgent {
                         null,
                         null));
     }
+
+    private String getKbcLanguage(String locale) {
+        if (Strings.isNullOrEmpty(locale)) {
+            return Locale.ENGLISH.getLanguage();
+        }
+        if (locale.toLowerCase().contains(KbcConstants.LANGUAGE_DUTCH)) {
+            return KbcConstants.LANGUAGE_DUTCH;
+        }
+        if (locale.toLowerCase().contains(Locale.FRENCH.getLanguage())) {
+            return Locale.FRANCE.getLanguage();
+        }
+        if (locale.toLowerCase().contains(Locale.GERMAN.getLanguage())) {
+            return Locale.GERMAN.getLanguage();
+        }
+        return Locale.ENGLISH.getLanguage();
+    }
+
 }

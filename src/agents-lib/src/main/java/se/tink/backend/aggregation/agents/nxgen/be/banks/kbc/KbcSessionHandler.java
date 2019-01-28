@@ -27,7 +27,7 @@ public class KbcSessionHandler implements SessionHandler {
     @Override
     public void keepAlive() throws SessionException {
         try {
-            apiClient.fetchAccounts();
+            apiClient.fetchAccounts(KbcConstants.DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS);
         } catch (Exception e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }

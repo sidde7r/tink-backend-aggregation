@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto;
 
-import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 
 public class LoginSotpRequest {
@@ -178,9 +177,14 @@ public class LoginSotpRequest {
             return this;
         }
 
+        public Builder setLanguage(String language) {
+            this.language = TypeValuePair.createText(language);
+            return this;
+        }
+
         public LoginSotpRequest build() {
             return new LoginSotpRequest(fingerprint, osVersion, deviceId, company, os, appType, deviceType, otp,
-                    TypeValuePair.createText(KbcConstants.LANGUAGE), username, appVersion, applicationId, withTouchId);
+                    language, username, appVersion, applicationId, withTouchId);
         }
     }
 }

@@ -11,8 +11,12 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
+import java.util.Locale;
+
 public class KbcConstants {
-    public static final String LANGUAGE = "en";
+
+    public static final String LANGUAGE_DUTCH = "nl";
+    public static final String DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS = Locale.ENGLISH.getLanguage();
 
     public enum Url implements UrlEnum {
         KEY_EXCHANGE(createUrlWithHost("/SAI/A054/service/keyExchange/1")),
@@ -144,7 +148,9 @@ public class KbcConstants {
     public static class ResultCode {
         public static final String DOUBLE_ZERO = "00";
         public static final String ZERO_TWO = "02";
-        public static final String ZERO_NINE = "09";
+        public static final String ZERO_NINE = "09"; // isSigningRequired
+        public static final String ZERO_TEN = "10"; // isReSigningRequired
+
     }
 
     public static class PairTypeTypes {
@@ -184,6 +190,7 @@ public class KbcConstants {
     public static class LogTags {
         public static final LogTag ACCOUNTS = LogTag.from("#be_kbc_accounts");
         public static final LogTag CREDIT_CARDS = LogTag.from("#be_kbc_credit_cards");
+        public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
     }
 
     public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES = ImmutableMap.<String, AccountTypes>builder()
@@ -196,14 +203,30 @@ public class KbcConstants {
             .build();
 
     public static final class ErrorMessage {
+        // Probably safe to remove we have HeaderErrorMessage
         public static final String INCORRECT_CARD_NUMBER = "the card number you have entered is incorrect";
-        public static final String NO_TRANSACTIONS_FOUND = "no transactions in the most recent 12 months";
-        public static final String NOT_A_CUSTOMER = "managing branch not found";
         public static final String INCORRECT_LOGIN_CODE = "you have entered the wrong login code";
-        public static final String INCORRECT_SIGN_CODE = "your sign code is incorrect";
-        public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
+
+        // Hoping the logging will log HeaderErrorMessage that can be used as replacement
+        public static final String NOT_A_CUSTOMER = "managing branch not found";
         public static final String ACCOUNT_BLOCKED = "type in the characters as they appear in the image below and then click 'confirm'";
         public static final String ACCOUNT_BLOCKED2 = "your pin has been blocked";
+        public static final String INCORRECT_SIGN_CODE = "your sign code is incorrect";
+
+        // Probably only text messages log should give us information otherwise
+        public static final String NO_TRANSACTIONS_FOUND = "no transactions in the most recent 12 months";
+
+        // Only text message no header or code, we do transfers in English to ensure that correctness
+        public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
+    }
+
+    public static final class HeaderErrorMessage {
+        public static final String INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT = "D9FE50";
+        public static final String INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT = "D9E028";
+        public static final String INCORRECT_CARD_NUMBER = "D93058";
+        public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_1 = "D9FE51";
+        public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_2 = "D9C104";
+        public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_3 = "D9E027";
     }
 
     public enum UserMessage implements LocalizableEnum {
@@ -270,5 +293,9 @@ public class KbcConstants {
         public static final String SCASH_VERSION_NUMBER = "";
         public static final String TRANSFER_TO_OWN_ACCOUNT = "transferOwnAccount";
         public static final String TRANSFER_TO_OTHER_ACCOUNT = "transferOtherAccount";
+    }
+
+    public static class ErrorHeaders {
+        public static final String LOGON_ERROR = "logon-error-code";
     }
 }
