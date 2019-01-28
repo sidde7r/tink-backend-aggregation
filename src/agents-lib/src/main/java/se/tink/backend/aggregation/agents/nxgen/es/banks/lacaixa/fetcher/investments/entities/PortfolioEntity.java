@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transac
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class PortfolioEntity {
