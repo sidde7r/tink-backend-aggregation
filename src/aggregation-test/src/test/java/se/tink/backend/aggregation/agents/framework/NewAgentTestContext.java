@@ -518,7 +518,6 @@ public class NewAgentTestContext extends AgentContext {
     }
 
     public void printCollectedData() {
-        printUserInformation();
         accountsByBankId.forEach((bankId, account) -> {
             printAccountInformation(account);
             printTransactions(bankId);
@@ -527,18 +526,6 @@ public class NewAgentTestContext extends AgentContext {
         });
 
         printTransfers();
-    }
-
-
-    private void printUserInformation() {
-        if (user == null || user.getLocale() == null) {
-            return;
-        }
-        Map<String, String> row = new LinkedHashMap<>();
-        row.put("userid", user.getId());
-        row.put("username", user.getUsername());
-        row.put("locale", user.getLocale());
-        CliPrintUtils.printTable(0, "user", Lists.newArrayList(row));
     }
 
     public void printStatistics() {

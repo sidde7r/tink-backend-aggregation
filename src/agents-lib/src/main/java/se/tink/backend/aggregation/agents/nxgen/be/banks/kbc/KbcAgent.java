@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
+import java.util.Locale;
 import java.util.Optional;
 
 
@@ -121,18 +122,18 @@ public class KbcAgent extends NextGenerationAgent {
 
     private String getKbcLanguage(String locale) {
         if (Strings.isNullOrEmpty(locale)) {
-            return KbcConstants.LANGUAGE_ENGLISH;
+            return Locale.ENGLISH.getLanguage();
         }
         if (locale.toLowerCase().contains(KbcConstants.LANGUAGE_DUTCH)) {
             return KbcConstants.LANGUAGE_DUTCH;
         }
-        if (locale.toLowerCase().contains(KbcConstants.LANGUAGE_FRENCH)) {
-            return KbcConstants.LANGUAGE_FRENCH;
+        if (locale.toLowerCase().contains(Locale.FRENCH.getLanguage())) {
+            return Locale.FRANCE.getLanguage();
         }
-        if (locale.toLowerCase().contains(KbcConstants.LANGUAGE_GERMAN)) {
-            return KbcConstants.LANGUAGE_GERMAN;
+        if (locale.toLowerCase().contains(Locale.GERMAN.getLanguage())) {
+            return Locale.GERMAN.getLanguage();
         }
-        return KbcConstants.LANGUAGE_ENGLISH;
+        return Locale.ENGLISH.getLanguage();
     }
 
 }

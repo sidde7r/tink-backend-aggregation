@@ -11,12 +11,12 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
+import java.util.Locale;
+
 public class KbcConstants {
-    public static final String LANGUAGE_FRENCH = "fr";
+
     public static final String LANGUAGE_DUTCH = "nl";
-    public static final String LANGUAGE_GERMAN = "de";
-    public static final String LANGUAGE_ENGLISH = "en";
-    public static final String DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS = LANGUAGE_ENGLISH;
+    public static final String DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS = Locale.ENGLISH.getLanguage();
 
     public enum Url implements UrlEnum {
         KEY_EXCHANGE(createUrlWithHost("/SAI/A054/service/keyExchange/1")),

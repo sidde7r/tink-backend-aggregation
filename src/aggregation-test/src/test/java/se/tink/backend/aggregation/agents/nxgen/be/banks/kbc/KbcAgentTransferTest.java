@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 
@@ -31,10 +32,9 @@ public class KbcAgentTransferTest {
             "destinationaccount",
             "destinationname");
 
-
     private final AgentIntegrationTest.Builder builder =
             new AgentIntegrationTest.Builder("be", "be-kbc-cardreader")
-                    .setUserLocale(KbcConstants.LANGUAGE_FRENCH)
+                    .setUserLocale(Locale.FRENCH.getLanguage())
                     .loadCredentialsBefore(true)
                     .saveCredentialsAfter(true);
 
