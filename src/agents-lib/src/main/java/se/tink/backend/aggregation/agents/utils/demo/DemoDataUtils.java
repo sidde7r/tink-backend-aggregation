@@ -64,7 +64,7 @@ public class DemoDataUtils {
             account.setBankId(data.get(0));
             account.putIdentifier(new SwedishIdentifier(data.get(0)));
             account.setName(data.get(1));
-            account.setType(se.tink.backend.core.AccountTypes.valueOf(data.get(2)));
+            account.setType(se.tink.libraries.enums.AccountTypes.valueOf(data.get(2)));
             account.setBalance(StringUtils.parseAmount(data.get(4).replace("\"", "")));
             account.setCredentialsId(credentials.getId());
             account.setUserId(credentials.getUserId());

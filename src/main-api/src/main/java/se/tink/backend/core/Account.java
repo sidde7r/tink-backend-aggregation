@@ -27,6 +27,7 @@ import javax.persistence.Transient;
 import se.tink.libraries.enums.AccountFlag;
 import se.tink.libraries.enums.AccountExclusion;
 import se.tink.backend.core.transfer.TransferDestination;
+import se.tink.libraries.enums.AccountTypes;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;

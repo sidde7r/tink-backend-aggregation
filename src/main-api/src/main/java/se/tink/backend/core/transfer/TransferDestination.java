@@ -6,8 +6,7 @@ import com.google.common.base.MoreObjects;
 import io.protostuff.Tag;
 import io.swagger.annotations.ApiModelProperty;
 import java.net.URI;
-import javax.persistence.Transient;
-import se.tink.backend.core.AccountTypes;
+import se.tink.libraries.enums.AccountTypes;
 
 /**
  * Fields used for creating TransferDestination: uri, name
