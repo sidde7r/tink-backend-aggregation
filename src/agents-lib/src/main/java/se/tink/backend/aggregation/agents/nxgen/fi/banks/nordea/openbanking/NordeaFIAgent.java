@@ -30,7 +30,7 @@ public class NordeaFIAgent extends NordeaBaseAgent {
                 getNordeaPersistentStorage());
 
         return OAuth2AuthenticationFlow.create(request, context,
-                persistentStorage, supplementalInformationController,
+                persistentStorage, supplementalInformationHelper,
                 oauthAuthenticator);
     }
 

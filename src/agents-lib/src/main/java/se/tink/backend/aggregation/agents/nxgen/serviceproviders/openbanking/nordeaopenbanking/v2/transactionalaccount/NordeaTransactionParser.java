@@ -7,7 +7,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.NordeaBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class NordeaTransactionParser {
 
