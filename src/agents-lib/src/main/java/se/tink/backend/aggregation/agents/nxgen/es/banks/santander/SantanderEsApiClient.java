@@ -10,6 +10,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.credi
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.RepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.FirstPageOfTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.TransactionPaginationRequest;
@@ -72,6 +75,18 @@ public class SantanderEsApiClient {
         return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
                 SantanderEsConstants.NodeTags.METHOD_RESULT,
                 CreditCardDetailsResponse.class);
+    }
+
+    public FundDetailsResponse fetchFundDetails(String userDataXml, FundEntity fundEntity) {
+        String fundDetailsRequest = FundDetailsRequest.create(tokenCredential, userDataXml, fundEntity);
+
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_FONDOS,
+                SantanderEsConstants.Urls.SCH_BAMOBI_FONDOS.toString(),
+                fundDetailsRequest);
+
+        return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
+                SantanderEsConstants.NodeTags.METHOD_RESULT,
+                FundDetailsResponse.class);
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(String userDataXml, CardEntity card,

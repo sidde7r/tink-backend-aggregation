@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
+import com.google.common.collect.Sets;
+import java.util.Set;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
@@ -10,6 +12,7 @@ public class SantanderEsConstants {
 
         public static final URL SANMOV = new URL(HOST + "/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener");
         public static final URL SCH_BAMOBI = new URL(HOST + "/SCH_BAMOBI_WS_ENS/ws/BAMOBI_WS_Def_Listener");
+        public static final URL SCH_BAMOBI_FONDOS = new URL(HOST + "/SCH_BAMOBI_FONDOS_ENS/ws/BAMOBI_WS_Def_Listener");
     }
 
     public static final class Headers {
@@ -37,7 +40,7 @@ public class SantanderEsConstants {
     }
 
     public static final class DataHeader {
-        public static final String VERSION = "5.0.8";
+        public static final String VERSION = "5.1.2";
         public static final String TERMINAL_ID = "iPhone";
         public static final String IDIOMA = "es-ES";
     }
@@ -56,6 +59,25 @@ public class SantanderEsConstants {
 
     public static final class LogMessages {
         public static final String LOGIN_RESPONSE_NOT_FOUND = "Login response not found in session storage";
+        public static final Set<String> KNOWN_NODES = Sets.newHashSet(
+                "info",
+                "datosUsuario",
+                "cuentas",
+                "fondos",
+                "tarjetas",
+                "nombreCliente",
+                "indMigradoSEPA",
+                "indMigradoDeBanesto",
+                "indActividadEstadoFirma",
+                "indFaseEstadoFirma",
+                "indOperatividadUsuario",
+                "indTipoConsultivo",
+                "fechaNacimientoCliente",
+                "nombrePersonaSinApellidos",
+                "apellidoUno",
+                "apellidoDos",
+                "estados");
+
     }
 
     public static final class Indicators {
