@@ -46,7 +46,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
     protected final Counter refreshTotal;
     protected final Counter inconsistencyBetweelAccountsTotal;
     protected final Counter zeroAccountsFoundDuringRefreshTotal;
-    protected final Counter accountsNotBeingSentToSystemTotal;
     protected final MetricId.MetricLabels defaultMetricLabels;
 
     protected static final Set<AccountTypes> TARGET_ACCOUNT_TYPES = new HashSet<>(Arrays.asList(
@@ -95,10 +94,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
 
         zeroAccountsFoundDuringRefreshTotal = metricRegistry.meter(
                 MetricId.newId("zero_accounts_found_during_refresh")
-                        .label(defaultMetricLabels));
-
-        accountsNotBeingSentToSystemTotal = metricRegistry.meter(
-                MetricId.newId("accounts_not_being_sent_to_system")
                         .label(defaultMetricLabels));
 
         this.agentsServiceConfiguration = agentsServiceConfiguration;
@@ -219,21 +214,6 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         if (accountsFoundByAgent.size() != accountsBeforeRefresh.size()) {
             inconsistencyBetweelAccountsTotal.inc();
             return;
-        }
-
-        List<String> accountIdsBeforeRefresh = accountsBeforeRefresh.stream().map(Account::getId).collect(Collectors.toList());
-        List<String> accountIdsFoundByAgent  = accountsFoundByAgent.stream().map(Account::getId).collect(Collectors.toList());
-
-        for (String idBeforeRefresh : accountIdsBeforeRefresh) {
-            if (!accountIdsFoundByAgent.contains(idBeforeRefresh)) {
-
-                // An account that existed before is not getting sent to system. This happen happen when
-                //      the user closed an account on their credentials. (not a problem)
-                //      the client is not refreshing this RefreshableItem. (not a problem)
-                // But it's not something that we expect happening on multiple users at the same time. (problem)
-                accountsNotBeingSentToSystemTotal.inc();
-                log.warn("accountid {} is missing from the ones sent to system.", idBeforeRefresh);
-            }
         }
 
         // TODO: Have 3 different metrics for ids, COMPLETE_MATCH, PARTIAL_MISMATCH, COMPLETE_MISMATCH, increment accordingly
