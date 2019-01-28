@@ -14,6 +14,7 @@ java_library(
         "//src/libraries/net",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//src/libraries/user:rpc",
         "//src/main-api",  #todo, we don't want dependency towards main-api here.
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
@@ -32,6 +33,7 @@ junit_test(
     deps = [
         ":abn_amro",
         "//src/libraries/account:rpc",
+        "//src/libraries/user:rpc",
         "//src/main-api",  #todo, we don't want dependency towards main-api here.
         "//third_party:com_google_guava_guava",
         "//third_party:joda_time_joda_time",

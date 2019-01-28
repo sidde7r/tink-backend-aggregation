@@ -9,7 +9,7 @@ import io.protostuff.Tag;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.UUID;
-import se.tink.backend.core.User;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.enums.SignableOperationTypes;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.application.GenericApplication;

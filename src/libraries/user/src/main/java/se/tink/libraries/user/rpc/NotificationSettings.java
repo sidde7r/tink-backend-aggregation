@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.user.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.protostuff.Tag;
@@ -9,46 +9,46 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NotificationSettings implements Serializable {
-    @Modifiable
+
     @Tag(1)
     protected boolean balance = true;
-    @Modifiable
+
     @Tag(2)
     protected boolean budget = true;
-    @Modifiable
+
     @Tag(3)
     protected boolean doubleCharge = true;
-    @Modifiable
+
     @Tag(4)
     protected boolean income = true;
-    @Modifiable
+
     @Tag(5)
     protected boolean largeExpense = true;
-    @Modifiable
+
     @Tag(6)
     protected boolean summaryMonthly = true;
-    @Modifiable
+
     @Tag(7)
     protected boolean summaryWeekly = true;
-    @Modifiable
+
     @Tag(8)
     protected boolean transaction = true;
-    @Modifiable
+
     @Tag(9)
     protected boolean unusualAccount = true;
-    @Modifiable
+
     @Tag(10)
     protected boolean unusualCategory = true;
-    @Modifiable
+
     @Tag(11)
     protected boolean einvoices = true;
-    @Modifiable
+
     @Tag(12)
     private boolean fraud = true;
-    @Modifiable
+
     @Tag(13)
     private boolean leftToSpend = false;
-    @Modifiable
+
     @Tag(14)
     private boolean loanUpdate = true;
 

@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.user.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -30,35 +30,32 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class UserProfile implements Serializable {
     public static final Pattern PATTERN_BIRTH = Pattern.compile("([0-9]{4})(-([0-9]{2})(-([0-9]{2}))?)?");
 
-    @Modifiable
-    @Creatable
+
     @Tag(1)
     @ApiModelProperty(name = "birth", hidden = true)
     private String birth; // Should be on form yyyy, yyyy-MM or yyyy-MM-dd
     // @Modifiable
     @Tag(2)
     private String currency;
-    @Modifiable
-    @Creatable
+
     @Tag(3)
     @ApiModelProperty(name = "gender", hidden = true)
     private String gender;
-    @Modifiable
-    @Creatable
+
     @Tag(4)
     private String locale;
-    @Creatable
+
     @Tag(5)
     private String market;
-    @Modifiable
+
     @Transient
     @JsonProperty("notificationSettings")
     @Tag(6)
     private NotificationSettings notificationSettings;
-    @Modifiable
+
     @Tag(7)
     private int periodAdjustedDay;
-    @Modifiable
+
     @Enumerated(EnumType.STRING)
     @Tag(8)
     private ResolutionTypes periodMode;

@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.user.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -21,55 +21,67 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.enums.FeatureFlags;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
 @Entity
 @Table(name = "users")
 @SuppressWarnings("serial")
 public class User implements Serializable {
-    private static final TypeReference<List<String>> STRING_LIST_TYPE_REFERENCE = new TypeReference<List<String>>() {
-    };
+    private static final TypeReference<List<String>> STRING_LIST_TYPE_REFERENCE =
+            new TypeReference<List<String>>() {};
 
     @JsonIgnore
     @Exclude
     @ApiModelProperty(name = "blocked", hidden = true)
     private boolean blocked;
+
     @JsonIgnore
     @Exclude
     @ApiModelProperty(name = "confirmed", hidden = true)
     private boolean confirmed;
+
     @Tag(10)
     private Date created;
+
     @Tag(1)
     @ApiModelProperty(name = "endpoint", hidden = true)
     private String endpoint;
+
     @Tag(8)
     private List<String> flags;
+
     @Tag(2)
     private String flagsSerialized;
+
     @JsonIgnore
     @Exclude
     @ApiModelProperty(name = "hash", hidden = true)
     private String hash;
+
     @Tag(3)
     private String id;
-    @Creatable
-    @Modifiable
+
     @JsonInclude(Include.NON_NULL)
     @Tag(4)
     private String password;
-    @Creatable
+
     @Tag(5)
     private UserProfile profile;
-    @Creatable
-    @Modifiable
+
+    @JsonInclude(Include.NON_NULL)
+    @Tag(6)
+    @ApiModelProperty(name = "services", hidden = true)
+    private List<UserConnectedService> services;
+
     @Tag(7)
     private String username;
+
     @Exclude
     @ApiModelProperty(name = "debugUntil", hidden = true)
     private Date debugUntil;
+
     @Tag(9)
     private String nationalId;
 
@@ -77,7 +89,10 @@ public class User implements Serializable {
         id = StringUtils.generateUUID();
     }
 
-    @ApiModelProperty(name = "created", value = "The date when the user was created.", required = true)
+    @ApiModelProperty(
+            name = "created",
+            value = "The date when the user was created.",
+            required = true)
     public Date getCreated() {
         return created;
     }
@@ -87,7 +102,10 @@ public class User implements Serializable {
     }
 
     @Transient
-    @ApiModelProperty(name = "flags", value = "The user-specific feature flags assigned to the user.", example = "[\"TRANSFERS\", \"TEST_PINK_ONBOARDING\"]")
+    @ApiModelProperty(
+            name = "flags",
+            value = "The user-specific feature flags assigned to the user.",
+            example = "[\"TRANSFERS\", \"TEST_PINK_ONBOARDING\"]")
     public List<String> getFlags() {
 
         if (flags == null) {
@@ -113,25 +131,37 @@ public class User implements Serializable {
     }
 
     @Id
-    @ApiModelProperty(name = "id", value = "The internal identifier of the user.", example = "6e68cc6287704273984567b3300c5822", required = true)
+    @ApiModelProperty(
+            name = "id",
+            value = "The internal identifier of the user.",
+            example = "6e68cc6287704273984567b3300c5822",
+            required = true)
     public String getId() {
         return id;
     }
 
     @Transient
-    @ApiModelProperty(name = "password", value = "The password of the user (only included at registration).")
+    @ApiModelProperty(
+            name = "password",
+            value = "The password of the user (only included at registration).")
     public String getPassword() {
         return password;
     }
 
     @Embedded
-    @ApiModelProperty(name = "profile", value = "The configurable profile of the user", required = true)
+    @ApiModelProperty(
+            name = "profile",
+            value = "The configurable profile of the user",
+            required = true)
     @Nonnull
     public UserProfile getProfile() {
         return profile;
     }
 
-    @ApiModelProperty(name = "username", value = "The username (usually email) of the user.", example = "nisse@manpower.se")
+    @ApiModelProperty(
+            name = "username",
+            value = "The username (usually email) of the user.",
+            example = "nisse@manpower.se")
     public String getUsername() {
         return username;
     }
@@ -196,7 +226,9 @@ public class User implements Serializable {
         this.flagsSerialized = flagsSerialized;
 
         if (!Strings.isNullOrEmpty(flagsSerialized)) {
-            flags = SerializationUtils.deserializeFromString(flagsSerialized, STRING_LIST_TYPE_REFERENCE);
+            flags =
+                    SerializationUtils.deserializeFromString(
+                            flagsSerialized, STRING_LIST_TYPE_REFERENCE);
         }
     }
 
@@ -245,6 +277,7 @@ public class User implements Serializable {
     @JsonIgnore
     @Transient
     public boolean isTrackingEnabled() {
-        return flags == null || !FeatureFlags.FeatureFlagGroup.TRACKING_DISABLED.isFlagInGroup(flags);
+        return flags == null
+                || !FeatureFlags.FeatureFlagGroup.TRACKING_DISABLED.isFlagInGroup(flags);
     }
 }

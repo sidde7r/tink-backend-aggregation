@@ -43,6 +43,7 @@ junit_test(
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
         "//src/libraries/transfer:stubs",
+        "//src/libraries/user:rpc",
         "//src/libraries/uuid",
         "//src/main-api",
         "//third_party:com_google_guava_guava",

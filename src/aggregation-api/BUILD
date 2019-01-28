@@ -20,6 +20,7 @@ java_library(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/transfer:rpc",
+        "//src/libraries/user:rpc",
         "//src/libraries/uuid",
         "//src/main-api",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

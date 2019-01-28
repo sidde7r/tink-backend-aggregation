@@ -24,7 +24,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import se.tink.backend.core.Modifiable;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.transfer.rpc.TransferDestination;
@@ -81,7 +80,7 @@ public class Account implements Cloneable {
     @ApiModelProperty(name = "payload", hidden = true)
     private String payload;
     @Enumerated(EnumType.STRING)
-    @Modifiable
+
     @Tag(9)
     @ApiModelProperty(name = "type", value = "The type of the account. This can be modified by the user.", required = true, allowableValues = AccountTypes.DOCUMENTED)
     private AccountTypes type;

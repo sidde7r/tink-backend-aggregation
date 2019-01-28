@@ -14,7 +14,7 @@ import se.tink.backend.core.Credentials;
 import se.tink.backend.core.CredentialsStatus;
 import se.tink.backend.core.CredentialsTypes;
 import se.tink.backend.core.Provider;
-import se.tink.backend.core.User;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.abnamro.utils.AbnAmroLegacyUserUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

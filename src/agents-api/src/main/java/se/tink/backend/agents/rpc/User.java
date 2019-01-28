@@ -8,13 +8,15 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
+import se.tink.libraries.user.rpc.UserProfile;
+import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
 /**
  * Aggregation RPC User
  *
- * {@link se.tink.backend.core.User} objects (from main-api) can be converted to User objects with
+ * {@link se.tink.libraries.user.rpc.User} objects (from main-api) can be converted to User objects with
  */
 public class User {
     private static final TypeReference<List<String>> STRING_LIST_TYPE_REFERENCE = new TypeReference<List<String>>() {
