@@ -52,6 +52,7 @@ public class SantanderEsConstants {
     }
 
     public static final class Tags {
+        public static final LogTag UNKNOWN_ENGAGEMENT_TYPE = LogTag.from("es_santander_unknown_engagement_type");
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("es_santander_unknown_account_type");
         public static final LogTag CREDIT_CARD_ACCOUNT = LogTag.from("es_santander_credit_card_account_log");
         public static final LogTag CREDIT_CARD_TRANSACTION = LogTag.from("es_santander_credit_card_transaction");

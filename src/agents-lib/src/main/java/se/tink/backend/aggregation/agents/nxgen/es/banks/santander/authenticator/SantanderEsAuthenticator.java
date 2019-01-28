@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator;
 
 import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -14,6 +16,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderEsAuthenticator implements PasswordAuthenticator {
+    private static final Logger LOG = LoggerFactory.getLogger(SantanderEsAuthenticator.class);
+
     private final SantanderEsApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -56,12 +60,40 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
         responseString = apiClient.login();
 
         // Login response contain users accounts, save to session storage to use for later fetching
-        Node loginResponseNode =  SantanderEsXmlUtils.getTagNodeFromSoapString(
+        Node loginResponseNode = SantanderEsXmlUtils.getTagNodeFromSoapString(
                 responseString, SantanderEsConstants.NodeTags.METHOD_RESULT);
+
+        // log unknown engagements to see what more we can find
+        logUnknownEngagementNodes(loginResponseNode);
 
         String loginResponseString = SantanderEsXmlUtils.convertToString(loginResponseNode);
 
         sessionStorage.put(SantanderEsConstants.Storage.LOGIN_RESPONSE, loginResponseString);
 
+    }
+
+    private void logUnknownEngagementNodes(Node loginResponseNode) {
+        try {
+            Node childNode = loginResponseNode.getFirstChild();
+
+            StringBuilder unknownNodes = new StringBuilder("");
+            while (childNode != null) {
+                String nodeName = childNode.getNodeName();
+                childNode = childNode.getNextSibling();
+                if (SantanderEsConstants.LogMessages.KNOWN_NODES.contains(nodeName)) {
+                    continue;
+                }
+
+                unknownNodes.append(nodeName);
+                unknownNodes.append(", ");
+            }
+
+            if (unknownNodes.length() > 0) {
+                LOG.info(String.format("%s: %s ", SantanderEsConstants.Tags.UNKNOWN_ENGAGEMENT_TYPE.toString(),
+                        unknownNodes.toString()));
+            }
+        } catch (Exception e) {
+            LOG.info("Could not log unknown engagement types");
+        }
     }
 }
