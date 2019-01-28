@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.utils.mappers;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 import se.tink.backend.core.Account;
-import se.tink.backend.agents.core.enums.AccountFlag;
+import se.tink.libraries.enums.AccountFlag;
 import static org.junit.Assert.assertEquals;
 
 public class CoreAccountMapperTest {

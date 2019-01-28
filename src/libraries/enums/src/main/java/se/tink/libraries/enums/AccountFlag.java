@@ -1,4 +1,4 @@
-package se.tink.backend.agents.core.enums;
+package se.tink.libraries.enums;
 
 public enum AccountFlag {
 

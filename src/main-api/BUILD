@@ -5,7 +5,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/agents-api",
-        "//src/libraries/amount:amount",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/amount",
         "//src/libraries/api_annotations:api-annotations",

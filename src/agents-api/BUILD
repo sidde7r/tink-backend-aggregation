@@ -9,6 +9,7 @@ java_library(
         "//src/libraries/serialization",
         "//src/libraries/uuid",
         "//src/libraries/strings",
+        "//src/libraries/enums",
         "//src/libraries/account_identifier:account-identifier",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
