@@ -9,7 +9,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.date.DateUtils;
 

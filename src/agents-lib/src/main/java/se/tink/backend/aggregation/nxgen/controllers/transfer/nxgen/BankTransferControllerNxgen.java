@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Outbox
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferSource;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class BankTransferControllerNxgen implements BankTransferExecutor {

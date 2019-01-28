@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class EInvoiceDetailsResponse {

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.metrics.MetricId;
 
 public final class EInvoiceRefreshController implements Refresher {

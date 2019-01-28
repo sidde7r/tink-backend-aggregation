@@ -4,7 +4,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.PaymentRecipient;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.date.DateUtils;

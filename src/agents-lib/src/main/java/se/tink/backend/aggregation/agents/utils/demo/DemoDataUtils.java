@@ -26,7 +26,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.Credentials;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;

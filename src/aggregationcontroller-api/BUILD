@@ -13,6 +13,7 @@ java_library(
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//src/libraries/transfer:rpc",
         "//src/libraries/uuid",
         "//src/main-api",
         "//third_party:com_datastax_cassandra_cassandra_driver_core",

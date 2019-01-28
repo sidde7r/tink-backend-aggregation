@@ -7,6 +7,7 @@ java_library(
         "//src/libraries/amount",
         "//src/libraries/enums",
         "//src/libraries/transfer:enums",
+        "//src/libraries/transfer:rpc",
         "//src/main-api",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

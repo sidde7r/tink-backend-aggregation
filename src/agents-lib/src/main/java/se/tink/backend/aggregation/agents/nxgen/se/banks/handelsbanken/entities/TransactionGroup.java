@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.e
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class TransactionGroup {

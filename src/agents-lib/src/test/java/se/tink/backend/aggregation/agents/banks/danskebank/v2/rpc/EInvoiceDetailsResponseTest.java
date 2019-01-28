@@ -8,7 +8,7 @@ import org.junit.Test;
 import se.tink.libraries.helper.transfer.stubs.TransferStub;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import static org.assertj.core.api.Assertions.assertThat;
 

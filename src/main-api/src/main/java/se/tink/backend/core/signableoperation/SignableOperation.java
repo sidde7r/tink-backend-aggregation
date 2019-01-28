@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.UUID;
 import se.tink.backend.core.User;
 import se.tink.libraries.enums.SignableOperationTypes;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;

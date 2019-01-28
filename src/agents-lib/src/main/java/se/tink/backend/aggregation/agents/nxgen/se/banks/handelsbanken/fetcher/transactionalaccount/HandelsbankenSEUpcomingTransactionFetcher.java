@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.Upcomin
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEUpcomingTransactionFetcher
         implements UpcomingTransactionFetcher<TransactionalAccount> {

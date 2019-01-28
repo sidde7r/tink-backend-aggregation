@@ -33,10 +33,10 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBank
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class IcaBankenExecutorHelper {
     private static final Logger log = LoggerFactory.getLogger(IcaBankenExecutorHelper.class);
@@ -47,7 +47,10 @@ public class IcaBankenExecutorHelper {
     private final Catalog catalog;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
-    public IcaBankenExecutorHelper(IcaBankenApiClient apiClient, AgentContext context, Catalog catalog,
+    public IcaBankenExecutorHelper(
+            IcaBankenApiClient apiClient,
+            AgentContext context,
+            Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
         this.context = context;
@@ -56,40 +59,60 @@ public class IcaBankenExecutorHelper {
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
-    public AccountEntity findSourceAccount(final AccountIdentifier source, Collection<AccountEntity> accounts) {
-        Optional<AccountEntity> fromAccount = IcaBankenExecutorUtils.tryFindOwnAccount(source, accounts);
+    public AccountEntity findSourceAccount(
+            final AccountIdentifier source, Collection<AccountEntity> accounts) {
+        Optional<AccountEntity> fromAccount =
+                IcaBankenExecutorUtils.tryFindOwnAccount(source, accounts);
 
-        return fromAccount.orElseThrow(() ->
-                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(context.getCatalog().getString(
-                                TransferExecutionException.EndUserMessage.INVALID_SOURCE))
-                        .build());
+        return fromAccount.orElseThrow(
+                () ->
+                        TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                                .setEndUserMessage(
+                                        context.getCatalog()
+                                                .getString(
+                                                        TransferExecutionException.EndUserMessage
+                                                                .INVALID_SOURCE))
+                                .build());
     }
 
     /**
-     * First try to find the destination among user's save recipients. If not present try to add a new recipient.
-     * If adding a new recipient fails throws an exception as the destination is invalid.
+     * First try to find the destination among user's save recipients. If not present try to add a
+     * new recipient. If adding a new recipient fails throws an exception as the destination is
+     * invalid.
      */
     public RecipientEntity findDestinationAccount(final AccountIdentifier destination) {
 
         return getRecipientEntity(destination, apiClient.fetchDestinationAccounts())
-                .orElseGet(() -> addNewRecipient(destination)
-                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(context.getCatalog().getString(
-                                TransferExecutionException.EndUserMessage.INVALID_DESTINATION))
-                        .build()));
+                .orElseGet(
+                        () ->
+                                addNewRecipient(destination)
+                                        .orElseThrow(
+                                                () ->
+                                                        TransferExecutionException.builder(
+                                                                        SignableOperationStatuses
+                                                                                .FAILED)
+                                                                .setEndUserMessage(
+                                                                        context.getCatalog()
+                                                                                .getString(
+                                                                                        TransferExecutionException
+                                                                                                .EndUserMessage
+                                                                                                .INVALID_DESTINATION))
+                                                                .build()));
     }
 
     /**
-     * Add new recipient to user's list of recipients, after add, search for newly added recipient in list of
-     * user's recipients. Return result of that search.
+     * Add new recipient to user's list of recipients, after add, search for newly added recipient
+     * in list of user's recipients. Return result of that search.
      */
     private Optional<RecipientEntity> addNewRecipient(final AccountIdentifier destination) {
-        String recipientType = IcaBankenExecutorUtils.getRecipientType(destination.getType(), context.getCatalog());
+        String recipientType =
+                IcaBankenExecutorUtils.getRecipientType(
+                        destination.getType(), context.getCatalog());
 
         // Create the new recipient.
         RecipientEntity recipientEntity = new RecipientEntity();
-        recipientEntity.setAccountNumber(destination.getIdentifier(IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER));
+        recipientEntity.setAccountNumber(
+                destination.getIdentifier(IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER));
         recipientEntity.setType(recipientType);
         recipientEntity.setName(findDestinationNameFor(destination));
         recipientEntity.setBudgetGroup("");
@@ -104,23 +127,25 @@ public class IcaBankenExecutorHelper {
     }
 
     /**
-     * Search for bank account destination or payment account (BG || PG) destination in list of user's saved
-     * recipients and returns result of that search.
+     * Search for bank account destination or payment account (BG || PG) destination in list of
+     * user's saved recipients and returns result of that search.
      */
-
-    private Optional<RecipientEntity> getRecipientEntity(AccountIdentifier destination,
-            List<RecipientEntity> destinationAccounts) {
+    private Optional<RecipientEntity> getRecipientEntity(
+            AccountIdentifier destination, List<RecipientEntity> destinationAccounts) {
 
         if (AccountIdentifier.Type.SE.equals(destination.getType())) {
-            return IcaBankenExecutorUtils.tryFindRegisteredTransferAccount(destination,  destinationAccounts);
+            return IcaBankenExecutorUtils.tryFindRegisteredTransferAccount(
+                    destination, destinationAccounts);
         }
 
-        return IcaBankenExecutorUtils.tryFindRegisteredPaymentAccount(destination, destinationAccounts);
+        return IcaBankenExecutorUtils.tryFindRegisteredPaymentAccount(
+                destination, destinationAccounts);
     }
 
     /**
-     * Try to get destination name from destination. If not present try to fetch payment (BG || PG) destination
-     * names through an API call, otherwise ask user for destination name via a supplemental information.
+     * Try to get destination name from destination. If not present try to fetch payment (BG || PG)
+     * destination names through an API call, otherwise ask user for destination name via a
+     * supplemental information.
      */
     private String findDestinationNameFor(final AccountIdentifier destination) {
         Optional<String> destinationName = destination.getName();
@@ -130,8 +155,10 @@ public class IcaBankenExecutorHelper {
         }
 
         if (!AccountIdentifier.Type.SE.equals(destination.getType())) {
-            destinationName = apiClient.fetchPaymentDestinationName(
-                    destination.getIdentifier(IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER));
+            destinationName =
+                    apiClient.fetchPaymentDestinationName(
+                            destination.getIdentifier(
+                                    IcaBankenFormatUtils.ACCOUNT_IDENTIFIER_FORMATTER));
         }
 
         return destinationName.orElseGet(this::askUserForDestinationName);
@@ -139,20 +166,25 @@ public class IcaBankenExecutorHelper {
 
     private String askUserForDestinationName() {
         try {
-            Map<String, String> nameResponse = supplementalInformationHelper
-                    .askSupplementalInformation(getNameInputField());
-            String destinationName = nameResponse.get(IcaBankenConstants.Transfers.RECIPIENT_NAME_FIELD_NAME);
+            Map<String, String> nameResponse =
+                    supplementalInformationHelper.askSupplementalInformation(getNameInputField());
+            String destinationName =
+                    nameResponse.get(IcaBankenConstants.Transfers.RECIPIENT_NAME_FIELD_NAME);
 
             if (!Strings.isNullOrEmpty(destinationName)) {
                 return destinationName;
             }
 
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(context.getCatalog().getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
+                    .setMessage(
+                            context.getCatalog()
+                                    .getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
                     .build();
         } catch (SupplementalInfoException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(context.getCatalog().getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
+                    .setMessage(
+                            context.getCatalog()
+                                    .getString(IcaBankenConstants.LogMessage.NO_RECIPIENT_NAME))
                     .build();
         }
     }
@@ -166,25 +198,30 @@ public class IcaBankenExecutorHelper {
     }
 
     /**
-     * Fetch transfer banks from the bank and try to return the one that matches the clearing number of the
-     * destination account. E.g. Swedbank has the bank id 8000, this method would then return 8000 for a destination
-     * with 8327 as clearing number.
+     * Fetch transfer banks from the bank and try to return the one that matches the clearing number
+     * of the destination account. E.g. Swedbank has the bank id 8000, this method would then return
+     * 8000 for a destination with 8327 as clearing number.
      *
-     * Throws an exception if no match is found as a valid transfer bank could not be found for the given destination.
+     * <p>Throws an exception if no match is found as a valid transfer bank could not be found for
+     * the given destination.
      */
     private String fetchTransferBankIdFor(final AccountIdentifier destination) {
         List<TransferBankEntity> transferBankEntities = apiClient.fetchTransferBanks();
 
-        Optional<TransferBankEntity> transferBankEntity = IcaBankenExecutorUtils.findBankForAccountNumber(
-                destination.getIdentifier(IcaBankenFormatUtils.DEFAULT_FORMATTER), transferBankEntities);
+        Optional<TransferBankEntity> transferBankEntity =
+                IcaBankenExecutorUtils.findBankForAccountNumber(
+                        destination.getIdentifier(IcaBankenFormatUtils.DEFAULT_FORMATTER),
+                        transferBankEntities);
 
         if (transferBankEntity.isPresent()) {
             return transferBankEntity.get().getTransferBankId();
         }
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setEndUserMessage(context.getCatalog().getString(
-                        "Could not find a bank for the given destination account. Check the account number and try again."))
+                .setEndUserMessage(
+                        context.getCatalog()
+                                .getString(
+                                        "Could not find a bank for the given destination account. Check the account number and try again."))
                 .build();
     }
 
@@ -201,7 +238,8 @@ public class IcaBankenExecutorHelper {
 
             if (!isTransferFailedButWasSuccessful(transfer, sourceAccount)) {
                 if (initialException.getCause() instanceof HttpResponseException) {
-                    HttpResponse response = ((HttpResponseException) initialException.getCause()).getResponse();
+                    HttpResponse response =
+                            ((HttpResponseException) initialException.getCause()).getResponse();
                     if (response.getStatus() == HttpStatus.SC_CONFLICT) {
                         throwBankIdAlreadyInProgressError();
                     }
@@ -225,9 +263,14 @@ public class IcaBankenExecutorHelper {
     private void throwBankIdAlreadyInProgressError() {
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                .setMessage(TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS.getKey().get())
-                .setEndUserMessage(catalog.getString(
-                        TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS))
+                .setMessage(
+                        TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS
+                                .getKey()
+                                .get())
+                .setEndUserMessage(
+                        catalog.getString(
+                                TransferExecutionException.EndUserMessage
+                                        .BANKID_ANOTHER_IN_PROGRESS))
                 .build();
     }
 
@@ -236,7 +279,8 @@ public class IcaBankenExecutorHelper {
             List<AssignmentEntity> unsignedTransfers = apiClient.fetchUnsignedTransfers();
             deleteUnsignedTransfer(unsignedTransfers);
         } catch (Exception deleteException) {
-            log.warn("Could not delete transfer in outbox. "
+            log.warn(
+                    "Could not delete transfer in outbox. "
                             + "If unsigned transfers are left here, user could end up in a deadlock.",
                     deleteException);
         }
@@ -250,22 +294,34 @@ public class IcaBankenExecutorHelper {
                 status = collect(reference);
 
                 switch (status) {
-                case DONE:
-                    return;
-                case WAITING:
-                    break;
-                case CANCELLED:
-                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED.getKey().get())
-                            .setEndUserMessage(catalog.getString(
-                                    TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
-                            .build();
-                default:
-                    throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                            .setMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED.getKey().get())
-                            .setEndUserMessage(catalog.getString(
-                                    TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED))
-                            .build();
+                    case DONE:
+                        return;
+                    case WAITING:
+                        break;
+                    case CANCELLED:
+                        throw TransferExecutionException.builder(
+                                        SignableOperationStatuses.CANCELLED)
+                                .setMessage(
+                                        TransferExecutionException.EndUserMessage.BANKID_CANCELLED
+                                                .getKey()
+                                                .get())
+                                .setEndUserMessage(
+                                        catalog.getString(
+                                                TransferExecutionException.EndUserMessage
+                                                        .BANKID_CANCELLED))
+                                .build();
+                    default:
+                        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                                .setMessage(
+                                        TransferExecutionException.EndUserMessage
+                                                .BANKID_TRANSFER_FAILED
+                                                .getKey()
+                                                .get())
+                                .setEndUserMessage(
+                                        catalog.getString(
+                                                TransferExecutionException.EndUserMessage
+                                                        .BANKID_TRANSFER_FAILED))
+                                .build();
                 }
 
                 Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
@@ -273,19 +329,25 @@ public class IcaBankenExecutorHelper {
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_CONFLICT) {
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setMessage(IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED.getKey().get())
-                            .setEndUserMessage(catalog.getString(
-                                    IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED))
+                            .setMessage(
+                                    IcaBankenConstants.UserMessage.BANKID_TRANSFER_INTERRUPTED
+                                            .getKey()
+                                            .get())
+                            .setEndUserMessage(
+                                    catalog.getString(
+                                            IcaBankenConstants.UserMessage
+                                                    .BANKID_TRANSFER_INTERRUPTED))
                             .build();
                 }
             }
-
         }
 
         throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
-                .setEndUserMessage(catalog.getString(
-                        TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE))
+                .setMessage(
+                        TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE.getKey().get())
+                .setEndUserMessage(
+                        catalog.getString(
+                                TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE))
                 .build();
     }
 
@@ -315,12 +377,15 @@ public class IcaBankenExecutorHelper {
      * Returns true if the registered transfer (which we got a fail response for) exists in the list
      * of upcoming transactions.
      */
-    private boolean isTransferFailedButWasSuccessful(Transfer transfer, AccountEntity sourceAccount) {
+    private boolean isTransferFailedButWasSuccessful(
+            Transfer transfer, AccountEntity sourceAccount) {
 
-        List<UpcomingTransactionEntity> sourceAccountUpcomingTransactions = apiClient.fetchUpcomingTransactions()
-                .stream()
-                .filter(upcomingTransaction -> upcomingTransaction.belongsTo(sourceAccount.getAccountId()))
-                .collect(Collectors.toList());
+        List<UpcomingTransactionEntity> sourceAccountUpcomingTransactions =
+                apiClient.fetchUpcomingTransactions().stream()
+                        .filter(
+                                upcomingTransaction ->
+                                        upcomingTransaction.belongsTo(sourceAccount.getAccountId()))
+                        .collect(Collectors.toList());
 
         for (UpcomingTransactionEntity upcomingTransaction : sourceAccountUpcomingTransactions) {
             if (IcaBankenExecutorUtils.isMatchingTransfers(transfer, upcomingTransaction)) {
@@ -334,9 +399,14 @@ public class IcaBankenExecutorHelper {
     public void validateNoUnsignedTransfers() {
         if (hasUnsignedTransfers()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS.getKey().get())
-                    .setEndUserMessage(catalog.getString(
-                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS))
+                    .setMessage(
+                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS
+                                    .getKey()
+                                    .get())
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage
+                                            .EXISTING_UNSIGNED_TRANSFERS))
                     .build();
         }
     }
@@ -346,8 +416,8 @@ public class IcaBankenExecutorHelper {
     }
 
     /**
-     * Try to put transfer in user's outbox. If the date is not a bank day ICA Banken returns a 409 response with a
-     * new suggested date. Will then update the date and try to add to outbox again.
+     * Try to put transfer in user's outbox. If the date is not a bank day ICA Banken returns a 409
+     * response with a new suggested date. Will then update the date and try to add to outbox again.
      */
     public void putTransferInOutbox(TransferRequest transferRequest) {
 
@@ -356,7 +426,8 @@ public class IcaBankenExecutorHelper {
         } catch (HttpResponseException e) {
             HttpResponse response = e.getResponse();
 
-            // Conflict (409) means the date was a non bank day, update transfer request with suggested date.
+            // Conflict (409) means the date was a non bank day, update transfer request with
+            // suggested date.
             if (response.getStatus() == HttpStatus.SC_CONFLICT) {
                 TransferResponse transferResponse = response.getBody(TransferResponse.class);
 
@@ -365,10 +436,14 @@ public class IcaBankenExecutorHelper {
                     transferResponse = apiClient.putAssignmentInOutbox(transferRequest);
                 }
 
-                if (transferResponse.getResponseStatus().getCode() != IcaBankenConstants.StatusCodes.OK_RESPONSE) {
+                if (transferResponse.getResponseStatus().getCode()
+                        != IcaBankenConstants.StatusCodes.OK_RESPONSE) {
                     throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                            .setEndUserMessage(getEndUserMessage(transferResponse,
-                                    TransferExecutionException.EndUserMessage.TRANSFER_EXECUTE_FAILED))
+                            .setEndUserMessage(
+                                    getEndUserMessage(
+                                            transferResponse,
+                                            TransferExecutionException.EndUserMessage
+                                                    .TRANSFER_EXECUTE_FAILED))
                             .build();
                 }
             } else {
@@ -378,9 +453,11 @@ public class IcaBankenExecutorHelper {
     }
 
     /**
-     * Attempts to get a detailed error message from the bank. If not present, it takes the more general alternative.
+     * Attempts to get a detailed error message from the bank. If not present, it takes the more
+     * general alternative.
      */
-    private String getEndUserMessage(BaseResponse errorResponse,
+    private String getEndUserMessage(
+            BaseResponse errorResponse,
             TransferExecutionException.EndUserMessage generalErrorMessage) {
         String message = errorResponse.getResponseStatus().getClientMessage();
 

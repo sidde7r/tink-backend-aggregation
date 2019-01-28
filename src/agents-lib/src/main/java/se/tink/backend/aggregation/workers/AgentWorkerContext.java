@@ -35,7 +35,7 @@ import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.core.StatisticMode;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;

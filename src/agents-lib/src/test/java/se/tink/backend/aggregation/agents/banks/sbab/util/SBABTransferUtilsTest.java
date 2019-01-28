@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.sbab.util;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SBABTransferUtilsTest {
 

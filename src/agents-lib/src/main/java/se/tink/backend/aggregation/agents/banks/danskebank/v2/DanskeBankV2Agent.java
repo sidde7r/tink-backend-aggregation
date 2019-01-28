@@ -98,7 +98,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;

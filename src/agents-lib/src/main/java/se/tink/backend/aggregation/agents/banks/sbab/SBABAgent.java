@@ -41,7 +41,7 @@ import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.DocumentIdentifier;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.serialization.TypeReferences;

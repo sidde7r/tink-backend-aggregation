@@ -1,4 +1,4 @@
-package se.tink.backend.core.transfer;
+package se.tink.libraries.transfer.rpc;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;

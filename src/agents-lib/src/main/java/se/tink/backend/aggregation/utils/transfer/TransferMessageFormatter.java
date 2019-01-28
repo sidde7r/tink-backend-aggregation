@@ -12,7 +12,7 @@ import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 /**
  * To be used in agents to in a common place do logic for default transfer messages. The agent injects a configuration

@@ -11,11 +11,11 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorkerCommand {
 

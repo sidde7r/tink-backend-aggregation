@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.UpdatePaymentExecutor;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;

@@ -12,7 +12,7 @@ import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.date.DateUtils;
 

@@ -56,6 +56,7 @@ java_library(
         "//src/libraries/social_security_number:social-security-number",
         "//src/libraries/strings",
         "//src/libraries/transfer:enums",
+        "//src/libraries/transfer:rpc",
         "//src/libraries/uuid",
         "//src/main-api",
         "//src/provider-configuration-api",

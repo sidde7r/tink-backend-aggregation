@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.Valida
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.date.DateUtils;
 
 public class ValidateInternalTransferBodyTest {

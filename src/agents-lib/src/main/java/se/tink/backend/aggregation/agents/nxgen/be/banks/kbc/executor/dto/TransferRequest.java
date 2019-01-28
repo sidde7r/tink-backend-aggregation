@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;

@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_AMOUNT;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION;

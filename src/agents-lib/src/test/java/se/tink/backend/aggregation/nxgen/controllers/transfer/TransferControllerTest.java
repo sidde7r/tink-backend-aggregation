@@ -8,7 +8,7 @@ import org.junit.rules.ExpectedException;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
