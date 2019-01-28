@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateInternalTransferBody;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;

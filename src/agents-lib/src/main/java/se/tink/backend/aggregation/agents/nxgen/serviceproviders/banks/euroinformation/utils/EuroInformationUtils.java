@@ -3,9 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinfo
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class EuroInformationUtils {
 

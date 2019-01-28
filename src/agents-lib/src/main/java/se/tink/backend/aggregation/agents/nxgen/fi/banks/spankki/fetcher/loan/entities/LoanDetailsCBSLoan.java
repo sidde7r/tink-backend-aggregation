@@ -7,7 +7,7 @@ import java.util.Scanner;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class LoanDetailsCBSLoan {

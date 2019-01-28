@@ -14,7 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaHashMapDeserializer;
 import se.tink.libraries.social.security.SocialSecurityNumber;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;

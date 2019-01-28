@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.SwedbankSEConstants;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
 public class SwedbankSeSerializationUtils {

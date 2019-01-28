@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject

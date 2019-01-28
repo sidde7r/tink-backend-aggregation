@@ -1,25 +1,20 @@
-package se.tink.backend.core;
+package se.tink.libraries.amount;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import io.protostuff.Tag;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.Optional;
-import javax.persistence.Embeddable;
 
-@Embeddable
 public class Amount extends Number {
     @JsonIgnore
     private static final String CURRENCY_ERROR_MESSAGE = "The currencies must be the same.";
     private static final int SCALE = 2;
 
-    @Tag(1)
     private String currency;
-    @Tag(2)
     private double value;
 
     public static Amount valueOf(String currency, long unscaledValue, int scale) {

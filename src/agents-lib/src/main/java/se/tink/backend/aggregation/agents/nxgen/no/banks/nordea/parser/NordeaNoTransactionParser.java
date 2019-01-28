@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.entities.payments.PaymentEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.transactionalaccount.entities.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.parsers.TransactionParser;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class NordeaNoTransactionParser implements TransactionParser {
     private static final Splitter CLEANUP_SPLITTER = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings();

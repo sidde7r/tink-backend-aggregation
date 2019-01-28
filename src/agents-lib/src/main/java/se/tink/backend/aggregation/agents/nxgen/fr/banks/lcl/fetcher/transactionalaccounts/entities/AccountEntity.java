@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.lcl.LclConstants;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
 public class AccountEntity {

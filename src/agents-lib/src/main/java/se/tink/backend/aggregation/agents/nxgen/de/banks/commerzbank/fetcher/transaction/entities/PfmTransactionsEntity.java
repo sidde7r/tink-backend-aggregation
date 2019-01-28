@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class PfmTransactionsEntity {

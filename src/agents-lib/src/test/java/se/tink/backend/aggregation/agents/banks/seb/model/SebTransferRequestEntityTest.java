@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.backend.core.transfer.Transfer;
 import static org.mockito.Matchers.any;

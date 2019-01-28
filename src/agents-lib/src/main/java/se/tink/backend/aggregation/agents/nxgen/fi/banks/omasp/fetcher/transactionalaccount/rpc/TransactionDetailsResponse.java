@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.entities.DateEnti
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.rpc.OmaspBaseResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransactionDetailsResponse extends OmaspBaseResponse {

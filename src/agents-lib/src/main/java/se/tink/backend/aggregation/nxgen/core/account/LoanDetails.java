@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.system.rpc.Loan;
 import se.tink.libraries.date.DateUtils;
 

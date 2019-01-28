@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.statement;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,8 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsDateParser;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
-import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.amount.Amount;
 
 public class MT940Statement {
 

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.NordeaFiCons
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.transactionalaccount.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.system.rpc.Instrument;
 import se.tink.backend.system.rpc.Portfolio;
 

@@ -3,7 +3,7 @@ package se.tink.backend.system.rpc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Optional;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instrument {

@@ -55,7 +55,7 @@ public class Transaction {
         return externalAccountId + getTransactionTimestampString();
     }
 
-    private se.tink.backend.core.Amount getAmount() {
+    private se.tink.libraries.amount.Amount getAmount() {
         return amount.toTinkAmount();
     }
 

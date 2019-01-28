@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.List;
@@ -9,7 +8,7 @@ import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 
 @JsonObject

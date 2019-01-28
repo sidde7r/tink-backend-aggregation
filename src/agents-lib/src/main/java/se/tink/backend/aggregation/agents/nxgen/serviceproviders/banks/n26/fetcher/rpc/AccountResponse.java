@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject

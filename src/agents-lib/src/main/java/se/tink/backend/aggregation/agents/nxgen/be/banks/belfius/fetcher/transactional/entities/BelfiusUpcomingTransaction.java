@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.Belf
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 import java.util.Date;
 import java.util.Optional;

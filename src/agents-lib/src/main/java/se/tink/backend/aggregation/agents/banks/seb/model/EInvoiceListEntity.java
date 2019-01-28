@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;

@@ -25,6 +25,7 @@ junit_test(
         "//src/aggregationcontroller-api",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/account_identifier:account-identifier-test",
+        "//src/libraries/amount:amount",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/date",
         "//src/libraries/demo_credentials:demo-credentials",

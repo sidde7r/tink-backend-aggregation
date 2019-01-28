@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTup
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.enums.MessageType;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;

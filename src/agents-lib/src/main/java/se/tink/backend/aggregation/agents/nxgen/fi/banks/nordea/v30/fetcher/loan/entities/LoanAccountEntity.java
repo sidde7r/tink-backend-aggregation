@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class LoanAccountEntity {

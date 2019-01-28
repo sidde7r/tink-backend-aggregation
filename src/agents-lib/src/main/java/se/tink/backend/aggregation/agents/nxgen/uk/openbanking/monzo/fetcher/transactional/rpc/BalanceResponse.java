@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.tr
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 /**
  * Monzo has something called "pots" - some sort of subaccounts. The balance of the pots is not included in "balance",

@@ -15,7 +15,7 @@ public class Amount {
         return currency;
     }
 
-    public se.tink.backend.core.Amount toTinkAmount() {
-        return se.tink.backend.core.Amount.inEUR(Double.valueOf(amount));
+    public se.tink.libraries.amount.Amount toTinkAmount() {
+        return se.tink.libraries.amount.Amount.inEUR(Double.valueOf(amount));
     }
 }

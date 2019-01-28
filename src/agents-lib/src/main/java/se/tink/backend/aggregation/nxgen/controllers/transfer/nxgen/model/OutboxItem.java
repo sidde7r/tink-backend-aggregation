@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model;
 
 import com.google.common.base.Preconditions;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class OutboxItem {
     private TransferSource source;

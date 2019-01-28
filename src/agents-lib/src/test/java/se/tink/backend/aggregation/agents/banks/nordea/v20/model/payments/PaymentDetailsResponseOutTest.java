@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Test;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.backend.core.enums.TransferType;

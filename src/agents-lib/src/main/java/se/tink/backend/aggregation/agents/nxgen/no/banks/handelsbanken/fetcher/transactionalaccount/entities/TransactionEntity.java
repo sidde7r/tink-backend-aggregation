@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransactionEntity {

@@ -1,14 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Optional;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.DetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.Amount;
-import se.tink.backend.core.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class EInvoiceEntity {

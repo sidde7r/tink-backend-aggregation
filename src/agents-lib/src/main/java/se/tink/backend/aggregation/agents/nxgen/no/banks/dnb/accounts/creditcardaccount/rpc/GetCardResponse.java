@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcar
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject

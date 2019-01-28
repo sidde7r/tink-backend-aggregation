@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter.Messages;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.mocks.ResultCaptor;
 import se.tink.libraries.account.AccountIdentifier;
