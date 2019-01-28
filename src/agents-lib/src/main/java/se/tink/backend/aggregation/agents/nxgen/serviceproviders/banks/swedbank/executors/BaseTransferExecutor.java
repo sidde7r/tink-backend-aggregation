@@ -19,7 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.core.signableoperation.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class BaseTransferExecutor {
     private static final Logger log = LoggerFactory.getLogger(BaseTransferExecutor.class);

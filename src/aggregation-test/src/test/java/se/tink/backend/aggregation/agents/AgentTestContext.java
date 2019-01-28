@@ -23,7 +23,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.core.signableoperation.SignableOperation;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;

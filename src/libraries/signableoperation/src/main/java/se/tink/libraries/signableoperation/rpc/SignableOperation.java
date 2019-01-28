@@ -1,4 +1,4 @@
-package se.tink.backend.core.signableoperation;
+package se.tink.libraries.signableoperation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,8 +9,9 @@ import io.protostuff.Tag;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.UUID;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.enums.SignableOperationTypes;
 import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.enums.SignableOperationTypes;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.application.GenericApplication;
 import se.tink.libraries.serialization.utils.SerializationUtils;

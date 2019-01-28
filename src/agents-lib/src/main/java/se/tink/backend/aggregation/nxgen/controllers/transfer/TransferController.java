@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransfer
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferControllerNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.validators.StructuredMessageValidator;
 import se.tink.libraries.transfer.enums.MessageType;
-import se.tink.backend.core.signableoperation.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 

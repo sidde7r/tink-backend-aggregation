@@ -37,6 +37,8 @@ junit_test(
         "//src/libraries/log",
         "//src/libraries/metrics",
         "//src/libraries/serialization",
+        "//src/libraries/signableoperation:enums",
+        "//src/libraries/signableoperation:rpc",
         "//src/libraries/social_security_number:social-security-number",
         "//src/libraries/social_security_number:social-security-number-test",
         "//src/libraries/strings",

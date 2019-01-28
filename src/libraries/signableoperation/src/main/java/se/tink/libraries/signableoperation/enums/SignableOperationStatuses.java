@@ -1,4 +1,4 @@
-package se.tink.backend.core.signableoperation;
+package se.tink.libraries.signableoperation.enums;
 
 public enum SignableOperationStatuses {
     CREATED,

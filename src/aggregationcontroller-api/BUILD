@@ -13,6 +13,7 @@ java_library(
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",
         "//src/libraries/serialization",
+        "//src/libraries/signableoperation:rpc",
         "//src/libraries/strings",
         "//src/libraries/transfer:rpc",
         "//src/libraries/uuid",

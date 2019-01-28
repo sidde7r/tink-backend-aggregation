@@ -29,8 +29,8 @@ import se.tink.backend.agents.rpc.User;
 import se.tink.backend.agents.rpc.UserProfile;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregation.utils.StringMasker;
-import se.tink.backend.core.signableoperation.SignableOperation;
-import se.tink.backend.core.signableoperation.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.strings.StringUtils;
 

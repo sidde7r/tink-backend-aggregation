@@ -54,6 +54,8 @@ java_library(
         "//src/libraries/repository",
         "//src/libraries/serialization",
         "//src/libraries/service_version:service-version",
+        "//src/libraries/signableoperation:enums",
+        "//src/libraries/signableoperation:rpc",
         "//src/libraries/social_security_number:social-security-number",
         "//src/libraries/strings",
         "//src/libraries/transfer:enums",

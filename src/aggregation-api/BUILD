@@ -19,6 +19,7 @@ java_library(
         "//src/libraries/metrics",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//src/libraries/signableoperation:rpc",
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
         "//src/libraries/uuid",
