@@ -6,7 +6,6 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import se.tink.backend.aggregation.cli.AddClientConfigurationsCommand;
-import se.tink.backend.aggregation.cli.AggregationMigrateMultiClientCommand;
 import se.tink.backend.aggregation.configuration.ConfigurationValidator;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.aggregation.configuration.guice.modules.AggregationModuleFactory;
@@ -24,7 +23,6 @@ public class AggregationServiceContainer extends Application<AggregationServiceC
     @Override
     public void initialize(Bootstrap<AggregationServiceConfiguration> bootstrap) {
         DropwizardObjectMapperConfigurator.doNotFailOnUnknownProperties(bootstrap);
-        bootstrap.addCommand(new AggregationMigrateMultiClientCommand());
         bootstrap.addCommand(new AddClientConfigurationsCommand());
 
     }

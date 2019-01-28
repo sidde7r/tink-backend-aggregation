@@ -6,43 +6,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationDevelopmentConfiguration;
 import se.tink.backend.aggregation.storage.database.models.CryptoConfiguration;
-import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
-import se.tink.backend.core.ClusterCryptoConfiguration;
 
 public class DevelopmentConfigurationSeeder {
     private static final Logger log = LoggerFactory.getLogger(DevelopmentConfigurationSeeder.class);
-    private final ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository;
     private final CryptoConfigurationsRepository cryptoConfigurationsRepository;
     private final AggregationDevelopmentConfiguration developmentConfiguration;
 
     @Inject
-    DevelopmentConfigurationSeeder(ClusterCryptoConfigurationRepository clusterCryptoConfigurationRepository,
-            CryptoConfigurationsRepository cryptoConfigurationsRepository,
+    DevelopmentConfigurationSeeder(CryptoConfigurationsRepository cryptoConfigurationsRepository,
             AggregationDevelopmentConfiguration developmentConfiguration) {
-        this.clusterCryptoConfigurationRepository = clusterCryptoConfigurationRepository;
         this.cryptoConfigurationsRepository = cryptoConfigurationsRepository;
         this.developmentConfiguration = developmentConfiguration;
-        seedClusterCryptoConfiguration();
         seedCryptoConfiguration();
-    }
-
-    private void seedClusterCryptoConfiguration() {
-        ClusterCryptoConfiguration cryptoConfiguration = developmentConfiguration.getClusterCryptoConfiguration();
-
-        if (Objects.isNull(cryptoConfiguration) || !cryptoConfiguration.isValid()) {
-            return;
-        }
-
-        ClusterCryptoConfiguration cryptoConfigurationInStorage = clusterCryptoConfigurationRepository.findOne(
-                cryptoConfiguration.getCryptoId());
-
-        if (!Objects.isNull(cryptoConfigurationInStorage)) {
-            return;
-        }
-
-        log.info("Seeding cluster crypto configuration for local development.");
-        clusterCryptoConfigurationRepository.save(cryptoConfiguration);
     }
 
     private void seedCryptoConfiguration() {
