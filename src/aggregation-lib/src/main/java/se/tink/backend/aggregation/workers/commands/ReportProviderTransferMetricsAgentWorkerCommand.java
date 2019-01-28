@@ -14,7 +14,7 @@ import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.signableoperation.SignableOperation;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 
 public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorkerCommand {

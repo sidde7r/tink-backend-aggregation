@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Benefi
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.OutboxItem;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferSource;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 

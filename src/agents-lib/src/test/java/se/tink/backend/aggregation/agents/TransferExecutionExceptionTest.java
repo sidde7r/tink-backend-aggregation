@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 
 @RunWith(Enclosed.class)
 public class TransferExecutionExceptionTest {

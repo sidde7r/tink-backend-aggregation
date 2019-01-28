@@ -30,7 +30,7 @@ import se.tink.backend.agents.rpc.UserProfile;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.core.signableoperation.SignableOperation;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.strings.StringUtils;
 

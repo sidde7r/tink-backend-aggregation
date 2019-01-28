@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperation;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;

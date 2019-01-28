@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
-import com.amazonaws.codegen.model.service.Http;
 import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +42,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.TrustedBenefici
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 
 public class IngApiClient {

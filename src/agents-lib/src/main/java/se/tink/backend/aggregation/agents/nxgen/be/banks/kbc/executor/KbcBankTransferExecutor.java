@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor;
 
-
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -20,18 +20,12 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.pair.Pair;
-import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.pair.Pair;
-
-import java.util.List;
-import java.util.Optional;
 
 public class KbcBankTransferExecutor implements BankTransferExecutor {
 
@@ -67,23 +61,28 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
             validateAmountCoveredByBalance(sourceAccountAgreement.first, transfer.getAmount());
         }
 
-        boolean isTransferToOwnAccount = GeneralUtils.isAccountExisting(transfer.getDestination(), ownAccounts);
+        boolean isTransferToOwnAccount =
+                GeneralUtils.isAccountExisting(transfer.getDestination(), ownAccounts);
 
-        String signType = validateTransfer(transfer, sourceAccountAgreement.second, isTransferToOwnAccount);
+        String signType =
+                validateTransfer(transfer, sourceAccountAgreement.second, isTransferToOwnAccount);
 
         KbcConstants.Url url = getTransferUrl(isTransferToOwnAccount, instantTransfer);
 
         try {
-            return transfer(transfer, signType, isTransferToOwnAccount, url, sourceAccountAgreement.second);
+            return transfer(
+                    transfer, signType, isTransferToOwnAccount, url, sourceAccountAgreement.second);
         } catch (AuthenticationException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
-                            catalog.getString(TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED))
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.SIGN_TRANSFER_FAILED))
                     .build();
         }
     }
 
-    private KbcConstants.Url getTransferUrl(boolean isTransferToOwnAccount, boolean instantTransfer) {
+    private KbcConstants.Url getTransferUrl(
+            boolean isTransferToOwnAccount, boolean instantTransfer) {
         if (instantTransfer) {
             return isTransferToOwnAccount
                     ? KbcConstants.Url.TRANSFER_TO_OWN_INSTANT
@@ -99,75 +98,94 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     }
 
     private void validateAmountCoveredByBalance(TransactionalAccount sourceAccount, Amount amount) {
-        if (sourceAccount.getBalance()
-                .isLessThan(amount.doubleValue())) {
+        if (sourceAccount.getBalance().isLessThan(amount.doubleValue())) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get()))
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
+                    .setMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EXCESS_AMOUNT
+                                            .getKey()
+                                            .get()))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EXCESS_AMOUNT))
                     .build();
         }
     }
 
     private List<GeneralAccountEntity> fetchOwnAccounts() {
-        List<AgreementDto> accountsForTransferToOwn = apiClient.accountsForTransferToOwn().getAgreements();
-        List<AgreementDto> accountsForTransferToOther = apiClient.accountsForTransferToOther().getAgreements();
+        List<AgreementDto> accountsForTransferToOwn =
+                apiClient.accountsForTransferToOwn().getAgreements();
+        List<AgreementDto> accountsForTransferToOther =
+                apiClient.accountsForTransferToOther().getAgreements();
 
         return GeneralUtils.concat(accountsForTransferToOwn, accountsForTransferToOther);
     }
 
     private Pair<TransactionalAccount, AgreementDto> getSourceAccountAndAgreement(
-            final AccountIdentifier accountIdentifier,
-            List<GeneralAccountEntity> sourceAccounts)
-    {
-        Optional<GeneralAccountEntity> sourceAccount = GeneralUtils.find(accountIdentifier, sourceAccounts);
+            final AccountIdentifier accountIdentifier, List<GeneralAccountEntity> sourceAccounts) {
+        Optional<GeneralAccountEntity> sourceAccount =
+                GeneralUtils.find(accountIdentifier, sourceAccounts);
 
         if (!sourceAccount.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE))
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE))
+                    .setMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.INVALID_SOURCE))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.INVALID_SOURCE))
                     .build();
         }
-        return new Pair<>(((AgreementDto) sourceAccount.get()).toTransactionalAccount(), (AgreementDto) sourceAccount.get());
+        return new Pair<>(
+                ((AgreementDto) sourceAccount.get()).toTransactionalAccount(),
+                (AgreementDto) sourceAccount.get());
     }
 
-    private String validateTransfer(Transfer transfer, AgreementDto sourceAccount, boolean isTransferToOwnAccount) {
-        ValidateTransferResponse response = apiClient.validateTransfer(transfer, sourceAccount, isTransferToOwnAccount);
+    private String validateTransfer(
+            Transfer transfer, AgreementDto sourceAccount, boolean isTransferToOwnAccount) {
+        ValidateTransferResponse response =
+                apiClient.validateTransfer(transfer, sourceAccount, isTransferToOwnAccount);
         return response.getSignType();
     }
 
-    private Optional<String> transfer(Transfer transfer,
-                                      String signType,
-                                      boolean isTransferToOwnAccount,
-                                      KbcConstants.Url url,
-                                      AgreementDto sourceAccount)
+    private Optional<String> transfer(
+            Transfer transfer,
+            String signType,
+            boolean isTransferToOwnAccount,
+            KbcConstants.Url url,
+            AgreementDto sourceAccount)
             throws AuthenticationException {
-        String signingId = apiClient.prepareTransfer(transfer, isTransferToOwnAccount, url, sourceAccount);
+        String signingId =
+                apiClient.prepareTransfer(transfer, isTransferToOwnAccount, url, sourceAccount);
 
         SignTypesResponse signTypesResponse = apiClient.signingTypes(signingId);
         String signTypeId = signTypesResponse.getSignTypeId(signType);
         String signTypeSigningId = signTypesResponse.getHeader().getSigningId().getEncoded();
 
-        String finalSigningId = signingChallengeAndValidation(signType, signTypeId, signTypeSigningId);
+        String finalSigningId =
+                signingChallengeAndValidation(signType, signTypeId, signTypeSigningId);
 
         apiClient.signTransfer(finalSigningId, url);
         return Optional.empty();
     }
 
-    private String signingChallengeAndValidation(String signType, String signTypeId, String signTypeSigningId)
+    private String signingChallengeAndValidation(
+            String signType, String signTypeId, String signTypeSigningId)
             throws AuthenticationException {
         switch (signType) {
-        case KbcConstants.Predicates.SIGN_TYPE_MANUAL:
-            return signingChallengeAndValidationManual(signTypeId, signTypeSigningId);
-        case KbcConstants.Predicates.SIGN_TYPE_SOTP:
-        default:
-            return signingChallengeAndValidationSotp(signTypeId, signTypeSigningId);
+            case KbcConstants.Predicates.SIGN_TYPE_MANUAL:
+                return signingChallengeAndValidationManual(signTypeId, signTypeSigningId);
+            case KbcConstants.Predicates.SIGN_TYPE_SOTP:
+            default:
+                return signingChallengeAndValidationSotp(signTypeId, signTypeSigningId);
         }
     }
 
     private String signingChallengeAndValidationSotp(String signTypeId, String signTypeSigningId) {
-        SigningChallengeSotpResponse signingChallengeSotpResponse = apiClient.signingChallengeSotp(signTypeId,
-                signTypeSigningId);
-        String finalSigningId = signingChallengeSotpResponse.getHeader().getSigningId().getEncoded();
+        SigningChallengeSotpResponse signingChallengeSotpResponse =
+                apiClient.signingChallengeSotp(signTypeId, signTypeSigningId);
+        String finalSigningId =
+                signingChallengeSotpResponse.getHeader().getSigningId().getEncoded();
         List<String> dataFields = signingChallengeSotpResponse.getDataFields();
 
         String signatureOtp = calculateSignatureOtp(dataFields);
@@ -177,12 +195,12 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
         return finalSigningId;
     }
 
-    private String signingChallengeAndValidationManual(String signTypeId, String signTypeSigningId) throws
-            AuthenticationException {
+    private String signingChallengeAndValidationManual(String signTypeId, String signTypeSigningId)
+            throws AuthenticationException {
         String finalSigningId = signTypeSigningId;
 
-        SigningChallengeUcrResponse signingChallengeUcrResponse = apiClient.signingChallengeUcr(signTypeId,
-                signTypeSigningId);
+        SigningChallengeUcrResponse signingChallengeUcrResponse =
+                apiClient.signingChallengeUcr(signTypeId, signTypeSigningId);
         String challenge = signingChallengeUcrResponse.getChallenge().getValue();
 
         String response = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
@@ -193,8 +211,10 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
     }
 
     private String calculateSignatureOtp(List<String> dataFields) {
-        KbcDevice device = persistentStorage.get(KbcConstants.Storage.DEVICE_KEY, KbcDevice.class).orElseThrow(
-                () -> new IllegalStateException("Device data not found"));
+        KbcDevice device =
+                persistentStorage
+                        .get(KbcConstants.Storage.DEVICE_KEY, KbcDevice.class)
+                        .orElseThrow(() -> new IllegalStateException("Device data not found"));
 
         String signatureOtp = device.calculateSignatureOtp(dataFields);
 

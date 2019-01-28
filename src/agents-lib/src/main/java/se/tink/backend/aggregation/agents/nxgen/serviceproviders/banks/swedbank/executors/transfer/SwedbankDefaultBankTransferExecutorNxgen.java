@@ -35,7 +35,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.Outbox
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferDestination;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model.TransferSource;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;

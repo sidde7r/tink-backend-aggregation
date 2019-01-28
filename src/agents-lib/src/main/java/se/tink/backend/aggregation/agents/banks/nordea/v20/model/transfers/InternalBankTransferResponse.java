@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaErrorUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.v20.model.BankingServiceResponse;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InternalBankTransferResponse
