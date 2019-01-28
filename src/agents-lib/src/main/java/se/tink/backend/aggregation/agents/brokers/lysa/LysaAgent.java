@@ -6,25 +6,29 @@ import com.google.common.collect.Multimaps;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.AccountEntity;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.DetailsEntity;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.brokers.lysa.rpc.PollBankIdResponse;
 import se.tink.backend.aggregation.agents.brokers.lysa.rpc.StartBankIdResponse;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.agents.models.Transaction;
 
-public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor {
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccountsExecutor {
     private static final int MAX_ATTEMPTS = 60;
 
     private final LysaClient client;
@@ -42,35 +46,39 @@ public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor 
     }
 
     @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case INVESTMENT_ACCOUNTS:
-            details.getAccounts().forEach(accountEntity -> financialDataCacher.cacheAccount(accountEntity.toAccount()));
-            break;
-
-        case INVESTMENT_TRANSACTIONS:
-            refreshInvestmentTransactions();
-            break;
-        }
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return new FetchInvestmentAccountsResponse(
+                details.getAccounts().stream()
+                        .collect(Collectors.toMap(AccountEntity::toAccount, a -> AccountFeatures.createEmpty())));
     }
 
-    private void refreshInvestmentTransactions() {
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return refreshInvestmentTransactions();
+    }
+
+    private FetchTransactionsResponse refreshInvestmentTransactions() {
         ImmutableListMultimap<String, TransactionEntity> transactionsByExternalAccountId = Multimaps.index(
                 client.getTransactions(), TransactionEntity::getAccountId);
 
-        for (AccountEntity accountEntity : details.getAccounts()) {
-            List<Transaction> transactionsForAccount = Lists.newArrayList();
+       return new FetchTransactionsResponse(details.getAccounts().stream()
+               .collect(
+                       Collectors.toMap(AccountEntity::toAccount,
+                               a -> getTransactionsForAccount(transactionsByExternalAccountId, a))));
+    }
 
-            for (TransactionEntity transactionEntity : transactionsByExternalAccountId.get(accountEntity.getAccountId())) {
-                if (!transactionEntity.isValidTransaction()) {
-                    continue;
-                }
+    private List<Transaction> getTransactionsForAccount(
+            ImmutableListMultimap<String, TransactionEntity> transactionsByExternalAccountId,
+            AccountEntity accountEntity) {
+        List<Transaction> transactionsForAccount = Lists.newArrayList();
 
-                transactionsForAccount.add(transactionEntity.toTransaction());
+        for (TransactionEntity transactionEntity : transactionsByExternalAccountId.get(accountEntity.getAccountId())) {
+            if (!transactionEntity.isValidTransaction()) {
+                continue;
             }
-
-            financialDataCacher.updateTransactions(accountEntity.toAccount(), transactionsForAccount);
+            transactionsForAccount.add(transactionEntity.toTransaction());
         }
+        return transactionsForAccount;
     }
 
     @Override
@@ -101,7 +109,8 @@ public class LysaAgent extends AbstractAgent implements RefreshableItemExecutor 
                 case PollBankIdResponse.Status.ERROR:
                     throw BankIdError.CANCELLED.exception();
                 default:
-                    throw new IllegalStateException(String.format("Unknown BankID status: %s", pollBankIdResponse.getStatus()));
+                    throw new IllegalStateException(
+                            String.format("Unknown BankID status: %s", pollBankIdResponse.getStatus()));
             }
         }
 
