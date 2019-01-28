@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExe
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.core.transfer.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor implements ApproveEInvoiceExecutor {

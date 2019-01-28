@@ -133,7 +133,7 @@ import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.enums.TransferType;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;

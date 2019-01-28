@@ -23,6 +23,7 @@ java_library(
         "//src/libraries/phone_number_utils",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//src/libraries/transfer:enums",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",

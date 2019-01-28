@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExe
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.core.transfer.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.i18n.Catalog;
 
 public class IcaBankenEInvoiceExecutor implements ApproveEInvoiceExecutor {

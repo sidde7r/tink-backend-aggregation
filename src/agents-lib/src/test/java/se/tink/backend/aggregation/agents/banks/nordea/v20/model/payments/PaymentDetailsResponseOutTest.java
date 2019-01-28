@@ -7,7 +7,7 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.libraries.enums.TransferType;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -99,7 +99,7 @@ import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.core.transfer.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;

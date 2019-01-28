@@ -1,4 +1,4 @@
-package se.tink.libraries.enums;
+package se.tink.libraries.transfer.enums;
 
 import se.tink.libraries.account.AccountIdentifier;
 

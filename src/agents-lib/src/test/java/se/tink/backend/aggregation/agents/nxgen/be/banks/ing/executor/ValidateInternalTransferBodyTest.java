@@ -4,8 +4,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateInternalTransferBody;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.enums.MessageType;
-import se.tink.libraries.enums.TransferType;
+import se.tink.libraries.transfer.enums.MessageType;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.date.DateUtils;
 

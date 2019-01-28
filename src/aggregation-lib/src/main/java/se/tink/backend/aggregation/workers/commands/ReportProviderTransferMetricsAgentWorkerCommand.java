@@ -7,15 +7,15 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
-import se.tink.libraries.metrics.MetricId;
-import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.metrics.utils.MetricsUtils;
-import se.tink.libraries.enums.TransferType;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.metrics.utils.MetricsUtils;
+import se.tink.libraries.transfer.enums.TransferType;
 
 public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorkerCommand {
 
@@ -23,23 +23,25 @@ public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorker
     private AgentWorkerCommandContext context;
     private MetricRegistry metricRegistry;
 
-    public ReportProviderTransferMetricsAgentWorkerCommand(AgentWorkerCommandContext context,
-            String operationName) {
+    public ReportProviderTransferMetricsAgentWorkerCommand(
+            AgentWorkerCommandContext context, String operationName) {
         this.context = context;
         this.metricRegistry = context.getMetricRegistry();
         this.operationName = operationName;
     }
 
-    private MetricId addMetricLabels(MetricId metricId, TransferType type, SignableOperationStatuses status) {
+    private MetricId addMetricLabels(
+            MetricId metricId, TransferType type, SignableOperationStatuses status) {
         Provider provider = context.getRequest().getProvider();
 
-        MetricId.MetricLabels metricLabels = new MetricId.MetricLabels()
-                .add("provider_type", provider.getType().name().toLowerCase())
-                .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
-                .add("className", Optional.ofNullable(provider.getClassName()).orElse(""))
-                .add("operation", operationName)
-                .add("status", status.name())
-                .add("transfer_type", type.toString().toLowerCase().replace("_", "-"));
+        MetricId.MetricLabels metricLabels =
+                new MetricId.MetricLabels()
+                        .add("provider_type", provider.getType().name().toLowerCase())
+                        .add("provider", MetricsUtils.cleanMetricName(provider.getName()))
+                        .add("className", Optional.ofNullable(provider.getClassName()).orElse(""))
+                        .add("operation", operationName)
+                        .add("status", status.name())
+                        .add("transfer_type", type.toString().toLowerCase().replace("_", "-"));
 
         return metricId.label(metricLabels);
     }
@@ -67,16 +69,26 @@ public class ReportProviderTransferMetricsAgentWorkerCommand extends AgentWorker
         Long value = transfer.getAmount().getValue().longValue();
 
         switch (operationStatus) {
-        case FAILED:
-        case EXECUTED:
-        case CANCELLED:
-            metricRegistry.meter(
-                    addMetricLabels(MetricId.newId("transfer_amount"), transferType, operationStatus)).inc(value);
-            metricRegistry.meter(
-                    addMetricLabels(MetricId.newId("transfer_count"), transferType, operationStatus)).inc();
-            break;
-        default:
-            break;
+            case FAILED:
+            case EXECUTED:
+            case CANCELLED:
+                metricRegistry
+                        .meter(
+                                addMetricLabels(
+                                        MetricId.newId("transfer_amount"),
+                                        transferType,
+                                        operationStatus))
+                        .inc(value);
+                metricRegistry
+                        .meter(
+                                addMetricLabels(
+                                        MetricId.newId("transfer_count"),
+                                        transferType,
+                                        operationStatus))
+                        .inc();
+                break;
+            default:
+                break;
         }
     }
 }

@@ -51,7 +51,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.enums.TransferType;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.credentials.demo.DemoCredentials;

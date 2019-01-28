@@ -39,6 +39,7 @@ junit_test(
         "//src/libraries/social_security_number:social-security-number",
         "//src/libraries/social_security_number:social-security-number-test",
         "//src/libraries/strings",
+        "//src/libraries/transfer:enums",
         "//src/libraries/transfer_stub:transfer-stub-test",
         "//src/libraries/uuid",
         "//src/main-api",

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
 import se.tink.backend.core.signableoperation.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.core.transfer.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_AMOUNT;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION;
 import static se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE;

@@ -1,4 +1,4 @@
-package se.tink.libraries.enums;
+package se.tink.libraries.transfer.enums;
 
 public enum MessageType {
     STRUCTURED,
