@@ -17,9 +17,6 @@ import se.tink.backend.aggregation.storage.database.repositories.ClientConfigura
 import se.tink.backend.aggregation.storage.database.repositories.ClusterConfigurationsRepository;
 import se.tink.backend.aggregation.storage.database.repositories.CryptoConfigurationsRepository;
 import se.tink.libraries.repository.config.DatabaseConfiguration;
-import se.tink.backend.aggregation.storage.database.repositories.ClusterCryptoConfigurationRepository;
-import se.tink.backend.aggregation.storage.database.repositories.ClusterHostConfigurationRepository;
-import se.tink.backend.core.ClusterHostConfiguration;
 import se.tink.libraries.repository.guice.configuration.RepositoryModule;
 
 public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
