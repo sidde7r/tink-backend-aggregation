@@ -4,7 +4,7 @@ set -euo pipefail
 
 .buildkite/generate-version-file.sh
 echo "--- Build deb packages"
-./bazel-wrapper --batch build deb:all
+./bazel-wrapper build deb:all
 mkdir -p debs/
 cp bazel-bin/deb/tink-backend-* debs/
 .buildkite/sign-debs.sh
