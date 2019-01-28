@@ -136,10 +136,6 @@ public class Credentials implements Cloneable {
     @JsonIgnore // Shoudn't be used between containers.
     @ApiModelProperty(name = "sensitivePayloadSerialized", hidden = true)
     private String sensitivePayloadSerialized;
-    @Tag(12)
-    @Transient
-    @ApiModelProperty(name = "images", hidden = true)
-    private ImageUrls images;
 
     @PrePersist
     private void generateIdIfMissing() {
@@ -523,14 +519,6 @@ public class Credentials implements Cloneable {
 
     public void setProviderLatency(long providerLatency) {
         this.providerLatency = providerLatency;
-    }
-
-    public ImageUrls getImages() {
-        return images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     @Override

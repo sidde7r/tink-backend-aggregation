@@ -62,8 +62,6 @@ public class Credentials implements Cloneable {
     // Cross-cluster sensitive data.
     private String sensitiveDataSerialized;
 
-    private ImageUrls images;
-
     private void generateIdIfMissing() {
         if (id == null) {
             id = UUIDUtils.generateUUID();
@@ -427,14 +425,6 @@ public class Credentials implements Cloneable {
 
     public void setProviderLatency(long providerLatency) {
         this.providerLatency = providerLatency;
-    }
-
-    public ImageUrls getImages() {
-        return images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     @Override

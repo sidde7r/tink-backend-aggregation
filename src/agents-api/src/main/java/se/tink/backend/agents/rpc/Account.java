@@ -57,7 +57,6 @@ public class Account implements Cloneable {
     private boolean userModifiedType;
     private String identifiers;
     private List<TransferDestination> transferDestinations;
-    private ImageUrls images;
     private AccountDetails details;
     private boolean closed;
     private String holderName;
@@ -373,14 +372,6 @@ public class Account implements Cloneable {
 
     public void setDetails(AccountDetails details) {
         this.details = details;
-    }
-
-    public ImageUrls getImages() {
-        return this.images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     /**

@@ -108,10 +108,6 @@ public class Account implements Cloneable {
     @Transient
     @ApiModelProperty(name = "details", value="If available, details are populated.")
     private AccountDetails details;
-    @Tag(14)
-    @Transient
-    @ApiModelProperty(name = "images", hidden = true)
-    private ImageUrls images;
     @Tag(15)
     @ApiModelProperty(name = "holderName", value="The name of the account holder", example = "Thomas Alan Waits")
     private String holderName;
@@ -446,14 +442,6 @@ public class Account implements Cloneable {
 
     public void setDetails(AccountDetails details) {
         this.details = details;
-    }
-
-    public ImageUrls getImages() {
-        return this.images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     /**

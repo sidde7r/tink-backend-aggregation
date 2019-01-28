@@ -105,9 +105,6 @@ public class Provider implements Cloneable {
     @Tag(11)
     @ApiModelProperty(name = "tutorialUrl", hidden = true)
     private String tutorialUrl;
-    @Tag(13)
-    @Transient
-    private ImageUrls images;
     @Tag(14)
     private String displayDescription;
     @Column(name = "`refreshschedule`")
@@ -463,14 +460,6 @@ public class Provider implements Cloneable {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public ImageUrls getImages() {
-        return images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     @Override

@@ -89,7 +89,6 @@ public class Provider implements Cloneable {
     private String url;
     // URL to tutorial how to add the specific credential
     private String tutorialUrl;
-    private ImageUrls images;
     // Displayed under the provider name in the app when adding a new credential.
     private String displayDescription;
 
@@ -409,14 +408,6 @@ public class Provider implements Cloneable {
 
     public void setType(ProviderTypes type) {
         this.type = type;
-    }
-
-    public ImageUrls getImages() {
-        return images;
-    }
-
-    public void setImages(ImageUrls images) {
-        this.images = images;
     }
 
     @Override
