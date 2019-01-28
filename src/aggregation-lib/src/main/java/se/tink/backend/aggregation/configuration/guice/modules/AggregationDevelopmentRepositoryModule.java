@@ -39,7 +39,6 @@ public class AggregationDevelopmentRepositoryModule extends RepositoryModule {
 
     @Override
     protected void bindRepositories() {
-        bindSpringBean(ClusterCryptoConfigurationRepository.class);
         bindSpringBean(CryptoConfigurationsRepository.class);
         bindSpringBean(ClientConfigurationsRepository.class);
         bindSpringBean(AggregatorConfigurationsRepository.class);
