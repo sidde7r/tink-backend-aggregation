@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class SdcAmount {
     private long value;

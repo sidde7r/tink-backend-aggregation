@@ -3,14 +3,6 @@ package se.tink.backend.aggregation.agents.framework;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +13,14 @@ import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
@@ -37,6 +37,15 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.rpc.UserProfile;
 import se.tink.backend.core.transfer.Transfer;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
@@ -183,6 +192,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         log.info("Starting refresh.");
 
         if (agent instanceof DeprecatedRefreshExecutor) {
+            log.warn("DeprecatedRefreshExecutor");
             ((DeprecatedRefreshExecutor) agent).refresh();
 
             // process everything
@@ -191,12 +201,10 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             context.processEinvoices();
             context.processTransferDestinationPatterns();
 
-        } else if (agent instanceof RefreshableItemExecutor) {
-            RefreshableItemExecutor refreshExecutor = (RefreshableItemExecutor) agent;
-
+        } else {
             List<RefreshableItem> sortedItems = RefreshableItem.sort(refreshableItems);
             for (RefreshableItem item : sortedItems) {
-                refreshExecutor.refresh(item);
+                refresh(agent, item);
             }
 
             if (RefreshableItem.hasAccounts(sortedItems)) {
@@ -222,14 +230,98 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             } else {
                 Assert.assertTrue(context.getTransferDestinationPatterns().isEmpty());
             }
-        } else {
-            throw new AssertionError(
-                    String.format(
-                            "%s does not implement a refresh interface.",
-                            agent.getClass().getSimpleName()));
         }
 
         log.info("Done with refresh.");
+    }
+
+    private void refresh(Agent agent, RefreshableItem item) {
+        if (agent instanceof RefreshableItemExecutor) {
+            log.warn("Using old RefreshableItemExecutor");
+            RefreshableItemExecutor refreshExecutor = (RefreshableItemExecutor) agent;
+            refreshExecutor.refresh(item);
+        } else {
+            executeSegregatedRefresher(agent, item);
+        }
+    }
+
+    private void executeSegregatedRefresher(Agent agent, RefreshableItem item) {
+        Class executorKlass = RefreshExecutorUtils.getRefreshExecutor(item);
+        if (executorKlass == null) {
+            log.warn(String.format("No implementation for %s", item.name()));
+            return;
+        }
+        // Segregated refresh executor
+        if (executorKlass.isAssignableFrom(agent.getAgentClass())) {
+            switch (item) {
+                case EINVOICES:
+                    context.updateEinvoices(((RefreshEInvoiceExecutor) agent).fetchEInvoices().getEInvoices());
+                    break;
+                case TRANSFER_DESTINATIONS:
+                    context.updateTransferDestinationPatterns(
+                            ((RefreshTransferDestinationExecutor) agent)
+                                    .fetchTransferDestinations(context.getUpdatedAccounts())
+                                    .getTransferDestinations());
+                    break;
+                case CHECKING_ACCOUNTS:
+                    context.cacheAccounts(((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts());
+                    break;
+                case CHECKING_TRANSACTIONS:
+                    ((RefreshCheckingAccountsExecutor) agent)
+                            .fetchCheckingTransactions()
+                            .getTransactions()
+                            .forEach((key, value) -> context.updateTransactions(key, value));
+                    break;
+                case SAVING_ACCOUNTS:
+                    context.cacheAccounts(((RefreshSavingsAccountsExecutor) agent).fetchSavingsAccounts().getAccounts());
+                    break;
+                case SAVING_TRANSACTIONS:
+                    ((RefreshSavingsAccountsExecutor) agent)
+                            .fetchSavingsTransactions()
+                            .getTransactions()
+                            .forEach((key, value) -> context.updateTransactions(key, value));
+
+                    break;
+                case CREDITCARD_ACCOUNTS:
+                    context.cacheAccounts(
+                            ((RefreshCreditCardAccountsExecutor) agent).fetchCreditCardAccounts().getAccounts());
+                    break;
+                case CREDITCARD_TRANSACTIONS:
+
+                    ((RefreshCreditCardAccountsExecutor) agent)
+                            .fetchCreditCardTransactions()
+                            .getTransactions()
+                            .forEach((key, value) -> context.updateTransactions(key, value));
+                    break;
+                case LOAN_ACCOUNTS:
+                    ((RefreshLoanAccountsExecutor) agent)
+                            .fetchLoanAccounts()
+                            .getAccounts()
+                            .forEach((key, value) -> context.cacheAccount(key, value));
+                    break;
+                case LOAN_TRANSACTIONS:
+                    ((RefreshLoanAccountsExecutor) agent)
+                            .fetchLoanTransactions()
+                            .getTransactions()
+                            .forEach((key, value) -> context.updateTransactions(key, value));
+                    break;
+                case INVESTMENT_ACCOUNTS:
+                    ((RefreshInvestmentAccountsExecutor) agent)
+                            .fetchInvestmentAccounts()
+                            .getAccounts()
+                            .forEach((key, value) -> context.cacheAccount(key, value));
+                    break;
+                case INVESTMENT_TRANSACTIONS:
+                    ((RefreshInvestmentAccountsExecutor) agent)
+                            .fetchInvestmentTransactions()
+                            .getTransactions()
+                            .forEach((key, value) -> context.updateTransactions(key, value));
+                    break;
+                default:
+                    throw new IllegalStateException(
+                            String.format("Invalid refreshable item detected %s", item.name()));
+            }
+        }
     }
 
     private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {

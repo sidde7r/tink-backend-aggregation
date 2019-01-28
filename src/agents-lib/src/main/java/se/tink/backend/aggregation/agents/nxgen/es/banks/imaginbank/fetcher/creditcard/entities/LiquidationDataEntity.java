@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.cre
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class LiquidationDataEntity {

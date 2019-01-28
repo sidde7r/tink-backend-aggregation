@@ -6,14 +6,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BaseUserResponse {
-    private UserEntity user;
-    private WalletEntity wallet;
+  private UserEntity user;
+  private WalletEntity wallet;
 
-    public UserEntity getUser() {
-        return user;
-    }
+  public UserEntity getUser() {
+    return user;
+  }
 
-    public WalletEntity getWallet() {
-        return wallet;
-    }
+  public WalletEntity getWallet() {
+    return wallet;
+  }
 }

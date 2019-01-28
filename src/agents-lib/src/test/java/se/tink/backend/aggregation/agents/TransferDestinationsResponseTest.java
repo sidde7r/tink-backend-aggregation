@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.junit.Test;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransferDestinationsResponseTest {

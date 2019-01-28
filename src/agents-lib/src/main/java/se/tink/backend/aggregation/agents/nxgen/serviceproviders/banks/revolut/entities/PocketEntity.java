@@ -7,87 +7,92 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.rpc.AccountTypes;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class PocketEntity {
-    private String id;
-    private String name;
-    private String type;
-    private String state;
-    private String currency;
-    private int balance; // expressed in cents
-    private int blockedAmount;  // expressed in cents
-    private boolean closed;
-    private int creditLimit;    // expressed in cents
+  private String id;
+  private String name;
+  private String type;
+  private String state;
+  private String currency;
+  private int balance; // expressed in cents
+  private int blockedAmount; // expressed in cents
+  private boolean closed;
+  private int creditLimit; // expressed in cents
 
-    @JsonIgnore
-    public TransactionalAccount toTinkCheckingAccount(String accountNumber, String holderName) {
-        return toTinkAccount(accountNumber, holderName, AccountTypes.CHECKING);
+  @JsonIgnore
+  public TransactionalAccount toTinkCheckingAccount(String accountNumber, String holderName) {
+    return toTinkAccount(accountNumber, holderName, AccountTypes.CHECKING);
+  }
+
+  @JsonIgnore
+  public TransactionalAccount toTinkSavingsAccount(String holderName) {
+    return toTinkAccount(
+        id, holderName, AccountTypes.SAVINGS); // Savings account has no external id
+  }
+
+  private TransactionalAccount toTinkAccount(
+      String accountNumber, String holderName, AccountTypes accountType) {
+    TransactionalAccount.Builder builder =
+        TransactionalAccount.builder(
+                accountType, id, new Amount(currency.toUpperCase(), getBalance()))
+            .setName(getAccountName())
+            .setHolderName(new HolderName(holderName))
+            .setBankIdentifier(id);
+
+    if (!Strings.isNullOrEmpty(accountNumber)) {
+      builder.setAccountNumber(accountNumber);
+    } else {
+      builder.setAccountNumber(id);
     }
 
-    @JsonIgnore
-    public TransactionalAccount toTinkSavingsAccount(String holderName) {
-        return toTinkAccount(id, holderName, AccountTypes.SAVINGS); // Savings account has no external id
-    }
+    builder.putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
+    return builder.build();
+  }
 
-    private TransactionalAccount toTinkAccount(String accountNumber, String holderName, AccountTypes accountType) {
-        TransactionalAccount.Builder builder = TransactionalAccount
-                .builder(
-                        accountType,
-                        id,
-                        new Amount(currency.toUpperCase(), getBalance()))
-                .setName(getAccountName())
-                .setHolderName(new HolderName(holderName))
-                .setAccountNumber(accountNumber)
-                .setBankIdentifier(id);
+  @JsonIgnore
+  private String getAccountName() {
+    return Strings.isNullOrEmpty(name) ? "Revolut " + getCurrency() : name;
+  }
 
-        builder.putInTemporaryStorage(RevolutConstants.Storage.CURRENCY, currency);
-        return builder.build();
-    }
+  public String getId() {
+    return id;
+  }
 
-    @JsonIgnore
-    private String getAccountName() {
-        return Strings.isNullOrEmpty(name) ? "Revolut " + getCurrency() : name;
-    }
+  public String getType() {
+    return type;
+  }
 
-    public String getId() {
-        return id;
-    }
+  public String getState() {
+    return state;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getCurrency() {
+    return currency;
+  }
 
-    public String getState() {
-        return state;
-    }
+  public double getBalance() {
+    return balance / 100.0;
+  }
 
-    public String getCurrency() {
-        return currency;
-    }
+  public double getBlockedAmount() {
+    return blockedAmount / 100.0;
+  }
 
-    public double getBalance() {
-        return balance / 100.0;
-    }
+  public boolean isActive() {
+    return RevolutConstants.Accounts.ACTIVE_STATE.equalsIgnoreCase(getState());
+  }
 
-    public double getBlockedAmount() {
-        return blockedAmount / 100.0;
-    }
+  public boolean isOpen() {
+    return !closed;
+  }
 
-    public boolean isActive() {
-        return RevolutConstants.Accounts.ACTIVE_STATE.equalsIgnoreCase(getState());
-    }
+  public double getCreditLimit() {
+    return creditLimit / 100.0;
+  }
 
-    public boolean isOpen() {
-        return !closed;
-    }
-
-    public double getCreditLimit() {
-        return creditLimit / 100.0;
-    }
-
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 }

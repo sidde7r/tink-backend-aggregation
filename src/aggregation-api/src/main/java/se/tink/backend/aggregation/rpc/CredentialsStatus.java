@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.rpc;
 
+import java.util.EnumSet;
+
 public enum CredentialsStatus {
     CREATED,
     AUTHENTICATING,
@@ -17,5 +19,8 @@ public enum CredentialsStatus {
     PERMANENT_ERROR,
     DELETED,
     METRIC,
-    DISABLED
+    DISABLED;
+
+    public static final EnumSet<CredentialsStatus> FAILED_OPERATION_STATUSES = EnumSet.of(
+            UNCHANGED, TEMPORARY_ERROR, AUTHENTICATION_ERROR);
 }

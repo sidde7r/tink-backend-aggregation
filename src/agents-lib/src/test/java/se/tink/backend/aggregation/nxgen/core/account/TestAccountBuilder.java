@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.core.account;
 
 import java.util.List;
 import org.mockito.Mockito;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class TestAccountBuilder<T extends Account> {

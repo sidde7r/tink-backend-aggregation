@@ -7,7 +7,7 @@ import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 import se.tink.backend.core.Account;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,

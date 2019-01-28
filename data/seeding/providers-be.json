@@ -4,6 +4,8 @@
   "providers": [
     {
       "name": "be-beobank-password",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "displayName": "Beobank",
       "popular": false,
       "type": "BANK",
@@ -51,6 +53,8 @@
     {
       "className": "nxgen.be.banks.kbc.KbcAgent",
       "credentialsType": "PASSWORD",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "displayName": "KBC",
       "capabilities": [
         "TRANSFERS"
@@ -131,6 +135,8 @@
     {
       "className": "nxgen.be.banks.ing.IngAgent",
       "credentialsType": "PASSWORD",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "displayName": "ING",
       "capabilities": [
         "TRANSFERS"
@@ -194,6 +200,8 @@
       "className": "nxgen.be.banks.belfius.BelfiusAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Belfius",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "capabilities": [
         "TRANSFERS"
       ],
@@ -315,6 +323,8 @@
       ],
       "multiFactor": true,
       "name": "be-belfius-cardreader",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
       "popular": true,
       "status": "ENABLED",
@@ -349,6 +359,8 @@
       "name": "be-n26-password",
       "displayName": "N26",
       "groupDisplayName": "N26",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "popular": false,
       "type": "BANK",
       "status": "ENABLED",
@@ -376,6 +388,8 @@
       "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
       "displayName": "Revolut",
       "credentialsType": "PASSWORD",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "multiFactor": true,
       "fields": [
         {
@@ -434,6 +448,8 @@
     {
       "className": "nxgen.be.banks.argenta.ArgentaAgent",
       "credentialsType": "PASSWORD",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "displayName": "Argenta",
       "capabilities": [
       ],
@@ -478,6 +494,8 @@
       "className": "nxgen.be.banks.fortis.FortisAgent",
       "credentialsType": "PASSWORD",
       "displayName": "BNP Paribas Fortis",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "payload": "https://app.easybanking.bnpparibasfortis.be 49FB001",
       "capabilities": [
       ],
@@ -520,6 +538,8 @@
       "className": "nxgen.be.banks.fortis.FortisAgent",
       "credentialsType": "PASSWORD",
       "displayName": "Hello bank!",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "payload": "https://app.easybanking.hellobank.be 49FB002",
       "capabilities": [
       ],

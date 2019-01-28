@@ -11,10 +11,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditc
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.entities.TransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.EngagementResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.PositionDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.PositionValuesResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.TransactionDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -90,16 +91,32 @@ public class LaCaixaApiClient {
                 .get(AccountTransactionResponse.class);
     }
 
-    public TransactionDetailsResponse fetchTransactionDetails(String accountReference, TransactionEntity transaction) {
-        return createRequest(LaCaixaConstants.Urls.FETCH_TRANSACTION_DETAILS)
-                .queryParam(LaCaixaConstants.QueryParams.ACCOUNT_REFERENCE, accountReference)
-                .queryParam(LaCaixaConstants.QueryParams.TRANSACTION_DETAILS_CONSULTACOM,
-                        transaction.getRefValConsultaCom())
-                .queryParam(LaCaixaConstants.QueryParams.TRANSACTION_DETAILS_COMMUNICADOS,
-                        transaction.getIndComunicados())
-                .queryParam(LaCaixaConstants.QueryParams.TRANSACTION_DETAILS_ACCESODETALLEMOV,
-                        transaction.getAccesoDetalleMov())
-                .get(TransactionDetailsResponse.class);
+    public EngagementResponse fetchEngagements(String globalPositionType) {
+        return createRequest(LaCaixaConstants.Urls.FETCH_ENGAGEMENTS)
+                .queryParam(LaCaixaConstants.QueryParams.ZERO_BALANCE_CONTRACTS,
+                        LaCaixaConstants.DefaultRequestParams.ZERO_BALANCE_CONTRACTS)
+                .queryParam(LaCaixaConstants.QueryParams.GLOBAL_POSITION_TYPE,
+                        globalPositionType)
+                .get(EngagementResponse.class);
+    }
+
+    public PositionValuesResponse fetchDepositList() {
+        return createRequest(LaCaixaConstants.Urls.FETCH_DEPOSITS_LIST)
+                .get(PositionValuesResponse.class);
+    }
+
+    public PositionValuesResponse fetchDeposit(String depositId, boolean moreData) {
+        return createRequest(LaCaixaConstants.Urls.FETCH_DEPOSITS_LIST)
+                .queryParam(LaCaixaConstants.QueryParams.DEPOSIT_ID, depositId)
+                .queryParam(LaCaixaConstants.QueryParams.MORE_DATA, Boolean.toString(moreData))
+                .get(PositionValuesResponse.class);
+    }
+
+    public PositionDetailsResponse fetchPositionDetails(String depositId, String depositContentId) {
+        return createRequest(LaCaixaConstants.Urls.FETCH_DEPOSIT_DETAILS)
+                .queryParam(LaCaixaConstants.QueryParams.DEPOSIT_CONTENT_ID, depositContentId)
+                .queryParam(LaCaixaConstants.QueryParams.DEPOSIT_ID, depositId)
+                .get(PositionDetailsResponse.class);
     }
 
     public GenericCardsResponse fetchCards() {

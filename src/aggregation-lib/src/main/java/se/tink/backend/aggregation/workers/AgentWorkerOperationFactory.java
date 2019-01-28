@@ -42,15 +42,15 @@ import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.ProcessItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RequestUserOptInAccountsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SelectAccountsToAggregateCommand;
 import se.tink.backend.aggregation.workers.commands.SendAccountsToUpdateServiceAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.SendDataForProcessingAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.SetCredentialsStatusToAuthenticatingAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.UpdateCredentialsStatusAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.TransferAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ValidateProviderAgentWorkerStatus;
 import se.tink.backend.aggregation.workers.commands.state.CircuitBreakerAgentWorkerCommandState;
@@ -220,48 +220,6 @@ public class AgentWorkerOperationFactory {
                             context, createCommandMetricState(request)));
         }
 
-        // Post refresh processing. Only once per data type (accounts, transactions etcetera)
-        if (RefreshableItem.hasAccounts(items)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.ACCOUNTS, createCommandMetricState(request)));
-        }
-
-        if (items.contains(RefreshableItem.EINVOICES)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.EINVOICES, createCommandMetricState(request)));
-        }
-
-        if (items.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSFER_DESTINATIONS, createCommandMetricState(request)));
-        }
-
-        // Transactions are processed last of the refreshable items since the credential status will
-        // be set `UPDATED`
-        // by system when the processing is done.
-        if (RefreshableItem.hasTransactions(items)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSACTIONS, createCommandMetricState(request)));
-        }
-
-        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
-        // connector and if
-        // transactions aren't processed in system. The transaction processing in system will set
-        // the status to
-        // `UPDATED` when transactions have been processed and new statistics are generated.
-        // Todo: Remove this dependency
-        commands.add(
-                new SetCredentialsStatusAgentWorkerCommand(
-                        context,
-                        CredentialsStatus.UPDATED,
-                        c ->
-                                !c.isWaitingOnConnectorTransactions()
-                                        && !c.isSystemProcessingTransactions()));
-
         return commands;
     }
 
@@ -303,12 +261,21 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
+        // transactions aren't processed in system. The transaction processing in system will set the status
+        // to `UPDATED` when transactions have been processed and new statistics are generated.
         commands.add(
-                new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(
-                        controllerWrapper, request.getCredentials(), request.getProvider()));
+                new UpdateCredentialsStatusAgentWorkerCommand(
+                        controllerWrapper, request.getCredentials(), request.getProvider(), context,
+                        c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
+        commands.add(
+                new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
+                ProcessableItem.fromRefreshableItems(
+                        RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -419,6 +386,10 @@ public class AgentWorkerOperationFactory {
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationName, reportMetricsAgentWorkerCommandState),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
+                new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
+                        ProcessableItem.fromRefreshableItems(
+                                RefreshableItem.convertLegacyItems(
+                                        RefreshableItem.REFRESHABLE_ITEMS_ALL))),
                 new DecryptCredentialsWorkerCommand(context, credentialsCrypto),
                 new DebugAgentWorkerCommand(
                         context, debugAgentWorkerCommandState, agentDebugStorageHandler),
@@ -630,12 +601,20 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+
+        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
+        // transactions aren't processed in system. The transaction processing in system will set the status
+        // to `UPDATED` when transactions have been processed and new statistics are generated.
         commands.add(
-                new SetCredentialsStatusToAuthenticatingAgentWorkerCommand(
-                        controllerWrapper, request.getCredentials(), request.getProvider()));
+                new UpdateCredentialsStatusAgentWorkerCommand(
+                        controllerWrapper, request.getCredentials(), request.getProvider(), context,
+                        c -> !c.isWaitingOnConnectorTransactions() && !c.isSystemProcessingTransactions()));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, metricsName, reportMetricsAgentWorkerCommandState));
+        commands.add(new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
+                ProcessableItem.fromRefreshableItems(
+                        RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(new DecryptCredentialsWorkerCommand(context, credentialsCrypto));
         commands.add(
                 new DebugAgentWorkerCommand(
@@ -693,6 +672,10 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationMetricName, reportMetricsAgentWorkerCommandState));
+        commands.add(
+                new SendDataForProcessingAgentWorkerCommand(context, createCommandMetricState(request),
+                        ProcessableItem.fromRefreshableItems(
+                                RefreshableItem.convertLegacyItems(request.getItemsToRefresh()))));
         commands.add(
                 new DecryptCredentialsWorkerCommand(
                         context,
@@ -770,50 +753,6 @@ public class AgentWorkerOperationFactory {
                                         new RefreshItemAgentWorkerCommand(
                                                 context, item, createCommandMetricState(request))));
         // === END REFRESHING ===
-
-        // === START PROCESSING ===
-        // Post refresh processing. Only once per data type (accounts, transactions etc.).
-        if (RefreshableItem.hasAccounts(items)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.ACCOUNTS, createCommandMetricState(request)));
-        }
-
-        if (items.contains(RefreshableItem.EINVOICES)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.EINVOICES, createCommandMetricState(request)));
-        }
-
-        if (items.contains(RefreshableItem.TRANSFER_DESTINATIONS)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSFER_DESTINATIONS, createCommandMetricState(request)));
-        }
-
-        // Transactions are processed last of the refreshable items since the credential status will
-        // be set `UPDATED`
-        // by system when the processing is done.
-        if (RefreshableItem.hasTransactions(items)) {
-            commands.add(
-                    new ProcessItemAgentWorkerCommand(
-                            context, ProcessableItem.TRANSACTIONS, createCommandMetricState(request)));
-        }
-        // === END PROCESSING ===
-
-        // Update the status to `UPDATED` if the credential isn't waiting on transactions from the
-        // connector and if
-        // transactions aren't processed in system. The transaction processing in system will set
-        // the status to
-        // `UPDATED` when transactions have been processed and new statistics are generated.
-        // Todo: Remove this dependency
-        commands.add(
-                new SetCredentialsStatusAgentWorkerCommand(
-                        context,
-                        CredentialsStatus.UPDATED,
-                        c ->
-                                !c.isWaitingOnConnectorTransactions()
-                                        && !c.isSystemProcessingTransactions()));
 
         return commands.build();
     }

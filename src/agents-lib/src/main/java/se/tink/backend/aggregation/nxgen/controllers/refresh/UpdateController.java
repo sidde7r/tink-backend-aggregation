@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.LoanInterpreter;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.core.enums.FeatureFlags;
+import se.tink.libraries.enums.FeatureFlags;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 

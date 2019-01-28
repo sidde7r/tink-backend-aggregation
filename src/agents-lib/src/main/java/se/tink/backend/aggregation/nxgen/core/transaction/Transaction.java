@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 
 public class Transaction extends AggregationTransaction {

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.model;
 
 import org.junit.Test;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import static org.assertj.core.api.Assertions.assertThat;
 

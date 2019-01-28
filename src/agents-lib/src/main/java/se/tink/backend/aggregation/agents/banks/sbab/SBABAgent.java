@@ -8,63 +8,53 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.util.Precision;
-import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.BankIdMessage;
-import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.TransferExecutor;
+import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.banks.sbab.client.AuthenticationClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.BankIdSignClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.TransferClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.UserDataClient;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedTransferException;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.AccountEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.BankIdStartResponse;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.*;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.FetchTransactionsResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitialTransferResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.MakeTransferResponse;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.SavedRecipientEntity;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.core.DocumentIdentifier;
-import se.tink.backend.core.account.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.backend.core.transfer.Transfer;
-import se.tink.libraries.serialization.TypeReferences;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor {
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+public class SBABAgent extends AbstractAgent
+        implements RefreshTransferDestinationExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                TransferExecutor {
 
     private final Credentials credentials;
     private final Catalog catalog;
@@ -141,47 +131,6 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
             return accountEntities;
         } catch (Exception e) {
             throw new IllegalStateException(e);
-        }
-    }
-
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case EINVOICES:
-            // nop
-            break;
-
-        case TRANSFER_DESTINATIONS:
-            try {
-                updateTransferDestinations();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case SAVING_ACCOUNTS:
-            updateAccounts();
-            break;
-
-        case SAVING_TRANSACTIONS:
-            try {
-                for (Account account : toTinkAccounts(getAccounts())) {
-                    List<Transaction> transactions = fetchTransactions(account);
-                    financialDataCacher.updateTransactions(account, transactions);
-                }
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case LOAN_ACCOUNTS:
-            try {
-                updateLoans();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
         }
     }
 
@@ -355,10 +304,6 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         return transactions;
     }
 
-    private void updateAccounts() {
-        financialDataCacher.cacheAccounts(toTinkAccounts(getAccounts()));
-    }
-
     private List<Account> toTinkAccounts(List<AccountEntity> sbabAccounts) {
         List<Account> accounts = Lists.newArrayList();
 
@@ -373,20 +318,6 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         }
 
         return accounts;
-    }
-
-    private void updateLoans() throws Exception {
-        Map<Account, Loan> loanAccountMapping = userDataClient.getLoans();
-        boolean updateAmortizationDocument = isUpdateAmortizationDocument();
-
-        for (Account account : loanAccountMapping.keySet()) {
-            Loan loan = loanAccountMapping.get(account);
-            financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
-
-            if (updateAmortizationDocument) {
-                systemUpdater.updateDocument(getAmortizationDocumentation(loan.getLoanNumber()));
-            }
-        }
     }
 
     private DocumentContainer getAmortizationDocumentation(String loanNumber) throws Exception {
@@ -417,21 +348,6 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
         return now.isAfter(dateToUpdateAmortizationDocument);
     }
 
-
-    public void updateTransferDestinations() throws Exception {
-        List<AccountEntity> accountEntities = getAccounts();
-        List<SavedRecipientEntity> recipientEntities = transferClient.getValidRecipients();
-
-        Map<Account, List<TransferDestinationPattern>> transferPatterns = new TransferDestinationPatternBuilder()
-                .setSourceAccounts(accountEntities)
-                .setDestinationAccounts(recipientEntities)
-                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
-                .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
-                .build();
-
-        systemUpdater.updateTransferDestinationPatterns(transferPatterns);
-    }
-
     private void requestBankIdSupplemental() {
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
@@ -450,4 +366,72 @@ public class SBABAgent extends AbstractAgent implements RefreshableItemExecutor,
     @Override
     public void logout() throws Exception {
     }
+
+    ///// Refresh Executor Refactor /////
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        try {
+            Map<Account, AccountFeatures> accounts = new HashMap<>();
+            Map<Account, Loan> loanAccountMapping = userDataClient.getLoans();
+            boolean updateAmortizationDocument = isUpdateAmortizationDocument();
+
+            for (Account account : loanAccountMapping.keySet()) {
+                Loan loan = loanAccountMapping.get(account);
+                accounts.put(account, AccountFeatures.createForLoan(loan));
+
+                if (updateAmortizationDocument) {
+                    systemUpdater.updateDocument(getAmortizationDocumentation(loan.getLoanNumber()));
+                }
+            }
+            return new FetchLoanAccountsResponse(accounts);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public se.tink.backend.aggregation.agents.FetchTransactionsResponse fetchLoanTransactions() {
+        return new se.tink.backend.aggregation.agents.FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return new FetchAccountsResponse(toTinkAccounts(getAccounts()));
+    }
+
+    @Override
+    public se.tink.backend.aggregation.agents.FetchTransactionsResponse fetchSavingsTransactions() {
+        try {
+            Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
+            for (Account account : toTinkAccounts(getAccounts())) {
+                List<Transaction> transactions = fetchTransactions(account);
+                transactionsMap.put(account, transactions);
+            }
+            return new se.tink.backend.aggregation.agents.FetchTransactionsResponse(transactionsMap);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        try {
+            List<AccountEntity> accountEntities = getAccounts();
+            List<SavedRecipientEntity> recipientEntities = transferClient.getValidRecipients();
+
+            Map<Account, List<TransferDestinationPattern>> transferPatterns =
+                    new TransferDestinationPatternBuilder()
+                            .setSourceAccounts(accountEntities)
+                            .setDestinationAccounts(recipientEntities)
+                            .setTinkAccounts(accounts)
+                            .addMultiMatchPattern(
+                                    AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                            .build();
+            return new FetchTransferDestinationsResponse(transferPatterns);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+    /////////////////////////////////////
 }

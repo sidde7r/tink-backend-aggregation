@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 import java.util.ArrayList;
 import java.util.Collection;

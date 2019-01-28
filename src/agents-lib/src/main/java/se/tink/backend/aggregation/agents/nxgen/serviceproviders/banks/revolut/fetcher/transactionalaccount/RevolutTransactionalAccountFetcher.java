@@ -17,43 +17,48 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.rpc.AccountTypes;
 
 public class RevolutTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private final RevolutApiClient apiClient;
+  private final RevolutApiClient apiClient;
 
-    public RevolutTransactionalAccountFetcher(RevolutApiClient apiClient) {
-        this.apiClient = apiClient;
+  public RevolutTransactionalAccountFetcher(RevolutApiClient apiClient) {
+    this.apiClient = apiClient;
+  }
+
+  @Override
+  public Collection<TransactionalAccount> fetchAccounts() {
+
+    final AccountsResponse topUpAccountEntities = apiClient.fetchAccounts();
+    final BaseUserResponse user = apiClient.fetchUser();
+    final WalletEntity wallet = user.getWallet();
+    final String holderName = user.getUser().getFullName();
+
+    // Most currencies will share iban.
+    // Some currencies are handled externally, these pockets have their own iban.
+    Map<String, String> currencyIbanMap = new HashMap<>();
+    for (AccountEntity account : topUpAccountEntities) {
+      account.getIban().ifPresent(iban -> currencyIbanMap.put(account.getCurrency(), iban));
     }
 
-    @Override
-    public Collection<TransactionalAccount> fetchAccounts() {
+    return wallet
+        .getPockets()
+        .stream()
+        .filter(PocketEntity::isActive)
+        .filter(PocketEntity::isOpen)
+        .map(pocket -> toTinkAccount(pocket, currencyIbanMap.get(pocket.getCurrency()), holderName))
+        .collect(Collectors.toList());
+  }
 
-        final AccountsResponse topUpAccountEntities = apiClient.fetchAccounts();
-        final BaseUserResponse user = apiClient.fetchUser();
-        final WalletEntity wallet = user.getWallet();
-        final String holderName = user.getUser().getFullName();
+  private static TransactionalAccount toTinkAccount(
+      PocketEntity pocket, String accountNumber, String holderName) {
 
-        // Most currencies will share iban.
-        // Some currencies are handled externally, these pockets have their own iban.
-        Map<String, String> currencyIbanMap = new HashMap<>();
-        for (AccountEntity account : topUpAccountEntities) {
-            account.getIban()
-                    .ifPresent(iban -> currencyIbanMap.put(account.getCurrency(), iban));
-        }
+    Optional<AccountTypes> accountType =
+        RevolutConstants.ACCOUNT_TYPE_MAPPER.translate(pocket.getType());
 
-        return wallet.getPockets().stream()
-                .filter(PocketEntity::isActive)
-                .filter(PocketEntity::isOpen)
-                .map(pocket -> toTinkAccount(pocket, currencyIbanMap.get(pocket.getCurrency()), holderName))
-                .collect(Collectors.toList());
-    }
-
-    private static TransactionalAccount toTinkAccount(PocketEntity pocket, String accountNumber,
-            String holderName) {
-
-        Optional<AccountTypes> accountType = RevolutConstants.ACCOUNT_TYPE_MAPPER.translate(pocket.getType());
-
-        return accountType.map(accountTypes -> accountTypes == AccountTypes.CHECKING ?
-                pocket.toTinkCheckingAccount(accountNumber, holderName) :
-                pocket.toTinkSavingsAccount(holderName))
-                .orElseThrow(() -> new IllegalStateException("Could not construct account from pocket."));
-    }
+    return accountType
+        .map(
+            accountTypes ->
+                accountTypes == AccountTypes.CHECKING
+                    ? pocket.toTinkCheckingAccount(accountNumber, holderName)
+                    : pocket.toTinkSavingsAccount(holderName))
+        .orElseThrow(() -> new IllegalStateException("Could not construct account from pocket."));
+  }
 }

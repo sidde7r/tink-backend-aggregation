@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entiti
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entities.PoolAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class FetchInvestmentResponse {

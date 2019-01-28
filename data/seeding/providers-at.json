@@ -14,6 +14,8 @@
       "passwordHelpText": null,
       "transactional": "true",
       "payload": null,
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "tutorialUrl": null,
       "fields": [
         {
@@ -47,6 +49,8 @@
       "passwordHelpText": null,
       "transactional": "true",
       "payload": null,
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "tutorialUrl": null,
       "fields": [
         {
@@ -74,6 +78,8 @@
       "passwordHelpText": null,
       "transactional": "true",
       "payload": "ebanking.bawagpsk.com, BAWAG",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "tutorialUrl": null,
       "fields": [
         {
@@ -101,6 +107,8 @@
       "passwordHelpText": null,
       "transactional": "true",
       "payload": "ebanking.easybank.at, EASYBANK",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "tutorialUrl": null,
       "fields": [
         {
@@ -127,6 +135,8 @@
       "className": "nxgen.at.banks.erstebank.password.ErsteBankPasswordAgent",
       "transactional": "true",
       "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -182,6 +192,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Burgenland\", \"regionIndex\": \"0\", \"regionCode\": \"ELVIE33V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -212,6 +224,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Kärnten\", \"regionIndex\": \"1\", \"regionCode\": \"ELOOE03V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -242,6 +256,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Niederösterreich/Wien\", \"regionIndex\": \"2\", \"regionCode\": \"ELVIE32V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -272,6 +288,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Oberösterreich\", \"regionIndex\": \"3\", \"regionCode\": \"ELOOE01V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -302,6 +320,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Salzburg\", \"regionIndex\": \"4\", \"regionCode\": \"ELOOE05V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -332,6 +352,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Steiermark\", \"regionIndex\": \"5\", \"regionCode\": \"ELVIE38V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -362,6 +384,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Tirol\", \"regionIndex\": \"6\", \"regionCode\": \"ELOOE11V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -392,6 +416,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Vorarlberg\", \"regionIndex\": \"7\", \"regionCode\": \"ELVIE37V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -422,6 +448,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Kärnten/Posojilnica Bank\", \"regionIndex\": \"8\", \"regionCode\": \"ELVIE91V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -452,6 +480,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Oberösterreich/bankdirekt.at\", \"regionIndex\": \"9\", \"regionCode\": \"ELOOE01V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -482,6 +512,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Oberösterreich/PRIVAT BANK\", \"regionIndex\": \"10\", \"regionCode\": \"ELOOE01V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -512,6 +544,8 @@
       "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
       "transactional": "true",
       "payload": "{\"region\": \"Tirol/Jungholz\", \"regionIndex\": \"11\", \"regionCode\": \"ELOOE11V\"}",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",
@@ -541,6 +575,8 @@
       "credentialsType": "PASSWORD",
       "multiFactor": false,
       "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
       "transactional": true,
       "fields": [
@@ -562,6 +598,8 @@
       "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
       "displayName": "Revolut",
       "credentialsType": "PASSWORD",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "multiFactor": true,
       "fields": [
         {
@@ -626,6 +664,8 @@
       "credentialsType": "PASSWORD",
       "displayName": "Test Password",
       "groupDisplayName": "Test Password",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "description": "Username",
@@ -678,6 +718,8 @@
       "className": "nxgen.at.banks.ing.IngAtAgent",
       "transactional": "true",
       "payload": "",
+      "refreshFrequency" : 1.0,
+      "refreshFrequencyFactor" : 1.0,
       "fields": [
         {
           "name": "username",

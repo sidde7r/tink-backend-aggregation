@@ -5,11 +5,13 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/amount",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_headers:api-headers",
         "//src/libraries/auth",
         "//src/libraries/date",
         "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/enums",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/http:http-annotations",

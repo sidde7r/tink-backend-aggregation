@@ -14,7 +14,7 @@ spec:
   ingress:
   - ports:
     - protocol: TCP
-      port: metrics
+      port: 9130
     from:
     - podSelector:
         matchLabels:

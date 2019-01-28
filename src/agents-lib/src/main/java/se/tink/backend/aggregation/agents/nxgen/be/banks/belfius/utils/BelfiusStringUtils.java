@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils;
 
 import java.util.Locale;
 import java.util.Optional;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class BelfiusStringUtils {
 

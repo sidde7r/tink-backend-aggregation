@@ -4,14 +4,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class UserExistEntity {
-    private String registeredAs;
-    private boolean premium;
+  private String registeredAs;
+  private boolean premium;
 
-    public String getRegisteredAs() {
-        return registeredAs;
-    }
+  public String getRegisteredAs() {
+    return registeredAs;
+  }
 
-    public boolean isPremium() {
-        return premium;
-    }
+  public boolean isPremium() {
+    return premium;
+  }
 }

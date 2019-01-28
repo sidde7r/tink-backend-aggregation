@@ -5,6 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.revolut.a
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class UserExistResponse extends HashMap<String, UserExistEntity> {
-
-}
+public class UserExistResponse extends HashMap<String, UserExistEntity> {}

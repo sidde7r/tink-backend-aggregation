@@ -83,8 +83,8 @@ public class Mov {
     }
   }
 
-  private se.tink.backend.core.Amount getAmount() {
-    return new se.tink.backend.core.Amount(amount.getdIVISA(), amount.getiMPORTE());
+  private se.tink.libraries.amount.Amount getAmount() {
+    return new se.tink.libraries.amount.Amount(amount.getdIVISA(), amount.getiMPORTE());
   }
 
   public Transaction toTinkTransaction() {

@@ -10,7 +10,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.enums.TransferType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)

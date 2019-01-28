@@ -9,8 +9,8 @@ import com.google.common.collect.ListMultimap;
 import java.util.List;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.application.GenericApplicationFieldGroup;
-import se.tink.backend.core.enums.ApplicationFieldName;
-import se.tink.backend.core.enums.GenericApplicationFieldGroupNames;
+import se.tink.libraries.enums.ApplicationFieldName;
+import se.tink.libraries.enums.GenericApplicationFieldGroupNames;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class WithdrawalAccount {

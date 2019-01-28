@@ -7,12 +7,11 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABAgent;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.social.security.TestSSN;
-import se.tink.backend.core.Amount;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.date.DateUtils;
@@ -20,16 +19,13 @@ import se.tink.libraries.date.DateUtils;
 public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
 
     private Credentials credentials;
-    private SBABAgent agent;
 
-    public SBABAgentTest() throws Exception {
+    public SBABAgentTest() {
         super(SBABAgent.class);
 
         credentials = createCredentials(TestSSN.TOLVAN, null, CredentialsTypes.MOBILE_BANKID);
 
         testContext = new AgentTestContext(credentials);
-        agent = (SBABAgent) factory
-                .create(SBABAgent.class, createRefreshInformationRequest(credentials, new Provider()), testContext);
     }
 
     @Test
@@ -225,18 +221,4 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
         testTransferException(credentials, transfer);
     }
 
-    /**
-     * This is to be able to use a client without SSL validation when testing mortgages.
-     */
-    private void switchToMortgageTestAgent(String ssn) throws Exception {
-        if (ssn == null) {
-            ssn = TestSSN.TOLVAN;
-        }
-
-        Provider provider = new Provider();
-        provider.setPayload("{\"isSwitchMortgageProviderTest\":\"true\"}");
-        credentials = createCredentials(ssn, null, CredentialsTypes.MOBILE_BANKID);
-        agent = (SBABAgent) factory
-                .create(SBABAgent.class, createRefreshInformationRequest(credentials, provider), testContext);
-    }
 }

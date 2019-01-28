@@ -10,7 +10,7 @@ import java.util.Locale;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.enums.TransferType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpcomingTransactionEntity extends TransactionEntity {

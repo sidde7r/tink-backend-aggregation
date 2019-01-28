@@ -5,9 +5,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.Locale;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.date.DateUtils;
 

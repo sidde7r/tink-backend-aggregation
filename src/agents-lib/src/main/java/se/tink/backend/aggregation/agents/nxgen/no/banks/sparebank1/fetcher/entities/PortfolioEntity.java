@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Am
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 
 @JsonObject

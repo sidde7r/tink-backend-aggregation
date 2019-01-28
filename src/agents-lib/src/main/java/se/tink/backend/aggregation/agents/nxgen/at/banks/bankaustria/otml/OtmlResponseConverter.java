@@ -35,7 +35,7 @@ import se.tink.backend.aggregation.nxgen.core.account.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class OtmlResponseConverter {
     private static final Logger LOGGER = LoggerFactory.getLogger(OtmlResponseConverter.class);

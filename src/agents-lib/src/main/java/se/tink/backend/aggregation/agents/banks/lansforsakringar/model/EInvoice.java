@@ -4,8 +4,8 @@ import se.tink.backend.core.transfer.TransferPayloadType;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
-import se.tink.backend.core.Amount;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

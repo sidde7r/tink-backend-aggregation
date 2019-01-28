@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenCons
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorUtils;
 import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.Amount;
-import se.tink.backend.core.enums.TransferType;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.enums.TransferType;
 import se.tink.backend.core.transfer.Transfer;
 import se.tink.backend.core.transfer.TransferPayloadType;
 import se.tink.libraries.account.AccountIdentifier;

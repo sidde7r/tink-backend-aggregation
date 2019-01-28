@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public class HandelsbankenFICreditCard extends HandelsbankenCreditCard {
 

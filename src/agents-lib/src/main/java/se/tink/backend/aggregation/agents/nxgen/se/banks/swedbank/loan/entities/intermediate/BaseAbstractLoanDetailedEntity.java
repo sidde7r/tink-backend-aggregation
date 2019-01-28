@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanDetailsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
-import se.tink.backend.core.Amount;
+import se.tink.libraries.amount.Amount;
 
 public abstract class BaseAbstractLoanDetailedEntity extends BaseAbstractLoanEntity {
 
