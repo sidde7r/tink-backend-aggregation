@@ -25,8 +25,6 @@ import java.util.UUID;
 import javax.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.core.Creatable;
-import se.tink.backend.core.Modifiable;
 import se.tink.libraries.enums.MessageType;
 import se.tink.libraries.enums.TransferType;
 import se.tink.libraries.account.AccountIdentifier;
@@ -50,8 +48,7 @@ public class Transfer implements Serializable, Cloneable {
             new TypeReference<Map<TransferPayloadType, String>>() {
             };
 
-    @Modifiable
-    @Creatable
+
     @Tag(1)
     @ApiModelProperty(name = "amount", example = "10", required = true, value = "The amount that will be transferred")
     private BigDecimal amount;
@@ -64,8 +61,7 @@ public class Transfer implements Serializable, Cloneable {
     @Tag(3)
     @ApiModelProperty(name = "currency", example = "SEK", required = true, value = "The currency of the amount")
     private String currency;
-    @Modifiable
-    @Creatable
+
     @Tag(4)
     @JsonProperty("destinationUri")
     @ApiModelProperty(name = "destinationUri", example = "se://6000123456789", required = true, value = "The destination account or recipient of the transfer, on the form of a uri. ")
@@ -73,16 +69,14 @@ public class Transfer implements Serializable, Cloneable {
     @Exclude
     @JsonIgnore
     private String originalDestination;
-    @Modifiable
-    @Creatable
+
     @Tag(5)
     @ApiModelProperty(name = "destinationMessage", example = "Happy birthday!", required = true, value = "The message to the recipient. Optional for bank transfers but required for payments. If the payment recipient requires an OCR, it should be set as destinationMessage.")
     private String destinationMessage;
     @Tag(6)
     @ApiModelProperty(name = "id", example = "a4516bda6ff545e0aa24e54b859579e0", value = "The id of this transfer.")
     private UUID id;
-    @Modifiable
-    @Creatable
+
     @Tag(7)
     @JsonProperty("sourceUri")
     @ApiModelProperty(name = "sourceUri", example = "tink://1e09bab571d84b1cbe8d49c0be9c030f", required = true, value = "The source account of the transfer, on the form of a uri.")
@@ -90,8 +84,7 @@ public class Transfer implements Serializable, Cloneable {
     @Exclude
     @JsonIgnore
     private String originalSource;
-    @Modifiable
-    @Creatable
+
     @Tag(8)
     @ApiModelProperty(name = "sourceMessage", example = "Gift to Sophie", value = "A note to show to the source account.")
     private String sourceMessage;
@@ -101,8 +94,7 @@ public class Transfer implements Serializable, Cloneable {
     @Tag(10)
     @ApiModelProperty(name = "type", example = "BANK_TRANSFER", value = "The type of the transfer.", allowableValues = TransferType.DOCUMENTED)
     private String type;
-    @Modifiable
-    @Creatable
+
     @Tag(11)
     @ApiModelProperty(name = "dueDate", example = "1471349422000", required = true, value = "The date the payment or bank transfer should be executed. If bank transfer, and no dueDate is given, it will be executed immediately")
     private Date dueDate;
