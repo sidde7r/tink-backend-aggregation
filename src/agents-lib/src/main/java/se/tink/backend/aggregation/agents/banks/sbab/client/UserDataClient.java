@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequ
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.TransactionEntity;
 import se.tink.backend.aggregation.utils.json.JsonUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.Loan;

@@ -6,8 +6,8 @@ import com.google.common.base.Strings;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.MAPPERS;
 

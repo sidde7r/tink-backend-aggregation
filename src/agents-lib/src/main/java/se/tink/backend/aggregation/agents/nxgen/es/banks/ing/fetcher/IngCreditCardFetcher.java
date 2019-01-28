@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.rpc.Product;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
 
 public class IngCreditCardFetcher extends ProductMovementsFetcher<CreditCardAccount, CreditCardTransaction> {

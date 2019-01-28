@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.norwegian.model;
 
 import java.util.regex.Pattern;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public class AccountEntity {
 

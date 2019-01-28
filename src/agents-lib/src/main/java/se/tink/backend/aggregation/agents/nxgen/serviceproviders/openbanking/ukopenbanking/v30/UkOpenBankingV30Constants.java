@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingConstants;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public class UkOpenBankingV30Constants extends UkOpenBankingConstants {
 

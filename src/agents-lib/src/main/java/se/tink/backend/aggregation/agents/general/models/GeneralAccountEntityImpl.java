@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.general.models;
 
 import java.util.Optional;
 import org.assertj.core.util.Preconditions;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class GeneralAccountEntityImpl implements GeneralAccountEntity {

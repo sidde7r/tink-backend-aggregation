@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public final class TypeMapperTest {
     @Test

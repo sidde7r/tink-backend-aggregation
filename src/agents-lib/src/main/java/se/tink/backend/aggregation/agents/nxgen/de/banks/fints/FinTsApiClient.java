@@ -20,7 +20,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;

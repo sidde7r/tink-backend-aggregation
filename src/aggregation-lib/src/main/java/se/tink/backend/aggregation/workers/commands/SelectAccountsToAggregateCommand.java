@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.WhitelistRequest;
@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.agents.SetAccountsToAggregateContext;
 import se.tink.libraries.enums.TinkFeature;
+
 
 import java.util.List;
 import java.util.Objects;

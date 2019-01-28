@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.contexts;
 
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;

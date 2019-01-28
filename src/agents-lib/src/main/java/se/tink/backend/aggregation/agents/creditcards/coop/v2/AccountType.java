@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.creditcards.coop.v2;
 import java.util.Locale;
 import java.util.Objects;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public enum AccountType {
     MEDMERA_VISA(-1, "Visa", AccountTypes.CREDIT_CARD, "Coop MedMera Visa"),

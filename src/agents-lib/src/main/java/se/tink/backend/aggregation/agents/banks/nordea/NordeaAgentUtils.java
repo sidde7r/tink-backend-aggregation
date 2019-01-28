@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.ProductEntity;
 import se.tink.backend.aggregation.agents.banks.nordea.v20.model.payments.PaymentEntity;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;

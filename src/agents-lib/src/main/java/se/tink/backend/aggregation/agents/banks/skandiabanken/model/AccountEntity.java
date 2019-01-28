@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.strings.StringUtils;
 

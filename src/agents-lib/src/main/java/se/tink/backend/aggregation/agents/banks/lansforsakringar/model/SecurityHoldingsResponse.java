@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Optional;
-import se.tink.backend.aggregation.rpc.Account;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.strings.StringUtils;
 

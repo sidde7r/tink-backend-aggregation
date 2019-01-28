@@ -104,7 +104,7 @@ public class UpdateController {
         baseContext.updateTransferDestinationPatterns(transferDestinations.getDestinations());
     }
 
-    public Collection<se.tink.backend.aggregation.rpc.Account> getAccounts() {
+    public Collection<se.tink.backend.agents.rpc.Account> getAccounts() {
         // Must be rpc.Accounts, because those are 'properly' updated with userId and the like.
         return baseContext.getUpdatedAccounts();
     }

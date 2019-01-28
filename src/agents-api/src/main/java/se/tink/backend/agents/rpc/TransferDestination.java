@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.backend.agents.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

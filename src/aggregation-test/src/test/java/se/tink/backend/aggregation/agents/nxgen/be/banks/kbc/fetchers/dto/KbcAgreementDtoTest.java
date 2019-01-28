@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.core.AccountFlag;
+import se.tink.libraries.enums.AccountFlag;
 
 public class KbcAgreementDtoTest {
 

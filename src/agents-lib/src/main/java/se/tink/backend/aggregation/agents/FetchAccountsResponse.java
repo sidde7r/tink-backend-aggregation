@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
 import java.util.List;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 public class FetchAccountsResponse {
     private final List<Account> accounts;

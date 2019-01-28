@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCard;
 import se.tink.backend.aggregation.agents.banks.seb.model.SebCreditCardAccount;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;

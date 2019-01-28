@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.backend.agents.rpc;
 
 import java.util.Date;
 

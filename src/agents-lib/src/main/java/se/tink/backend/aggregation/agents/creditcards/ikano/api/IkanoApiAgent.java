@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.CardList;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.CredentialsStatus;

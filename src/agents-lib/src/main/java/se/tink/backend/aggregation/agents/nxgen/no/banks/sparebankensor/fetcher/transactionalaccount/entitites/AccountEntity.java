@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.entities
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject

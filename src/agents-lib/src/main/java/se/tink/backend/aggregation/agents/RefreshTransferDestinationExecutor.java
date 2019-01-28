@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
 import java.util.List;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 /**
  * Interface for executing refreshes of transfer destinations.

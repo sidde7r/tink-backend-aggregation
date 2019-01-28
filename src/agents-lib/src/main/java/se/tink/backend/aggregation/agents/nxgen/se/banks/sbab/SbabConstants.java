@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.sun.jersey.api.uri.UriTemplate;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public abstract class SbabConstants {
     public static final String CURRENCY = "SEK";

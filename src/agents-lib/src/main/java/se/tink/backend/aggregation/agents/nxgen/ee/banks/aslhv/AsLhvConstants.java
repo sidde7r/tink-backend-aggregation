@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class AsLhvConstants {

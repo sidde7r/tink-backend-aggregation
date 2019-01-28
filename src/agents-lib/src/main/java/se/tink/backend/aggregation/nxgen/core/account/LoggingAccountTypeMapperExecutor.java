@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.pair.Pair;
 
 public final class LoggingAccountTypeMapperExecutor<KeyType>

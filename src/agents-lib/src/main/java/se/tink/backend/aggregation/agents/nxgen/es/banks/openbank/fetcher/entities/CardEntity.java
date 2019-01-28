@@ -5,7 +5,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 @JsonObject
 public class CardEntity {

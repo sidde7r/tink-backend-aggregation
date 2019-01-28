@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 public class AccountUtils {
     private static final Pattern SUB_ACCOUNTS = Pattern.compile(",?sub_accounts=\\[(?<subAccounts>.*?)\\]");

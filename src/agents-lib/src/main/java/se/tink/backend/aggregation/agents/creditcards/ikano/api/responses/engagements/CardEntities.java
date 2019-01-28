@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.BaseResponse;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardEntities extends BaseResponse {

@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRe
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.core.signableoperation.SignableOperation;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;

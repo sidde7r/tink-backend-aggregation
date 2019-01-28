@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.utils.typeguesser;
 
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 /**
  * Language based type guesser.

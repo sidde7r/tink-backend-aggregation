@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.banks.se.collector.models.WithdrawalRe
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;

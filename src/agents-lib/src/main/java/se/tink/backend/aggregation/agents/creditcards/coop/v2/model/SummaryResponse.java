@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SummaryResponse {

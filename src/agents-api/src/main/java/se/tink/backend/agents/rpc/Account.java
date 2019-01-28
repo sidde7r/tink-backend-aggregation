@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.backend.agents.rpc;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,9 +16,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import se.tink.backend.core.AccountFlag;
 import se.tink.libraries.enums.AccountExclusion;
-import se.tink.backend.core.transfer.TransferDestination;
+import se.tink.libraries.enums.AccountFlag;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;

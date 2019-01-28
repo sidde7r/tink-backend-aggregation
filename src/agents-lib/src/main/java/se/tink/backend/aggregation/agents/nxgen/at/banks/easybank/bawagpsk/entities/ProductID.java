@@ -5,7 +5,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.rpc.AccountTypes;
 
 @XmlRootElement(name = "ProductID")
 @XmlType(propOrder = {

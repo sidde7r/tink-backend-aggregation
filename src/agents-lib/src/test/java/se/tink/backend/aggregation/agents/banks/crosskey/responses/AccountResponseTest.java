@@ -5,9 +5,9 @@ import com.google.common.collect.Lists;
 import java.io.IOException;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.banks.crosskey.PaginationTypes;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 

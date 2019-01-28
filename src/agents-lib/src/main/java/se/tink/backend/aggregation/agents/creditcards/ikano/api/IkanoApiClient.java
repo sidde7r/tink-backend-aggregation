@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engage
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.registerCard.RegisteredCards;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoCrypt;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.Transaction;
 

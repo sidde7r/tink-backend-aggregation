@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.metrics.MetricId;
 
 public final class TransferDestinationRefreshController implements Refresher {

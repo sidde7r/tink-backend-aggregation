@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.backend.core.Account;
@@ -96,14 +96,14 @@ public class DemoDataUtils {
         return readAccounts(file, CoreCredentialsMapper.fromAggregationCredentials(credentials));
     }
 
-    public static List<se.tink.backend.aggregation.rpc.Account> readAggregationAccounts(File file, se.tink.backend.aggregation.rpc.Credentials credentials) throws IOException {
+    public static List<se.tink.backend.agents.rpc.Account> readAggregationAccounts(File file, se.tink.backend.aggregation.rpc.Credentials credentials) throws IOException {
         return readAccounts(file, CoreCredentialsMapper.fromAggregationCredentials(credentials)).stream()
                 .map(CoreAccountMapper::toAggregation)
                 .collect(Collectors.toList());
     }
 
     public static List<Transaction> readTransactionsWithRandomization(DemoCredentials demoCredentials, File file,
-            se.tink.backend.aggregation.rpc.Account account,
+            se.tink.backend.agents.rpc.Account account,
             int transactionsToRandomize) throws IOException {
 
         List<Transaction> transactions = readTransactions(demoCredentials, file, account);
@@ -127,13 +127,13 @@ public class DemoDataUtils {
     }
 
     public static List<Transaction> readTransactions(DemoCredentials demoCredentials, File file,
-            se.tink.backend.aggregation.rpc.Account account)
+            se.tink.backend.agents.rpc.Account account)
             throws IOException {
         return readTransactions(demoCredentials, file, account, false);
     }
 
     public static List<Transaction> readTransactions(DemoCredentials demoCredentials, File file,
-            se.tink.backend.aggregation.rpc.Account account, boolean skipFutureTransactions)
+            se.tink.backend.agents.rpc.Account account, boolean skipFutureTransactions)
             throws IOException {
 
         Date today = DateUtils.setInclusiveStartTime(new Date());

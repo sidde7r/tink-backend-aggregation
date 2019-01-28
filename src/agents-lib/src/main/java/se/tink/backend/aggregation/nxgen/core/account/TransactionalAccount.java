@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
 import com.google.common.collect.ImmutableList;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
 
 public class TransactionalAccount extends Account {

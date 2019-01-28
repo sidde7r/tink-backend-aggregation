@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.backend.aggregation.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.core.AccountFlag;
+import se.tink.libraries.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.account.AccountIdentifier;
@@ -126,8 +126,8 @@ public abstract class Account {
         return Objects.hashCode(getUniqueIdentifier());
     }
 
-    public se.tink.backend.aggregation.rpc.Account toSystemAccount(User user) {
-        se.tink.backend.aggregation.rpc.Account account = new se.tink.backend.aggregation.rpc.Account();
+    public se.tink.backend.agents.rpc.Account toSystemAccount(User user) {
+        se.tink.backend.agents.rpc.Account account = new se.tink.backend.agents.rpc.Account();
 
         account.setType(getType());
         account.setName(this.name);

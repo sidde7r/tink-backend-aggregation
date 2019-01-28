@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
 import java.util.Map;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 
 public class FetchInvestmentAccountsResponse {

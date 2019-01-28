@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.abnamro.utils;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.abnamro.utils.AbnAmroUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
