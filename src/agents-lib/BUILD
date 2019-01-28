@@ -12,6 +12,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agents-api",
         "//src/agents-models",
         "//src/aggregation-api",
         "//src/aggregationcontroller-api",
@@ -102,6 +103,7 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
+        "//src/agents-api",
         "//src/agents-lib",
         "//src/agents-models",
         "//src/aggregation-api",

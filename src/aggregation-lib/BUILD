@@ -15,6 +15,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//po:i18n",
+        "//src/agents-api",
         "//src/agents-lib",
         "//src/agents-models",
         "//src/aggregation-api",

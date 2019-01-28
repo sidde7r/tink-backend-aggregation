@@ -18,6 +18,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agents-api",
         "//src/agents-lib",
         "//src/agents-models",
         "//src/aggregation-api",
