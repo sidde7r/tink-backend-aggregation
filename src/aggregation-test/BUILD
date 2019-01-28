@@ -24,6 +24,7 @@ junit_test(
         "//src/aggregation-api",
         "//src/aggregation-lib",
         "//src/aggregationcontroller-api",
+        "//src/libraries/account:enums",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/account_identifier:account-identifier-test",
         "//src/libraries/amount",

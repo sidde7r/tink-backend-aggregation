@@ -12,14 +12,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.User;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.enums.AccountFlag;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.FeatureFlags;
-import se.tink.backend.agents.rpc.User;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class Account {
@@ -44,28 +44,30 @@ public abstract class Account {
         this.holderName = builder.getHolderName();
         this.temporaryStorage = builder.getTransientStorage();
         this.accountFlags = ImmutableList.copyOf(builder.getAccountFlags());
-        // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or '-').
-        Preconditions.checkState(!Strings.isNullOrEmpty(uniqueIdentifier),
+        // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or
+        // '-').
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(uniqueIdentifier),
                 "Unique identifier was empty after sanitation.");
     }
 
-    public static Builder<? extends Account, ?> builder(AccountTypes type, String uniqueIdentifier) {
+    public static Builder<? extends Account, ?> builder(
+            AccountTypes type, String uniqueIdentifier) {
         switch (type) {
-        case SAVINGS:
-        case OTHER:
-        case CHECKING:
-            return TransactionalAccount.builder(type, uniqueIdentifier);
-        case CREDIT_CARD:
-            return CreditCardAccount.builder(uniqueIdentifier);
-        case PENSION:
-        case INVESTMENT:
-            return InvestmentAccount.builder(uniqueIdentifier);
-        case MORTGAGE:
-        case LOAN:
-            return LoanAccount.builder(uniqueIdentifier);
-        default:
-            throw new IllegalStateException(
-                    String.format("Unknown Account type (%s)", type));
+            case SAVINGS:
+            case OTHER:
+            case CHECKING:
+                return TransactionalAccount.builder(type, uniqueIdentifier);
+            case CREDIT_CARD:
+                return CreditCardAccount.builder(uniqueIdentifier);
+            case PENSION:
+            case INVESTMENT:
+                return InvestmentAccount.builder(uniqueIdentifier);
+            case MORTGAGE:
+            case LOAN:
+                return LoanAccount.builder(uniqueIdentifier);
+            default:
+                throw new IllegalStateException(String.format("Unknown Account type (%s)", type));
         }
     }
 
@@ -109,9 +111,7 @@ public abstract class Account {
         return this.uniqueIdentifier.equals(sanitizeUniqueIdentifier(otherUniqueIdentifier));
     }
 
-    /**
-     * @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId
-     */
+    /** @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId */
     public String getBankIdentifier() {
         return this.bankIdentifier;
     }
@@ -182,7 +182,8 @@ public abstract class Account {
         protected Builder(String uniqueIdentifier) {
             this.thisObj = self();
 
-            Preconditions.checkArgument(!Strings.isNullOrEmpty(uniqueIdentifier),
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(uniqueIdentifier),
                     "Unique identifier is null or empty.");
             this.thisObj.uniqueIdentifier = uniqueIdentifier;
         }
@@ -225,7 +226,7 @@ public abstract class Account {
             return self();
         }
 
-        public T addIdentifiers(Collection<AccountIdentifier> identifiers){
+        public T addIdentifiers(Collection<AccountIdentifier> identifiers) {
             thisObj.identifiers.addAll(identifiers);
             return self();
         }
@@ -239,14 +240,14 @@ public abstract class Account {
             return self();
         }
 
-
-        public T addAccountFlags(Collection<AccountFlag> accountFlags){
+        public T addAccountFlags(Collection<AccountFlag> accountFlags) {
             thisObj.accountFlags.addAll(accountFlags);
             return self();
         }
 
         public String getUniqueIdentifier() {
-            return Preconditions.checkNotNull(thisObj.uniqueIdentifier, "Unique identifier must be set.");
+            return Preconditions.checkNotNull(
+                    thisObj.uniqueIdentifier, "Unique identifier must be set.");
         }
 
         public HolderName getHolderName() {

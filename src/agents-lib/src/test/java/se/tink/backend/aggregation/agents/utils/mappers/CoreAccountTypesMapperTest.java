@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.mappers;
 
 import org.junit.Test;
-import se.tink.libraries.enums.AccountTypes;
+import se.tink.libraries.account.enums.AccountTypes;
 import static org.junit.Assert.assertEquals;
 
 public class CoreAccountTypesMapperTest {

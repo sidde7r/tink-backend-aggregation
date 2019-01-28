@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.mappers;
 
 import org.modelmapper.ModelMapper;
-import se.tink.libraries.enums.AccountTypes;
+import se.tink.libraries.account.enums.AccountTypes;
 
 public class CoreAccountTypesMapper {
     public static se.tink.backend.agents.rpc.AccountTypes toAggregation(AccountTypes accountType) {

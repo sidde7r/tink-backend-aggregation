@@ -1,4 +1,4 @@
-package se.tink.libraries.enums;
+package se.tink.libraries.account.enums;
 
 public enum AccountFlag {
 

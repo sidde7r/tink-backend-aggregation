@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.UriBuilder;
 import se.tink.backend.core.Account;
-import se.tink.libraries.enums.AccountTypes;
+import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.abnamro.client.rpc.AuthenticatedRequest;
 import se.tink.libraries.abnamro.client.rpc.AuthenticationRequest;
 import se.tink.libraries.abnamro.client.exceptions.InternetBankingUnavailableException;

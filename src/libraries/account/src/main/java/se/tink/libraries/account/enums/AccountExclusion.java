@@ -1,6 +1,7 @@
-package se.tink.libraries.enums;
+package se.tink.libraries.account.enums;
 
 import java.util.EnumSet;
+import se.tink.libraries.enums.TinkFeature;
 
 public enum AccountExclusion {
     AGGREGATION(
