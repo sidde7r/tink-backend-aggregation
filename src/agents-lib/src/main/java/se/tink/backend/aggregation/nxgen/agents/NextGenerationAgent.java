@@ -283,12 +283,22 @@ public abstract class NextGenerationAgent extends AbstractAgent
 
     @Override
     public FetchLoanAccountsResponse fetchLoanAccounts() {
-        return fetchLoanAccounts(LoanRefreshController.class);
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        for (AccountRefresher refresher : getRefreshControllersOfType(LoanRefreshController.class)) {
+            accounts.putAll(refresher.refreshAccounts());
+        }
+
+        return new FetchLoanAccountsResponse(accounts);
     }
 
     @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
-        return fetchInvestmentAccounts(InvestmentRefreshController.class);
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        for (AccountRefresher refresher : getRefreshControllersOfType(InvestmentRefreshController.class)) {
+            accounts.putAll(refresher.refreshAccounts());
+        }
+
+        return new FetchInvestmentAccountsResponse(accounts);
     }
 
     private FetchAccountsResponse fetchTransactionalAccounts() {
@@ -308,25 +318,6 @@ public abstract class NextGenerationAgent extends AbstractAgent
         }
 
         return new FetchAccountsResponse(accounts);
-    }
-
-    private <T extends AccountRefresher> FetchLoanAccountsResponse fetchLoanAccounts(Class<T> cls) {
-        Map<Account, AccountFeatures> accounts = new HashMap<>();
-        for (AccountRefresher refresher : getRefreshControllersOfType(cls)) {
-            accounts.putAll(refresher.refreshAccounts());
-        }
-
-        return new FetchLoanAccountsResponse(accounts);
-    }
-
-    private <T extends AccountRefresher> FetchInvestmentAccountsResponse fetchInvestmentAccounts(
-            Class<T> cls) {
-        Map<Account, AccountFeatures> accounts = new HashMap<>();
-        for (AccountRefresher refresher : getRefreshControllersOfType(cls)) {
-            accounts.putAll(refresher.refreshAccounts());
-        }
-
-        return new FetchInvestmentAccountsResponse(accounts);
     }
 
     @Override
