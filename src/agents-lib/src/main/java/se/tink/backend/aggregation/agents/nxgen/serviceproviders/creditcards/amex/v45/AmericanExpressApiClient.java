@@ -44,7 +44,7 @@ public class AmericanExpressApiClient {
                         AmericanExpressConstants.HeaderValues.CLIENT_TYPE)
                 .header(
                         AmericanExpressConstants.Headers.CLIENT_VERSION,
-                        AmericanExpressConstants.HeaderValues.CLIENT_VERSION)
+                        config.getClientVersion())
                 .header(
                         AmericanExpressConstants.Headers.DEVICE_ID,
                         sessionStorage.get(AmericanExpressConstants.Tags.HARDWARE_ID))
