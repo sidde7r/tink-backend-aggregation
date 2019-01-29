@@ -34,8 +34,8 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.agents.rpc.User;
-import se.tink.backend.agents.rpc.UserProfile;
+import se.tink.libraries.user.rpc.User;
+import se.tink.libraries.user.rpc.UserProfile;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 import java.io.File;

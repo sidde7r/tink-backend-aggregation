@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.Collection;

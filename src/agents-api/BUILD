@@ -12,6 +12,7 @@ java_library(
         "//src/libraries/field:rpc",
         "//src/libraries/serialization",
         "//src/libraries/strings",
+        "//src/libraries/user:rpc",
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",

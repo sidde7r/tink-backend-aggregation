@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;

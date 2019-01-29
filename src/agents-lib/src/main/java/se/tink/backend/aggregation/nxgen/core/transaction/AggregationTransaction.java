@@ -14,7 +14,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

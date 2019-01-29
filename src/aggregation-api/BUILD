@@ -51,6 +51,7 @@ junit_test(
         "//src/aggregation-api",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_annotations:api-annotations-testlib-test",
+        "//src/libraries/user:rpc",
         "//src/main-api",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",

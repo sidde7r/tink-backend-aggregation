@@ -6,7 +6,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 
 public class AgentRequestTest {
 

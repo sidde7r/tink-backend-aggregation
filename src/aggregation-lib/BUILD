@@ -61,6 +61,7 @@ java_library(
         "//src/libraries/strings",
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
+        "//src/libraries/user:rpc",
         "//src/libraries/uuid",
         "//src/main-api",
         "//src/provider-configuration-api",
