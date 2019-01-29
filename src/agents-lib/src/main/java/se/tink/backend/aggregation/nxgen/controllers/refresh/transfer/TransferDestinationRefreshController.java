@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.libraries.metrics.MetricId;
 
 import java.util.*;
@@ -33,7 +32,7 @@ public final class TransferDestinationRefreshController implements Refresher {
     private final TransferDestinationFetcher transferDestinationFetcher;
 
     public TransferDestinationRefreshController(MetricRefreshController metricRefreshController,
-            UpdateController updateController, TransferDestinationFetcher transferDestinationFetcher) {
+             TransferDestinationFetcher transferDestinationFetcher) {
         this.metricRefreshController = Preconditions.checkNotNull(metricRefreshController);
         this.transferDestinationFetcher = Preconditions.checkNotNull(transferDestinationFetcher);
     }
