@@ -28,6 +28,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,8 +47,20 @@ import org.joda.time.DateTime;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -143,7 +156,10 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
+public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExecutor, RefreshTransferDestinationExecutor,
+        RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor, RefreshLoanAccountsExecutor,
+        RefreshInvestmentAccountsExecutor, RefreshCreditCardAccountsExecutor,
+        TransferExecutor,
         PersistentLogin {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -726,82 +742,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
 
         return Optional.ofNullable(account);
     }
-
-    /**
-     * Fetch information about an account/product.
-     */
-    private void refreshAccountsAndTransactions(ProductEntity productEntity, Account account) throws IOException {
-        String productType = productEntity.getNordeaProductType();
-        String accountId = productEntity.getNordeaAccountIdV2();
-
-        if (Objects.equal(productType, PRODUCT_TYPE_ACCOUNT)) {
-            refreshAccountTransactions(account, accountId, productEntity);
-        } else if (Objects.equal(productType, PRODUCT_TYPE_CARD)) {
-            refreshCreditCardAccountTransactions(account, accountId);
-        }
-    }
-
-    /**
-     * Fetch regular account transactions.
-     */
-    private Account refreshAccountTransactions(Account account, String accountId, ProductEntity productEntity)
-            throws IOException {
-        Map<String, Transaction> transactionsMap = Maps.newHashMap();
-        List<Transaction> transactions = Lists.newArrayList();
-
-        String continueKey = "";
-
-        // Fetch all the transaction pages.
-
-        while (true) {
-            TransactionListResponse transactionListResponse = fetchTransactions(accountId, continueKey);
-
-            // We've gotten some temporary error from Nordea when we try to get the accounts.
-            // Because of this we'll try to fetch again and see if we succeed.
-            if (transactionListResponse.getAccountTransactions() == null) {
-                this.log.warn("Failed fetching transactions. Retrying...");
-                transactionListResponse = fetchTransactions(accountId, continueKey);
-
-                Preconditions.checkNotNull(transactionListResponse.getAccountTransactions(),
-                        "Failed retry fetching transactions.");
-
-            }
-
-            continueKey = (transactionListResponse.getAccountTransactions().getContinueKey().get("$") == null ? null
-                    : transactionListResponse.getAccountTransactions().getContinueKey().get("$").toString());
-
-            Map<String, Transaction> transactionsPage = parseTransactions(transactionListResponse, account.getType());
-
-            // Break if we've fetched an empty transaction page.
-
-            if (!transactionsPage.isEmpty()) {
-                transactionsMap.putAll(transactionsPage);
-                transactions = Lists.newArrayList(transactionsMap.values());
-
-                this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
-
-                // See if we're content with the data we have.
-
-                if (isContentWithRefresh(account, transactions)) {
-                    break;
-                }
-            }
-
-            if (Strings.isNullOrEmpty(continueKey)) {
-                break;
-            }
-        }
-
-        List<PaymentPair> upcomingPayments = getPaymentsWithDetails(productEntity, Payment.StatusCode.CONFIRMED);
-        List<Transaction> upcomingTransactions = populateUpcomingTransactions(upcomingPayments);
-
-        transactions.addAll(upcomingTransactions);
-
-        this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
-        return this.financialDataCacher.updateTransactions(account, NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
-                .sortedCopy(transactions));
-    }
-
+    
     private TransactionListResponse fetchTransactions(String accountId, String continueKey) throws IOException {
         String transactionListResponseContent = createClientRequest(
                 this.market.getBankingEndpoint() + "/Transactions?accountId=" + accountId + "&continueKey="
@@ -894,101 +835,6 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
                 .sortedCopy(transactionsList));
     }
 
-    private void refreshLoan(Account account, ProductEntity product) throws IOException, ParseException {
-        String accountId = product.getNordeaAccountIdV2();
-
-        String loanResponseContent = createClientRequest(
-                this.market.getBankingEndpoint() + "/Loans/Details/" + accountId,
-                this.securityToken).get(String.class);
-        LoanDetailsResponse loanDetails = MAPPER.readValue(loanResponseContent, LoanDetailsResponse.class);
-
-        AccountFeatures assets = AccountFeatures.createEmpty();
-
-        if (loanDetails != null && loanDetails.getLoanDetails() != null &&
-                loanDetails.getLoanDetails().getLoanData() != null) {
-
-            Loan.Type loanType = NordeaAgentUtils.getLoanTypeForCode(product.getNordeaProductTypeExtension());
-
-            Loan loan = loanDetails.toLoan(account, loanType, loanResponseContent);
-            assets.setLoans(Lists.newArrayList(loan));
-        }
-
-        this.financialDataCacher.cacheAccount(account, assets);
-    }
-
-    private void refreshInvestmentAccounts() throws IOException {
-
-        CustodyAccountsResponse response = getCustodyAccounts();
-
-        // The Custody Account Service at Nordea isn't very stable. Returning silently from error "MBS0110" or "MBS9001"
-        // (Your custody accounts cannot be shown at the moment. Please try again later) as it is more important
-        // to get other accounts and transactions updated compared to having data for the custody accounts
-
-        if (response.hasError()) {
-            if (response.getErrorCode().equals("MBS0110") || response.getErrorCode().equals("MBS9001")) {
-                this.log.warn("Could not fetch custody accounts from Nordea");
-                return;
-            }
-
-            updateStatus(response.getErrorCode());
-            return;
-        }
-
-        InitialContextResponse contextResponse = getInitialContext();
-
-        if (contextResponse != null) {
-            for (ProductEntity account : contextResponse.getProductsOfTypes(PRODUCT_TYPE_ACCOUNT)) {
-
-                Optional<String> productNumber = account.getProductNumber();
-                Optional<String> balance = account.getBalance();
-
-                if (productNumber.isPresent() && balance.isPresent()) {
-                    custodyAccountCashValueMap.put(
-                            StringUtils.removeNonAlphaNumeric(productNumber.get()),
-                            parseAmount(balance.get()));
-                }
-            }
-
-            for (CustodyAccount custodyAccount : response.getCustodyAccounts()) {
-                try {
-
-                    if (custodyAccount == null) {
-                        continue;
-                    }
-
-                    Preconditions.checkState(custodyAccount.hasValidBankId(),
-                            "Unexpected account.bankid '%s' for account.name '%s'. Reformatted?",
-                            custodyAccount.getAccountId(), custodyAccount.getName());
-
-                    if (!custodyAccount.getCurrency().equalsIgnoreCase(this.market.getCurrency())) {
-                        this.log.warn(String.format("%s is the only supported currency. Currency was %s",
-                                this.market.getCurrency(), custodyAccount.getCurrency()));
-                        continue;
-                    }
-
-                    String accountNumber = StringUtils.removeNonAlphaNumeric(custodyAccount.getAccountNumber());
-
-                    Account account = custodyAccount.toAccount();
-                    Portfolio portfolio = custodyAccount.toPortfolio(
-                            custodyAccountCashValueMap.getOrDefault(accountNumber, 0.0));
-
-                    List<Instrument> instruments = Lists.newArrayList();
-                    custodyAccount.getHoldings()
-                            .forEach(holdingsEntity -> {
-                                holdingsEntity.toInstrument(custodyAccount.getCurrency())
-                                        .ifPresent(instruments::add);
-                            });
-                    portfolio.setInstruments(instruments);
-
-                    this.financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
-                } catch (Exception e) {
-                    // Don't fail the whole refresh just because we failed updating investment data but log error.
-                    this.log.error("Caught exception while updating investment data", e);
-                }
-            }
-        }
-    }
-
     private void updateCredentialsType(CredentialsTypes type) {
         if (type != this.credentials.getType()) {
             this.credentials.setType(type);
@@ -1073,214 +919,6 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
         }
 
         return productEntityAccountMap;
-    }
-
-    private void updateAccountsPerType(RefreshableItem type) {
-        getAccounts().entrySet().stream()
-                .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
-    }
-
-    private void updateTransactionsPerAccountType(RefreshableItem type) {
-        getAccounts().entrySet().stream()
-                .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> {
-                    try {
-                        refreshAccountsAndTransactions(set.getKey(), set.getValue());
-                    } catch (Exception e) {
-                        throw new IllegalStateException(e);
-                    }
-                });
-    }
-
-    @Override
-    public void refresh(RefreshableItem item) {
-
-        // cached
-        InitialContextResponse contextResponse = getInitialContext();
-        if (contextResponse == null) {
-            return;
-        }
-
-        switch (item) {
-        case TRANSFER_DESTINATIONS:
-            try {
-                updateTransferDestinations();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case EINVOICES:
-            try {
-                updateEInvoices();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
-        case CREDITCARD_ACCOUNTS:
-            updateAccountsPerType(item);
-            break;
-
-        case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
-        case CREDITCARD_TRANSACTIONS:
-            updateTransactionsPerAccountType(item);
-            break;
-
-        case LOAN_ACCOUNTS:
-            try {
-                refreshLoans(contextResponse);
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case INVESTMENT_ACCOUNTS:
-            try {
-                refreshInvestmentAccounts();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-        }
-    }
-
-    private void refreshLoans(InitialContextResponse contextResponse) throws IOException {
-
-        List<ProductEntity> products = contextResponse.getProductsOfTypes(PRODUCT_TYPE_LOAN);
-
-        for (ProductEntity product : products) {
-
-            Optional<Account> account = constructAccount(product);
-
-            if (!account.isPresent()) {
-                continue;
-            }
-
-            try {
-                refreshLoan(account.get(), product);
-            } catch (Exception e) {
-                this.log.error("Couldn't fetch loan information--ignoring account ("
-                        + product.getNordeaAccountIdV2() + ")", e);
-            }
-        }
-    }
-
-    private void updateTransferDestinations() throws Exception {
-        InitialContextResponse contextResponse = getInitialContext();
-
-        if (contextResponse == null) {
-            return;
-        }
-
-        List<GeneralAccountEntity> sourceAccounts = Lists.newArrayList();
-        List<GeneralAccountEntity> destinationAccounts = Lists.newArrayList();
-        List<GeneralAccountEntity> paymentSourceAccounts = Lists.newArrayList();
-        List<GeneralAccountEntity> paymentDestinationAccounts = Lists.newArrayList();
-        List<GeneralAccountEntity> internalOnlySourceAccounts = Lists.newArrayList();
-        List<GeneralAccountEntity> internalOnlyDestinationAccounts = Lists.newArrayList();
-
-        List<ProductEntity> internalAccounts = contextResponse.getData().getProducts();
-        List<BeneficiaryEntity> beneficiaries = getBeneficiaries();
-
-        if (internalAccounts == null || beneficiaries == null) {
-            return;
-        }
-
-        for (ProductEntity entity : internalAccounts) {
-
-            Boolean ownTransferFrom = entity.getProductIdBoolean("@ownTransferFrom");
-            Boolean ownTransferTo = entity.getProductIdBoolean("@ownTransferTo");
-            Boolean thirdParty = entity.getProductIdBoolean("@thirdParty");
-
-            if (ownTransferFrom != null && ownTransferFrom) {
-                if (thirdParty != null && thirdParty) {
-                    sourceAccounts.add(entity);
-                } else {
-                    internalOnlySourceAccounts.add(entity);
-                }
-
-                if (entity.canMakePayment()) {
-                    paymentSourceAccounts.add(entity);
-                }
-            }
-
-            if (ownTransferTo != null && ownTransferTo) {
-                destinationAccounts.add(entity);
-                internalOnlyDestinationAccounts.add(entity);
-            }
-        }
-
-        for (BeneficiaryEntity entity : beneficiaries) {
-            if (entity.isBankTransferEntity()) {
-                destinationAccounts.add(entity);
-            }
-
-            if (entity.isPaymentEntity()) {
-                if (entity.isPgPaymentEntity() || entity.isBgPaymentEntity()) {
-                    paymentDestinationAccounts.add(entity);
-                }
-            }
-        }
-
-        TransferDestinationsResponse response = new TransferDestinationsResponse();
-
-        Map<Account, List<TransferDestinationPattern>> internalOnly = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
-                .setSourceAccounts(internalOnlySourceAccounts)
-                .setDestinationAccounts(internalOnlyDestinationAccounts)
-                .build();
-
-        response.addDestinations(internalOnly);
-
-        Map<Account, List<TransferDestinationPattern>> external = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
-                .setSourceAccounts(sourceAccounts)
-                .setDestinationAccounts(destinationAccounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
-                .build();
-
-        response.addDestinations(external);
-
-        Map<Account, List<TransferDestinationPattern>> payments = new TransferDestinationPatternBuilder()
-                .setTinkAccounts(systemUpdater.getUpdatedAccounts())
-                .setSourceAccounts(paymentSourceAccounts)
-                .setDestinationAccounts(paymentDestinationAccounts)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)
-                .addMultiMatchPattern(AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
-                .build();
-
-        response.addDestinations(payments);
-
-        systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
-    }
-
-    private void updateEInvoices() throws Exception {
-        if (!this.market.getMarketCode().equals("SE")) {
-            return;
-        }
-
-        InitialContextResponse contextResponse = getInitialContext();
-
-        if (contextResponse == null) {
-            return;
-        }
-
-        List<ProductEntity> accounts = contextResponse.getData().getProducts();
-
-        List<PaymentPair> unsignedEInvoices = getPaymentsWithDetails(accounts,
-                Payment.StatusCode.UNCONFIRMED, Payment.SubType.EINVOICE);
-
-        List<Transfer> eInvoices = Lists.newArrayList(FluentIterable
-                .from(unsignedEInvoices)
-                .transform(PaymentPair.TO_PAYMENTDETAILS)
-                .transform(PaymentDetailsResponseOut.TO_EINVOICE_TRANSFER));
-
-        systemUpdater.updateEinvoices(eInvoices);
     }
 
     private InitialContextResponse getInitialContext() {
@@ -2480,4 +2118,473 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshableItemExec
             return getPaymentDetails().toEInvoiceTransfer().toString();
         }
     }
+
+    ////// Refresh Executor Refactor ///////////
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        try {
+            if (!this.market.getMarketCode().equals("SE")) {
+                return new FetchEInvoicesResponse(Collections.emptyList());
+            }
+
+            InitialContextResponse contextResponse = getInitialContext();
+
+            if (contextResponse == null) {
+                return new FetchEInvoicesResponse(Collections.emptyList());
+            }
+
+            List<ProductEntity> accounts = contextResponse.getData().getProducts();
+
+            List<PaymentPair> unsignedEInvoices = getPaymentsWithDetails(accounts,
+                    Payment.StatusCode.UNCONFIRMED, Payment.SubType.EINVOICE);
+
+            List<Transfer> eInvoices = Lists.newArrayList(FluentIterable
+                    .from(unsignedEInvoices)
+                    .transform(PaymentPair.TO_PAYMENTDETAILS)
+                    .transform(PaymentDetailsResponseOut.TO_EINVOICE_TRANSFER));
+
+            return new FetchEInvoicesResponse(eInvoices);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        try {
+            InitialContextResponse contextResponse = getInitialContext();
+
+            if (contextResponse == null) {
+                return new FetchTransferDestinationsResponse(Collections.emptyMap());
+            }
+
+            List<GeneralAccountEntity> sourceAccounts = Lists.newArrayList();
+            List<GeneralAccountEntity> destinationAccounts = Lists.newArrayList();
+            List<GeneralAccountEntity> paymentSourceAccounts = Lists.newArrayList();
+            List<GeneralAccountEntity> paymentDestinationAccounts = Lists.newArrayList();
+            List<GeneralAccountEntity> internalOnlySourceAccounts = Lists.newArrayList();
+            List<GeneralAccountEntity> internalOnlyDestinationAccounts = Lists.newArrayList();
+
+            List<ProductEntity> internalAccounts = contextResponse.getData().getProducts();
+            List<BeneficiaryEntity> beneficiaries = getBeneficiaries();
+
+            if (internalAccounts == null || beneficiaries == null) {
+                return new FetchTransferDestinationsResponse(Collections.emptyMap());
+            }
+
+            for (ProductEntity entity : internalAccounts) {
+
+                Boolean ownTransferFrom = entity.getProductIdBoolean("@ownTransferFrom");
+                Boolean ownTransferTo = entity.getProductIdBoolean("@ownTransferTo");
+                Boolean thirdParty = entity.getProductIdBoolean("@thirdParty");
+
+                if (ownTransferFrom != null && ownTransferFrom) {
+                    if (thirdParty != null && thirdParty) {
+                        sourceAccounts.add(entity);
+                    } else {
+                        internalOnlySourceAccounts.add(entity);
+                    }
+
+                    if (entity.canMakePayment()) {
+                        paymentSourceAccounts.add(entity);
+                    }
+                }
+
+                if (ownTransferTo != null && ownTransferTo) {
+                    destinationAccounts.add(entity);
+                    internalOnlyDestinationAccounts.add(entity);
+                }
+            }
+
+            for (BeneficiaryEntity entity : beneficiaries) {
+                if (entity.isBankTransferEntity()) {
+                    destinationAccounts.add(entity);
+                }
+
+                if (entity.isPaymentEntity()) {
+                    if (entity.isPgPaymentEntity() || entity.isBgPaymentEntity()) {
+                        paymentDestinationAccounts.add(entity);
+                    }
+                }
+            }
+
+            TransferDestinationsResponse response = new TransferDestinationsResponse();
+
+            Map<Account, List<TransferDestinationPattern>> internalOnly = new TransferDestinationPatternBuilder()
+                    .setTinkAccounts(accounts)
+                    .setSourceAccounts(internalOnlySourceAccounts)
+                    .setDestinationAccounts(internalOnlyDestinationAccounts)
+                    .build();
+
+            response.addDestinations(internalOnly);
+
+            Map<Account, List<TransferDestinationPattern>> external = new TransferDestinationPatternBuilder()
+                    .setTinkAccounts(accounts)
+                    .setSourceAccounts(sourceAccounts)
+                    .setDestinationAccounts(destinationAccounts)
+                    .addMultiMatchPattern(AccountIdentifier.Type.SE, TransferDestinationPattern.ALL)
+                    .build();
+
+            response.addDestinations(external);
+
+            Map<Account, List<TransferDestinationPattern>> payments = new TransferDestinationPatternBuilder()
+                    .setTinkAccounts(accounts)
+                    .setSourceAccounts(paymentSourceAccounts)
+                    .setDestinationAccounts(paymentDestinationAccounts)
+                    .addMultiMatchPattern(AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL)
+                    .addMultiMatchPattern(AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
+                    .build();
+
+            response.addDestinations(payments);
+
+
+            return new FetchTransferDestinationsResponse(response.getDestinations());
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private FetchAccountsResponse fetchAccountsPerType(RefreshableItem type) {
+
+        List<Account> accounts = new ArrayList<>();
+        getAccounts().entrySet().stream()
+                .filter(set -> type.isAccountType(set.getValue().getType()))
+                .forEach(set -> accounts.add(set.getValue()));
+        return new FetchAccountsResponse(accounts);
+    }
+
+
+    private FetchTransactionsResponse fetchTransactionsPerAccountType(RefreshableItem type) {
+        Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
+        getAccounts().entrySet().stream()
+                .filter(set -> type.isAccountType(set.getValue().getType()))
+                .forEach(set -> {
+                    try {
+                        transactionsMap.put(set.getValue(), fetchAccountsAndTransactions(set.getKey(), set.getValue()));
+                    } catch (Exception e) {
+                        throw new IllegalStateException(e);
+                    }
+                });
+        return new FetchTransactionsResponse(transactionsMap);
+    }
+
+    /**
+     * Fetch information about an account/product.
+     */
+    private List<Transaction> fetchAccountsAndTransactions(ProductEntity productEntity, Account account) throws IOException {
+        String productType = productEntity.getNordeaProductType();
+        String accountId = productEntity.getNordeaAccountIdV2();
+
+        if (Objects.equal(productType, PRODUCT_TYPE_ACCOUNT)) {
+            return fetchAccountTransactions(account, accountId, productEntity);
+        } else if (Objects.equal(productType, PRODUCT_TYPE_CARD)) {
+            return fetchCreditCardAccountTransactions(account, accountId);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private List<Transaction> fetchAccountTransactions(Account account, String accountId, ProductEntity productEntity)
+            throws IOException {
+        Map<String, Transaction> transactionsMap = Maps.newHashMap();
+        List<Transaction> transactions = Lists.newArrayList();
+
+        String continueKey = "";
+
+        // Fetch all the transaction pages.
+
+        while (true) {
+            TransactionListResponse transactionListResponse = fetchTransactions(accountId, continueKey);
+
+            // We've gotten some temporary error from Nordea when we try to get the accounts.
+            // Because of this we'll try to fetch again and see if we succeed.
+            if (transactionListResponse.getAccountTransactions() == null) {
+                this.log.warn("Failed fetching transactions. Retrying...");
+                transactionListResponse = fetchTransactions(accountId, continueKey);
+
+                Preconditions.checkNotNull(transactionListResponse.getAccountTransactions(),
+                        "Failed retry fetching transactions.");
+
+            }
+
+            continueKey = (transactionListResponse.getAccountTransactions().getContinueKey().get("$") == null ? null
+                    : transactionListResponse.getAccountTransactions().getContinueKey().get("$").toString());
+
+            Map<String, Transaction> transactionsPage = parseTransactions(transactionListResponse, account.getType());
+
+            // Break if we've fetched an empty transaction page.
+
+            if (!transactionsPage.isEmpty()) {
+                transactionsMap.putAll(transactionsPage);
+                transactions = Lists.newArrayList(transactionsMap.values());
+
+                this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+
+                // See if we're content with the data we have.
+
+                if (isContentWithRefresh(account, transactions)) {
+                    break;
+                }
+            }
+
+            if (Strings.isNullOrEmpty(continueKey)) {
+                break;
+            }
+        }
+
+        List<PaymentPair> upcomingPayments = getPaymentsWithDetails(productEntity, Payment.StatusCode.CONFIRMED);
+        List<Transaction> upcomingTransactions = populateUpcomingTransactions(upcomingPayments);
+
+        transactions.addAll(upcomingTransactions);
+
+        this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+        return NordeaAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions);
+    }
+
+    /**
+     * Fetch credit card transactions.
+     */
+    private List<Transaction> fetchCreditCardAccountTransactions(Account account, String accountId)
+            throws IOException {
+        Map<String, Transaction> transactionsMap = Maps.newHashMap();
+        List<Transaction> transactionsList = Lists.newArrayList();
+
+        Calendar startDateOfMonth = null;
+
+        // Loop through all available transaction pages.
+
+        while (true) {
+            String period = (startDateOfMonth == null ? null : DateUtils.getMonthPeriod(startDateOfMonth.getTime()));
+
+            String beginTransactionDate = (period == null ? "" : ThreadSafeDateFormat.FORMATTER_DAILY.format(DateUtils
+                    .getFirstDateFromPeriod(period)));
+            String endTransactionDate = (period == null ? "" : ThreadSafeDateFormat.FORMATTER_DAILY.format(DateUtils
+                    .getLastDateFromPeriod(period)));
+
+            String transactionListResponseContent = createClientRequest(
+                    this.market.getBankingEndpoint() + "/Transactions?cardNumber=" + accountId
+                            + "&beginTransactionDate="
+                            + beginTransactionDate + "&endTransactionDate=" + endTransactionDate, this.securityToken)
+                    .get(
+                            String.class);
+
+            TransactionListResponse transactionListResponse = MAPPER.readValue(transactionListResponseContent,
+                    TransactionListResponse.class);
+
+            Map<String, Transaction> transactionsPage = parseTransactions(transactionListResponse, account.getType());
+
+            // Break if we've fetched an empty transaction page.
+
+            if (period != null && transactionsPage.isEmpty()) {
+                break;
+            } else {
+                transactionsMap.putAll(transactionsPage);
+                transactionsList = Lists.newArrayList(transactionsMap.values());
+
+                this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
+
+                // Either construct the date object to start fetching the historical card transactions, or go back
+                // another month.
+
+                if (startDateOfMonth == null) {
+                    startDateOfMonth = DateUtils.getCalendar();
+                    startDateOfMonth.set(Calendar.DAY_OF_MONTH, 1);
+                } else {
+                    startDateOfMonth.add(Calendar.MONTH, -1);
+                }
+
+                // See if we're content with the data we have.
+
+                if (isContentWithRefresh(account, transactionsList)) {
+                    break;
+                } else {
+                    continue;
+                }
+            }
+        }
+
+        this.statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactionsList);
+        return NordeaAgentUtils.TRANSACTION_ORDERING.reverse()
+                .sortedCopy(transactionsList);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return fetchAccountsPerType(RefreshableItem.CHECKING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return fetchTransactionsPerAccountType(RefreshableItem.CHECKING_TRANSACTIONS);
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        try {
+            Map<Account, AccountFeatures> accounts = new HashMap<>();
+            CustodyAccountsResponse response = getCustodyAccounts();
+
+            // The Custody Account Service at Nordea isn't very stable. Returning silently from error "MBS0110" or "MBS9001"
+            // (Your custody accounts cannot be shown at the moment. Please try again later) as it is more important
+            // to get other accounts and transactions updated compared to having data for the custody accounts
+
+            if (response.hasError()) {
+                if (response.getErrorCode().equals("MBS0110") || response.getErrorCode().equals("MBS9001")) {
+                    this.log.warn("Could not fetch custody accounts from Nordea");
+                    return new FetchInvestmentAccountsResponse(Collections.emptyMap());
+                }
+
+                updateStatus(response.getErrorCode());
+                return new FetchInvestmentAccountsResponse(Collections.emptyMap());
+            }
+
+            InitialContextResponse contextResponse = getInitialContext();
+
+            if (contextResponse != null) {
+                for (ProductEntity account : contextResponse.getProductsOfTypes(PRODUCT_TYPE_ACCOUNT)) {
+
+                    Optional<String> productNumber = account.getProductNumber();
+                    Optional<String> balance = account.getBalance();
+
+                    if (productNumber.isPresent() && balance.isPresent()) {
+                        custodyAccountCashValueMap.put(
+                                StringUtils.removeNonAlphaNumeric(productNumber.get()),
+                                parseAmount(balance.get()));
+                    }
+                }
+
+                for (CustodyAccount custodyAccount : response.getCustodyAccounts()) {
+                    try {
+
+                        if (custodyAccount == null) {
+                            continue;
+                        }
+
+                        Preconditions.checkState(custodyAccount.hasValidBankId(),
+                                "Unexpected account.bankid '%s' for account.name '%s'. Reformatted?",
+                                custodyAccount.getAccountId(), custodyAccount.getName());
+
+                        if (!custodyAccount.getCurrency().equalsIgnoreCase(this.market.getCurrency())) {
+                            this.log.warn(String.format("%s is the only supported currency. Currency was %s",
+                                    this.market.getCurrency(), custodyAccount.getCurrency()));
+                            continue;
+                        }
+
+                        String accountNumber = StringUtils.removeNonAlphaNumeric(custodyAccount.getAccountNumber());
+
+                        Account account = custodyAccount.toAccount();
+                        Portfolio portfolio = custodyAccount.toPortfolio(
+                                custodyAccountCashValueMap.getOrDefault(accountNumber, 0.0));
+
+                        List<Instrument> instruments = Lists.newArrayList();
+                        custodyAccount.getHoldings()
+                                .forEach(holdingsEntity -> {
+                                    holdingsEntity.toInstrument(custodyAccount.getCurrency())
+                                            .ifPresent(instruments::add);
+                                });
+                        portfolio.setInstruments(instruments);
+
+                        accounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+                    } catch (Exception e) {
+                        // Don't fail the whole refresh just because we failed updating investment data but log error.
+                        this.log.error("Caught exception while updating investment data", e);
+                    }
+                }
+                return new FetchInvestmentAccountsResponse(accounts);
+            } else {
+                return new FetchInvestmentAccountsResponse(Collections.emptyMap());
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        try {
+            Map<Account, AccountFeatures> accounts = new HashMap<>();
+            // cached
+            InitialContextResponse contextResponse = getInitialContext();
+            if (contextResponse == null) {
+                return new FetchLoanAccountsResponse(Collections.emptyMap());
+            }
+            List<ProductEntity> products = contextResponse.getProductsOfTypes(PRODUCT_TYPE_LOAN);
+
+            for (ProductEntity product : products) {
+
+                Optional<Account> account = constructAccount(product);
+
+                if (!account.isPresent()) {
+                    continue;
+                }
+
+                try {
+                    accounts.put(account.get(), fetchLoan(account.get(), product));
+                } catch (Exception e) {
+                    this.log.error("Couldn't fetch loan information--ignoring account ("
+                            + product.getNordeaAccountIdV2() + ")", e);
+                }
+            }
+            return new FetchLoanAccountsResponse(accounts);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private AccountFeatures fetchLoan(Account account, ProductEntity product) throws IOException, ParseException {
+
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        String accountId = product.getNordeaAccountIdV2();
+
+        String loanResponseContent = createClientRequest(
+                this.market.getBankingEndpoint() + "/Loans/Details/" + accountId,
+                this.securityToken).get(String.class);
+        LoanDetailsResponse loanDetails = MAPPER.readValue(loanResponseContent, LoanDetailsResponse.class);
+
+        AccountFeatures assets = AccountFeatures.createEmpty();
+
+        if (loanDetails != null && loanDetails.getLoanDetails() != null &&
+                loanDetails.getLoanDetails().getLoanData() != null) {
+
+            Loan.Type loanType = NordeaAgentUtils.getLoanTypeForCode(product.getNordeaProductTypeExtension());
+
+            Loan loan = loanDetails.toLoan(account, loanType, loanResponseContent);
+            assets.setLoans(Lists.newArrayList(loan));
+        }
+
+        return assets;
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return fetchAccountsPerType(RefreshableItem.SAVING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return fetchTransactionsPerAccountType(RefreshableItem.SAVING_TRANSACTIONS);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return fetchAccountsPerType(RefreshableItem.CREDITCARD_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return fetchTransactionsPerAccountType(RefreshableItem.CREDITCARD_ACCOUNTS);
+    }
+
+    ////////////////////////////////////////////
 }
