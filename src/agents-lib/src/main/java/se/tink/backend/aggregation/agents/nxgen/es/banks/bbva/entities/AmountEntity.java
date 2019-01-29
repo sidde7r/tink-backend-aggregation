@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc;
 
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.StockAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -10,6 +11,7 @@ public class FetchProductsResponse extends BbvaResponse {
 
     private List<AccountEntity> accounts;
     private List<AccountEntity> cards;
+    private List<StockAccountEntity> stockAccounts;
     private List<Object> internationalFundsPortfolios;
     private List<Object> workingCapitalLoansLimits;
     private List<Object> revolvingCredits;
@@ -53,5 +55,9 @@ public class FetchProductsResponse extends BbvaResponse {
 
     public List<Object> getManagedFundsPortfolios() {
         return managedFundsPortfolios;
+    }
+
+    public List<StockAccountEntity> getStockAccounts() {
+        return stockAccounts;
     }
 }
