@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,9 +28,14 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TestAccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.user.rpc.User;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class RefreshControllersTest {
@@ -106,8 +107,7 @@ public class RefreshControllersTest {
                 .add(new InvestmentRefreshController(metricRefreshController, updateController, investmentFetcher))
                 .add(new LoanRefreshController(metricRefreshController, updateController, loanFetcher))
                 .add(new EInvoiceRefreshController(metricRefreshController, updateController, eInvoiceFetcher))
-                .add(new TransferDestinationRefreshController(metricRefreshController, updateController,
-                        transferDestinationFetcher))
+                .add(new TransferDestinationRefreshController(metricRefreshController, transferDestinationFetcher))
                 .build();
     }
 
@@ -249,15 +249,7 @@ public class RefreshControllersTest {
         executionOrder.verify(transferDestinationFetcher).fetchTransferDestinationsFor(accounts.get(0));
     }
     */
-
-    @Test
-    public void ensureFetchEInvoices_fetchesEInvoices() {
-        getRefreshController(EInvoiceRefreshController.class)
-                .ifPresent(EInvoiceRefreshController::refreshEInvoices);
-        executionOrder.verify(eInvoiceFetcher).fetchEInvoices();
-        executionOrder.verify(updateController).updateEInvoices(Mockito.anyList());
-    }
-
+    
     /*
     // Test fail due to TransferDestinationFetcherController touches context
     @Test

@@ -96,7 +96,7 @@ public class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
-        return Optional.of(new TransferDestinationRefreshController(metricRefreshController, updateController,
+        return Optional.of(new TransferDestinationRefreshController(metricRefreshController,
                 new KbcTransferDestinationFetcher(apiClient, kbcLanguage)));
     }
 
