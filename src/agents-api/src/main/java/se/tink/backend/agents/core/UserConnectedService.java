@@ -1,13 +1,8 @@
 package se.tink.backend.agents.core;
 
-import io.protostuff.Tag;
-
 public class UserConnectedService {
-    @Tag(1)
     private String externalId;
-    @Tag(2)
     private UserConnectedServiceStates state;
-    @Tag(3)
     private UserConnectedServiceTypes type;
 
     public UserConnectedService() {
