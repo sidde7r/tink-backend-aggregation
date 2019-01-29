@@ -9,9 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest;
-import se.tink.backend.aggregation.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.Provider;
@@ -19,8 +18,8 @@ import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.User;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
-import se.tink.backend.utils.StringUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -68,6 +67,11 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
                                     public void migrateData(
                                             ControllerWrapper controllerWrapper,
                                             CredentialsRequest request) {}
+
+                                    @Override
+                                    protected ControllerWrapper getControlWrapper() {
+                                        return wrapper;
+                                    }
                                 }));
 
         AgentWorkerCommandResult result = command.execute();
@@ -110,6 +114,11 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
                                             CredentialsRequest request) {
                                         migrateDataCalled.set(true);
                                     }
+
+                                    @Override
+                                    protected ControllerWrapper getControlWrapper() {
+                                        return wrapper;
+                                    }
                                 }));
 
         AgentWorkerCommandResult result = command.execute();
@@ -120,6 +129,7 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
         Assert.assertTrue(changeRequestCalled.get());
         Assert.assertTrue(migrateDataCalled.get());
     }
+
     @Test
     public void testMigrationCommandCallsCorrectMethods() throws Exception {
         AtomicBoolean shouldChangeRequestCalled = new AtomicBoolean(false);
@@ -155,6 +165,11 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
                                             ControllerWrapper controllerWrapper,
                                             CredentialsRequest request) {
                                         migrateDataCalled.set(true);
+                                    }
+
+                                    @Override
+                                    protected ControllerWrapper getControlWrapper() {
+                                        return wrapper;
                                     }
                                 }));
 
@@ -197,6 +212,11 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
                                     public void migrateData(
                                             ControllerWrapper controllerWrapper,
                                             CredentialsRequest request) {}
+
+                                    @Override
+                                    protected ControllerWrapper getControlWrapper() {
+                                        return wrapper;
+                                    }
                                 }));
 
         AgentWorkerCommandResult result = command.execute();
@@ -250,11 +270,15 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
                                         try {
                                             Account a = request.getAccounts().get(0).clone();
                                             a.setBankId(a.getBankId().replaceAll("-", ""));
-                                            migrateAccounts(
-                                                    wrapper, request, Lists.newArrayList(a));
+                                            migrateAccounts(request, Lists.newArrayList(a));
                                         } catch (CloneNotSupportedException e) {
                                             Assert.fail("should allow cloning");
                                         }
+                                    }
+
+                                    @Override
+                                    protected ControllerWrapper getControlWrapper() {
+                                        return wrapper;
                                     }
                                 }));
         AgentWorkerCommandResult result = command.execute();
@@ -272,7 +296,7 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
         //        Assert.assertEquals("bankid", newBankId.getAccount().getBankId());
 
         Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
-        //Same values, but different instances
+        // Same values, but different instances
         Assert.assertNotEquals(a, request.getAccounts().get(0));
         Assert.assertEquals(newBankId, request.getAccounts().get(0).getBankId());
         Assert.assertTrue(request.isUpdate());

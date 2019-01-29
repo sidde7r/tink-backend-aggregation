@@ -42,6 +42,7 @@ import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
+import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
@@ -260,6 +261,9 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(
+                new MigrateCredentialsAndAccountsWorkerCommand(
+                        context.getRequest(), controllerWrapper));
 
         // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
         // transactions aren't processed in system. The transaction processing in system will set the status
@@ -382,6 +386,8 @@ public class AgentWorkerOperationFactory {
                 new ValidateProviderAgentWorkerStatus(context, controllerWrapper),
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState),
                 new LockAgentWorkerCommand(context),
+                new MigrateCredentialsAndAccountsWorkerCommand(
+                        context.getRequest(), controllerWrapper),
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationName, reportMetricsAgentWorkerCommandState),
                 new ReportProviderTransferMetricsAgentWorkerCommand(context, operationName),
@@ -487,6 +493,9 @@ public class AgentWorkerOperationFactory {
 
         commands.add(new ValidateProviderAgentWorkerStatus(context, controllerWrapper));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(
+                new MigrateCredentialsAndAccountsWorkerCommand(
+                        context.getRequest(), controllerWrapper));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, "keep-alive", reportMetricsAgentWorkerCommandState));
@@ -600,7 +609,9 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
-
+        commands.add(
+                new MigrateCredentialsAndAccountsWorkerCommand(
+                        context.getRequest(), controllerWrapper));
         // Update the status to `UPDATED` if the credential isn't waiting on transactions from the connector and if
         // transactions aren't processed in system. The transaction processing in system will set the status
         // to `UPDATED` when transactions have been processed and new statistics are generated.
@@ -668,6 +679,9 @@ public class AgentWorkerOperationFactory {
         commands.add(
                 new CircuitBreakerAgentWorkerCommand(context, circuitBreakAgentWorkerCommandState));
         commands.add(new LockAgentWorkerCommand(context));
+        commands.add(
+                new MigrateCredentialsAndAccountsWorkerCommand(
+                        context.getRequest(), controllerWrapper));
         commands.add(
                 new ReportProviderMetricsAgentWorkerCommand(
                         context, operationMetricName, reportMetricsAgentWorkerCommandState));

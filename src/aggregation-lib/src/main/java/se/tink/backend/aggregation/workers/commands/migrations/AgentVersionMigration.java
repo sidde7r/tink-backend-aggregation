@@ -17,18 +17,15 @@ public abstract class AgentVersionMigration {
     public abstract void migrateData(
             final ControllerWrapper controllerWrapper, CredentialsRequest request);
 
-    protected void migrateAccounts(
-            final ControllerWrapper controllerWrapper,
-            CredentialsRequest request,
-            List<Account> accounts) {
+    protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
         List<Account> accountList =
-                accounts.stream()
-                        .map(a -> migrateAccount(controllerWrapper, a))
-                        .collect(Collectors.toList());
+                accounts.stream().map(a -> migrateAccount(a)).collect(Collectors.toList());
         request.setAccounts(accountList);
     }
 
-    protected Account migrateAccount(final ControllerWrapper controllerWrapper, Account account) {
-        return controllerWrapper.updateAccountMetaData(account.getId(), account.getBankId());
+    protected Account migrateAccount(Account account) {
+        return getControlWrapper().updateAccountMetaData(account.getId(), account.getBankId());
     }
+
+    protected abstract ControllerWrapper getControlWrapper();
 }
