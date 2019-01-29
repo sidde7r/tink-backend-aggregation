@@ -12,6 +12,6 @@ public class AmericanExpressFRConstants extends AmericanExpressConstants {
 
     public static class BodyValues {
         public static final String LOCALE = "fr_FR";
-        public static final String CLIENT_VERSION = "4.5.1";
+        public static final String CLIENT_VERSION = "4.5.0";
     }
 }

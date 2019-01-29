@@ -14,7 +14,7 @@ public class AmericanExpressBEConstants {
 
     public static class BodyValue {
         public static final String LOCALE = "en_BE";
-        public static final String CLIENT_VERSION = "4.4.1";
+        public static final String CLIENT_VERSION = "4.5.0";
     }
 
 }
