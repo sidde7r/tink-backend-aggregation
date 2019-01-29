@@ -5,7 +5,7 @@ import java.util.List;
 import org.junit.Test;
 import se.tink.libraries.abnamro.client.model.RejectedContractEntity;
 import se.tink.libraries.abnamro.client.model.SubscriptionResult;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SubscriptionResultBuilderTest {

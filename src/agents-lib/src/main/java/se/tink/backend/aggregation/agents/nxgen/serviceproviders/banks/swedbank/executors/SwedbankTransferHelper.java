@@ -24,11 +24,11 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankTransferHelper {
 
@@ -38,8 +38,11 @@ public class SwedbankTransferHelper {
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final SwedbankDefaultApiClient apiClient;
 
-    public SwedbankTransferHelper(AgentContext context, Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper, SwedbankDefaultApiClient apiClient) {
+    public SwedbankTransferHelper(
+            AgentContext context,
+            Catalog catalog,
+            SupplementalInformationHelper supplementalInformationHelper,
+            SwedbankDefaultApiClient apiClient) {
         this.context = context;
         this.supplementalRequester = context;
         this.catalog = catalog;
@@ -51,7 +54,8 @@ public class SwedbankTransferHelper {
         supplementalRequester.openBankId(null, false);
 
         for (int i = 0; i < SwedbankBaseConstants.BankId.MAX_ATTEMPTS; i++) {
-            SwedbankBaseConstants.BankIdResponseStatus signingStatus = bankIdSignResponse.getBankIdStatus();
+            SwedbankBaseConstants.BankIdResponseStatus signingStatus =
+                    bankIdSignResponse.getBankIdStatus();
 
             switch (signingStatus) {
                 case CLIENT_NOT_STARTED:
@@ -61,20 +65,27 @@ public class SwedbankTransferHelper {
                     return bankIdSignResponse.getLinks();
                 case CANCELLED:
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_CANCELLED)
-                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
+                            .setEndUserMessage(
+                                    TransferExecutionException.EndUserMessage.BANKID_CANCELLED)
+                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                            .build();
                 case TIMEOUT:
                 default:
                     throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                            .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED)
-                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_FAILED).build();
+                            .setEndUserMessage(
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_TRANSFER_FAILED)
+                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_FAILED)
+                            .build();
             }
 
             LinksEntity links = bankIdSignResponse.getLinks();
             if (links == null) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
-                        .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_FAILED).build();
+                        .setEndUserMessage(
+                                TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
+                        .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_FAILED)
+                        .build();
             }
 
             try {
@@ -84,33 +95,45 @@ public class SwedbankTransferHelper {
                 if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                     // This means that another BankId session was started WHILE polling
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_ANOTHER_IN_PROGRESS)
-                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
+                            .setEndUserMessage(
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_ANOTHER_IN_PROGRESS)
+                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                            .build();
                 }
 
                 // Re-throw unknown exception.
                 throw hre;
             }
-            Uninterruptibles.sleepUninterruptibly(SwedbankBaseConstants.BankId.BANKID_SLEEP_INTERVAL, TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(
+                    SwedbankBaseConstants.BankId.BANKID_SLEEP_INTERVAL, TimeUnit.MILLISECONDS);
         }
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE)
-                .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED).build();
+                .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
+                .build();
     }
 
     public static SwedbankBaseConstants.ReferenceType getReferenceTypeFor(Transfer transfer) {
-        GiroMessageValidator giroValidator = GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
-        Optional<String> validOcr = giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
+        GiroMessageValidator giroValidator =
+                GiroMessageValidator.create(OcrValidationConfiguration.softOcr());
+        Optional<String> validOcr =
+                giroValidator.validate(transfer.getDestinationMessage()).getValidOcr();
 
-        return validOcr.isPresent() ? SwedbankBaseConstants.ReferenceType.OCR : SwedbankBaseConstants.ReferenceType.MESSAGE;
+        return validOcr.isPresent()
+                ? SwedbankBaseConstants.ReferenceType.OCR
+                : SwedbankBaseConstants.ReferenceType.MESSAGE;
     }
 
-    public static void confirmSuccessfulTransfer(ConfirmTransferResponse confirmTransferResponse, String idToConfirm) {
+    public static void confirmSuccessfulTransfer(
+            ConfirmTransferResponse confirmTransferResponse, String idToConfirm) {
         if (!confirmTransferResponse.isTransferConfirmed(idToConfirm)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED).build();
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.TRANSFER_CONFIRM_FAILED)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.TRANSFER_CONFIRM_FAILED)
+                    .build();
         }
     }
 
@@ -118,8 +141,10 @@ public class SwedbankTransferHelper {
         AccountIdentifier destinationAccount = transfer.getDestination();
         if (destinationAccount == null || !destinationAccount.isValid()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION).build();
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_DESTINATION)
+                    .build();
         }
 
         return destinationAccount;
@@ -130,29 +155,44 @@ public class SwedbankTransferHelper {
         if (sourceAccount == null || !sourceAccount.isValid()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_SOURCE).build();
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.INVALID_SOURCE)
+                    .build();
         }
 
         return sourceAccount;
     }
 
-    public static void ensureLinksNotNull(LinksEntity linksEntity,
-            TransferExecutionException.EndUserMessage endUserMessage, String message) {
+    public static void ensureLinksNotNull(
+            LinksEntity linksEntity,
+            TransferExecutionException.EndUserMessage endUserMessage,
+            String message) {
         if (linksEntity == null) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(endUserMessage)
-                    .setMessage(message).build();
+                    .setMessage(message)
+                    .build();
         }
     }
 
     public String getDestinationName(final Transfer transfer) {
-        return transfer.getDestination().getName()
-                .orElseGet(() -> requestRecipientNameSupplemental().orElseThrow(() -> TransferExecutionException
-                        .builder(SignableOperationStatuses.CANCELLED)
-                        .setMessage("Could not get recipient name from user")
-                        .setEndUserMessage(catalog
-                                .getString(TransferExecutionException.EndUserMessage.NEW_RECIPIENT_NAME_ABSENT))
-                        .build()));
+        return transfer.getDestination()
+                .getName()
+                .orElseGet(
+                        () ->
+                                requestRecipientNameSupplemental()
+                                        .orElseThrow(
+                                                () ->
+                                                        TransferExecutionException.builder(
+                                                                        SignableOperationStatuses
+                                                                                .CANCELLED)
+                                                                .setMessage(
+                                                                        "Could not get recipient name from user")
+                                                                .setEndUserMessage(
+                                                                        catalog.getString(
+                                                                                TransferExecutionException
+                                                                                        .EndUserMessage
+                                                                                        .NEW_RECIPIENT_NAME_ABSENT))
+                                                                .build()));
     }
 
     private Optional<String> requestRecipientNameSupplemental() {
@@ -160,7 +200,8 @@ public class SwedbankTransferHelper {
 
         Field nameField = getNameField();
         try {
-            Map<String, String> answers = supplementalInformationHelper.askSupplementalInformation(nameField);
+            Map<String, String> answers =
+                    supplementalInformationHelper.askSupplementalInformation(nameField);
             return Optional.ofNullable(answers.get("name"));
         } catch (SupplementalInfoException e) {
             return Optional.empty();
@@ -172,8 +213,10 @@ public class SwedbankTransferHelper {
         nameField.setDescription(catalog.getString("Recipient name"));
         nameField.setName("name");
         nameField.setPattern(".+");
-        nameField.setHelpText(catalog.getString("Because this is the first time you transfer money to this"
-                + " account, you'll need to register a name for it."));
+        nameField.setHelpText(
+                catalog.getString(
+                        "Because this is the first time you transfer money to this"
+                                + " account, you'll need to register a name for it."));
         return nameField;
     }
 
@@ -186,23 +229,31 @@ public class SwedbankTransferHelper {
     }
 
     /**
-     * Signs and confirms the creation of a new recipient or payee. Returns the created recipient or throws an exception
-     * if the creation failed.
+     * Signs and confirms the creation of a new recipient or payee. Returns the created recipient or
+     * throws an exception if the creation failed.
      */
-    public AbstractAccountEntity signAndConfirmNewRecipient(LinksEntity linksEntity,
-            Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>> findNewRecipientFunction) {
+    public AbstractAccountEntity signAndConfirmNewRecipient(
+            LinksEntity linksEntity,
+            Function<PaymentBaseinfoResponse, Optional<AbstractAccountEntity>>
+                    findNewRecipientFunction) {
 
         return signNewRecipient(linksEntity.getSign())
                 .map(LinksEntity::getNext)
                 .flatMap(this::getConfirmResponse)
                 .flatMap(findNewRecipientFunction)
-                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED).setEndUserMessage(
-                        catalog.getString(TransferExecutionException.EndUserMessage.NEW_RECIPIENT_FAILED))
-                        .build());
+                .orElseThrow(
+                        () ->
+                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                                        .setEndUserMessage(
+                                                catalog.getString(
+                                                        TransferExecutionException.EndUserMessage
+                                                                .NEW_RECIPIENT_FAILED))
+                                        .build());
     }
 
     private Optional<LinksEntity> signNewRecipient(LinkEntity signLink) {
-        InitiateSignTransferResponse initiateSignTransfer = apiClient.signExternalTransfer(signLink);
+        InitiateSignTransferResponse initiateSignTransfer =
+                apiClient.signExternalTransfer(signLink);
         return Optional.ofNullable(collectBankId(initiateSignTransfer));
     }
 }

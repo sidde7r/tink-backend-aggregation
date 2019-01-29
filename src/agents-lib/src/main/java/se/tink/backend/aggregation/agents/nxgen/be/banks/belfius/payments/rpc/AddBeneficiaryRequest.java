@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstant
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventInformation;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventsRequest;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class AddBeneficiaryRequest extends BelfiusRequest {

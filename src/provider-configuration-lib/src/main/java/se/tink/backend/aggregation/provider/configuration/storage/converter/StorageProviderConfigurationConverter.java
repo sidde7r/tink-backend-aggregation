@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
-import se.tink.backend.core.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderStatuses;
 
 public class StorageProviderConfigurationConverter {
 

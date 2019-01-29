@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.rpc.PendingEInvoicesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceFetcher;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEEInvoiceFetcher implements EInvoiceFetcher {
 

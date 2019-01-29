@@ -6,7 +6,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.TransferAmount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 @JsonObject

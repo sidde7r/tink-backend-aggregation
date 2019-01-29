@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.core.Account;
+import se.tink.libraries.account.rpc.Account;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

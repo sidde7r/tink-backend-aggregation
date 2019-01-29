@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.libraries.application.GenericApplication;
-import se.tink.backend.core.signableoperation.SignableOperation;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 /**
  * A representation of a request for creating a new product for a certain provider. It holds an application where

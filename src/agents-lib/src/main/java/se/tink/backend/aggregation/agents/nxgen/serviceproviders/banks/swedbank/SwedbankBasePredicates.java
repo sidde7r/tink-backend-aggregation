@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.PayeeEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ReferenceEntity;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;

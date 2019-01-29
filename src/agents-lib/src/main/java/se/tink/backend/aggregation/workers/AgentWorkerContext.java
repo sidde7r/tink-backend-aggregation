@@ -33,9 +33,9 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.libraries.pair.Pair;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
-import se.tink.backend.core.StatisticMode;
+import se.tink.libraries.enums.StatisticMode;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
@@ -342,7 +342,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         credentialsCopy.clearSensitiveInformation(request.getProvider());
 
         // TODO: Refactor System API side to not depend on :main-api
-        se.tink.backend.core.Credentials coreCredentials = CoreCredentialsMapper
+        se.tink.libraries.credentials.rpc.Credentials coreCredentials = CoreCredentialsMapper
                 .fromAggregationCredentials(credentialsCopy);
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest updateCredentialsStatusRequest =

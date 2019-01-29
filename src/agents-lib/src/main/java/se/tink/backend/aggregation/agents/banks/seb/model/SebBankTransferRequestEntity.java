@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SebBankTransferRequestEntity extends SebTransferRequestEntity {

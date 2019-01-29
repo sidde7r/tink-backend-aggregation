@@ -21,7 +21,7 @@ import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 
 
 @RunWith(MockitoJUnitRunner.class)

@@ -30,8 +30,8 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.core.signableoperation.SignableOperation;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -294,7 +294,7 @@ public class AgentWorkerCommandContext extends AgentWorkerContext implements Set
         }
     }
 
-    private Map<se.tink.backend.core.Account, List<TransferDestinationPattern>> destinationBySource(
+    private Map<se.tink.libraries.account.rpc.Account, List<TransferDestinationPattern>> destinationBySource(
             Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount) {
         return transferDestinationPatternsByAccount.entrySet().stream()
                 .map(e -> new AbstractMap.SimpleEntry<>(CoreAccountMapper.fromAggregation(e.getKey()), e.getValue()))

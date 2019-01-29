@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
-import se.tink.backend.core.User;
+import se.tink.libraries.user.rpc.User;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import static org.mockito.ArgumentMatchers.any;

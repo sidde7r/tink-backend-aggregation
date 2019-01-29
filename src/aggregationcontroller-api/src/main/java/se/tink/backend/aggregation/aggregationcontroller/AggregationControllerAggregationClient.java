@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDe
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.core.signableoperation.SignableOperation;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
 import se.tink.libraries.jersey.utils.JerseyUtils;

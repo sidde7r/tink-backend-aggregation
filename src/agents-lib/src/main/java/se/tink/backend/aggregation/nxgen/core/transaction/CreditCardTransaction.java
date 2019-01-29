@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 
 public final class CreditCardTransaction extends Transaction {
     private final CreditCardAccount creditAccount;

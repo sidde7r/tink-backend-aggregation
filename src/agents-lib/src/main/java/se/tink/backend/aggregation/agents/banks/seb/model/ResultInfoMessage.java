@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import java.util.Optional;
 import com.google.common.collect.ImmutableMap;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResultInfoMessage {

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import se.tink.backend.core.CredentialsTypes;
-import se.tink.backend.core.Field;
-import se.tink.backend.core.ProviderRefreshSchedule;
-import se.tink.backend.core.ProviderStatuses;
-import se.tink.backend.core.ProviderTypes;
+import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.field.rpc.Field;
+import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
+import se.tink.libraries.provider.enums.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

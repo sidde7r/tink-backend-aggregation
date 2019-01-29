@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.core.signableoperation.SignableOperation;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferRequest extends CredentialsRequest {
 

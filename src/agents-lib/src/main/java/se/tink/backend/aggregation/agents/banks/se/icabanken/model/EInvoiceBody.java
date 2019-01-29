@@ -8,7 +8,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.util.List;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EInvoiceBody {

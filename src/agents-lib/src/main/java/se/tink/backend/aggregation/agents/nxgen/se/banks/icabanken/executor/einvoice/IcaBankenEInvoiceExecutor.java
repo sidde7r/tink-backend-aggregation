@@ -26,9 +26,9 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvo
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.einvoice.entities.EInvoiceEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.core.transfer.TransferPayloadType;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.i18n.Catalog;
 
 public class IcaBankenEInvoiceExecutor implements ApproveEInvoiceExecutor {

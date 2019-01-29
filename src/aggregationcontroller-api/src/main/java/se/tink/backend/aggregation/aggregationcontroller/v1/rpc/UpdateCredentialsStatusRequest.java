@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.core.Credentials;
+import se.tink.libraries.credentials.rpc.Credentials;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateCredentialsStatusRequest {

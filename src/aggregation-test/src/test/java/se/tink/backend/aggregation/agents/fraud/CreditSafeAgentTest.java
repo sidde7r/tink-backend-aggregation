@@ -19,8 +19,8 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
 import se.tink.libraries.social.security.TestSSN;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContentType;
-import se.tink.backend.core.User;
-import se.tink.backend.core.UserProfile;
+import se.tink.libraries.user.rpc.User;
+import se.tink.libraries.user.rpc.UserProfile;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.strings.StringUtils;
 

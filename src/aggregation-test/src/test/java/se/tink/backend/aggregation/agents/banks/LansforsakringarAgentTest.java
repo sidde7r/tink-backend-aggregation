@@ -14,14 +14,14 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.social.security.TestSSN;
 
 public class LansforsakringarAgentTest extends AbstractAgentTest<LansforsakringarAgent> {
@@ -191,7 +191,7 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
 
         @Test
         public void testTransferInternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
                     .to(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_ANOTHER_FH)
                     .withAmountInSEK(1.0)
@@ -202,7 +202,7 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
 
         @Test
         public void testTransferExternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
                     .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                     .withAmountInSEK(1.0)
@@ -213,7 +213,7 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
 
         @Test
         public void testTransferInternal_CutsMessageIfTooLong() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
                     .to(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_ANOTHER_FH)
                     .withAmountInSEK(1.0)
@@ -224,7 +224,7 @@ public class LansforsakringarAgentTest extends AbstractAgentTest<Lansforsakringa
 
         @Test(expected = TransferMessageException.class)
         public void testTransferExternal_ThrowsIfTooLongDestinationMessage() throws Throwable {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.LANSFORSAKRINGAR_FH)
                     .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                     .withAmountInSEK(1.0)

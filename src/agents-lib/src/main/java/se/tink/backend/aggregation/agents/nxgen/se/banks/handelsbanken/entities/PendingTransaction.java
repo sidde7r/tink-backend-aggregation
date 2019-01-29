@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class PendingTransaction extends BaseResponse {
 

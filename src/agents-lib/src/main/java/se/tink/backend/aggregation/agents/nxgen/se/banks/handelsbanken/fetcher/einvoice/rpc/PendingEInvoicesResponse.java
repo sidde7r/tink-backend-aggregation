@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.entities.EInvoice;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.einvoice.entities.EInvoicesGrouped;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class PendingEInvoicesResponse extends BaseResponse {
     private List<EInvoicesGrouped> eInvoicesGrouped;

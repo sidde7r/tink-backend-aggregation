@@ -8,9 +8,9 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.enums.MessageType;
-import se.tink.libraries.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.enums.MessageType;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 import java.time.LocalDate;

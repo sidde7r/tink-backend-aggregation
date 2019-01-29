@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableKey;
 

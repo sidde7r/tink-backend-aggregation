@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -44,20 +46,16 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.S
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.core.SwedishGiroType;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.enums.TransferType;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.credentials.demo.DemoCredentials.DemoUserFeature;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor {
@@ -71,7 +69,8 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
     private List<Account> accounts = null;
 
-    public DemoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public DemoAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         demoCredentials = DemoCredentials.byUsername(request.getCredentials().getUsername());
@@ -105,12 +104,16 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         }
 
         if (!Objects.equal(credentials.getPassword(), "demo")) {
-            log.error("Could not authenticate demo credentials (fields: " + credentials.getFieldsSerialized() + ")");
+            log.error(
+                    "Could not authenticate demo credentials (fields: "
+                            + credentials.getFieldsSerialized()
+                            + ")");
 
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        if (demoCredentials != null && demoCredentials.hasFeature(DemoUserFeature.REQUIRES_BANK_ID)) {
+        if (demoCredentials != null
+                && demoCredentials.hasFeature(DemoUserFeature.REQUIRES_BANK_ID)) {
             for (int i = 0; i < 10; i++) {
                 credentials.setStatusPayload(null);
                 credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
@@ -119,8 +122,8 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
                 Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
             }
-        } else if (demoCredentials != null && demoCredentials
-                .hasFeature(DemoUserFeature.REQUIRES_SUPPLEMENTAL_INFORMATION)) {
+        } else if (demoCredentials != null
+                && demoCredentials.hasFeature(DemoUserFeature.REQUIRES_SUPPLEMENTAL_INFORMATION)) {
             String response = requestChallengeResponse(request.getCredentials(), "code1");
 
             if (Strings.isNullOrEmpty(response) || !response.equals("code1")) {
@@ -136,7 +139,8 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             return accounts;
         }
         try {
-            accounts = DemoDataUtils.readAggregationAccounts(accountsFile, request.getCredentials());
+            accounts =
+                    DemoDataUtils.readAggregationAccounts(accountsFile, request.getCredentials());
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -151,12 +155,17 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
             List<Transaction> transactions;
             try {
-                if (demoCredentials != null && demoCredentials.hasFeature(DemoUserFeature.RANDOMIZE_TRANSACTIONS)) {
-                    transactions = DemoDataUtils
-                            .readTransactionsWithRandomization(demoCredentials, accountFile, account,
+                if (demoCredentials != null
+                        && demoCredentials.hasFeature(DemoUserFeature.RANDOMIZE_TRANSACTIONS)) {
+                    transactions =
+                            DemoDataUtils.readTransactionsWithRandomization(
+                                    demoCredentials,
+                                    accountFile,
+                                    account,
                                     NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE);
                 } else {
-                    transactions = DemoDataUtils.readTransactions(demoCredentials, accountFile, account);
+                    transactions =
+                            DemoDataUtils.readTransactions(demoCredentials, accountFile, account);
                 }
             } catch (Exception e) {
                 throw new IllegalStateException(e);
@@ -176,66 +185,88 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     private void updateTransactionsPerType(RefreshableItem type) {
         getAccounts().stream()
                 .filter(account -> type.isAccountType(account.getType()))
-                .forEach(account -> financialDataCacher.updateTransactions(account, getTransactions(account)));
+                .forEach(
+                        account ->
+                                financialDataCacher.updateTransactions(
+                                        account, getTransactions(account)));
     }
 
     @Override
     public void refresh(RefreshableItem item) {
         switch (item) {
-        case TRANSFER_DESTINATIONS:
-            TransferDestinationsResponse response = new TransferDestinationsResponse();
+            case TRANSFER_DESTINATIONS:
+                TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            for (Account account : systemUpdater.getUpdatedAccounts()) {
-                response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
-                        AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
-                response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
-                        AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
-                response.addDestination(account, TransferDestinationPattern.createForMultiMatch(
-                        AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
-            }
-            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
-            break;
+                for (Account account : systemUpdater.getUpdatedAccounts()) {
+                    response.addDestination(
+                            account,
+                            TransferDestinationPattern.createForMultiMatch(
+                                    AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
+                    response.addDestination(
+                            account,
+                            TransferDestinationPattern.createForMultiMatch(
+                                    AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
+                    response.addDestination(
+                            account,
+                            TransferDestinationPattern.createForMultiMatch(
+                                    AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
+                }
+                systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
+                break;
 
-        case EINVOICES:
-            systemUpdater.updateEinvoices(getEInvoices());
-            break;
+            case EINVOICES:
+                systemUpdater.updateEinvoices(getEInvoices());
+                break;
 
-        case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
-        case CREDITCARD_ACCOUNTS:
-            updateAccountsPerType(item);
-            break;
+            case CHECKING_ACCOUNTS:
+            case SAVING_ACCOUNTS:
+            case CREDITCARD_ACCOUNTS:
+                updateAccountsPerType(item);
+                break;
 
-        case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
-        case CREDITCARD_TRANSACTIONS:
-            updateTransactionsPerType(item);
-            break;
+            case CHECKING_TRANSACTIONS:
+            case SAVING_TRANSACTIONS:
+            case CREDITCARD_TRANSACTIONS:
+                updateTransactionsPerType(item);
+                break;
 
-        case LOAN_ACCOUNTS:
-            getAccounts().stream()
-                    .filter(account -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> financialDataCacher.cacheAccount(account, createLoanAsset(account)));
-            break;
+            case LOAN_ACCOUNTS:
+                getAccounts().stream()
+                        .filter(
+                                account ->
+                                        RefreshableItem.LOAN_ACCOUNTS.isAccountType(
+                                                account.getType()))
+                        .forEach(
+                                account ->
+                                        financialDataCacher.cacheAccount(
+                                                account, createLoanAsset(account)));
+                break;
 
-        case INVESTMENT_ACCOUNTS:
-            getAccounts().stream()
-                    .filter(account -> RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(account.getType()))
-                    .forEach(account -> financialDataCacher.cacheAccount(account,
-                            AccountFeatures.createForPortfolios(generateFakePortolio(account))));
-            break;
+            case INVESTMENT_ACCOUNTS:
+                getAccounts().stream()
+                        .filter(
+                                account ->
+                                        RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(
+                                                account.getType()))
+                        .forEach(
+                                account ->
+                                        financialDataCacher.cacheAccount(
+                                                account,
+                                                AccountFeatures.createForPortfolios(
+                                                        generateFakePortolio(account))));
+                break;
         }
     }
 
     /**
-     * Create a mortgage asset if the type is mortgage or the name "Bolån". Rest of the assets are considered to be
-     * blanco loans assets.
+     * Create a mortgage asset if the type is mortgage or the name "Bolån". Rest of the assets are
+     * considered to be blanco loans assets.
      */
     private AccountFeatures createLoanAsset(Account account) {
         Loan loan = new Loan();
 
-        if (Objects.equal(account.getType(), AccountTypes.MORTGAGE) ||
-                account.getName().toLowerCase().contains("bolån")) {
+        if (Objects.equal(account.getType(), AccountTypes.MORTGAGE)
+                || account.getName().toLowerCase().contains("bolån")) {
             loan.setInterest(0.019);
             loan.setName("Bolån");
             loan.setBalance(-2300000D);
@@ -262,20 +293,21 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     }
 
     @Override
-    public void execute(Transfer transfer) throws Exception,
-            TransferExecutionException {
+    public void execute(Transfer transfer) throws Exception, TransferExecutionException {
 
         if (!Objects.equal(demoCredentials.getUsername(), "201212121212")) {
             String response = requestChallengeResponse(request.getCredentials(), "code1");
             if (Strings.isNullOrEmpty(response) || !response.equals("code1")) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage("Kod nr 1 var felaktig").build();
+                        .setEndUserMessage("Kod nr 1 var felaktig")
+                        .build();
             }
 
             response = requestChallengeResponse(request.getCredentials(), "code2");
             if (Strings.isNullOrEmpty(response) || !response.equals("code2")) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage("Kod nr 2 var felaktig").build();
+                        .setEndUserMessage("Kod nr 2 var felaktig")
+                        .build();
             }
         }
 
@@ -291,18 +323,19 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             transactions.add(t);
 
             statusUpdater.updateStatus(CredentialsStatus.UPDATING);
-            financialDataCacher.updateTransactions(findAccountForIdentifier(transfer.getSource()), transactions);
+            financialDataCacher.updateTransactions(
+                    findAccountForIdentifier(transfer.getSource()), transactions);
             context.processTransactions();
         }
     }
 
     @Override
-    public void update(Transfer transfer) throws Exception, TransferExecutionException {
+    public void update(Transfer transfer) throws Exception, TransferExecutionException {}
 
-    }
-
-    private Account findAccountForIdentifier(AccountIdentifier transferAccountIdentifier) throws IOException {
-        for (Account account : DemoDataUtils.readAggregationAccounts(accountsFile, request.getCredentials())) {
+    private Account findAccountForIdentifier(AccountIdentifier transferAccountIdentifier)
+            throws IOException {
+        for (Account account :
+                DemoDataUtils.readAggregationAccounts(accountsFile, request.getCredentials())) {
             for (AccountIdentifier accountAccountIdentifier : account.getIdentifiers()) {
                 if (Objects.equal(
                         accountAccountIdentifier.getIdentifier(),
@@ -320,8 +353,12 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         t.setDate(se.tink.libraries.date.DateUtils.flattenTime(transfer.getDueDate()));
         t.setAmount(transfer.getAmount().getValue());
         t.setPending(true);
-        t.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER, MAPPER.writeValueAsString(transfer));
-        t.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER_ID, UUIDUtils.toTinkUUID(transfer.getId()));
+        t.setPayload(
+                TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER,
+                MAPPER.writeValueAsString(transfer));
+        t.setPayload(
+                TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER_ID,
+                UUIDUtils.toTinkUUID(transfer.getId()));
 
         return t;
     }
@@ -332,7 +369,8 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
+        String supplementalInformation =
+                supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 
@@ -340,9 +378,9 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             return null;
         }
 
-        Map<String, String> answers = SerializationUtils.deserializeFromString(supplementalInformation,
-                new TypeReference<HashMap<String, String>>() {
-                });
+        Map<String, String> answers =
+                SerializationUtils.deserializeFromString(
+                        supplementalInformation, new TypeReference<HashMap<String, String>>() {});
 
         return answers.get("response");
     }
@@ -374,15 +412,29 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         List<Transfer> einvoices = Lists.newArrayList();
 
-        einvoices.add(DemoDataUtils.createFakeTransfer("Centrala Studiestödsnämnd", "4027809501", 2406, "55803084",
-                SwedishGiroType.BG, 14, TransferType.EINVOICE));
-        einvoices.add(DemoDataUtils
-                .createFakeTransferInComingSunday("Centrala Studiestödsnämnd 2", "4027809502", 3500, "55803084",
-                        SwedishGiroType.BG, TransferType.EINVOICE));
+        einvoices.add(
+                DemoDataUtils.createFakeTransfer(
+                        "Centrala Studiestödsnämnd",
+                        "4027809501",
+                        2406,
+                        "55803084",
+                        SwedishGiroType.BG,
+                        14,
+                        TransferType.EINVOICE));
+        einvoices.add(
+                DemoDataUtils.createFakeTransferInComingSunday(
+                        "Centrala Studiestödsnämnd 2",
+                        "4027809502",
+                        3500,
+                        "55803084",
+                        SwedishGiroType.BG,
+                        TransferType.EINVOICE));
 
-        // pendingEinvoices.add(createEinvoice("American Express 3757", "37578468440200734", 144.69, "7308596",
+        // pendingEinvoices.add(createEinvoice("American Express 3757", "37578468440200734", 144.69,
+        // "7308596",
         // SwedishGiroType.BG, 15, TransferType.EINVOICE));
-        // pendingEinvoices.add(createEinvoice("Sunfleet Carsharing AB", "5165022766476", 685, "7074198",
+        // pendingEinvoices.add(createEinvoice("Sunfleet Carsharing AB", "5165022766476", 685,
+        // "7074198",
         // SwedishGiroType.BG, 20, TransferType.EINVOICE));
 
         return einvoices;
@@ -399,12 +451,13 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     private boolean authenticateWithBankId(final Credentials credentials) {
         // Create the authenticator
 
-        SignicatBankIdAuthenticator authenticator = new SignicatBankIdAuthenticator(
-                credentials.getField(Field.Key.USERNAME),
-                credentials.getUserId(),
-                credentials.getId(),
-                context.getCatalog(),
-                new CredentialsSignicatBankIdAuthenticationHandler(credentials, context));
+        SignicatBankIdAuthenticator authenticator =
+                new SignicatBankIdAuthenticator(
+                        credentials.getField(Field.Key.USERNAME),
+                        credentials.getUserId(),
+                        credentials.getId(),
+                        context.getCatalog(),
+                        new CredentialsSignicatBankIdAuthenticationHandler(credentials, context));
 
         // Run the authenticator synchronously.
 
@@ -419,36 +472,126 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         portfolio.setCashValue(231d);
         portfolio.setUniqueIdentifier(account.getAccountNumber());
         List<Instrument> instruments = new ArrayList<>();
-        instruments.add(createFakeInstrument("SE0009778954", "OMXS", "SEK", "XACT högutdelande", "XACTHDIV",
-                Instrument.Type.OTHER, "ETF"));
-        instruments.add(createFakeInstrument("IE00BZ0PKV06", "LONDON STOCK EXCHANGE", "EUR",
-                "iShares Edge MSCI Europe Multifactor UCITS ETF EUR", "IFSE", Instrument.Type.OTHER, "ETF"));
-        instruments.add(createFakeInstrument("NO0010257801", "OSLO BORS", "NOK",
-                "DNB OBX", "OBXEDNB", Instrument.Type.OTHER, "ETF"));
-        instruments.add(createFakeInstrument("DK0060830644", "OMX NORDIC EQUITIES", "DKK",
-                "BEAR SX5E X15 NORDNET", "BEAR SX5E X15 NORDNET", Instrument.Type.OTHER, "ETN"));
-        instruments.add(createFakeInstrument("US06742W4309", "NYSE ARCA", "USD",
-                "Barclays Women in Leadership ETN", "WIL", Instrument.Type.OTHER, "ETN"));
-        instruments.add(createFakeInstrument("SE0000869646", "OMXS", "SEK",
-                "Boliden", "BOL", Instrument.Type.STOCK, "Aktie"));
-        instruments.add(createFakeInstrument("FI4000074984", "OMX Helsinki", "EUR",
-                "Valmet", "VALMT", Instrument.Type.STOCK, "Aktie"));
-        instruments.add(createFakeInstrument("NO0010096985", "OBX Top 25", "NOK",
-                "Statoil", "STL", Instrument.Type.STOCK, "Aktie"));
-        instruments.add(createFakeInstrument("DK0010181759", "OMXC", "DKK",
-                "Carlsberg B", "CARL B", Instrument.Type.STOCK, "Aktie"));
-        instruments.add(createFakeInstrument("US0378331005", "NASDAQ", "USD",
-                "Apple", "AAPL", Instrument.Type.STOCK, "Aktie"));
-        instruments.add(createFakeInstrument("SE0005798329", null, "SEK",
-                "Spiltan Högräntefond", null, Instrument.Type.FUND, "Fond"));
-        instruments.add(createFakeInstrument("SE0001718388", null, "SEK",
-                "AVANZA ZERO", null, Instrument.Type.FUND, "Fond"));
+        instruments.add(
+                createFakeInstrument(
+                        "SE0009778954",
+                        "OMXS",
+                        "SEK",
+                        "XACT högutdelande",
+                        "XACTHDIV",
+                        Instrument.Type.OTHER,
+                        "ETF"));
+        instruments.add(
+                createFakeInstrument(
+                        "IE00BZ0PKV06",
+                        "LONDON STOCK EXCHANGE",
+                        "EUR",
+                        "iShares Edge MSCI Europe Multifactor UCITS ETF EUR",
+                        "IFSE",
+                        Instrument.Type.OTHER,
+                        "ETF"));
+        instruments.add(
+                createFakeInstrument(
+                        "NO0010257801",
+                        "OSLO BORS",
+                        "NOK",
+                        "DNB OBX",
+                        "OBXEDNB",
+                        Instrument.Type.OTHER,
+                        "ETF"));
+        instruments.add(
+                createFakeInstrument(
+                        "DK0060830644",
+                        "OMX NORDIC EQUITIES",
+                        "DKK",
+                        "BEAR SX5E X15 NORDNET",
+                        "BEAR SX5E X15 NORDNET",
+                        Instrument.Type.OTHER,
+                        "ETN"));
+        instruments.add(
+                createFakeInstrument(
+                        "US06742W4309",
+                        "NYSE ARCA",
+                        "USD",
+                        "Barclays Women in Leadership ETN",
+                        "WIL",
+                        Instrument.Type.OTHER,
+                        "ETN"));
+        instruments.add(
+                createFakeInstrument(
+                        "SE0000869646",
+                        "OMXS",
+                        "SEK",
+                        "Boliden",
+                        "BOL",
+                        Instrument.Type.STOCK,
+                        "Aktie"));
+        instruments.add(
+                createFakeInstrument(
+                        "FI4000074984",
+                        "OMX Helsinki",
+                        "EUR",
+                        "Valmet",
+                        "VALMT",
+                        Instrument.Type.STOCK,
+                        "Aktie"));
+        instruments.add(
+                createFakeInstrument(
+                        "NO0010096985",
+                        "OBX Top 25",
+                        "NOK",
+                        "Statoil",
+                        "STL",
+                        Instrument.Type.STOCK,
+                        "Aktie"));
+        instruments.add(
+                createFakeInstrument(
+                        "DK0010181759",
+                        "OMXC",
+                        "DKK",
+                        "Carlsberg B",
+                        "CARL B",
+                        Instrument.Type.STOCK,
+                        "Aktie"));
+        instruments.add(
+                createFakeInstrument(
+                        "US0378331005",
+                        "NASDAQ",
+                        "USD",
+                        "Apple",
+                        "AAPL",
+                        Instrument.Type.STOCK,
+                        "Aktie"));
+        instruments.add(
+                createFakeInstrument(
+                        "SE0005798329",
+                        null,
+                        "SEK",
+                        "Spiltan Högräntefond",
+                        null,
+                        Instrument.Type.FUND,
+                        "Fond"));
+        instruments.add(
+                createFakeInstrument(
+                        "SE0001718388",
+                        null,
+                        "SEK",
+                        "AVANZA ZERO",
+                        null,
+                        Instrument.Type.FUND,
+                        "Fond"));
         portfolio.setInstruments(instruments);
         return portfolio;
     }
 
-    private Instrument createFakeInstrument(String ISIN, String marketplace, String currency, String name,
-            String ticker, Instrument.Type type, String rawType) {
+    private Instrument createFakeInstrument(
+            String ISIN,
+            String marketplace,
+            String currency,
+            String name,
+            String ticker,
+            Instrument.Type type,
+            String rawType) {
         Instrument instrument = new Instrument();
         instrument.setCurrency(currency);
         instrument.setIsin(ISIN);
@@ -466,5 +609,4 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         instrument.setRawType(rawType);
         return instrument;
     }
-
 }

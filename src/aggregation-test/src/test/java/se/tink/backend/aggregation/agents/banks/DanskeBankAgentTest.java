@@ -12,13 +12,13 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.DanskeBankV2Agent;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.FeatureFlags;
-import se.tink.libraries.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -85,7 +85,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         Amount originalAmountPlus1SEK = Amount.inSEK(originalTransfer.getAmount().getValue() + 1);
         Date originalDateMinus1Day = DateUtils.getCurrentOrPreviousBusinessDay(new DateTime(originalTransfer.getDueDate()).minusDays(1).toDate());
 
-        Transfer transferToSign = TransferStub.eInvoice()
+        Transfer transferToSign = TransferMock.eInvoice()
                 .createUpdateTransferFromOriginal(originalTransfer)
                 .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                 .withAmount(originalAmountPlus1SEK)
@@ -214,7 +214,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
 
         @Test
         public void testTransferInternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                     .to(TestAccount.IdentifiersWithName.DANSKEBANK_ANOTHER_FH)
                     .withAmountInSEK(1.0)
@@ -225,7 +225,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
 
         @Test
         public void testTransferExternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                     .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
                     .withAmountInSEK(1.0)
@@ -236,7 +236,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
 
         @Test
         public void testTransferInternal_CutsMessageIfTooLong() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                     .to(TestAccount.IdentifiersWithName.DANSKEBANK_ANOTHER_FH)
                     .withAmountInSEK(1.0)
@@ -247,7 +247,7 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
 
         @Test(expected = TransferMessageException.class)
         public void testTransferExternal_ThrowsIfTooLongDestinationMessage() throws Throwable {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                     .to(TestAccount.IdentifiersWithName.HANDELSBANKEN_FH)
                     .withAmountInSEK(1.0)

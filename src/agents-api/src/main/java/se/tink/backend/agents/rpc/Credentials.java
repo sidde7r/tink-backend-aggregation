@@ -21,7 +21,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
 /**
- * This Credentials has been copied from {@link se.tink.backend.core.Credentials} in an effort to remove :aggregation-apis
+ * This Credentials has been copied from {@link se.tink.libraries.credentials.rpc.Credentials} in an effort to remove :aggregation-apis
  * dependency on :main-api
  * <p>
  * Some of the objects here are not used by Aggregation at all, but are still needed until the Aggregation API has been

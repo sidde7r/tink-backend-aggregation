@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.IngTransferHelper;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class ValidateInternalTransferBody extends MultivaluedMapImpl {
 

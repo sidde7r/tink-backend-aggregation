@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.IcaBankenExecutorUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class PaymentRequest implements TransferRequest {

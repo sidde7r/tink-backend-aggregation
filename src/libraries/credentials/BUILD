@@ -1,0 +1,36 @@
+java_library(
+    name = "enums",
+    srcs = glob(["src/main/**/enums/*.java"]),
+    visibility = ["//visibility:public"],
+)
+
+java_library(
+    name = "rpc",
+    srcs = glob(["src/main/**/rpc/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        ":enums",
+        "//src/libraries/date",
+        "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/field:rpc",
+        "//src/libraries/provider:rpc",
+        "//src/libraries/serialization",
+        "//src/libraries/strings",
+        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_fasterxml_jackson_datatype_jackson_datatype_joda",
+        "//third_party:com_google_guava_guava",
+        "//third_party:de_grundid_opendatalab_geojson_jackson",
+        "//third_party:de_jollyday_jollyday",
+        "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:io_grpc_grpc_core",
+        "//third_party:io_protostuff_protostuff_api",
+        "//third_party:io_swagger_swagger_annotations",
+        "//third_party:org_apache_curator_curator_recipes",
+        "//third_party:org_hibernate_hibernate_annotations",
+        "//third_party:org_hibernate_hibernate_entitymanager",
+        "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
+        "@com_google_code_findbugs_jsr305//jar",
+        "@joda_time_joda_time//jar",
+    ],
+)

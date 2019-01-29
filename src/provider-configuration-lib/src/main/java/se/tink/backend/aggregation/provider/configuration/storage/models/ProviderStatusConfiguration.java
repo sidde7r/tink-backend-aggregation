@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.provider.configuration.storage.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.core.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderStatuses;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

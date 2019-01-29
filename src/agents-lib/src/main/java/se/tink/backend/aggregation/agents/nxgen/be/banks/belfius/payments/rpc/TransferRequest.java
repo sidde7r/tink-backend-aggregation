@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEvent
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 

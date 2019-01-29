@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.TransferAccountEntity;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.backend.core.SwedishGiroType;
+import se.tink.libraries.enums.SwedishGiroType;
 
 public class PaymentAccountWrapper implements GeneralAccountEntity {
 

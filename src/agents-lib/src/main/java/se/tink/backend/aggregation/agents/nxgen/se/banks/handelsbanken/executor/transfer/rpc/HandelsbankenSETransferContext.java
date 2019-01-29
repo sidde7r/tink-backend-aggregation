@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.entities.HandelsbankenSEPaymentAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSETransferContext extends TransferableResponse {
 

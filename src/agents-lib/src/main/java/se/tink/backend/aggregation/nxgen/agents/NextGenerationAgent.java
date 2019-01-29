@@ -44,7 +44,7 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.i18n.Catalog;
 
 public abstract class NextGenerationAgent extends AbstractAgent implements RefreshableItemExecutor,

@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferExecutorNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferControllerNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.validators.StructuredMessageValidator;
-import se.tink.libraries.enums.MessageType;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.enums.MessageType;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class TransferController {

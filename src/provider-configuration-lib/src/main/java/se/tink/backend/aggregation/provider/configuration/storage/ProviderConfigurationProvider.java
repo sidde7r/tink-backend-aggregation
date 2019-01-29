@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.provider.configuration.storage.models.Provide
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderStatusConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
-import se.tink.backend.core.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderStatuses;
 
 import java.util.Collections;
 import java.util.List;

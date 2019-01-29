@@ -26,6 +26,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -42,7 +46,6 @@ import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
@@ -82,46 +85,43 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.core.SwedishGiroType;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.core.transfer.TransferPayloadType;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
-public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceExecutor,
-                                                           RefreshTransferDestinationExecutor,
-                                                           RefreshCheckingAccountsExecutor,
-                                                           RefreshSavingsAccountsExecutor,
-                                                           RefreshCreditCardAccountsExecutor,
-                                                           RefreshInvestmentAccountsExecutor,
-                                                           RefreshLoanAccountsExecutor,
-                                                           TransferExecutor {
+public class DanskeBankV2Agent extends AbstractAgent
+        implements RefreshEInvoiceExecutor,
+                RefreshTransferDestinationExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                TransferExecutor {
 
     private final Client httpClient;
 
@@ -130,14 +130,15 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         NORMAL
     }
 
-    private static final DanskeBankAccountIdentifierFormatter ACCOUNT_IDENTIFIER_FORMATTER = new DanskeBankAccountIdentifierFormatter();
-    private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG = TransferMessageLengthConfig
-            .createWithMaxLength(19, 12);
+    private static final DanskeBankAccountIdentifierFormatter ACCOUNT_IDENTIFIER_FORMATTER =
+            new DanskeBankAccountIdentifierFormatter();
+    private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
+            TransferMessageLengthConfig.createWithMaxLength(19, 12);
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     // Don't change! (requires migration)
-    private final static String SENSITIVE_PAYLOAD_SECURITY_KEY = "securityKey";
+    private static final String SENSITIVE_PAYLOAD_SECURITY_KEY = "securityKey";
     private static final int OK_STATUS_CODE = 0;
     private static final int INVALID_INVOICE_STATUS_CODE = 9;
 
@@ -152,7 +153,8 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
 
     private Map<AccountEntity, Account> accountMap = null;
 
-    public DanskeBankV2Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public DanskeBankV2Agent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         String providerCountry = getProviderCountry();
@@ -168,19 +170,27 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         }
 
         httpClient = clientFactory.createBasicClient(context.getLogOutputStream());
-        this.apiClient = new DanskeBankApiClient(httpClient, DEFAULT_USER_AGENT, bankIdResourceHelper, providerCountry,
-                sessionLanguage);
+        this.apiClient =
+                new DanskeBankApiClient(
+                        httpClient,
+                        DEFAULT_USER_AGENT,
+                        bankIdResourceHelper,
+                        providerCountry,
+                        sessionLanguage);
         catalog = context.getCatalog();
-        transferMessageFormatter = new TransferMessageFormatter(catalog,
-                TRANSFER_MESSAGE_LENGTH_CONFIG,
-                new StringNormalizerSwedish(",._-?!/:()&`~"));
+        transferMessageFormatter =
+                new TransferMessageFormatter(
+                        catalog,
+                        TRANSFER_MESSAGE_LENGTH_CONFIG,
+                        new StringNormalizerSwedish(",._-?!/:()&`~"));
     }
 
     private String getProviderCountry() {
         return request.getProvider().getPayload();
     }
 
-    private static String getLoginIdFromCredentials(String providerCountry, Credentials credentials) {
+    private static String getLoginIdFromCredentials(
+            String providerCountry, Credentials credentials) {
         if (Objects.equals(providerCountry, "SE")) {
             return credentials.getUsername().substring(2);
         }
@@ -188,17 +198,23 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         return credentials.getUsername();
     }
 
-    private static Optional<TransferAccountEntity> findAccount(AccountIdentifier identifier,
-            List<TransferAccountEntity> transferAccountEntities) {
-        final String danskeAdaptedIdentifier = identifier.getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
+    private static Optional<TransferAccountEntity> findAccount(
+            AccountIdentifier identifier, List<TransferAccountEntity> transferAccountEntities) {
+        final String danskeAdaptedIdentifier =
+                identifier.getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
 
-        return transferAccountEntities.stream().filter(
-                transferAccountEntity -> Objects.equals(transferAccountEntity.getAccountNumber(), danskeAdaptedIdentifier))
+        return transferAccountEntities.stream()
+                .filter(
+                        transferAccountEntity ->
+                                Objects.equals(
+                                        transferAccountEntity.getAccountNumber(),
+                                        danskeAdaptedIdentifier))
                 .findFirst();
     }
 
     private static HashCode getTransactionHash(HashFunction hashFunction, Transaction transaction) {
-        return hashFunction.newHasher()
+        return hashFunction
+                .newHasher()
                 .putLong(transaction.getDate().getTime())
                 .putString(transaction.getDescription(), Charsets.UTF_8)
                 .putDouble(transaction.getAmount())
@@ -214,16 +230,18 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
     public void execute(final Transfer transfer) throws Exception {
         try {
             switch (transfer.getType()) {
-            case BANK_TRANSFER:
-                executeBankTransfer(transfer);
-                break;
-            case PAYMENT:
-                executePayment(transfer);
-                break;
-            case EINVOICE:
-                throw new IllegalStateException("Should never happen, einvoices are approved through update");
-            default:
-                throw new IllegalStateException("Should never happen, not recognized transfer type");
+                case BANK_TRANSFER:
+                    executeBankTransfer(transfer);
+                    break;
+                case PAYMENT:
+                    executePayment(transfer);
+                    break;
+                case EINVOICE:
+                    throw new IllegalStateException(
+                            "Should never happen, einvoices are approved through update");
+                default:
+                    throw new IllegalStateException(
+                            "Should never happen, not recognized transfer type");
             }
         } catch (BankIdException bankIdException) {
             throw toTransferExecutionException(bankIdException);
@@ -234,42 +252,54 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
     public void update(Transfer transfer) throws Exception {
         try {
             switch (transfer.getType()) {
-            case EINVOICE:
-                approveEInvoice(transfer);
-                break;
-            case PAYMENT:
-                throw new IllegalStateException("Not implemented");
-            case BANK_TRANSFER:
-                throw new IllegalStateException("Not implemented");
-            default:
-                throw new IllegalStateException("Should never happen, not recognized transfer type");
+                case EINVOICE:
+                    approveEInvoice(transfer);
+                    break;
+                case PAYMENT:
+                    throw new IllegalStateException("Not implemented");
+                case BANK_TRANSFER:
+                    throw new IllegalStateException("Not implemented");
+                default:
+                    throw new IllegalStateException(
+                            "Should never happen, not recognized transfer type");
             }
         } catch (BankIdException bankIdException) {
             throw toTransferExecutionException(bankIdException);
         }
     }
 
-    private TransferExecutionException toTransferExecutionException(BankIdException bankIdException) {
+    private TransferExecutionException toTransferExecutionException(
+            BankIdException bankIdException) {
         BankIdResponse bankIdResponse = bankIdException.getResponse();
         String bankIDStatusCode = bankIdResponse.getBankIdStatusCode();
 
         if (bankIdResponse.isWaitingForUserInput() || bankIdResponse.isTimeout()) {
             return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE))
                     .setMessage(
-                            bankIDStatusCode + " - Timed out or did not open app: Failed to sign transfer with BankID")
+                            bankIDStatusCode
+                                    + " - Timed out or did not open app: Failed to sign transfer with BankID")
                     .build();
         } else if (bankIdResponse.isUserCancelled()) {
             return TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
-                    .setMessage(bankIDStatusCode + " - User cancelled: Failed to sign transfer with BankID")
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.BANKID_CANCELLED))
+                    .setMessage(
+                            bankIDStatusCode
+                                    + " - User cancelled: Failed to sign transfer with BankID")
                     .build();
         } else {
             String logMessage = bankIDStatusCode + " - Failed to sign transfer with BankID";
             return TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(
-                            catalog.getString(TransferExecutionException.EndUserMessage.BANKID_TRANSFER_FAILED))
-                    .setMessage(logMessage).build();
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_TRANSFER_FAILED))
+                    .setMessage(logMessage)
+                    .build();
         }
     }
 
@@ -292,19 +322,25 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
 
         if (!originalTransfer.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("No original transfer on payload to compare with.").build();
+                    .setMessage("No original transfer on payload to compare with.")
+                    .build();
         }
 
         return originalTransfer.get();
     }
 
     private String getTransactionId(Transfer originalTransfer) {
-        String transactionId = originalTransfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID).orElse(null);
+        String transactionId =
+                originalTransfer
+                        .getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID)
+                        .orElse(null);
 
         if (Strings.isNullOrEmpty(transactionId)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage("Missing PROVIDER_UNIQUE_ID on transfer payload")
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
                     .build();
         }
 
@@ -318,9 +354,12 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
             eInvoiceDetails = apiClient.getEInvoiceDetails(transactionId);
         } catch (Exception fetchException) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
                     .setMessage("Got exception while fetching details of einvoice. Missing?")
-                    .setException(fetchException).build();
+                    .setException(fetchException)
+                    .build();
         }
 
         return eInvoiceDetails;
@@ -330,14 +369,21 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         final AccountIdentifier source = transfer.getSource();
         List<AccountEntity> fromAccounts = eInvoiceDetails.getFromAccounts();
 
-        Optional<AccountEntity> sourceAccountMatch = fromAccounts.stream()
-                .filter(fromAccount -> Objects.equals(
-                        EInvoiceDetailsResponse.toAccountIdentifier(fromAccount), source))
-                .findFirst();
+        Optional<AccountEntity> sourceAccountMatch =
+                fromAccounts.stream()
+                        .filter(
+                                fromAccount ->
+                                        Objects.equals(
+                                                EInvoiceDetailsResponse.toAccountIdentifier(
+                                                        fromAccount),
+                                                source))
+                        .findFirst();
 
         if (!sourceAccountMatch.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.INVALID_SOURCE))
                     .setMessage("No source account found")
                     .build();
         }
@@ -345,11 +391,10 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         return sourceAccountMatch.get().getAccountId();
     }
 
-    /**
-     * Only from-account, date and amount is possible to modify on einvoices
-     */
+    /** Only from-account, date and amount is possible to modify on einvoices */
     private void ensureValidUpdate(Transfer originalTransfer, Transfer transfer) {
-        if (!Objects.equals(transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
+        if (!Objects.equals(
+                transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
             throwFailed(TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_MESSAGE);
         } else if (!Objects.equals(transfer.getDestination(), originalTransfer.getDestination())) {
             throwFailed(TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_DESTINATION);
@@ -362,19 +407,27 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
                 .build();
     }
 
-    private void updateAndSignEInvoice(String transactionId, String fromAccountId, Transfer transfer)
+    private void updateAndSignEInvoice(
+            String transactionId, String fromAccountId, Transfer transfer)
             throws BankIdException, IOException, AuthenticationException {
-        EInvoiceApproveRequest eInvoiceApproveRequest = new EInvoiceApproveRequest(fromAccountId, transfer);
-        EInvoiceApproveResponse eInvoiceApproveResponse = apiClient.approveEInvoice(eInvoiceApproveRequest, transactionId);
+        EInvoiceApproveRequest eInvoiceApproveRequest =
+                new EInvoiceApproveRequest(fromAccountId, transfer);
+        EInvoiceApproveResponse eInvoiceApproveResponse =
+                apiClient.approveEInvoice(eInvoiceApproveRequest, transactionId);
 
         if (eInvoiceApproveResponse.getStatus().getStatusCode() != 0) {
             String statusText = eInvoiceApproveResponse.getStatus().getStatusText();
-            String errorMessage = statusText != null ? statusText :
-                    catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_SIGN_FAILED);
+            String errorMessage =
+                    statusText != null
+                            ? statusText
+                            : catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EINVOICE_SIGN_FAILED);
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(String.format("Failed to sign einvoice. (statuscode: %d, statustext: %s)",
-                            eInvoiceApproveResponse.getStatus().getStatusCode(),
-                            eInvoiceApproveResponse.getStatus().getStatusText()))
+                    .setMessage(
+                            String.format(
+                                    "Failed to sign einvoice. (statuscode: %d, statustext: %s)",
+                                    eInvoiceApproveResponse.getStatus().getStatusCode(),
+                                    eInvoiceApproveResponse.getStatus().getStatusText()))
                     .setEndUserMessage(errorMessage)
                     .build();
         }
@@ -382,7 +435,9 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         if (!eInvoiceApproveResponse.isChallengeNeeded()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage("No challenge required for DanskeBank e-invoice!")
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_SIGN_FAILED))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EINVOICE_SIGN_FAILED))
                     .build();
         }
 
@@ -395,10 +450,13 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
 
         AccountIdentifier source = transfer.getSource();
 
-        Optional<TransferAccountEntity> fromAccount = findAccount(source, detailsResponse.getFromAccounts());
+        Optional<TransferAccountEntity> fromAccount =
+                findAccount(source, detailsResponse.getFromAccounts());
         if (!fromAccount.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
                     .build();
         }
 
@@ -412,11 +470,16 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         }
 
         // Check if the transfer is between two accounts belonging to the same credentials.
-        boolean isBetweenUserAccounts = findAccount(transfer.getDestination(), detailsResponse.getFromAccounts())
-                .isPresent();
+        boolean isBetweenUserAccounts =
+                findAccount(transfer.getDestination(), detailsResponse.getFromAccounts())
+                        .isPresent();
 
-        TransferRequest transferRequest = createTransferRequest(transfer, fromAccount.get(),
-                transferDate.toInstant().atZone(ZoneId.of(DEFAULT_ZONE_ID)).toLocalDate(), isBetweenUserAccounts);
+        TransferRequest transferRequest =
+                createTransferRequest(
+                        transfer,
+                        fromAccount.get(),
+                        transferDate.toInstant().atZone(ZoneId.of(DEFAULT_ZONE_ID)).toLocalDate(),
+                        isBetweenUserAccounts);
         TransferResponse transferResponse = apiClient.createTransfer(transferRequest);
 
         if (transferResponse.isChallengeNeeded()) {
@@ -432,10 +495,13 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
 
         AccountIdentifier source = transfer.getSource();
 
-        Optional<TransferAccountEntity> fromAccount = findAccount(source, detailsResponse.getFromAccounts());
+        Optional<TransferAccountEntity> fromAccount =
+                findAccount(source, detailsResponse.getFromAccounts());
         if (!fromAccount.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
                     .build();
         }
 
@@ -443,15 +509,22 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         BillResponse billResponse = apiClient.createPayment(billRequest);
 
         if (billResponse.isBillNotValid()) {
-            String errorMessage = billResponse.getText() != null ?
-                    billResponse.getText() :
-                    catalog.getString(TransferExecutionException.EndUserMessage.PAYMENT_CREATE_FAILED);
+            String errorMessage =
+                    billResponse.getText() != null
+                            ? billResponse.getText()
+                            : catalog.getString(
+                                    TransferExecutionException.EndUserMessage
+                                            .PAYMENT_CREATE_FAILED);
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(errorMessage).build();
+                    .setEndUserMessage(errorMessage)
+                    .build();
         } else if (!billResponse.isChallengeNeeded()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage("No challenge required for DanskeBank payment!")
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.PAYMENT_CREATE_FAILED))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage
+                                            .PAYMENT_CREATE_FAILED))
                     .build();
         }
 
@@ -471,12 +544,20 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
 
             challengeResponseRequest.setResponse("0");
         } else {
-            String challengeResponse = Optional.ofNullable(requestChallengeResponse(challenge.getChallenge()))
-                    .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(
-                                    catalog.getString(TransferExecutionException.EndUserMessage.CHALLENGE_NO_RESPONSE))
-                            .setMessage("Failed to get challenge response from user")
-                            .build());
+            String challengeResponse =
+                    Optional.ofNullable(requestChallengeResponse(challenge.getChallenge()))
+                            .orElseThrow(
+                                    () ->
+                                            TransferExecutionException.builder(
+                                                            SignableOperationStatuses.CANCELLED)
+                                                    .setEndUserMessage(
+                                                            catalog.getString(
+                                                                    TransferExecutionException
+                                                                            .EndUserMessage
+                                                                            .CHALLENGE_NO_RESPONSE))
+                                                    .setMessage(
+                                                            "Failed to get challenge response from user")
+                                                    .build());
 
             challengeResponseRequest.setResponse(challengeResponse);
         }
@@ -486,23 +567,27 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
 
     private String getOrderReferenceFromChallenge(AbstractChallengeResponse challenge)
             throws IOException {
-        MessageContainer challengeContainer = MAPPER
-                .readValue(challenge.getChallenge(), MessageContainer.class);
-        SignBankIdResponse signBankIdResponse = challengeContainer
-                .decrypt(bankIdResourceHelper, SignBankIdResponse.class);
+        MessageContainer challengeContainer =
+                MAPPER.readValue(challenge.getChallenge(), MessageContainer.class);
+        SignBankIdResponse signBankIdResponse =
+                challengeContainer.decrypt(bankIdResourceHelper, SignBankIdResponse.class);
 
         return signBankIdResponse.getOrderReference();
     }
 
-    private TransferRequest createTransferRequest(Transfer transfer, TransferAccountEntity fromAccount,
-            LocalDate transferDate, boolean isBetweenUserAccounts) throws
-            TransferMessageException {
+    private TransferRequest createTransferRequest(
+            Transfer transfer,
+            TransferAccountEntity fromAccount,
+            LocalDate transferDate,
+            boolean isBetweenUserAccounts)
+            throws TransferMessageException {
 
-        String destinationAccountId = transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
+        String destinationAccountId =
+                transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
 
         // Formatted messages to ensure we don't exceed max limits of chars
-        TransferMessageFormatter.Messages formattedMessages = transferMessageFormatter
-                .getMessages(transfer, isBetweenUserAccounts);
+        TransferMessageFormatter.Messages formattedMessages =
+                transferMessageFormatter.getMessages(transfer, isBetweenUserAccounts);
 
         return TransferRequest.builder()
                 .amount(Double.toString(transfer.getAmount().getValue()))
@@ -511,11 +596,13 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
                 .destinationAccountNumber(destinationAccountId)
                 .destinationMessage(formattedMessages.getDestinationMessage())
                 .sourceAccountNumber(fromAccount.getAccountId())
-                .sourceMessage(formattedMessages.getSourceMessage()).build();
+                .sourceMessage(formattedMessages.getSourceMessage())
+                .build();
     }
 
     private BillRequest createBillRequest(Transfer transfer, TransferAccountEntity fromAccount) {
-        String destinationAccountId = transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
+        String destinationAccountId =
+                transfer.getDestination().getIdentifier(ACCOUNT_IDENTIFIER_FORMATTER);
 
         BillRequest billRequest = new BillRequest();
         billRequest.setSaveForLaterApproval("false");
@@ -548,7 +635,8 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         return validator.validate(message).getValidOcr().isPresent();
     }
 
-    private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(List<Account> updatedAccounts) {
+    private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(
+            List<Account> updatedAccounts) {
         TransferDetailsResponse transferDetailsResponse = apiClient.getTransferAccounts();
 
         return new TransferDestinationPatternBuilder()
@@ -579,7 +667,10 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
                 log.info(bankIDStatusCode + " - User timeout authenticating with BankID");
                 throw BankIdError.TIMEOUT.exception();
             } else {
-                throw new IllegalStateException(String.format("#login-refactoring - DanskeBank - Login failed with BankId status: %s", bankIDStatusCode));
+                throw new IllegalStateException(
+                        String.format(
+                                "#login-refactoring - DanskeBank - Login failed with BankId status: %s",
+                                bankIDStatusCode));
             }
         }
     }
@@ -600,20 +691,25 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
             throws BankIdException, LoginException {
         BankIdResponse bankIdResponse = null;
 
-        // Solves a bug with a SocketTimeoutException below in postBankIdService() due to calling this too quickly.
+        // Solves a bug with a SocketTimeoutException below in postBankIdService() due to calling
+        // this too quickly.
         Uninterruptibles.sleepUninterruptibly(500, TimeUnit.MILLISECONDS);
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             bankIdResponse = apiClient.bankIdVerify(bankIdServiceType, orderReference);
 
             if (bankIdResponse.isUserAuthenticated()) {
-                log.info(bankIdServiceType.toString() + " - User authenticated successfully with BankID");
+                log.info(
+                        bankIdServiceType.toString()
+                                + " - User authenticated successfully with BankID");
                 return;
             } else if (!bankIdResponse.isWaitingForUserInput()) {
                 throw new BankIdException(bankIdResponse);
             }
 
-            log.info(bankIdServiceType.toString() + " - Waiting for user to authenticate using BankID");
+            log.info(
+                    bankIdServiceType.toString()
+                            + " - Waiting for user to authenticate using BankID");
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
@@ -632,11 +728,13 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            credentials.setSensitivePayload(SENSITIVE_PAYLOAD_SECURITY_KEY, loginResponse.getSecurityKey());
+            credentials.setSensitivePayload(
+                    SENSITIVE_PAYLOAD_SECURITY_KEY, loginResponse.getSecurityKey());
 
             String challengeResponse = requestChallengeResponse(loginResponse.getChallenge());
 
-            Preconditions.checkState(!Strings.isNullOrEmpty(challengeResponse),
+            Preconditions.checkState(
+                    !Strings.isNullOrEmpty(challengeResponse),
                     "#login-refactoring - Login failed with null/empty challenge response, statusCode %s, statusText %s.",
                     loginResponse.getStatus().getStatusCode(),
                     loginResponse.getStatus().getStatusText());
@@ -645,30 +743,50 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         }
 
         int statusCode = loginResponse.getStatus().getStatusCode();
-        String errorMessage = loginResponse.getStatus().getStatusText() != null ?
-                loginResponse.getStatus().getStatusText() : generalLoginErrorMessage;
+        String errorMessage =
+                loginResponse.getStatus().getStatusText() != null
+                        ? loginResponse.getStatus().getStatusText()
+                        : generalLoginErrorMessage;
 
         switch (statusCode) {
-        case 0:
-            return true;
-        case 1:
-            if (errorMessage.toLowerCase().contains("fel personnummer eller servicekod")) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(UserMessage.PERSONAL_NUMBER_SERVICE_CODE.getKey());
-            } else if (errorMessage.toLowerCase().contains("teckna avtal om Servicekod")) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.NO_SERVICE_CODE.getKey());
-            }
-            throw new IllegalStateException(String.format("#login-refactoring - Login failed with statusCode %s, statusText %s", statusCode, errorMessage));
-        case 3:
-            if (errorMessage.toLowerCase().contains("du har angivit fel servicekod för många gånger")) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.SERVICE_CODE_BLOCKED.getKey());
-            }
-            throw new IllegalStateException(String.format("#login-refactoring - Login failed with statusCode %s, statusText %s", statusCode, errorMessage));
-        case 4:
-            throw new IllegalStateException(String.format("#login-refactoring - Login failed with statusCode %s, statusText %s", statusCode, errorMessage));
-            // Looks like there are only when there is some problem at Danskes side, see comment in: https://github.com/tink-ab/tink-backend/pull/5398
-            // Not implemented yet.
-        default:
-            throw new IllegalStateException(String.format("#login-refactoring - Login failed with statusCode %s, statusText %s", statusCode, errorMessage));
+            case 0:
+                return true;
+            case 1:
+                if (errorMessage.toLowerCase().contains("fel personnummer eller servicekod")) {
+                    throw LoginError.INCORRECT_CREDENTIALS.exception(
+                            UserMessage.PERSONAL_NUMBER_SERVICE_CODE.getKey());
+                } else if (errorMessage.toLowerCase().contains("teckna avtal om Servicekod")) {
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                            UserMessage.NO_SERVICE_CODE.getKey());
+                }
+                throw new IllegalStateException(
+                        String.format(
+                                "#login-refactoring - Login failed with statusCode %s, statusText %s",
+                                statusCode, errorMessage));
+            case 3:
+                if (errorMessage
+                        .toLowerCase()
+                        .contains("du har angivit fel servicekod för många gånger")) {
+                    throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                            UserMessage.SERVICE_CODE_BLOCKED.getKey());
+                }
+                throw new IllegalStateException(
+                        String.format(
+                                "#login-refactoring - Login failed with statusCode %s, statusText %s",
+                                statusCode, errorMessage));
+            case 4:
+                throw new IllegalStateException(
+                        String.format(
+                                "#login-refactoring - Login failed with statusCode %s, statusText %s",
+                                statusCode, errorMessage));
+                // Looks like there are only when there is some problem at Danskes side, see comment
+                // in: https://github.com/tink-ab/tink-backend/pull/5398
+                // Not implemented yet.
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                "#login-refactoring - Login failed with statusCode %s, statusText %s",
+                                statusCode, errorMessage));
         }
     }
 
@@ -709,7 +827,8 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         return accountMap;
     }
 
-    private Map<Account, List<TransferDestinationPattern>> getPaymentAccountDestinations(List<Account> updatedAccounts) {
+    private Map<Account, List<TransferDestinationPattern>> getPaymentAccountDestinations(
+            List<Account> updatedAccounts) {
         TransferDetailsResponse detailsResponse = apiClient.getPaymentAccounts();
 
         if (detailsResponse == null) {
@@ -725,16 +844,18 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
 
         List<TransferAccountEntity> toAccountsBankGiro = detailsResponse.getToAccountsBankGiro();
         if (toAccountsBankGiro != null) {
-            destinationAccounts.addAll(toAccountsBankGiro.stream()
-                    .map(tae -> new PaymentAccountWrapper(tae, SwedishGiroType.BG))
-                    .collect(Collectors.toList()));
+            destinationAccounts.addAll(
+                    toAccountsBankGiro.stream()
+                            .map(tae -> new PaymentAccountWrapper(tae, SwedishGiroType.BG))
+                            .collect(Collectors.toList()));
         }
 
         List<TransferAccountEntity> toAccountsPlusGiro = detailsResponse.getToAccountsPlusGiro();
         if (toAccountsPlusGiro != null) {
-            destinationAccounts.addAll(toAccountsPlusGiro.stream()
-                    .map(tae -> new PaymentAccountWrapper(tae, SwedishGiroType.PG))
-                    .collect(Collectors.toList()));
+            destinationAccounts.addAll(
+                    toAccountsPlusGiro.stream()
+                            .map(tae -> new PaymentAccountWrapper(tae, SwedishGiroType.PG))
+                            .collect(Collectors.toList()));
         }
 
         return new TransferDestinationPatternBuilder()
@@ -745,27 +866,29 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
                 .addMultiMatchPattern(AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
                 .build();
     }
-                                                             
-    private List<Transaction> fetchTransactions(AccountEntity accountEntity, Account account, TransactionType type) {
+
+    private List<Transaction> fetchTransactions(
+            AccountEntity accountEntity, Account account, TransactionType type) {
         List<Transaction> transactions = Lists.newArrayList();
 
         AccountResponse accountResponse = null;
         do {
-            accountResponse = apiClient.getTransactions(accountEntity, type, Optional.ofNullable(accountResponse));
+            accountResponse =
+                    apiClient.getTransactions(
+                            accountEntity, type, Optional.ofNullable(accountResponse));
 
             for (TransactionEntity transactionEntity : accountResponse.getTransactions()) {
                 transactions.add(transactionEntity.toTransaction());
             }
 
             statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
-        } while (!isContentWithRefresh(account, transactions) && accountResponse.isMoreTransactions());
+        } while (!isContentWithRefresh(account, transactions)
+                && accountResponse.isMoreTransactions());
 
         return transactions;
     }
 
-    /**
-     * Hack to filter out transactions that are booked as settled and pending at the same time.
-     */
+    /** Hack to filter out transactions that are booked as settled and pending at the same time. */
     private static List<Transaction> filterFauxDoubleCharges(List<Transaction> transactions) {
         final HashFunction hashFunction = Hashing.md5();
         final Set<HashCode> settledTransactionHashes = Sets.newHashSet();
@@ -779,14 +902,18 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
             settledTransactionHashes.add(settledTransactionHash);
         }
 
-        return transactions.stream().filter(transaction -> {
-            if (!transaction.isPending()) {
-                return true;
-            }
+        return transactions.stream()
+                .filter(
+                        transaction -> {
+                            if (!transaction.isPending()) {
+                                return true;
+                            }
 
-            HashCode transactionHash = getTransactionHash(hashFunction, transaction);
-            return !settledTransactionHashes.contains(transactionHash);
-        }).collect(Collectors.toList());
+                            HashCode transactionHash =
+                                    getTransactionHash(hashFunction, transaction);
+                            return !settledTransactionHashes.contains(transactionHash);
+                        })
+                .collect(Collectors.toList());
     }
 
     private String requestChallengeResponse(String challenge) {
@@ -797,7 +924,8 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
+        String supplementalInformation =
+                supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 
@@ -831,23 +959,30 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
             return null;
         }
 
-        Map<String, String> answers = SerializationUtils.deserializeFromString(supplementalInformation,
-                new TypeReference<HashMap<String, String>>() {
-                });
+        Map<String, String> answers =
+                SerializationUtils.deserializeFromString(
+                        supplementalInformation, new TypeReference<HashMap<String, String>>() {});
 
         return answers.get("response");
     }
 
     private enum UserMessage implements LocalizableEnum {
-        SERVICE_CODE_BLOCKED(new LocalizableKey("You have enter incorrect service code to many times. For safety reasons the service code is now blocked. You may unlock your safety in Hembanken, in Mobila tjänster.")),
-        NO_SERVICE_CODE(new LocalizableKey("To use the mobile services you need to sign an agreement for Service code. Log in at Hembanken and and look in Mobila tjänster - Se och ändra servicekod.")),
-        PERSONAL_NUMBER_SERVICE_CODE(new LocalizableKey("Wrong personal number or service code. Please try again or control your service code in Hembanken, in Mobila tjänster."));
+        SERVICE_CODE_BLOCKED(
+                new LocalizableKey(
+                        "You have enter incorrect service code to many times. For safety reasons the service code is now blocked. You may unlock your safety in Hembanken, in Mobila tjänster.")),
+        NO_SERVICE_CODE(
+                new LocalizableKey(
+                        "To use the mobile services you need to sign an agreement for Service code. Log in at Hembanken and and look in Mobila tjänster - Se och ändra servicekod.")),
+        PERSONAL_NUMBER_SERVICE_CODE(
+                new LocalizableKey(
+                        "Wrong personal number or service code. Please try again or control your service code in Hembanken, in Mobila tjänster."));
 
         private LocalizableKey userMessage;
 
         UserMessage(LocalizableKey userMessage) {
             this.userMessage = userMessage;
         }
+
         @Override
         public LocalizableKey getKey() {
             return userMessage;
@@ -863,19 +998,22 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
 
             EInvoiceListResponse eInvoiceList = apiClient.getEInvoices();
 
-            for (EInvoiceListTransactionEntity eInvoiceListTransactionEntity : eInvoiceList.getTransactions()) {
+            for (EInvoiceListTransactionEntity eInvoiceListTransactionEntity :
+                    eInvoiceList.getTransactions()) {
                 String transferId = eInvoiceListTransactionEntity.getTransactionId();
 
                 EInvoiceDetailsResponse eInvoiceDetails = apiClient.getEInvoiceDetails(transferId);
 
                 // Old eInvoices are removed
-                if (eInvoiceDetails.getStatus() != null &&
-                        eInvoiceDetails.getStatus().getStatusCode() == INVALID_INVOICE_STATUS_CODE) {
+                if (eInvoiceDetails.getStatus() != null
+                        && eInvoiceDetails.getStatus().getStatusCode()
+                                == INVALID_INVOICE_STATUS_CODE) {
                     continue;
                 }
 
                 try {
-                    // There's an identifier on the list response, add that id as payload for identification of invoice
+                    // There's an identifier on the list response, add that id as payload for
+                    // identification of invoice
                     Transfer eInvoiceTransfer = eInvoiceDetails.toEInvoiceTransfer(transferId);
                     eInvoices.add(eInvoiceTransfer);
                 } catch (Exception e) {
@@ -933,24 +1071,31 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
                 .forEach(set -> accounts.add(set.getValue()));
         return new FetchAccountsResponse(accounts);
     }
+
     private FetchTransactionsResponse fetchTransactionsPerType(RefreshableItem type) {
         Map<Account, List<Transaction>> transactionMap = new HashMap<>();
         getAccountMap().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> {
-                    AccountEntity accountEntity = set.getKey();
-                    boolean isCreditCardAccount = apiClient.isCreditCardAccount(accountEntity);
-                    Account account = accountEntity.toAccount(isCreditCardAccount);
+                .forEach(
+                        set -> {
+                            AccountEntity accountEntity = set.getKey();
+                            boolean isCreditCardAccount =
+                                    apiClient.isCreditCardAccount(accountEntity);
+                            Account account = accountEntity.toAccount(isCreditCardAccount);
 
-                    List<Transaction> transactions = Lists.newArrayList();
+                            List<Transaction> transactions = Lists.newArrayList();
 
-                    transactions.addAll(fetchTransactions(accountEntity, account, TransactionType.FUTURE));
-                    transactions.addAll(fetchTransactions(accountEntity, account, TransactionType.NORMAL));
+                            transactions.addAll(
+                                    fetchTransactions(
+                                            accountEntity, account, TransactionType.FUTURE));
+                            transactions.addAll(
+                                    fetchTransactions(
+                                            accountEntity, account, TransactionType.NORMAL));
 
-                    transactions = filterFauxDoubleCharges(transactions);
+                            transactions = filterFauxDoubleCharges(transactions);
 
-                    transactionMap.put(account, transactions);
-                });
+                            transactionMap.put(account, transactions);
+                        });
         return new FetchTransactionsResponse(transactionMap);
     }
 
@@ -974,29 +1119,40 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
         Map<Account, AccountFeatures> accounts = new HashMap<>();
         PortfoliosListResponse portfoliosListResponse = apiClient.getPortfolios();
 
-        if (portfoliosListResponse.getStatus().getStatusCode() != OK_STATUS_CODE ||
-                portfoliosListResponse.getPortfolios() == null ||
-                portfoliosListResponse.getPortfolios().isEmpty()) {
+        if (portfoliosListResponse.getStatus().getStatusCode() != OK_STATUS_CODE
+                || portfoliosListResponse.getPortfolios() == null
+                || portfoliosListResponse.getPortfolios().isEmpty()) {
             return new FetchInvestmentAccountsResponse(Collections.emptyMap());
         }
 
-        portfoliosListResponse.getPortfolios().forEach(portfolioEntity -> {
-            Account account = portfolioEntity.toAccount();
-            Portfolio portfolio = portfolioEntity.toPortfolio();
+        portfoliosListResponse
+                .getPortfolios()
+                .forEach(
+                        portfolioEntity -> {
+                            Account account = portfolioEntity.toAccount();
+                            Portfolio portfolio = portfolioEntity.toPortfolio();
 
-            PapersListResponse portfolioPapers = apiClient.getPortfolioPapers(portfolioEntity.getPortfolioId());
+                            PapersListResponse portfolioPapers =
+                                    apiClient.getPortfolioPapers(portfolioEntity.getPortfolioId());
 
-            if (portfolioPapers.getStatus().getStatusCode() != OK_STATUS_CODE ||
-                    portfolioPapers.getPapers() == null) {
-                accounts.put(account, AccountFeatures.createForPortfolios(portfolio));
-            }
+                            if (portfolioPapers.getStatus().getStatusCode() != OK_STATUS_CODE
+                                    || portfolioPapers.getPapers() == null) {
+                                accounts.put(
+                                        account, AccountFeatures.createForPortfolios(portfolio));
+                            }
 
-            List<Instrument> instruments = Lists.newArrayList();
-            portfolioPapers.getPapers().forEach(paperEntity -> paperEntity.toInstrument().ifPresent(instruments::add));
-            portfolio.setInstruments(instruments);
+                            List<Instrument> instruments = Lists.newArrayList();
+                            portfolioPapers
+                                    .getPapers()
+                                    .forEach(
+                                            paperEntity ->
+                                                    paperEntity
+                                                            .toInstrument()
+                                                            .ifPresent(instruments::add));
+                            portfolio.setInstruments(instruments);
 
-            accounts.put(account, AccountFeatures.createForPortfolios(portfolio));
-        });
+                            accounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+                        });
         return new FetchInvestmentAccountsResponse(accounts);
     }
 
@@ -1004,10 +1160,15 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceE
     public FetchLoanAccountsResponse fetchLoanAccounts() {
         Map<Account, AccountFeatures> accounts = new HashMap<>();
         getAccountMap().entrySet().stream()
-                .filter(set -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(set.getValue().getType()))
-                .forEach(set ->
-                        accounts.put(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
-                );
+                .filter(
+                        set ->
+                                RefreshableItem.LOAN_ACCOUNTS.isAccountType(
+                                        set.getValue().getType()))
+                .forEach(
+                        set ->
+                                accounts.put(
+                                        set.getValue(),
+                                        AccountFeatures.createForLoan(set.getKey().toLoan())));
         return new FetchLoanAccountsResponse(accounts);
     }
 

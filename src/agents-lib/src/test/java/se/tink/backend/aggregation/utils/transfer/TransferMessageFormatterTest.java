@@ -12,9 +12,9 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
-import se.tink.libraries.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.mocks.TransferMock;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.i18n.Catalog;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -162,7 +162,7 @@ public class TransferMessageFormatterTest {
             TransferMessageFormatter formatter = new TransferMessageFormatter(
                     null, lengthConfig, Optional.empty());
 
-            Transfer transfer = TransferStub.bankTransfer()
+            Transfer transfer = TransferMock.bankTransfer()
                     .withSourceMessage("source:123åäöüÅÄÖÜ$©@£")
                     .withDestinationMessage("dest:123åäöüÅÄÖÜ$©@£")
                     .build();
@@ -178,7 +178,7 @@ public class TransferMessageFormatterTest {
             TransferMessageFormatter formatter = new TransferMessageFormatter(
                     null, lengthConfig, Optional.empty());
 
-            Transfer transfer = TransferStub.bankTransfer().build();
+            Transfer transfer = TransferMock.bankTransfer().build();
             transfer.setGeneratedSourceMessage("source:123åäöüÅÄÖÜ$©@£");
             transfer.setGeneratedDestinationMessage("dest:123åäöüÅÄÖÜ$©@£");
 
@@ -193,7 +193,7 @@ public class TransferMessageFormatterTest {
             TransferMessageFormatter formatter = new TransferMessageFormatter(
                     null, lengthConfig, new StringNormalizerSwedish(':'));
 
-            Transfer transfer = TransferStub.bankTransfer().build();
+            Transfer transfer = TransferMock.bankTransfer().build();
             transfer.setGeneratedSourceMessage("source:123åäöüÅÄÖÜ$©@£^");
             transfer.setGeneratedDestinationMessage("dest:123åäöüÅÄÖÜ$©@£");
 
@@ -210,7 +210,7 @@ public class TransferMessageFormatterTest {
                         Catalog.getCatalog(Locale.ENGLISH),
                         lengthConfig, new StringNormalizerSwedish(':'));
 
-                Transfer transfer = TransferStub.bankTransfer()
+                Transfer transfer = TransferMock.bankTransfer()
                         .withSourceMessage("source:123åäöüÅÄÖÜ$©@£^è").build();
 
                 formatter.getSourceMessage(transfer);
@@ -231,7 +231,7 @@ public class TransferMessageFormatterTest {
                         Catalog.getCatalog(Locale.ENGLISH),
                         lengthConfig, new StringNormalizerSwedish(':'));
 
-                Transfer transfer = TransferStub.bankTransfer()
+                Transfer transfer = TransferMock.bankTransfer()
                         .withDestinationMessage("dest:123åäöüÅÄÖÜ$©@£^è").build();
 
                 formatter.getDestinationMessage(transfer, false);

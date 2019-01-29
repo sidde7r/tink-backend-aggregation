@@ -8,7 +8,7 @@ import com.google.api.client.util.Strings;
 import java.util.List;
 import org.junit.Test;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class EInvoiceBodyTest {
     private static final String UUID = "2016-04-26-16.20.03.177833";

@@ -4,8 +4,8 @@ import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 
 import se.tink.backend.aggregation.agents.AgentEventListener;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.core.signableoperation.SignableOperation;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 public class CredentialsStatusEventListener implements AgentEventListener {
     private final AgentWorkerCommandContext context;

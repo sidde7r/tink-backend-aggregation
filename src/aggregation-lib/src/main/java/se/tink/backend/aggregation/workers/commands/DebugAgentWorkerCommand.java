@@ -5,25 +5,25 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Objects;
 import java.util.List;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.rpc.CredentialsRequestType;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.libraries.user.rpc.User;
+import se.tink.backend.aggregation.rpc.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.backend.agents.rpc.User;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.exception.EmptyDebugLogException;
 import se.tink.backend.aggregation.workers.commands.state.DebugAgentWorkerCommandState;
-import se.tink.libraries.uuid.UUIDUtils;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.uuid.UUIDUtils;
 
 public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
@@ -33,7 +33,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     private AgentWorkerCommandContext context;
     private AgentDebugStorageHandler agentDebugStorage;
 
-    public DebugAgentWorkerCommand(AgentWorkerCommandContext context,
+    public DebugAgentWorkerCommand(
+            AgentWorkerCommandContext context,
             DebugAgentWorkerCommandState state,
             AgentDebugStorageHandler agentDebugStorage) {
         this.context = context;
@@ -49,20 +50,23 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
     @Override
     public void postProcess() {
         String clusterId = context.getClusterId();
-        List<String> excludedDebugClusters = context.getAgentsServiceConfiguration()
-                .getExcludedDebugClusters().getExcludedClusters();
+        List<String> excludedDebugClusters =
+                context.getAgentsServiceConfiguration()
+                        .getExcludedDebugClusters()
+                        .getExcludedClusters();
 
         if (Objects.nonNull(excludedDebugClusters) && excludedDebugClusters.contains(clusterId)) {
             return;
         }
 
         Credentials credentials = context.getRequest().getCredentials();
-        
+
         if (context.getRequest().getType() == CredentialsRequestType.TRANSFER) {
             TransferRequest transferRequest = (TransferRequest) context.getRequest();
 
             // Debug output for transfers.
-            SignableOperationStatuses transferStatus = transferRequest.getSignableOperation().getStatus();
+            SignableOperationStatuses transferStatus =
+                    transferRequest.getSignableOperation().getStatus();
             if (transferStatus == SignableOperationStatuses.FAILED
                     || transferStatus == SignableOperationStatuses.CANCELLED) {
                 writeToDebugFile(credentials, transferRequest);
@@ -71,23 +75,24 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             User user = context.getRequest().getUser();
 
             // Debug output for non-transfers such as refresh commands and delete.
-            if (credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR ||
-                    credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR ||
-                    credentials.getStatus() == CredentialsStatus.UNCHANGED ||
-                    credentials.isDebug() ||
-                    user.isDebug()) {
+            if (credentials.getStatus() == CredentialsStatus.AUTHENTICATION_ERROR
+                    || credentials.getStatus() == CredentialsStatus.TEMPORARY_ERROR
+                    || credentials.getStatus() == CredentialsStatus.UNCHANGED
+                    || credentials.isDebug()
+                    || user.isDebug()) {
                 writeToDebugFile(credentials, null);
             }
         }
     }
 
-    private String maskSensitiveOutputLog(String logContent, Credentials credentials){
+    private String maskSensitiveOutputLog(String logContent, Credentials credentials) {
         for (Field providerField : context.getRequest().getProvider().getFields()) {
             String credentialFieldValue = credentials.getField(providerField.getName());
 
-
             if (Objects.nonNull(credentialFieldValue)) {
-                logContent = logContent.replace(credentialFieldValue, "***" + providerField.getName() + "***");
+                logContent =
+                        logContent.replace(
+                                credentialFieldValue, "***" + providerField.getName() + "***");
             }
         }
 
@@ -105,7 +110,10 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             File logFile = null;
             String logContent = getCleanLogContent(credentials);
             if (agentDebugStorage.isLocalStorage() && state.isSaveLocally()) {
-                logFile = new File(state.getDebugDirectory(), getFormattedFileName(logContent, credentials));
+                logFile =
+                        new File(
+                                state.getDebugDirectory(),
+                                getFormattedFileName(logContent, credentials));
             }
 
             if (!agentDebugStorage.isLocalStorage()) {
@@ -113,7 +121,8 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
             }
 
             if (Objects.isNull(logFile)) {
-                log.warn("Created debug log but local storage cannot be used & no S3 storage configuration available.");
+                log.warn(
+                        "Created debug log but local storage cannot be used & no S3 storage configuration available.");
                 return;
             }
 
@@ -121,7 +130,11 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
             if (transferRequest != null) {
                 String id = UUIDUtils.toTinkUUID(transferRequest.getTransfer().getId());
-                log.info("Flushed transfer (" + id + ") debug log for further investigation: " + storagePath);
+                log.info(
+                        "Flushed transfer ("
+                                + id
+                                + ") debug log for further investigation: "
+                                + storagePath);
             } else {
                 log.info("Flushed debug log for further investigation: " + storagePath);
             }
@@ -147,12 +160,12 @@ public class DebugAgentWorkerCommand extends AgentWorkerCommand {
 
     private String getFormattedFileName(String logContent, Credentials credentials) {
         return String.format(
-                "%s_%s_u%s_c%s_%s.log",
-                credentials.getProviderName(),
-                ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
-                credentials.getUserId(),
-                credentials.getId(),
-                getFormattedSize(logContent))
+                        "%s_%s_u%s_c%s_%s.log",
+                        credentials.getProviderName(),
+                        ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()),
+                        credentials.getUserId(),
+                        credentials.getId(),
+                        getFormattedSize(logContent))
                 .replace(":", ".");
     }
 }

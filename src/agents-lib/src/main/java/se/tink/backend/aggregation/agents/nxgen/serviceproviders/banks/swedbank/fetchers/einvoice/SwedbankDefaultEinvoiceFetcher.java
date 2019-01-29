@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceFetcher;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankDefaultEinvoiceFetcher implements EInvoiceFetcher {
     private final SwedbankDefaultApiClient apiClient;

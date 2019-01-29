@@ -15,7 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class HandelsbankenSEBankTransferExecutor implements BankTransferExecutor {
 

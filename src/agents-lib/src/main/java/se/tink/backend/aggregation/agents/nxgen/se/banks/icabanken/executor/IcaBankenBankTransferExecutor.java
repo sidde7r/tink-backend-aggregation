@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.utils.IcaBank
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.i18n.Catalog;
 

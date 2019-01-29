@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 
 public class Transaction extends AggregationTransaction {
     private final boolean pending;

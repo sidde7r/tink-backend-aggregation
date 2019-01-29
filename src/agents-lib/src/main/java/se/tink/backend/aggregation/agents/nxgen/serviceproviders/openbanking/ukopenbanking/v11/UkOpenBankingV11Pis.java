@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.pis.rpc.PaymentSubmissionV11Response;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 

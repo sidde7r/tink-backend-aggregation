@@ -32,8 +32,8 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TestAccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.agents.rpc.User;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.user.rpc.User;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.metrics.MetricId;
 
 @RunWith(MockitoJUnitRunner.Silent.class)

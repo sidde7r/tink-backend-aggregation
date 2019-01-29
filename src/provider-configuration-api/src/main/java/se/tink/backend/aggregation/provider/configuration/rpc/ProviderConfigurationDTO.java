@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
-import se.tink.backend.core.CredentialsTypes;
-import se.tink.backend.core.Field;
-import se.tink.backend.core.ProviderRefreshSchedule;
-import se.tink.backend.core.ProviderStatuses;
-import se.tink.backend.core.ProviderTypes;
+import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.field.rpc.Field;
+import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
+import se.tink.libraries.provider.enums.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.ArrayList;

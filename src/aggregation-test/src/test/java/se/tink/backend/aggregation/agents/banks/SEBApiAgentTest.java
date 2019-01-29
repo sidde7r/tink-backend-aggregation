@@ -18,13 +18,13 @@ import se.tink.backend.aggregation.agents.banks.seb.utilities.SEBDateUtil;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.helper.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.FeatureFlags;
-import se.tink.libraries.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.date.DateUtils;
@@ -104,7 +104,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
 
     @Test
     public void testTransferBankId() throws Exception {
-        Transfer transfer = TransferStub.bankTransfer()
+        Transfer transfer = TransferMock.bankTransfer()
                 .from(TestAccount.IdentifiersWithName.SEB_DL)
                 .to(TestAccount.IdentifiersWithName.SEB_ANOTHER_DL)
                 .withAmountInSEK(1.0)
@@ -196,7 +196,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
         Amount originalAmountPlus1SEK = Amount.inSEK(originalTransfer.getAmount().getValue() + 1);
         Date originalDateMinus1Day = DateUtils.getCurrentOrPreviousBusinessDay(new DateTime(originalTransfer.getDueDate()).minusDays(1).toDate());
 
-        Transfer transferToSign = TransferStub.eInvoice()
+        Transfer transferToSign = TransferMock.eInvoice()
                 .createUpdateTransferFromOriginal(originalTransfer)
                 .withAmount(originalAmountPlus1SEK)
                 .withDueDate(originalDateMinus1Day)
@@ -220,7 +220,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
 
         @Test
         public void testTransferInternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.SEB_DL)
                     .to(TestAccount.IdentifiersWithName.SEB_ANOTHER_DL)
                     .withAmountInSEK(1.0)
@@ -231,7 +231,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
 
         @Test
         public void testTransferExternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.SEB_DL)
                     .to(TestAccount.IdentifiersWithName.SEB_JR)
                     .withAmountInSEK(1.0)
@@ -242,7 +242,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
 
         @Test
         public void testTransferInternal_CutsMessageIfTooLong() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.SEB_DL)
                     .to(TestAccount.IdentifiersWithName.SEB_ANOTHER_DL)
                     .withAmountInSEK(1.0)
@@ -253,7 +253,7 @@ public class SEBApiAgentTest extends AbstractAgentTest<SEBApiAgent> {
 
         @Test(expected = TransferMessageException.class)
         public void testTransferExternal_ThrowsIfTooLongDestinationMessage() throws Throwable {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.SEB_DL)
                     .to(TestAccount.IdentifiersWithName.SEB_JR)
                     .withAmountInSEK(1.0)

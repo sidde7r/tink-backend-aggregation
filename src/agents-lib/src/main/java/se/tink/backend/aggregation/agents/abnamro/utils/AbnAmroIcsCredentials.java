@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
-import se.tink.backend.core.Account;
-import se.tink.backend.core.Credentials;
-import se.tink.backend.core.CredentialsStatus;
-import se.tink.backend.core.CredentialsTypes;
-import se.tink.backend.core.Provider;
-import se.tink.backend.core.User;
+import se.tink.libraries.account.rpc.Account;
+import se.tink.libraries.credentials.rpc.Credentials;
+import se.tink.libraries.credentials.enums.CredentialsStatus;
+import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.provider.rpc.Provider;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.abnamro.utils.AbnAmroLegacyUserUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

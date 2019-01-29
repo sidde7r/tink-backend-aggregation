@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
 import com.google.common.base.Preconditions;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;

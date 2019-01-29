@@ -2,7 +2,7 @@ package se.tink.libraries.abnamro.utils;
 
 import java.util.Optional;
 import org.junit.Test;
-import se.tink.backend.core.User;
+import se.tink.libraries.user.rpc.User;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbnAmroLegacyUserUtilsTest {

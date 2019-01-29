@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.utils.mappers;
 import org.assertj.core.util.VisibleForTesting;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import se.tink.backend.core.Credentials;
+import se.tink.libraries.credentials.rpc.Credentials;
 
 public class CoreCredentialsMapper {
     /**
-     * ModelMapper for se.tink.backend.core.Credentials to Aggregation RPC Credentials
+     * ModelMapper for se.tink.libraries.credentials.rpc.Credentials to Aggregation RPC Credentials
      */
     @VisibleForTesting
     static final TypeMap<Credentials, se.tink.backend.agents.rpc.Credentials> toAggregationMap = new ModelMapper()

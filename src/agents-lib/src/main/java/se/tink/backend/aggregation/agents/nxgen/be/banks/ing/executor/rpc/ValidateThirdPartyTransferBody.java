@@ -5,7 +5,7 @@ import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.IngTransferHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class ValidateThirdPartyTransferBody extends MultivaluedMapImpl {
 

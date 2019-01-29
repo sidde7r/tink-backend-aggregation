@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateTransfersRequest {

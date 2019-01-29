@@ -9,9 +9,9 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
-import se.tink.backend.core.transfer.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.date.DateUtils;
 
 public class EInvoice extends BaseResponse {

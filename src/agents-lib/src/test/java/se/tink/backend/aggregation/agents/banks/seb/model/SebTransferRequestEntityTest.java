@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.mock;

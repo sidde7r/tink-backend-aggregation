@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

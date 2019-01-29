@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.executor.rpc.
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.transfer.entities.RecipientEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.PaymentExecutor;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class IcaBankenPaymentExecutor implements PaymentExecutor {
 

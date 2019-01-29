@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
 import java.util.List;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class FetchEInvoicesResponse {
     private final List<Transfer> eInvoices;

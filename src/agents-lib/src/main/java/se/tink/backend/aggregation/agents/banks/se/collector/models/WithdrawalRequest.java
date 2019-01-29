@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.se.collector.models;
 
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class WithdrawalRequest {
     private double amount;

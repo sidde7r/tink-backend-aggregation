@@ -5,6 +5,9 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/libraries/account:enums",
+        "//src/libraries/account:rpc",
+        "//src/libraries/credentials:rpc",
         "//src/libraries/date",
         "//src/libraries/enums",
         "//src/libraries/log",
@@ -12,7 +15,7 @@ java_library(
         "//src/libraries/net",
         "//src/libraries/serialization",
         "//src/libraries/strings",
-        "//src/main-api",  #todo, we don't want dependency towards main-api here.
+        "//src/libraries/user:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",
@@ -29,7 +32,8 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         ":abn_amro",
-        "//src/main-api",  #todo, we don't want dependency towards main-api here.
+        "//src/libraries/account:rpc",
+        "//src/libraries/user:rpc",
         "//third_party:com_google_guava_guava",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",

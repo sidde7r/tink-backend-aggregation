@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class HandelsbankenSEAccountContext {

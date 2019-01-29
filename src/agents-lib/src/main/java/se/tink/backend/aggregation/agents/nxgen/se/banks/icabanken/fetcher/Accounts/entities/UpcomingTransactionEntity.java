@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.annotations.JsonDouble;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.enums.TransferType;
+import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;

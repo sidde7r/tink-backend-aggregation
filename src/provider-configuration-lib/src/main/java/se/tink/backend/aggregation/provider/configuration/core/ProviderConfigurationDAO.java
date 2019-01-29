@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.provider.configuration.core;
 
-import se.tink.backend.core.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderStatuses;
 
 import java.util.List;
 

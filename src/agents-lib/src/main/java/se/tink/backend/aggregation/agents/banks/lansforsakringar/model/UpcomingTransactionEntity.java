@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.Locale;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.enums.TransferType;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

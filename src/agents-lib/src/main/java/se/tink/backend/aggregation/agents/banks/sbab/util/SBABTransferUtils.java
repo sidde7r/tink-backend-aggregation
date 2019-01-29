@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.sbab.util;
 
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;

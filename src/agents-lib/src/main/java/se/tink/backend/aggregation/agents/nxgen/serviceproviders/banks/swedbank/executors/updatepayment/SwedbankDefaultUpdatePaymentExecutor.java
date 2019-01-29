@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.UpdatePaymentExecutor;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class SwedbankDefaultUpdatePaymentExecutor extends BaseTransferExecutor implements UpdatePaymentExecutor {

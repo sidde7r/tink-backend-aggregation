@@ -10,26 +10,27 @@ import java.util.Optional;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitialTransferResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.MakeTransferResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SavedRecipientEntity;
+import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.TransferEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.core.transfer.SignableOperationStatuses;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class TransferClient extends SBABClient {
-    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
+    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
+            new DefaultAccountIdentifierFormatter();
 
     private static final AggregationLogger log = new AggregationLogger(TransferClient.class);
 
@@ -38,11 +39,14 @@ public class TransferClient extends SBABClient {
     private final Catalog catalog;
     private final TransferMessageFormatter messageFormatter;
 
-    public TransferClient(Client client, Credentials credentials, Catalog catalog, String userAgent) {
+    public TransferClient(
+            Client client, Credentials credentials, Catalog catalog, String userAgent) {
         super(client, credentials, userAgent);
-        this.messageFormatter = new TransferMessageFormatter(catalog,
-                TransferMessageLengthConfig.createWithMaxLength(30, 12, 12),
-                new StringNormalizerSwedish("!+%\"/?,.§\\-"));
+        this.messageFormatter =
+                new TransferMessageFormatter(
+                        catalog,
+                        TransferMessageLengthConfig.createWithMaxLength(30, 12, 12),
+                        new StringNormalizerSwedish("!+%\"/?,.§\\-"));
         this.catalog = catalog;
     }
 
@@ -52,35 +56,46 @@ public class TransferClient extends SBABClient {
         Element newRecipientForm = page.select("form[id=sparaEjMottagare_overforingForm]").first();
 
         InitialTransferResponse initialResponse = new InitialTransferResponse();
-        initialResponse.setStrutsTokenName(transferForm.select("input[name=struts.token.name]").val());
+        initialResponse.setStrutsTokenName(
+                transferForm.select("input[name=struts.token.name]").val());
         initialResponse.setToken(transferForm.select("input[name=token]").val());
-        initialResponse.setPostUrl(SECURE_BASE_URL + transferForm.attr("action").replace(" ", "%20"));
-        initialResponse.setSaveRecipientStrutsTokenName(newRecipientForm.select("input[name=struts.token.name]").val());
+        initialResponse.setPostUrl(
+                SECURE_BASE_URL + transferForm.attr("action").replace(" ", "%20"));
+        initialResponse.setSaveRecipientStrutsTokenName(
+                newRecipientForm.select("input[name=struts.token.name]").val());
         initialResponse.setSaveRecipientToken(newRecipientForm.select("input[name=token]").val());
-        initialResponse.setSaveRecipientPostUrl(SECURE_BASE_URL + newRecipientForm.attr("action").replace(" ", "%20"));
+        initialResponse.setSaveRecipientPostUrl(
+                SECURE_BASE_URL + newRecipientForm.attr("action").replace(" ", "%20"));
         initialResponse.setValidRecipients(getValidRecipients(page));
         initialResponse.setValidSourceAccountNumbers(getValidSourceAccountNumbers(page));
 
         return initialResponse;
     }
 
-    public MakeTransferResponse makeTransfer(Transfer transfer, Optional<SavedRecipientEntity> savedRecipient,
-            InitialTransferResponse initialResponse) throws Exception {
-        boolean isBetweenUserAccounts = savedRecipient.isPresent() && savedRecipient.get().isUserAccount();
+    public MakeTransferResponse makeTransfer(
+            Transfer transfer,
+            Optional<SavedRecipientEntity> savedRecipient,
+            InitialTransferResponse initialResponse)
+            throws Exception {
+        boolean isBetweenUserAccounts =
+                savedRecipient.isPresent() && savedRecipient.get().isUserAccount();
 
         // Create a transfer object with the values that will actually be sent to SBAB.
-        TransferMessageFormatter.Messages messages = messageFormatter.getMessages(transfer, isBetweenUserAccounts);
+        TransferMessageFormatter.Messages messages =
+                messageFormatter.getMessages(transfer, isBetweenUserAccounts);
         TransferEntity transferEntity = TransferEntity.create(transfer, messages);
 
         if (!savedRecipient.isPresent()) {
             validateNewRecipient(transferEntity, initialResponse);
         }
 
-        MultivaluedMapImpl requestBody = createRequestBody(transferEntity, savedRecipient, initialResponse);
+        MultivaluedMapImpl requestBody =
+                createRequestBody(transferEntity, savedRecipient, initialResponse);
 
-        ClientResponse transferResponse = createFormEncodedHtmlRequest(initialResponse.getPostUrl())
-                .header("Referer", TRANSFER_PAGE_URL)
-                .post(ClientResponse.class, requestBody);
+        ClientResponse transferResponse =
+                createFormEncodedHtmlRequest(initialResponse.getPostUrl())
+                        .header("Referer", TRANSFER_PAGE_URL)
+                        .post(ClientResponse.class, requestBody);
 
         String redirectUrl = getRedirectUrl(transferResponse, SECURE_BASE_URL);
         Document resultPage = getJsoupDocumentWithReferer(redirectUrl, TRANSFER_PAGE_URL);
@@ -88,11 +103,14 @@ public class TransferClient extends SBABClient {
 
         MakeTransferResponse makeTransferResponse = new MakeTransferResponse();
         makeTransferResponse.setId(findTransferIdToAccept(transferEntity, resultPage));
-        Element acceptTransferTable = resultPage.select("form[id=godkannvaldaOverforingarForm]").first();
+        Element acceptTransferTable =
+                resultPage.select("form[id=godkannvaldaOverforingarForm]").first();
         makeTransferResponse.setAcceptUrl(SECURE_BASE_URL + acceptTransferTable.attr("action"));
-        Element deleteTransferTable = resultPage.select("form[id=tabortValdaOverforingarForm]").first();
+        Element deleteTransferTable =
+                resultPage.select("form[id=tabortValdaOverforingarForm]").first();
         makeTransferResponse.setDeleteUrl(SECURE_BASE_URL + deleteTransferTable.attr("action"));
-        makeTransferResponse.setStrutsTokenName(acceptTransferTable.select("input[name=struts.token.name]").val());
+        makeTransferResponse.setStrutsTokenName(
+                acceptTransferTable.select("input[name=struts.token.name]").val());
         makeTransferResponse.setToken(acceptTransferTable.select("input[name=token]").val());
         makeTransferResponse.setReferer(redirectUrl);
         makeTransferResponse.setIsBetweenUserAccounts(isBetweenUserAccounts);
@@ -101,17 +119,25 @@ public class TransferClient extends SBABClient {
         return makeTransferResponse;
     }
 
-    private void validateNewRecipient(TransferEntity transferEntity, InitialTransferResponse initialResponse)
+    private void validateNewRecipient(
+            TransferEntity transferEntity, InitialTransferResponse initialResponse)
             throws Exception {
-        MultivaluedMapImpl saveRecipientBody = createSaveRecipientRequestBody(transferEntity, initialResponse);
+        MultivaluedMapImpl saveRecipientBody =
+                createSaveRecipientRequestBody(transferEntity, initialResponse);
 
-        ClientResponse response = createFormEncodedHtmlRequest(initialResponse.getSaveRecipientPostUrl())
-                .header("Referer", TRANSFER_PAGE_URL)
-                .post(ClientResponse.class, saveRecipientBody);
+        ClientResponse response =
+                createFormEncodedHtmlRequest(initialResponse.getSaveRecipientPostUrl())
+                        .header("Referer", TRANSFER_PAGE_URL)
+                        .post(ClientResponse.class, saveRecipientBody);
         String redirectUrl = getRedirectUrl(response, SECURE_BASE_URL);
 
         Document transferPage = getJsoupDocumentWithReferer(redirectUrl, TRANSFER_PAGE_URL);
-        String newToken = transferPage.select("form[id=overforingForm]").first().select("input[name=token]").val();
+        String newToken =
+                transferPage
+                        .select("form[id=overforingForm]")
+                        .first()
+                        .select("input[name=token]")
+                        .val();
         initialResponse.setToken(newToken);
         checkIfNewRecipientError(transferPage);
     }
@@ -121,28 +147,34 @@ public class TransferClient extends SBABClient {
 
         if (potentialError != null) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                    .setMessage("Could not create new recipient. Error message: " + potentialError.text())
+                    .setMessage(
+                            "Could not create new recipient. Error message: "
+                                    + potentialError.text())
                     .setEndUserMessage(
-                            catalog.getString(TransferExecutionException.EndUserMessage.NEW_RECIPIENT_FAILED))
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.NEW_RECIPIENT_FAILED))
                     .build();
         }
     }
 
-    private MultivaluedMapImpl createSaveRecipientRequestBody(TransferEntity transferEntity,
-            InitialTransferResponse initialResponse) {
+    private MultivaluedMapImpl createSaveRecipientRequestBody(
+            TransferEntity transferEntity, InitialTransferResponse initialResponse) {
         MultivaluedMapImpl saveRecipientBody = new MultivaluedMapImpl();
 
-        saveRecipientBody.add("nyOverforing.bankkonto.kontonummer", transferEntity.getDestinationAccountNumber());
+        saveRecipientBody.add(
+                "nyOverforing.bankkonto.kontonummer", transferEntity.getDestinationAccountNumber());
         saveRecipientBody.add("nyOverforing.mottagarNamn", "");
         saveRecipientBody.add("nyOverforing.sparaOverforingsmottagare", "false");
         saveRecipientBody.add("nyOverforing.overforingBefintligMottagare", "-1");
-        saveRecipientBody.add("nyOverforing.franKontonummer", transferEntity.getFromAccountNumber());
+        saveRecipientBody.add(
+                "nyOverforing.franKontonummer", transferEntity.getFromAccountNumber());
         saveRecipientBody.add("nyOverforing.datumBetalning", "");
         saveRecipientBody.add("nyOverforing.formattedBelopp", "");
         saveRecipientBody.add("nyOverforing.meddelandeTillMottagare", "");
         saveRecipientBody.add("nyOverforing.egenNotering", "");
         saveRecipientBody.add("__checkbox_nyOverforing.staendeOverforing", "true");
-        saveRecipientBody.add("struts.token.name", initialResponse.getSaveRecipientStrutsTokenName());
+        saveRecipientBody.add(
+                "struts.token.name", initialResponse.getSaveRecipientStrutsTokenName());
         saveRecipientBody.add("token", initialResponse.getSaveRecipientToken());
 
         return saveRecipientBody;
@@ -156,8 +188,12 @@ public class TransferClient extends SBABClient {
 
     public void deleteTransfer(MakeTransferResponse makeResponse) throws Exception {
         Document transferPage = getJsoupDocument(TRANSFER_PAGE_URL);
-        String newToken = transferPage.select("form[id=tabortValdaOverforingarForm]").first()
-                .select("input[name=token]").val();
+        String newToken =
+                transferPage
+                        .select("form[id=tabortValdaOverforingarForm]")
+                        .first()
+                        .select("input[name=token]")
+                        .val();
         makeResponse.setToken(newToken);
 
         String redirectUrl = delete(makeResponse);
@@ -171,9 +207,11 @@ public class TransferClient extends SBABClient {
         }
     }
 
-    public SignFormRequestBody initiateSignProcess(MakeTransferResponse makeTransferResponse) throws Exception {
+    public SignFormRequestBody initiateSignProcess(MakeTransferResponse makeTransferResponse)
+            throws Exception {
         String redirectUrl = accept(makeTransferResponse);
-        Document signPage = getJsoupDocumentWithReferer(redirectUrl, makeTransferResponse.getReferer());
+        Document signPage =
+                getJsoupDocumentWithReferer(redirectUrl, makeTransferResponse.getReferer());
         Element signForm = signPage.select("form[id=signFormNexus]").first();
 
         SignFormRequestBody signFormRequestBody = SignFormRequestBody.from(signForm);
@@ -190,12 +228,14 @@ public class TransferClient extends SBABClient {
         return acceptOrDelete(makeTransferResponse.getDeleteUrl(), makeTransferResponse);
     }
 
-    private String acceptOrDelete(String url, MakeTransferResponse makeTransferResponse) throws Exception {
+    private String acceptOrDelete(String url, MakeTransferResponse makeTransferResponse)
+            throws Exception {
         MultivaluedMapImpl selectCheckboxBody = createSelectCheckboxBody(makeTransferResponse);
 
-        ClientResponse response = createFormEncodedHtmlRequest(url)
-                .header("Referer", makeTransferResponse.getReferer())
-                .post(ClientResponse.class, selectCheckboxBody);
+        ClientResponse response =
+                createFormEncodedHtmlRequest(url)
+                        .header("Referer", makeTransferResponse.getReferer())
+                        .post(ClientResponse.class, selectCheckboxBody);
 
         return getRedirectUrl(response, SECURE_BASE_URL);
     }
@@ -207,14 +247,16 @@ public class TransferClient extends SBABClient {
     private List<SavedRecipientEntity> getValidRecipients(Document transferPage) {
         List<SavedRecipientEntity> savedRecipients = Lists.newArrayList();
 
-        // Get the valid recipients for a transfer, including both own accounts and other saved destinations.
+        // Get the valid recipients for a transfer, including both own accounts and other saved
+        // destinations.
         savedRecipients.addAll(getSavedRecipients(transferPage, true));
         savedRecipients.addAll(getSavedRecipients(transferPage, false));
 
         return savedRecipients;
     }
 
-    private List<SavedRecipientEntity> getSavedRecipients(Document transferPage, boolean chooseUserOwned) {
+    private List<SavedRecipientEntity> getSavedRecipients(
+            Document transferPage, boolean chooseUserOwned) {
         Elements recipientElements;
 
         if (chooseUserOwned) {
@@ -226,12 +268,16 @@ public class TransferClient extends SBABClient {
         List<SavedRecipientEntity> recipients = Lists.newArrayList();
 
         for (Element recipient : recipientElements) {
-            Optional<SavedRecipientEntity> recipientEntity = SavedRecipientEntity.createFromString(recipient.val());
+            Optional<SavedRecipientEntity> recipientEntity =
+                    SavedRecipientEntity.createFromString(recipient.val());
             if (recipientEntity.isPresent()) {
                 recipientEntity.get().setIsUserAccount(chooseUserOwned);
                 recipients.add(recipientEntity.get());
             } else {
-                log.error("Could not create recipient entity from string value (" + recipient.val() + "). New format?");
+                log.error(
+                        "Could not create recipient entity from string value ("
+                                + recipient.val()
+                                + "). New format?");
             }
         }
 
@@ -241,8 +287,8 @@ public class TransferClient extends SBABClient {
     private List<String> getValidSourceAccountNumbers(Document transferPage) {
         List<String> validSourceAccountNumbers = Lists.newArrayList();
 
-        Elements sourceAccountElements = transferPage
-                .select("select[id=nyOverforing.belastningskonto] > optgroup > option");
+        Elements sourceAccountElements =
+                transferPage.select("select[id=nyOverforing.belastningskonto] > optgroup > option");
 
         for (Element sourceAccountElement : sourceAccountElements) {
             validSourceAccountNumbers.add(sourceAccountElement.val());
@@ -251,22 +297,28 @@ public class TransferClient extends SBABClient {
         return validSourceAccountNumbers;
     }
 
-    public Optional<SavedRecipientEntity> tryFindRecipient(Transfer transfer, InitialTransferResponse initialResponse) {
+    public Optional<SavedRecipientEntity> tryFindRecipient(
+            Transfer transfer, InitialTransferResponse initialResponse) {
         final AccountIdentifier destinationIdentifier = transfer.getDestination();
         List<SavedRecipientEntity> savedRecipients = initialResponse.getValidRecipients();
 
-        return savedRecipients.stream().filter(
-                savedRecipient -> {
-                    AccountIdentifier savedIdentifier = new SwedishIdentifier(savedRecipient.getAccountNumber());
-                    return Objects.equal(destinationIdentifier, savedIdentifier);
-                }).findFirst();
+        return savedRecipients.stream()
+                .filter(
+                        savedRecipient -> {
+                            AccountIdentifier savedIdentifier =
+                                    new SwedishIdentifier(savedRecipient.getAccountNumber());
+                            return Objects.equal(destinationIdentifier, savedIdentifier);
+                        })
+                .findFirst();
     }
 
-    public void checkTransferSuccess(MakeTransferResponse response, boolean isExternal) throws Exception {
+    public void checkTransferSuccess(MakeTransferResponse response, boolean isExternal)
+            throws Exception {
         try {
             if (transferIsInInbox(response.getId())) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setMessage("Tried to execute transfer, but transfer remains in inbox").build();
+                        .setMessage("Tried to execute transfer, but transfer remains in inbox")
+                        .build();
             }
         } catch (TransferExecutionException e) {
             throw e;
@@ -307,8 +359,9 @@ public class TransferClient extends SBABClient {
 
     private boolean transferIsUpcoming(TransferEntity executedEntity) throws Exception {
         Document acceptPage = getJsoupDocument(TRANSFER_PAGE_URL);
-        List<TransferEntity> upcomingTransfers = TransferClientParser
-                .parseUpcomingTransfers(acceptPage.select("table.kommandeoversikt").first());
+        List<TransferEntity> upcomingTransfers =
+                TransferClientParser.parseUpcomingTransfers(
+                        acceptPage.select("table.kommandeoversikt").first());
 
         for (TransferEntity transferEntity : upcomingTransfers) {
             if (transferEntity.equals(executedEntity)) {
@@ -335,7 +388,8 @@ public class TransferClient extends SBABClient {
         if (error != null && !elementIsHidden(error)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage(error.text())
-                    .setEndUserMessage(error.text()).build();
+                    .setEndUserMessage(error.text())
+                    .build();
         }
     }
 
@@ -344,47 +398,61 @@ public class TransferClient extends SBABClient {
         return style.contains("display: none");
     }
 
-    public Optional<String> tryFindSourceAccount(Transfer transfer, InitialTransferResponse initialResponse) {
+    public Optional<String> tryFindSourceAccount(
+            Transfer transfer, InitialTransferResponse initialResponse) {
         final String sourceIdentifier = transfer.getSource().getIdentifier(DEFAULT_FORMATTER);
         List<String> validSourceAccountNumbers = initialResponse.getValidSourceAccountNumbers();
 
-        return validSourceAccountNumbers.stream().filter(
-                sourceAccountNumber -> (Objects.equal(sourceIdentifier, sourceAccountNumber))).findFirst();
+        return validSourceAccountNumbers.stream()
+                .filter(
+                        sourceAccountNumber ->
+                                (Objects.equal(sourceIdentifier, sourceAccountNumber)))
+                .findFirst();
     }
 
-    private MultivaluedMapImpl createRequestBody(TransferEntity transferEntity,
-            Optional<SavedRecipientEntity> savedRecipient, InitialTransferResponse initialResponse) {
+    private MultivaluedMapImpl createRequestBody(
+            TransferEntity transferEntity,
+            Optional<SavedRecipientEntity> savedRecipient,
+            InitialTransferResponse initialResponse) {
 
         MultivaluedMapImpl transferRequestBody = new MultivaluedMapImpl();
 
         if (savedRecipient.isPresent()) {
             transferRequestBody.add("nyOverforing.bankkonto.kontonummer", "");
-            transferRequestBody.add("nyOverforing.overforingBefintligMottagare",
+            transferRequestBody.add(
+                    "nyOverforing.overforingBefintligMottagare",
                     getRecipientIdentifier(savedRecipient.get()));
 
         } else {
             String recipient = transferEntity.getDestinationAccountNumber();
             transferRequestBody.add("nyOverforing.bankkonto.kontonummer", recipient);
-            Optional<String> newRecipientIdentifier = SavedRecipientEntity.getNewRecipientIdentifier(recipient);
+            Optional<String> newRecipientIdentifier =
+                    SavedRecipientEntity.getNewRecipientIdentifier(recipient);
 
             if (!newRecipientIdentifier.isPresent()) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setMessage("Could not create a new recipient identifier").build();
+                        .setMessage("Could not create a new recipient identifier")
+                        .build();
             }
 
-            transferRequestBody.add("nyOverforing.overforingBefintligMottagare", newRecipientIdentifier.get());
+            transferRequestBody.add(
+                    "nyOverforing.overforingBefintligMottagare", newRecipientIdentifier.get());
         }
 
         transferRequestBody.add("nyOverforing.formattedBelopp", transferEntity.getPositiveAmount());
         transferRequestBody.add("nyOverforing.datumBetalning", transferEntity.getDate());
         transferRequestBody.add("nyOverforing.mottagarNamn", "");
         transferRequestBody.add("nyOverforing.sparaOverforingsmottagare", "false");
-        transferRequestBody.add("nyOverforing.franKontonummer", transferEntity.getFromAccountNumber());
-        transferRequestBody.add("nyOverforing.meddelandeTillMottagare", transferEntity.getDestinationMessage());
+        transferRequestBody.add(
+                "nyOverforing.franKontonummer", transferEntity.getFromAccountNumber());
+        transferRequestBody.add(
+                "nyOverforing.meddelandeTillMottagare", transferEntity.getDestinationMessage());
         transferRequestBody.add("nyOverforing.egenNotering", transferEntity.getSourceMessage());
 
-        // Note: the 'true' checkbox value here is always sent as true from the web page, but the real value
-        // (nyOverforing.staendeOverforing) is only sent and set to 'true' when it is a recurring transfer.
+        // Note: the 'true' checkbox value here is always sent as true from the web page, but the
+        // real value
+        // (nyOverforing.staendeOverforing) is only sent and set to 'true' when it is a recurring
+        // transfer.
 
         transferRequestBody.add("__checkbox_nyOverforing.staendeOverforing", "true");
         transferRequestBody.add("struts.token.name", initialResponse.getStrutsTokenName());
@@ -400,28 +468,34 @@ public class TransferClient extends SBABClient {
             return identifier.get();
         } else {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Could not create identifier string from saved recipient").build();
+                    .setMessage("Could not create identifier string from saved recipient")
+                    .build();
         }
     }
 
-    private String findTransferIdToAccept(TransferEntity actualTransfer, Document resultPage) throws Exception {
+    private String findTransferIdToAccept(TransferEntity actualTransfer, Document resultPage)
+            throws Exception {
         Element transfersToAcceptTable = resultPage.select("table.attgodkannaoversikt").first();
 
         if (transfersToAcceptTable == null) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Could not find any transfers to accept.").build();
+                    .setMessage("Could not find any transfers to accept.")
+                    .build();
         }
 
-        List<TransferEntity> transfersToAccept = TransferClientParser
-                .parseTransfersToAccept(transfersToAcceptTable);
+        List<TransferEntity> transfersToAccept =
+                TransferClientParser.parseTransfersToAccept(transfersToAcceptTable);
 
         for (TransferEntity transferToAcceptEntity : transfersToAccept) {
-            if (transferToAcceptEntity.equals(actualTransfer) && transferToAcceptEntity.getId() != null) {
+            if (transferToAcceptEntity.equals(actualTransfer)
+                    && transferToAcceptEntity.getId() != null) {
                 return transferToAcceptEntity.getId();
             }
         }
 
         throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setMessage("Could not find a transfer to accept matching the given transfer to be executed.").build();
+                .setMessage(
+                        "Could not find a transfer to accept matching the given transfer to be executed.")
+                .build();
     }
 }

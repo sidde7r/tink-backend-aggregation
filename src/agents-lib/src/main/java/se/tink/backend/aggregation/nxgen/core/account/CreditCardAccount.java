@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.nxgen.core.account;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.agents.rpc.User;
+import se.tink.libraries.user.rpc.User;
 import com.google.common.base.Preconditions;
 
 public class CreditCardAccount extends Account {

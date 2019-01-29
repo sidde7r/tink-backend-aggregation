@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ExecuteInternalTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.executor.rpc.ValidateInternalTransferResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class IngInternalTransferExecutor {
     private final IngApiClient apiClient;

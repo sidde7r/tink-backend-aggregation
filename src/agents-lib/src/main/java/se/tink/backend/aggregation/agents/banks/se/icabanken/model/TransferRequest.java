@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.libraries.enums.TransferType;
+import se.tink.libraries.transfer.enums.TransferType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferRequest {

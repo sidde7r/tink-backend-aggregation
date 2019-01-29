@@ -28,7 +28,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.backend.core.transfer.Transfer;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 class CollectorApiClient {

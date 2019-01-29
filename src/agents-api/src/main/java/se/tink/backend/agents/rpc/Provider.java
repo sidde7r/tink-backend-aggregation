@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This Provider has been copied from {@link se.tink.backend.core.Provider} in an effort to remove :aggregation-apis
+ * This Provider has been copied from {@link se.tink.libraries.provider.rpc.Provider} in an effort to remove :aggregation-apis
  * dependency on :main-api
  * <p>
  * Some of the objects here are not used by Aggregation at all, but are still needed until the Aggregation API has been

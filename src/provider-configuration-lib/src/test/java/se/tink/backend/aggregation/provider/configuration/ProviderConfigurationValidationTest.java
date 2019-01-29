@@ -7,8 +7,8 @@ import org.apache.commons.lang.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
-import se.tink.backend.core.CredentialsTypes;
-import se.tink.backend.core.Field;
+import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.pair.Pair;
 
 import java.util.ArrayList;
