@@ -11,6 +11,7 @@ java_library(
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_headers:api-headers",
         "//src/libraries/auth",
+        "//src/libraries/credentials:enums",
         "//src/libraries/date",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/enums",

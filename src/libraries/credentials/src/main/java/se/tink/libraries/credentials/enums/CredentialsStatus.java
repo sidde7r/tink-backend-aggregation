@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.credentials.enums;
 
 public enum CredentialsStatus {
     CREATED,

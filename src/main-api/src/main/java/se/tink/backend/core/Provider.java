@@ -25,6 +25,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
+import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Entity

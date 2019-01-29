@@ -342,7 +342,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         credentialsCopy.clearSensitiveInformation(request.getProvider());
 
         // TODO: Refactor System API side to not depend on :main-api
-        se.tink.backend.core.Credentials coreCredentials = CoreCredentialsMapper
+        se.tink.libraries.credentials.rpc.Credentials coreCredentials = CoreCredentialsMapper
                 .fromAggregationCredentials(credentialsCopy);
 
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateCredentialsStatusRequest updateCredentialsStatusRequest =

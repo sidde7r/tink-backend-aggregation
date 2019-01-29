@@ -4,6 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/api_annotations:api-annotations",
+        "//src/libraries/credentials:enums",
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",

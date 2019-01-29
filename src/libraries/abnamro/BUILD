@@ -7,6 +7,7 @@ java_library(
     deps = [
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
+        "//src/libraries/credentials:rpc",
         "//src/libraries/date",
         "//src/libraries/enums",
         "//src/libraries/log",

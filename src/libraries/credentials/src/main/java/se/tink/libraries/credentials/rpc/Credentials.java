@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.credentials.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -30,7 +30,11 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
+import se.tink.backend.core.Field;
+import se.tink.backend.core.Provider;
 import se.tink.credentials.demo.DemoCredentials;
+import se.tink.libraries.credentials.enums.CredentialsStatus;
+import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 

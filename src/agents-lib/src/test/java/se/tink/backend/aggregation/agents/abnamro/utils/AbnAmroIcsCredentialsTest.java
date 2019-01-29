@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.abnamro.utils;
 
 import com.google.common.collect.Sets;
 import org.junit.Test;
-import se.tink.backend.core.CredentialsStatus;
+import se.tink.libraries.credentials.enums.CredentialsStatus;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AbnAmroIcsCredentialsTest {

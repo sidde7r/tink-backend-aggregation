@@ -27,6 +27,7 @@ java_library(
         "//src/libraries/cache",
         "//src/libraries/cli_print_utils",
         "//src/libraries/concurrency",
+        "//src/libraries/credentials:rpc",
         "//src/libraries/creditsafe_consumer_monitoring",
         "//src/libraries/date",
         "//src/libraries/demo_credentials:demo-credentials",

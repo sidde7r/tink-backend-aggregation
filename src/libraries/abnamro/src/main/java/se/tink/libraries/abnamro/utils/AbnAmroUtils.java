@@ -21,7 +21,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.account.enums.AccountTypes;
-import se.tink.backend.core.Credentials;
+import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.log.legacy.LogUtils;

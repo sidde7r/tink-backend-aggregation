@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import se.tink.backend.core.CredentialsTypes;
+import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.backend.core.Field;
 import se.tink.backend.core.ProviderRefreshSchedule;
 import se.tink.backend.core.ProviderStatuses;
