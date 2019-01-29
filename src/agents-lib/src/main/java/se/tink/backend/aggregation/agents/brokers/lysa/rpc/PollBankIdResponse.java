@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.brokers.lysa.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.aggregation.agents.brokers.lysa.model.DetailsEntity;
 import se.tink.backend.aggregation.agents.brokers.lysa.model.PayloadEntity;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -36,7 +36,7 @@ public class AbnAmroIcsCredentials {
         this.credentials = credentials;
     }
 
-    public AbnAmroIcsCredentials(se.tink.backend.aggregation.rpc.Credentials credentials) {
+    public AbnAmroIcsCredentials(se.tink.backend.agents.rpc.Credentials credentials) {
         this(CoreCredentialsMapper.fromAggregationCredentials(credentials));
     }
 

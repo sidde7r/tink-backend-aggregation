@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.parser.NordeaDkT
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.parsers.NordeaV20Parser;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.session;
 
 import com.google.common.base.Preconditions;
 import java.util.Objects;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -9,8 +10,7 @@ import se.tink.backend.aggregation.nxgen.http.SerializeContainer;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SessionController {

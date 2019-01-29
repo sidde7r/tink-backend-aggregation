@@ -27,7 +27,7 @@ import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionE
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionGroupEntity;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;

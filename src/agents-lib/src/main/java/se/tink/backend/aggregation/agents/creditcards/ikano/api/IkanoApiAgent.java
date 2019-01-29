@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserError
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.CardList;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.Transaction;
 

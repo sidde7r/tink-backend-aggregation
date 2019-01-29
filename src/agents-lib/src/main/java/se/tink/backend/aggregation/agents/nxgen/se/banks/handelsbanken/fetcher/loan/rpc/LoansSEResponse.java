@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.loan.entities.HandelsbankenSELoan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.rpc.HandelsbankenLoansResponse;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class LoansSEResponse extends HandelsbankenLoansResponse {
     private List<HandelsbankenSELoan> loans;

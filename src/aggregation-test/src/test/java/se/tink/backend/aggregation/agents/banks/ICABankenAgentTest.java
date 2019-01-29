@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.agents.banks.icabanken.ICABankenAccountNumber
 import se.tink.backend.aggregation.agents.banks.se.icabanken.ICABankenAgent;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.PersistentSession;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SessionResponseBody;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.helper.transfer.stubs.TransferStub;
 import se.tink.libraries.account.identifiers.TestAccount;

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.LogResponseFilter;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class NordeaV17LogResponseFilter extends LogResponseFilter {
     private static final LogTag FOUND_CREDIT_CARD_CONTINUE_KEY_LOG_TAG = LogTag.from("#http_response_found_credit_card_continue_key_log_tag");

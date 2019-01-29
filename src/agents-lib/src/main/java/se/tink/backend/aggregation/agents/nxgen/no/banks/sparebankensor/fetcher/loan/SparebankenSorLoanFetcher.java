@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger LOGGER = new AggregationLogger(SparebankenSorLoanFetcher.class);

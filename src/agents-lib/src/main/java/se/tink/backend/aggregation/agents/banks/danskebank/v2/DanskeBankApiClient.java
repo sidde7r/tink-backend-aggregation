@@ -57,7 +57,7 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.VerifyBankIdRe
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.VerifyBankIdResponse;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
 
 public class DanskeBankApiClient {

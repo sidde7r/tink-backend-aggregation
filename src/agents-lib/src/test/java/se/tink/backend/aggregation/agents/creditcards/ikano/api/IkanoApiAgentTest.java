@@ -7,7 +7,7 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 import javax.naming.LimitExceededException;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;

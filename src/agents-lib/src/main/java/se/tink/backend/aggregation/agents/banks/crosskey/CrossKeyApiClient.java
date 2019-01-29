@@ -6,6 +6,7 @@ import java.net.URI;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.client.utils.URIBuilder;
 import org.joda.time.DateTime;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.banks.crosskey.errors.CrossKeyErrorHandler;
 import se.tink.backend.aggregation.agents.banks.crosskey.requests.AddDeviceRequest;
 import se.tink.backend.aggregation.agents.banks.crosskey.requests.GenerateTokenRequest;
@@ -18,8 +19,7 @@ import se.tink.backend.aggregation.agents.banks.crosskey.responses.LoanDetailsRe
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyLoanDetails;
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.TransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class CrossKeyApiClient {

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.norwegian;
 
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.rpc.Field;
 
 public class NorwegianAgentTest {
     private final String USERNAME = "";

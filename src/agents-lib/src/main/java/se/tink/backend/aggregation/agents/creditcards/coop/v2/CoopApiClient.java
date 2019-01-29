@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.WebResource;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.creditcards.coop.v2.model.AccountEntity;
 import se.tink.backend.aggregation.agents.creditcards.coop.v2.model.AuthenticateResult;
 import se.tink.backend.aggregation.agents.creditcards.coop.v2.model.BaseRequest;
@@ -21,8 +22,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class CoopApiClient {

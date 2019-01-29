@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 import com.google.common.base.Charsets;
 import org.apache.commons.codec.binary.Base64;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.encryption.MobileBankingEncryptionHelper;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.strings.StringUtils;
 
 /* renamed from: com.danskebank.core.h.e.a.e */

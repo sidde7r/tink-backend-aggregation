@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.nxgen.controllers.utils;
 
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.exceptions.SupplementalInfoException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.rpc.Field;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.libraries.strings.StringUtils;
 
 import java.util.Map;

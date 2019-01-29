@@ -16,8 +16,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.rpc.Credentials;
 import se.tink.libraries.amount.Amount;
+import se.tink.backend.agents.rpc.Credentials;
 
 public abstract class NordeaV20Parser {
 

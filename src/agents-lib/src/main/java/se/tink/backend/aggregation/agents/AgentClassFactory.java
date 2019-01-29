@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents;
 
-import se.tink.backend.aggregation.rpc.Provider;
+import se.tink.backend.agents.rpc.Provider;
 
 public class AgentClassFactory {
 

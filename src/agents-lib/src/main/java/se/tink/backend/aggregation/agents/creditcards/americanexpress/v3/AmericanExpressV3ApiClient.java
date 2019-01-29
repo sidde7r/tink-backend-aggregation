@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.CardDetailsEntity;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.CardEntity;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.LoginRequest;
@@ -24,8 +25,7 @@ import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.T
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsRequest;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsResponse;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.utils.MarketParameters;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
 

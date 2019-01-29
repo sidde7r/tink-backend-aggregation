@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.contexts;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public interface SupplementalRequester {
 

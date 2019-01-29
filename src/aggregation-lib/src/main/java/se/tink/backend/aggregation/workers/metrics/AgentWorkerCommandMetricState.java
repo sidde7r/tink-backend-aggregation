@@ -4,13 +4,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Objects;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.rpc.CredentialsRequestType;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.commands.MetricsCommand;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class AgentWorkerCommandMetricState {
     private static final AggregationLogger log = new AggregationLogger(AgentWorkerCommandMetricState.class);

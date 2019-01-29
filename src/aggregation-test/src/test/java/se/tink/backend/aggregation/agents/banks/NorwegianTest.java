@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.CreditCardParsingUtils.AccountNotFoundException;
 import se.tink.backend.aggregation.agents.banks.norwegian.utils.SavingsAccountParsingUtils;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.libraries.social.security.TestSSN;
 
 public class NorwegianTest extends AbstractAgentTest<NorwegianAgent> {

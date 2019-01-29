@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.authenticato
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 public class CoopPasswordAuthenticator implements PasswordAuthenticator {
 

@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.rpc.AccountDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.rpc.AccountsSummaryResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;

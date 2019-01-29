@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.rpc.filter.Norde
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemidPasswordAuthenticationController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.Credentials;
 import static org.mockito.Mockito.spy;
 
 public class NordeaTestBase {

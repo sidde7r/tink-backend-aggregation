@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents;
 
 import com.google.common.base.Objects;
 import java.lang.reflect.Constructor;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.demo.DemoAgent;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Provider;
-import se.tink.backend.aggregation.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class AgentFactory {

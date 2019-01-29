@@ -8,9 +8,9 @@ import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.UUID;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.rpc.FetchProductInformationParameterKey;
 import se.tink.backend.aggregation.rpc.ProductInformationRequest;
-import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.agents.rpc.User;
 import se.tink.backend.aggregation.rpc.ProductType;
 

@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.demo;
 
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
-import se.tink.backend.aggregation.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 
 public class NextGenerationDemoAgentTest extends NextGenerationBaseAgentTest<NextGenerationDemoAgent> {

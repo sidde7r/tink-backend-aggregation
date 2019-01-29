@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
-import se.tink.backend.aggregation.rpc.Field;
 
 public class AsLhvAgentTest {
     private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");

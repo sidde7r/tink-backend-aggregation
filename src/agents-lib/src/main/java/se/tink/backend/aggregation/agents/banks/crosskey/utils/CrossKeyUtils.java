@@ -5,8 +5,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
 import java.util.List;
 import org.joda.time.DateTime;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.utils.TransactionOrdering;
-import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.strings.StringUtils;
 
