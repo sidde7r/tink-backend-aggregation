@@ -1,7 +1,0 @@
-{
-  "clusterid" : "leeds-staging",
-  "providers" : [
-    "mt-bov",
-    "mt-hsbc-bank"
-  ]
-}
