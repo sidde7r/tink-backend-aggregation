@@ -333,6 +333,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 .filter(a -> a.getBankId().length() == OLD_ICS_ID_LENGTH)
                 .filter(a -> importedAccounts.stream().anyMatch(isOldICSAccount(a)))
                 .forEach(a -> {
+                    a.setBankId(a.getBankId().concat("-duplicate"));
                     a.setExcluded(true);
                     a.setClosed(true);
                     financialDataCacher.cacheAccount(a);
