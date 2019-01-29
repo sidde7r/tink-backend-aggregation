@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.backend.agents.rpc;
 
 public class UserProfile {
     private String locale;

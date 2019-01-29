@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Map;
-import se.tink.backend.aggregation.rpc.Field;
+import se.tink.backend.agents.rpc.User;
 
 /**
  * Immutable credentials object that's supposed to be used only as hack when needing a credentials instance, but

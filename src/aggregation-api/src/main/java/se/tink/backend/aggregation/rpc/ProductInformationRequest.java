@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import se.tink.backend.agents.rpc.User;
 
 /**
  * A representation of a request for getting product information for the user. There is not a given credentials at this

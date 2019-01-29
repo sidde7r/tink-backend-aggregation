@@ -1,4 +1,4 @@
-package se.tink.backend.core.enums;
+package se.tink.backend.agents.rpc;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.List;

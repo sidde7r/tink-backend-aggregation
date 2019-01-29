@@ -34,8 +34,8 @@ import se.tink.backend.aggregation.rpc.Field;
 import se.tink.backend.aggregation.rpc.Provider;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.rpc.User;
-import se.tink.backend.aggregation.rpc.UserProfile;
+import se.tink.backend.agents.rpc.User;
+import se.tink.backend.agents.rpc.UserProfile;
 import se.tink.backend.core.transfer.Transfer;
 
 import java.io.File;

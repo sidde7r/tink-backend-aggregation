@@ -21,6 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
+import se.tink.backend.agents.core.UserConnectedService;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.strings.StringUtils;

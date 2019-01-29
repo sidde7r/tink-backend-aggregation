@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.backend.agents.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -8,8 +8,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
-import se.tink.backend.core.UserConnectedService;
-import se.tink.libraries.enums.FeatureFlags;
+import se.tink.backend.agents.core.UserConnectedService;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 

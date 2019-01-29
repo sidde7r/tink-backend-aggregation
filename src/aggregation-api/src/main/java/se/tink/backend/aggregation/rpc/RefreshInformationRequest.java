@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
+import se.tink.backend.agents.rpc.User;
 
 public class RefreshInformationRequest extends CredentialsRequest {
     @JsonProperty

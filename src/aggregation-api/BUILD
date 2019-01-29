@@ -43,6 +43,7 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
+        "//src/agents-api",
         "//src/aggregation-api",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_annotations:api-annotations-testlib-test",

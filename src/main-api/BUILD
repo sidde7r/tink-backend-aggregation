@@ -4,6 +4,7 @@ java_library(
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//src/agents-api",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/amount",
         "//src/libraries/api_annotations:api-annotations",
