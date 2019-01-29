@@ -44,7 +44,7 @@ junit_test(
         "//src/libraries/strings",
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
-        "//src/libraries/transfer:stubs",
+        "//src/libraries/transfer:mocks",
         "//src/libraries/user:rpc",
         "//src/libraries/uuid",
         "//src/main-api",

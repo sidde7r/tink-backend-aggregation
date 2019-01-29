@@ -28,8 +28,8 @@ java_library(
 )
 
 java_library(
-    name = "stubs",
-    srcs = glob(["src/main/**/stubs/*.java"]),
+    name = "mocks",
+    srcs = glob(["src/main/**/mocks/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account_identifier:account-identifier",

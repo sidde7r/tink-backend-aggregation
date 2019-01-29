@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SessionRespon
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.social.security.TestSSN;
 import se.tink.libraries.amount.Amount;
@@ -239,7 +239,7 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
 
         Transfer originalTransfer = transfers.get(0);
 
-        Transfer transferToSign = TransferStub.eInvoice()
+        Transfer transferToSign = TransferMock.eInvoice()
                 .createUpdateTransferFromOriginal(originalTransfer)
                 .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
                 .withAmount(originalTransfer.getAmount())
@@ -260,7 +260,7 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
         // Update with minimal change
         Amount originalAmountPlus1SEK = Amount.inSEK(originalTransfer.getAmount().getValue() + 1);
 
-        Transfer transferToSign = TransferStub.eInvoice()
+        Transfer transferToSign = TransferMock.eInvoice()
                 .createUpdateTransferFromOriginal(originalTransfer)
                 .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
                 .withAmount(originalAmountPlus1SEK)
@@ -282,7 +282,7 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
         Date originalDateMinus1Day = DateUtils.getCurrentOrPreviousBusinessDay(new DateTime(originalTransfer
                 .getDueDate()).minusDays(1).toDate());
 
-        Transfer transferToSign = TransferStub.eInvoice()
+        Transfer transferToSign = TransferMock.eInvoice()
                 .createUpdateTransferFromOriginal(originalTransfer)
                 .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
                 .withAmount(originalTransfer.getAmount())
@@ -299,7 +299,7 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
 
         @Test
         public void testTransferInternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
                     .to(TestAccount.IdentifiersWithName.ICABANKEN_ANOTHER_FH)
                     .withAmountInSEK(1.0)
@@ -310,7 +310,7 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
 
         @Test
         public void testTransferExternal_NoMessageSetsDefaultMessage() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
                     .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                     .withAmountInSEK(1.0)
@@ -321,7 +321,7 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
 
         @Test
         public void testTransferInternal_CutsMessageIfTooLong() throws Exception {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
                     .to(TestAccount.IdentifiersWithName.ICABANKEN_ANOTHER_FH)
                     .withAmountInSEK(1.0)
@@ -332,7 +332,7 @@ public class ICABankenAgentTest extends AbstractAgentTest<ICABankenAgent> {
 
         @Test(expected = TransferMessageException.class)
         public void testTransferExternal_ThrowsIfTooLongDestinationMessage() throws Throwable {
-            Transfer t = TransferStub.bankTransfer()
+            Transfer t = TransferMock.bankTransfer()
                     .from(TestAccount.IdentifiersWithName.ICABANKEN_FH)
                     .to(TestAccount.IdentifiersWithName.DANSKEBANK_FH)
                     .withAmountInSEK(1.0)

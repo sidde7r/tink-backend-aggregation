@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Test;
-import se.tink.libraries.transfer.stubs.TransferStub;
+import se.tink.libraries.transfer.mocks.TransferMock;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -32,7 +32,7 @@ public class EInvoiceDetailsResponseTest {
                 .readValue(RESPONSE_EXAMPLE, EInvoiceDetailsResponse.class)
                 .toEInvoiceTransfer("abcd");
 
-        Transfer expected = TransferStub.eInvoice()
+        Transfer expected = TransferMock.eInvoice()
                 .from(null)
                 .to(AccountIdentifier.create(AccountIdentifier.Type.SE_BG, "6875496", "TINK AB"))
                 .withAmount(Amount.inSEK(1.0))

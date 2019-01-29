@@ -137,7 +137,7 @@ junit_test(
         "//src/libraries/net",
         "//src/libraries/serialization",
         "//src/libraries/strings",
-        "//src/libraries/transfer:stubs",
+        "//src/libraries/transfer:mocks",
         "//src/main-api",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",

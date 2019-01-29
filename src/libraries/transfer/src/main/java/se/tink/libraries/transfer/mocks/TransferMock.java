@@ -1,4 +1,4 @@
-package se.tink.libraries.transfer.stubs;
+package se.tink.libraries.transfer.mocks;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,7 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-public class TransferStub {
+public class TransferMock {
     public static BankTransferBuilder bankTransfer() {
         return new BankTransferBuilder();
     }
