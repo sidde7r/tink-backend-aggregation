@@ -17,7 +17,6 @@ java_library(
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/transfer:rpc",
-        "//src/main-api",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:io_protostuff_protostuff_api",
