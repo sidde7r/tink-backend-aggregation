@@ -7,15 +7,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
@@ -24,8 +15,19 @@ import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.bankid.CredentialsSignicatBankIdAuthenticationHandler;
@@ -58,7 +60,21 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor {
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+
+
+public class DemoAgent extends AbstractAgent implements RefreshCheckingAccountsExecutor,
+        RefreshSavingsAccountsExecutor, RefreshCreditCardAccountsExecutor, RefreshLoanAccountsExecutor,
+        RefreshInvestmentAccountsExecutor, RefreshEInvoiceExecutor, RefreshTransferDestinationExecutor, TransferExecutor {
     private static final String BASE_PATH = "data/demo";
     private static final Integer NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE = 3;
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -66,7 +82,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
     private DemoCredentials demoCredentials;
     private String userPath;
     private File accountsFile;
-
     private List<Account> accounts = null;
 
     public DemoAgent(
@@ -81,6 +96,28 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             userPath = BASE_PATH + File.separator + request.getCredentials().getUsername();
         }
         accountsFile = new File(userPath + File.separator + "accounts.txt");
+    }
+
+    private static List<Field> createChallengeAndResponse(String code) {
+        Field challengeField = new Field();
+
+        challengeField.setImmutable(true);
+        challengeField.setDescription("Kod");
+        challengeField.setValue("Kod");
+        challengeField.setName("code");
+        challengeField.setHelpText("Koden är: " + code);
+
+        Field responseField = new Field();
+
+        responseField.setDescription("Sändkod");
+        responseField.setName("response");
+        responseField.setNumeric(false);
+        responseField.setHint("NNNNN");
+        responseField.setMaxLength(code.length());
+        responseField.setMinLength(code.length());
+        responseField.setPattern("([a-zA-Z0-9]{" + code.length() + "})");
+
+        return Lists.newArrayList(challengeField, responseField);
     }
 
     @Override
@@ -133,7 +170,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         return true;
     }
-
     private List<Account> getAccounts() {
         if (accounts != null) {
             return accounts;
@@ -146,7 +182,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         }
         return accounts;
     }
-
     private List<Transaction> getTransactions(Account account) {
         if (demoCredentials.hasFeature(DemoUserFeature.GENERATE_TRANSACTIONS)) {
             return DemoTransactionsGenerator.generateTransactions(demoCredentials, account);
@@ -174,88 +209,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
             return transactions;
         }
         return Collections.emptyList();
-    }
-
-    private void updateAccountsPerType(RefreshableItem type) {
-        getAccounts().stream()
-                .filter(account -> type.isAccountType(account.getType()))
-                .forEach(context::cacheAccount);
-    }
-
-    private void updateTransactionsPerType(RefreshableItem type) {
-        getAccounts().stream()
-                .filter(account -> type.isAccountType(account.getType()))
-                .forEach(
-                        account ->
-                                financialDataCacher.updateTransactions(
-                                        account, getTransactions(account)));
-    }
-
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-            case TRANSFER_DESTINATIONS:
-                TransferDestinationsResponse response = new TransferDestinationsResponse();
-
-                for (Account account : systemUpdater.getUpdatedAccounts()) {
-                    response.addDestination(
-                            account,
-                            TransferDestinationPattern.createForMultiMatch(
-                                    AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
-                    response.addDestination(
-                            account,
-                            TransferDestinationPattern.createForMultiMatch(
-                                    AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
-                    response.addDestination(
-                            account,
-                            TransferDestinationPattern.createForMultiMatch(
-                                    AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
-                }
-                systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
-                break;
-
-            case EINVOICES:
-                systemUpdater.updateEinvoices(getEInvoices());
-                break;
-
-            case CHECKING_ACCOUNTS:
-            case SAVING_ACCOUNTS:
-            case CREDITCARD_ACCOUNTS:
-                updateAccountsPerType(item);
-                break;
-
-            case CHECKING_TRANSACTIONS:
-            case SAVING_TRANSACTIONS:
-            case CREDITCARD_TRANSACTIONS:
-                updateTransactionsPerType(item);
-                break;
-
-            case LOAN_ACCOUNTS:
-                getAccounts().stream()
-                        .filter(
-                                account ->
-                                        RefreshableItem.LOAN_ACCOUNTS.isAccountType(
-                                                account.getType()))
-                        .forEach(
-                                account ->
-                                        financialDataCacher.cacheAccount(
-                                                account, createLoanAsset(account)));
-                break;
-
-            case INVESTMENT_ACCOUNTS:
-                getAccounts().stream()
-                        .filter(
-                                account ->
-                                        RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(
-                                                account.getType()))
-                        .forEach(
-                                account ->
-                                        financialDataCacher.cacheAccount(
-                                                account,
-                                                AccountFeatures.createForPortfolios(
-                                                        generateFakePortolio(account))));
-                break;
-        }
     }
 
     /**
@@ -385,28 +338,6 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         return answers.get("response");
     }
 
-    private static List<Field> createChallengeAndResponse(String code) {
-        Field challengeField = new Field();
-
-        challengeField.setImmutable(true);
-        challengeField.setDescription("Kod");
-        challengeField.setValue("Kod");
-        challengeField.setName("code");
-        challengeField.setHelpText("Koden är: " + code);
-
-        Field responseField = new Field();
-
-        responseField.setDescription("Sändkod");
-        responseField.setName("response");
-        responseField.setNumeric(false);
-        responseField.setHint("NNNNN");
-        responseField.setMaxLength(code.length());
-        responseField.setMinLength(code.length());
-        responseField.setPattern("([a-zA-Z0-9]{" + code.length() + "})");
-
-        return Lists.newArrayList(challengeField, responseField);
-    }
-
     public List<Transfer> getEInvoices() {
         // Generate some e-invoices
 
@@ -465,6 +396,7 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
 
         return Objects.equal(CredentialsStatus.UPDATING, credentials.getStatus());
     }
+    /////////////// Refresh Executor Refactor /////////////////
 
     private Portfolio generateFakePortolio(Account account) {
         Portfolio portfolio = new Portfolio();
@@ -608,5 +540,102 @@ public class DemoAgent extends AbstractAgent implements RefreshableItemExecutor,
         instrument.setType(type);
         instrument.setRawType(rawType);
         return instrument;
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return fetchAccountsPerType(RefreshableItem.CHECKING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return fetchTransactionsPerType(RefreshableItem.CHECKING_TRANSACTIONS);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return fetchAccountsPerType(RefreshableItem.CREDITCARD_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return fetchTransactionsPerType(RefreshableItem.CREDITCARD_TRANSACTIONS);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return fetchAccountsPerType(RefreshableItem.SAVING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return fetchTransactionsPerType(RefreshableItem.SAVING_TRANSACTIONS);
+    }
+
+    private FetchAccountsResponse fetchAccountsPerType(RefreshableItem type) {
+        List<Account> accounts = new ArrayList<>();
+        getAccounts().stream()
+                .filter(account -> type.isAccountType(account.getType()))
+                .forEach(accounts::add);
+        return new FetchAccountsResponse(accounts);
+    }
+
+    private FetchTransactionsResponse fetchTransactionsPerType(RefreshableItem type) {
+        Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
+        getAccounts().stream()
+                .filter(account -> type.isAccountType(account.getType()))
+                .forEach(account -> transactionsMap.put(account, getTransactions(account)));
+        return new FetchTransactionsResponse(transactionsMap);
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        getAccounts().stream()
+                .filter(account -> RefreshableItem.INVESTMENT_ACCOUNTS.isAccountType(account.getType()))
+                .forEach(account -> accounts.put(account,
+                        AccountFeatures.createForPortfolios(generateFakePortolio(account))));
+        return new FetchInvestmentAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        getAccounts().stream()
+                .filter(account -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(account.getType()))
+                .forEach(account -> accounts.put(account, createLoanAsset(account)));
+        return new FetchLoanAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    ///////////////////////////////////////////////////////////
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        return new FetchEInvoicesResponse(getEInvoices());
+    }:
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
+        for (Account account : accounts) {
+            List<TransferDestinationPattern> destinations = new ArrayList<>();
+            destinations.add(TransferDestinationPattern.createForMultiMatch(
+                    AccountIdentifier.Type.SE, TransferDestinationPattern.ALL));
+            destinations.add(TransferDestinationPattern.createForMultiMatch(
+                    AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL));
+            destinations.add(TransferDestinationPattern.createForMultiMatch(
+                    AccountIdentifier.Type.SE_PG, TransferDestinationPattern.ALL));
+            transferDestinations.put(account, destinations);
+        }
+        return new FetchTransferDestinationsResponse(transferDestinations);
     }
 }
