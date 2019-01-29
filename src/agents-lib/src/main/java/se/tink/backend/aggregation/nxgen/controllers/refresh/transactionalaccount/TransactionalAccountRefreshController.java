@@ -48,10 +48,15 @@ public final class TransactionalAccountRefreshController implements AccountRefre
             Map<Account, AccountFeatures> systemAccounts = new HashMap<>();
 
             for (TransactionalAccount account : fetchAccounts()) {
-                systemAccounts.put(updateController.updateAccount(account).first, AccountFeatures.createEmpty());
+                Pair<Account, AccountFeatures> accounts = updateController.updateAccount(account);
+                if (accounts != null) {
+                    systemAccounts.put(
+                            updateController.updateAccount(account).first,
+                            AccountFeatures.createEmpty());
+                }
             }
 
-            action.count(accounts.size());
+            action.count(systemAccounts.size());
             action.completed();
             return systemAccounts;
         } catch (RuntimeException e) {
@@ -76,7 +81,9 @@ public final class TransactionalAccountRefreshController implements AccountRefre
                 List<AggregationTransaction> transactions = fetchTransactionsFor(account);
                 Pair<Account, List<Transaction>> accountTransactions =
                         updateController.updateTransactions(account, transactions);
-                transactionsMap.put(accountTransactions.first, accountTransactions.second);
+                if (accountTransactions != null) {
+                    transactionsMap.put(accountTransactions.first, accountTransactions.second);
+                }
                 action.count(transactions.size());
            }
             action.completed();

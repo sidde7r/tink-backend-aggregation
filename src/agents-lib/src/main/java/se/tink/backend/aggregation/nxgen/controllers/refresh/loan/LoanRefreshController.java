@@ -54,7 +54,9 @@ public final class LoanRefreshController implements AccountRefresher, Transactio
 
             for (LoanAccount account : getLoans()) {
                 Pair<Account, AccountFeatures> systemAccount = updateController.updateAccount(account);
-                systemAccounts.put(systemAccount.first, systemAccount.second);
+                if (systemAccount != null) {
+                    systemAccounts.put(systemAccount.first, systemAccount.second);
+                }
             }
 
             action.count(systemAccounts.size());
@@ -82,13 +84,19 @@ public final class LoanRefreshController implements AccountRefresher, Transactio
 
             Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
 
-            getLoans().forEach(account -> {
-                List<AggregationTransaction> transactions = fetchTransactionsFor(account);
-                Pair<Account, List<Transaction>> accountTransactions =
-                        updateController.updateTransactions(account, transactions);
-                transactionsMap.put(accountTransactions.first, accountTransactions.second);
-                action.count(transactions.size());
-            });
+            getLoans()
+                    .forEach(
+                            account -> {
+                                List<AggregationTransaction> transactions =
+                                        fetchTransactionsFor(account);
+                                Pair<Account, List<Transaction>> accountTransactions =
+                                        updateController.updateTransactions(account, transactions);
+                                if (accountTransactions != null) {
+                                    transactionsMap.put(
+                                            accountTransactions.first, accountTransactions.second);
+                                }
+                                action.count(transactions.size());
+                            });
 
             action.completed();
             return transactionsMap;

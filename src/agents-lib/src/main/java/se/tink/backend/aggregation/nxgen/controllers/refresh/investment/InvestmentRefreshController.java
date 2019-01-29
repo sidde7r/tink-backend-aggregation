@@ -43,7 +43,9 @@ public final class InvestmentRefreshController implements AccountRefresher {
 
             for (InvestmentAccount account : getInvestments()) {
                 Pair<Account, AccountFeatures> systemAccount = updateController.updateAccount(account);
-                systemAccounts.put(systemAccount.first, systemAccount.second);
+                if (systemAccount != null) {
+                    systemAccounts.put(systemAccount.first, systemAccount.second);
+                }
             }
 
             action.count(systemAccounts.size());

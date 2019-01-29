@@ -48,7 +48,12 @@ public final class CreditCardRefreshController implements AccountRefresher, Tran
             Map<Account, AccountFeatures> systemAccounts = new HashMap<>();
 
             for (CreditCardAccount account : fetchCreditCards()) {
-                systemAccounts.put(updateController.updateAccount(account).first, AccountFeatures.createEmpty());
+                Pair<Account, AccountFeatures> accounts = updateController.updateAccount(account);
+                if (accounts != null) {
+                    systemAccounts.put(
+                            updateController.updateAccount(account).first,
+                            AccountFeatures.createEmpty());
+                }
             }
 
             action.count(accounts.size());
@@ -73,13 +78,20 @@ public final class CreditCardRefreshController implements AccountRefresher, Tran
 
             Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
 
-            fetchCreditCards().forEach(account -> {
-                List<AggregationTransaction> transactions = fetchTransactionsFor(account);
-                Pair<Account, List<Transaction>> accountTransactions = updateController.updateTransactions(account, transactions);
-                transactionsMap.put(accountTransactions.first, accountTransactions.second);
+            fetchCreditCards()
+                    .forEach(
+                            account -> {
+                                List<AggregationTransaction> transactions =
+                                        fetchTransactionsFor(account);
+                                Pair<Account, List<Transaction>> accountTransactions =
+                                        updateController.updateTransactions(account, transactions);
+                                if (accountTransactions != null) {
+                                    transactionsMap.put(
+                                            accountTransactions.first, accountTransactions.second);
+                                }
 
-                action.count(transactions.size());
-            });
+                                action.count(transactions.size());
+                            });
 
             action.completed();
             return transactionsMap;
