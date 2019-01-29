@@ -62,7 +62,7 @@ public class CreditCardRefreshControllerTest {
     public void ensureNullAccountsList_isConverted_toEmptyList() {
         Mockito.when(accountFetcher.fetchAccounts()).thenReturn(null);
 
-        creditCardRefresher.refreshAccounts();
+        creditCardRefresher.fetchAccounts();
 
         Mockito.verify(accountFetcher).fetchAccounts();
         Mockito.verify(updateController, Mockito.never()).updateAccount(Mockito.any(CreditCardAccount.class));
@@ -74,7 +74,7 @@ public class CreditCardRefreshControllerTest {
         Mockito.when(accountFetcher.fetchAccounts()).thenReturn(accounts);
         Mockito.when(transactionFetcher.fetchTransactionsFor(Mockito.any(CreditCardAccount.class))).thenReturn(null);
 
-        creditCardRefresher.refreshTransactions();
+        creditCardRefresher.fetchTransactions();
 
         Mockito.verify(accountFetcher).fetchAccounts();
         Mockito.verify(transactionFetcher).fetchTransactionsFor(Mockito.any(CreditCardAccount.class));

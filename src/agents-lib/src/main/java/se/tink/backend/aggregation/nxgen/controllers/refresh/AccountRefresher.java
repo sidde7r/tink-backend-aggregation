@@ -23,5 +23,5 @@ public interface AccountRefresher extends Refresher {
                     .add(21)
                     .build();
 
-    Map<Account, AccountFeatures> refreshAccounts();
+    Map<Account, AccountFeatures> fetchAccounts();
 }

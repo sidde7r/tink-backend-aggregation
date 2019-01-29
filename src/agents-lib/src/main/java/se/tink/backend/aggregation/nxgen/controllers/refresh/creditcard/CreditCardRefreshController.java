@@ -38,7 +38,7 @@ public final class CreditCardRefreshController implements AccountRefresher, Tran
     }
 
     @Override
-    public Map<Account, AccountFeatures> refreshAccounts() {
+    public Map<Account, AccountFeatures> fetchAccounts() {
         MetricRefreshAction action = metricRefreshController.buildAction(AccountRefresher.METRIC_ID
                 .label(METRIC_ACCOUNT_TYPE), AccountRefresher.METRIC_COUNTER_BUCKETS);
 
@@ -69,7 +69,7 @@ public final class CreditCardRefreshController implements AccountRefresher, Tran
     }
 
     @Override
-    public Map<Account, List<Transaction>> refreshTransactions() {
+    public Map<Account, List<Transaction>> fetchTransactions() {
         MetricRefreshAction action = metricRefreshController.buildAction(TransactionRefresher.METRIC_ID
                 .label(METRIC_ACCOUNT_TYPE), TransactionRefresher.METRIC_COUNTER_BUCKETS);
 

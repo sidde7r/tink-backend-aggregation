@@ -38,7 +38,7 @@ public final class TransactionalAccountRefreshController implements AccountRefre
     }
 
     @Override
-    public Map<Account, AccountFeatures> refreshAccounts() {
+    public Map<Account, AccountFeatures> fetchAccounts() {
         MetricRefreshAction action = metricController.buildAction(AccountRefresher.METRIC_ID.label(METRIC_ACCOUNT_TYPE),
                 AccountRefresher.METRIC_COUNTER_BUCKETS);
 
@@ -47,7 +47,7 @@ public final class TransactionalAccountRefreshController implements AccountRefre
 
             Map<Account, AccountFeatures> systemAccounts = new HashMap<>();
 
-            for (TransactionalAccount account : fetchAccounts()) {
+            for (TransactionalAccount account : getAccounts()) {
                 Pair<Account, AccountFeatures> accounts = updateController.updateAccount(account);
                 if (accounts != null) {
                     systemAccounts.put(
@@ -68,7 +68,7 @@ public final class TransactionalAccountRefreshController implements AccountRefre
     }
 
     @Override
-    public Map<Account, List<Transaction>> refreshTransactions() {
+    public Map<Account, List<Transaction>> fetchTransactions() {
         MetricRefreshAction action = metricController.buildAction(TransactionRefresher.METRIC_ID
                 .label(METRIC_ACCOUNT_TYPE), TransactionRefresher.METRIC_COUNTER_BUCKETS);
 
@@ -77,7 +77,7 @@ public final class TransactionalAccountRefreshController implements AccountRefre
 
             Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
 
-            for (TransactionalAccount account : fetchAccounts()) {
+            for (TransactionalAccount account : getAccounts()) {
                 List<AggregationTransaction> transactions = fetchTransactionsFor(account);
                 Pair<Account, List<Transaction>> accountTransactions =
                         updateController.updateTransactions(account, transactions);
@@ -96,7 +96,7 @@ public final class TransactionalAccountRefreshController implements AccountRefre
         }
     }
 
-    private Collection<TransactionalAccount> fetchAccounts() {
+    private Collection<TransactionalAccount> getAccounts() {
         if (accounts == null) {
             accounts = Optional.ofNullable(accountFetcher.fetchAccounts()).orElse(Collections.emptyList());
         }

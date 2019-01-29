@@ -49,7 +49,7 @@ public class LoanRefreshControllerTest {
     public void ensureNullLoanAccountsMap_isConverted_toEmptyMap() {
         Mockito.when(loanFetcher.fetchAccounts()).thenReturn(null);
 
-        loanRefresher.refreshAccounts();
+        loanRefresher.fetchAccounts();
 
         Mockito.verify(loanFetcher).fetchAccounts();
         Mockito.verifyZeroInteractions(updateController);

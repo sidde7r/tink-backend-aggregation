@@ -32,7 +32,7 @@ public final class InvestmentRefreshController implements AccountRefresher {
     }
 
     @Override
-    public Map<Account, AccountFeatures> refreshAccounts() {
+    public Map<Account, AccountFeatures> fetchAccounts() {
         MetricRefreshAction action = metricRefreshController.buildAction(AccountRefresher.METRIC_ID
                 .label(METRIC_ACCOUNT_TYPE), AccountRefresher.METRIC_COUNTER_BUCKETS);
 

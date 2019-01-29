@@ -285,7 +285,7 @@ public abstract class NextGenerationAgent extends AbstractAgent
     public FetchLoanAccountsResponse fetchLoanAccounts() {
         Map<Account, AccountFeatures> accounts = new HashMap<>();
         for (AccountRefresher refresher : getRefreshControllersOfType(LoanRefreshController.class)) {
-            accounts.putAll(refresher.refreshAccounts());
+            accounts.putAll(refresher.fetchAccounts());
         }
 
         return new FetchLoanAccountsResponse(accounts);
@@ -295,7 +295,7 @@ public abstract class NextGenerationAgent extends AbstractAgent
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         Map<Account, AccountFeatures> accounts = new HashMap<>();
         for (AccountRefresher refresher : getRefreshControllersOfType(InvestmentRefreshController.class)) {
-            accounts.putAll(refresher.refreshAccounts());
+            accounts.putAll(refresher.fetchAccounts());
         }
 
         return new FetchInvestmentAccountsResponse(accounts);
@@ -314,7 +314,7 @@ public abstract class NextGenerationAgent extends AbstractAgent
             Class<T> cls) {
         List<Account> accounts = new ArrayList<>();
         for (AccountRefresher refresher : getRefreshControllersOfType(cls)) {
-            accounts.addAll(refresher.refreshAccounts().keySet());
+            accounts.addAll(refresher.fetchAccounts().keySet());
         }
 
         return new FetchAccountsResponse(accounts);
@@ -361,7 +361,7 @@ public abstract class NextGenerationAgent extends AbstractAgent
         Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
 
         for (TransactionRefresher refresher : getRefreshControllersOfType(cls)) {
-            transactionsMap.putAll(refresher.refreshTransactions());
+            transactionsMap.putAll(refresher.fetchTransactions());
         }
         return new FetchTransactionsResponse(transactionsMap);
     }

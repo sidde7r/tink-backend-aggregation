@@ -22,5 +22,5 @@ public interface TransactionRefresher extends Refresher {
             .add(10000)
             .add(20000)
             .build();
-    Map<Account, List<Transaction>> refreshTransactions();
+    Map<Account, List<Transaction>> fetchTransactions();
 }
