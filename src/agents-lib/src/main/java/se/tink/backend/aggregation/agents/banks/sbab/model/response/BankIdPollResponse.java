@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import se.tink.backend.aggregation.agents.BankIdStatus;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.rpc.NordeaResponse;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BankIdPollResponse extends NordeaResponse {
+public class BankIdPollResponse {
 
     @JsonProperty("status")
     private String status = "";

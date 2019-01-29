@@ -88,8 +88,4 @@ public class ICSConstants {
     public static final SimpleDateFormat LAST_LOGGED_TIME_FORMAT =
         new SimpleDateFormat("EEE, dd MMMM yyyy HH:mm:ss z");
   }
-
-  public static final class Logtag {
-      public static final LogTag MISSING_CONFIG = LogTag.from("ICS_MISSING_CONFIG");
-  }
 }
