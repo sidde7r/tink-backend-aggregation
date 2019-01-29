@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import se.tink.backend.core.StatisticGenerationMode;
-import se.tink.backend.core.StatisticMode;
+import se.tink.libraries.enums.StatisticGenerationMode;
+import se.tink.libraries.enums.StatisticMode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GenerateStatisticsAndActivitiesRequest {

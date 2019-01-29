@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.core.SwedishGiroType;
+import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;

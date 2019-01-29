@@ -24,7 +24,7 @@ import se.tink.backend.aggregation.agents.utils.mappers.CoreCredentialsMapper;
 import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.core.Credentials;
-import se.tink.backend.core.SwedishGiroType;
+import se.tink.libraries.enums.SwedishGiroType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.Transaction;

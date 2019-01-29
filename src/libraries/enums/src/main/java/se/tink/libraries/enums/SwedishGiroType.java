@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.enums;
 
 import org.apache.commons.lang.NotImplementedException;
 import se.tink.libraries.account.AccountIdentifier;
