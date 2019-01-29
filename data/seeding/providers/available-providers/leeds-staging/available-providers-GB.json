@@ -1,9 +1,0 @@
-{
-  "clusterid" : "leeds-staging",
-  "providers" : [
-    "gb-americanexpress",
-    "gb-citibank",
-    "gb-danskebank",
-    "gb-demo"
-  ]
-}
