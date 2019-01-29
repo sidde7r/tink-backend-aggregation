@@ -2,11 +2,10 @@ package se.tink.backend.aggregation.agents.banks;
 
 import org.junit.AfterClass;
 import org.junit.Before;
-
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
-import se.tink.backend.aggregation.rpc.Field;
 
 public class NordeaV20AgentTest {
         private final AgentIntegrationTest.Builder builder =
