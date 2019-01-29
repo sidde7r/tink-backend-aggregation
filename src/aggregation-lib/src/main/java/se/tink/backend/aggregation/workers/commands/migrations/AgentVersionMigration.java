@@ -8,24 +8,31 @@ import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public abstract class AgentVersionMigration {
 
-    public abstract boolean shouldChangeRequest(CredentialsRequest request);
+  private ControllerWrapper wrapper;
 
-    public abstract boolean shouldMigrateData(CredentialsRequest request);
+  public abstract boolean shouldChangeRequest(CredentialsRequest request);
 
-    public abstract void changeRequest(CredentialsRequest request);
+  public abstract boolean shouldMigrateData(CredentialsRequest request);
 
-    public abstract void migrateData(
-            final ControllerWrapper controllerWrapper, CredentialsRequest request);
+  public abstract void changeRequest(CredentialsRequest request);
 
-    protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
-        List<Account> accountList =
-                accounts.stream().map(a -> migrateAccount(a)).collect(Collectors.toList());
-        request.setAccounts(accountList);
-    }
+  public abstract void migrateData(CredentialsRequest request);
 
-    protected Account migrateAccount(Account account) {
-        return getControlWrapper().updateAccountMetaData(account.getId(), account.getBankId());
-    }
+  protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
+    List<Account> accountList =
+        accounts.stream().map(a -> migrateAccount(a)).collect(Collectors.toList());
+    request.setAccounts(accountList);
+  }
 
-    protected abstract ControllerWrapper getControlWrapper();
+  protected Account migrateAccount(Account account) {
+    return getControlWrapper().updateAccountMetaData(account.getId(), account.getBankId());
+  }
+
+  public final void setWrapper(ControllerWrapper wrapper) {
+    this.wrapper = wrapper;
+  }
+
+  public final ControllerWrapper getControlWrapper() {
+    return this.wrapper;
+  }
 }

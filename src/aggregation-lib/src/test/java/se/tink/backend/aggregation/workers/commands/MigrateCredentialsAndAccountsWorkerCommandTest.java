@@ -25,334 +25,298 @@ import static org.mockito.Mockito.verify;
 
 public class MigrateCredentialsAndAccountsWorkerCommandTest {
 
-    ControllerWrapper wrapper;
-    ImmutableList<AgentVersionMigration> migrations = ImmutableList.of();
-    ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+  ControllerWrapper wrapper;
+  ImmutableList<AgentVersionMigration> migrations = ImmutableList.of();
+  ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
-    @Before
-    public void setUp() {
-        wrapper = Mockito.mock(ControllerWrapper.class);
-    }
+  @Before
+  public void setUp() {
+    wrapper = Mockito.mock(ControllerWrapper.class);
+  }
 
-    @Test
-    public void testMigrationCommandReturnsContinueWithEmptyMigrationsList() throws Exception {
-        MigrateCredentialsAndAccountsWorkerCommand command = createCommand(createRequest());
+  @Test
+  public void testMigrationCommandReturnsContinueWithEmptyMigrationsList() throws Exception {
+    MigrateCredentialsAndAccountsWorkerCommand command = createCommand(createRequest());
 
-        AgentWorkerCommandResult result = command.execute();
-        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
-    }
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+  }
 
-    @Test
-    public void testMigrationCommandReturnsContinueWithSomethingInMigrationsListThatWontExecute()
-            throws Exception {
-        MigrateCredentialsAndAccountsWorkerCommand command =
-                createCommand(
-                        createRequest(),
-                        Lists.newArrayList(
-                                new AgentVersionMigration() {
-                                    @Override
-                                    public boolean shouldChangeRequest(CredentialsRequest request) {
-                                        return false;
-                                    }
+  @Test
+  public void testMigrationCommandReturnsContinueWithSomethingInMigrationsListThatWontExecute()
+      throws Exception {
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            createRequest(),
+            Lists.newArrayList(
+                new AgentVersionMigration() {
+                  @Override
+                  public boolean shouldChangeRequest(CredentialsRequest request) {
+                    return false;
+                  }
 
-                                    @Override
-                                    public boolean shouldMigrateData(CredentialsRequest request) {
-                                        return false;
-                                    }
+                  @Override
+                  public boolean shouldMigrateData(CredentialsRequest request) {
+                    return false;
+                  }
 
-                                    @Override
-                                    public void changeRequest(CredentialsRequest request) {}
+                  @Override
+                  public void changeRequest(CredentialsRequest request) {}
 
-                                    @Override
-                                    public void migrateData(
-                                            ControllerWrapper controllerWrapper,
-                                            CredentialsRequest request) {}
+                  @Override
+                  public void migrateData(CredentialsRequest request) {}
+                }));
 
-                                    @Override
-                                    protected ControllerWrapper getControlWrapper() {
-                                        return wrapper;
-                                    }
-                                }));
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+  }
 
-        AgentWorkerCommandResult result = command.execute();
-        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
-    }
+  @Test
+  public void testMigrationCommandCallsCorrectMethods_whenShouldMigrate() throws Exception {
+    AtomicBoolean shouldChangeRequestCalled = new AtomicBoolean(false);
+    AtomicBoolean shouldMigrateDataCalled = new AtomicBoolean(false);
+    AtomicBoolean changeRequestCalled = new AtomicBoolean(false);
+    AtomicBoolean migrateDataCalled = new AtomicBoolean(false);
 
-    @Test
-    public void testMigrationCommandCallsCorrectMethods_whenShouldMigrate() throws Exception {
-        AtomicBoolean shouldChangeRequestCalled = new AtomicBoolean(false);
-        AtomicBoolean shouldMigrateDataCalled = new AtomicBoolean(false);
-        AtomicBoolean changeRequestCalled = new AtomicBoolean(false);
-        AtomicBoolean migrateDataCalled = new AtomicBoolean(false);
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            createRequest(),
+            Lists.newArrayList(
+                new AgentVersionMigration() {
 
-        MigrateCredentialsAndAccountsWorkerCommand command =
-                createCommand(
-                        createRequest(),
-                        Lists.newArrayList(
-                                new AgentVersionMigration() {
+                  @Override
+                  public boolean shouldChangeRequest(CredentialsRequest request) {
+                    shouldChangeRequestCalled.set(true);
+                    return true;
+                  }
 
-                                    @Override
-                                    public boolean shouldChangeRequest(CredentialsRequest request) {
-                                        shouldChangeRequestCalled.set(true);
-                                        return true;
-                                    }
+                  @Override
+                  public boolean shouldMigrateData(CredentialsRequest request) {
+                    shouldMigrateDataCalled.set(true);
+                    return true;
+                  }
 
-                                    @Override
-                                    public boolean shouldMigrateData(CredentialsRequest request) {
-                                        shouldMigrateDataCalled.set(true);
-                                        return true;
-                                    }
+                  @Override
+                  public void changeRequest(CredentialsRequest request) {
+                    changeRequestCalled.set(true);
+                  }
 
-                                    @Override
-                                    public void changeRequest(CredentialsRequest request) {
-                                        changeRequestCalled.set(true);
-                                    }
+                  @Override
+                  public void migrateData(CredentialsRequest request) {
+                    migrateDataCalled.set(true);
+                  }
+                }));
 
-                                    @Override
-                                    public void migrateData(
-                                            ControllerWrapper controllerWrapper,
-                                            CredentialsRequest request) {
-                                        migrateDataCalled.set(true);
-                                    }
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
 
-                                    @Override
-                                    protected ControllerWrapper getControlWrapper() {
-                                        return wrapper;
-                                    }
-                                }));
+    Assert.assertTrue(shouldChangeRequestCalled.get());
+    Assert.assertTrue(shouldMigrateDataCalled.get());
+    Assert.assertTrue(changeRequestCalled.get());
+    Assert.assertTrue(migrateDataCalled.get());
+  }
 
-        AgentWorkerCommandResult result = command.execute();
-        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+  @Test
+  public void testMigrationCommandCallsCorrectMethods() throws Exception {
+    AtomicBoolean shouldChangeRequestCalled = new AtomicBoolean(false);
+    AtomicBoolean shouldMigrateDataCalled = new AtomicBoolean(false);
+    AtomicBoolean changeRequestCalled = new AtomicBoolean(false);
+    AtomicBoolean migrateDataCalled = new AtomicBoolean(false);
 
-        Assert.assertTrue(shouldChangeRequestCalled.get());
-        Assert.assertTrue(shouldMigrateDataCalled.get());
-        Assert.assertTrue(changeRequestCalled.get());
-        Assert.assertTrue(migrateDataCalled.get());
-    }
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            createRequest(),
+            Lists.newArrayList(
+                new AgentVersionMigration() {
 
-    @Test
-    public void testMigrationCommandCallsCorrectMethods() throws Exception {
-        AtomicBoolean shouldChangeRequestCalled = new AtomicBoolean(false);
-        AtomicBoolean shouldMigrateDataCalled = new AtomicBoolean(false);
-        AtomicBoolean changeRequestCalled = new AtomicBoolean(false);
-        AtomicBoolean migrateDataCalled = new AtomicBoolean(false);
+                  @Override
+                  public boolean shouldChangeRequest(CredentialsRequest request) {
+                    shouldChangeRequestCalled.set(true);
+                    return true;
+                  }
 
-        MigrateCredentialsAndAccountsWorkerCommand command =
-                createCommand(
-                        createRequest(),
-                        Lists.newArrayList(
-                                new AgentVersionMigration() {
+                  @Override
+                  public boolean shouldMigrateData(CredentialsRequest request) {
+                    shouldMigrateDataCalled.set(true);
+                    return false;
+                  }
 
-                                    @Override
-                                    public boolean shouldChangeRequest(CredentialsRequest request) {
-                                        shouldChangeRequestCalled.set(true);
-                                        return true;
-                                    }
+                  @Override
+                  public void changeRequest(CredentialsRequest request) {
+                    changeRequestCalled.set(true);
+                  }
 
-                                    @Override
-                                    public boolean shouldMigrateData(CredentialsRequest request) {
-                                        shouldMigrateDataCalled.set(true);
-                                        return false;
-                                    }
+                  @Override
+                  public void migrateData(CredentialsRequest request) {
+                    migrateDataCalled.set(true);
+                  }
+                }));
 
-                                    @Override
-                                    public void changeRequest(CredentialsRequest request) {
-                                        changeRequestCalled.set(true);
-                                    }
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
 
-                                    @Override
-                                    public void migrateData(
-                                            ControllerWrapper controllerWrapper,
-                                            CredentialsRequest request) {
-                                        migrateDataCalled.set(true);
-                                    }
+    Assert.assertTrue(shouldChangeRequestCalled.get());
+    Assert.assertTrue(shouldMigrateDataCalled.get());
+    Assert.assertTrue(changeRequestCalled.get());
+    Assert.assertFalse(migrateDataCalled.get());
+  }
 
-                                    @Override
-                                    protected ControllerWrapper getControlWrapper() {
-                                        return wrapper;
-                                    }
-                                }));
+  @Test
+  public void testMigrationCommandChangesSameInstanceOfRequestObject() throws Exception {
+    CredentialsRequest request = createRequest();
+    Assert.assertEquals("someClassName", request.getProvider().getClassName());
+    Account a = request.getAccounts().get(0);
 
-        AgentWorkerCommandResult result = command.execute();
-        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            request,
+            Lists.newArrayList(
+                new AgentVersionMigration() {
+                  @Override
+                  public boolean shouldChangeRequest(CredentialsRequest request) {
+                    return true;
+                  }
 
-        Assert.assertTrue(shouldChangeRequestCalled.get());
-        Assert.assertTrue(shouldMigrateDataCalled.get());
-        Assert.assertTrue(changeRequestCalled.get());
-        Assert.assertFalse(migrateDataCalled.get());
-    }
+                  @Override
+                  public boolean shouldMigrateData(CredentialsRequest request) {
+                    return false;
+                  }
 
-    @Test
-    public void testMigrationCommandChangesSameInstanceOfRequestObject() throws Exception {
-        CredentialsRequest request = createRequest();
-        Assert.assertEquals("someClassName", request.getProvider().getClassName());
-        Account a = request.getAccounts().get(0);
+                  @Override
+                  public void changeRequest(CredentialsRequest request) {
+                    request.getProvider().setClassName("someClassNameVersion2");
+                  }
 
-        MigrateCredentialsAndAccountsWorkerCommand command =
-                createCommand(
-                        request,
-                        Lists.newArrayList(
-                                new AgentVersionMigration() {
-                                    @Override
-                                    public boolean shouldChangeRequest(CredentialsRequest request) {
-                                        return true;
-                                    }
+                  @Override
+                  public void migrateData(CredentialsRequest request) {}
+                }));
 
-                                    @Override
-                                    public boolean shouldMigrateData(CredentialsRequest request) {
-                                        return false;
-                                    }
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
 
-                                    @Override
-                                    public void changeRequest(CredentialsRequest request) {
-                                        request.getProvider().setClassName("someClassNameVersion2");
-                                    }
+    Assert.assertEquals("someClassNameVersion2", request.getProvider().getClassName());
+    // also verify account is unchanged
+    Assert.assertEquals(
+        SerializationUtils.serializeToString(a),
+        SerializationUtils.serializeToString(request.getAccounts().get(0)));
+    Assert.assertEquals(a, request.getAccounts().get(0));
+  }
 
-                                    @Override
-                                    public void migrateData(
-                                            ControllerWrapper controllerWrapper,
-                                            CredentialsRequest request) {}
+  @Test
+  public void testMigrationCommandChangesSameInstanceOfAccountObject() throws Exception {
+    CredentialsRequest request = createRequest();
+    Assert.assertFalse(request.isUpdate());
+    Account a = request.getAccounts().get(0);
+    Assert.assertEquals("b-a-n-k-i-d", request.getAccounts().get(0).getBankId());
 
-                                    @Override
-                                    protected ControllerWrapper getControlWrapper() {
-                                        return wrapper;
-                                    }
-                                }));
+    Account clone = a.clone();
+    clone.setBankId("bankid");
 
-        AgentWorkerCommandResult result = command.execute();
-        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+    Mockito.when(wrapper.updateAccountMetaData(any(String.class), any(String.class)))
+        .thenReturn(clone);
 
-        Assert.assertEquals("someClassNameVersion2", request.getProvider().getClassName());
-        // also verify account is unchanged
-        Assert.assertEquals(
-                SerializationUtils.serializeToString(a),
-                SerializationUtils.serializeToString(request.getAccounts().get(0)));
-        Assert.assertEquals(a, request.getAccounts().get(0));
-    }
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            request,
+            Lists.newArrayList(
+                new AgentVersionMigration() {
+                  @Override
+                  public boolean shouldChangeRequest(CredentialsRequest request) {
+                    return true;
+                  }
 
-    @Test
-    public void testMigrationCommandChangesSameInstanceOfAccountObject() throws Exception {
-        CredentialsRequest request = createRequest();
-        Assert.assertFalse(request.isUpdate());
-        Account a = request.getAccounts().get(0);
-        Assert.assertEquals("b-a-n-k-i-d", request.getAccounts().get(0).getBankId());
+                  @Override
+                  public boolean shouldMigrateData(CredentialsRequest request) {
+                    return true;
+                  }
 
-        Account clone = a.clone();
-        clone.setBankId("bankid");
+                  @Override
+                  public void changeRequest(CredentialsRequest request) {
+                    request.setUpdate(true);
+                  }
 
-        Mockito.when(wrapper.updateAccountMetaData(any(String.class), any(String.class)))
-                .thenReturn(clone);
+                  @Override
+                  public void migrateData(CredentialsRequest request) {
+                    try {
+                      Account a = request.getAccounts().get(0).clone();
+                      a.setBankId(a.getBankId().replaceAll("-", ""));
+                      migrateAccounts(request, Lists.newArrayList(a));
+                    } catch (CloneNotSupportedException e) {
+                      Assert.fail("should allow cloning");
+                    }
+                  }
+                }));
+    AgentWorkerCommandResult result = command.execute();
+    // this verifies a specific implementation instead of just input/output. But it'll do for
+    // now
+    verify(wrapper, Mockito.atLeastOnce())
+        .updateAccountMetaData(any(String.class), argumentCaptor.capture());
+    String newBankId = argumentCaptor.getValue();
 
-        MigrateCredentialsAndAccountsWorkerCommand command =
-                createCommand(
-                        request,
-                        Lists.newArrayList(
-                                new AgentVersionMigration() {
-                                    @Override
-                                    public boolean shouldChangeRequest(CredentialsRequest request) {
-                                        return true;
-                                    }
+    //        Assert.assertEquals(request.getUser().getId(), .getUser());
+    //        Assert.assertEquals(request.getCredentials().getId(),
+    // newBankId.getCredentialsId());
+    //        Assert.assertEquals(request.getAccounts().get(0).getUserId(),
+    // newBankId.getAccount().getUserId());
+    //        Assert.assertEquals("bankid", newBankId.getAccount().getBankId());
 
-                                    @Override
-                                    public boolean shouldMigrateData(CredentialsRequest request) {
-                                        return true;
-                                    }
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+    // Same values, but different instances
+    Assert.assertNotEquals(a, request.getAccounts().get(0));
+    Assert.assertEquals(newBankId, request.getAccounts().get(0).getBankId());
+    Assert.assertTrue(request.isUpdate());
+  }
 
-                                    @Override
-                                    public void changeRequest(CredentialsRequest request) {
-                                        request.setUpdate(true);
-                                    }
+  private CredentialsRequest createRequest() {
+    CredentialsRequest request = new RefreshInformationRequest();
 
-                                    @Override
-                                    public void migrateData(
-                                            ControllerWrapper controllerWrapper,
-                                            CredentialsRequest request) {
-                                        try {
-                                            Account a = request.getAccounts().get(0).clone();
-                                            a.setBankId(a.getBankId().replaceAll("-", ""));
-                                            migrateAccounts(request, Lists.newArrayList(a));
-                                        } catch (CloneNotSupportedException e) {
-                                            Assert.fail("should allow cloning");
-                                        }
-                                    }
+    request.setProvider(createProvider());
+    request.setUser(createUser());
+    request.setCredentials(createCredentials(request.getUser().getId()));
+    request.setAccounts(
+        Lists.newArrayList(
+            createAccount(request.getUser().getId(), request.getCredentials().getId())));
 
-                                    @Override
-                                    protected ControllerWrapper getControlWrapper() {
-                                        return wrapper;
-                                    }
-                                }));
-        AgentWorkerCommandResult result = command.execute();
-        // this verifies a specific implementation instead of just input/output. But it'll do for
-        // now
-        verify(wrapper, Mockito.atLeastOnce())
-                .updateAccountMetaData(any(String.class), argumentCaptor.capture());
-        String newBankId = argumentCaptor.getValue();
+    return request;
+  }
 
-        //        Assert.assertEquals(request.getUser().getId(), .getUser());
-        //        Assert.assertEquals(request.getCredentials().getId(),
-        // newBankId.getCredentialsId());
-        //        Assert.assertEquals(request.getAccounts().get(0).getUserId(),
-        // newBankId.getAccount().getUserId());
-        //        Assert.assertEquals("bankid", newBankId.getAccount().getBankId());
+  private Provider createProvider() {
+    Provider p = new Provider();
+    p.setClassName("someClassName");
+    p.setName("someName");
+    p.setMarket("SE");
+    return p;
+  }
 
-        Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
-        // Same values, but different instances
-        Assert.assertNotEquals(a, request.getAccounts().get(0));
-        Assert.assertEquals(newBankId, request.getAccounts().get(0).getBankId());
-        Assert.assertTrue(request.isUpdate());
-    }
+  private User createUser() {
+    User u = new User();
+    u.setId(StringUtils.generateUUID());
+    return u;
+  }
 
-    private CredentialsRequest createRequest() {
-        CredentialsRequest request = new RefreshInformationRequest();
+  private Credentials createCredentials(String userId) {
+    Credentials c = new Credentials();
+    c.setId(StringUtils.generateUUID());
+    c.setUserId(userId);
+    return c;
+  }
 
-        request.setProvider(createProvider());
-        request.setUser(createUser());
-        request.setCredentials(createCredentials(request.getUser().getId()));
-        request.setAccounts(
-                Lists.newArrayList(
-                        createAccount(
-                                request.getUser().getId(), request.getCredentials().getId())));
+  private Account createAccount(String userId, String credentialsId) {
+    Account a = new Account();
+    a.setBankId("b-a-n-k-i-d");
+    a.setId(StringUtils.generateUUID());
+    a.setUserId(userId);
+    a.setCredentialsId(credentialsId);
+    return a;
+  }
 
-        return request;
-    }
+  private MigrateCredentialsAndAccountsWorkerCommand createCommand(CredentialsRequest request) {
+    return new MigrateCredentialsAndAccountsWorkerCommand(request, wrapper, migrations);
+  }
 
-    private Provider createProvider() {
-        Provider p = new Provider();
-        p.setClassName("someClassName");
-        p.setName("someName");
-        p.setMarket("SE");
-        return p;
-    }
-
-    private User createUser() {
-        User u = new User();
-        u.setId(StringUtils.generateUUID());
-        return u;
-    }
-
-    private Credentials createCredentials(String userId) {
-        Credentials c = new Credentials();
-        c.setId(StringUtils.generateUUID());
-        c.setUserId(userId);
-        return c;
-    }
-
-    private Account createAccount(String userId, String credentialsId) {
-        Account a = new Account();
-        a.setBankId("b-a-n-k-i-d");
-        a.setId(StringUtils.generateUUID());
-        a.setUserId(userId);
-        a.setCredentialsId(credentialsId);
-        return a;
-    }
-
-    private MigrateCredentialsAndAccountsWorkerCommand createCommand(CredentialsRequest request) {
-        return new MigrateCredentialsAndAccountsWorkerCommand(request, wrapper, migrations);
-    }
-
-    private MigrateCredentialsAndAccountsWorkerCommand createCommand(
-            CredentialsRequest request, List<AgentVersionMigration> migrations) {
-        return new MigrateCredentialsAndAccountsWorkerCommand(
-                request, wrapper, ImmutableList.copyOf(migrations));
-    }
+  private MigrateCredentialsAndAccountsWorkerCommand createCommand(
+      CredentialsRequest request, List<AgentVersionMigration> migrations) {
+    return new MigrateCredentialsAndAccountsWorkerCommand(
+        request, wrapper, ImmutableList.copyOf(migrations));
+  }
 }
