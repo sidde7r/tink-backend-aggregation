@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.Portfoli
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankPortfolioRootEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

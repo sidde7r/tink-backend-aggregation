@@ -1,10 +1,11 @@
-package se.tink.backend.aggregation.nxgen.core.account;
+package se.tink.backend.aggregation.nxgen.core.account.creditcard;
+
+import com.google.common.base.Preconditions;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.libraries.amount.Amount;
 
 import java.util.Objects;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.user.rpc.User;
-import com.google.common.base.Preconditions;
 
 public class CreditCardAccount extends Account {
 
@@ -16,14 +17,14 @@ public class CreditCardAccount extends Account {
         return new DefaultCreditCardBuilder(uniqueIdentifier);
     }
 
-    public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance, Amount availableCredit) {
-        return builder(uniqueIdentifier)
-                .setBalance(balance)
-                .setAvailableCredit(availableCredit);
+    public static Builder<?, ?> builder(
+            String uniqueIdentifier, Amount balance, Amount availableCredit) {
+        return builder(uniqueIdentifier).setBalance(balance).setAvailableCredit(availableCredit);
     }
 
     /**
-     * Variation of {@link #builderFromFullNumber(String, String)} for when there is no suitable card alias.
+     * Variation of {@link #builderFromFullNumber(String, String)} for when there is no suitable
+     * card alias.
      */
     public static Builder<?, ?> builderFromFullNumber(String creditCardNumber) {
         Objects.requireNonNull(creditCardNumber);
@@ -31,10 +32,11 @@ public class CreditCardAccount extends Account {
     }
 
     /**
-     * This is the preferred factory method when you have the complete credit card number. It defines the
-     * uniqueIdentifier, accountNumber and name in a standard way.
+     * This is the preferred factory method when you have the complete credit card number. It
+     * defines the uniqueIdentifier, accountNumber and name in a standard way.
      *
-     * @param creditCardNumber Complete credit card number (any/all formatting, or non-digits, will be removed)
+     * @param creditCardNumber Complete credit card number (any/all formatting, or non-digits, will
+     *     be removed)
      * @param cardAlias A (user defined) card name
      * @return A builder with the uniqueIdentifier and accountNumber defined in a standard way
      */
@@ -46,16 +48,19 @@ public class CreditCardAccount extends Account {
 
     private static Builder<?, ?> makeBuilder(String cardNumber, String cardAlias) {
 
-        String unformatted = cardNumber.replaceAll("\\D+","");
+        String unformatted = cardNumber.replaceAll("\\D+", "");
 
-        Preconditions.checkState(unformatted.length() >= 12, "Not enough digits. Should be minimum 12 and most likely 16 digits!");
+        Preconditions.checkState(
+                unformatted.length() >= 12,
+                "Not enough digits. Should be minimum 12 and most likely 16 digits!");
 
         String firstFour = unformatted.substring(0, 4);
         String lastFour = unformatted.substring(unformatted.length() - 4);
 
         String uniqueIdentifier = String.format("%s%s", firstFour, lastFour);
         String accountNumber = String.format("%s **** **** %s", firstFour, lastFour);
-        String name = cardAlias != null ? String.format("%s *%s", cardAlias, lastFour) : accountNumber;
+        String name =
+                cardAlias != null ? String.format("%s *%s", cardAlias, lastFour) : accountNumber;
 
         return new DefaultCreditCardBuilder(uniqueIdentifier)
                 .setAccountNumber(accountNumber)

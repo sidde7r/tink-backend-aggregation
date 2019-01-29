@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class ArgentaTransactionalTransactionFetcher
         implements TransactionPagePaginator<TransactionalAccount> {

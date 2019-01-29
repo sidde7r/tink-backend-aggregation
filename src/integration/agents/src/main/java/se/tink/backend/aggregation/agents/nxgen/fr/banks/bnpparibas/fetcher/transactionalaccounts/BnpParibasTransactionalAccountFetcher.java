@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.tran
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.accounts.RibListEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.bnpparibas.fetcher.transactionalaccounts.entites.accounts.UserOverviewDataEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class BnpParibasTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final BnpParibasApiClient apiClient;

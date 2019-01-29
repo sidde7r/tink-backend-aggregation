@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBank
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.alandsbanken.AlandsBankenTest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionalAccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import static org.junit.Assert.assertNotNull;
 
 public class AlandsBankenTransactionFetcherTest extends AlandsBankenTest {

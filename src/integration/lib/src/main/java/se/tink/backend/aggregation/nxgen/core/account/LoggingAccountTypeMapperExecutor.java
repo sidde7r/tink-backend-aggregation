@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import java.util.List;
-import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.pair.Pair;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public final class LoggingAccountTypeMapperExecutor<KeyType>
         implements AccountTypeMapperExecutor<KeyType> {
@@ -19,7 +20,9 @@ public final class LoggingAccountTypeMapperExecutor<KeyType>
 
     @Override
     public void onUnambiguousPredicateMatch(
-            KeyType accountTypeString, Predicate<KeyType> matchingPredicate, AccountTypes accountType) {
+            KeyType accountTypeString,
+            Predicate<KeyType> matchingPredicate,
+            AccountTypes accountType) {
         logger.warn(
                 "Unspecified account type for key: \"{}\" -- using {} because the key satisfies a predicate associated with it",
                 accountTypeString,

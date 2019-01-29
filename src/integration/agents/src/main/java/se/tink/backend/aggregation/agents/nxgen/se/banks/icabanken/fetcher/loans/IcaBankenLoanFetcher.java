@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.LoansBodyEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.loans.entities.MortgageEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class IcaBankenLoanFetcher implements AccountFetcher<LoanAccount> {
 

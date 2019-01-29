@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.creditc
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class JyskeCreditCardTransactionFetcher implements TransactionPagePaginator<CreditCardAccount> {
 

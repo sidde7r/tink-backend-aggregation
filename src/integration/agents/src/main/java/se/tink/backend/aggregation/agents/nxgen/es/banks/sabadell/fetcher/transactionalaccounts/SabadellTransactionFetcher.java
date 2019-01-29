@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiCli
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class SabadellTransactionFetcher implements TransactionKeyPaginator<TransactionalAccount, Boolean> {
     private final SabadellApiClient apiClient;

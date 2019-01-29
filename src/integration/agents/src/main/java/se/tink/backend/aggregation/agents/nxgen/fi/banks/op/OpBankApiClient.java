@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankPersistentStorage;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitRequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.InitResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankAdobeAnalyticsResponse;
@@ -26,7 +25,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpB
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankAccountsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankPortfolioRootEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;

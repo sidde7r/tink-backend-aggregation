@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaApiCli
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ibercaja.IberCajaConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class IberCajaCreditCardTransactionalFetcher implements TransactionDatePaginator<CreditCardAccount> {
 

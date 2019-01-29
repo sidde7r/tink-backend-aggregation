@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc;
 
 import java.util.Collection;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import static org.junit.Assert.assertNotNull;
 
 public class FetchProductsResponseTest {

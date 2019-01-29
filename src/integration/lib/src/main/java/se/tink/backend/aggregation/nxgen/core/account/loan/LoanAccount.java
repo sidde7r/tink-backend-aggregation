@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.nxgen.core.account;
+package se.tink.backend.aggregation.nxgen.core.account.loan;
 
 import com.google.common.base.Preconditions;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.amount.Amount;
 
 public class LoanAccount extends Account {

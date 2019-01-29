@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Co
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.AccountListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class Sparebank1TransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final Sparebank1ApiClient apiClient;

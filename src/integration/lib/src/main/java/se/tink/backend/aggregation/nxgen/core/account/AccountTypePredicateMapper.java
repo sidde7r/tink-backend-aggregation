@@ -1,14 +1,11 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.pair.Pair;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public final class AccountTypePredicateMapper<KeyType> {
 
@@ -72,8 +69,7 @@ public final class AccountTypePredicateMapper<KeyType> {
     public Optional<AccountTypes> translate(KeyType accountTypeKey) {
 
         List<Pair<Predicate<KeyType>, AccountTypes>> matchingRestriction =
-                predicates
-                        .stream()
+                predicates.stream()
                         .filter(pair -> pair.first.test(accountTypeKey))
                         .collect(Collectors.toList());
 

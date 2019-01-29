@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.creditcar
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.creditcard.rpc.CreditCardDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
 public class OmaspCreditCardFetcher implements AccountFetcher<CreditCardAccount>, TransactionFetcher<CreditCardAccount> {

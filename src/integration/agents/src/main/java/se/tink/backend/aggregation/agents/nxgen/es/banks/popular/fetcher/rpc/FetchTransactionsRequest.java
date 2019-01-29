@@ -7,7 +7,7 @@ import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
 public class FetchTransactionsRequest {

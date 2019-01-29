@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.creditcard.entities.CreditCardAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 @JsonObject
 public class FetchCreditCardsResponse extends ArrayList<CreditCardAccountEntity> {

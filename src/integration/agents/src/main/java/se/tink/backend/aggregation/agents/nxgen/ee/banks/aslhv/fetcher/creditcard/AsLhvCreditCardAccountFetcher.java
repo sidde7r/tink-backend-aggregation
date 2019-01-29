@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvSessionStora
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.AsLhvAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetUserDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class AsLhvCreditCardAccountFetcher extends AsLhvAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private final AsLhvSessionStorage sessionStorage;

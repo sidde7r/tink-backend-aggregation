@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class SbabLoanFetcher implements AccountFetcher<LoanAccount> {
     private final SbabApiClient apiClient;

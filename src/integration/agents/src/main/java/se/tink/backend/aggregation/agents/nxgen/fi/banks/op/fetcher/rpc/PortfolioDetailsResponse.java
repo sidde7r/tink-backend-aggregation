@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpB
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankStocksEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;

@@ -11,15 +11,15 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entiti
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.transfer.enums.MessageType;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.MessageType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.core.account.CheckingAccount;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
+import se.tink.libraries.amount.Amount;
 
 public class HandelsbankenFIAccount extends HandelsbankenAccount {
 

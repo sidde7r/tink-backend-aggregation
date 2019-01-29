@@ -5,7 +5,7 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.investment.rpc.FundsPortfoliosResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class SpankkiInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 

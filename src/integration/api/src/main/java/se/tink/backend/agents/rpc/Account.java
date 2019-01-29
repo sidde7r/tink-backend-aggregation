@@ -229,7 +229,7 @@ public class Account implements Cloneable {
         this.holderName = holderName;
     }
 
-    public void setFlags(List<AccountFlag> flags) {
+    public void setFlags(Collection<AccountFlag> flags) {
         for (AccountFlag flag: flags) {
             this.putFlag(flag);
         }

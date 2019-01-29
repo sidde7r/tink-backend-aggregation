@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.BancoPopularPer
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoPopularContract;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchAccountsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class BancoPopularAccountFetcher extends BancoPopularContractFetcher implements
         AccountFetcher<TransactionalAccount> {

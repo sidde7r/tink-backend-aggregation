@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.CreditDe
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 

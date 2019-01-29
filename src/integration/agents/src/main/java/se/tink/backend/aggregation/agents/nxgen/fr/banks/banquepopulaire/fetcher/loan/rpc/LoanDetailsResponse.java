@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.BanqueP
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.entities.ContractOverviewEntity;
 import se.tink.backend.aggregation.agents.nxgen.fr.banks.banquepopulaire.fetcher.loan.entities.CreditEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 @JsonObject

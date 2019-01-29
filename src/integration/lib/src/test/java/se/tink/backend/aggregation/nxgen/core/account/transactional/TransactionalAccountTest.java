@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.core.account;
+package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;

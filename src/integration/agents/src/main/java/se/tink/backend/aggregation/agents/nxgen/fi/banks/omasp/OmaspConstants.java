@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp;
 import com.google.common.collect.ImmutableMap;
 import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.i18n.LocalizableEnum;

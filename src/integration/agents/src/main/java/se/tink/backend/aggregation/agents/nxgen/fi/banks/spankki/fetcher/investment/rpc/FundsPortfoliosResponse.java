@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiConstant
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.investment.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.rpc.SpankkiResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 

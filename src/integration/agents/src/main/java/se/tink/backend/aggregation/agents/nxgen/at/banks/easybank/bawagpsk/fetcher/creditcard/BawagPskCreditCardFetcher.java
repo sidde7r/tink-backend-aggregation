@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.Bawag
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.BawagPskAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.pair.Pair;
 
 public final class BawagPskCreditCardFetcher implements AccountFetcher<CreditCardAccount> {

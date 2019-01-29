@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLApiClie
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConfig;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.fetcher.WLFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 public final class HVBTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {

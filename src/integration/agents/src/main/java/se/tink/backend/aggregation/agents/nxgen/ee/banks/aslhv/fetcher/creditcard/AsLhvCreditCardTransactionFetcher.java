@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.AsLhvSessionStora
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.fetcher.AsLhvTransactionFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class AsLhvCreditCardTransactionFetcher implements TransactionDatePaginator<CreditCardAccount> {
     private final AsLhvTransactionFetcher transactionFetcher;

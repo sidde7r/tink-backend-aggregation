@@ -4,7 +4,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.rpc.Element;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.rpc.Product;

@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investment
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.oauth.rpc.InitMyWealthResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.agents.rpc.Credentials;
 
 public class DnbInvestmentFetcher implements AccountFetcher<InvestmentAccount> {

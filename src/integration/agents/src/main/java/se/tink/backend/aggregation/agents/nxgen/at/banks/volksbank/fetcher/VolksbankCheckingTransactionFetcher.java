@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankApiC
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.libraries.amount.Amount;

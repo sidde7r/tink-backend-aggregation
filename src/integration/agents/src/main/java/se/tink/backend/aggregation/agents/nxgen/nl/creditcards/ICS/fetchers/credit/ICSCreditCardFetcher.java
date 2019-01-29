@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSApiClient;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class ICSCreditCardFetcher implements TransactionPagePaginator<CreditCardAccount> {
 

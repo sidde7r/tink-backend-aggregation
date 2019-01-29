@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
 import com.google.common.collect.ImmutableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.agents.rpc.AccountTypes;
 
-/**
- * @deprecated Use {@link se.tink.backend.aggregation.nxgen.core.account.TypeMapper} instead.
- */
+/** @deprecated Use {@link se.tink.backend.aggregation.nxgen.core.account.TypeMapper} instead. */
 @Deprecated
 public class AccountTypeMapper {
 
@@ -27,17 +28,13 @@ public class AccountTypeMapper {
             return new AccountTypeMapper(this);
         }
 
-        /**
-         * Known keys, and the account type they should be mapped to.
-         */
+        /** Known keys, and the account type they should be mapped to. */
         public AccountTypeMapper.Builder put(AccountTypes value, Object... keys) {
             reversed.put(value, keys);
             return this;
         }
 
-        /**
-         * Known keys that should not be mapped to any specific account type.
-         */
+        /** Known keys that should not be mapped to any specific account type. */
         public AccountTypeMapper.Builder ignoreKeys(Object... keys) {
             return this.put(AccountTypes.DUMMY, keys);
         }
