@@ -69,7 +69,7 @@
   "nxgen.fi.banks.alandsbanken.AlandsBankenAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS"],
   "nxgen.fi.banks.danskebank.DanskeBankFIAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS"],
   "nxgen.fi.banks.handelsbanken.HandelsbankenFIAgent": ["CHECKING_ACCOUNTS", "CREDIT_CARDS", "LOANS"],
-  "nxgen.fi.banks.nordea.v30.NordeaFiAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS"],
+  "nxgen.fi.banks.nordea.v33.NordeaFIAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS"],
   "nxgen.fi.banks.omasp.OmaspAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS"],
   "nxgen.fi.banks.op.OpBankAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS"],
   "nxgen.fi.banks.poppankki.PopPankkiAgent": ["CHECKING_ACCOUNTS", "CREDIT_CARDS", "LOANS"],
