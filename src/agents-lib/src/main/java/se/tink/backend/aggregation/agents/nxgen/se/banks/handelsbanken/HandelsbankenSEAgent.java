@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenSECardDeviceAuthenticator;
@@ -39,6 +38,8 @@ import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.libraries.i18n.Catalog;
+
+import java.util.Optional;
 
 public class HandelsbankenSEAgent
         extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration> {
@@ -102,7 +103,6 @@ public class HandelsbankenSEAgent
             HandelsbankenSessionStorage sessionStorage) {
         return Optional.of(new EInvoiceRefreshController(
                 metricRefreshController,
-                updateController,
                 new HandelsbankenSEEInvoiceFetcher(client, sessionStorage)
         ));
     }
@@ -136,7 +136,6 @@ public class HandelsbankenSEAgent
     protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController(
             HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return Optional.of(new TransferDestinationRefreshController(metricRefreshController,
-                updateController,
                 new HandelsbankenSETransferDestinationFetcher(client, sessionStorage)));
     }
 

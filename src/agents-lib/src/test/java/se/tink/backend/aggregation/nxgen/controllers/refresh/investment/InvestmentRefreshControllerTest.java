@@ -50,7 +50,7 @@ public class InvestmentRefreshControllerTest {
     public void ensureNullInvestmentAccountsMap_isConverted_toEmptyMap() {
         Mockito.when(investmentFetcher.fetchAccounts()).thenReturn(null);
 
-        investmentRefresher.refreshAccounts();
+        investmentRefresher.fetchAccounts();
 
         Mockito.verify(investmentFetcher).fetchAccounts();
         Mockito.verifyZeroInteractions(updateController);

@@ -63,7 +63,7 @@ public class TransactionalAccountRefreshControllerTest {
     public void ensureNullAccountsList_isConverted_toEmptyList() {
         Mockito.when(accountFetcher.fetchAccounts()).thenReturn(null);
 
-        transactionalAccountRefresher.refreshAccounts();
+        transactionalAccountRefresher.fetchAccounts();
 
         Mockito.verify(accountFetcher).fetchAccounts();
         Mockito.verify(updateController, Mockito.never()).updateAccount(Mockito.any(TransactionalAccount.class));
@@ -75,7 +75,7 @@ public class TransactionalAccountRefreshControllerTest {
         Mockito.when(accountFetcher.fetchAccounts()).thenReturn(accounts);
         Mockito.when(transactionFetcher.fetchTransactionsFor(Mockito.any(TransactionalAccount.class))).thenReturn(null);
 
-        transactionalAccountRefresher.refreshTransactions();
+        transactionalAccountRefresher.fetchTransactions();
 
         Mockito.verify(accountFetcher).fetchAccounts();
         Mockito.verify(transactionFetcher).fetchTransactionsFor(Mockito.any(TransactionalAccount.class));

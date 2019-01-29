@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount;
 
 import com.google.common.base.Preconditions;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -14,7 +12,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.pair.Pair;
+
+import java.util.*;
 
 public final class TransactionalAccountRefreshController implements AccountRefresher, TransactionRefresher {
     private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE = new MetricId.MetricLabels()
@@ -36,18 +38,27 @@ public final class TransactionalAccountRefreshController implements AccountRefre
     }
 
     @Override
-    public void refreshAccounts() {
+    public Map<Account, AccountFeatures> fetchAccounts() {
         MetricRefreshAction action = metricController.buildAction(AccountRefresher.METRIC_ID.label(METRIC_ACCOUNT_TYPE),
                 AccountRefresher.METRIC_COUNTER_BUCKETS);
 
         try {
             action.start();
 
-            Collection<TransactionalAccount> accounts = fetchAccounts();
-            accounts.forEach(updateController::updateAccount);
+            Map<Account, AccountFeatures> systemAccounts = new HashMap<>();
 
-            action.count(accounts.size());
+            for (TransactionalAccount account : getAccounts()) {
+                Pair<Account, AccountFeatures> accounts = updateController.updateAccount(account);
+                if (accounts != null) {
+                    systemAccounts.put(
+                            updateController.updateAccount(account).first,
+                            AccountFeatures.createEmpty());
+                }
+            }
+
+            action.count(systemAccounts.size());
             action.completed();
+            return systemAccounts;
         } catch (RuntimeException e) {
             action.failed();
             throw e;
@@ -57,21 +68,26 @@ public final class TransactionalAccountRefreshController implements AccountRefre
     }
 
     @Override
-    public void refreshTransactions() {
+    public Map<Account, List<Transaction>> fetchTransactions() {
         MetricRefreshAction action = metricController.buildAction(TransactionRefresher.METRIC_ID
                 .label(METRIC_ACCOUNT_TYPE), TransactionRefresher.METRIC_COUNTER_BUCKETS);
 
         try {
             action.start();
 
-            fetchAccounts().forEach(a -> {
-                List<AggregationTransaction> transactions = fetchTransactionsFor(a);
-                updateController.updateTransactions(a, transactions);
+            Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
 
+            for (TransactionalAccount account : getAccounts()) {
+                List<AggregationTransaction> transactions = fetchTransactionsFor(account);
+                Pair<Account, List<Transaction>> accountTransactions =
+                        updateController.updateTransactions(account, transactions);
+                if (accountTransactions != null) {
+                    transactionsMap.put(accountTransactions.first, accountTransactions.second);
+                }
                 action.count(transactions.size());
-            });
-
+           }
             action.completed();
+            return transactionsMap;
         } catch (RuntimeException e) {
             action.failed();
             throw e;
@@ -80,7 +96,7 @@ public final class TransactionalAccountRefreshController implements AccountRefre
         }
     }
 
-    private Collection<TransactionalAccount> fetchAccounts() {
+    private Collection<TransactionalAccount> getAccounts() {
         if (accounts == null) {
             accounts = Optional.ofNullable(accountFetcher.fetchAccounts()).orElse(Collections.emptyList());
         }

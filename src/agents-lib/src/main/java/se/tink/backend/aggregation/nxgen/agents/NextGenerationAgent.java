@@ -1,23 +1,35 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
 import com.google.common.base.Strings;
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
@@ -35,20 +47,35 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.transfer.rpc.Transfer;
 
-public abstract class NextGenerationAgent extends AbstractAgent implements RefreshableItemExecutor,
-        TransferExecutorNxgen, PersistentLogin {
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+public abstract class NextGenerationAgent extends AbstractAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshTransferDestinationExecutor,
+                RefreshEInvoiceExecutor,
+                TransferExecutorNxgen,
+                PersistentLogin {
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -80,7 +107,7 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
         this.persistentStorage = new PersistentStorage();
         this.sessionStorage = new SessionStorage();
         this.credentials = request.getCredentials();
-        this.updateController = new UpdateController(context,
+        this.updateController = new UpdateController(
                 // TODO: Remove when provider uses MarketCode
                 MarketCode.valueOf(request.getProvider().getMarket()),
                 request.getProvider().getCurrency(), request.getUser());
@@ -153,85 +180,6 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
     @Override
     public void clearLoginSession() {
         getSessionController().clear();
-    }
-
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case EINVOICES:
-            refreshEInvoices();
-            break;
-
-        case TRANSFER_DESTINATIONS:
-            refreshTransferDestinations();
-            break;
-
-        // We cannot at this layer distinguish between CHECKING and SAVINGS accounts. Future improvement.
-        case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
-            if (hasRefreshedCheckingAccounts) {
-                break;
-            }
-            hasRefreshedCheckingAccounts = true;
-
-            refreshAccountsPerType(TransactionalAccountRefreshController.class);
-            break;
-
-        // We cannot at this layer distinguish between CHECKING and SAVINGS transactions. Future improvement.
-        case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
-            if (hasRefreshedCheckingTransactions) {
-                break;
-            }
-            hasRefreshedCheckingTransactions = true;
-
-            refreshTransactionsPerType(TransactionalAccountRefreshController.class);
-            break;
-
-        case CREDITCARD_ACCOUNTS:
-            refreshAccountsPerType(CreditCardRefreshController.class);
-            break;
-
-        case CREDITCARD_TRANSACTIONS:
-            refreshTransactionsPerType(CreditCardRefreshController.class);
-            break;
-
-        case LOAN_ACCOUNTS:
-            refreshAccountsPerType(LoanRefreshController.class);
-            break;
-
-        case LOAN_TRANSACTIONS:
-            refreshTransactionsPerType(LoanRefreshController.class);
-            break;
-
-        case INVESTMENT_ACCOUNTS:
-            refreshAccountsPerType(InvestmentRefreshController.class);
-            break;
-
-        case INVESTMENT_TRANSACTIONS:
-            // Todo: implement `TransactionRefresher` in `InvestmentRefreshController`
-            break;
-        }
-    }
-
-    private <T extends AccountRefresher> void refreshAccountsPerType(Class<T> cls) {
-        getRefreshControllersOfType(cls).forEach(AccountRefresher::refreshAccounts);
-    }
-
-    private <T extends TransactionRefresher> void refreshTransactionsPerType(Class<T> cls) {
-        getRefreshControllersOfType(cls).forEach(TransactionRefresher::refreshTransactions);
-    }
-
-    private void refreshTransferDestinations() {
-        getRefreshController(TransferDestinationRefreshController.class)
-                .ifPresent(destinationRefresher ->
-                        destinationRefresher.refreshTransferDestinationsFor(updateController.getAccounts())
-                );
-    }
-
-    private void refreshEInvoices() {
-        getRefreshController(EInvoiceRefreshController.class)
-                .ifPresent(EInvoiceRefreshController::refreshEInvoices);
     }
 
     @Override
@@ -317,4 +265,126 @@ public abstract class NextGenerationAgent extends AbstractAgent implements Refre
 
     // transfer and payment executors
     protected abstract Optional<TransferController> constructTransferController();
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return this.fetchTransactionalAccounts();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return this.fetchTransactionalAccounts();
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return fetchTransactionalAccountsPerType(CreditCardRefreshController.class);
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        for (AccountRefresher refresher : getRefreshControllersOfType(LoanRefreshController.class)) {
+            accounts.putAll(refresher.fetchAccounts());
+        }
+
+        return new FetchLoanAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        for (AccountRefresher refresher : getRefreshControllersOfType(InvestmentRefreshController.class)) {
+            accounts.putAll(refresher.fetchAccounts());
+        }
+
+        return new FetchInvestmentAccountsResponse(accounts);
+    }
+
+    private FetchAccountsResponse fetchTransactionalAccounts() {
+        if (hasRefreshedCheckingAccounts) {
+            return new FetchAccountsResponse(Collections.emptyList());
+        }
+        hasRefreshedCheckingAccounts = true;
+
+        return fetchTransactionalAccountsPerType(TransactionalAccountRefreshController.class);
+    }
+
+    private <T extends AccountRefresher> FetchAccountsResponse fetchTransactionalAccountsPerType(
+            Class<T> cls) {
+        List<Account> accounts = new ArrayList<>();
+        for (AccountRefresher refresher : getRefreshControllersOfType(cls)) {
+            accounts.addAll(refresher.fetchAccounts().keySet());
+        }
+
+        return new FetchAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return this.fetchTransactionalAccountTransactions();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return this.fetchTransactionalAccountTransactions();
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return fetchTransactionsPerType(CreditCardRefreshController.class);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return fetchTransactionsPerType(LoanRefreshController.class);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        // Todo: implement `TransactionRefresher` in `InvestmentRefreshController`
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    private FetchTransactionsResponse fetchTransactionalAccountTransactions() {
+        if (hasRefreshedCheckingTransactions) {
+            return new FetchTransactionsResponse(Collections.emptyMap());
+        }
+        hasRefreshedCheckingTransactions = true;
+
+        return fetchTransactionsPerType(TransactionalAccountRefreshController.class);
+    }
+
+    private <T extends TransactionRefresher> FetchTransactionsResponse fetchTransactionsPerType(
+            Class<T> cls) {
+
+        Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
+
+        for (TransactionRefresher refresher : getRefreshControllersOfType(cls)) {
+            transactionsMap.putAll(refresher.fetchTransactions());
+        }
+        return new FetchTransactionsResponse(transactionsMap);
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        TransferDestinationRefreshController destinationRefresher =
+                getRefreshController(TransferDestinationRefreshController.class).orElse(null);
+        if (destinationRefresher == null) {
+            return new FetchTransferDestinationsResponse(Collections.emptyMap());
+        }
+        Map<Account, List<TransferDestinationPattern>> refreshTransferDestination =
+                destinationRefresher.refreshTransferDestinationsFor(accounts);
+        return new FetchTransferDestinationsResponse(refreshTransferDestination);
+    }
+
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        EInvoiceRefreshController eInvoiceRefreshController =
+                getRefreshController(EInvoiceRefreshController.class).orElse(null);
+        if (eInvoiceRefreshController == null) {
+            return new FetchEInvoicesResponse(Collections.emptyList());
+        }
+        return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
+    }
 }

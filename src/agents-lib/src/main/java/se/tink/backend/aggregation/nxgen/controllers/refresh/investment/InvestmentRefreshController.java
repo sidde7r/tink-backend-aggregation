@@ -1,16 +1,18 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.investment;
 
 import com.google.common.base.Preconditions;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.pair.Pair;
+
+import java.util.*;
 
 public final class InvestmentRefreshController implements AccountRefresher {
     private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE = new MetricId.MetricLabels()
@@ -30,18 +32,25 @@ public final class InvestmentRefreshController implements AccountRefresher {
     }
 
     @Override
-    public void refreshAccounts() {
+    public Map<Account, AccountFeatures> fetchAccounts() {
         MetricRefreshAction action = metricRefreshController.buildAction(AccountRefresher.METRIC_ID
                 .label(METRIC_ACCOUNT_TYPE), AccountRefresher.METRIC_COUNTER_BUCKETS);
 
         try {
             action.start();
 
-            Collection<InvestmentAccount> accounts = getInvestments();
-            accounts.forEach(updateController::updateAccount);
+            Map<Account, AccountFeatures> systemAccounts = new HashMap<>();
 
-            action.count(accounts.size());
+            for (InvestmentAccount account : getInvestments()) {
+                Pair<Account, AccountFeatures> systemAccount = updateController.updateAccount(account);
+                if (systemAccount != null) {
+                    systemAccounts.put(systemAccount.first, systemAccount.second);
+                }
+            }
+
+            action.count(systemAccounts.size());
             action.completed();
+            return systemAccounts;
         } catch (RuntimeException e) {
             action.failed();
             throw e;

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
@@ -30,6 +29,9 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
+
+import java.util.Optional;
+
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers.USER_AGENT;
 
 public class IngAgent extends NextGenerationAgent {
@@ -114,7 +116,6 @@ public class IngAgent extends NextGenerationAgent {
         return Optional.of(
                 new TransferDestinationRefreshController(
                         metricRefreshController,
-                        updateController,
                         new IngTransferDestinationFetcher(apiClient, ingHelper)));
     }
 

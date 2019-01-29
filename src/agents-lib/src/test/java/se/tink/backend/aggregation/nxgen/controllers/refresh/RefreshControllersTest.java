@@ -1,10 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,9 +28,14 @@ import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TestAccountBuilder;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.metrics.MetricId;
+import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.user.rpc.User;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class RefreshControllersTest {
@@ -105,16 +106,15 @@ public class RefreshControllersTest {
                         creditCardAccountFetcher, creditCardTransactionFetcher))
                 .add(new InvestmentRefreshController(metricRefreshController, updateController, investmentFetcher))
                 .add(new LoanRefreshController(metricRefreshController, updateController, loanFetcher))
-                .add(new EInvoiceRefreshController(metricRefreshController, updateController, eInvoiceFetcher))
-                .add(new TransferDestinationRefreshController(metricRefreshController, updateController,
-                        transferDestinationFetcher))
+                .add(new EInvoiceRefreshController(metricRefreshController, eInvoiceFetcher))
+                .add(new TransferDestinationRefreshController(metricRefreshController, transferDestinationFetcher))
                 .build();
     }
 
     @Test
     public void ensureRefreshAccounts_fetchesAndUpdatesAccountsCreditCardsAndLoans() {
         getRefreshControllersOfType(AccountRefresher.class)
-                .forEach(AccountRefresher::refreshAccounts);
+                .forEach(AccountRefresher::fetchAccounts);
 
         executionOrder.verify(transactionalAccountFetcher).fetchAccounts();
         executionOrder.verify(updateController, Mockito.times(accounts.size()))
@@ -138,7 +138,7 @@ public class RefreshControllersTest {
         Mockito.when(transactionalAccountFetcher.fetchAccounts()).thenReturn(null);
 
         getRefreshControllersOfType(AccountRefresher.class)
-                .forEach(AccountRefresher::refreshAccounts);
+                .forEach(AccountRefresher::fetchAccounts);
 
         executionOrder.verify(transactionalAccountFetcher).fetchAccounts();
         executionOrder.verify(updateController, Mockito.never()).updateAccount(Mockito.any(TransactionalAccount.class));
@@ -149,7 +149,7 @@ public class RefreshControllersTest {
         Mockito.when(creditCardAccountFetcher.fetchAccounts()).thenReturn(null);
 
         getRefreshControllersOfType(AccountRefresher.class)
-                .forEach(AccountRefresher::refreshAccounts);
+                .forEach(AccountRefresher::fetchAccounts);
 
         executionOrder.verify(creditCardAccountFetcher).fetchAccounts();
         executionOrder.verify(updateController, Mockito.never()).updateAccount(Mockito.any(CreditCardAccount.class));
@@ -160,7 +160,7 @@ public class RefreshControllersTest {
         Mockito.when(investmentFetcher.fetchAccounts()).thenReturn(null);
 
         getRefreshControllersOfType(AccountRefresher.class)
-                .forEach(AccountRefresher::refreshAccounts);
+                .forEach(AccountRefresher::fetchAccounts);
 
         executionOrder.verify(investmentFetcher).fetchAccounts();
         executionOrder.verify(updateController, Mockito.never())
@@ -172,7 +172,7 @@ public class RefreshControllersTest {
         Mockito.when(loanFetcher.fetchAccounts()).thenReturn(null);
 
         getRefreshControllersOfType(AccountRefresher.class)
-                .forEach(AccountRefresher::refreshAccounts);
+                .forEach(AccountRefresher::fetchAccounts);
 
         executionOrder.verify(loanFetcher).fetchAccounts();
         executionOrder.verify(updateController, Mockito.never())
@@ -184,7 +184,7 @@ public class RefreshControllersTest {
         Mockito.when(transactionFetcher.fetchTransactionsFor(accounts.get(0))).thenReturn(null);
 
         getRefreshControllersOfType(TransactionRefresher.class)
-                .forEach(TransactionRefresher::refreshTransactions);
+                .forEach(TransactionRefresher::fetchTransactions);
 
         executionOrder.verify(transactionalAccountFetcher).fetchAccounts();
         executionOrder.verify(transactionFetcher).fetchTransactionsFor(accounts.get(0));
@@ -194,7 +194,7 @@ public class RefreshControllersTest {
     @Test
     public void ensureRefreshTransactions_fetchesAccountsAndCreditCards_whenAccounts_haveNotAlreadyBeenFetched() {
         getRefreshControllersOfType(TransactionRefresher.class)
-                .forEach(TransactionRefresher::refreshTransactions);
+                .forEach(TransactionRefresher::fetchTransactions);
         executionOrder.verify(transactionalAccountFetcher).fetchAccounts();
         executionOrder.verify(transactionFetcher).fetchTransactionsFor(accounts.get(0));
         executionOrder.verify(updateController).updateTransactions(accounts.get(0), transactions);
@@ -206,12 +206,12 @@ public class RefreshControllersTest {
     @Test
     public void ensureRefreshTransactions_doesNotFetchAccountsAndCreditCards_whenAccountsHaveAlreadyBeenFetched() {
         getRefreshControllersOfType(AccountRefresher.class)
-                .forEach(AccountRefresher::refreshAccounts);
+                .forEach(AccountRefresher::fetchAccounts);
         executionOrder.verify(transactionalAccountFetcher).fetchAccounts();
         accounts.forEach(a -> executionOrder.verify(updateController).updateAccount(a));
 
         getRefreshControllersOfType(TransactionRefresher.class)
-                .forEach(TransactionRefresher::refreshTransactions);
+                .forEach(TransactionRefresher::fetchTransactions);
 
         executionOrder.verify(transactionalAccountFetcher, Mockito.never()).fetchAccounts();
         executionOrder.verify(transactionFetcher).fetchTransactionsFor(accounts.get(0));
@@ -224,7 +224,7 @@ public class RefreshControllersTest {
     @Test
     public void ensureRefreshAccounts_doesNotFetchAccountsAndCreditCards_whenAccountsHaveAlreadyBeenFetched() {
         getRefreshControllersOfType(TransactionRefresher.class)
-                .forEach(TransactionRefresher::refreshTransactions);
+                .forEach(TransactionRefresher::fetchTransactions);
 
         executionOrder.verify(transactionalAccountFetcher).fetchAccounts();
         executionOrder.verify(updateController, Mockito.never()).updateAccount(Mockito.any(Account.class));
@@ -232,7 +232,7 @@ public class RefreshControllersTest {
         executionOrder.verify(updateController).updateTransactions(accounts.get(0), transactions);
 
         getRefreshControllersOfType(AccountRefresher.class)
-                .forEach(AccountRefresher::refreshAccounts);
+                .forEach(AccountRefresher::fetchAccounts);
         executionOrder.verify(transactionalAccountFetcher, Mockito.never()).fetchAccounts();
         executionOrder.verify(updateController, Mockito.times(accounts.size()))
                 .updateAccount(Mockito.any(TransactionalAccount.class));
@@ -249,15 +249,7 @@ public class RefreshControllersTest {
         executionOrder.verify(transferDestinationFetcher).fetchTransferDestinationsFor(accounts.get(0));
     }
     */
-
-    @Test
-    public void ensureFetchEInvoices_fetchesEInvoices() {
-        getRefreshController(EInvoiceRefreshController.class)
-                .ifPresent(EInvoiceRefreshController::refreshEInvoices);
-        executionOrder.verify(eInvoiceFetcher).fetchEInvoices();
-        executionOrder.verify(updateController).updateEInvoices(Mockito.anyList());
-    }
-
+    
     /*
     // Test fail due to TransferDestinationFetcherController touches context
     @Test
@@ -268,15 +260,6 @@ public class RefreshControllersTest {
         executionOrder.verify(transferDestinationFetcher).fetchTransferDestinationsFor(accounts.get(0));
     }
     */
-
-    @Test
-    public void ensureNullEInvoiceFetcher_doesNotRenderNullPointer() {
-        Mockito.when(eInvoiceFetcher.fetchEInvoices()).thenReturn(null);
-
-        getRefreshController(EInvoiceRefreshController.class)
-                .ifPresent(EInvoiceRefreshController::refreshEInvoices);
-        executionOrder.verify(eInvoiceFetcher).fetchEInvoices();
-    }
 
     @SuppressWarnings("unchecked")
     private <T extends Refresher> List<T> getRefreshControllersOfType(Class<T> cls) {

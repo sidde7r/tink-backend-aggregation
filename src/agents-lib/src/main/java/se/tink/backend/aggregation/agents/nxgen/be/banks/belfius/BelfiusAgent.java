@@ -115,7 +115,6 @@ public class BelfiusAgent extends NextGenerationAgent {
         return Optional.of(
                 new TransferDestinationRefreshController(
                         metricRefreshController,
-                        updateController,
                         new BelfiusTransferDestinationFetcher(apiClient)));
     }
 
