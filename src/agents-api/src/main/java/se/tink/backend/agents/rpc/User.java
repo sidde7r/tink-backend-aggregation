@@ -8,7 +8,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
-import se.tink.backend.agents.core.UserConnectedService;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
@@ -35,8 +34,6 @@ public class User {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String password;
     private UserProfile profile;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<UserConnectedService> services;
     private String username;
     private Date debugUntil;
     private String nationalId;
@@ -85,10 +82,6 @@ public class User {
 
     public UserProfile getProfile() {
         return profile;
-    }
-
-    public List<UserConnectedService> getServices() {
-        return services;
     }
 
     public String getUsername() {
@@ -170,10 +163,6 @@ public class User {
 
     public void setProfile(UserProfile profile) {
         this.profile = profile;
-    }
-
-    public void setServices(List<UserConnectedService> services) {
-        this.services = services;
     }
 
     public void setUsername(String username) {
