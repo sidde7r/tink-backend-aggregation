@@ -15,6 +15,7 @@ import com.sun.jersey.api.client.Client;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +28,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -68,6 +81,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.rpc.Credentials;
@@ -80,8 +95,6 @@ import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValidator;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.SwedishGiroType;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.core.transfer.SignableOperationStatuses;
@@ -101,7 +114,14 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor {
+public class DanskeBankV2Agent extends AbstractAgent implements RefreshEInvoiceExecutor,
+                                                           RefreshTransferDestinationExecutor,
+                                                           RefreshCheckingAccountsExecutor,
+                                                           RefreshSavingsAccountsExecutor,
+                                                           RefreshCreditCardAccountsExecutor,
+                                                           RefreshInvestmentAccountsExecutor,
+                                                           RefreshLoanAccountsExecutor,
+                                                           TransferExecutor {
 
     private final Client httpClient;
 
@@ -689,95 +709,6 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
         return accountMap;
     }
 
-    private void updateAccountsPerType(RefreshableItem type) {
-        getAccountMap().entrySet().stream()
-                .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
-    }
-
-    private void updateTransactionsPerType(RefreshableItem type) {
-        getAccountMap().entrySet().stream()
-                .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> updateTransactions(set.getKey()));
-    }
-
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case EINVOICES:
-            try {
-                getEInvoices();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case TRANSFER_DESTINATIONS:
-            TransferDestinationsResponse response = new TransferDestinationsResponse();
-            response.addDestinations(getTransferAccountDestinations(systemUpdater.getUpdatedAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(systemUpdater.getUpdatedAccounts()));
-            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
-            break;
-
-        case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
-        case CREDITCARD_ACCOUNTS:
-            updateAccountsPerType(item);
-            break;
-
-        case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
-        case CREDITCARD_TRANSACTIONS:
-        case LOAN_TRANSACTIONS:
-            updateTransactionsPerType(item);
-            break;
-
-        case INVESTMENT_ACCOUNTS:
-            try {
-                collectInvestmentData();
-            } catch (Exception e) {
-                // Catch and just exit - This is not yet implemented in our model.
-                log.warn("Caught exception while logging investment data", e);
-            }
-            break;
-
-        case LOAN_ACCOUNTS:
-            getAccountMap().entrySet().stream()
-                    .filter(set -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(set.getValue().getType()))
-                    .forEach(set ->
-                            financialDataCacher.cacheAccount(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
-                    );
-            break;
-        }
-    }
-
-    public void getEInvoices() throws Exception {
-        List<Transfer> eInvoices = Lists.newArrayList();
-
-        EInvoiceListResponse eInvoiceList = apiClient.getEInvoices();
-
-        for (EInvoiceListTransactionEntity eInvoiceListTransactionEntity : eInvoiceList.getTransactions()) {
-            String transferId = eInvoiceListTransactionEntity.getTransactionId();
-
-            EInvoiceDetailsResponse eInvoiceDetails = apiClient.getEInvoiceDetails(transferId);
-
-            // Old eInvoices are removed
-            if (eInvoiceDetails.getStatus() != null &&
-                    eInvoiceDetails.getStatus().getStatusCode() == INVALID_INVOICE_STATUS_CODE) {
-                continue;
-            }
-
-            try {
-                // There's an identifier on the list response, add that id as payload for identification of invoice
-                Transfer eInvoiceTransfer = eInvoiceDetails.toEInvoiceTransfer(transferId);
-                eInvoices.add(eInvoiceTransfer);
-            } catch (Exception e) {
-                log.warn("Validation failed when trying to save e-invoice", e);
-            }
-        }
-        systemUpdater.updateEinvoices(eInvoices);
-    }
-
     private Map<Account, List<TransferDestinationPattern>> getPaymentAccountDestinations(List<Account> updatedAccounts) {
         TransferDetailsResponse detailsResponse = apiClient.getPaymentAccounts();
 
@@ -814,51 +745,7 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
                 .addMultiMatchPattern(AccountIdentifier.Type.SE_BG, TransferDestinationPattern.ALL)
                 .build();
     }
-
-    private void collectInvestmentData() {
-        PortfoliosListResponse portfoliosListResponse = apiClient.getPortfolios();
-
-        if (portfoliosListResponse.getStatus().getStatusCode() != OK_STATUS_CODE ||
-                portfoliosListResponse.getPortfolios() == null ||
-                portfoliosListResponse.getPortfolios().isEmpty()) {
-            return;
-        }
-
-        portfoliosListResponse.getPortfolios().forEach(portfolioEntity -> {
-            Account account = portfolioEntity.toAccount();
-            Portfolio portfolio = portfolioEntity.toPortfolio();
-
-            PapersListResponse portfolioPapers = apiClient.getPortfolioPapers(portfolioEntity.getPortfolioId());
-
-            if (portfolioPapers.getStatus().getStatusCode() != OK_STATUS_CODE ||
-                    portfolioPapers.getPapers() == null) {
-                financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
-            }
-
-            List<Instrument> instruments = Lists.newArrayList();
-            portfolioPapers.getPapers().forEach(paperEntity -> paperEntity.toInstrument().ifPresent(instruments::add));
-            portfolio.setInstruments(instruments);
-
-            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
-        });
-    }
-
-
-
-    private void updateTransactions(AccountEntity accountEntity) {
-        boolean isCreditCardAccount = apiClient.isCreditCardAccount(accountEntity);
-        Account account = accountEntity.toAccount(isCreditCardAccount);
-
-        List<Transaction> transactions = Lists.newArrayList();
-
-        transactions.addAll(fetchTransactions(accountEntity, account, TransactionType.FUTURE));
-        transactions.addAll(fetchTransactions(accountEntity, account, TransactionType.NORMAL));
-
-        transactions = filterFauxDoubleCharges(transactions);
-
-        financialDataCacher.updateTransactions(account, transactions);
-    }
-
+                                                             
     private List<Transaction> fetchTransactions(AccountEntity accountEntity, Account account, TransactionType type) {
         List<Transaction> transactions = Lists.newArrayList();
 
@@ -966,4 +853,168 @@ public class DanskeBankV2Agent extends AbstractAgent implements RefreshableItemE
             return userMessage;
         }
     }
+
+    //// Refresh Executor Refactor ///////
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        try {
+
+            List<Transfer> eInvoices = Lists.newArrayList();
+
+            EInvoiceListResponse eInvoiceList = apiClient.getEInvoices();
+
+            for (EInvoiceListTransactionEntity eInvoiceListTransactionEntity : eInvoiceList.getTransactions()) {
+                String transferId = eInvoiceListTransactionEntity.getTransactionId();
+
+                EInvoiceDetailsResponse eInvoiceDetails = apiClient.getEInvoiceDetails(transferId);
+
+                // Old eInvoices are removed
+                if (eInvoiceDetails.getStatus() != null &&
+                        eInvoiceDetails.getStatus().getStatusCode() == INVALID_INVOICE_STATUS_CODE) {
+                    continue;
+                }
+
+                try {
+                    // There's an identifier on the list response, add that id as payload for identification of invoice
+                    Transfer eInvoiceTransfer = eInvoiceDetails.toEInvoiceTransfer(transferId);
+                    eInvoices.add(eInvoiceTransfer);
+                } catch (Exception e) {
+                    log.warn("Validation failed when trying to save e-invoice", e);
+                }
+            }
+            return new FetchEInvoicesResponse(eInvoices);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
+        transferDestinations.putAll(getTransferAccountDestinations(accounts));
+        transferDestinations.putAll(getPaymentAccountDestinations(accounts));
+        return new FetchTransferDestinationsResponse(transferDestinations);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return fetchAccountsPerType(RefreshableItem.CHECKING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return fetchTransactionsPerType(RefreshableItem.CHECKING_TRANSACTIONS);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return fetchAccountsPerType(RefreshableItem.CREDITCARD_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return fetchTransactionsPerType(RefreshableItem.CREDITCARD_TRANSACTIONS);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return fetchAccountsPerType(RefreshableItem.SAVING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return fetchTransactionsPerType(RefreshableItem.SAVING_TRANSACTIONS);
+    }
+
+    private FetchAccountsResponse fetchAccountsPerType(RefreshableItem type) {
+        List<Account> accounts = new ArrayList<>();
+        getAccountMap().entrySet().stream()
+                .filter(set -> type.isAccountType(set.getValue().getType()))
+                .forEach(set -> accounts.add(set.getValue()));
+        return new FetchAccountsResponse(accounts);
+    }
+    private FetchTransactionsResponse fetchTransactionsPerType(RefreshableItem type) {
+        Map<Account, List<Transaction>> transactionMap = new HashMap<>();
+        getAccountMap().entrySet().stream()
+                .filter(set -> type.isAccountType(set.getValue().getType()))
+                .forEach(set -> {
+                    AccountEntity accountEntity = set.getKey();
+                    boolean isCreditCardAccount = apiClient.isCreditCardAccount(accountEntity);
+                    Account account = accountEntity.toAccount(isCreditCardAccount);
+
+                    List<Transaction> transactions = Lists.newArrayList();
+
+                    transactions.addAll(fetchTransactions(accountEntity, account, TransactionType.FUTURE));
+                    transactions.addAll(fetchTransactions(accountEntity, account, TransactionType.NORMAL));
+
+                    transactions = filterFauxDoubleCharges(transactions);
+
+                    transactionMap.put(account, transactions);
+                });
+        return new FetchTransactionsResponse(transactionMap);
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        try {
+            return fetchInvestmentData();
+        } catch (Exception e) {
+            // Catch and just exit - This is not yet implemented in our model.
+            log.warn("Caught exception while logging investment data", e);
+            return new FetchInvestmentAccountsResponse(Collections.emptyMap());
+        }
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    private FetchInvestmentAccountsResponse fetchInvestmentData() {
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        PortfoliosListResponse portfoliosListResponse = apiClient.getPortfolios();
+
+        if (portfoliosListResponse.getStatus().getStatusCode() != OK_STATUS_CODE ||
+                portfoliosListResponse.getPortfolios() == null ||
+                portfoliosListResponse.getPortfolios().isEmpty()) {
+            return new FetchInvestmentAccountsResponse(Collections.emptyMap());
+        }
+
+        portfoliosListResponse.getPortfolios().forEach(portfolioEntity -> {
+            Account account = portfolioEntity.toAccount();
+            Portfolio portfolio = portfolioEntity.toPortfolio();
+
+            PapersListResponse portfolioPapers = apiClient.getPortfolioPapers(portfolioEntity.getPortfolioId());
+
+            if (portfolioPapers.getStatus().getStatusCode() != OK_STATUS_CODE ||
+                    portfolioPapers.getPapers() == null) {
+                accounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+            }
+
+            List<Instrument> instruments = Lists.newArrayList();
+            portfolioPapers.getPapers().forEach(paperEntity -> paperEntity.toInstrument().ifPresent(instruments::add));
+            portfolio.setInstruments(instruments);
+
+            accounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+        });
+        return new FetchInvestmentAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        Map<Account, AccountFeatures> accounts = new HashMap<>();
+        getAccountMap().entrySet().stream()
+                .filter(set -> RefreshableItem.LOAN_ACCOUNTS.isAccountType(set.getValue().getType()))
+                .forEach(set ->
+                        accounts.put(set.getValue(), AccountFeatures.createForLoan(set.getKey().toLoan()))
+                );
+        return new FetchLoanAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    //////////////////////////////////////
 }
