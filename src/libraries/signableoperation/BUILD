@@ -24,6 +24,7 @@ java_library(
         "//src/libraries/uuid",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
+        "//third_party:com_google_code_findbugs_jsr305",
         "//third_party:com_google_guava_guava",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:io_protostuff_protostuff_api",
@@ -31,6 +32,5 @@ java_library(
         "//third_party:org_apache_curator_curator_recipes",
         "//third_party:org_hibernate_hibernate_annotations",
         "//third_party:org_hibernate_javax_persistence_hibernate_jpa_2_0_api",
-        "//third_party:com_google_code_findbugs_jsr305",
     ],
 )
