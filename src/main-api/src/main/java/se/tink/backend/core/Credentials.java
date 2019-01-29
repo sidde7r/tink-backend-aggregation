@@ -59,16 +59,14 @@ public class Credentials implements Cloneable {
     private long providerLatency;
 
     @JsonInclude(Include.NON_NULL)
-    @Creatable
-    @Modifiable
+
     @Type(type = "text")
     @Exclude
     @ApiModelProperty(name = "sensitiveDataSerialized", hidden = true)
     private String sensitiveDataSerialized;
 
     @JsonIgnore
-    @Creatable
-    @Modifiable
+
     @Column(name = "`fields`")
     @Type(type = "text")
     @Tag(9)
@@ -80,12 +78,12 @@ public class Credentials implements Cloneable {
     @Exclude
     @ApiModelProperty(name = "nextUpdate", hidden = true)
     private Date nextUpdate;
-    @Creatable
+
     @Type(type = "text")
     @Exclude
     @ApiModelProperty(name = "payload", hidden = true)
     private String payload;
-    @Creatable
+
     @Tag(2)
     @ApiModelProperty(name = "providerName", value = "The provider (financial institute) that the credentials belongs to.", example = "handelsbanken-bankid", required = true)
     private String providerName;
@@ -94,13 +92,13 @@ public class Credentials implements Cloneable {
     @Exclude
     @ApiModelProperty(name = "secretKey", hidden = true)
     private String secretKey;
-    @Creatable
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @Tag(4)
     @ApiModelProperty(name = "status", value = "The status of the credentials.", allowableValues = CredentialsStatus.DOCUMENTED, example = "UPDATED")
     private CredentialsStatus status;
-    @Modifiable
+
     @Type(type = "text")
     @Tag(6)
     @ApiModelProperty(name = "statusPayload", value = "A user-friendly message connected to the status. Could be an error message or text describing what is currently going on in the refresh process.", example = "Analyzed 1,200 out of 1,200 transactions.")
@@ -113,13 +111,12 @@ public class Credentials implements Cloneable {
     @ApiModelProperty(name = "statusUpdated", value = "A timestamp of when the credentials' status was last updated.", example = "1493379467000")
     @Column(columnDefinition = "DATETIME(6)")
     private Date statusUpdated;
-    @Creatable
-    @Modifiable
+
     @Type(type = "text")
     @Tag(10)
     @ApiModelProperty(name = "supplementalInformation", value = "A key-value structure to handle if status of credentials are AWAITING_SUPPLEMENTAL_INFORMATION.", example = "null")
     private String supplementalInformation;
-    @Creatable
+
     @Enumerated(EnumType.STRING)
     @Tag(3)
     @ApiModelProperty(name = "type", value = "The type of credentials.", allowableValues = CredentialsTypes.DOCUMENTED, example = "MOBILE_BANKID")
