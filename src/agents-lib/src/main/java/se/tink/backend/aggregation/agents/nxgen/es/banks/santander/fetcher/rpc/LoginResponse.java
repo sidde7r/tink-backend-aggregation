@@ -3,10 +3,12 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.InfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.UserData;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -20,6 +22,8 @@ public class LoginResponse {
     private List<AccountEntity> accountList;
     @JsonProperty("tarjetas")
     private List<CardEntity> cards;
+    @JsonProperty("fondos")
+    private List<FundEntity> funds;
 
     public InfoEntity getInfo() {
         return info;
@@ -30,10 +34,14 @@ public class LoginResponse {
     }
 
     public List<AccountEntity> getAccountList() {
-        return accountList == null ? Collections.emptyList() : accountList;
+        return Optional.ofNullable(accountList).orElse(Collections.emptyList());
     }
 
     public List<CardEntity> getCards() {
-        return cards == null ? Collections.emptyList() : cards;
+        return Optional.ofNullable(cards).orElse(Collections.emptyList());
+    }
+
+    public List<FundEntity> getFunds() {
+        return Optional.ofNullable(funds).orElse(Collections.emptyList());
     }
 }
