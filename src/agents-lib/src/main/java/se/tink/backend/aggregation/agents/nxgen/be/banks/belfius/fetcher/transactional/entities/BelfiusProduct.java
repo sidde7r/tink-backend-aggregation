@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Optional;
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.Belf
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.BelfiusStringDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -20,11 +19,11 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
+import java.util.Optional;
+
 @JsonObject
 public class BelfiusProduct implements GeneralAccountEntity{
-
-    private static final AggregationLogger LOGGER = new AggregationLogger(BelfiusProduct.class);
-
+    
     @JsonProperty("lb_orderingaccount")
     @JsonDeserialize(using = BelfiusStringDeserializer.class)
     private String orderingAccount;
@@ -86,7 +85,12 @@ public class BelfiusProduct implements GeneralAccountEntity{
 
 
     private Optional<Amount> getAmount() {
-        return BelfiusStringUtils.parseStringToAmount(this.amount);
+        // Ongoing transaction the available and amount differs, use available
+        if (Strings.isNullOrEmpty(this.available)) {
+            return BelfiusStringUtils.parseStringToAmount(this.amount);
+        } else {
+            return BelfiusStringUtils.parseStringToAmount(this.available);
+        }
     }
 
     public boolean isTransactionalAccount() {
