@@ -55,161 +55,164 @@ import se.tink.libraries.user.rpc.User;
  * accounts cannot be added. - This agent can and should only be used by ABN AMRO.
  */
 public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccountsExecutor {
-    private final Credentials credentials;
-    private final MetricRegistry metricRegistry;
-    private IBSubscriptionClient ibSubscriptionClient;
-    private User user;
-    private Retryer<List<CreditCardAccountContainerEntity>> retryer;
+  private final Credentials credentials;
+  private final MetricRegistry metricRegistry;
+  private IBSubscriptionClient ibSubscriptionClient;
+  private User user;
+  private Retryer<List<CreditCardAccountContainerEntity>> retryer;
 
-    // cache
-    private Map<Account, List<Transaction>> accounts = new HashMap<>();
+  // cache
+  private Map<Account, List<Transaction>> accounts = new HashMap<>();
 
-    public IcsAgent(
-            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-        super(request, context);
+  public IcsAgent(
+      CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    super(request, context);
 
-        this.credentials = request.getCredentials();
-        this.user = request.getUser();
-        this.metricRegistry = context.getMetricRegistry();
+    this.credentials = request.getCredentials();
+    this.user = request.getUser();
+    this.metricRegistry = context.getMetricRegistry();
 
-        retryer =
-                RetryerBuilder.<List<CreditCardAccountContainerEntity>>newBuilder(
-                        new LogUtils(IcsAgent.class), "fetching ics transactions")
-                        .withStopStrategy(StopStrategies.stopAfterAttempt(2))
-                        .withWaitStrategy(WaitStrategies.fixedWait(100, TimeUnit.MILLISECONDS))
-                        .retryIfExceptionOfType(IcsRetryableException.class)
-                        .build();
+    retryer =
+        RetryerBuilder.<List<CreditCardAccountContainerEntity>>newBuilder(
+                new LogUtils(IcsAgent.class), "fetching ics transactions")
+            .withStopStrategy(StopStrategies.stopAfterAttempt(2))
+            .withWaitStrategy(WaitStrategies.fixedWait(100, TimeUnit.MILLISECONDS))
+            .retryIfExceptionOfType(IcsRetryableException.class)
+            .build();
+  }
+
+  @Override
+  public boolean login() throws AuthenticationException, AuthorizationException {
+    return true; // We can always login since we are using a static token as authentication towards
+                 // ABN AMRO
+  }
+
+  @Override
+  public void logout() throws Exception {
+    // NOP
+  }
+
+  @Override
+  public void setConfiguration(AgentsServiceConfiguration configuration) {
+    super.setConfiguration(configuration);
+
+    AbnAmroConfiguration abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
+
+    try {
+      this.ibSubscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, metricRegistry);
+    } catch (Exception e) {
+      throw new RuntimeException("Could not instantiate Internet Banking Client", e);
+    }
+  }
+
+  private AbnAmroConfiguration getValidAbnAmroConfiguration(
+      AgentsServiceConfiguration configuration) {
+    if (Objects.nonNull(configuration.getAbnAmro())) {
+      return configuration.getAbnAmro();
     }
 
-    @Override
-    public boolean login() throws AuthenticationException, AuthorizationException {
-        return true; // We can always login since we are using a static token as authentication towards ABN AMRO
+    String clusterIdentifier =
+        Optional.ofNullable(context.getClusterId())
+            .orElseThrow(() -> new IllegalStateException("Failed to fetch cluster identifier."));
+
+    switch (clusterIdentifier.toLowerCase()) {
+      case "leeds-staging":
+        return configuration.getAbnAmroStaging();
+      case "leeds-production":
+        return configuration.getAbnAmroProduction();
+      default:
+        throw new IllegalStateException("This agent can only be used by Leeds cluster.");
+    }
+  }
+
+  /**
+   * The ICS API support refresh of multiple accounts/contracts at the same time but if one fails
+   * then it fails for all of them and we don't want that.
+   *
+   * @param bcNumber Bank Customer Number (The number that we identify the user with at ABN AMRO)
+   * @param contractNumbers A set of contracts for which we should try to fetch transactions
+   */
+  private Map<Account, List<Transaction>> getAccountDetails(
+      String bcNumber, Set<Long> contractNumbers) {
+
+    ErrorMessageBuilder errorMessageBuilder =
+        new ErrorMessageBuilder(Catalog.getCatalog(user.getProfile().getLocale()));
+
+    for (Long contractNumber : contractNumbers) {
+      try {
+        return updateAccountAndTransactions(bcNumber, contractNumber);
+      } catch (Exception e) {
+        log.error("Error when calling ABN AMRO credit card service", e);
+        errorMessageBuilder.addException(contractNumber, e);
+      }
     }
 
-    @Override
-    public void logout() throws Exception {
-        // NOP
+    if (errorMessageBuilder.hasExceptions()) {
+      statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessageBuilder.build());
+    }
+    return Collections.EMPTY_MAP;
+  }
+
+  /**
+   * Retrieve transactions for a specific contract that belongs to a customer (Bank Customer Number)
+   */
+  private Map<Account, List<Transaction>> updateAccountAndTransactions(
+      String bcNumber, Long contractNumber) throws Exception {
+    List<CreditCardAccountContainerEntity> entities =
+        retryer.call(
+            () ->
+                ibSubscriptionClient.getCreditCardAccountAndTransactions(bcNumber, contractNumber));
+
+    Map<Account, List<Transaction>> result = new HashMap<>();
+
+    for (CreditCardAccountContainerEntity entity : entities) {
+      CreditCardAccountEntity creditCardAccount = entity.getCreditCardAccount();
+
+      Account account =
+          AccountMapper.toAccount(
+              creditCardAccount, shouldUseNewIcsAccountFormat(user.getFlags()));
+
+      List<Transaction> transactions =
+          creditCardAccount
+              .getTransactions()
+              .stream()
+              .filter(TransactionContainerEntity::isInEUR)
+              .map(TransactionMapper::toTransaction)
+              .collect(Collectors.toList());
+
+      result.put(account, transactions);
+    }
+    return result;
+  }
+
+  public static boolean shouldUseNewIcsAccountFormat(List<String> featureFlags) {
+      return featureFlags.contains(FeatureFlags.ABN_AMRO_ICS_NEW_ACCOUNT_FORMAT);
+  }
+
+  private Map<Account, List<Transaction>> getAccounts(String bcNumber, Set<Long> contractNumbers) {
+    return getAccountDetails(bcNumber, contractNumbers);
+  }
+
+  @Override
+  public FetchAccountsResponse fetchCreditCardAccounts() {
+    AbnAmroIcsCredentials abnAmroIcsCredentials = new AbnAmroIcsCredentials(credentials);
+
+    String bcNumber = abnAmroIcsCredentials.getBcNumber();
+    Set<Long> contractNumbers = abnAmroIcsCredentials.getContractNumbers();
+
+    Preconditions.checkNotNull(bcNumber);
+
+    if (contractNumbers.isEmpty()) {
+      return new FetchAccountsResponse(Lists.emptyList());
     }
 
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        super.setConfiguration(configuration);
+    this.accounts = getAccounts(bcNumber, contractNumbers);
 
-        AbnAmroConfiguration abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
+    return new FetchAccountsResponse(new ArrayList<>(this.accounts.keySet()));
+  }
 
-        try {
-            this.ibSubscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, metricRegistry);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not instantiate Internet Banking Client", e);
-        }
-    }
-
-    private AbnAmroConfiguration getValidAbnAmroConfiguration(AgentsServiceConfiguration configuration) {
-        if (Objects.nonNull(configuration.getAbnAmro())) {
-            return configuration.getAbnAmro();
-        }
-
-        String clusterIdentifier = Optional.ofNullable(context.getClusterId())
-                .orElseThrow(() -> new IllegalStateException("Failed to fetch cluster identifier."));
-
-        switch (clusterIdentifier.toLowerCase()) {
-        case "leeds-staging":
-            return configuration.getAbnAmroStaging();
-        case "leeds-production":
-            return configuration.getAbnAmroProduction();
-        default:
-            throw new IllegalStateException("This agent can only be used by Leeds cluster.");
-        }
-    }
-
-    /**
-     * The ICS API support refresh of multiple accounts/contracts at the same time but if one fails then it fails for
-     * all of them and we don't want that.
-     * @param bcNumber Bank Customer Number (The number that we identify the user with at ABN AMRO)
-     * @param contractNumbers A set of contracts for which we should try to fetch transactions
-     */
-    private Map<Account, List<Transaction>> getAccountDetails(
-            String bcNumber, Set<Long> contractNumbers) {
-
-        ErrorMessageBuilder errorMessageBuilder =
-                new ErrorMessageBuilder(Catalog.getCatalog(user.getProfile().getLocale()));
-
-        for (Long contractNumber : contractNumbers) {
-            try {
-                return updateAccountAndTransactions(bcNumber, contractNumber);
-            } catch (Exception e) {
-                log.error("Error when calling ABN AMRO credit card service", e);
-                errorMessageBuilder.addException(contractNumber, e);
-            }
-        }
-
-        if (errorMessageBuilder.hasExceptions()) {
-            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR, errorMessageBuilder.build());
-        }
-        return Collections.EMPTY_MAP;
-    }
-
-
-    /**
-     * Retrieve transactions for a specific contract that belongs to a customer (Bank Customer Number)
-     */
-    private Map<Account, List<Transaction>> updateAccountAndTransactions(
-            String bcNumber, Long contractNumber) throws Exception {
-        List<CreditCardAccountContainerEntity> entities =
-                retryer.call(
-                        () ->
-                                ibSubscriptionClient.getCreditCardAccountAndTransactions(bcNumber, contractNumber));
-
-        Map<Account, List<Transaction>> result = new HashMap<>();
-
-        for (CreditCardAccountContainerEntity entity : entities) {
-            CreditCardAccountEntity creditCardAccount = entity.getCreditCardAccount();
-
-            Account account =
-                    AccountMapper.toAccount(
-                            creditCardAccount, shouldUseNewIcsAccountFormat(user.getFlags()));
-
-            List<Transaction> transactions =
-                    creditCardAccount
-                            .getTransactions()
-                            .stream()
-                            .filter(TransactionContainerEntity::isInEUR)
-                            .map(TransactionMapper::toTransaction)
-                            .collect(Collectors.toList());
-
-            result.put(account, transactions);
-        }
-        return result;
-    }
-
-    public static boolean shouldUseNewIcsAccountFormat(List<String> featureFlags) {
-        return featureFlags.contains(FeatureFlags.ABN_AMRO_ICS_NEW_ACCOUNT_FORMAT);
-    }
-
-    private Map<Account, List<Transaction>> getAccounts(String bcNumber, Set<Long> contractNumbers) {
-        return getAccountDetails(bcNumber, contractNumbers);
-    }
-
-    @Override
-    public FetchAccountsResponse fetchCreditCardAccounts() {
-        AbnAmroIcsCredentials abnAmroIcsCredentials = new AbnAmroIcsCredentials(credentials);
-
-        String bcNumber = abnAmroIcsCredentials.getBcNumber();
-        Set<Long> contractNumbers = abnAmroIcsCredentials.getContractNumbers();
-
-        Preconditions.checkNotNull(bcNumber);
-
-        if (contractNumbers.isEmpty()) {
-            return new FetchAccountsResponse(Lists.emptyList());
-        }
-
-        this.accounts = getAccounts(bcNumber, contractNumbers);
-
-        return new FetchAccountsResponse(new ArrayList<>(this.accounts.keySet()));
-    }
-
-    @Override
-    public FetchTransactionsResponse fetchCreditCardTransactions() {
-        return new FetchTransactionsResponse(this.accounts);
-    }
+  @Override
+  public FetchTransactionsResponse fetchCreditCardTransactions() {
+    return new FetchTransactionsResponse(this.accounts);
+  }
 }
