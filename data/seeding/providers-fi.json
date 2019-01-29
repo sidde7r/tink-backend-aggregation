@@ -188,7 +188,7 @@
       "transactional": "true"
     },
     {
-      "className": "nxgen.fi.banks.nordea.v30.NordeaFiAgent",
+      "className": "nxgen.fi.banks.nordea.v33.NordeaFIAgent",
       "credentialsType": "THIRD_PARTY_APP",
       "displayDescription": "Nordea Codes App",
       "displayName": "Nordea",
