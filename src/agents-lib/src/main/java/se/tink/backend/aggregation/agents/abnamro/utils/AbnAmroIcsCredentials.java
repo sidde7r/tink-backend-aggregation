@@ -13,7 +13,7 @@ import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
-import se.tink.backend.core.Provider;
+import se.tink.libraries.provider.rpc.Provider;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.abnamro.utils.AbnAmroLegacyUserUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;

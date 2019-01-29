@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.provider.enums;
 
 public enum ProviderStatuses {
     ENABLED, // Provider is refreshed and shown in providers list.

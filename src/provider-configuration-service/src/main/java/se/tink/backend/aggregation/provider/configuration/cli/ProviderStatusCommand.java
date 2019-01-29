@@ -9,9 +9,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
-import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
-import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
-import se.tink.backend.core.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderStatuses;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 
 import java.io.IOException;

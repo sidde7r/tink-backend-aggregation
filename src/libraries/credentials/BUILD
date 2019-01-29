@@ -12,6 +12,7 @@ java_library(
         ":enums",
         "//src/libraries/date",
         "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/provider:rpc",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/main-api",

@@ -13,6 +13,8 @@ java_library(
         "//src/libraries/jersey_guice:jersey-guice",
         "//src/libraries/jersey_log:jersey-log",
         "//src/libraries/metrics",
+        "//src/libraries/provider:enums",
+        "//src/libraries/provider:rpc",
         "//src/libraries/repository",
         "//src/libraries/serialization",
         "//src/libraries/service_version:service-version",

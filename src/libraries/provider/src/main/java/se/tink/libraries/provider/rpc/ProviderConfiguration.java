@@ -1,17 +1,13 @@
-package se.tink.backend.core;
+package se.tink.libraries.provider.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.protostuff.Exclude;
-import io.protostuff.Tag;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +21,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
+import se.tink.backend.core.Field;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.provider.enums.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @Entity
-@Table(name = "providers")
-@JsonInclude(Include.NON_NULL)
+@Table(name = "provider_configurations")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Provider implements Cloneable {
+public class ProviderConfiguration {
     private static final String DEMO_AGENT_CLASS_NAME = "demo.DemoAgent";
 
     @SuppressWarnings("serial")
@@ -40,82 +38,53 @@ public class Provider implements Cloneable {
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
-    @Tag(15)
+
     @Column(name = "`capabilities`")
-    @Type(type = "text")
+//    @Type(type = "text")
     @ApiModelProperty(name = "capabilitiesSerialized", hidden = true)
     private String capabilitiesSerialized;
-    @Exclude
     @ApiModelProperty(name = "className", hidden = true)
     private String className;
     @Enumerated(EnumType.STRING)
-    @Tag(5)
     private CredentialsTypes credentialsType;
-    @Exclude
     private String currency;
-    @Tag(2)
     private String displayName;
-    @Exclude
-    private String email;
     @JsonProperty("fields")
     @Column(name = "`fields`")
     @Type(type = "text")
-    @Tag(9)
     private String fieldsSerialized;
     @JsonProperty("supplementalFields")
-    @Transient
-    @Tag(16)
+    @Column(name = "`supplementalFields`")
+    @Type(type = "text")
     private String supplementalFieldsSerialized;
-    @Tag(10)
     private String groupDisplayName;
-    @Exclude
     private String market;
-    @Exclude
     private boolean multiFactor;
     @Id
-    @Tag(1)
     private String name;
     @Type(type = "text")
-    @Tag(6)
     private String passwordHelpText;
-    @Type(type = "text")
-    @Exclude
+//    @Type(type = "text")
     @ApiModelProperty(name = "payload", hidden = true)
     private String payload;
-    @Exclude
-    private String phone;
-    @Tag(7)
     private boolean popular;
     @JsonIgnore
-    @Exclude
     @ApiModelProperty(name = "refreshFrequency", hidden = true)
     private double refreshFrequency;
     @JsonIgnore
-    @Exclude
     private double refreshFrequencyFactor;
     @Enumerated(EnumType.STRING)
-    @Tag(4)
     private ProviderStatuses status;
-    @Tag(8)
     private boolean transactional;
     @Enumerated(EnumType.STRING)
-    @Tag(3)
     private ProviderTypes type;
-    @Exclude
-    private String url;
-    @Tag(11)
-    @ApiModelProperty(name = "tutorialUrl", hidden = true)
-    private String tutorialUrl;
-    @Tag(14)
     private String displayDescription;
     @Column(name = "`refreshschedule`")
     @Type(type = "text")
-    @Exclude
     private String refreshScheduleSerialized;
 
-    public Provider() {
+    public ProviderConfiguration() {
         setFields(Lists.<Field> newArrayList());
-        setSupplementalFields(Lists.<Field> newArrayList());
     }
 
     @Override
@@ -139,7 +108,7 @@ public class Provider implements Cloneable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Provider other = (Provider) obj;
+        ProviderConfiguration other = (ProviderConfiguration) obj;
         if (name == null) {
             if (other.name != null) {
                 return false;
@@ -150,14 +119,6 @@ public class Provider implements Cloneable {
         return true;
     }
 
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "additionalInformationCaption", hidden = true)
-    public String getAdditionalInformationCaption() {
-        Field field = getField(Field.Key.ADDITIONAL_INFORMATION);
-
-        return (field != null ? field.getDescription() : null);
-    }
 
     @ApiModelProperty(name = "capabilities", hidden = true)
     @JsonProperty("capabilities")
@@ -195,11 +156,6 @@ public class Provider implements Cloneable {
     @ApiModelProperty(name = "displayDescription", value="The display description of the provider", example = "Mobilt BankID")
     public String getDisplayDescription() {
         return displayDescription;
-    }
-
-    @ApiModelProperty(name = "email", value="The contact information email to the provider")
-    public String getEmail() {
-        return email;
     }
 
     private Field getField(final String name) {
@@ -241,52 +197,12 @@ public class Provider implements Cloneable {
         return name;
     }
 
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "passwordCaption", hidden = true)
-    public String getPasswordCaption() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        return (field != null ? field.getDescription() : null);
-    }
-
     public String getPasswordHelpText() {
         return passwordHelpText;
     }
 
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "passwordIsPIN", hidden = true)
-    public boolean getPasswordIsPIN() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        if (field == null) {
-            return false;
-        }
-
-        if (Objects.equal("PIN-kod", field.getDescription())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "passwordLength", hidden = true)
-    public int getPasswordLength() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        return ((field != null && field.getMaxLength() != null) ? field.getMaxLength() : 0);
-    }
-
     public String getPayload() {
         return payload;
-    }
-
-    @ApiModelProperty(name = "phone", value="The contact information phone number to the provider")
-    public String getPhone() {
-        return phone;
     }
 
     public double getRefreshFrequency() {
@@ -305,37 +221,6 @@ public class Provider implements Cloneable {
     @ApiModelProperty(name = "type", value="The type of the provider")
     public ProviderTypes getType() {
         return type;
-    }
-
-    @ApiModelProperty(name = "url", value="The contact information URL to the provider")
-    public String getUrl() {
-        return url;
-    }
-
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "usernameCaption", hidden = true)
-    public String getUsernameCaption() {
-        Field field = getField(Field.Key.USERNAME);
-
-        return (field != null ? field.getDescription() : null);
-    }
-
-    @Deprecated
-    @JsonProperty
-    @ApiModelProperty(name = "usernameIsPersonnummer", hidden = true)
-    public boolean getUsernameIsPersonnummer() {
-        Field field = getField(Field.Key.USERNAME);
-
-        if (field == null) {
-            return false;
-        }
-
-        if (Objects.equal(field.getHint(), "ÅÅÅÅMMDDNNNN") || Objects.equal(field.getHint(), "ÅÅMMDDNNNN")) {
-            return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -395,10 +280,6 @@ public class Provider implements Cloneable {
         this.displayDescription = displayDescription;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
     }
@@ -431,10 +312,6 @@ public class Provider implements Cloneable {
         this.payload = payload;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public void setPopular(boolean popular) {
         this.popular = popular;
     }
@@ -459,21 +336,9 @@ public class Provider implements Cloneable {
         this.type = type;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(Provider.class).add("name", name).toString();
-    }
-
-    public String getTutorialUrl() {
-        return tutorialUrl;
-    }
-
-    public void setTutorialUrl(String tutorialUrl) {
-        this.tutorialUrl = tutorialUrl;
     }
 
     @JsonIgnore
@@ -501,14 +366,7 @@ public class Provider implements Cloneable {
      * main to know if an agent implements an interface e.g. TransferExecutor.
      */
     public enum Capability {
-        TRANSFERS,              // backwards compatibility
-        MORTGAGE_AGGREGATION,   // backwards compatibility
-        CHECKING_ACCOUNTS,
-        SAVINGS_ACCOUNTS,
-        CREDIT_CARDS,
-        LOANS,
-        INVESTMENTS,
-        PAYMENTS
+        TRANSFERS, MORTGAGE_AGGREGATION
     }
 
     @JsonProperty("refreshschedule")
@@ -527,3 +385,5 @@ public class Provider implements Cloneable {
                 SerializationUtils.deserializeFromString(refreshScheduleSerialized, ProviderRefreshSchedule.class));
     }
 }
+
+

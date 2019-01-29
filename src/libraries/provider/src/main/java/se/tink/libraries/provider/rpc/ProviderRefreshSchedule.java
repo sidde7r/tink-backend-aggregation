@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.provider.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

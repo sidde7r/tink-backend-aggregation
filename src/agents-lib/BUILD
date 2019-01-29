@@ -48,6 +48,7 @@ java_library(
         "//src/libraries/phone_number_utils",
         "//src/libraries/queue-lib",
         "//src/libraries/queue-sqs",
+        "//src/libraries/provider:rpc",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
         "//src/libraries/social_security_number:social-security-number",

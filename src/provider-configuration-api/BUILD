@@ -8,6 +8,8 @@ java_library(
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",
         "//src/libraries/jersey_utils:jersey-utils",
+        "//src/libraries/provider:enums",
+        "//src/libraries/provider:rpc",
         "//src/libraries/serialization",
         "//src/main-api",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

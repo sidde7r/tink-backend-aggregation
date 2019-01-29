@@ -31,7 +31,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import se.tink.backend.core.Field;
-import se.tink.backend.core.Provider;
+import se.tink.libraries.provider.rpc.Provider;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
