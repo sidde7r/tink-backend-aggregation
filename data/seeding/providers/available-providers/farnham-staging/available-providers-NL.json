@@ -1,9 +1,0 @@
-{
-  "clusterid" : "farnham-staging",
-  "providers" : [
-    "nl-abnamro",
-    "nl-bunq",
-    "nl-test-password",
-    "nl-test-multi-supplemental"
-  ]
-}

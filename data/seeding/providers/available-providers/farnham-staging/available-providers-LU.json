@@ -1,7 +1,0 @@
-{
-  "clusterid" : "farnham-staging",
-  "providers" : [
-    "lu-bcee",
-    "lu-keytrade-bank"
-  ]
-}
