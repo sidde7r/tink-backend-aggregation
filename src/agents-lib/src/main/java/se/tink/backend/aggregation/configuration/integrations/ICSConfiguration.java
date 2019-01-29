@@ -13,71 +13,74 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ICSConfiguration {
-  @JsonProperty private String clientId;
-  @JsonProperty private String clientSecret;
-  @JsonProperty private String clientSSLCertificate;
-  @JsonProperty private String rootCACertificate;
-  @JsonProperty private String rootCAPassword;
+    @JsonProperty private String clientId;
+    @JsonProperty private String clientSecret;
+    @JsonProperty private String clientSSLCertificate;
+    @JsonProperty private String rootCACertificate;
+    @JsonProperty private String rootCAPassword;
 
-  @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(ICSConfiguration.class);
-  @JsonIgnore private static final LogTag MISSING_CONFIG = LogTag.from("ICS_MISSING_CONFIG");
+    @JsonIgnore
+    private static final Logger logger = LoggerFactory.getLogger(ICSConfiguration.class);
 
-  public String getClientId() {
-    return clientId;
-  }
+    @JsonIgnore private static final LogTag MISSING_CONFIG = LogTag.from("ICS_MISSING_CONFIG");
 
-  public String getClientSecret() {
-    return clientSecret;
-  }
-
-  public String getClientSSLCertificate() {
-    return clientSSLCertificate;
-  }
-
-  public String getRootCACertificate() {
-    return rootCACertificate;
-  }
-
-  public String getRootCAPassword() {
-    return rootCAPassword;
-  }
-
-  public boolean isValid() {
-
-    if (!Strings.isNullOrEmpty(clientId)
-        && !Strings.isNullOrEmpty(clientSecret)
-        && !Strings.isNullOrEmpty(clientSSLCertificate)
-        && !Strings.isNullOrEmpty(rootCACertificate)
-        && !Strings.isNullOrEmpty(rootCAPassword)) {
-      return true;
-    } else {
-      List<String> list = new ArrayList<>();
-
-      if (Strings.isNullOrEmpty(clientId)) {
-        list.add("clientId");
-      }
-
-      if (Strings.isNullOrEmpty(clientSecret)) {
-        list.add("clientSecret");
-      }
-
-      if (Strings.isNullOrEmpty(clientSSLCertificate)) {
-        list.add("clientSSLCertificate");
-      }
-
-      if (Strings.isNullOrEmpty(rootCACertificate)) {
-        list.add("rootCACertificate");
-      }
-
-      if (Strings.isNullOrEmpty(rootCAPassword)) {
-        list.add("rootCAPassword");
-      }
-
-      logger.error(
-          "{} - Missing ICS configuration: {}", MISSING_CONFIG,
-          Arrays.toString(list.toArray()));
-
-      return false;
+    public String getClientId() {
+        return clientId;
     }
-  }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public String getClientSSLCertificate() {
+        return clientSSLCertificate;
+    }
+
+    public String getRootCACertificate() {
+        return rootCACertificate;
+    }
+
+    public String getRootCAPassword() {
+        return rootCAPassword;
+    }
+
+    public boolean isValid() {
+
+        if (!Strings.isNullOrEmpty(clientId)
+                && !Strings.isNullOrEmpty(clientSecret)
+                && !Strings.isNullOrEmpty(clientSSLCertificate)
+                && !Strings.isNullOrEmpty(rootCACertificate)
+                && !Strings.isNullOrEmpty(rootCAPassword)) {
+            return true;
+        } else {
+            List<String> list = new ArrayList<>();
+
+            if (Strings.isNullOrEmpty(clientId)) {
+                list.add("clientId");
+            }
+
+            if (Strings.isNullOrEmpty(clientSecret)) {
+                list.add("clientSecret");
+            }
+
+            if (Strings.isNullOrEmpty(clientSSLCertificate)) {
+                list.add("clientSSLCertificate");
+            }
+
+            if (Strings.isNullOrEmpty(rootCACertificate)) {
+                list.add("rootCACertificate");
+            }
+
+            if (Strings.isNullOrEmpty(rootCAPassword)) {
+                list.add("rootCAPassword");
+            }
+
+            logger.error(
+                    "{} - Missing ICS configuration: {}",
+                    MISSING_CONFIG,
+                    Arrays.toString(list.toArray()));
+
+            return false;
+        }
+    }
 }
