@@ -261,15 +261,6 @@ public class RefreshControllersTest {
     }
     */
 
-    @Test
-    public void ensureNullEInvoiceFetcher_doesNotRenderNullPointer() {
-        Mockito.when(eInvoiceFetcher.fetchEInvoices()).thenReturn(null);
-
-        getRefreshController(EInvoiceRefreshController.class)
-                .ifPresent(EInvoiceRefreshController::refreshEInvoices);
-        executionOrder.verify(eInvoiceFetcher).fetchEInvoices();
-    }
-
     @SuppressWarnings("unchecked")
     private <T extends Refresher> List<T> getRefreshControllersOfType(Class<T> cls) {
         return refreshers.stream()
