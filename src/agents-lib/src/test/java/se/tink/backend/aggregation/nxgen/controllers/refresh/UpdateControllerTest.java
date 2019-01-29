@@ -1,10 +1,5 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,17 +7,22 @@ import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.constants.MarketCode;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.constants.MarketCode;
+import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.user.rpc.User;
 
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
 public final class UpdateControllerTest {
@@ -39,7 +39,7 @@ public final class UpdateControllerTest {
 
     @Test
     public void ensureLoansRemain_whenTransactions_areRefreshed() {
-        final UpdateController updateController = new UpdateController(context, MarketCode.SE, "SEK", user);
+        final UpdateController updateController = new UpdateController(MarketCode.SE, "SEK", user);
 
         final LoanAccount loanAccount = LoanAccount.builder("1337")
                 .setAccountNumber("777")
@@ -61,7 +61,7 @@ public final class UpdateControllerTest {
 
     @Test
     public void ensureCacheTransactions_whenUpdateTransactions_isNotCalledWithNull() {
-        final UpdateController updateController = new UpdateController(context, MarketCode.SE, "SEK", user);
+        final UpdateController updateController = new UpdateController(MarketCode.SE, "SEK", user);
 
         final LoanAccount loanAccount = LoanAccount.builder("1337")
                 .setAccountNumber("777")

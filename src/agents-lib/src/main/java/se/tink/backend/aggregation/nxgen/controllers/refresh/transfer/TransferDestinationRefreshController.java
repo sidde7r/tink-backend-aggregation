@@ -2,15 +2,15 @@ package se.tink.backend.aggregation.nxgen.controllers.refresh.transfer;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.metrics.MetricId;
+
+import java.util.*;
 
 public final class TransferDestinationRefreshController implements Refresher {
     private static final MetricId METRIC_ID = Refresher.REFRESHER_METRIC_ID
@@ -30,30 +30,31 @@ public final class TransferDestinationRefreshController implements Refresher {
             .build();
 
     private final MetricRefreshController metricRefreshController;
-    private final UpdateController updateController;
     private final TransferDestinationFetcher transferDestinationFetcher;
 
     public TransferDestinationRefreshController(MetricRefreshController metricRefreshController,
             UpdateController updateController, TransferDestinationFetcher transferDestinationFetcher) {
         this.metricRefreshController = Preconditions.checkNotNull(metricRefreshController);
-        this.updateController = Preconditions.checkNotNull(updateController);
         this.transferDestinationFetcher = Preconditions.checkNotNull(transferDestinationFetcher);
     }
 
-    public void refreshTransferDestinationsFor(Collection<Account> accounts) {
+    public Map<Account, List<TransferDestinationPattern>> refreshTransferDestinationsFor(Collection<Account> accounts) {
         MetricRefreshAction action = metricRefreshController.buildAction(METRIC_ID, COUNTER_METRIC_BUCKETS);
 
         try {
             action.start();
+            Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
 
             Optional.ofNullable(transferDestinationFetcher.fetchTransferDestinationsFor(accounts))
                     .ifPresent(destinationsResponse -> {
-                        updateController.updateTransferDestinationPatterns(destinationsResponse);
+
+                        transferDestinations.putAll(destinationsResponse.getDestinations());
                         destinationsResponse.getDestinations().values()
                                 .forEach(destinations -> action.count(destinations.size()));
                     });
 
             action.completed();
+            return transferDestinations;
         } catch (RuntimeException e) {
             action.failed();
             throw e;

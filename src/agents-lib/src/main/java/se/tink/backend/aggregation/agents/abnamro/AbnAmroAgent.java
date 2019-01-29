@@ -5,15 +5,12 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Uninterruptibles;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
@@ -22,15 +19,10 @@ import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.libraries.user.rpc.User;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
 import se.tink.libraries.abnamro.client.exceptions.IcsException;
@@ -45,6 +37,15 @@ import se.tink.libraries.abnamro.utils.AbnAmroUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.phonenumbers.InvalidPhoneNumberException;
 import se.tink.libraries.phonenumbers.utils.PhoneNumberUtils;
+import se.tink.libraries.user.rpc.User;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * This is the new AbnAmroAgent that will be used for Grip 3.0. It also includes ICS.
@@ -72,7 +73,6 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         this.catalog = Catalog.getCatalog(user.getLocale());
         this.existingAccounts = request.getAccounts();
     }
-
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         this.abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);

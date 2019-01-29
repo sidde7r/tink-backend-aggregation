@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh;
 
 import com.google.common.collect.ImmutableList;
-import java.util.List;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.metrics.MetricId;
+
+import java.util.List;
+import java.util.Map;
 
 public interface TransactionRefresher extends Refresher {
     MetricId METRIC_ID = REFRESHER_METRIC_ID.label(METRIC_ITEM_TYPE, "transactions");
@@ -18,5 +22,5 @@ public interface TransactionRefresher extends Refresher {
             .add(10000)
             .add(20000)
             .build();
-    void refreshTransactions();
+    Map<Account, List<Transaction>> refreshTransactions();
 }
