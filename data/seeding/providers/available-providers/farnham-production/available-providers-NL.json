@@ -1,9 +1,0 @@
-{
-  "clusterid" : "farnham-production",
-  "providers" : [
-    "nl-abnamro",
-    "nl-bunq",
-    "nl-bunq-apikey",
-    "nl-bunq-sandbox-apikey"
-  ]
-}
