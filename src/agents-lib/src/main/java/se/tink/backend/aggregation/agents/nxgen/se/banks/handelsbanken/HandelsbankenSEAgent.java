@@ -103,7 +103,6 @@ public class HandelsbankenSEAgent
             HandelsbankenSessionStorage sessionStorage) {
         return Optional.of(new EInvoiceRefreshController(
                 metricRefreshController,
-                updateController,
                 new HandelsbankenSEEInvoiceFetcher(client, sessionStorage)
         ));
     }

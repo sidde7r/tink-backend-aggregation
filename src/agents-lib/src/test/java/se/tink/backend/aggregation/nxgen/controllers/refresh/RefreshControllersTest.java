@@ -106,7 +106,7 @@ public class RefreshControllersTest {
                         creditCardAccountFetcher, creditCardTransactionFetcher))
                 .add(new InvestmentRefreshController(metricRefreshController, updateController, investmentFetcher))
                 .add(new LoanRefreshController(metricRefreshController, updateController, loanFetcher))
-                .add(new EInvoiceRefreshController(metricRefreshController, updateController, eInvoiceFetcher))
+                .add(new EInvoiceRefreshController(metricRefreshController, eInvoiceFetcher))
                 .add(new TransferDestinationRefreshController(metricRefreshController, transferDestinationFetcher))
                 .build();
     }

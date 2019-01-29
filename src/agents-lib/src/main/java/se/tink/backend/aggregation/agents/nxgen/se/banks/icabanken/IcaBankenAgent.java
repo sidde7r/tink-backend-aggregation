@@ -115,7 +115,6 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
         return Optional.of(new EInvoiceRefreshController(
                         metricRefreshController,
-                        updateController,
                         eInvoiceFetcher)
         );
     }

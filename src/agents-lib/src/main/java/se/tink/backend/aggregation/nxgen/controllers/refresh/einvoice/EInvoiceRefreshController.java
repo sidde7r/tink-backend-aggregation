@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.metrics.MetricId;
 
@@ -28,13 +27,11 @@ public final class EInvoiceRefreshController implements Refresher {
             .build();
 
     private final MetricRefreshController metricRefreshController;
-    private final UpdateController updateController;
     private final EInvoiceFetcher eInvoiceFetcher;
 
-    public EInvoiceRefreshController(MetricRefreshController metricRefreshController, UpdateController updateController,
+    public EInvoiceRefreshController(MetricRefreshController metricRefreshController,
             EInvoiceFetcher eInvoiceFetcher) {
         this.metricRefreshController = Preconditions.checkNotNull(metricRefreshController);
-        this.updateController = Preconditions.checkNotNull(updateController);
         this.eInvoiceFetcher = Preconditions.checkNotNull(eInvoiceFetcher);
     }
 

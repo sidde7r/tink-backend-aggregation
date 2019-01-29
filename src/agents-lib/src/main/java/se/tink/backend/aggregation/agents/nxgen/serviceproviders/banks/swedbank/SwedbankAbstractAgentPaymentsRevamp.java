@@ -108,7 +108,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
     @Override
     protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
         return Optional.of(
-                new EInvoiceRefreshController(metricRefreshController, updateController,
+                new EInvoiceRefreshController(metricRefreshController,
                         new SwedbankDefaultEinvoiceFetcher(apiClient)));
     }
 
