@@ -13,15 +13,17 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
 import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
-import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroAgentUtils;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
@@ -34,11 +36,15 @@ import se.tink.libraries.abnamro.client.rpc.enrollment.CollectEnrollmentResponse
 import se.tink.libraries.abnamro.client.rpc.enrollment.InitiateEnrollmentResponse;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.abnamro.utils.AbnAmroUtils;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.phonenumbers.InvalidPhoneNumberException;
 import se.tink.libraries.phonenumbers.utils.PhoneNumberUtils;
 import se.tink.libraries.user.rpc.User;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,10 +53,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-/**
- * This is the new AbnAmroAgent that will be used for Grip 3.0. It also includes ICS.
- */
-public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecutor {
+/** This is the new AbnAmroAgent that will be used for Grip 3.0. It also includes ICS. */
+public class AbnAmroAgent extends AbstractAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor {
     private static final Minutes AUTHENTICATION_TIMEOUT = Minutes.minutes(5);
 
     private final Credentials credentials;
@@ -177,39 +184,6 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         return Optional.empty();
     }
 
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
-            updateAccountPerType(item);
-            break;
-        case CREDITCARD_ACCOUNTS:
-        case CREDITCARD_TRANSACTIONS:
-            updateAllCreditCardAccounts(item);
-            break;
-        default:
-            // Info instead of warn because the ABN agent only is responsible to fetch new user accounts.
-            log.info(String.format("Refresh for item (%s) not implemented", item));
-            break;
-        }
-    }
-
-    private void updateAccountPerType(RefreshableItem type) {
-        getAccounts().stream()
-                .filter(account -> type.isAccountType(account.getType()))
-                .forEach(this::updateAccount);
-    }
-
-    private void updateAllCreditCardAccounts(RefreshableItem type) {
-        List<Account> importedAccounts = getAccounts();
-        importedAccounts.stream()
-                .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
-                .forEach(a -> updateCreditCardAccount(a, type));
-        
-            closeExcludeOldDuplicateICSAccounts(importedAccounts);
-    }
-
     private List<Account> getAccounts() {
         if (accounts != null) {
             return accounts;
@@ -225,49 +199,6 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    private void updateAccount(Account account) {
-        // Update the account. This will call system which will subscribe the account towards ABN AMRO if it is
-        // a new account.
-        financialDataCacher.cacheAccount(account);
-        account = context.sendAccountToUpdateService(account.getBankId());
-
-        if (AbnAmroAgentUtils.isSubscribed(account)) {
-            // This is a new account that was subscribed towards ABN AMRO. Tell aggregation that we are waiting
-            // on getting transactions ingested in the connector.
-            log.info(account, "Waiting for updates from the connector...");
-            systemUpdater.setWaitingOnConnectorTransactions(true);
-        }
-    }
-
-    private void updateCreditCardAccount(Account account, RefreshableItem item) {
-        boolean shouldFetchTransactions = Objects.equals(item, RefreshableItem.CREDITCARD_TRANSACTIONS);
-
-        try {
-            if (shouldFetchTransactions) {
-                account.setBalance(getCreditCardBalance(account));
-            }
-
-            financialDataCacher.cacheAccount(account);
-            context.sendAccountToUpdateService(account.getBankId());
-
-            if (shouldFetchTransactions) {
-                refreshCreditCardTransactions(account);
-            }
-        } catch (IcsException e) {
-            if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
-                log.warn("Ignoring error from ICS", e);
-            } else {
-                throw new IllegalStateException(e);
-            }
-        }
-    }
-
-    private void refreshCreditCardTransactions(Account account) throws IcsException {
-        Long accountNumber = getCreditCardContractNumber(account);
-        List<Transaction> transactions = getCreditCardTransactions(accountNumber);
-        financialDataCacher.cacheTransactions(account.getBankId(), transactions);
     }
 
     private Double getCreditCardBalance(Account account) throws IcsException {
@@ -349,5 +280,68 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
     @Override
     public void logout() throws Exception {
         // NOP
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return fetchAccountPerType(RefreshableItem.CHECKING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        List<Account> resultAccounts = new ArrayList<>();
+        List<Account> importedAccounts = getAccounts();
+        importedAccounts.stream()
+                .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
+                .forEach(resultAccounts::add);
+        closeExcludeOldDuplicateICSAccounts(importedAccounts);
+        return new FetchAccountsResponse(resultAccounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+
+        try {
+            Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
+            List<Account> accounts = fetchCreditCardAccounts().getAccounts();
+            for (Account account : accounts) {
+                account.setBalance(getCreditCardBalance(account));
+                context.sendAccountToUpdateService(account.getBankId());
+                Long accountNumber = getCreditCardContractNumber(account);
+                List<Transaction> transactions = getCreditCardTransactions(accountNumber);
+                transactionsMap.put(account, transactions);
+            }
+            return new FetchTransactionsResponse(transactionsMap);
+        } catch (IcsException e) {
+            if (abnAmroConfiguration.shouldIgnoreCreditCardErrors()) {
+                log.warn("Ignoring error from ICS", e);
+                return new FetchTransactionsResponse(Collections.emptyMap());
+            } else {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return fetchAccountPerType(RefreshableItem.SAVING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    private FetchAccountsResponse fetchAccountPerType(RefreshableItem type) {
+        List<Account> accounts = new ArrayList<>();
+        getAccounts().stream()
+                .filter(account -> type.isAccountType(account.getType()))
+                .forEach(accounts::add);
+        return new FetchAccountsResponse(accounts);
     }
 }
