@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.ICSConstants;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -20,6 +20,7 @@ public class ICSConfiguration {
   @JsonProperty private String rootCAPassword;
 
   @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(ICSConfiguration.class);
+  @JsonIgnore private static final LogTag MISSING_CONFIG = LogTag.from("ICS_MISSING_CONFIG");
 
   public String getClientId() {
     return clientId;
@@ -73,8 +74,7 @@ public class ICSConfiguration {
       }
 
       logger.error(
-          "{} - Missing ICS configuration: {}",
-          ICSConstants.Logtag.MISSING_CONFIG,
+          "{} - Missing ICS configuration: {}", MISSING_CONFIG,
           Arrays.toString(list.toArray()));
 
       return false;
