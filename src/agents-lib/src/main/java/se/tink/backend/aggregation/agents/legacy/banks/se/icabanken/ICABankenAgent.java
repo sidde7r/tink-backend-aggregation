@@ -16,77 +16,15 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.lang3.StringEscapeUtils;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
-import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.TransferExecutionException.EndUserMessage;
-import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.icabanken.IcaBankenAccountIdentifierFormatter;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AcceptEInvoiceTransferRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AccountEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AccountsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AssignmentsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.AssignmentsResponseBody;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.BankEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.BankTransferRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.BanksResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.CollectBankIdResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.CollectBankIdResponseBody;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.DepotEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.DepotsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EInvoiceEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EInvoiceResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EndBankIdAuthenticationRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EngagementResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.EngagementResponseBody;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.FundDetails;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.FundHoldingsEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.FundsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.InitBankIdResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.InitSignRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.LoanEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.LoanListEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.LoansResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.LoansResponseBody;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.MortgageEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.MortgageListEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.OwnRecipientEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.PaymentNameResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.PaymentRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.RecipientEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.RecipientsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.Response;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SessionResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SessionResponseBody;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SignBundleResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.SignedAssignmentList;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.TransactionEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.TransactionListResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.TransferRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.TransferResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionEntity;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionsBody;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpcomingTransactionsResponse;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.UpdateEInvoiceRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.ValidateEInvoiceRequest;
-import se.tink.backend.aggregation.agents.banks.se.icabanken.model.ValidateEInvoiceResponse;
+import se.tink.backend.aggregation.agents.banks.se.icabanken.model.*;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.types.IcaDestinationType;
 import se.tink.backend.aggregation.agents.banks.se.icabanken.types.IcaSourceType;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -98,43 +36,57 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.agents.models.*;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
+<<<<<<< HEAD
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
+=======
+import se.tink.backend.aggregation.rpc.CredentialsRequest;
+>>>>>>> refactor(ica-refresher) ica banken refresher refactor
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.models.Portfolio;
-import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
-public class ICABankenAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
-        PersistentLogin {
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import java.text.ParseException;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+public class ICABankenAgent extends AbstractAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
+                TransferExecutor,
+                PersistentLogin {
     // Do not change, will require migration
     private static final String DEVICEAPPLICATIONID_KEY = "deviceApplicationId";
 
@@ -937,7 +889,7 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
     /**
      * Process an account and fetch all the transactions for that account.
      */
-    private void processAccount(AccountEntity accountEntity, UpcomingTransactionsBody upcomingTransactions) throws Exception {
+    private Pair<Account, List<Transaction>> processAccount(AccountEntity accountEntity, UpcomingTransactionsBody upcomingTransactions) throws Exception {
         Account account = accountEntity.toAccount();
 
         ArrayList<Transaction> transactions = Lists.newArrayList();
@@ -953,8 +905,6 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
                 transactions.add(transactionEntity.toTransaction(true));
             }
         }
-
-        statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
 
         TransactionListResponse transactionsResponse = null;
 
@@ -979,12 +929,10 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             for (TransactionEntity transactionEntity : transactionsResponse.getBody().getTransactions()) {
                 transactions.add(transactionEntity.toTransaction());
             }
-
-            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
         } while (!transactionsResponse.getBody().isNoMoreTransactions()
                 && !isContentWithRefresh(account, transactions));
 
-        financialDataCacher.updateTransactions(account, transactions);
+        return Pair.of(account, transactions);
     }
 
     private TransferResponse redoTransferWithValidDate(TransferRequest transferRequest,
@@ -1014,11 +962,6 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
     }
 
-    private void updateEInvoices() {
-        List<Transfer> einvoices = fetchEInvoices().getBody().toTinkTransfers(catalog);
-        systemUpdater.updateEinvoices(einvoices);
-    }
-
     private List<AccountEntity> getAccounts() {
         if (accountEntities != null) {
             return accountEntities;
@@ -1028,95 +971,6 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         return accountEntities;
     }
 
-    private void updateAccountsPerType(RefreshableItem type) {
-        getAccounts().stream()
-                .map(AccountEntity::toAccount)
-                .filter(account -> type.isAccountType(account.getType()))
-                .forEach(context::cacheAccount);
-    }
-
-    private void updateTransactionsPerAccountType(RefreshableItem type) {
-        UpcomingTransactionsBody upcomingTransactions = fetchUpcomingTransactions();
-
-        for (AccountEntity accountEntity : getAccounts()) {
-            Account tinkAccount = accountEntity.toAccount();
-            if (!type.isAccountType(tinkAccount.getType())) {
-                continue;
-            }
-
-            try {
-                processAccount(accountEntity, upcomingTransactions);
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-        }
-    }
-
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case EINVOICES:
-            updateEInvoices();
-            break;
-
-        case TRANSFER_DESTINATIONS:
-            updateTransferDestinations();
-            break;
-
-        case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
-        case CREDITCARD_ACCOUNTS:
-            updateAccountsPerType(item);
-            break;
-
-        case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
-        case CREDITCARD_TRANSACTIONS:
-        case LOAN_TRANSACTIONS:
-            updateTransactionsPerAccountType(item);
-            break;
-
-        case LOAN_ACCOUNTS:
-            try {
-                updateLoans();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case INVESTMENT_ACCOUNTS:
-            try {
-                updateInvestmentAccounts();
-            } catch (Exception e) {
-                // Don't fail the whole refresh just because we failed updating investment data but log error.
-                log.error("Caught exception while updating investment data", e);
-            }
-            break;
-
-        case INVESTMENT_TRANSACTIONS:
-            // nop
-            break;
-        }
-    }
-
-    private void updateInvestmentAccounts() {
-        List<DepotEntity> depots = fetchDepots();
-        logDepots(depots);
-        for (DepotEntity depot : depots) {
-            Account account = depot.toAccount();
-            Portfolio portfolio = depot.toPortfolio();
-
-            List<Instrument> instruments = Lists.newArrayList();
-
-            depot.getFundHoldings().forEach(fund ->
-                            toInstrument(fund, fetchFundDetails(fund.getFundId())).ifPresent(instruments::add));
-
-            portfolio.setInstruments(instruments);
-
-            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
-        }
-    }
-    
     private void logDepots(List<DepotEntity> depots) {
         LogTag investmentLogTag = LogTag.from("icabanken_investment");
         try{
@@ -1150,36 +1004,6 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         return Optional.of(instrument);
     }
 
-    private void updateLoans() throws Exception {
-
-        EngagementResponseBody engagementResponse = createClientRequest(ENGAGEMENTS_URL)
-                .get(EngagementResponse.class).getBody();
-
-        if (engagementResponse.hasLoans()) {
-
-            LoansResponseBody loansResponseBody = createClientRequest(LOANS_URL)
-                    .get(LoansResponse.class).getBody();
-
-            LoanListEntity loansList = loansResponseBody.getLoanList();
-            MortgageListEntity mortgageList = loansResponseBody.getMortgageList();
-
-            if (loansList.getLoans() != null) {
-
-                logLoansIfNotEmpty(loansList.getLoans());
-
-                for (LoanEntity loanEntity : loansList.getLoans()) {
-                    updateAccount(loanEntity);
-                }
-            }
-
-            if (mortgageList.getMortgages() != null) {
-                for (MortgageEntity mortgageEntity : mortgageList.getMortgages()) {
-                    updateAccount(mortgageEntity);
-                }
-            }
-        }
-    }
-
     private void logLoansIfNotEmpty(List<LoanEntity> loansList) {
         if (!loansList.isEmpty()) {
             log.infoExtraLong(
@@ -1188,18 +1012,18 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
         }
     }
 
-    private void updateAccount(LoanEntity loanEntity) throws Exception {
+    private Pair<Account, AccountFeatures> updateAccount(LoanEntity loanEntity) throws Exception {
         Account account = loanEntity.toAccount();
         Loan loan = loanEntity.toLoan();
 
-        financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
+        return Pair.of(account, AccountFeatures.createForLoan(loan));
     }
 
-    private void updateAccount(MortgageEntity mortgageEntity) throws Exception {
+    private Pair<Account, AccountFeatures> updateAccount(MortgageEntity mortgageEntity) throws Exception {
         Account account = mortgageEntity.toAccount();
         Loan loan = mortgageEntity.toLoan();
 
-        financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
+        return Pair.of(account, AccountFeatures.createForLoan(loan));
     }
 
     private Optional<RecipientEntity> tryFindRegisteredDestinationAccount(AccountIdentifier destination) {
@@ -1530,4 +1354,149 @@ public class ICABankenAgent extends AbstractAgent implements RefreshableItemExec
             return userMessage;
         }
     }
+
+    //////////// Refresh Executor Refactor /////////////
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return fetchAccountsPerType(RefreshableItem.CHECKING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return fetchTransactionsPerAccountType(RefreshableItem.CHECKING_TRANSACTIONS);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return fetchAccountsPerType(RefreshableItem.CREDITCARD_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return fetchTransactionsPerAccountType(RefreshableItem.CREDITCARD_TRANSACTIONS);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return fetchAccountsPerType(RefreshableItem.SAVING_ACCOUNTS);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return fetchTransactionsPerAccountType(RefreshableItem.SAVING_TRANSACTIONS);
+    }
+
+    private FetchAccountsResponse fetchAccountsPerType(RefreshableItem type) {
+        List<Account> accounts = new ArrayList<>();
+        getAccounts().stream()
+                .map(AccountEntity::toAccount)
+                .filter(account -> type.isAccountType(account.getType()))
+                .forEach(accounts::add);
+        return new FetchAccountsResponse(accounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return fetchTransactionsPerAccountType(RefreshableItem.LOAN_TRANSACTIONS);
+    }
+
+    private FetchTransactionsResponse fetchTransactionsPerAccountType(RefreshableItem type) {
+        Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
+
+        UpcomingTransactionsBody upcomingTransactions = fetchUpcomingTransactions();
+
+        for (AccountEntity accountEntity : getAccounts()) {
+            Account tinkAccount = accountEntity.toAccount();
+            if (!type.isAccountType(tinkAccount.getType())) {
+                continue;
+            }
+
+            try {
+                Pair<Account, List<Transaction>> accountTransaction =
+                        processAccount(accountEntity, upcomingTransactions);
+                transactionsMap.put(accountTransaction.first, accountTransaction.second);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return new FetchTransactionsResponse(transactionsMap);
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        try {
+            Map<Account, AccountFeatures> accounts = new HashMap<>();
+            List<DepotEntity> depots = fetchDepots();
+            logDepots(depots);
+            for (DepotEntity depot : depots) {
+                Account account = depot.toAccount();
+                Portfolio portfolio = depot.toPortfolio();
+
+                List<Instrument> instruments = Lists.newArrayList();
+
+                depot.getFundHoldings()
+                        .forEach(
+                                fund ->
+                                        toInstrument(fund, fetchFundDetails(fund.getFundId()))
+                                                .ifPresent(instruments::add));
+
+                portfolio.setInstruments(instruments);
+
+                accounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+            }
+            return new FetchInvestmentAccountsResponse(accounts);
+        } catch (Exception e) {
+            // Don't fail the whole refresh just because we failed updating investment data but log
+            // error.
+            log.error("Caught exception while updating investment data", e);
+            return new FetchInvestmentAccountsResponse(Collections.emptyMap());
+        }
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        try {
+            Map<Account, AccountFeatures> accounts = new HashMap<>();
+            EngagementResponseBody engagementResponse =
+                    createClientRequest(ENGAGEMENTS_URL).get(EngagementResponse.class).getBody();
+
+            if (engagementResponse.hasLoans()) {
+
+                LoansResponseBody loansResponseBody =
+                        createClientRequest(LOANS_URL).get(LoansResponse.class).getBody();
+
+                LoanListEntity loansList = loansResponseBody.getLoanList();
+                MortgageListEntity mortgageList = loansResponseBody.getMortgageList();
+
+                if (loansList.getLoans() != null) {
+
+                    logLoansIfNotEmpty(loansList.getLoans());
+
+                    for (LoanEntity loanEntity : loansList.getLoans()) {
+                        Pair<Account, AccountFeatures> account = updateAccount(loanEntity);
+                        accounts.put(account.first, account.second);
+                    }
+                }
+
+                if (mortgageList.getMortgages() != null) {
+                    for (MortgageEntity mortgageEntity : mortgageList.getMortgages()) {
+                        Pair<Account, AccountFeatures> account = updateAccount(mortgageEntity);
+                        accounts.put(account.first, account.second);
+                    }
+                }
+            }
+            return new FetchLoanAccountsResponse(accounts);
+        } catch (Exception e) {
+            throw new IllegalStateException();
+        }
+    }
+
+
+    ////////////////////////////////////////////////////
 }
