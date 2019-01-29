@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ConfirmSignInResponse extends BaseUserResponse {
-  private String accessToken;
+    private String accessToken;
 
-  public String getAccessToken() {
-    return accessToken;
-  }
+    public String getAccessToken() {
+        return accessToken;
+    }
 }

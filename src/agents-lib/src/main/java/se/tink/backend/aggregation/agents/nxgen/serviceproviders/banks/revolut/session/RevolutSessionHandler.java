@@ -7,21 +7,21 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class RevolutSessionHandler implements SessionHandler {
-  private final RevolutApiClient apiClient;
+    private final RevolutApiClient apiClient;
 
-  public RevolutSessionHandler(RevolutApiClient apiClient) {
-    this.apiClient = apiClient;
-  }
-
-  @Override
-  public void logout() {}
-
-  @Override
-  public void keepAlive() throws SessionException {
-    try {
-      apiClient.assertAuthorized();
-    } catch (HttpResponseException e) {
-      throw SessionError.SESSION_EXPIRED.exception();
+    public RevolutSessionHandler(RevolutApiClient apiClient) {
+        this.apiClient = apiClient;
     }
-  }
+
+    @Override
+    public void logout() {}
+
+    @Override
+    public void keepAlive() throws SessionException {
+        try {
+            apiClient.assertAuthorized();
+        } catch (HttpResponseException e) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
 }
