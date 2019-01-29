@@ -19,10 +19,12 @@ public final class BbvaConstants {
         public static final String ACCOUNT_TRANSACTION = BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
         public static final String CARD_TRANSACTIONS = BASE_URL + "/ASO/cardTransactions/V01/{" + PARAM_ID + "}";
+        public static final String SECURITY_PROFITABILITY = BASE_URL + "/ASO/securityActions/V01/listProfitability";
     }
 
     public static final class Storage {
         public static final String ACCOUNT_ID = "accountId";
+        public static final String HOLDER_NAME = "holderName";
     }
 
     public final class Header {
@@ -30,12 +32,12 @@ public final class BbvaConstants {
         public static final String CONSUMER_ID_KEY = "ConsumerID";
         public static final String CONSUMER_ID_VALUE = "00000013";
         public static final String BBVA_USER_AGENT_KEY = "BBVA-User-Agent";
-        public static final String BBVA_USER_AGENT_VALUE = "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.9.0;xhdpi";
+        public static final String BBVA_USER_AGENT_VALUE = "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi";
         public static final String ORIGIN_KEY = "Origin";
         public static final String ORIGIN_VALUE = "https://movil.bbva.es";
         public static final String REFERER_KEY = "Referer";
         public static final String TSEC_KEY = "tsec";
-        public static final String REFERER_VALUE = "https://movil.bbva.es/versions/woody/6.9.1/index.html";
+        public static final String REFERER_VALUE = "https://movil.bbva.es/versions/woody/6.14.5/index.html";
     }
 
     public static class Defaults {
@@ -64,6 +66,8 @@ public final class BbvaConstants {
         public static final String CONSUMER_ID_KEY = "consumerID";
         public static final String CONSUMER_ID_VALUE = Header.CONSUMER_ID_VALUE;
         public static final String SEARCH_TYPE = "SEARCH";
+
+        public static final int START_DATE_YEAR_AGO = -30;
     }
 
     public final class Message {

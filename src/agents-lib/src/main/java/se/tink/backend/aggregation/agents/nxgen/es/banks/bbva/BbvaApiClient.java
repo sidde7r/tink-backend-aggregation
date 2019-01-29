@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.UrlEncodedFormBody;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.FetchTransactionsRequestEntity;
@@ -98,6 +100,14 @@ public class BbvaApiClient {
                 .post(FetchAccountTransactionsResponse.class, request);
 
     }
+
+    public SecurityProfitabilityResponse fetchSecurityProfitability(String portfolioId, String securityCode) {
+        SecurityProfitabilityRequest request = SecurityProfitabilityRequest.create(portfolioId, securityCode);
+
+        return createRefererRequest(BbvaConstants.Url.SECURITY_PROFITABILITY)
+                .post(SecurityProfitabilityResponse.class, request);
+    }
+
     private FetchTransactionsRequestEntity createAccountTransactionsQuery(Account account) {
         FetchTransactionsRequestEntity request = new FetchTransactionsRequestEntity();
 

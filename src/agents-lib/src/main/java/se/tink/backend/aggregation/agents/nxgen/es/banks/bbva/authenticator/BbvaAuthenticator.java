@@ -9,13 +9,16 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BbvaAuthenticator implements PasswordAuthenticator {
 
     private BbvaApiClient apiClient;
+    private final SessionStorage sessionStorage;
 
-    public BbvaAuthenticator(BbvaApiClient apiClient) {
+    public BbvaAuthenticator(BbvaApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -31,6 +34,7 @@ public class BbvaAuthenticator implements PasswordAuthenticator {
                 throw new IllegalStateException(String.format("Initiate session failed with code %s",
                         initiateSessionResponse.getResult().getCode()));
             }
+            sessionStorage.put(BbvaConstants.Storage.HOLDER_NAME, initiateSessionResponse.getName());
         } else if (responseString.toLowerCase().contains(BbvaConstants.Message.LOGIN_WRONG_CREDENTIAL_CODE)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else {

@@ -3,12 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.BbvaLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.BbvaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.BbvaInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.BbvaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.session.BbvaSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -24,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class BbvaAgent extends NextGenerationAgent {
 
@@ -41,14 +41,14 @@ public class BbvaAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BbvaAuthenticator authenticator = new BbvaAuthenticator(apiClient);
+        BbvaAuthenticator authenticator = new BbvaAuthenticator(apiClient, sessionStorage);
 
         return new PasswordAuthenticationController(authenticator);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        BbvaAccountFetcher transactionalAccountFetcher = new BbvaAccountFetcher(apiClient);
+        BbvaAccountFetcher transactionalAccountFetcher = new BbvaAccountFetcher(apiClient, sessionStorage);
         BbvaTransactionFetcher transactionFetcher = new BbvaTransactionFetcher(apiClient);
 
         return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
@@ -73,7 +73,7 @@ public class BbvaAgent extends NextGenerationAgent {
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
         return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController,
-                new BbvaInvestmentFetcher(apiClient)));
+                new BbvaInvestmentFetcher(apiClient, sessionStorage)));
     }
 
     @Override

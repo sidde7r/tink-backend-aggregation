@@ -3,12 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 import static se.tink.libraries.account.AccountIdentifier.Type.IBAN;
 
 @JsonObject
@@ -33,12 +34,13 @@ public class AccountEntity {
     private double actualBalance;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount() {
+    public TransactionalAccount toTinkAccount(HolderName holderName) {
         String normalizedIban = iban.replaceAll(" ","").toLowerCase();
 
         return TransactionalAccount.builder(getTinkAccountType(), normalizedIban, new Amount(currency, availableBalance))
                 .setAccountNumber(iban)
                 .setName(name)
+                .setHolderName(holderName)
                 .putInTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
                 .addIdentifier(AccountIdentifier.create(IBAN, normalizedIban))
                 .build();
