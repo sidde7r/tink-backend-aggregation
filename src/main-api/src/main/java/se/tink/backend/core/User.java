@@ -21,7 +21,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
-import se.tink.backend.agents.core.UserConnectedService;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.strings.StringUtils;
@@ -64,10 +63,6 @@ public class User implements Serializable {
     @Creatable
     @Tag(5)
     private UserProfile profile;
-    @JsonInclude(Include.NON_NULL)
-    @Tag(6)
-    @ApiModelProperty(name = "services", hidden = true)
-    private List<UserConnectedService> services;
     @Creatable
     @Modifiable
     @Tag(7)
@@ -134,11 +129,6 @@ public class User implements Serializable {
     @Nonnull
     public UserProfile getProfile() {
         return profile;
-    }
-
-    @Transient
-    public List<UserConnectedService> getServices() {
-        return services;
     }
 
     @ApiModelProperty(name = "username", value = "The username (usually email) of the user.", example = "nisse@manpower.se")
@@ -224,10 +214,6 @@ public class User implements Serializable {
 
     public void setProfile(UserProfile profile) {
         this.profile = profile;
-    }
-
-    public void setServices(List<UserConnectedService> services) {
-        this.services = services;
     }
 
     public void setUsername(String username) {
