@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.field.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;

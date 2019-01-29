@@ -11,9 +11,9 @@ java_library(
     deps = [
         "//src/libraries/credentials:enums",
         "//src/libraries/date",
+        "//src/libraries/field:rpc",
         "//src/libraries/provider:enums",
         "//src/libraries/serialization",
-        "//src/main-api",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:io_protostuff_protostuff_api",

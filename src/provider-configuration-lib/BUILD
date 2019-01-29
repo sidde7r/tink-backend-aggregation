@@ -7,6 +7,7 @@ java_library(
     deps = [
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/credentials:enums",
+        "//src/libraries/field:rpc",
         "//src/libraries/http:http-utils",
         "//src/libraries/http_client:http-client",
         "//src/libraries/i18n",
@@ -50,6 +51,7 @@ junit_test(
     deps = [
         "//src/agents-lib",
         "//src/libraries/credentials:enums",
+        "//src/libraries/field:rpc",
         "//src/libraries/metrics",
         "//src/libraries/pair",
         "//src/main-api",

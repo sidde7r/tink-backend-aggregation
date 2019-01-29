@@ -9,6 +9,7 @@ java_library(
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/enums",
+        "//src/libraries/field:rpc",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/uuid",

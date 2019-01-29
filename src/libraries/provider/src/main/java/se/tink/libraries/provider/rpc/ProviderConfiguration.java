@@ -21,7 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
-import se.tink.backend.core.Field;
+import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.provider.enums.ProviderStatuses;
 import se.tink.libraries.provider.enums.ProviderTypes;
