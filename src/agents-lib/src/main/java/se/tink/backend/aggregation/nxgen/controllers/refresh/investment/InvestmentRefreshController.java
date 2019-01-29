@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
-import se.tink.backend.aggregation.rpc.Account;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.pair.Pair;
 
