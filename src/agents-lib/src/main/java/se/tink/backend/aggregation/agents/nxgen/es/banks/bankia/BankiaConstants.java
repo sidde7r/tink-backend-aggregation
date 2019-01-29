@@ -99,6 +99,7 @@ public abstract class BankiaConstants {
 
     public static class CardTypes {
         public static final String DEBIT_CARD = "D";
+        public static final String CREDIT_CARD = "C";
     }
 
     public static class Regex {
