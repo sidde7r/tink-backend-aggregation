@@ -38,7 +38,6 @@ import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.core.DocumentContainer;
-import se.tink.backend.core.DocumentIdentifier;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
@@ -64,6 +63,7 @@ public class SBABAgent extends AbstractAgent
     private final Catalog catalog;
 
     private static final int BANKID_MAX_ATTEMPTS = 100;
+    public static final String AMORTIZATION_DOCUMENTATION = "amortization-documentation";
 
     private final AuthenticationClient authenticationClient;
     private final UserDataClient userDataClient;
@@ -326,7 +326,7 @@ public class SBABAgent extends AbstractAgent
 
     private DocumentContainer getAmortizationDocumentation(String loanNumber) throws Exception {
         DocumentContainer amortizationDocumentation = userDataClient.getAmortizationDocumentation(loanNumber);
-        String identifier = DocumentIdentifier.AMORTIZATION_DOCUMENTATION + "-" + loanNumber;
+        String identifier = AMORTIZATION_DOCUMENTATION + "-" + loanNumber;
         amortizationDocumentation.setIdentifier(identifier);
 
         return amortizationDocumentation;
