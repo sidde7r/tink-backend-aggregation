@@ -13,28 +13,28 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class RevolutAutoAuthenticator implements AutoAuthenticator {
-  private static final Logger log = LoggerFactory.getLogger(RevolutAutoAuthenticator.class);
-  private final RevolutApiClient apiClient;
+    private static final Logger log = LoggerFactory.getLogger(RevolutAutoAuthenticator.class);
+    private final RevolutApiClient apiClient;
 
-  public RevolutAutoAuthenticator(RevolutApiClient apiClient) {
-    this.apiClient = apiClient;
-  }
-
-  @Override
-  public void autoAuthenticate() throws SessionException, BankServiceException {
-    try {
-      apiClient.fetchUser();
-    } catch (HttpResponseException e) {
-      if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
-        throw SessionError.SESSION_EXPIRED.exception();
-      }
-
-      log.error(
-          "%s: Authorization failed with message \"%s\"",
-          RevolutConstants.Tags.AUTHORIZATION_ERROR,
-          e.getResponse().getBody(ErrorResponse.class).getMessage());
-
-      throw e;
+    public RevolutAutoAuthenticator(RevolutApiClient apiClient) {
+        this.apiClient = apiClient;
     }
-  }
+
+    @Override
+    public void autoAuthenticate() throws SessionException, BankServiceException {
+        try {
+            apiClient.fetchUser();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
+
+            log.error(
+                    "%s: Authorization failed with message \"%s\"",
+                    RevolutConstants.Tags.AUTHORIZATION_ERROR,
+                    e.getResponse().getBody(ErrorResponse.class).getMessage());
+
+            throw e;
+        }
+    }
 }
