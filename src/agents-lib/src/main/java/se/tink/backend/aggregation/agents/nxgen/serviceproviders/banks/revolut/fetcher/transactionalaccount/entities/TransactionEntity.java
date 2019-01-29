@@ -90,7 +90,10 @@ public class TransactionEntity {
   }
 
   public boolean isValid() {
-    return !RevolutConstants.TransactionState.FAILED.equalsIgnoreCase(state);
+    return !RevolutConstants.TransactionState.FAILED.equalsIgnoreCase(state)
+            && !RevolutConstants.TransactionState.DECLINED.equalsIgnoreCase(state)
+            && !RevolutConstants.TransactionState.REVERTED.equalsIgnoreCase(state)
+            && !RevolutConstants.TransactionState.CANCELLED.equalsIgnoreCase(state);
   }
 
   public boolean belongsToAccount(String accountNumber) {

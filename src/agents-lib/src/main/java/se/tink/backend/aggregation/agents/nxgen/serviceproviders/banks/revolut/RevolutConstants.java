@@ -95,5 +95,8 @@ public class RevolutConstants {
 
   public static class TransactionState {
     public static final String FAILED = "FAILED";
+    public static final String REVERTED = "REVERTED";
+    public static final String DECLINED = "DECLINED";
+    public static final String CANCELLED = "CANCELLED";
   }
 }
