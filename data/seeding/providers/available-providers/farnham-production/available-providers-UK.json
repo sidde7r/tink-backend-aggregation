@@ -1,7 +1,0 @@
-{
-  "clusterid" : "farnham-production",
-  "providers" : [
-    "uk-americanexpress-password",
-    "uk-revolut-password"
-  ]
-}

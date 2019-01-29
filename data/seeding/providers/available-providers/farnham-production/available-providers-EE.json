@@ -1,9 +1,0 @@
-{
-  "clusterid" : "farnham-production",
-  "providers" : [
-    "ee-dnb",
-    "ee-lhv-pank",
-    "ee-nordea",
-    "ee-swedbank"
-  ]
-}

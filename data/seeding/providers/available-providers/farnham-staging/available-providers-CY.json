@@ -1,8 +1,0 @@
-{
-  "clusterid" : "farnham-staging",
-  "providers" : [
-    "cy-bank-of-cyprus",
-    "cy-eurobank-ergasias",
-    "cy-piraeus-bank"
-  ]
-}

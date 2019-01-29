@@ -1,7 +1,0 @@
-{
-  "clusterid" : "farnham-staging",
-  "providers" : [
-    "sk-slovenska-sporitelna",
-    "sk-zuno-bank"
-  ]
-}

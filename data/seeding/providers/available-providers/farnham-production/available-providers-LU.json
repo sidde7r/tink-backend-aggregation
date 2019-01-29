@@ -1,7 +1,0 @@
-{
-  "clusterid" : "farnham-production",
-  "providers" : [
-    "lu-bcee",
-    "lu-keytrade-bank"
-  ]
-}
