@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.cluster.identification.Aggregator;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
@@ -52,6 +53,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.i18n.Catalog;
@@ -110,7 +112,8 @@ public abstract class NextGenerationAgent extends AbstractAgent
                 // TODO: Remove when provider uses MarketCode
                 MarketCode.valueOf(request.getProvider().getMarket()),
                 request.getProvider().getCurrency(), request.getUser());
-        this.client = new TinkHttpClient(context, signatureKeyPair);
+        this.client = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
+                context.getLogOutputStream(), signatureKeyPair, request.getProvider());
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
         this.supplementalInformationController = new SupplementalInformationController(context, credentials);
         this.metricRefreshController = new MetricRefreshController(
