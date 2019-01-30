@@ -28,7 +28,7 @@ import se.tink.backend.aggregation.utils.json.JsonUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.core.DocumentContainer;
+import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;

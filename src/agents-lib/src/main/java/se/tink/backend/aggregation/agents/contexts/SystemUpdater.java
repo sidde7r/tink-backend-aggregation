@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.core.DocumentContainer;
+import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.transfer.rpc.Transfer;

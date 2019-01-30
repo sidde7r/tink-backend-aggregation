@@ -10,6 +10,7 @@ java_library(
         "//src/libraries/amount",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/credentials:rpc",
+        "//src/libraries/document_container",
         "//src/libraries/enums",
         "//src/libraries/http:http-annotations",
         "//src/libraries/http_client:http-client",

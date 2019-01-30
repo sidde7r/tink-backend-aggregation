@@ -32,6 +32,7 @@ java_library(
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/discovered_web_service",
         "//src/libraries/discovery",
+        "//src/libraries/document_container",
         "//src/libraries/enums",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/giro_validation:giro-validation",

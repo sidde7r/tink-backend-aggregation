@@ -32,6 +32,7 @@ junit_test(
         "//src/libraries/credentials:service",
         "//src/libraries/date",
         "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/document_container",
         "//src/libraries/enums",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/i18n",
