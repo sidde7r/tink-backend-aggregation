@@ -20,6 +20,29 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
@@ -133,30 +156,6 @@ import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class SEBApiAgent extends AbstractAgent implements
         RefreshTransferDestinationExecutor,
@@ -535,19 +534,29 @@ public class SEBApiAgent extends AbstractAgent implements
             }
 
             List<Instrument> instruments = Lists.newArrayList();
-            holdingByDepotNumber.get(depotNumber).forEach(holding -> {
-                holding.toInstrument().ifPresent(instrument -> {
-                    Double estimatedAverageAcquisitionPrice = instrument.getMarketValue() / instrument.getQuantity();
-                    if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice()) > 1) {
-                        log.warn("Possibly faulty value parsing: " + SerializationUtils.serializeToString(holding));
+            // check if we have made a mistake mapping Holding
+            if (holdingByDepotNumber.get(depotNumber) == null) {
+                log.warn("Null_holding_seb for depot number " + depotNumber);
+            } else {
+                holdingByDepotNumber.get(depotNumber).forEach(holding -> {
+                    // check if holding item for some reason is null
+                    if (holding == null) {
+                        log.warn("Null_holding_seb item for depot number " + depotNumber);
+                    } else {
+                        holding.toInstrument().ifPresent(instrument -> {
+                            Double estimatedAverageAcquisitionPrice = instrument.getMarketValue() / instrument.getQuantity();
+                            if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice()) > 1) {
+                                log.warn("Possibly faulty value parsing: " + SerializationUtils.serializeToString(holding));
+                            }
+                            instruments.add(instrument);
+                        });
                     }
-                    instruments.add(instrument);
                 });
-            });
-            portfolio.setInstruments(instruments);
-            portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
+                portfolio.setInstruments(instruments);
+                portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
-            depotAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+                depotAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+            }
         });
         return depotAccounts;
     }
