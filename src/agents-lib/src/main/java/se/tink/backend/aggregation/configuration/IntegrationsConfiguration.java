@@ -7,6 +7,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.ICSConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.NordeaConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 
@@ -22,8 +23,14 @@ public class IntegrationsConfiguration {
 
     @JsonProperty private Map<String, ICSConfiguration> icsConfiguration;
 
+    @JsonProperty private Map<String, NordeaConfiguration> nordea;
+
     public SbabConfiguration getSbab() {
         return sbab;
+    }
+
+    public Optional<SbabClientConfiguration> getSbab(String clientName) {
+        return Optional.ofNullable(sbab).flatMap(sc -> getClientConfiguration(clientName, sc.getClients()));
     }
 
     private <T> Optional<T> getClientConfiguration(String clientName, Map<String, T> configMap) {
@@ -34,16 +41,16 @@ public class IntegrationsConfiguration {
         return getClientConfiguration(clientName, monzo);
     }
 
-    public Optional<SbabClientConfiguration> getSbab(String clientName) {
-        return Optional.ofNullable(sbab).flatMap(sc -> getClientConfiguration(clientName, sc.getClients()));
-    }
-
     public FinTsIntegrationConfiguration getFinTsIntegrationConfiguration() {
         return fints;
     }
 
     public String getUkOpenBankingJson() {
         return ukOpenBankingJson;
+    }
+
+    public Optional<NordeaConfiguration> getNordea(String clientName) {
+        return getClientConfiguration(clientName, nordea);
     }
 
     public String getProxyUri() {
