@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.libraries.date.DateUtils;
 
 public class DanskeBankMultiTransactionsFetcher<A extends Account> implements TransactionDatePaginator<A>,
         UpcomingTransactionFetcher<A> {
@@ -74,7 +75,9 @@ public class DanskeBankMultiTransactionsFetcher<A extends Account> implements Tr
                             .collect(Collectors.toList()));
         }
 
-        return PaginatorResponseImpl.create(transactions);
+        // TODO: Removing `toDate.after(DateUtils.addYears(new Date(), -2))` will cause paginator to sometimes get
+        // TODO: stuck looping the last transactions forever. -2 is based on transaction range in app. Find better fix.
+        return PaginatorResponseImpl.create(transactions, toDate.after(DateUtils.addYears(new Date(), -2)));
     }
 
     @Override
