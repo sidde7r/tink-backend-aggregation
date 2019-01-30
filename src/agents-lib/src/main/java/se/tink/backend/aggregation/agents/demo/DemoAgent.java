@@ -70,11 +70,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-
-
-public class DemoAgent extends AbstractAgent implements RefreshCheckingAccountsExecutor,
-        RefreshSavingsAccountsExecutor, RefreshCreditCardAccountsExecutor, RefreshLoanAccountsExecutor,
-        RefreshInvestmentAccountsExecutor, RefreshEInvoiceExecutor, RefreshTransferDestinationExecutor, TransferExecutor {
+public class DemoAgent extends AbstractAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshEInvoiceExecutor,
+                RefreshTransferDestinationExecutor,
+                TransferExecutor {
     private static final String BASE_PATH = "data/demo";
     private static final Integer NUMBER_OF_TRANSACTIONS_TO_RANDOMIZE = 3;
     private static final ObjectMapper MAPPER = new ObjectMapper();
