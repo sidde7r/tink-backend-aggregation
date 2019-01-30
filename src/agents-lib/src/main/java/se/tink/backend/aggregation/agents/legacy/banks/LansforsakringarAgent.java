@@ -108,10 +108,6 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -121,6 +117,7 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -1291,11 +1288,11 @@ public class LansforsakringarAgent extends AbstractAgent
 
             if (accountEntities.isEmpty()) {
                 log.info("EInvoices not updated: The user has no accounts.");
-                return null;
+                return new FetchEInvoicesResponse(Collections.emptyList());
             }
 
             if (!hasPendingEInvoices()) {
-                return null;
+                return new FetchEInvoicesResponse(Collections.emptyList()); 
             }
 
             EInvoicesListResponse invoicesListResponse = createGetRequest(FETCH_EINVOICES_URL,
@@ -1304,7 +1301,7 @@ public class LansforsakringarAgent extends AbstractAgent
             List<EInvoice> eInvoiceEntities = invoicesListResponse.getElectronicInvoices();
             if (eInvoiceEntities.isEmpty()) {
                 log.error("User should have eInvoices, but we got no transfers.");
-                return null;
+                return new FetchEInvoicesResponse(Collections.emptyList());
             }
 
             List<Transfer> eInvoices = Lists.newArrayList();
@@ -1521,7 +1518,7 @@ public class LansforsakringarAgent extends AbstractAgent
         }
 
         if (loans == null) {
-            return null;
+            return new FetchLoanAccountsResponse(Collections.emptyMap());
         }
 
         for (LoanEntity le : loans.getLoans()) {
