@@ -1,7 +1,0 @@
-<configuration default="false" name="Job: Seed Database" type="BlazeCommandRunConfigurationType"
-               factoryName="Bazel Command" singleton="false" keep-in-sync="true"
-               handler-id="BlazeCommandGenericRunConfigurationHandlerProvider" blaze-command="run">
-    <blaze-target>//:system</blaze-target>
-    <blaze-user-exe-flag>seed-database</blaze-user-exe-flag>
-    <blaze-user-exe-flag>etc/development-system-cli.yml</blaze-user-exe-flag>
-</configuration>

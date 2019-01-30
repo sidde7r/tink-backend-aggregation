@@ -1,7 +1,0 @@
-<configuration default="false" name="ABN - Server: Main" type="BlazeCommandRunConfigurationType"
-               factoryName="Bazel Command" keep-in-sync="true"
-               handler-id="BlazeCommandGenericRunConfigurationHandlerProvider" blaze-command="run">
-    <blaze-target>//:main</blaze-target>
-    <blaze-user-exe-flag>server</blaze-user-exe-flag>
-    <blaze-user-exe-flag>etc/abn/development-main-server.yml</blaze-user-exe-flag>
-</configuration>

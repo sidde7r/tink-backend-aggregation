@@ -1,6 +1,0 @@
-<configuration default="false" name="Server: Webhook" type="BlazeCommandRunConfigurationType" factoryName="Bazel Command"
-               keep-in-sync="true" handler-id="BlazeCommandGenericRunConfigurationHandlerProvider" blaze-command="run">
-    <blaze-target>//:webhook</blaze-target>
-    <blaze-user-exe-flag>server</blaze-user-exe-flag>
-    <blaze-user-exe-flag>etc/development-webhook-server.yml</blaze-user-exe-flag>
-</configuration>
