@@ -32,7 +32,7 @@ public abstract class AgentVersionMigration {
     this.wrapper = wrapper;
   }
 
-  public final ControllerWrapper getControlWrapper() {
+  private final ControllerWrapper getControlWrapper() {
     return this.wrapper;
   }
 }
