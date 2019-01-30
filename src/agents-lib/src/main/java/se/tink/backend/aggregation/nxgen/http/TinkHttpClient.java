@@ -193,62 +193,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
     }
 
-    public TinkHttpClient(@Nullable AgentContext context, @Nullable SignatureKeyPair signatureKeyPair) {
-        this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
-        this.internalClientConfig = new DefaultApacheHttpClient4Config();
-        this.internalCookieStore = new BasicCookieStore();
-        this.internalRequestConfigBuilder = RequestConfig.custom();
-        this.internalHttpClientBuilder = HttpClientBuilder.create()
-                                        .setRequestExecutor(requestExecutor)
-                                        .setDefaultCookieStore(this.internalCookieStore);
-
-        this.internalSslContextBuilder = new SSLContextBuilder()
-                .useProtocol("TLSv1.2")
-                .setSecureRandom(new SecureRandom());
-
-        this.redirectStrategy = new ApacheHttpRedirectStrategy();
-
-        if (context != null && context.getLogOutputStream() != null) {
-            this.logOutputStream = context.getLogOutputStream();
-        } else {
-            this.logOutputStream = null;
-        }
-
-        if (context instanceof AgentWorkerContext) {
-            AgentWorkerContext agentWorkerContext = (AgentWorkerContext) context;
-            this.metricRegistry = agentWorkerContext.getMetricRegistry();
-            this.provider = agentWorkerContext.getRequest().getProvider();
-        } else {
-            this.metricRegistry = null;
-            this.provider = null;
-        }
-
-        // Add an initial redirect handler to fix any illegal location paths
-        addRedirectHandler(new FixRedirectHandler());
-
-        // Add the filter that is responsible to add persistent data to each request
-        addFilter(this.persistentHeaderFilter);
-
-        // The context should only be null if the HttpClient if used for a test
-        if (context != null) {
-            this.aggregator = Objects.isNull(context.getAggregatorInfo()) ?
-                    AggregatorInfo.getAggregatorForTesting() : context.getAggregatorInfo();
-        } else {
-            this.aggregator = AggregatorInfo.getAggregatorForTesting();
-        }
-
-        setTimeout(DEFAULTS.TIMEOUT_MS);
-        setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
-        setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
-        setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
-        setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
-        setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
-    }
-
-    public TinkHttpClient(@Nullable AgentContext context) {
-        this(context, null);
-    }
-
     public TinkHttpClient() {
         this(null, null, null, null, null);
     }
