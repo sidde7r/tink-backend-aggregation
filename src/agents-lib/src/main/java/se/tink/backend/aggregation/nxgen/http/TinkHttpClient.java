@@ -11,6 +11,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -43,6 +44,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
@@ -68,6 +70,7 @@ import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 
@@ -91,6 +94,9 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     private final AgentContext context;
     private final Credentials credentials;
+
+    private final MetricRegistry metricRegistry;
+    private final Provider provider;
 
     private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
@@ -177,6 +183,15 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
 
+        if (context instanceof AgentWorkerContext) {
+            AgentWorkerContext agentWorkerContext = (AgentWorkerContext) context;
+            this.metricRegistry = agentWorkerContext.getMetricRegistry();
+            this.provider = agentWorkerContext.getRequest().getProvider();
+        } else {
+            this.metricRegistry = null;
+            this.provider = null;
+        }
+
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
 
@@ -246,12 +261,9 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             } catch (UnsupportedEncodingException e) {
                 throw new IllegalStateException(e);
             }
-            if (this.context instanceof AgentWorkerContext) {
-                AgentWorkerContext agentWorkerContext = (AgentWorkerContext) this.context;
+            if (this.metricRegistry != null && this.provider != null) {
                 addFilter(
-                        new MetricFilter(
-                                agentWorkerContext.getMetricRegistry(),
-                                agentWorkerContext.getRequest().getProvider()));
+                        new MetricFilter(this.metricRegistry, this.provider));
             }
         }
         if (this.debugOutput) {
