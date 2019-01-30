@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.CardList;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials_requests.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.Transaction;

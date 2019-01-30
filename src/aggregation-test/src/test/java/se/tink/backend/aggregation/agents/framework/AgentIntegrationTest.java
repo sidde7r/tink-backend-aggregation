@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidato
 import se.tink.backend.aggregation.agents.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials_requests.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;

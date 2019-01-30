@@ -13,7 +13,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.libraries.user.rpc.User;
-import se.tink.backend.aggregation.rpc.CredentialsRequestType;
+import se.tink.libraries.credentials_requests.CredentialsRequestType;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.backend.aggregation.storage.debug.AgentDebugStorageHandler;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;

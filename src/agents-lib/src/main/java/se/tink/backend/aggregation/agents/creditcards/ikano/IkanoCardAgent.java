@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.creditcards.ikano;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials_requests.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 // - DEPRECATED AGENT -

@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials_requests.CredentialsRequestType;
 import se.tink.libraries.user.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;

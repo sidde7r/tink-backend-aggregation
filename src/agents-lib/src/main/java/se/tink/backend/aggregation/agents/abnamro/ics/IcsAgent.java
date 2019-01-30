@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.abnamro.ics;
 import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,7 +21,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials_requests.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.libraries.user.rpc.User;
@@ -36,7 +35,6 @@ import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountConta
 import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountEntity;
 import se.tink.libraries.abnamro.client.model.creditcards.TransactionContainerEntity;
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
-import se.tink.libraries.abnamro.utils.AbnAmroUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
 

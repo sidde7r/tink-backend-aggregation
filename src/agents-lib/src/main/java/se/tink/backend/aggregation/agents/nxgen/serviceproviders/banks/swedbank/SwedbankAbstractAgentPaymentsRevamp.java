@@ -32,9 +32,8 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
-
 import java.util.Optional;
+import se.tink.libraries.credentials_requests.CredentialsRequest;
 
 public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGenerationAgent {
     protected final SwedbankConfiguration configuration;
