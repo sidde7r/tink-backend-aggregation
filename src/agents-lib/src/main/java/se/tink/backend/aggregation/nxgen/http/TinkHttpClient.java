@@ -249,6 +249,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this(context, null);
     }
 
+    public TinkHttpClient() {
+        this(null, null);
+    }
+
     private void constructInternalClient() {
         SSLContext sslContext;
         try {
