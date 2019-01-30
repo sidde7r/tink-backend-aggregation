@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OAuth2AuthenticationFlow {
     public static Authenticator create(CredentialsRequest request, AgentContext context,

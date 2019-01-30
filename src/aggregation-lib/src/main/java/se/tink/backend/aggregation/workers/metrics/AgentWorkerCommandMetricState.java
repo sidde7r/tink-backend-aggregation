@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Objects;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.libraries.credentials_requests.CredentialsRequestType;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.commands.MetricsCommand;
 import se.tink.libraries.metrics.MetricId;

@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;

@@ -14,16 +14,16 @@ import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.libraries.credentials_requests.CreateCredentialsRequest;
+import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials_requests.DeleteCredentialsRequest;
+import se.tink.libraries.credentials.service.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.libraries.credentials_requests.UpdateCredentialsRequest;
+import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 
 @Path("/aggregation")

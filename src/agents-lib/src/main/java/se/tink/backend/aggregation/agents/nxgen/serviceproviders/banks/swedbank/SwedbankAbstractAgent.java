@@ -33,7 +33,7 @@ import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import java.util.Optional;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class SwedbankAbstractAgent extends NextGenerationAgent {
     protected final SwedbankConfiguration configuration;

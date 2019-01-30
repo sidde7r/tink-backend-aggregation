@@ -1,23 +1,23 @@
-package se.tink.libraries.credentials_requests;
+package se.tink.libraries.credentials.service;
 
 import se.tink.libraries.user.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 
-public class UpdateCredentialsRequest extends CredentialsRequest {
-    
-    public UpdateCredentialsRequest() {
+public class CreateCredentialsRequest extends CredentialsRequest {
+
+    public CreateCredentialsRequest() {
     }
     
-    public UpdateCredentialsRequest(User user, Provider provider, Credentials credentials) {
+    public CreateCredentialsRequest(User user, Provider provider, Credentials credentials) {
         super(user, provider, credentials);
     }
-    
+
     @Override
     public CredentialsRequestType getType() {
-        return CredentialsRequestType.UPDATE;
+        return CredentialsRequestType.CREATE;
     }
-
+    
     @Override
     public boolean isManual() {
         return true;

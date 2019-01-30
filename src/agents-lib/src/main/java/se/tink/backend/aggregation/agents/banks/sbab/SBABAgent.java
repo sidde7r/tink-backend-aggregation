@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.core.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;

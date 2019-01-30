@@ -1,4 +1,4 @@
-package se.tink.libraries.credentials_requests;
+package se.tink.libraries.credentials.service;
 
 public enum CredentialsRequestType {
     REFRESH_INFORMATION,

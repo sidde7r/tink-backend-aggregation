@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.creditcards.amex;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressAgent;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class AmericanExpressESAgent extends AmericanExpressAgent {

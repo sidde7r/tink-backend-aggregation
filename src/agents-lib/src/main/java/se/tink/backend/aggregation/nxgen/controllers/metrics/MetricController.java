@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.nxgen.controllers.metrics;
 
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.libraries.credentials_requests.CredentialsRequestType;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 

@@ -1,4 +1,4 @@
-package se.tink.libraries.credentials_requests;
+package se.tink.libraries.credentials.service;
 
 import se.tink.libraries.user.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;

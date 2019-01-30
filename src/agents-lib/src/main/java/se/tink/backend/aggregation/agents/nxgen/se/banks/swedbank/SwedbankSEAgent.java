@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.SwedbankS
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankAbstractAgent;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class SwedbankSEAgent extends SwedbankAbstractAgent {

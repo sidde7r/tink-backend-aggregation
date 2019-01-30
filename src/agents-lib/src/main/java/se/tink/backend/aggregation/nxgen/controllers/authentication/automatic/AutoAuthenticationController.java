@@ -11,8 +11,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
-import se.tink.libraries.credentials_requests.CredentialsRequestType;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 
 public class AutoAuthenticationController implements TypedAuthenticator {

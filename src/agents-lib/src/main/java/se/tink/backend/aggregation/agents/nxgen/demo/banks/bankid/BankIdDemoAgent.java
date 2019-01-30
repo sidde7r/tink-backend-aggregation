@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 
 public class BankIdDemoAgent extends NextGenerationDemoAgent {

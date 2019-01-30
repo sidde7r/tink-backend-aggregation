@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.demo.DemoAgent;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.libraries.credentials_requests.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
