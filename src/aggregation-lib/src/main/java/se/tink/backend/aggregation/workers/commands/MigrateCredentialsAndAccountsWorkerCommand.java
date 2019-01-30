@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
@@ -11,8 +11,8 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
 
   private final ControllerWrapper controllerWrapper;
   private final CredentialsRequest request;
-  protected ImmutableList<AgentVersionMigration> migrations =
-      ImmutableList.of(
+  protected ImmutableMap<String, AgentVersionMigration> migrations =
+      ImmutableMap.of(
           // Add your migrations here
           );
 
@@ -22,22 +22,28 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     this.controllerWrapper = controllerWrapper;
   }
 
-  protected void setMigrations(ImmutableList<AgentVersionMigration> migrations) {
+  protected void setMigrations(ImmutableMap<String, AgentVersionMigration> migrations) {
     this.migrations = migrations;
   }
 
   @Override
   public AgentWorkerCommandResult execute() throws Exception {
 
-    for (AgentVersionMigration migration : migrations) {
+      migrations.entrySet().stream()
+              .filter(e -> e.getKey().equals(request.getProvider().getName()))
+              .map(e -> e.getValue())
+              .filter(m-> m.shouldChangeRequest(request))
+              .forEach(m -> migrate(m));
 
-      if (!migration.shouldChangeRequest(request)) {
-        // nothing to migrate for this request
-        continue;
-      }
-
-      migrate(migration);
-    }
+//    for (AgentVersionMigration migration : migrations) {
+//
+//      if (!migration.shouldChangeRequest(request)) {
+//         nothing to migrate for this request
+//        continue;
+//      }
+//
+//      migrate(migration);
+//    }
 
     return AgentWorkerCommandResult.CONTINUE;
   }

@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,8 +26,9 @@ import static org.mockito.Mockito.verify;
 
 public class MigrateCredentialsAndAccountsWorkerCommandTest {
 
+  private static String PROVIDER_NAME = "some-provider";
   ControllerWrapper wrapper;
-  ImmutableList<AgentVersionMigration> migrations = ImmutableList.of();
+  ImmutableMap<String, AgentVersionMigration> migrations = ImmutableMap.of();
   ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
 
   @Before
@@ -43,29 +45,82 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
   }
 
   @Test
+  public void testMigrationCommandReturnsContinueWhenDifferentProviderName() throws Exception {
+    AtomicBoolean shouldChangeRequestCalled = new AtomicBoolean(false);
+    AtomicBoolean shouldMigrateDataCalled = new AtomicBoolean(false);
+    AtomicBoolean changeRequestCalled = new AtomicBoolean(false);
+    AtomicBoolean migrateDataCalled = new AtomicBoolean(false);
+
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            createRequest(),
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME + "x",
+                    new AgentVersionMigration() {
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        shouldChangeRequestCalled.set(true);
+                        return false;
+                      }
+
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        shouldMigrateDataCalled.set(true);
+                        return false;
+                      }
+
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {
+                        changeRequestCalled.set(true);
+                      }
+
+                      @Override
+                      public void migrateData(CredentialsRequest request) {
+                        migrateDataCalled.set(true);
+                      }
+                    });
+              }
+            });
+
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+    Assert.assertFalse(shouldChangeRequestCalled.get());
+    Assert.assertFalse(shouldMigrateDataCalled.get());
+    Assert.assertFalse(changeRequestCalled.get());
+    Assert.assertFalse(migrateDataCalled.get());
+  }
+
+  @Test
   public void testMigrationCommandReturnsContinueWithSomethingInMigrationsListThatWontExecute()
       throws Exception {
     MigrateCredentialsAndAccountsWorkerCommand command =
         createCommand(
             createRequest(),
-            Lists.newArrayList(
-                new AgentVersionMigration() {
-                  @Override
-                  public boolean shouldChangeRequest(CredentialsRequest request) {
-                    return false;
-                  }
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME,
+                    new AgentVersionMigration() {
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        return false;
+                      }
 
-                  @Override
-                  public boolean shouldMigrateData(CredentialsRequest request) {
-                    return false;
-                  }
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        return false;
+                      }
 
-                  @Override
-                  public void changeRequest(CredentialsRequest request) {}
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {}
 
-                  @Override
-                  public void migrateData(CredentialsRequest request) {}
-                }));
+                      @Override
+                      public void migrateData(CredentialsRequest request) {}
+                    });
+              }
+            });
 
     AgentWorkerCommandResult result = command.execute();
     Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
@@ -81,31 +136,35 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     MigrateCredentialsAndAccountsWorkerCommand command =
         createCommand(
             createRequest(),
-            Lists.newArrayList(
-                new AgentVersionMigration() {
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME,
+                    new AgentVersionMigration() {
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        shouldChangeRequestCalled.set(true);
+                        return true;
+                      }
 
-                  @Override
-                  public boolean shouldChangeRequest(CredentialsRequest request) {
-                    shouldChangeRequestCalled.set(true);
-                    return true;
-                  }
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        shouldMigrateDataCalled.set(true);
+                        return true;
+                      }
 
-                  @Override
-                  public boolean shouldMigrateData(CredentialsRequest request) {
-                    shouldMigrateDataCalled.set(true);
-                    return true;
-                  }
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {
+                        changeRequestCalled.set(true);
+                      }
 
-                  @Override
-                  public void changeRequest(CredentialsRequest request) {
-                    changeRequestCalled.set(true);
-                  }
-
-                  @Override
-                  public void migrateData(CredentialsRequest request) {
-                    migrateDataCalled.set(true);
-                  }
-                }));
+                      @Override
+                      public void migrateData(CredentialsRequest request) {
+                        migrateDataCalled.set(true);
+                      }
+                    });
+              }
+            });
 
     AgentWorkerCommandResult result = command.execute();
     Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
@@ -126,31 +185,36 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     MigrateCredentialsAndAccountsWorkerCommand command =
         createCommand(
             createRequest(),
-            Lists.newArrayList(
-                new AgentVersionMigration() {
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME,
+                    new AgentVersionMigration() {
 
-                  @Override
-                  public boolean shouldChangeRequest(CredentialsRequest request) {
-                    shouldChangeRequestCalled.set(true);
-                    return true;
-                  }
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        shouldChangeRequestCalled.set(true);
+                        return true;
+                      }
 
-                  @Override
-                  public boolean shouldMigrateData(CredentialsRequest request) {
-                    shouldMigrateDataCalled.set(true);
-                    return false;
-                  }
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        shouldMigrateDataCalled.set(true);
+                        return false;
+                      }
 
-                  @Override
-                  public void changeRequest(CredentialsRequest request) {
-                    changeRequestCalled.set(true);
-                  }
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {
+                        changeRequestCalled.set(true);
+                      }
 
-                  @Override
-                  public void migrateData(CredentialsRequest request) {
-                    migrateDataCalled.set(true);
-                  }
-                }));
+                      @Override
+                      public void migrateData(CredentialsRequest request) {
+                        migrateDataCalled.set(true);
+                      }
+                    });
+              }
+            });
 
     AgentWorkerCommandResult result = command.execute();
     Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
@@ -170,26 +234,31 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     MigrateCredentialsAndAccountsWorkerCommand command =
         createCommand(
             request,
-            Lists.newArrayList(
-                new AgentVersionMigration() {
-                  @Override
-                  public boolean shouldChangeRequest(CredentialsRequest request) {
-                    return true;
-                  }
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME,
+                    new AgentVersionMigration() {
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        return true;
+                      }
 
-                  @Override
-                  public boolean shouldMigrateData(CredentialsRequest request) {
-                    return false;
-                  }
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        return false;
+                      }
 
-                  @Override
-                  public void changeRequest(CredentialsRequest request) {
-                    request.getProvider().setClassName("someClassNameVersion2");
-                  }
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {
+                        request.getProvider().setClassName("someClassNameVersion2");
+                      }
 
-                  @Override
-                  public void migrateData(CredentialsRequest request) {}
-                }));
+                      @Override
+                      public void migrateData(CredentialsRequest request) {}
+                    });
+              }
+            });
 
     AgentWorkerCommandResult result = command.execute();
     Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
@@ -218,34 +287,39 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     MigrateCredentialsAndAccountsWorkerCommand command =
         createCommand(
             request,
-            Lists.newArrayList(
-                new AgentVersionMigration() {
-                  @Override
-                  public boolean shouldChangeRequest(CredentialsRequest request) {
-                    return true;
-                  }
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME,
+                    new AgentVersionMigration() {
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        return true;
+                      }
 
-                  @Override
-                  public boolean shouldMigrateData(CredentialsRequest request) {
-                    return true;
-                  }
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        return true;
+                      }
 
-                  @Override
-                  public void changeRequest(CredentialsRequest request) {
-                    request.setUpdate(true);
-                  }
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {
+                        request.setUpdate(true);
+                      }
 
-                  @Override
-                  public void migrateData(CredentialsRequest request) {
-                    try {
-                      Account a = request.getAccounts().get(0).clone();
-                      a.setBankId(a.getBankId().replaceAll("-", ""));
-                      migrateAccounts(request, Lists.newArrayList(a));
-                    } catch (CloneNotSupportedException e) {
-                      Assert.fail("should allow cloning");
-                    }
-                  }
-                }));
+                      @Override
+                      public void migrateData(CredentialsRequest request) {
+                        try {
+                          Account a = request.getAccounts().get(0).clone();
+                          a.setBankId(a.getBankId().replaceAll("-", ""));
+                          migrateAccounts(request, Lists.newArrayList(a));
+                        } catch (CloneNotSupportedException e) {
+                          Assert.fail("should allow cloning");
+                        }
+                      }
+                    });
+              }
+            });
     AgentWorkerCommandResult result = command.execute();
     // this verifies a specific implementation instead of just input/output. But it'll do for
     // now
@@ -283,7 +357,7 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
   private Provider createProvider() {
     Provider p = new Provider();
     p.setClassName("someClassName");
-    p.setName("someName");
+    p.setName(PROVIDER_NAME);
     p.setMarket("SE");
     return p;
   }
@@ -311,17 +385,17 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
   }
 
   private MigrateCredentialsAndAccountsWorkerCommand createCommand(CredentialsRequest request) {
-      MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand = new MigrateCredentialsAndAccountsWorkerCommand(
-              request, wrapper);
-      migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableList.copyOf(migrations));
-      return migrateCredentialsAndAccountsWorkerCommand;
+    MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand =
+        new MigrateCredentialsAndAccountsWorkerCommand(request, wrapper);
+    migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableMap.copyOf(migrations));
+    return migrateCredentialsAndAccountsWorkerCommand;
   }
 
   private MigrateCredentialsAndAccountsWorkerCommand createCommand(
-      CredentialsRequest request, List<AgentVersionMigration> migrations) {
-      MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand = new MigrateCredentialsAndAccountsWorkerCommand(
-              request, wrapper);
-      migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableList.copyOf(migrations));
-      return migrateCredentialsAndAccountsWorkerCommand;
+      CredentialsRequest request, Map<String, AgentVersionMigration> migrations) {
+    MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand =
+        new MigrateCredentialsAndAccountsWorkerCommand(request, wrapper);
+    migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableMap.copyOf(migrations));
+    return migrateCredentialsAndAccountsWorkerCommand;
   }
 }
