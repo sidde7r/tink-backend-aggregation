@@ -18,6 +18,11 @@ public abstract class AgentVersionMigration {
 
   public abstract void migrateData(CredentialsRequest request);
 
+  public void updateAccounts(CredentialsRequest request) {
+    migrateData(request);
+    migrateAccounts(request, request.getAccounts());
+  }
+
   protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
     List<Account> accountList =
         accounts.stream().map(a -> migrateAccount(a)).collect(Collectors.toList());

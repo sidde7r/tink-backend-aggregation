@@ -48,7 +48,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
 
     if (migration.shouldMigrateData(request)) {
       // Change any data in the database
-      migration.migrateData(request);
+      migration.updateAccounts(request);
     }
   }
 
