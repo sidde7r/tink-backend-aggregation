@@ -74,12 +74,6 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
   }
 
   @Test
-  public void shouldChangeRequest_differentProvider_no() {
-    provider.setName(PROVIDER_NAME + 'x');
-    assertFalse(this.migration.shouldChangeRequest(this.request));
-  }
-
-  @Test
   public void shouldChangeRequest_sameAgent_no() {
     provider.setClassName(NEW_AGENT_NAME);
     assertFalse(this.migration.shouldChangeRequest(this.request));
