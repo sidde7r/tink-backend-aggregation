@@ -92,7 +92,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final LoggingFilter debugOutputLoggingFilter= new LoggingFilter(new PrintStream(System.out));
     private boolean debugOutput = false;
 
-    private final AgentContext context;
     private final Credentials credentials;
 
     private final ByteArrayOutputStream logOutputStream;
@@ -166,7 +165,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
     public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
             @Nullable SignatureKeyPair signatureKeyPair) {
-        this.context = context;
         this.agentAggregatorIdentifier = context;
         this.credentials = credentials;
 
@@ -255,23 +253,21 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.internalClient = new TinkApacheHttpClient4(httpHandler, this.internalClientConfig);
 
         // Add agent debug `LoggingFilter`, todo: move this into nxgen
-        if (this.context != null) {
-            try {
-                if (this.logOutputStream != null) {
-                    this.internalClient.addFilter(
-                            new LoggingFilter(
-                                    new PrintStream(
-                                            logOutputStream,
-                                            true,
-                                            "UTF-8")));
-                }
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalStateException(e);
+        try {
+            if (this.logOutputStream != null) {
+                this.internalClient.addFilter(
+                        new LoggingFilter(
+                                new PrintStream(
+                                        logOutputStream,
+                                        true,
+                                        "UTF-8")));
             }
-            if (this.metricRegistry != null && this.provider != null) {
-                addFilter(
-                        new MetricFilter(this.metricRegistry, this.provider));
-            }
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
+        if (this.metricRegistry != null && this.provider != null) {
+            addFilter(
+                    new MetricFilter(this.metricRegistry, this.provider));
         }
         if (this.debugOutput) {
             this.internalClient.addFilter(debugOutputLoggingFilter);
