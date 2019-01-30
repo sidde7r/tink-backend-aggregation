@@ -12,10 +12,19 @@ public abstract class AgentVersionMigration {
   private ControllerWrapper wrapper;
 
   /**
-   * This method is used to determine which vetrsion of agent for a given provider is used
-   * and if it's one using old or new format of `bankId`.
+   * Depending on result of this method the migrations will be performed or completely omitted. In
+   * implementation the class agent given in {@param request} can be obtained by using {@link
+   * Provider#getClassName() getClassName} method on the {@link CredentialsRequest#getProvider()
+   * provider}. Then this value needs to be inspected. If the {@link String className} corresponds
+   * to the implementation that uses new {@link Account#bankId} format there is no need of
+   * performing a migrations, so <code>false</code> should ve returned. When the {@link String
+   * className} is different, what usually means that it is pointing the previous version of the
+   * agent implementation that uses an old {@link Account#bankId} format the migration is necessary
+   * and <code>true</code> should be returned.
+   *
    * @param request
-   * @return <code>false</> if the {@param request} was done by a new agent version, <code>true</code> if it uses previous version of agent
+   * @return <code>false</code> if the {@param request} was done by a new agent version, <code>true
+   *     </code> if it uses previous version of agent
    */
   public abstract boolean shouldChangeRequest(CredentialsRequest request);
 
