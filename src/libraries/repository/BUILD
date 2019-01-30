@@ -1,6 +1,7 @@
 java_library(
     name = "repository",
     srcs = glob(["src/main/**/*.java"]),
+    resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
         "//third_party:c3p0_c3p0",
