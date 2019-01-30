@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.fetcher.loan.entities.AmountEntity;
@@ -86,7 +87,8 @@ public class FetchLoanDetailsResponse {
     }
 
     public Amount getInitialBalance() {
-        return new Amount(NordeaFIConstants.CURRENCY, credit.getLimit());
+        return Optional.of(new Amount(NordeaFIConstants.CURRENCY, credit.getLimit()))
+                .orElseGet(() -> new Amount(NordeaFIConstants.CURRENCY, amount.getGranted()));
     }
 
     public Amount getPaid() {

@@ -6,9 +6,27 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class AmountEntity {
     @JsonProperty
+    private double granted;
+    @JsonProperty
+    private double drawn;
+    @JsonProperty
+    private double undrawn;
+    @JsonProperty
     private double paid;
     @JsonProperty
     private double balance;
+
+    public double getGranted() {
+        return granted;
+    }
+
+    public double getDrawn() {
+        return drawn;
+    }
+
+    public double getUndrawn() {
+        return undrawn;
+    }
 
     public double getPaid() {
         return paid;
