@@ -158,6 +158,41 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             }
         }
     }
+
+    public TinkHttpClient(@Nullable AggregatorInfo aggregatorInfo, @Nullable MetricRegistry metricRegistry,
+            @Nullable ByteArrayOutputStream logOutPutStream, @Nullable SignatureKeyPair signatureKeyPair, @Nullable Provider provider) {
+        this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
+        this.internalClientConfig = new DefaultApacheHttpClient4Config();
+        this.internalCookieStore = new BasicCookieStore();
+        this.internalRequestConfigBuilder = RequestConfig.custom();
+        this.internalHttpClientBuilder = HttpClientBuilder.create()
+                .setRequestExecutor(requestExecutor)
+                .setDefaultCookieStore(this.internalCookieStore);
+
+        this.internalSslContextBuilder = new SSLContextBuilder()
+                .useProtocol("TLSv1.2")
+                .setSecureRandom(new SecureRandom());
+
+        this.redirectStrategy = new ApacheHttpRedirectStrategy();
+        this.logOutputStream = logOutPutStream;
+        this.aggregator = Objects.nonNull(aggregatorInfo) ? aggregatorInfo : AggregatorInfo.getAggregatorForTesting();
+        this.metricRegistry = metricRegistry;
+        this.provider = provider;
+
+        // Add an initial redirect handler to fix any illegal location paths
+        addRedirectHandler(new FixRedirectHandler());
+
+        // Add the filter that is responsible to add persistent data to each request
+        addFilter(this.persistentHeaderFilter);
+
+        setTimeout(DEFAULTS.TIMEOUT_MS);
+        setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
+        setMaxRedirects(DEFAULTS.MAX_REDIRECTS);
+        setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
+        setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
+        setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
+    }
+
     public TinkHttpClient(@Nullable AgentContext context, @Nullable SignatureKeyPair signatureKeyPair) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
