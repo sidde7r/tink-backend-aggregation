@@ -26,7 +26,8 @@ public class BankdataPinAuthenticatorTest {
 
         Credentials credentials = new Credentials();
         AgentContext context = new AgentTestContext(credentials);
-        TinkHttpClient client = new TinkHttpClient(context);
+        TinkHttpClient client = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
+                context.getLogOutputStream(), null, null);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();
         provider.setPayload(bankNo);

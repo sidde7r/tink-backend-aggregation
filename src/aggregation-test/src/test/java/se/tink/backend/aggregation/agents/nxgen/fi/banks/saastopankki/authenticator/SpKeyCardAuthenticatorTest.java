@@ -47,7 +47,8 @@ public class SpKeyCardAuthenticatorTest extends NextGenerationBaseAgentTest {
     @Test
     public void testAuthenticate() throws Exception {
         AgentContext context = new AgentTestContext(credentials);
-        TinkHttpClient client = new TinkHttpClient(context);
+        TinkHttpClient client = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
+                context.getLogOutputStream(), null, null);
         client.setDebugOutput(true);
         SamlinkSessionStorage sessionStorage = new SamlinkSessionStorage(new SessionStorage());
         SamlinkApiClient bankClient = new SamlinkApiClient(client, sessionStorage, new SamlinkConfiguration(
