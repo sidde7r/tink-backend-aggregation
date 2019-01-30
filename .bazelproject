@@ -25,5 +25,3 @@ import_run_configurations:
   tink-ide-settings/run/Server__Aggregation.xml
   tink-ide-settings/run/All_Tests.xml
   tink-ide-settings/run/Integration_Tests.xml
-  tink-ide-settings/run/abnamro/Server__Aggregation.xml
-  tink-ide-settings/run/kirkby/Server__Aggregation.xml
