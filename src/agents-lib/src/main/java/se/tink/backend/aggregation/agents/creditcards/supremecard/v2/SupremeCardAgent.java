@@ -5,49 +5,40 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.apache.http.client.utils.URIBuilder;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.*;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.AccountInfoEntity;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.model.TransactionEntity;
-import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.rpc.CollectBankIdResponse;
-import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.rpc.OrderBankIdResponse;
-import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.rpc.SamlRequest;
-import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.rpc.TransactionsRequest;
-import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.creditcards.supremecard.v2.rpc.*;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.utils.jersey.NoRedirectStrategy;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.utils.jersey.NoRedirectStrategy;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SupremeCardAgent extends AbstractAgent implements RefreshableItemExecutor {
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCardAccountsExecutor {
     private static final int MAX_ATTEMPTS = 65;
     private final Credentials credentials;
     private final SupremeCardApiAgent apiAgent;
@@ -339,20 +330,34 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
         return account;
     }
 
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case CREDITCARD_ACCOUNTS:
-            financialDataCacher.cacheAccount(getAccount());
-            break;
+    private enum UserMessage implements LocalizableEnum {
+        SSN_UPDATED(new LocalizableKey("The social security number has been updated, please try again"));
 
-        case CREDITCARD_TRANSACTIONS:
-            refreshTransactions();
-            break;
+        private final LocalizableKey key;
+
+        UserMessage(LocalizableKey key) {
+            this.key = key;
+        }
+
+        @Override
+        public LocalizableKey getKey() {
+            return key;
         }
     }
+    /////// Refresh Executor Refactor ////////
 
-    private void refreshTransactions() {
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return new FetchAccountsResponse(Collections.singletonList(getAccount()));
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return fetchTransactions();
+    }
+
+    private FetchTransactionsResponse fetchTransactions() {
+        Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
         AccountInfoEntity accountInfoEntity = getAccountInfoEntity();
         Account account = getAccount();
 
@@ -397,22 +402,8 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshableItemEx
                             .collect(Collectors.toList()));
         } while (failCounter < 3 && !isContentWithRefresh(account,
                 transactions));
-
-        financialDataCacher.updateTransactions(account, transactions);
+        transactionsMap.put(account, transactions);
+        return new FetchTransactionsResponse(transactionsMap);
     }
-
-    private enum UserMessage implements LocalizableEnum {
-        SSN_UPDATED(new LocalizableKey("The social security number has been updated, please try again"));
-
-        private final LocalizableKey key;
-
-        UserMessage(LocalizableKey key) {
-            this.key = key;
-        }
-
-        @Override
-        public LocalizableKey getKey() {
-            return key;
-        }
-    }
+    //////////////////////////////////////////
 }
