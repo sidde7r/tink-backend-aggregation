@@ -31,7 +31,7 @@ public class BankdataTransactionFetcherTest {
 
         Credentials credentials = new Credentials();
         AgentContext context = new AgentTestContext(credentials);
-        TinkHttpClient client = new TinkHttpClient(context, credentials);
+        TinkHttpClient client = new TinkHttpClient(context);
         client.setDebugOutput(debugOutput);
         Provider provider = new Provider();
         provider.setPayload(bankNo);

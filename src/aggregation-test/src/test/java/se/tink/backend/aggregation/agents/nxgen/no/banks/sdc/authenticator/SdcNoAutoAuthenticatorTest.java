@@ -32,7 +32,7 @@ public class SdcNoAutoAuthenticatorTest {
         SdcSessionStorage sessionStorage = new SdcSessionStorage(new SessionStorage());
         SdcPersistentStorage persistentStorage = new SdcPersistentStorage(new PersistentStorage());
 
-        SdcApiClient apiClient = new SdcApiClient(new TinkHttpClient(null, credentials), configuration);
+        SdcApiClient apiClient = new SdcApiClient(new TinkHttpClient(null), configuration);
 
        new SdcAutoAuthenticator(
                 apiClient,

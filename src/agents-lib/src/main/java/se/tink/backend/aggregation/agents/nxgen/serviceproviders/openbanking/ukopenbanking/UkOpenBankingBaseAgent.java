@@ -54,7 +54,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
             SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        this.paymentsHttpClient = new TinkHttpClient(context, credentials, signatureKeyPair);
+        this.paymentsHttpClient = new TinkHttpClient(context, signatureKeyPair);
         tinkProvider = request.getProvider();
     }
 

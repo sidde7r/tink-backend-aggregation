@@ -30,7 +30,7 @@ public class JyskeKeyCardAuthenticatorTest {
 
         JyskePersistentStorage persistentStorage = new JyskePersistentStorage(new PersistentStorage());
         JyskeKeyCardAuthenticator keyCardAuthenticator = new JyskeKeyCardAuthenticator(
-                new JyskeApiClient(new TinkHttpClient(null, credentials)), persistentStorage);
+                new JyskeApiClient(new TinkHttpClient(null)), persistentStorage);
 
         KeyCardInitValues cardValues = keyCardAuthenticator.init(user.username, user.mobilCode);
 

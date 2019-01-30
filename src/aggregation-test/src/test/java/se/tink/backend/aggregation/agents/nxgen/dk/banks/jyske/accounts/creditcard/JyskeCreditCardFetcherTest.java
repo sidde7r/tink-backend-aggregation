@@ -23,7 +23,7 @@ public class JyskeCreditCardFetcherTest {
         credentials.setType(CredentialsTypes.PASSWORD);
         credentials.setField(Field.Key.USERNAME, user.username);
         credentials.setField(Field.Key.PASSWORD, user.mobilCode);
-        JyskeApiClient apiClient = new JyskeApiClient(new TinkHttpClient(null, credentials));
+        JyskeApiClient apiClient = new JyskeApiClient(new TinkHttpClient(null));
         new JyskeAutoAuthenticator(apiClient, user.persistentStorage, credentials).autoAuthenticate();
 
         JyskeCreditCardFetcher creditCardFetcher = new JyskeCreditCardFetcher(apiClient);

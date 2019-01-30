@@ -26,7 +26,7 @@ public class BancoPopularTestBase {
     protected void setup() {
         credentials = new Credentials();
         AgentContext context = new AgentTestContext(credentials);
-        TinkHttpClient client = new TinkHttpClient(context, credentials);
+        TinkHttpClient client = new TinkHttpClient(context);
         client.setDebugOutput(true);
 
         persistentStorage = new BancoPopularPersistentStorage(new PersistentStorage());

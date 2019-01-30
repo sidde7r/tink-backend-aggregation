@@ -54,7 +54,7 @@ public class IngTestConfig {
     }
 
     private IngApiClient createTestApiClient() {
-        TinkHttpClient httpClient = new TinkHttpClient(null, this.credentials);
+        TinkHttpClient httpClient = new TinkHttpClient(null);
         httpClient.setFollowRedirects(false);
         httpClient.setUserAgent(USER_AGENT);
         return new IngApiClient(httpClient);

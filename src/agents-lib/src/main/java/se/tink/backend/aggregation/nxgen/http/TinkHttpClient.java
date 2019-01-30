@@ -47,7 +47,6 @@ import org.apache.http.params.CoreConnectionPNames;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -67,7 +66,6 @@ import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -160,8 +158,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             }
         }
     }
-    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
-            @Nullable SignatureKeyPair signatureKeyPair) {
+    public TinkHttpClient(@Nullable AgentContext context, @Nullable SignatureKeyPair signatureKeyPair) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
@@ -213,8 +210,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
     }
 
-    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
-        this(context, credentials, null);
+    public TinkHttpClient(@Nullable AgentContext context) {
+        this(context, null);
     }
 
     private void constructInternalClient() {

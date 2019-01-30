@@ -59,7 +59,7 @@ public final class BawagPskTransactionalAccountFetcherTest {
         Provider provider = new Provider();
         provider.setPayload("ebanking.bawagpsk.com, BAWAG");
 
-        final BawagPskApiClient apiClient = new BawagPskApiClient(new TinkHttpClient(context, credentials),
+        final BawagPskApiClient apiClient = new BawagPskApiClient(new TinkHttpClient(context),
                 new SessionStorage(), new PersistentStorage(), provider);
         authenticator = new BawagPskPasswordAuthenticator(apiClient);
         accountFetcher = new BawagPskTransactionalAccountFetcher(apiClient);
