@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.aggregationcontroller.v1.api;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,6 +50,22 @@ public interface UpdateService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Account updateAccount(UpdateAccountRequest request);
+
+
+    /**
+     * This method does currently only update the account's bankid. It may in the future be extended to update further
+     * metadata. This method should only be used in very specific situations. Not as a regular update. For regular cases
+     * refer to <code>updateAccount</code> on <code>POST /accounts/update</code>.
+     *
+     * @param accountId the id of the account to update
+     * @param newBankId bankId in new format
+     * @return
+     */
+    @PUT
+    @Path("/accounts/{id}/bankid")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Account updateAccountMetaData(@PathParam(value = "id") String accountId, String newBankId);
 
     @POST
     @Path("/accounts/transfer-destinations/update")

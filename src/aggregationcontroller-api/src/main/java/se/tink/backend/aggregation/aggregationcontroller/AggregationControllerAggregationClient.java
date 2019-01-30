@@ -83,6 +83,10 @@ public class AggregationControllerAggregationClient {
         return getUpdateService(hostConfiguration).updateAccount(request);
     }
 
+    public Account updateAccountMetaData(HostConfiguration hostConfiguration, String accountId, String newBankId) {
+        return getUpdateService(hostConfiguration).updateAccountMetaData(accountId, newBankId);
+    }
+
     public Response updateTransferDestinationPatterns(HostConfiguration hostConfiguration,
             UpdateTransferDestinationPatternsRequest request) {
         return getUpdateService(hostConfiguration).updateTransferDestinationPatterns(request);

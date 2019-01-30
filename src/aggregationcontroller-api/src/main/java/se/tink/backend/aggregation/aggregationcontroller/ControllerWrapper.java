@@ -60,6 +60,10 @@ public class ControllerWrapper {
         return client.updateAccount(configuration, request);
     }
 
+    public Account updateAccountMetaData(String accountId, String newBankId) {
+        return client.updateAccountMetaData(configuration, accountId, newBankId);
+    }
+
     public Response updateTransferDestinationPatterns(
             UpdateTransferDestinationPatternsRequest request) {
         return client.updateTransferDestinationPatterns(configuration, request);
