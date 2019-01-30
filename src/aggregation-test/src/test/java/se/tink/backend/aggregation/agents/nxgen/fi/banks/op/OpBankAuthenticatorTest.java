@@ -62,7 +62,7 @@ public class OpBankAuthenticatorTest {
         credentials.setField(Field.Key.USERNAME, username);
         credentials.setField(Field.Key.PASSWORD, password);
         credentials.setType(CredentialsTypes.PASSWORD);
-        TinkHttpClient tinkHttpClient = new TinkHttpClient(new AgentTestContext(credentials), null);
+        TinkHttpClient tinkHttpClient = new TinkHttpClient(new AgentTestContext(credentials));
         //tinkHttpClient.setDebugOutput(true);
         //tinkHttpClient.setProxy("http://127.0.0.1:8888");
 
@@ -179,7 +179,7 @@ public class OpBankAuthenticatorTest {
         SupplementalInformationController supplementalInformationController = new SupplementalInformationController(
                 context, credentials);
         OpBankApiClient bankClient =
-                spy(new OpBankApiClient(new TinkHttpClient(new AgentTestContext(null), null)));
+                spy(new OpBankApiClient(new TinkHttpClient(new AgentTestContext(null))));
         loginResultCaptor = new ResultCaptor();
         doAnswer(loginResultCaptor).when(bankClient).login(any());
         doReturn(new OpBankMobileConfigurationsEntity())

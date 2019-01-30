@@ -29,7 +29,7 @@ public class OpenIdApiClientTest {
     public void setup() {
         UKOB_TEST_CONFIG.validate();
 
-        TinkHttpClient httpClient = new TinkHttpClient(null, null);
+        TinkHttpClient httpClient = new TinkHttpClient();
         httpClient.disableSignatureRequestHeader();
         httpClient.trustRootCaCertificate(UKOB_TEST_CONFIG.getRootCAData(),
                 UKOB_TEST_CONFIG.getRootCAPassword());

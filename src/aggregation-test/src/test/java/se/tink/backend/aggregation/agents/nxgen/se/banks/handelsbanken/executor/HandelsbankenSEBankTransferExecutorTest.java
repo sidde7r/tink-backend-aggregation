@@ -80,7 +80,7 @@ public class HandelsbankenSEBankTransferExecutorTest {
                 Collections.emptyMap());
         HandelsbankenSessionStorage sessionStorage = new HandelsbankenSessionStorage(new SessionStorage(),
                 configuration);
-        HandelsbankenSEApiClient client = spy(new HandelsbankenSEApiClient(new TinkHttpClient(null),
+        HandelsbankenSEApiClient client = spy(new HandelsbankenSEApiClient(new TinkHttpClient(),
                 configuration));
         specificationResponseCaptor = new ResultCaptor<>();
         doAnswer(specificationResponseCaptor).when(client)

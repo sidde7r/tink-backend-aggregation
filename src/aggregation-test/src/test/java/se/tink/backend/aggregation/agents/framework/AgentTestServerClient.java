@@ -37,7 +37,7 @@ public class AgentTestServerClient {
     }
 
     private static TinkHttpClient constructHttpClient() {
-        TinkHttpClient client = new TinkHttpClient(null, null);
+        TinkHttpClient client = new TinkHttpClient();
         client.setTimeout(TIMEOUT_MS);
 
         // Disable ssl verification because of self signed certificate.

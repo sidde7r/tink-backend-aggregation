@@ -34,7 +34,7 @@ import se.tink.libraries.metrics.MetricRegistry;
 public class AgentTestContext extends AgentContext {
     private static final LogUtils log = new LogUtils(AgentTestContext.class);
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final TinkHttpClient supplementalClient = new TinkHttpClient(null, null);
+    private static final TinkHttpClient supplementalClient = new TinkHttpClient();
     private static final String SUPPLEMENTAL_TEST_API = "http://127.0.0.1:7357/api/v1/supplemental";
     private static final String CLUSTER_ID_FOR_TESTING = "test-local-development";
 

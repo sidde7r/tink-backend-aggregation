@@ -147,7 +147,7 @@ public class AlandsBankenAutoAuthenticatorTest {
         credentials.setField(Field.Key.USERNAME, username);
         credentials.setField(Field.Key.PASSWORD, password);
         credentials.setType(CredentialsTypes.PASSWORD);
-        client = spy(new CrossKeyApiClient(new TinkHttpClient(null),
+        client = spy(new CrossKeyApiClient(new TinkHttpClient(),
                 new AlandsBankenFIConfiguration()));
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_ID, deviceId);
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_TOKEN, deviceToken);

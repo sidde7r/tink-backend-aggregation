@@ -32,7 +32,7 @@ public class SdcDkPinAuthenticatorTest {
         SdcSessionStorage sessionStorage = new SdcSessionStorage(new SessionStorage());
         SdcPersistentStorage persistentStorage = new SdcPersistentStorage(new PersistentStorage());
 
-        SdcApiClient apiClient = new SdcApiClient(new TinkHttpClient(null), configuration);
+        SdcApiClient apiClient = new SdcApiClient(new TinkHttpClient(), configuration);
 
         new SdcPinAuthenticator(
                 apiClient,
