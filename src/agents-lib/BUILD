@@ -111,6 +111,7 @@ java_library(
         "//src/libraries/account:enums",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/amount",
+        "//src/libraries/credentials:service",
         "//src/libraries/date",
         "//src/libraries/giro_validation:giro-validation",
         "//src/libraries/i18n",
