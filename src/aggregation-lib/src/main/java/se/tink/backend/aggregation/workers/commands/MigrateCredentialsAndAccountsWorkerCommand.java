@@ -29,21 +29,13 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
   @Override
   public AgentWorkerCommandResult execute() throws Exception {
 
-      migrations.entrySet().stream()
-              .filter(e -> e.getKey().equals(request.getProvider().getName()))
-              .map(e -> e.getValue())
-              .filter(m-> m.shouldChangeRequest(request))
-              .forEach(m -> migrate(m));
-
-//    for (AgentVersionMigration migration : migrations) {
-//
-//      if (!migration.shouldChangeRequest(request)) {
-//         nothing to migrate for this request
-//        continue;
-//      }
-//
-//      migrate(migration);
-//    }
+    migrations
+        .entrySet()
+        .stream()
+        .filter(e -> e.getKey().equals(request.getProvider().getName()))
+        .map(e -> e.getValue())
+        .filter(m -> m.shouldChangeRequest(request))
+        .forEach(m -> migrate(m));
 
     return AgentWorkerCommandResult.CONTINUE;
   }
