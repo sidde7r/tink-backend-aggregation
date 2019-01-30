@@ -44,17 +44,6 @@ filegroup(
 )
 
 filegroup(
-    name = "main-api-test",
-    srcs = glob(["test/*"]) + [
-        "seeding/iso_countries.csv",
-        "seeding/cities-global.json",
-        "seeding/cities-se.txt",
-        "seeding/cities-nl.txt",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-filegroup(
     name = "aggregation-test",
     srcs = glob([
         "aggregation/**",
