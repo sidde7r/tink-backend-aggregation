@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
@@ -20,7 +19,6 @@ import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigra
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
-import se.tink.libraries.user.rpc.User;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -327,13 +325,6 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
         .updateAccountMetaData(any(String.class), argumentCaptor.capture());
     String newBankId = argumentCaptor.getValue();
 
-    //        Assert.assertEquals(request.getUser().getId(), .getUser());
-    //        Assert.assertEquals(request.getCredentials().getId(),
-    // newBankId.getCredentialsId());
-    //        Assert.assertEquals(request.getAccounts().get(0).getUserId(),
-    // newBankId.getAccount().getUserId());
-    //        Assert.assertEquals("bankid", newBankId.getAccount().getBankId());
-
     Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
     // Same values, but different instances
     Assert.assertNotEquals(a, request.getAccounts().get(0));
@@ -345,11 +336,7 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     CredentialsRequest request = new RefreshInformationRequest();
 
     request.setProvider(createProvider());
-    request.setUser(createUser());
-    request.setCredentials(createCredentials(request.getUser().getId()));
-    request.setAccounts(
-        Lists.newArrayList(
-            createAccount(request.getUser().getId(), request.getCredentials().getId())));
+    request.setAccounts(Lists.newArrayList(createAccount()));
 
     return request;
   }
@@ -362,25 +349,10 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     return p;
   }
 
-  private User createUser() {
-    User u = new User();
-    u.setId(StringUtils.generateUUID());
-    return u;
-  }
-
-  private Credentials createCredentials(String userId) {
-    Credentials c = new Credentials();
-    c.setId(StringUtils.generateUUID());
-    c.setUserId(userId);
-    return c;
-  }
-
-  private Account createAccount(String userId, String credentialsId) {
+  private Account createAccount() {
     Account a = new Account();
     a.setBankId("b-a-n-k-i-d");
     a.setId(StringUtils.generateUUID());
-    a.setUserId(userId);
-    a.setCredentialsId(credentialsId);
     return a;
   }
 
