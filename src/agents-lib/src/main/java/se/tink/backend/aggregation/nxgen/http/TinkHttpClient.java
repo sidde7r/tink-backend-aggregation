@@ -95,6 +95,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final AgentContext context;
     private final Credentials credentials;
 
+    private final ByteArrayOutputStream logOutputStream;
     private final MetricRegistry metricRegistry;
     private final Provider provider;
 
@@ -183,6 +184,12 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
 
+        if (context != null && context.getLogOutputStream() != null) {
+            this.logOutputStream = context.getLogOutputStream();
+        } else {
+            this.logOutputStream = null;
+        }
+
         if (context instanceof AgentWorkerContext) {
             AgentWorkerContext agentWorkerContext = (AgentWorkerContext) context;
             this.metricRegistry = agentWorkerContext.getMetricRegistry();
@@ -250,11 +257,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         // Add agent debug `LoggingFilter`, todo: move this into nxgen
         if (this.context != null) {
             try {
-                if (this.context.getLogOutputStream() != null) {
+                if (this.logOutputStream != null) {
                     this.internalClient.addFilter(
                             new LoggingFilter(
                                     new PrintStream(
-                                            this.context.getLogOutputStream(),
+                                            logOutputStream,
                                             true,
                                             "UTF-8")));
                 }
