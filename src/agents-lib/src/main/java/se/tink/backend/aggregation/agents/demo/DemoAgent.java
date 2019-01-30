@@ -622,7 +622,7 @@ public class DemoAgent extends AbstractAgent implements RefreshCheckingAccountsE
     @Override
     public FetchEInvoicesResponse fetchEInvoices() {
         return new FetchEInvoicesResponse(getEInvoices());
-    }:
+    }
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
         Map<Account, List<TransferDestinationPattern>> transferDestinations = new HashMap<>();
