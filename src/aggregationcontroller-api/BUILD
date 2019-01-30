@@ -20,7 +20,6 @@ java_library(
         "//src/libraries/strings",
         "//src/libraries/transfer:rpc",
         "//src/libraries/uuid",
-        "//src/main-api",
         "//third_party:com_datastax_cassandra_cassandra_driver_core",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
