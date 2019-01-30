@@ -2,15 +2,18 @@ package se.tink.backend.aggregation.agents.banks.se.collector;
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.UniformInterfaceException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.CollectAuthenticationResponse;
@@ -18,26 +21,31 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
+import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.net.TinkApacheHttpClient4;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 
-public class CollectorAgent extends AbstractAgent implements RefreshableItemExecutor,
-        TransferExecutor {
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+public class CollectorAgent extends AbstractAgent
+        implements RefreshSavingsAccountsExecutor,
+                RefreshTransferDestinationExecutor,
+                TransferExecutor {
     private static final int MAX_ATTEMPTS = 90;
 
     private final CollectorApiClient apiClient;
@@ -148,40 +156,6 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
     }
 
     @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case SAVING_ACCOUNTS:
-            List<Account> accounts = apiClient.getAccounts();
-            financialDataCacher.cacheAccounts(accounts);
-            break;
-
-        case SAVING_TRANSACTIONS:
-            for (Account account : apiClient.getAccounts()) {
-                List<Transaction> transactions = apiClient.fetchTransactionsFor(account);
-
-                financialDataCacher.updateTransactions(account, transactions);
-            }
-            break;
-
-        case TRANSFER_DESTINATIONS:
-            TransferDestinationsResponse response = new TransferDestinationsResponse();
-            for (Account account : systemUpdater.getUpdatedAccounts()) {
-                SwedishIdentifier withdrawalIdentifier = apiClient.getWithdrawalIdentifierFor(account);
-
-                if (withdrawalIdentifier == null) {
-                    return;
-                }
-
-                TransferDestinationPattern pattern = TransferDestinationPattern.createForSingleMatch(withdrawalIdentifier);
-                response.addDestination(account, pattern);
-            }
-
-            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
-            break;
-        }
-    }
-
-    @Override
     public void execute(Transfer transfer)
             throws Exception, TransferExecutionException {
         switch (transfer.getType()) {
@@ -246,4 +220,43 @@ public class CollectorAgent extends AbstractAgent implements RefreshableItemExec
     public void attachHttpFilters(ClientFilterFactory filterFactory) {
         filterFactory.addClientFilter(httpClient);
     }
+
+    /////////// Refresh Executor Refactor /////////////
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return new FetchAccountsResponse(apiClient.getAccounts());
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
+        for (Account account : apiClient.getAccounts()) {
+            List<Transaction> transactions = apiClient.fetchTransactionsFor(account);
+
+            transactionsMap.put(account, transactions);
+        }
+
+        return new FetchTransactionsResponse(transactionsMap);
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
+        Map<Account, List<TransferDestinationPattern>> destinations = new HashMap<>();
+        for (Account account : accounts) {
+            SwedishIdentifier withdrawalIdentifier = apiClient.getWithdrawalIdentifierFor(account);
+
+            if (withdrawalIdentifier == null) {
+                return new FetchTransferDestinationsResponse(Collections.emptyMap());
+            }
+
+            TransferDestinationPattern pattern = TransferDestinationPattern.createForSingleMatch(withdrawalIdentifier);
+
+            destinations.put(account, Collections.singletonList(pattern));
+        }
+
+        return new FetchTransferDestinationsResponse(destinations);
+    }
+
+    ///////////////////////////////////////////////////
 }
