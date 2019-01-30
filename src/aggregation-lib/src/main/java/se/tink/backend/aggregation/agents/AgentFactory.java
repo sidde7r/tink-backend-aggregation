@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.base.Objects;
 import java.lang.reflect.Constructor;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.demo.DemoAgent;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -24,7 +23,7 @@ public class AgentFactory {
         // Check if this is demo account.
 
         if (credentials.isDemoCredentials() && !Objects.equal(credentials.getType(), CredentialsTypes.FRAUD)) {
-            agentClass = DemoAgent.class;
+            agentClass = AgentClassFactory.getAgentClass("demo.DemoAgent");
             credentials.setPassword("demo");
         } else {
             agentClass = AgentClassFactory.getAgentClass(provider);
