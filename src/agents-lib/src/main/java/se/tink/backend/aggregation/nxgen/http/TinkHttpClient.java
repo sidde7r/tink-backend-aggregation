@@ -247,7 +247,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
                 throw new IllegalStateException(e);
             }
             if (this.context instanceof AgentWorkerContext) {
-                addFilter(new MetricFilter((AgentWorkerContext) this.context));
+                AgentWorkerContext agentWorkerContext = (AgentWorkerContext) this.context;
+                addFilter(
+                        new MetricFilter(
+                                agentWorkerContext.getMetricRegistry(),
+                                agentWorkerContext.getRequest().getProvider()));
             }
         }
         if (this.debugOutput) {
