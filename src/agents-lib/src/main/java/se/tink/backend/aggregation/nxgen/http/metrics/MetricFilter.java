@@ -22,8 +22,12 @@ public class MetricFilter extends Filter {
     private final Provider provider;
 
     public MetricFilter(AgentWorkerContext context) {
-        registry = context.getMetricRegistry();
-        provider = context.getRequest().getProvider();
+        this(context.getMetricRegistry(), context.getRequest().getProvider());
+    }
+
+    public MetricFilter(MetricRegistry registry, Provider provider) {
+        this.registry = registry;
+        this.provider = provider;
     }
 
     private MetricId populateMetric(MetricId metric, HttpResponse response) {
