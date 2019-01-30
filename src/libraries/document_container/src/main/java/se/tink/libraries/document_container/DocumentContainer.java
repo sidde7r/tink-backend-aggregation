@@ -1,10 +1,10 @@
-package se.tink.backend.core;
+package se.tink.libraries.documentcontainer;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.jersey.core.util.Base64;
 import java.io.IOException;
-import org.apache.commons.io.IOUtils;
 import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
 
 public class DocumentContainer {
 
@@ -12,14 +12,13 @@ public class DocumentContainer {
     private String mimeType;
     private String base64Representation;
 
-    public DocumentContainer() {
-
-    }
+    public DocumentContainer() {}
 
     public DocumentContainer(String mimeType, InputStream documentInputStream) {
         this.mimeType = mimeType;
         try {
-            base64Representation = new String(Base64.encode(IOUtils.toByteArray(documentInputStream)));
+            base64Representation =
+                    new String(Base64.encode(IOUtils.toByteArray(documentInputStream)));
         } catch (IOException e) {
             e.printStackTrace();
         }

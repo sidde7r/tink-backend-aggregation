@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.aggregationcontroller.v1.rpc;
 
-import se.tink.backend.core.DocumentContainer;
+import se.tink.libraries.documentcontainer.DocumentContainer;
 
 public class UpdateDocumentRequest {
     private String userId;
