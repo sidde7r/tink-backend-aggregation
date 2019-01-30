@@ -75,7 +75,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
-    private final AgentAggregatorIdentifier agentAggregatorIdentifier;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -165,7 +164,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
     public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
             @Nullable SignatureKeyPair signatureKeyPair) {
-        this.agentAggregatorIdentifier = context;
         this.credentials = credentials;
 
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
@@ -204,8 +202,12 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         addFilter(this.persistentHeaderFilter);
 
         // The context should only be null if the HttpClient if used for a test
-        this.aggregator = Objects.isNull(agentAggregatorIdentifier) ?
-                AggregatorInfo.getAggregatorForTesting() : agentAggregatorIdentifier.getAggregatorInfo();
+        if (context != null) {
+            this.aggregator = Objects.isNull(context.getAggregatorInfo()) ?
+                    AggregatorInfo.getAggregatorForTesting() : context.getAggregatorInfo();
+        } else {
+            this.aggregator = AggregatorInfo.getAggregatorForTesting();
+        }
 
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
