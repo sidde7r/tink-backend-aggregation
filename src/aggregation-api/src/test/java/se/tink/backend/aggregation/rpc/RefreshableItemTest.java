@@ -6,6 +6,7 @@ import com.google.common.collect.Ordering;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class RefreshableItemTest {
 

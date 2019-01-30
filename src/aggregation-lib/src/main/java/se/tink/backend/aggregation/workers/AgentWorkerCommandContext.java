@@ -27,7 +27,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreAccountMapper;
-import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;

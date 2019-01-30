@@ -7,7 +7,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 import java.util.List;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 
 public class RefreshMetricNameFactory {

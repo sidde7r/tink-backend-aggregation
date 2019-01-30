@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public abstract class NextGenerationBaseAgentTest<T extends NextGenerationAgent> extends AbstractAgentTest<T> {
     protected NextGenerationBaseAgentTest(Class<T> cls) {

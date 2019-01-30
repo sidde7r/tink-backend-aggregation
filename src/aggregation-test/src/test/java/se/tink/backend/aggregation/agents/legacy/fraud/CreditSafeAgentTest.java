@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.configuration.models.AggregationServiceConfig
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
 import se.tink.libraries.social.security.TestSSN;

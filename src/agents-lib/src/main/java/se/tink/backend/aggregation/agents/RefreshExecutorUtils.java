@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class RefreshExecutorUtils {
 

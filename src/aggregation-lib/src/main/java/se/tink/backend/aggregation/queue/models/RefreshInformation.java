@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.queue.models;
 import java.util.Map;
 import org.slf4j.MDC;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 
 public class RefreshInformation {
 

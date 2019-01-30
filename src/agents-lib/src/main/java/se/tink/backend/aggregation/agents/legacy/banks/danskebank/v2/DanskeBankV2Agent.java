@@ -94,7 +94,7 @@ import se.tink.backend.aggregation.agents.utils.giro.validation.GiroMessageValid
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;

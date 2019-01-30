@@ -32,7 +32,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public class NordnetAgent extends AbstractAgent implements RefreshableItemExecutor {
     private static final int MAX_ATTEMPTS = 60;
