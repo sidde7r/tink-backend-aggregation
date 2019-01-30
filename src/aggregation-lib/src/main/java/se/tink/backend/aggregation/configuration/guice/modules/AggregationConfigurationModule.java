@@ -31,7 +31,6 @@ public class AggregationConfigurationModule extends AbstractModule {
         bindConstant().annotatedWith(Names.named("isMultiClientDevelopment"))
                 .to(configuration.isMultiClientDevelopment());
 
-        // Tink monolith (common-lib and main-api) configurations
         bind(CacheConfiguration.class).toProvider(Providers.of(configuration.getCacheConfiguration()));
         bind(SqsQueueConfiguration.class).toProvider(Providers.of(configuration.getSqsQueueConfiguration()));
         bind(AggregationServiceConfiguration.class).toInstance(configuration);

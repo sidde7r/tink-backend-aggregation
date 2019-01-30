@@ -33,7 +33,6 @@ public class ValidateProviderAgentWorkerStatus extends AgentWorkerCommand {
         credentials.setStatus(CredentialsStatus.UNCHANGED);
         credentials.clearSensitiveInformation(provider);
 
-        // TODO: Refactor System API side to not depend on :main-api
         se.tink.libraries.credentials.rpc.Credentials coreCredentials = CoreCredentialsMapper
                 .fromAggregationCredentials(credentials);
 

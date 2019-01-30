@@ -112,12 +112,6 @@ public class AggregationLogger extends se.tink.libraries.log.LogUtils {
         return new String(Arrays.copyOfRange(chars, start, start + length));
     }
 
-    /*
-     * {@link Transfer} loggers
-     *
-     * Transfer is still a part of :main-api, but this will change shortly
-     */
-
     private String format(Transfer transfer) {
         return "[transferId: " + UUIDUtils.toTinkUUID(transfer.getId()) + "] ";
     }
@@ -134,19 +128,9 @@ public class AggregationLogger extends se.tink.libraries.log.LogUtils {
         this.log.error(format(transfer) + message, e);
     }
 
-    /*
-     * {@link Account} loggers
-     *
-     * Account is still a part of :main-api, but this will change shortly
-     */
-
     public void info(Account account, String message) {
         this.log.info(String.format("[accountId: %s] %s", account.getId(), message));
     }
-
-    /*
-     * {@link GenericApplication}, {@link Credentials} loggers
-     */
 
     private String format(GenericApplication application, String message) {
         return "[applicationId: " + UUIDUtils.toTinkUUID(application.getApplicationId()) + "] " + message;

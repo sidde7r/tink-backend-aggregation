@@ -307,7 +307,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
                 new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest();
 
         updateAccountRequest.setUser(request.getCredentials().getUserId());
-        // TODO: Refactor System API side to not depend on :main-api
         updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
         updateAccountRequest.setAccountFeatures(accountFeatures);
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
@@ -341,7 +340,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         Credentials credentialsCopy = credentials.clone();
         credentialsCopy.clearSensitiveInformation(request.getProvider());
 
-        // TODO: Refactor System API side to not depend on :main-api
         se.tink.libraries.credentials.rpc.Credentials coreCredentials = CoreCredentialsMapper
                 .fromAggregationCredentials(credentialsCopy);
 

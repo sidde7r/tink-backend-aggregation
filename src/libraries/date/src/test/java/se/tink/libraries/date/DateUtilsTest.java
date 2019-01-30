@@ -44,8 +44,6 @@ public class DateUtilsTest {
 
     @Before
     public void setup() {
-        // TODO: This is more or less a copy of SwedishTimeRule, but in Maven main-api is not allowed to depend on
-        // common-lib. When Maven is gone, this should be removed.
         TimeZone.setDefault(TimeZone.getTimeZone(TZ));
         DateTimeZone.setDefault(DateTimeZone.forID(TZ));
         DateTimeConfig.setGlobalDefault(new DateTimeConfig() {{
