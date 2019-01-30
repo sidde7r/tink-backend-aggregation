@@ -10,8 +10,6 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
-import se.tink.backend.aggregation.agents.creditcards.rikskortet.RikskortetAgent;
-
 import com.google.common.collect.Lists;
 
 public class SOAPUserAgentHandler implements SOAPHandler<SOAPMessageContext> {
