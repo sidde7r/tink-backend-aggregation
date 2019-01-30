@@ -20,6 +20,7 @@ junit_test(
     deps = [
         "//src/agents-api",
         "//src/agents-lib",
+        "//src/agents-lib:agents-nxgen",
         "//src/agents-models",
         "//src/aggregation-api",
         "//src/aggregation-lib",
