@@ -250,7 +250,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public TinkHttpClient() {
-        this(null, null);
+        this(null, null, null, null, null);
     }
 
     private void constructInternalClient() {
