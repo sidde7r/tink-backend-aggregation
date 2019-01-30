@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.rpc;
 
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.user.rpc.User;
 import se.tink.backend.agents.rpc.Provider;
 

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v11.UkOpenBankingV11Pis;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AibAgent extends UkOpenBankingBaseAgent {
     public AibAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

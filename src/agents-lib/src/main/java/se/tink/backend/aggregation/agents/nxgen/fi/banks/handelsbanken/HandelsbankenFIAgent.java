@@ -22,7 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class HandelsbankenFIAgent

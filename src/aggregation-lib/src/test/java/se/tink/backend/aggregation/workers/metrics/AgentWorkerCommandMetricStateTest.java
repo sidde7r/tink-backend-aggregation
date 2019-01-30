@@ -5,7 +5,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderTypes;
-import se.tink.backend.aggregation.rpc.CredentialsRequestType;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;

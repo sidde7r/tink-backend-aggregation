@@ -48,7 +48,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.S
 import se.tink.backend.aggregation.agents.utils.demo.DemoDataUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.credentials.demo.DemoCredentials;
 import se.tink.credentials.demo.DemoCredentials.DemoUserFeature;

@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fr.banks.banquetransatlantique;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.euroinformation.EuroInformationAgent;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class BanqueTransatlantiqueAgent extends EuroInformationAgent {

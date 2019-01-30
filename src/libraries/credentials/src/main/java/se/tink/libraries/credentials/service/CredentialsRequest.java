@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.libraries.credentials.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

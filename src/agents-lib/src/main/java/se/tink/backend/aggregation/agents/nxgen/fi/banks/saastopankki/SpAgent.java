@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.saastopankki;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.SamlinkConfiguration;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class SpAgent extends SamlinkAgent {

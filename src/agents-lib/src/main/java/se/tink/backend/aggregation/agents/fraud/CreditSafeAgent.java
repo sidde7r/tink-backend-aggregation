@@ -36,7 +36,7 @@ import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.GetDataTest;
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.Language;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.libraries.user.rpc.User;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.SignicatBankIdAuthenticator;

@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.L
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TimelineRequest;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsRequest;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;

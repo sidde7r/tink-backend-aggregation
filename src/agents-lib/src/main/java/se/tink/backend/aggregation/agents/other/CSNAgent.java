@@ -26,7 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBod
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {

@@ -7,11 +7,9 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.Handelsba
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.FirstLoginResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
 
 public class HandelsbankenNOAutoAuthenticator implements AutoAuthenticator {
     private final HandelsbankenNOApiClient apiClient;

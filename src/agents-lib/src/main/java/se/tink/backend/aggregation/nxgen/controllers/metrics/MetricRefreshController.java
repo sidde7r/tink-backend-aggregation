@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.rpc.CredentialsRequestType;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 

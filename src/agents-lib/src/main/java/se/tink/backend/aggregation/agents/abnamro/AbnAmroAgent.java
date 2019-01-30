@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshableItem;
 import se.tink.libraries.abnamro.client.EnrollmentClient;
 import se.tink.libraries.abnamro.client.IBSubscriptionClient;
@@ -333,6 +333,7 @@ public class AbnAmroAgent extends AbstractAgent implements RefreshableItemExecut
                 .filter(a -> a.getBankId().length() == OLD_ICS_ID_LENGTH)
                 .filter(a -> importedAccounts.stream().anyMatch(isOldICSAccount(a)))
                 .forEach(a -> {
+                    a.setBankId(a.getBankId().concat("-duplicate"));
                     a.setExcluded(true);
                     a.setClosed(true);
                     financialDataCacher.cacheAccount(a);

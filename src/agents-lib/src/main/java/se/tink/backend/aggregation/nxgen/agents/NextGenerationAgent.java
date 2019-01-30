@@ -52,10 +52,9 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.transfer.rpc.Transfer;
-
+import se.tink.libraries.i18n.Catalog;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collections;
