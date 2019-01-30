@@ -20,7 +20,6 @@ java_library(
     deps = [
         "//src/agents-api",
         "//src/agents-models",
-        "//src/aggregation-api",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account:enums",
@@ -211,7 +210,6 @@ junit_test(
         "//src/agents-api",
         "//src/agents-lib",
         "//src/agents-models",
-        "//src/aggregation-api",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account:enums",
