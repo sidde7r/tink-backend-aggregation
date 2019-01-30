@@ -91,8 +91,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final LoggingFilter debugOutputLoggingFilter= new LoggingFilter(new PrintStream(System.out));
     private boolean debugOutput = false;
 
-    private final Credentials credentials;
-
     private final ByteArrayOutputStream logOutputStream;
     private final MetricRegistry metricRegistry;
     private final Provider provider;
@@ -164,8 +162,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
     public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
             @Nullable SignatureKeyPair signatureKeyPair) {
-        this.credentials = credentials;
-
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
