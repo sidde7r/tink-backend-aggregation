@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerCommand {
 

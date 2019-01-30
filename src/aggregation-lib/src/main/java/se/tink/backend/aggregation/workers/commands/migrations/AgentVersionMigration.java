@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class AgentVersionMigration {
 
