@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.rpc.CredentialsRequest;
@@ -10,30 +9,21 @@ import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigra
 
 public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerCommand {
 
-  private static final ImmutableList<AgentVersionMigration> CURRENT_MIGRATIONS =
+  private final ControllerWrapper controllerWrapper;
+  private final CredentialsRequest request;
+  protected ImmutableList<AgentVersionMigration> migrations =
       ImmutableList.of(
           // Add your migrations here
           );
-
-  private final ImmutableList<AgentVersionMigration> migrations;
-  private final ControllerWrapper controllerWrapper;
-  private final CredentialsRequest request;
 
   public MigrateCredentialsAndAccountsWorkerCommand(
       CredentialsRequest request, ControllerWrapper controllerWrapper) {
     this.request = request;
     this.controllerWrapper = controllerWrapper;
-    this.migrations = CURRENT_MIGRATIONS;
   }
 
-  @VisibleForTesting
-  public MigrateCredentialsAndAccountsWorkerCommand(
-      CredentialsRequest request,
-      ControllerWrapper controllerWrapper,
-      ImmutableList<AgentVersionMigration> migrationsOverride) {
-    this.request = request;
-    this.controllerWrapper = controllerWrapper;
-    this.migrations = migrationsOverride;
+  protected void setMigrations(ImmutableList<AgentVersionMigration> migrations) {
+    this.migrations = migrations;
   }
 
   @Override

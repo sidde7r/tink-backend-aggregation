@@ -311,12 +311,17 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
   }
 
   private MigrateCredentialsAndAccountsWorkerCommand createCommand(CredentialsRequest request) {
-    return new MigrateCredentialsAndAccountsWorkerCommand(request, wrapper, migrations);
+      MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand = new MigrateCredentialsAndAccountsWorkerCommand(
+              request, wrapper);
+      migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableList.copyOf(migrations));
+      return migrateCredentialsAndAccountsWorkerCommand;
   }
 
   private MigrateCredentialsAndAccountsWorkerCommand createCommand(
       CredentialsRequest request, List<AgentVersionMigration> migrations) {
-    return new MigrateCredentialsAndAccountsWorkerCommand(
-        request, wrapper, ImmutableList.copyOf(migrations));
+      MigrateCredentialsAndAccountsWorkerCommand migrateCredentialsAndAccountsWorkerCommand = new MigrateCredentialsAndAccountsWorkerCommand(
+              request, wrapper);
+      migrateCredentialsAndAccountsWorkerCommand.setMigrations(ImmutableList.copyOf(migrations));
+      return migrateCredentialsAndAccountsWorkerCommand;
   }
 }
