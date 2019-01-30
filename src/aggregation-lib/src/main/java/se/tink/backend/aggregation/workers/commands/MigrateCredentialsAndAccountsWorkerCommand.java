@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.workers.commands;
 
 import com.google.common.collect.ImmutableMap;
+import org.assertj.core.util.VisibleForTesting;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -22,10 +23,19 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     this.controllerWrapper = controllerWrapper;
   }
 
+  @VisibleForTesting
   protected void setMigrations(ImmutableMap<String, AgentVersionMigration> migrations) {
     this.migrations = migrations;
   }
 
+  /**
+   * This method execuds a command to migrate value of `bankId` to a new format. It checks the
+   * provder name and looks for it in the {@link
+   * MigrateCredentialsAndAccountsWorkerCommand#migrations map}.
+   *
+   * @return {@link AgentWorkerCommandResult#CONTINUE status} after successful execution
+   * @throws Exception
+   */
   @Override
   public AgentWorkerCommandResult execute() throws Exception {
 
@@ -40,6 +50,10 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     return AgentWorkerCommandResult.CONTINUE;
   }
 
+  /**
+   * @param migration is an instance of {@link AgentVersionMigration} that implements the logics for
+   *     the new `bankId` format as well as the validation if a migration should be executed.
+   */
   private void migrate(AgentVersionMigration migration) {
     // Change the Request
     migration.changeRequest(request);
