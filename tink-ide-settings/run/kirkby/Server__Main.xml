@@ -1,7 +1,0 @@
-<configuration default="false" name="KIRKBY - Server: Main" type="BlazeCommandRunConfigurationType"
-               factoryName="Bazel Command" singleton="true" keep-in-sync="true"
-               handler-id="BlazeCommandGenericRunConfigurationHandlerProvider" blaze-command="run">
-    <blaze-target>//:main</blaze-target>
-    <blaze-user-exe-flag>server</blaze-user-exe-flag>
-    <blaze-user-exe-flag>etc/kirkby/development-main-server.yml</blaze-user-exe-flag>
-</configuration>

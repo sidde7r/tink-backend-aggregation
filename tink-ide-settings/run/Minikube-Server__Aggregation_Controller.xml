@@ -1,7 +1,0 @@
-<configuration default="false" name="Server: Aggregation Controller" type="BlazeCommandRunConfigurationType"
-               factoryName="Bazel Command" singleton="true" keep-in-sync="true"
-               handler-id="BlazeCommandGenericRunConfigurationHandlerProvider" blaze-command="run">
-    <blaze-target>//:aggregation-controller</blaze-target>
-    <blaze-user-exe-flag>server</blaze-user-exe-flag>
-    <blaze-user-exe-flag>etc/development-minikube-aggregation-controller-server.yml</blaze-user-exe-flag>
-</configuration>
