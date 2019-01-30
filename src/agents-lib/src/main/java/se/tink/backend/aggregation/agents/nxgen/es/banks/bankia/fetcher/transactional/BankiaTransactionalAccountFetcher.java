@@ -60,7 +60,7 @@ public class BankiaTransactionalAccountFetcher implements AccountFetcher<Transac
             return apiClient.getTransactions(account, fromDate, toDate);
         } catch (HttpResponseException hre) {
             if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR &&
-                    toDate.after(getOneYearOldDate())) {
+                    toDate.before(getOneYearOldDate())) {
                 // We will get status code 500 if we try to fetch too far back in time. If this happens we
                 // indicate to the paginator that we cannot fetch more.
                 return PaginatorResponseImpl.createEmpty(false);
