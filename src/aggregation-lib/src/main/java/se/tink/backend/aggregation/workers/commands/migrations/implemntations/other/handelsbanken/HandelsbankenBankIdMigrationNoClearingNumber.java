@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAgent;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMigration {
   private static final Pattern CLEARING_NUMBER_PATTERN = Pattern.compile("([0-9]{4})-.*");
@@ -68,6 +68,5 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
                     a.getAccountNumber()
                         .replaceAll("[^0-9]", "")
                         .substring(ACCOUNT_NUMBER_WITHOUT_CLEARING_START_POSITION)));
-    migrateAccounts(request, request.getAccounts());
   }
 }

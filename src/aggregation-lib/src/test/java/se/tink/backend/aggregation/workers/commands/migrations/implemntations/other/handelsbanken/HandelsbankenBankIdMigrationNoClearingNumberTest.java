@@ -7,11 +7,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEAgent;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
-import se.tink.backend.aggregation.rpc.CredentialsRequest;
-import se.tink.backend.aggregation.rpc.CredentialsRequestType;
-import se.tink.backend.aggregation.rpc.Provider;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -100,7 +100,7 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
     when(wrapper.updateAccountMetaData(any(String.class), any(String.class)))
         .thenReturn(this.newFormat);
 
-    this.migration.migrateData(request);
+    this.migration.updateAccounts(request);
 
     verify(wrapper).updateAccountMetaData(this.oldFormat.getId(), this.newFormat.getBankId());
 
