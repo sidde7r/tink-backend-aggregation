@@ -76,7 +76,7 @@ database:
   password: tink
   url: jdbc:mysql://172.16.42.2/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
   showSql: false
-  persistenceUnitName: tink-combined-api
+  persistenceUnitName: tink-aggregation-api
   generateDdl: true
   maxPoolSize: 40
 

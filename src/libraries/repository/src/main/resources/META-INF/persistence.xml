@@ -2,36 +2,6 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
-	
-	<!-- !!! make sure to map persistence unit names in PersistenceUnit enum. !!! -->
-	<persistence-unit name="tink-main-api"
-		transaction-type="RESOURCE_LOCAL">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<properties>
-			<property name="hibernate.hbm2ddl.auto" value="validate" />
-			<property name="hibernate.ejb.naming_strategy"
-				value="org.hibernate.cfg.DefaultComponentSafeNamingStrategy" />
-				
-			<property name="hibernate.connection.CharSet" value="utf8" />
-			<property name="hibernate.connection.characterEncoding" value="UTF-8" />
-			<property name="hibernate.connection.useUnicode" value="true" />
-		</properties>
-	</persistence-unit>
-	
-	<!-- !!! make sure to map persistence unit names in PersistenceUnit enum. !!! -->
-	<persistence-unit name="tink-combined-api"
-		transaction-type="RESOURCE_LOCAL">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<properties>
-			<property name="hibernate.hbm2ddl.auto" value="update" />
-			<property name="hibernate.ejb.naming_strategy"
-				value="org.hibernate.cfg.DefaultComponentSafeNamingStrategy" />
-				
-			<property name="hibernate.connection.CharSet" value="utf8" />
-			<property name="hibernate.connection.characterEncoding" value="UTF-8" />
-			<property name="hibernate.connection.useUnicode" value="true" />
-		</properties>
-	</persistence-unit>
 
 	<!-- !!! make sure to map persistence unit names in PersistenceUnit enum. !!! -->
 	<persistence-unit name="tink-aggregation-api"
