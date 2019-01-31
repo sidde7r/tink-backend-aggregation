@@ -1,8 +1,7 @@
-package se.tink.backend.aggregation.agents.utils;
+package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsDateParser;
 
 import java.time.LocalDate;
 import java.util.HashMap;
