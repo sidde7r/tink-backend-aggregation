@@ -659,7 +659,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
         return transactions;
     }
 
-    private Optional<Account> constructAccount(ProductEntity productEntity) throws IOException {
+    private Optional<Account> constructAccount(ProductEntity productEntity) {
         Account account = new Account();
 
         productEntity.getBalance()
@@ -723,9 +723,13 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
             String cardDetailsResponseContent = createClientRequest(
                     this.market.getBankingEndpoint() + "/Cards/" + accountId,
                     this.securityToken).get(String.class);
-
-            CardDetailsResponse cardDetailsResponse = MAPPER.readValue(cardDetailsResponseContent,
-                    CardDetailsResponse.class);
+            CardDetailsResponse cardDetailsResponse;
+            try{
+                cardDetailsResponse = MAPPER.readValue(cardDetailsResponseContent,
+                        CardDetailsResponse.class);
+            }catch (IOException e){
+                throw new IllegalStateException("Error parsing response: ", e);
+            }
 
             CardDetailsEntity cardDetails = cardDetailsResponse.getCardDetails();
 
@@ -887,35 +891,32 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
         }
 
         productEntityAccountMap = new HashMap<>();
-        try {
-            InitialContextResponse contextResponse = getInitialContext();
-            CustodyAccountsResponse custodyAccountsResponse = getCustodyAccounts();
 
-            Set<String> custodyAccountSet = custodyAccountsResponse.getCustodyAccounts()
-                    .stream()
-                    .map(CustodyAccount::getAccountNumber)
-                    .map(StringUtils::removeNonAlphaNumeric)
-                    .collect(Collectors.toSet());
+        InitialContextResponse contextResponse = getInitialContext();
+        CustodyAccountsResponse custodyAccountsResponse = getCustodyAccounts();
 
-            if (contextResponse == null) {
-                return Collections.emptyMap();
+        Set<String> custodyAccountSet = custodyAccountsResponse.getCustodyAccounts()
+                .stream()
+                .map(CustodyAccount::getAccountNumber)
+                .map(StringUtils::removeNonAlphaNumeric)
+                .collect(Collectors.toSet());
+
+        if (contextResponse == null) {
+            return Collections.emptyMap();
+        }
+
+        for (ProductEntity productEntity : contextResponse
+                .getProductsOfTypes(PRODUCT_TYPE_ACCOUNT, PRODUCT_TYPE_CARD)) {
+
+            // Skip accounts that belongs to an investment (liquidity accounts).
+            // This account will represent the cashValue in that investment, see this::refreshInvestmentAccounts.
+            Optional<String> productNumber = productEntity.getProductNumber();
+            if (productNumber.isPresent() && custodyAccountSet.contains(productNumber.get())) {
+                continue;
             }
 
-            for (ProductEntity productEntity : contextResponse
-                    .getProductsOfTypes(PRODUCT_TYPE_ACCOUNT, PRODUCT_TYPE_CARD)) {
-
-                // Skip accounts that belongs to an investment (liquidity accounts).
-                // This account will represent the cashValue in that investment, see this::refreshInvestmentAccounts.
-                Optional<String> productNumber = productEntity.getProductNumber();
-                if (productNumber.isPresent() && custodyAccountSet.contains(productNumber.get())) {
-                    continue;
-                }
-
-                constructAccount(productEntity)
-                        .ifPresent(account -> productEntityAccountMap.put(productEntity, account));
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+            constructAccount(productEntity)
+                    .ifPresent(account -> productEntityAccountMap.put(productEntity, account));
         }
 
         return productEntityAccountMap;
@@ -926,29 +927,31 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
             return initialContextResponse;
         }
 
-        try {
             String contextResponseContent = createClientRequest(
                     this.market.getBankingEndpoint() + "/initialContext", this.securityToken)
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .get(String.class);
 
-            InitialContextResponse contextResponse = MAPPER.readValue(contextResponseContent,
+        InitialContextResponse contextResponse;
+
+        try{
+            contextResponse = MAPPER.readValue(contextResponseContent,
                     InitialContextResponse.class);
-
-            BankingServiceResponse serviceResponse = contextResponse.getBankingServiceResponse();
-
-            if (serviceResponse != null && serviceResponse.getErrorMessage() != null) {
-                String errorCode = (String) serviceResponse.getErrorMessage().getErrorCode().get("$");
-                this.log.info(String.format("Initial context could not be fetched (%s)", errorCode));
-                updateStatus(errorCode);
-                return null;
-            }
-
-            initialContextResponse = contextResponse;
-            return initialContextResponse;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        }catch (IOException e){
+            throw new IllegalStateException("Error parsing response: ", e);
         }
+
+        BankingServiceResponse serviceResponse = contextResponse.getBankingServiceResponse();
+
+        if (serviceResponse != null && serviceResponse.getErrorMessage() != null) {
+            String errorCode = (String) serviceResponse.getErrorMessage().getErrorCode().get("$");
+            this.log.info(String.format("Initial context could not be fetched (%s)", errorCode));
+            updateStatus(errorCode);
+            return null;
+        }
+
+        initialContextResponse = contextResponse;
+        return initialContextResponse;
     }
 
     private List<BeneficiaryEntity> getBeneficiaries() throws IOException {
