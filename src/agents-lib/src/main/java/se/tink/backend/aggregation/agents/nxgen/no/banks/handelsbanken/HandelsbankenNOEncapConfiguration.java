@@ -36,11 +36,6 @@ public class HandelsbankenNOEncapConfiguration implements EncapConfiguration {
     }
 
     @Override
-    public String getSuffixForDeviceHash() {
-        return EncapConstants.suffixForDeviceHash;
-    }
-
-    @Override
     public String getRsaPubKeyString() {
         return EncapConstants.rsaPubKeyString;
     }

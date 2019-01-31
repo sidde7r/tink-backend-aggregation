@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.w3c.dom.Element;
@@ -28,13 +27,6 @@ public class EncapUtils {
     static String buildApplicationHashAsB64String(String appId) {
         byte[] hash = Hash.sha256(appId);
         return EncodingUtils.encodeAsBase64String(hash);
-    }
-
-    static String buildDeviceHashAsB64String(String suffixForDeviceHash) {
-        UUID randomUUID = UUID.randomUUID();
-        String deviceString = randomUUID.toString() + suffixForDeviceHash;
-        byte[] deviceHash = Hash.sha256(deviceString);
-        return EncodingUtils.encodeAsBase64String(deviceHash);
     }
 
     static String buildRandom32BytesAsB64String() {

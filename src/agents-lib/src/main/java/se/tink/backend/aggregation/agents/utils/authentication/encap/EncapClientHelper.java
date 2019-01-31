@@ -51,7 +51,7 @@ public class EncapClientHelper {
         storage.put(EncapConstants.Storage.B64_APPLICATION_HASH,
                 EncapUtils.buildApplicationHashAsB64String(configuration.getAppId()));
         storage.put(EncapConstants.Storage.B64_DEVICE_HASH,
-                EncapUtils.buildDeviceHashAsB64String(configuration.getSuffixForDeviceHash()));
+                EncapUtils.buildRandom32BytesAsB64String());
         storage.put(EncapConstants.Storage.DEVICE_UUID, UUID.randomUUID().toString());
         storage.put(EncapConstants.Storage.HARDWARE_ID, UUID.randomUUID().toString());
         storage.put(EncapConstants.Storage.B64_AUTHENTICATION_KEY,
