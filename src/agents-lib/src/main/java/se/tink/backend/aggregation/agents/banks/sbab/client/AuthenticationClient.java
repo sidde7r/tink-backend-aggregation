@@ -40,9 +40,9 @@ public class AuthenticationClient extends SBABClient {
         InitBankIdResponse response = client.resource(BANKID_INIT_URL)
                 .queryParam("dep", "privat")
                 .queryParam("auth_mech", "PW_MBID")
+                .queryParam("auth_device", "OTHER")
                 .queryParam("pnr", credentials.getField(Field.Key.USERNAME))
                 .get(InitBankIdResponse.class);
-
         reference = response.getPendingAuthorizationCode();
     }
 

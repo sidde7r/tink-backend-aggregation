@@ -78,6 +78,13 @@ public class SBABAgent extends AbstractAgent
         credentials = request.getCredentials();
         lastCredentialsUpdate = credentials.getUpdated() != null ?
                 credentials.getUpdated().toInstant().atZone(ZoneId.of("UTC")).toLocalDate() : null;
+
+//        DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
+//        config.getProperties().put(
+//                ApacheHttpClient4Config.PROPERTY_PROXY_URI,
+//                "http://127.0.0.1:8888"
+//        );
+//       client = clientFactory.createProxyClient(context.getLogOutputStream(), config);
         client = clientFactory.createClientWithRedirectHandler(context.getLogOutputStream());
 
         HashMap<String, String> payload = request.getProvider() == null ? null : SerializationUtils
