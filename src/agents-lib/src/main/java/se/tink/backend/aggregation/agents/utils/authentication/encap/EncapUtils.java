@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.Authent
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.SamlResponse;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.agents.utils.soap.SoapParser;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -30,7 +31,7 @@ public class EncapUtils {
     }
 
     static String buildRandom32BytesAsB64String() {
-        byte[] randomBytes = EncapCrypto.getRandomBytes(32);
+        byte[] randomBytes = RandomUtils.secureRandom(32);
         return EncodingUtils.encodeAsBase64String(randomBytes);
     }
 
