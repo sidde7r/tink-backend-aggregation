@@ -563,20 +563,6 @@ spec:
             the last 30 minutes.
         tags: <{ $labels.className }>
 
-### Temporarily escalated alert for BE
-  - alert: LoginSuccessRateTooLowInBelgium
-    expr: |
-      # Trigger if login success rate in Belgium is too low
-       sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market='BE'}[15m])) / sum(increase(tink_agent_login_total{action="login", market='BE'}[15m])) < 0.9
-    for: 15m
-    labels:
-      severity: urgent
-      who: integration
-    annotations:
-      description: This will alert when there is a login success rate below 90% in Belgium
-      summary: 'There was a login failure on <{ $labels.provider }>.'
-      tags: '<{ $labels.provider }>'
-
 ### Too many errors in general
     # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
     # Threshold: old canonical threshold of 20 errors / 15 min.
