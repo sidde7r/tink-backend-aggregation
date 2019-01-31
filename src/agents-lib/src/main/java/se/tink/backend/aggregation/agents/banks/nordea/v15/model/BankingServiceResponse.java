@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v15.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BankingServiceResponse {
-    public ErrorMessage errorMessage;
+    @JsonProperty
+    private ErrorMessage errorMessage;
 
     public ErrorMessage getErrorMessage() {
         return errorMessage;
