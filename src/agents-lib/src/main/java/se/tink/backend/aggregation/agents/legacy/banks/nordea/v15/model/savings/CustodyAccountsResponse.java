@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import java.util.List;
-import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.BankingServiceResponse;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@XmlRootElement
 public class CustodyAccountsResponse {
 
     private BankingServiceResponse bankingServiceResponse;
