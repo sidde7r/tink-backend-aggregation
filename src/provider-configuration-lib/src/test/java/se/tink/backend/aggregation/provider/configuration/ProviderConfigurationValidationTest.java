@@ -236,7 +236,6 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                 && StringUtils.equalsIgnoreCase(field.getDescription(), "card number");
     }
 
-    @Ignore("Ignored until we have fixed all 1109 offending providers")
     @Test
     public void validatePasswordFieldsAreSensitive() {
         validateFields(
