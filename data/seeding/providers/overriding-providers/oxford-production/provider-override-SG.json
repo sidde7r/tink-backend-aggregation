@@ -52,7 +52,7 @@
                     "helpText": null,
                     "hint": null,
                     "immutable": false,
-                    "masked": false,
+                    "masked": true,
                     "maxLength": null,
                     "minLength": 0,
                     "name": "password",

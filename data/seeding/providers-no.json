@@ -26,7 +26,8 @@
                     "name": "password",
                     "numeric": true,
                     "pattern": "[0-9]{8}",
-                    "patternError": "Please enter a valid activation code."
+                    "patternError": "Please enter a valid activation code.",
+                    "masked": true
                 }
             ],
             "name": "no-sparebankenvest-activationcode",

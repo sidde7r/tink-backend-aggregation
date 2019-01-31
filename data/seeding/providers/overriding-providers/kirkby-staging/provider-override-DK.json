@@ -2191,7 +2191,7 @@
                     "helpText": null,
                     "hint": "NNNN",
                     "immutable": false,
-                    "masked": false,
+                    "masked": true,
                     "maxLength": 4,
                     "minLength": 4,
                     "name": "password",

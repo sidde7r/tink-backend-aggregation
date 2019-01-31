@@ -1347,7 +1347,7 @@
                 },
                 {
                     "description": "Pin Code",
-                    "masked": false,
+                    "masked": true,
                     "name": "password",
                     "maxLength": 4,
                     "minLength": 4,
