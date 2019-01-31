@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -13,10 +15,13 @@ import se.tink.libraries.user.rpc.User;
 
 public final class CreditCardTransaction extends Transaction {
     private final CreditCardAccount creditAccount;
+    private final CreditCard creditCard;
 
-    private CreditCardTransaction(Amount amount, Date date, String description, boolean pending, CreditCardAccount creditAccount) {
+    private CreditCardTransaction(Amount amount, Date date, String description, boolean pending,
+            CreditCardAccount creditAccount, CreditCard creditCard) {
         super(amount, date, description, pending);
         this.creditAccount = creditAccount;
+        this.creditCard = creditCard;
     }
 
     public Optional<CreditCardAccount> getCreditAccount() {
@@ -35,6 +40,10 @@ public final class CreditCardTransaction extends Transaction {
         getCreditAccount().ifPresent(creditAccount ->
                 transaction.setPayload(TransactionPayloadTypes.SUB_ACCOUNT, creditAccount.getAccountNumber()));
 
+        if (Objects.nonNull(creditCard) && Objects.nonNull(creditCard.getCardNumber())) {
+            transaction.setPayload(TransactionPayloadTypes.CREDIT_CARD_NUMBER, creditCard.getCardNumber());
+        }
+
         return transaction;
     }
 
@@ -44,6 +53,7 @@ public final class CreditCardTransaction extends Transaction {
 
     public static final class Builder extends Transaction.Builder {
         private CreditCardAccount creditAccount;
+        private CreditCard creditCard;
 
         private CreditCardAccount getCreditAccount() {
             return creditAccount;
@@ -51,6 +61,15 @@ public final class CreditCardTransaction extends Transaction {
 
         public Builder setCreditAccount(CreditCardAccount creditAccount) {
             this.creditAccount = creditAccount;
+            return this;
+        }
+
+        public CreditCard getCreditCard() {
+            return creditCard;
+        }
+
+        public Builder setCreditCard(CreditCard creditCard) {
+            this.creditCard = creditCard;
             return this;
         }
 
@@ -96,7 +115,8 @@ public final class CreditCardTransaction extends Transaction {
 
         @Override
         public CreditCardTransaction build() {
-            return new CreditCardTransaction(getAmount(), getDate(), getDescription(), isPending(), getCreditAccount());
+            return new CreditCardTransaction(getAmount(), getDate(), getDescription(), isPending(), getCreditAccount(),
+                    getCreditCard());
         }
     }
 }
