@@ -27,6 +27,7 @@ public abstract class Account {
     private String name;
     private String accountNumber;
     private Amount balance;
+    private Amount availableCredit;
     private List<AccountIdentifier> identifiers;
     private String uniqueIdentifier;
     private String bankIdentifier;
@@ -38,6 +39,7 @@ public abstract class Account {
         this.name = builder.getName();
         this.accountNumber = builder.getAccountNumber();
         this.balance = builder.getBalance();
+        this.availableCredit = builder.getAvailableCredit();
         this.identifiers = ImmutableList.copyOf(builder.getIdentifiers());
         this.uniqueIdentifier = sanitizeUniqueIdentifier(builder.getUniqueIdentifier());
         this.bankIdentifier = builder.getBankIdentifier();
@@ -91,6 +93,10 @@ public abstract class Account {
         return new Amount(this.balance.getCurrency(), this.balance.getValue());
     }
 
+    public Amount getAvailableCredit() {
+        return new Amount(this.availableCredit.getCurrency(), this.availableCredit.getValue());
+    }
+
     public List<AccountIdentifier> getIdentifiers() {
         return Lists.newArrayList(this.identifiers);
     }
@@ -138,6 +144,9 @@ public abstract class Account {
         account.setHolderName(HolderName.toString(this.holderName));
         account.setFlags(this.accountFlags);
         account.setPayload(createPayload(user));
+        account.setAvailableCredit(Optional.ofNullable(this.availableCredit)
+                .map(Amount::getValue)
+                .orElse(0.0));
 
         return account;
     }
@@ -175,6 +184,7 @@ public abstract class Account {
         protected String name;
         protected String accountNumber;
         protected Amount balance;
+        protected Amount availableCredit;
         protected String uniqueIdentifier;
         protected HolderName holderName;
         private T thisObj;
@@ -214,6 +224,15 @@ public abstract class Account {
 
         public T setBalance(Amount balance) {
             thisObj.balance = balance;
+            return self();
+        }
+
+        public Amount getAvailableCredit() {
+            return Amount.createFromAmount(this.availableCredit).orElse(null);
+        }
+
+        public T setAvailableCredit(Amount availableCredit) {
+            this.availableCredit = availableCredit;
             return self();
         }
 
