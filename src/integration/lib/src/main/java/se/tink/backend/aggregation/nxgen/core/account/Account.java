@@ -5,15 +5,10 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.user.rpc.User;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
@@ -21,6 +16,14 @@ import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.user.rpc.User;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public abstract class Account {
     private static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
@@ -28,7 +31,7 @@ public abstract class Account {
     private String accountNumber;
     private Amount balance;
     private Amount availableCredit;
-    private List<AccountIdentifier> identifiers;
+    private Set<AccountIdentifier> identifiers;
     private String uniqueIdentifier;
     private String bankIdentifier;
     private HolderName holderName;
@@ -40,7 +43,7 @@ public abstract class Account {
         this.accountNumber = builder.getAccountNumber();
         this.balance = builder.getBalance();
         this.availableCredit = builder.getAvailableCredit();
-        this.identifiers = ImmutableList.copyOf(builder.getIdentifiers());
+        this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
         this.uniqueIdentifier = sanitizeUniqueIdentifier(builder.getUniqueIdentifier());
         this.bankIdentifier = builder.getBankIdentifier();
         this.holderName = builder.getHolderName();
