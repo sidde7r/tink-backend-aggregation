@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
 import java.util.List;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
@@ -74,6 +75,24 @@ public final class BbvaConstants {
         public static final String OK = "ok";
         public static final String LOGIN_SUCCESS = "login successful";
         public static final String LOGIN_WRONG_CREDENTIAL_CODE = "eai0000";
+    }
+
+    public enum Error {
+        BANK_SERVICE_UNAVAILABLE("ENPP0000"),
+        UNKNOWN("");
+
+        private final String code;
+
+        Error(String code) {
+            this.code = code;
+        }
+
+        public static Error find(String errorCode) {
+            return Arrays.stream(Error.values())
+                    .filter(error -> error.code.equalsIgnoreCase(errorCode))
+                    .findFirst()
+                    .orElse(UNKNOWN);
+        }
     }
 
     public static class Logging {

@@ -8,7 +8,11 @@ import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.UrlEncodedFormBody;
@@ -25,8 +29,10 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BbvaApiClient {
+    private static final Logger LOG = LoggerFactory.getLogger(BbvaApiClient.class);
 
     private static final int RANDOM_HEX_LENGTH = 64;
     private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
@@ -63,7 +69,7 @@ public class BbvaApiClient {
                 .post(HttpResponse.class, loginBody);
     }
 
-    public InitiateSessionResponse initiateSession() throws SessionException {
+    public InitiateSessionResponse initiateSession() throws SessionException, BankServiceException {
         Map<String, String> body = new HashMap<>();
         body.put(BbvaConstants.PostParameter.CONSUMER_ID_KEY, BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
 
@@ -80,6 +86,20 @@ public class BbvaApiClient {
         tsec = response.getHeaders().getFirst(BbvaConstants.Header.TSEC_KEY);
 
         InitiateSessionResponse initiateSessionResponse = response.getBody(InitiateSessionResponse.class);
+
+        if (initiateSessionResponse.hasError()) {
+            if (initiateSessionResponse.hasError(BbvaConstants.Error.BANK_SERVICE_UNAVAILABLE)) {
+                throw BankServiceError.NO_BANK_SERVICE.exception();
+            }
+
+            LOG.warn(
+                    String.format("Bank responded with error: %s",
+                            SerializationUtils.serializeToString(initiateSessionResponse.getResult()))
+            );
+
+            throw new IllegalStateException("Failed to initiate session");
+        }
+
         userId = initiateSessionResponse.getUser().getId();
 
         return initiateSessionResponse;
