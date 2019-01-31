@@ -926,29 +926,31 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
             return initialContextResponse;
         }
 
-        try {
             String contextResponseContent = createClientRequest(
                     this.market.getBankingEndpoint() + "/initialContext", this.securityToken)
                     .type(MediaType.APPLICATION_JSON_TYPE)
                     .get(String.class);
 
-            InitialContextResponse contextResponse = MAPPER.readValue(contextResponseContent,
+        InitialContextResponse contextResponse;
+
+        try{
+            contextResponse = MAPPER.readValue(contextResponseContent,
                     InitialContextResponse.class);
-
-            BankingServiceResponse serviceResponse = contextResponse.getBankingServiceResponse();
-
-            if (serviceResponse != null && serviceResponse.getErrorMessage() != null) {
-                String errorCode = (String) serviceResponse.getErrorMessage().getErrorCode().get("$");
-                this.log.info(String.format("Initial context could not be fetched (%s)", errorCode));
-                updateStatus(errorCode);
-                return null;
-            }
-
-            initialContextResponse = contextResponse;
-            return initialContextResponse;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
+        }catch (IOException e){
+            throw new IllegalStateException("Error parsing response: ", e);
         }
+
+        BankingServiceResponse serviceResponse = contextResponse.getBankingServiceResponse();
+
+        if (serviceResponse != null && serviceResponse.getErrorMessage() != null) {
+            String errorCode = (String) serviceResponse.getErrorMessage().getErrorCode().get("$");
+            this.log.info(String.format("Initial context could not be fetched (%s)", errorCode));
+            updateStatus(errorCode);
+            return null;
+        }
+
+        initialContextResponse = contextResponse;
+        return initialContextResponse;
     }
 
     private List<BeneficiaryEntity> getBeneficiaries() throws IOException {
