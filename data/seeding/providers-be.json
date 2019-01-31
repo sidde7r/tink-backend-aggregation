@@ -1,632 +1,627 @@
 {
-  "market": "BE",
-  "currency": "EUR",
-  "providers": [
-    {
-      "name": "be-beobank-password",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "displayName": "Beobank",
-      "popular": false,
-      "type": "BANK",
-      "status": "DISABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.be.banks.beobank.BeobankAgent",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in Beobank's mobile banking app.",
-      "transactional": "true",
-      "payload": "BEOBANK",
-      "tutorialUrl": null,
-      "fields": [
+    "market": "BE",
+    "currency": "EUR",
+    "providers": [
         {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "immutable": true
+            "name": "be-beobank-password",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "displayName": "Beobank",
+            "popular": false,
+            "type": "BANK",
+            "status": "DISABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.be.banks.beobank.BeobankAgent",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in Beobank's mobile banking app.",
+            "transactional": "true",
+            "payload": "BEOBANK",
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password"
+                }
+            ]
         },
         {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password"
+            "className": "nxgen.be.banks.bnppf.BnpPfAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "BNP Paribas Fortis",
+            "fields": [
+                {
+                    "description": "Access Token",
+                    "name": "access-token",
+                    "sensitive": true
+                }
+            ],
+            "multiFactor": true,
+            "name": "be-bnppf-jwt",
+            "popular": false,
+            "status": "OBSOLETE",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.be.banks.kbc.KbcAgent",
+            "credentialsType": "PASSWORD",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "displayName": "KBC",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "fields": [
+                {
+                    "description": "Card number",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "^[0-9]{17}$",
+                    "patternError": "Please enter your 17 digit card number, including the control number.",
+                    "sensitive": true,
+                    "immutable": true
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "Start code",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'Login' twice.\nEnter the start code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the login code from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "logindescription"
+                },
+                {
+                    "description": "Login code, 8 digits.",
+                    "name": "logininput",
+                    "immutable": false,
+                    "masked": false,
+                    "numeric": true,
+                    "pattern": "^[0-9]{8}$",
+                    "patternError": "Please enter your 8 digit login code from your card reader."
+                },
+                {
+                    "description": "Start code",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'Sign' twice.\nEnter the start code.\nPress 'OK'.\nThe following message is displayed on the card reader 'Request to sign up OK?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Sign code, 8 digits.",
+                    "name": "signcodeinput",
+                    "immutable": false,
+                    "masked": false,
+                    "numeric": true,
+                    "pattern": "^[0-9]{8}$",
+                    "patternError": "Please enter your 8 digit sign code from your card reader."
+                },
+                {
+                    "description": "Start code",
+                    "helpText": "Insert you bank card into the card reader.\nPress 'Sign' twice.\nEnter the start code.\nPress 'OK' twice.\nEnter the full amount of your transfer including the digits after the decimal point.\nPress 'OK'.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signfortransferdescription",
+                    "value": null
+                },
+                {
+                    "description": "Sign code",
+                    "helpText": "Enter your PIN.\nPress 'OK'.\nEnter the sign code from your card reader.",
+                    "immutable": false,
+                    "masked": false,
+                    "numeric": true,
+                    "name": "signfortransferinput",
+                    "value": null,
+                    "pattern": "^[0-9]{8}$",
+                    "patternError": "Please enter your 8 digit response code from your card reader.",
+                    "hint": "8 digits."
+                }
+            ],
+            "multiFactor": true,
+            "name": "be-kbc-cardreader",
+            "passwordHelpText": "In order to authenticate yourself you will need your KBC card reader.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.be.banks.ing.IngAgent",
+            "credentialsType": "PASSWORD",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "displayName": "ING",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "fields": [
+                {
+                    "description": "ING ID",
+                    "name": "username",
+                    "immutable": true,
+                    "numeric": true,
+                    "pattern": "^[0-9]{10}$",
+                    "patternError": "Incorrect ID format. The ID should be 10 digits.",
+                    "hint": "10 digits."
+                },
+                {
+                    "description": "Card ID",
+                    "name": "cardId",
+                    "numeric": true,
+                    "pattern": "^[0-9]{17}$",
+                    "patternError": "Please enter your 17 digit card number, including the control number.",
+                    "immutable": true,
+                    "sensitive": true
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "Response code, 4-8 digits.",
+                    "helpText": "Insert your card into the card reader.\nPress 'Identify'.\nEnter your PIN.\nPress 'OK'.\nEnter the response code.",
+                    "sensitive": true,
+                    "numeric": true,
+                    "name": "otpinput",
+                    "pattern": "^[0-9]{4,8}$",
+                    "patternError": "Incorrect response code format. The response code should be 4-8 digits."
+                },
+                {
+                    "description": "Sign code",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code.\nPress 'Sign'.\nEnter the response code from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Response code, 4-8 digits.",
+                    "name": "signcodeinput",
+                    "immutable": false,
+                    "masked": false,
+                    "numeric": true,
+                    "pattern": "^[0-9]{4,8}$",
+                    "patternError": "Please enter your 4-8 digit response code from your card reader."
+                }
+            ],
+            "multiFactor": true,
+            "name": "be-ing-cardreader",
+            "passwordHelpText": "In order to authenticate yourself you will need your ING card reader.\nBy connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.be.banks.belfius.BelfiusAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Belfius",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "fields": [
+                {
+                    "description": "Number of your bank card",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "^[0-9]{17}$",
+                    "patternError": "Please enter your 17 digit card number, including the control number.",
+                    "sensitive": true,
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password",
+                    "minLength": 1
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "Security code",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'Login'.\nEnter the security code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the registration code from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "logindescription"
+                },
+                {
+                    "description": "Registration code, 1-8 digits.",
+                    "name": "logininput",
+                    "immutable": false,
+                    "masked": false,
+                    "numeric": true,
+                    "pattern": "^[0-9]{1,8}$",
+                    "patternError": "Invalid registration code."
+                },
+                {
+                    "description": "Security code",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter the security code.\nPress 'OK'.\nThe following message is displayed on the card reader: 'Register your device?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signcodedescription"
+                },
+                {
+                    "description": "Sign code, 1-8 digits.",
+                    "name": "signcodeinput",
+                    "immutable": false,
+                    "masked": false,
+                    "numeric": true,
+                    "pattern": "^[0-9]{1,8}$",
+                    "patternError": "Invalid sign code."
+                },
+                {
+                    "description": "Control Code",
+                    "helpText": "Sign using your Card Reader\nPress 'Sign'\nEnter the security code from the reader",
+                    "hint": null,
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signfortransferdescription",
+                    "value": null
+                },
+                {
+                    "description": "Description Code",
+                    "helpText": "Sign for the transfer?\nAmount",
+                    "hint": null,
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signfortransferextradescription",
+                    "value": null
+                },
+                {
+                    "helpText": "Enter your PIN\nEnter the signature code from the reader",
+                    "immutable": false,
+                    "masked": false,
+                    "name": "signfortransferinput",
+                    "value": null,
+                    "pattern": "^[0-9]{1,8}$",
+                    "patternError": "Please enter your response code from you card reader.",
+                    "hint": "1-8 digits."
+                },
+                {
+                    "description": "Beneficiary Name",
+                    "helpText": "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
+                    "hint": "Name",
+                    "masked": false,
+                    "name": "addbeneficiaryinput"
+                },
+                {
+                    "description": "Control Code",
+                    "helpText": "Sign using your Card Reader\nPress 'Sign'\nEnter the security code from the reader",
+                    "hint": null,
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signforbeneficiarydescription",
+                    "value": null
+                },
+                {
+                    "description": "Description Code",
+                    "helpText": "Want to sign for the beneficiary?\nEnter the control code from the reader",
+                    "hint": null,
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signforbeneficiaryextradescription",
+                    "value": null
+                },
+                {
+                    "description": "Response Code",
+                    "helpText": "Enter your PIN\nEnter the signature code from the reader",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signforbeneficiaryinput",
+                    "value": null,
+                    "pattern": "^[0-9]{1,8}$",
+                    "patternError": "Please enter your response code from you card reader.",
+                    "hint": "1-8 digits."
+                }
+            ],
+            "multiFactor": true,
+            "name": "be-belfius-cardreader",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "demo.DemoAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Demo",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "name": "be-demo",
+            "passwordHelpText": "",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "TEST"
+        },
+        {
+            "name": "be-n26-password",
+            "displayName": "N26",
+            "groupDisplayName": "N26",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": true,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ]
+        },
+        {
+            "name": "be-revolut-password",
+            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+            "displayName": "Revolut",
+            "credentialsType": "PASSWORD",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "multiFactor": true,
+            "fields": [
+                {
+                    "description": "Phone number",
+                    "name": "username",
+                    "pattern": "\\+?[1-9][0-9]+",
+                    "minLength": 5,
+                    "maxLength": 16,
+                    "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +32 NNN NNN NNNN"
+                },
+                {
+                    "description": "Passcode",
+                    "name": "password",
+                    "pattern": "^[0-9]{4}$",
+                    "sensitive": true,
+                    "masked": true,
+                    "patternError": "Please enter your four digit passcode."
+                }
+            ],
+            "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "be-americanexpress-password",
+            "className": "nxgen.be.creditcards.amex.AmericanExpressBEAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "EUR",
+            "displayName": "American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "groupDisplayName": "American Express",
+            "market": "BE",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same credentials as when you log in to americanexpress.be. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=fr_BE).",
+            "payload": "BE",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "className": "nxgen.be.banks.argenta.ArgentaAgent",
+            "credentialsType": "PASSWORD",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "displayName": "Argenta",
+            "capabilities": [],
+            "fields": [
+                {
+                    "description": "Number of your bank card",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "^[0-9]{17}$",
+                    "patternError": "Please enter your 17 digit card number, including the control number.",
+                    "sensitive": true,
+                    "immutable": true
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "Challenge",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "logindescription"
+                },
+                {
+                    "description": "Response, 8 digits.",
+                    "name": "logininput",
+                    "immutable": false,
+                    "masked": false,
+                    "numeric": true,
+                    "pattern": "^[0-9]{8}$",
+                    "patternError": "Please enter your 8 digit response code from your card reader."
+                }
+            ],
+            "multiFactor": true,
+            "name": "be-argenta-cardreader",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Argenta Digipass to finish the authentication.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.be.banks.fortis.FortisAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "BNP Paribas Fortis",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "payload": "https://app.easybanking.bnpparibasfortis.be 49FB001",
+            "capabilities": [],
+            "fields": [
+                {
+                    "description": "Number of your bank card",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "^[0-9]{17}$",
+                    "patternError": "Please enter your 17 digit card number, including the control number.",
+                    "sensitive": true,
+                    "immutable": true
+                },
+                {
+                    "description": "Client number",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "clientnumber",
+                    "pattern": "^[0-9]{10}$",
+                    "patternError": "Please enter your 10 digit client number.",
+                    "hint": "10 digits."
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password",
+                    "minLength": 1
+                }
+            ],
+            "multiFactor": true,
+            "name": "be-fortis-cardreader",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.be.banks.fortis.FortisAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Hello bank!",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "payload": "https://app.easybanking.hellobank.be 49FB002",
+            "capabilities": [],
+            "fields": [
+                {
+                    "description": "Number of your bank card",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "^[0-9]{17}$",
+                    "patternError": "Please enter your 17 digit card number, including the control number.",
+                    "sensitive": true,
+                    "immutable": true
+                },
+                {
+                    "description": "Client number",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "clientnumber",
+                    "maxLength": 10,
+                    "minLength": 10,
+                    "pattern": "^[0-9]{10}$",
+                    "patternError": "Please enter your 10 digit client number.",
+                    "hint": "10 digits."
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password",
+                    "minLength": 1
+                }
+            ],
+            "multiFactor": true,
+            "name": "be-hellobank-cardreader",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "be-test-password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "be-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         }
-      ]
-    },
-    {
-      "className": "nxgen.be.banks.bnppf.BnpPfAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "BNP Paribas Fortis",
-      "fields": [
-        {
-          "description": "Access Token",
-          "name": "access-token",
-          "sensitive": true
-        }
-      ],
-      "multiFactor": true,
-      "name": "be-bnppf-jwt",
-      "popular": false,
-      "status": "OBSOLETE",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.be.banks.kbc.KbcAgent",
-      "credentialsType": "PASSWORD",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "displayName": "KBC",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "fields": [
-        {
-          "description": "Card number",
-          "name": "username",
-          "numeric": true,
-          "pattern": "^[0-9]{17}$",
-          "patternError": "Please enter your 17 digit card number, including the control number.",
-          "sensitive": true,
-          "immutable": true
-        }
-      ],
-      "supplementalFields": [
-        {
-          "description": "Start code",
-          "helpText": "Insert your bank card into the card reader.\nPress 'Login' twice.\nEnter the start code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the login code from the card reader.",
-          "immutable": true,
-          "masked": false,
-          "name": "logindescription"
-        },
-        {
-          "description": "Login code, 8 digits.",
-          "name": "logininput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit login code from your card reader."
-        },
-        {
-          "description": "Start code",
-          "helpText": "Insert your bank card into the card reader.\nPress 'Sign' twice.\nEnter the start code.\nPress 'OK'.\nThe following message is displayed on the card reader 'Request to sign up OK?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
-          "immutable": true,
-          "masked": false,
-          "name": "signcodedescription"
-        },
-        {
-          "description": "Sign code, 8 digits.",
-          "name": "signcodeinput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit sign code from your card reader."
-        },
-        {
-          "description" : "Start code",
-          "helpText" : "Insert you bank card into the card reader.\nPress 'Sign' twice.\nEnter the start code.\nPress 'OK' twice.\nEnter the full amount of your transfer including the digits after the decimal point.\nPress 'OK'.",
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signfortransferdescription",
-          "value" : null
-        },
-        {
-          "description" : "Sign code",
-          "helpText": "Enter your PIN.\nPress 'OK'.\nEnter the sign code from your card reader.",
-          "immutable": false,
-          "masked" : false,
-          "numeric": true,
-          "name" : "signfortransferinput",
-          "value" : null,
-          "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader.",
-          "hint": "8 digits."
-        }
-      ],
-      "multiFactor": true,
-      "name": "be-kbc-cardreader",
-      "passwordHelpText": "In order to authenticate yourself you will need your KBC card reader.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.be.banks.ing.IngAgent",
-      "credentialsType": "PASSWORD",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "displayName": "ING",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "fields": [
-        {
-          "description": "ING ID",
-          "name": "username",
-          "immutable": true,
-          "numeric": true,
-          "pattern": "^[0-9]{10}$",
-          "patternError": "Incorrect ID format. The ID should be 10 digits.",
-          "hint": "10 digits."
-        },
-        {
-          "description": "Card ID",
-          "name": "cardId",
-          "numeric": true,
-          "pattern": "^[0-9]{17}$",
-          "patternError": "Please enter your 17 digit card number, including the control number.",
-          "immutable": true,
-          "sensitive": true
-        }
-      ],
-      "supplementalFields": [
-        {
-          "description": "Response code, 4-8 digits.",
-          "helpText": "Insert your card into the card reader.\nPress 'Identify'.\nEnter your PIN.\nPress 'OK'.\nEnter the response code.",
-          "sensitive": true,
-          "numeric": true,
-          "name": "otpinput",
-          "pattern": "^[0-9]{4,8}$",
-          "patternError": "Incorrect response code format. The response code should be 4-8 digits."
-        },
-        {
-          "description": "Sign code",
-          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code.\nPress 'Sign'.\nEnter the response code from the card reader.",
-          "immutable": true,
-          "masked": false,
-          "name": "signcodedescription"
-        },
-        {
-          "description": "Response code, 4-8 digits.",
-          "name": "signcodeinput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "pattern": "^[0-9]{4,8}$",
-          "patternError": "Please enter your 4-8 digit response code from your card reader."
-        }
-      ],
-      "multiFactor": true,
-      "name": "be-ing-cardreader",
-      "passwordHelpText": "In order to authenticate yourself you will need your ING card reader.\nBy connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.be.banks.belfius.BelfiusAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Belfius",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "fields": [
-        {
-          "description": "Number of your bank card",
-          "name": "username",
-          "numeric": true,
-          "pattern": "^[0-9]{17}$",
-          "patternError": "Please enter your 17 digit card number, including the control number.",
-          "sensitive": true,
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password",
-          "minLength": 1
-        }
-      ],
-      "supplementalFields": [
-        {
-          "description": "Security code",
-          "helpText": "Insert your bank card into the card reader.\nPress 'Login'.\nEnter the security code.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the registration code from the card reader.",
-          "immutable": true,
-          "masked": false,
-          "name": "logindescription"
-        },
-        {
-          "description": "Registration code, 1-8 digits.",
-          "name": "logininput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "pattern": "^[0-9]{1,8}$",
-          "patternError": "Invalid registration code."
-        },
-        {
-          "description": "Security code",
-          "helpText": "Insert your bank card into the card reader.\nPress 'Sign'.\nEnter the security code.\nPress 'OK'.\nThe following message is displayed on the card reader: 'Register your device?'.\nPress 'OK'.\nEnter your PIN.\nPress 'OK'.\nEnter the sign code from the card reader.",
-          "immutable": true,
-          "masked": false,
-          "name": "signcodedescription"
-        },
-        {
-          "description": "Sign code, 1-8 digits.",
-          "name": "signcodeinput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "pattern": "^[0-9]{1,8}$",
-          "patternError": "Invalid sign code."
-        },
-        {
-          "description" : "Control Code",
-          "helpText" : "Sign using your Card Reader\nPress 'Sign'\nEnter the security code from the reader",
-          "hint" : null,
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signfortransferdescription",
-          "value" : null
-        },
-        {
-          "description" : "Description Code",
-          "helpText" : "Sign for the transfer?\nAmount",
-          "hint" : null,
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signfortransferextradescription",
-          "value" : null
-        },
-        {
-          "helpText" : "Enter your PIN\nEnter the signature code from the reader",
-          "immutable": false,
-          "masked" : false,
-          "name" : "signfortransferinput",
-          "value" : null,
-          "pattern": "^[0-9]{1,8}$",
-          "patternError": "Please enter your response code from you card reader.",
-          "hint": "1-8 digits."
-        },
-        {
-          "description": "Beneficiary Name",
-          "helpText" : "You have not transferred money to this account before. Please supply the name of the owner to the account in the field below",
-          "hint" : "Name",
-          "masked" : false,
-          "name" : "addbeneficiaryinput"
-        },
-        {
-          "description" : "Control Code",
-          "helpText" : "Sign using your Card Reader\nPress 'Sign'\nEnter the security code from the reader",
-          "hint" : null,
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signforbeneficiarydescription",
-          "value" : null
-        },
-        {
-          "description" : "Description Code",
-          "helpText" : "Want to sign for the beneficiary?\nEnter the control code from the reader",
-          "hint" : null,
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signforbeneficiaryextradescription",
-          "value" : null
-        },
-        {
-          "description" : "Response Code",
-          "helpText" : "Enter your PIN\nEnter the signature code from the reader",
-          "immutable" : true,
-          "masked" : false,
-          "name" : "signforbeneficiaryinput",
-          "value" : null,
-          "pattern": "^[0-9]{1,8}$",
-          "patternError": "Please enter your response code from you card reader.",
-          "hint": "1-8 digits."
-        }
-      ],
-      "multiFactor": true,
-      "name": "be-belfius-cardreader",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "demo.DemoAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Demo",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "name": "be-demo",
-      "passwordHelpText": "",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": "true",
-      "type": "TEST"
-    },
-    {
-      "name": "be-n26-password",
-      "displayName": "N26",
-      "groupDisplayName": "N26",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": true,
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "be-revolut-password",
-      "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
-      "displayName": "Revolut",
-      "credentialsType": "PASSWORD",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "multiFactor": true,
-      "fields": [
-        {
-          "description": "Phone number",
-          "name": "username",
-          "pattern": "\\+?[1-9][0-9]+",
-          "minLength": 5,
-          "maxLength": 16,
-          "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +32 NNN NNN NNNN"
-        },
-        {
-          "description": "Passcode",
-          "name": "password",
-          "pattern": "^[0-9]{4}$",
-          "sensitive": true,
-          "masked": true,
-          "patternError": "Please enter your four digit passcode."
-        }
-      ],
-      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "be-americanexpress-password",
-      "className": "nxgen.be.creditcards.amex.AmericanExpressBEAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "EUR",
-      "displayName": "American Express",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "groupDisplayName": "American Express",
-      "market": "BE",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.be. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=fr_BE).",
-      "payload": "BE",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "className": "nxgen.be.banks.argenta.ArgentaAgent",
-      "credentialsType": "PASSWORD",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "displayName": "Argenta",
-      "capabilities": [
-      ],
-      "fields": [
-        {
-          "description": "Number of your bank card",
-          "name": "username",
-          "numeric": true,
-          "pattern": "^[0-9]{17}$",
-          "patternError": "Please enter your 17 digit card number, including the control number.",
-          "sensitive": true,
-          "immutable": true
-        }
-      ],
-      "supplementalFields": [
-        {
-          "description": "Challenge",
-          "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nPress 'OK'\nEnter your PIN\nPress 'OK'\nEnter the response from the card reader.",
-          "immutable": true,
-          "masked": false,
-          "name": "logindescription"
-        },
-        {
-          "description": "Response, 8 digits.",
-          "name": "logininput",
-          "immutable": false,
-          "masked": false,
-          "numeric": true,
-          "pattern": "^[0-9]{8}$",
-          "patternError": "Please enter your 8 digit response code from your card reader."
-        }
-      ],
-      "multiFactor": true,
-      "name": "be-argenta-cardreader",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your Argenta Digipass to finish the authentication.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.be.banks.fortis.FortisAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "BNP Paribas Fortis",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "payload": "https://app.easybanking.bnpparibasfortis.be 49FB001",
-      "capabilities": [
-      ],
-      "fields": [
-        {
-          "description": "Number of your bank card",
-          "name": "username",
-          "numeric": true,
-          "pattern": "^[0-9]{17}$",
-          "patternError": "Please enter your 17 digit card number, including the control number.",
-          "sensitive": true,
-          "immutable": true
-        },
-        {
-          "description": "Client number",
-          "masked": true,
-          "sensitive": true,
-          "name": "clientnumber",
-          "pattern": "^[0-9]{10}$",
-          "patternError": "Please enter your 10 digit client number.",
-          "hint": "10 digits."
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password",
-          "minLength": 1
-        }
-      ],
-      "multiFactor": true,
-      "name": "be-fortis-cardreader",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.be.banks.fortis.FortisAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Hello bank!",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "payload": "https://app.easybanking.hellobank.be 49FB002",
-      "capabilities": [
-      ],
-      "fields": [
-        {
-          "description": "Number of your bank card",
-          "name": "username",
-          "numeric": true,
-          "pattern": "^[0-9]{17}$",
-          "patternError": "Please enter your 17 digit card number, including the control number.",
-          "sensitive": true,
-          "immutable": true
-        },
-        {
-          "description": "Client number",
-          "masked": true,
-          "sensitive": true,
-          "name": "clientnumber",
-          "maxLength": 10,
-          "minLength": 10,
-          "pattern": "^[0-9]{10}$",
-          "patternError": "Please enter your 10 digit client number.",
-          "hint": "10 digits."
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password",
-          "minLength": 1
-        }
-      ],
-      "multiFactor": true,
-      "name": "be-hellobank-cardreader",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your %s card reader to finish the authentication.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "be-test-password",
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
-      "groupDisplayName": "Test Password",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          },
-          {
-              "description": "Password",
-              "masked": true,
-              "sensitive": true,
-              "name": "password"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  },
-  {
-      "name": "be-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  }
-  ]
+    ]
 }

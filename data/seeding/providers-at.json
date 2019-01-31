@@ -1,737 +1,737 @@
 {
-  "market": "AT",
-  "currency": "EUR",
-  "providers": [
-    {
-      "name": "at-volksbank-password",
-      "displayName": "Volksbank Tirol",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.at.banks.volksbank.VolksbankAgent",
-      "passwordHelpText": null,
-      "transactional": "true",
-      "payload": null,
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "tutorialUrl": null,
-      "fields": [
+    "market": "AT",
+    "currency": "EUR",
+    "providers": [
         {
-          "name": "usernumber",
-          "description": "User number",
-          "immutable": true,
-          "numeric": true
+            "name": "at-volksbank-password",
+            "displayName": "Volksbank Tirol",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.at.banks.volksbank.VolksbankAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "payload": null,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "name": "usernumber",
+                    "description": "User number",
+                    "immutable": true,
+                    "numeric": true
+                },
+                {
+                    "name": "username",
+                    "description": "User name",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "sensitive": true,
+                    "masked": true
+                }
+            ]
         },
         {
-          "name": "username",
-          "description": "User name",
-          "immutable": true
+            "name": "at-bankaustria-password",
+            "displayName": "Bank Austria",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.at.banks.bankaustria.BankAustriaAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "payload": null,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "User number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "sensitive": true,
-          "masked": true
-        }
-      ]
-    },
-    {
-      "name": "at-bankaustria-password",
-      "displayName": "Bank Austria",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.at.banks.bankaustria.BankAustriaAgent",
-      "passwordHelpText": null,
-      "transactional": "true",
-      "payload": null,
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "tutorialUrl": null,
-      "fields": [
-        {
-          "name": "username",
-          "description": "User number",
-          "immutable": true
+            "name": "at-bawagpsk-password",
+            "displayName": "BAWAG P.S.K.",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "payload": "ebanking.bawagpsk.com, BAWAG",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "User code",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-bawagpsk-password",
-      "displayName": "BAWAG P.S.K.",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
-      "passwordHelpText": null,
-      "transactional": "true",
-      "payload": "ebanking.bawagpsk.com, BAWAG",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "tutorialUrl": null,
-      "fields": [
-        {
-          "name": "username",
-          "description": "User code",
-          "immutable": true
+            "name": "at-easybank-password",
+            "displayName": "Easybank",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "payload": "ebanking.easybank.at, EASYBANK",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "User code",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-easybank-password",
-      "displayName": "Easybank",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.at.banks.easybank.bawagpsk.BawagPskAgent",
-      "passwordHelpText": null,
-      "transactional": "true",
-      "payload": "ebanking.easybank.at, EASYBANK",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "tutorialUrl": null,
-      "fields": [
-        {
-          "name": "username",
-          "description": "User code",
-          "immutable": true
+            "name": "at-erstebank-password",
+            "displayName": "Password",
+            "groupDisplayName": "Erste Bank und Sparkasse",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.erstebank.password.ErsteBankPasswordAgent",
+            "transactional": "true",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "User code",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-erstebank-password",
-      "displayName": "Password",
-      "groupDisplayName": "Erste Bank und Sparkasse",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.erstebank.password.ErsteBankPasswordAgent",
-      "transactional": "true",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "User code",
-          "immutable": true
+            "name": "at-erstebank-thirdparty",
+            "displayName": "s Identity",
+            "groupDisplayName": "Erste Bank und Sparkasse",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "MOBILE_BANKID",
+            "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
+            "passwordHelpText": "Use the same username as you would in your bank's mobile app.",
+            "transactional": "true",
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 0,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "User code",
+                    "immutable": true
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "s Identity Verification code",
+                    "helpText": "You will soon receive a message on your s Identity App.\nOpen s Identity and sign.\nThen open Tink and press Submit",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "logindescription"
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "Password",
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-erstebank-thirdparty",
-      "displayName": "s Identity",
-      "groupDisplayName": "Erste Bank und Sparkasse",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "MOBILE_BANKID",
-      "className": "nxgen.at.banks.erstebank.sidentity.ErstebankSidentityAgent",
-      "passwordHelpText": "Use the same username as you would in your bank's mobile app.",
-      "transactional": "true",
-      "refreshFrequency" : 0.0,
-      "refreshFrequencyFactor" : 0.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "User code",
-          "immutable": true
-        }
-      ],
-      "supplementalFields": [
-        {
-          "description": "s Identity Verification code",
-          "helpText": "You will soon receive a message on your s Identity App.\nOpen s Identity and sign.\nThen open Tink and press Submit",
-          "immutable": true,
-          "masked": false,
-          "name": "logindescription"
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen0-password",
-      "displayName": "Raiffeisen (Burgenland)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Burgenland\", \"regionIndex\": \"0\", \"regionCode\": \"ELVIE33V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen0-password",
+            "displayName": "Raiffeisen (Burgenland)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Burgenland\", \"regionIndex\": \"0\", \"regionCode\": \"ELVIE33V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen1-password",
-      "displayName": "Raiffeisen (Kärnten)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Kärnten\", \"regionIndex\": \"1\", \"regionCode\": \"ELOOE03V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen1-password",
+            "displayName": "Raiffeisen (Kärnten)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Kärnten\", \"regionIndex\": \"1\", \"regionCode\": \"ELOOE03V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen2-password",
-      "displayName": "Raiffeisen (Niederösterreich/Wien)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Niederösterreich/Wien\", \"regionIndex\": \"2\", \"regionCode\": \"ELVIE32V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen2-password",
+            "displayName": "Raiffeisen (Niederösterreich/Wien)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Niederösterreich/Wien\", \"regionIndex\": \"2\", \"regionCode\": \"ELVIE32V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen3-password",
-      "displayName": "Raiffeisen (Oberösterreich)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Oberösterreich\", \"regionIndex\": \"3\", \"regionCode\": \"ELOOE01V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen3-password",
+            "displayName": "Raiffeisen (Oberösterreich)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Oberösterreich\", \"regionIndex\": \"3\", \"regionCode\": \"ELOOE01V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen4-password",
-      "displayName": "Raiffeisen (Salzburg)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Salzburg\", \"regionIndex\": \"4\", \"regionCode\": \"ELOOE05V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen4-password",
+            "displayName": "Raiffeisen (Salzburg)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Salzburg\", \"regionIndex\": \"4\", \"regionCode\": \"ELOOE05V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen5-password",
-      "displayName": "Raiffeisen (Steiermark)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Steiermark\", \"regionIndex\": \"5\", \"regionCode\": \"ELVIE38V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen5-password",
+            "displayName": "Raiffeisen (Steiermark)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Steiermark\", \"regionIndex\": \"5\", \"regionCode\": \"ELVIE38V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen6-password",
-      "displayName": "Raiffeisen (Tirol)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Tirol\", \"regionIndex\": \"6\", \"regionCode\": \"ELOOE11V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen6-password",
+            "displayName": "Raiffeisen (Tirol)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Tirol\", \"regionIndex\": \"6\", \"regionCode\": \"ELOOE11V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen7-password",
-      "displayName": "Raiffeisen (Vorarlberg)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Vorarlberg\", \"regionIndex\": \"7\", \"regionCode\": \"ELVIE37V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen7-password",
+            "displayName": "Raiffeisen (Vorarlberg)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Vorarlberg\", \"regionIndex\": \"7\", \"regionCode\": \"ELVIE37V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen8-password",
-      "displayName": "Raiffeisen (Kärnten/Posojilnica Bank)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Kärnten/Posojilnica Bank\", \"regionIndex\": \"8\", \"regionCode\": \"ELVIE91V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen8-password",
+            "displayName": "Raiffeisen (Kärnten/Posojilnica Bank)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Kärnten/Posojilnica Bank\", \"regionIndex\": \"8\", \"regionCode\": \"ELVIE91V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen9-password",
-      "displayName": "Raiffeisen (Oberösterreich/bankdirekt.at)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Oberösterreich/bankdirekt.at\", \"regionIndex\": \"9\", \"regionCode\": \"ELOOE01V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen9-password",
+            "displayName": "Raiffeisen (Oberösterreich/bankdirekt.at)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Oberösterreich/bankdirekt.at\", \"regionIndex\": \"9\", \"regionCode\": \"ELOOE01V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen10-password",
-      "displayName": "Raiffeisen (Oberösterreich/PRIVAT BANK)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Oberösterreich/PRIVAT BANK\", \"regionIndex\": \"10\", \"regionCode\": \"ELOOE01V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen10-password",
+            "displayName": "Raiffeisen (Oberösterreich/PRIVAT BANK)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Oberösterreich/PRIVAT BANK\", \"regionIndex\": \"10\", \"regionCode\": \"ELOOE01V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-raiffeisen11-password",
-      "displayName": "Raiffeisen (Tirol/Jungholz)",
-      "groupDisplayName": "Raiffeisen",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
-      "transactional": "true",
-      "payload": "{\"region\": \"Tirol/Jungholz\", \"regionIndex\": \"11\", \"regionCode\": \"ELOOE11V\"}",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Signatory number",
-          "minLength": 8,
-          "maxLength": 8,
-          "immutable": true
+            "name": "at-raiffeisen11-password",
+            "displayName": "Raiffeisen (Tirol/Jungholz)",
+            "groupDisplayName": "Raiffeisen",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.raiffeisen.RaiffeisenAgent",
+            "transactional": "true",
+            "payload": "{\"region\": \"Tirol/Jungholz\", \"regionIndex\": \"11\", \"regionCode\": \"ELOOE11V\"}",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Signatory number",
+                    "minLength": 8,
+                    "maxLength": 8,
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "pattern": "[0-9]{5}",
+                    "minLength": 5,
+                    "maxLength": 5,
+                    "masked": true,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "pattern": "[0-9]{5}",
-          "minLength": 5,
-          "maxLength": 5,
-          "masked": true,
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-n26-password",
-      "displayName": "N26",
-      "groupDisplayName": "N26",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": true,
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
+            "name": "at-n26-password",
+            "displayName": "N26",
+            "groupDisplayName": "N26",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": true,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "at-revolut-password",
-      "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
-      "displayName": "Revolut",
-      "credentialsType": "PASSWORD",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "multiFactor": true,
-      "fields": [
-        {
-          "description": "Phone number",
-          "name": "username",
-          "pattern": "\\+?[1-9][0-9]+",
-          "minLength": 5,
-          "maxLength": 16,
-          "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +34 NNN NNN NNNN"
+            "name": "at-revolut-password",
+            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+            "displayName": "Revolut",
+            "credentialsType": "PASSWORD",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "multiFactor": true,
+            "fields": [
+                {
+                    "description": "Phone number",
+                    "name": "username",
+                    "pattern": "\\+?[1-9][0-9]+",
+                    "minLength": 5,
+                    "maxLength": 16,
+                    "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +34 NNN NNN NNNN"
+                },
+                {
+                    "description": "Passcode",
+                    "name": "password",
+                    "pattern": "[0-9]{4}",
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "patternError": "Please enter your four digit passcode."
+                }
+            ],
+            "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Passcode",
-          "name": "password",
-          "pattern": "[0-9]{4}",
-          "sensitive": true,
-          "masked": true,
-          "minLength": 4,
-          "maxLength": 4,
-          "patternError": "Please enter your four digit passcode."
-        }
-      ],
-      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "at-americanexpress-password",
-      "className": "nxgen.at.creditcards.amex.v62.AmericanExpressV62ATAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "EUR",
-      "displayName": "American Express",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "at-americanexpress-password",
+            "className": "nxgen.at.creditcards.amex.v62.AmericanExpressV62ATAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "EUR",
+            "displayName": "American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "groupDisplayName": "American Express",
+            "market": "AT",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same credentials as when you log in to americanexpress.at. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_AT).",
+            "payload": "AT",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "groupDisplayName": "American Express",
-      "market": "AT",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same credentials as when you log in to americanexpress.at. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_AT).",
-      "payload": "AT",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "at-test-password",
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
-      "groupDisplayName": "Test Password",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "name": "at-test-password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "at-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "at-ingdiba-password",
-      "displayName": "ING-DiBa",
-      "groupDisplayName": "ING-DiBa",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "credentialsType": "PASSWORD",
-      "className": "nxgen.at.banks.ing.IngAtAgent",
-      "transactional": "true",
-      "payload": "",
-      "refreshFrequency" : 1.0,
-      "refreshFrequencyFactor" : 1.0,
-      "fields": [
-        {
-          "name": "username",
-          "description": "Customer number",
-          "immutable": true
+            "name": "at-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         },
         {
-          "name": "password",
-          "description": "PIN",
-          "masked": true
+            "name": "at-ingdiba-password",
+            "displayName": "ING-DiBa",
+            "groupDisplayName": "ING-DiBa",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "credentialsType": "PASSWORD",
+            "className": "nxgen.at.banks.ing.IngAtAgent",
+            "transactional": "true",
+            "payload": "",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Customer number",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "PIN",
+                    "masked": true
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
