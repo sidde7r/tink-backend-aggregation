@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.banks;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -13,26 +12,29 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
+import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
@@ -97,42 +99,63 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
-import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
+import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
+import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
+import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
-public class LansforsakringarAgent extends AbstractAgent implements RefreshableItemExecutor, TransferExecutor,
-        PersistentLogin {
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import static se.tink.backend.aggregation.rpc.RefreshableItem.*;
+
+public class LansforsakringarAgent extends AbstractAgent
+        implements RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
+                RefreshEInvoiceExecutor,
+                RefreshTransferDestinationExecutor,
+                TransferExecutor,
+                PersistentLogin {
     private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
     private static final DisplayAccountIdentifierFormatter GIRO_FORMATTER = new DisplayAccountIdentifierFormatter();
     private static final TypeReference<HashMap<String, Object>> TYPE_MAP_REF = new TypeReference<HashMap<String, Object>>() {
@@ -433,39 +456,6 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
                 .build();
     }
 
-    private void updateEInvoices() {
-        try {
-            List<AccountEntity> accountEntities = fetchAccountEntities();
-
-            if (accountEntities.isEmpty()) {
-                log.info("EInvoices not updated: The user has no accounts.");
-                return;
-            }
-
-            if (!hasPendingEInvoices()) {
-                return;
-            }
-
-            EInvoicesListResponse invoicesListResponse = createGetRequest(FETCH_EINVOICES_URL,
-                    EInvoicesListResponse.class);
-
-            List<EInvoice> eInvoiceEntities = invoicesListResponse.getElectronicInvoices();
-            if (eInvoiceEntities.isEmpty()) {
-                log.error("User should have eInvoices, but we got no transfers.");
-                return;
-            }
-
-            List<Transfer> eInvoices = Lists.newArrayList();
-            for (EInvoice eInvoice : eInvoiceEntities) {
-                eInvoices.add(eInvoice.toTransfer());
-            }
-
-            systemUpdater.updateEinvoices(eInvoices);
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     private boolean hasPendingEInvoices() throws HttpStatusCodeErrorException {
         try {
             EInvoiceAndCreditAlertsResponse alertsResponse = createGetRequest(EINVOICE_AND_CREDIT_ALERTS_URL,
@@ -491,75 +481,6 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         }
 
         return clientResponse.getEntity(TransferrableResponse.class);
-    }
-
-    private void refreshAccountsTransactions(RefreshableItem type) {
-        getAccounts().entrySet().stream()
-                .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> {
-                    AccountEntity accountEntity = set.getKey();
-                    Account account = set.getValue();
-
-                    List<Transaction> transactions = Lists.newArrayList();
-                    String accountNumber = accountEntity.getAccountNumber();
-                    // Fetch upcoming transactions.
-
-                    for (UpcomingTransactionEntity transactionEntity : fetchUpcomingTransactions(accountNumber)) {
-                        Transfer transfer = createTransferForUpcomingPayment(transactionEntity);
-                        Transaction transaction = transactionEntity.toTransaction();
-
-                        if (transfer != null) {
-                            transfer.setId(UUIDUtils.fromTinkUUID(transaction.getId()));
-
-                            try {
-                                transaction.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER,
-                                        MAPPER.writeValueAsString(transfer));
-                            } catch (Exception e) {
-                                throw new IllegalStateException(e);
-                            }
-                            transaction.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER_ID,
-                                    UUIDUtils.toTinkUUID(transfer.getId()));
-                        }
-
-                        transactions.add(transaction);
-                    }
-
-                    // Fetch transactions.
-
-                    boolean hasMoreTransactions;
-                    int currentPage = 0;
-
-                    do {
-                        debug(request, "Requesting page " + (currentPage + 1));
-
-                        DebitTransactionListResponse transactionListResponse;
-                        try {
-                            transactionListResponse = createPostRequestWithResponseHandling(
-                                    TRANSACTIONS_URL, DebitTransactionListResponse.class,
-                                    new ListAccountTransactionRequest(currentPage, accountNumber));
-                        } catch (Exception e) {
-                            throw new IllegalStateException(e);
-                        }
-
-                        debug(request, "Requested page size " + MoreObjects
-                                .firstNonNull(transactionListResponse.getTransactions(), Lists.newArrayList()).size());
-
-                        for (TransactionEntity transactionEntity : transactionListResponse.getTransactions()) {
-                            transactions.add(transactionEntity.toTransaction());
-                        }
-
-                        if (isContentWithRefresh(account, transactions)) {
-                            hasMoreTransactions = false;
-                        } else {
-                            hasMoreTransactions = transactionListResponse.getHasMore();
-                            currentPage = transactionListResponse.getNextSequenceNumber();
-                        }
-
-                        statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
-                    } while (hasMoreTransactions);
-
-                    financialDataCacher.updateTransactions(account, transactions);
-                });
     }
 
     private List<UpcomingTransactionEntity> fetchUpcomingTransactions(String accountNumber) {
@@ -588,88 +509,6 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
             transfer = transactionEntity.toTransfer();
         }
         return transfer;
-    }
-
-    private void refreshCardsTransactions() throws Exception {
-        List<CardEntity> cardEntities = fetchCardEntities();
-
-        // loop the cards, that are not debit cards, and fetch transactions
-        for (CardEntity cardEntity : cardEntities) {
-
-            if (cardEntity.getCardType().equals("DEBIT")) {
-                /*
-                 * Cards of type DEBIT are connected to an account
-                 * There for these cards are handled by:
-                 * - fetchAndUpdateAccounts()
-                 * - fetchAndUpdateAccountsAndTransactions()
-                 */
-                continue;
-            }
-
-            Account account = cardEntity.getAccount();
-
-            List<Transaction> transactions = new LinkedList<>();
-
-            boolean hasMoreTransactions;
-            int currentPage = 1;
-
-            do {
-                debug(request, "Requesting page " + currentPage);
-
-                CreditTransactionListResponse transactionListResponse = createPostRequestWithResponseHandling(
-                        FETCH_CARD_TRANSACTIONS_URL, CreditTransactionListResponse.class,
-                        new ListCardTransactionRequest(currentPage, account.getAccountNumber()));
-
-                debug(request, "Requested page size " + MoreObjects
-                        .firstNonNull(transactionListResponse.getTransactions(), Lists.newArrayList()).size());
-
-                for (CardTransactionEntity transactionEntity : transactionListResponse.getTransactions()) {
-                    transactions.add(transactionEntity.toTransaction());
-                }
-
-                if (isContentWithRefresh(account, transactions)) {
-                    hasMoreTransactions = false;
-                } else {
-                    hasMoreTransactions = transactionListResponse.hasMorePages();
-                    currentPage++;
-                }
-
-                statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
-            } while (hasMoreTransactions);
-
-            financialDataCacher.updateTransactions(account, transactions);
-        }
-    }
-
-    private void updateLoans() {
-        LoanListResponse loans = null;
-
-        try {
-            loans = createGetRequest(FETCH_LOANS_URL, LoanListResponse.class);
-        } catch (Exception e) {
-            // Seeing LF return 400 and 500 responses from time to time, therefore this try-catch
-            log.warn("Was not able to retrieve loans from Lansforsakringar: " + e.getMessage());
-        }
-
-        if (loans == null) {
-            return;
-        }
-
-        for (LoanEntity le : loans.getLoans()) {
-            try {
-                String detailsString = createPostRequestWithResponseHandling(FETCH_LOAN_DETAILS_URL, String.class,
-                        new LoanDetailsRequest(le.getLoanNumber()));
-
-                LoanDetailsEntity details = MAPPER.readValue(detailsString, LoanDetailsEntity.class);
-
-                Account account = details.toAccount();
-                Loan loan = details.toLoan(detailsString);
-
-                financialDataCacher.cacheAccount(account, AccountFeatures.createForLoan(loan));
-            } catch (Exception e) {
-                log.warn("Was not able to retrieve loan: " + e.getMessage());
-            }
-        }
     }
 
     @Override
@@ -1310,269 +1149,12 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         createClientRequest(PASSWORD_LOGIN_URL).delete();
     }
 
-    private void logWithHackToAvoidCharacterLimit(String investmentDataString, String endpoint) {
-        // Hack to handle max characters 2048 in logging message
-        int limit = 1600;
-        int lower = 0;
-        int upper = investmentDataString.length() > limit ? limit : investmentDataString.length();
-        int counter = 0;
-
-        do {
-            log.info(String.format("#investment-pre-study-lf - %s - counter: %s - response: %s",
-                    endpoint, counter, investmentDataString.substring(lower, upper)));
-
-            counter++;
-            lower = upper;
-            upper += limit;
-
-            // Safety against index out of bounds exception
-            if (upper > investmentDataString.length()) {
-                upper = investmentDataString.length();
-            }
-
-        } while (lower < investmentDataString.length());
-    }
-
-    private void updateInvestmentAccounts() throws HttpStatusCodeErrorException, IOException {
-        refreshIskAccounts();
-        refreshFundDepot();
-        refreshStockDepot();
-    }
-
-    private void refreshIskAccounts() throws HttpStatusCodeErrorException, IOException {
-        String investmentSavingsDepotResponseString = createGetRequest(ISK_URL, String.class);
-
-        InvestmentSavingsDepotResponse investmentSavingsDepotResponse;
-
-        try {
-            investmentSavingsDepotResponse = MAPPER.readValue(investmentSavingsDepotResponseString,
-                    InvestmentSavingsDepotResponse.class);
-        } catch (IOException e) {
-            log.warn("#lf - investment savings deserialization failed - " +
-                    investmentSavingsDepotResponseString, e);
-            return;
-        }
-
-        InvestmentSavingsDepotEntity investmentSavingsDepotWrapper = investmentSavingsDepotResponse
-                .getInvestmentSavingsDepotWrapper();
-
-        if (investmentSavingsDepotWrapper == null ||
-                investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers() == null ||
-                investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers().isEmpty())  {
-            return;
-        }
-
-        for (InvestmentSavingsDepotWrappersEntity investmentDepotWrapper :
-                investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers()) {
-            Double totalValue = investmentDepotWrapper.getDepot().getTotalValue();
-            Double balance = investmentDepotWrapper.getAccount().getBalance();
-            Double marketValue = totalValue != null && balance != null ? (totalValue - balance) : null;
-
-            Account account = investmentDepotWrapper.getAccount().toAccount(totalValue);
-            String depotNumber = investmentDepotWrapper.getDepot().getDepotNumber();
-            Double cashValue = null;
-
-            try {
-                CashBalanceResponse cashBalanceResponse = createGetRequestFromUrlAndDepotNumber(
-                        CashBalanceResponse.class, ISK_CASH_BALANCE_URL, depotNumber);
-                cashValue = cashBalanceResponse.getCashValue();
-            } catch (URISyntaxException e) {
-                log.warn("Could not build URI", e);
-            }
-
-            Portfolio portfolio =
-                    investmentDepotWrapper.getDepot().toPortfolio(marketValue, cashValue, Portfolio.Type.ISK);
-
-            SecurityHoldingsResponse funds;
-            SecurityHoldingsResponse stocks;
-            try {
-                funds = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
-                        FUND_SECURITIES_URL, depotNumber);
-                stocks = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
-                        STOCK_SECURITIES_URL, depotNumber);
-            } catch (URISyntaxException e) {
-                return;
-            }
-
-            List<Instrument> instruments = Lists.newArrayList();
-            // Add funds
-            funds.getSecurityHoldings().getFunds().forEach(fundEntity ->
-                    fundEntity.toInstrument().ifPresent(instruments::add));
-
-            // Add stocks
-            stocks.getSecurityHoldings().getShares().forEach(shareEntity -> {
-                InstrumentDetailsResponse instrumentDetails;
-                try {
-                    instrumentDetails = getInstrumentDetails(depotNumber, shareEntity.getIsinCode());
-                    if (instrumentDetails == null) {
-                        return;
-                    }
-                } catch (HttpStatusCodeErrorException e) {
-                    // If the user don't have an fund depot this request will get a response with status code 400.
-                    // Just return and don't do anything.
-                    return;
-                }
-
-                shareEntity.toInstrument(instrumentDetails.getInstrument()).ifPresent(instruments::add);
-            });
-
-            // Add bonds
-            stocks.getSecurityHoldings().getBonds().forEach(bondEntity -> {
-                InstrumentDetailsResponse instrumentDetails;
-                try {
-                    instrumentDetails = getInstrumentDetails(depotNumber, bondEntity.getIsinCode());
-                    if (instrumentDetails == null) {
-                        return;
-                    }
-                    log.info("#lf - bond details: " + MAPPER.writeValueAsString(instrumentDetails));
-                } catch (HttpStatusCodeErrorException e) {
-                    // If the user don't have an fund depot this request will get a response with status code 400.
-                    // Just return and don't do anything.
-                    return;
-                } catch (JsonProcessingException e) {
-                    // Just continue
-                }
-                bondEntity.toInstrument().ifPresent(instruments::add);
-            });
-
-
-
-            portfolio.setInstruments(instruments);
-
-            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
-        }
-    }
-
-    private void refreshFundDepot() {
-        FundHoldingsResponse fundHoldingsResponse;
-        try {
-            fundHoldingsResponse = createGetRequest(FUND_DEPOT_URL, FundHoldingsResponse.class);
-        } catch (HttpStatusCodeErrorException e) {
-            // If the user don't have an fund depot this request will get a response with status code 400.
-            // Just return and don't do anything.
-            return;
-        }
-
-        Account account = fundHoldingsResponse.toAccount();
-        Portfolio portfolio = fundHoldingsResponse.toPortfolio();
-
-        List<Instrument> instruments = Lists.newArrayList();
-
-        fundHoldingsResponse.getFunds().forEach(fundEntity -> {
-            String fundInformationUrlWithFundId;
-            try {
-                fundInformationUrlWithFundId = new URIBuilder(FUND_INFORMATION_URL)
-                        .addParameter("fundid", String.valueOf(fundEntity.getFundId()))
-                        .build()
-                        .toString();
-            } catch (URISyntaxException e) {
-                log.error("failed to create uri builder", e);
-                return;
-            }
-
-            FundInformationWrapper fundInformationWrapper;
-            try {
-                fundInformationWrapper = createGetRequest(fundInformationUrlWithFundId, FundInformationWrapper.class);
-            } catch (HttpStatusCodeErrorException e) {
-                log.warn("failed to fetch fund details", e);
-                return;
-            }
-
-            fundEntity.toInstrument(fundInformationWrapper.getFundInformation()).ifPresent(instruments::add);
-        });
-        portfolio.setInstruments(instruments);
-
-        financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
-    }
-
     private <T> T createGetRequestFromUrlAndDepotNumber(Class<T> responseClass, String url, String depotNumber)
             throws HttpStatusCodeErrorException, URISyntaxException {
         String requestUrl = new URIBuilder(url)
                 .addParameter("depotNumber", depotNumber)
                 .build().toString();
         return createGetRequest(requestUrl, responseClass);
-    }
-
-    private void refreshStockDepot() {
-        ShareDepotResponse shareDepotResponse;
-        SecurityHoldingsResponse securityHoldingsResponse;
-        CashBalanceResponse cashBalanceResponse;
-        try {
-            shareDepotResponse = createGetRequest(STOCK_DEPOT_URL, ShareDepotResponse.class);
-            if (shareDepotResponse.getShareDepotWrapper() == null
-                    || shareDepotResponse.getShareDepotWrapper().getDepot() == null
-                    || shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber() == null) {
-                return;
-            }
-
-            String depotNumber = shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber();
-            securityHoldingsResponse = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
-                    STOCK_DEPOT_HOLDINGS_URL, depotNumber);
-            cashBalanceResponse = createGetRequestFromUrlAndDepotNumber(CashBalanceResponse.class,
-                    STOCK_DEPOT_CASH_BALANCE_URL, depotNumber);
-        } catch (HttpStatusCodeErrorException e) {
-            // If the user don't have an fund depot this request will get a response with status code 400.
-            // Just return and don't do anything.
-            if (e.getResponse().getStatus() != 400) {
-                log.error("could not fetch fund depot", e);
-            }
-
-            return;
-        } catch (URISyntaxException e) {
-            log.warn("failed to build url", e);
-            return;
-        }
-
-        Optional<Account> account = securityHoldingsResponse.toShareDepotAccount(
-                shareDepotResponse.getShareDepotWrapper());
-
-        if (!account.isPresent()) {
-            return;
-        }
-
-        Portfolio portfolio = securityHoldingsResponse.toShareDepotPortfolio(shareDepotResponse.getShareDepotWrapper(),
-                cashBalanceResponse.getCashValue());
-
-        List<Instrument> instruments = Lists.newArrayList();
-
-        String depotNumber = shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber();
-        securityHoldingsResponse.getSecurityHoldings().getShares().forEach(shareEntity -> {
-            InstrumentDetailsResponse instrumentDetails;
-
-            try {
-                instrumentDetails = getInstrumentDetails(depotNumber, shareEntity.getIsinCode());
-                if (instrumentDetails == null) {
-                    return;
-                }
-            } catch (HttpStatusCodeErrorException e) {
-                // If the user don't have an fund depot this request will get a response with status code 400.
-                // Just return and don't do anything.
-                return;
-            }
-
-            shareEntity.toInstrument(instrumentDetails.getInstrument()).ifPresent(instruments::add);
-        });
-
-        securityHoldingsResponse.getSecurityHoldings().getBonds().forEach(bondEntity -> {
-            InstrumentDetailsResponse instrumentDetails;
-            try {
-                instrumentDetails = getInstrumentDetails(depotNumber, bondEntity.getIsinCode());
-                if (instrumentDetails == null) {
-                    return;
-                }
-                log.info("#lf - stockdepot - bond details: " + MAPPER.writeValueAsString(instrumentDetails));
-            } catch (HttpStatusCodeErrorException e) {
-                // If the user don't have an fund depot this request will get a response with status code 400.
-                // Just return and don't do anything.
-                return;
-            } catch (JsonProcessingException e) {
-                // Just continue
-            }
-            bondEntity.toInstrument().ifPresent(instruments::add);
-        });
-        portfolio.setInstruments(instruments);
-
-        financialDataCacher.cacheAccount(account.get(), AccountFeatures.createForPortfolios(portfolio));
     }
 
     private InstrumentDetailsResponse getInstrumentDetails(String depotNumber, String isin)
@@ -1610,79 +1192,6 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
         return accounts;
     }
 
-    private void updateAccountPerType(RefreshableItem type) {
-        getAccounts().entrySet().stream()
-                .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
-    }
-
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case EINVOICES:
-            updateEInvoices();
-            break;
-
-        case TRANSFER_DESTINATIONS:
-            updateTransferDestinations();
-            break;
-
-        case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
-            updateAccountPerType(item);
-            break;
-
-        case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
-            refreshAccountsTransactions(item);
-            break;
-
-        case CREDITCARD_ACCOUNTS:
-            try {
-                updateCards();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case CREDITCARD_TRANSACTIONS:
-            try {
-                refreshCardsTransactions();
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
-            break;
-
-        case LOAN_ACCOUNTS:
-            updateLoans();
-            break;
-
-        case INVESTMENT_ACCOUNTS:
-            try {
-                updateInvestmentAccounts();
-            } catch (Exception e) {
-                // Just catch and exit gently
-                log.warn("Caught exception while logging investment data", e);
-            }
-            break;
-        }
-    }
-
-    private void updateTransferDestinations() {
-        try {
-            List<AccountEntity> accountEntities = fetchAccountEntities();
-
-            TransferDestinationsResponse response = new TransferDestinationsResponse();
-
-            response.addDestinations(getTransferAccountDestinations(accountEntities, systemUpdater.getUpdatedAccounts()));
-            response.addDestinations(getPaymentAccountDestinations(accountEntities, systemUpdater.getUpdatedAccounts()));
-
-            systemUpdater.updateTransferDestinationPatterns(response.getDestinations());
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     private List<CardEntity> fetchCardEntities()
             throws HttpStatusCodeErrorException {
         return createGetRequest(OVERVIEW_URL, OverviewEntity.class).getCards();
@@ -1691,38 +1200,6 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
     private List<AccountEntity> fetchAccountEntities()
             throws HttpStatusCodeErrorException {
         return createGetRequest(OVERVIEW_URL, OverviewEntity.class).getAccountEntities();
-    }
-
-    private void updateAccounts() throws HttpStatusCodeErrorException {
-        List<AccountEntity> accountEntities = fetchAccountEntities();
-
-        for (AccountEntity accountEntity : accountEntities) {
-            financialDataCacher.cacheAccount(accountEntity.toAccount());
-        }
-    }
-
-    private void updateCards() throws HttpStatusCodeErrorException {
-        List<CardEntity> cardEntities = fetchCardEntities();
-
-        for (CardEntity cardEntity : cardEntities) {
-            if (cardEntity.getCardType().equals("DEBIT")) {
-                /*
-                 * Cards of type DEBIT are connected to an account
-                 *  Handled by: cacheAccounts()
-                 */
-                continue;
-            }
-
-            financialDataCacher.cacheAccount(cardEntity.getAccount());
-        }
-    }
-
-    private boolean assertStatusCodeOK(ClientResponse response) {
-        if (response.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
-            log.warn("Status code was not 200. Status code " + response.getStatus());
-            return false;
-        }
-        return true;
     }
 
     // This could be moved into abstract agent when we have support for different data types in result
@@ -1801,4 +1278,524 @@ public class LansforsakringarAgent extends AbstractAgent implements RefreshableI
             return userMessage;
         }
     }
+
+
+    ///// Refresh Executor Refactor /////
+    @Override
+    public FetchEInvoicesResponse fetchEInvoices() {
+        try {
+            List<AccountEntity> accountEntities = fetchAccountEntities();
+
+            if (accountEntities.isEmpty()) {
+                log.info("EInvoices not updated: The user has no accounts.");
+                return new FetchEInvoicesResponse(Collections.emptyList());
+            }
+
+            if (!hasPendingEInvoices()) {
+                return new FetchEInvoicesResponse(Collections.emptyList()); 
+            }
+
+            EInvoicesListResponse invoicesListResponse = createGetRequest(FETCH_EINVOICES_URL,
+                    EInvoicesListResponse.class);
+
+            List<EInvoice> eInvoiceEntities = invoicesListResponse.getElectronicInvoices();
+            if (eInvoiceEntities.isEmpty()) {
+                log.error("User should have eInvoices, but we got no transfers.");
+                return new FetchEInvoicesResponse(Collections.emptyList());
+            }
+
+            List<Transfer> eInvoices = Lists.newArrayList();
+            for (EInvoice eInvoice : eInvoiceEntities) {
+                eInvoices.add(eInvoice.toTransfer());
+            }
+            return new FetchEInvoicesResponse(eInvoices);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> updatedAccounts) {
+        try {
+            List<AccountEntity> accountEntities = fetchAccountEntities();
+
+            TransferDestinationsResponse response = new TransferDestinationsResponse();
+
+            response.addDestinations(getTransferAccountDestinations(accountEntities, updatedAccounts));
+            response.addDestinations(getPaymentAccountDestinations(accountEntities, updatedAccounts));
+
+            return new FetchTransferDestinationsResponse(response.getDestinations());
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return this.refreshTransactionalAccounts(CHECKING_ACCOUNTS);
+    }
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return this.refreshTransactionalAccounts(SAVING_ACCOUNTS);
+    }
+
+    private FetchAccountsResponse refreshTransactionalAccounts(RefreshableItem type) {
+        List<Account> refreshedAccounts = getAccounts().entrySet().stream()
+                .filter(set -> type.isAccountType(set.getValue().getType()))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+        return new FetchAccountsResponse(refreshedAccounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return this.refreshTransactionalAccountTransactions(CHECKING_TRANSACTIONS);
+    }
+
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return this.refreshTransactionalAccountTransactions(SAVING_TRANSACTIONS);
+    }
+
+    private FetchTransactionsResponse refreshTransactionalAccountTransactions(RefreshableItem type) {
+        Map<Account, List<Transaction>> accountTransactions = new HashMap<>();
+        getAccounts().entrySet().stream()
+                .filter(set -> type.isAccountType(set.getValue().getType()))
+                .forEach(set -> {
+                    AccountEntity accountEntity = set.getKey();
+                    Account account = set.getValue();
+
+                    List<Transaction> transactions = Lists.newArrayList();
+                    String accountNumber = accountEntity.getAccountNumber();
+                    // Fetch upcoming transactions.
+
+                    for (UpcomingTransactionEntity transactionEntity : fetchUpcomingTransactions(accountNumber)) {
+                        Transfer transfer = createTransferForUpcomingPayment(transactionEntity);
+                        Transaction transaction = transactionEntity.toTransaction();
+
+                        if (transfer != null) {
+                            transfer.setId(UUIDUtils.fromTinkUUID(transaction.getId()));
+
+                            try {
+                                transaction.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER,
+                                        MAPPER.writeValueAsString(transfer));
+                            } catch (Exception e) {
+                                throw new IllegalStateException(e);
+                            }
+                            transaction.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER_ID,
+                                    UUIDUtils.toTinkUUID(transfer.getId()));
+                        }
+
+                        transactions.add(transaction);
+                    }
+
+                    // Fetch transactions.
+
+                    boolean hasMoreTransactions;
+                    int currentPage = 0;
+
+                    do {
+                        debug(request, "Requesting page " + (currentPage + 1));
+
+                        DebitTransactionListResponse transactionListResponse;
+                        try {
+                            transactionListResponse = createPostRequestWithResponseHandling(
+                                    TRANSACTIONS_URL, DebitTransactionListResponse.class,
+                                    new ListAccountTransactionRequest(currentPage, accountNumber));
+                        } catch (Exception e) {
+                            throw new IllegalStateException(e);
+                        }
+
+                        debug(request, "Requested page size " + MoreObjects
+                                .firstNonNull(transactionListResponse.getTransactions(), Lists.newArrayList()).size());
+
+                        for (TransactionEntity transactionEntity : transactionListResponse.getTransactions()) {
+                            transactions.add(transactionEntity.toTransaction());
+                        }
+
+                        if (isContentWithRefresh(account, transactions)) {
+                            hasMoreTransactions = false;
+                        } else {
+                            hasMoreTransactions = transactionListResponse.getHasMore();
+                            currentPage = transactionListResponse.getNextSequenceNumber();
+                        }
+                    } while (hasMoreTransactions);
+                    accountTransactions.put(account, transactions);
+                });
+        return new FetchTransactionsResponse(accountTransactions);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        List<Account> cards = Lists.newArrayList();
+        try {
+            List<CardEntity> cardEntities = fetchCardEntities();
+
+            for (CardEntity cardEntity : cardEntities) {
+                if (cardEntity.getCardType().equals("DEBIT")) {
+                    /*
+                     * Cards of type DEBIT are connected to an account
+                     *  Handled by: cacheAccounts()
+                     */
+                    continue;
+                }
+                cards.add(cardEntity.getAccount());
+            }
+            return new FetchAccountsResponse(cards);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        Map<Account, List<Transaction>> accountTransactions = new HashMap<>();
+        try {
+            List<CardEntity> cardEntities = fetchCardEntities();
+
+            // loop the cards, that are not debit cards, and fetch transactions
+            for (CardEntity cardEntity : cardEntities) {
+
+                if (cardEntity.getCardType().equals("DEBIT")) {
+                    /*
+                     * Cards of type DEBIT are connected to an account
+                     * There for these cards are handled by:
+                     * - fetchAndUpdateAccounts()
+                     * - fetchAndUpdateAccountsAndTransactions()
+                     */
+                    continue;
+                }
+
+                Account account = cardEntity.getAccount();
+
+                List<Transaction> transactions = new LinkedList<>();
+
+                boolean hasMoreTransactions;
+                int currentPage = 1;
+
+                do {
+                    debug(request, "Requesting page " + currentPage);
+
+                    CreditTransactionListResponse transactionListResponse = createPostRequestWithResponseHandling(
+                            FETCH_CARD_TRANSACTIONS_URL, CreditTransactionListResponse.class,
+                            new ListCardTransactionRequest(currentPage, account.getAccountNumber()));
+
+                    debug(request, "Requested page size " + MoreObjects
+                            .firstNonNull(transactionListResponse.getTransactions(), Lists.newArrayList()).size());
+
+                    for (CardTransactionEntity transactionEntity : transactionListResponse.getTransactions()) {
+                        transactions.add(transactionEntity.toTransaction());
+                    }
+
+                    if (isContentWithRefresh(account, transactions)) {
+                        hasMoreTransactions = false;
+                    } else {
+                        hasMoreTransactions = transactionListResponse.hasMorePages();
+                        currentPage++;
+                    }
+                } while (hasMoreTransactions);
+
+                accountTransactions.put(account, transactions);
+            }
+            return new FetchTransactionsResponse(accountTransactions);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public FetchLoanAccountsResponse fetchLoanAccounts() {
+        Map<Account, AccountFeatures> loanAccounts = new HashMap<>();
+
+        LoanListResponse loans = null;
+
+        try {
+            loans = createGetRequest(FETCH_LOANS_URL, LoanListResponse.class);
+        } catch (Exception e) {
+            // Seeing LF return 400 and 500 responses from time to time, therefore this try-catch
+            log.warn("Was not able to retrieve loans from Lansforsakringar: " + e.getMessage());
+        }
+
+        if (loans == null) {
+            return new FetchLoanAccountsResponse(Collections.emptyMap());
+        }
+
+        for (LoanEntity le : loans.getLoans()) {
+            try {
+                String detailsString = createPostRequestWithResponseHandling(FETCH_LOAN_DETAILS_URL, String.class,
+                        new LoanDetailsRequest(le.getLoanNumber()));
+
+                LoanDetailsEntity details = MAPPER.readValue(detailsString, LoanDetailsEntity.class);
+
+                Account account = details.toAccount();
+                Loan loan = details.toLoan(detailsString);
+
+                loanAccounts.put(account, AccountFeatures.createForLoan(loan));
+            } catch (Exception e) {
+                log.warn("Was not able to retrieve loan: " + e.getMessage());
+            }
+        }
+        return new FetchLoanAccountsResponse(loanAccounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchLoanTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        Map<Account, AccountFeatures> investmentAccounts = new HashMap<>();
+
+        try {
+            Map<Account, AccountFeatures> iskAccounts = refreshIskAccountsCopy();
+            assert iskAccounts != null;
+            investmentAccounts.putAll(iskAccounts);
+
+            Optional<Pair<Account, AccountFeatures>> fundDepot = refreshFundDepotCopy();
+            fundDepot.ifPresent(pair -> investmentAccounts.put(pair.first, pair.second));
+
+            Optional<Pair<Account, AccountFeatures>> stockDepot = refreshStockDepotCopy();
+            stockDepot.ifPresent(pair -> investmentAccounts.put(pair.first, pair.second));
+        } catch (Exception e) {
+            // Just catch and exit gently
+            log.warn("Caught exception while logging investment data", e);
+        }
+        return new FetchInvestmentAccountsResponse(investmentAccounts);
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    private Map<Account, AccountFeatures> refreshIskAccountsCopy() throws HttpStatusCodeErrorException {
+
+        Map<Account, AccountFeatures> iskAccounts = new HashMap<>();
+
+        String investmentSavingsDepotResponseString = createGetRequest(ISK_URL, String.class);
+
+        InvestmentSavingsDepotResponse investmentSavingsDepotResponse;
+
+        try {
+            investmentSavingsDepotResponse = MAPPER.readValue(investmentSavingsDepotResponseString,
+                    InvestmentSavingsDepotResponse.class);
+        } catch (IOException e) {
+            log.warn("#lf - investment savings deserialization failed - " +
+                    investmentSavingsDepotResponseString, e);
+            return null;
+        }
+
+        InvestmentSavingsDepotEntity investmentSavingsDepotWrapper = investmentSavingsDepotResponse
+                .getInvestmentSavingsDepotWrapper();
+
+        if (investmentSavingsDepotWrapper == null ||
+                investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers() == null ||
+                investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers().isEmpty())  {
+            return null;
+        }
+
+        for (InvestmentSavingsDepotWrappersEntity investmentDepotWrapper :
+                investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers()) {
+            Double totalValue = investmentDepotWrapper.getDepot().getTotalValue();
+            Double balance = investmentDepotWrapper.getAccount().getBalance();
+            Double marketValue = totalValue != null && balance != null ? (totalValue - balance) : null;
+
+            Account account = investmentDepotWrapper.getAccount().toAccount(totalValue);
+            String depotNumber = investmentDepotWrapper.getDepot().getDepotNumber();
+            Double cashValue = null;
+
+            try {
+                CashBalanceResponse cashBalanceResponse = createGetRequestFromUrlAndDepotNumber(
+                        CashBalanceResponse.class, ISK_CASH_BALANCE_URL, depotNumber);
+                cashValue = cashBalanceResponse.getCashValue();
+            } catch (URISyntaxException e) {
+                log.warn("Could not build URI", e);
+            }
+
+            Portfolio portfolio = investmentDepotWrapper.getDepot().toPortfolio(marketValue, cashValue);
+
+            SecurityHoldingsResponse funds;
+            SecurityHoldingsResponse stocks;
+            try {
+                funds = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
+                        FUND_SECURITIES_URL, depotNumber);
+                stocks = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
+                        STOCK_SECURITIES_URL, depotNumber);
+            } catch (URISyntaxException e) {
+                return null;
+            }
+
+            List<Instrument> instruments = Lists.newArrayList();
+            // Add funds
+            funds.getSecurityHoldings().getFunds().forEach(fundEntity ->
+                    fundEntity.toInstrument().ifPresent(instruments::add));
+
+            // Add stocks
+            stocks.getSecurityHoldings().getShares().forEach(shareEntity -> {
+                InstrumentDetailsResponse instrumentDetails;
+                try {
+                    instrumentDetails = getInstrumentDetails(depotNumber, shareEntity.getIsinCode());
+                    if (instrumentDetails == null) {
+                        return;
+                    }
+                } catch (HttpStatusCodeErrorException e) {
+                    // If the user don't have an fund depot this request will get a response with status code 400.
+                    // Just return and don't do anything.
+                    return;
+                }
+
+                shareEntity.toInstrument(instrumentDetails.getInstrument()).ifPresent(instruments::add);
+            });
+
+            // Add bonds
+            stocks.getSecurityHoldings().getBonds().forEach(bondEntity -> {
+                InstrumentDetailsResponse instrumentDetails;
+                try {
+                    instrumentDetails = getInstrumentDetails(depotNumber, bondEntity.getIsinCode());
+                    if (instrumentDetails == null) {
+                        return;
+                    }
+                    log.info("#lf - bond details: " + MAPPER.writeValueAsString(instrumentDetails));
+                } catch (HttpStatusCodeErrorException e) {
+                    // If the user don't have an fund depot this request will get a response with status code 400.
+                    // Just return and don't do anything.
+                    return;
+                } catch (JsonProcessingException e) {
+                    // Just continue
+                }
+                bondEntity.toInstrument().ifPresent(instruments::add);
+            });
+
+            portfolio.setInstruments(instruments);
+
+            iskAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+        }
+        return iskAccounts;
+    }
+
+    private Optional<Pair<Account, AccountFeatures>> refreshFundDepotCopy() {
+        FundHoldingsResponse fundHoldingsResponse;
+        try {
+            fundHoldingsResponse = createGetRequest(FUND_DEPOT_URL, FundHoldingsResponse.class);
+        } catch (HttpStatusCodeErrorException e) {
+            // If the user don't have an fund depot this request will get a response with status code 400.
+            // Just return and don't do anything.
+            return Optional.empty();
+        }
+
+        Account account = fundHoldingsResponse.toAccount();
+        Portfolio portfolio = fundHoldingsResponse.toPortfolio();
+
+        List<Instrument> instruments = Lists.newArrayList();
+
+        fundHoldingsResponse.getFunds().forEach(fundEntity -> {
+            String fundInformationUrlWithFundId;
+            try {
+                fundInformationUrlWithFundId = new URIBuilder(FUND_INFORMATION_URL)
+                        .addParameter("fundid", String.valueOf(fundEntity.getFundId()))
+                        .build()
+                        .toString();
+            } catch (URISyntaxException e) {
+                log.error("failed to create uri builder", e);
+                return;
+            }
+
+            FundInformationWrapper fundInformationWrapper;
+            try {
+                fundInformationWrapper = createGetRequest(fundInformationUrlWithFundId, FundInformationWrapper.class);
+            } catch (HttpStatusCodeErrorException e) {
+                log.warn("failed to fetch fund details", e);
+                return;
+            }
+
+            fundEntity.toInstrument(fundInformationWrapper.getFundInformation()).ifPresent(instruments::add);
+        });
+        portfolio.setInstruments(instruments);
+        return Optional.of(new Pair<>(account, AccountFeatures.createForPortfolios(portfolio)));
+    }
+
+    private Optional<Pair<Account, AccountFeatures>> refreshStockDepotCopy() {
+        ShareDepotResponse shareDepotResponse;
+        SecurityHoldingsResponse securityHoldingsResponse;
+        CashBalanceResponse cashBalanceResponse;
+        try {
+            shareDepotResponse = createGetRequest(STOCK_DEPOT_URL, ShareDepotResponse.class);
+            if (shareDepotResponse.getShareDepotWrapper() == null
+                    || shareDepotResponse.getShareDepotWrapper().getDepot() == null
+                    || shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber() == null) {
+                return Optional.empty();
+            }
+
+            String depotNumber = shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber();
+            securityHoldingsResponse = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
+                    STOCK_DEPOT_HOLDINGS_URL, depotNumber);
+            cashBalanceResponse = createGetRequestFromUrlAndDepotNumber(CashBalanceResponse.class,
+                    STOCK_DEPOT_CASH_BALANCE_URL, depotNumber);
+        } catch (HttpStatusCodeErrorException e) {
+            // If the user don't have an fund depot this request will get a response with status code 400.
+            // Just return and don't do anything.
+            if (e.getResponse().getStatus() != 400) {
+                log.error("could not fetch fund depot", e);
+            }
+
+            return Optional.empty();
+        } catch (URISyntaxException e) {
+            log.warn("failed to build url", e);
+            return Optional.empty();
+        }
+
+        Optional<Account> account = securityHoldingsResponse.toShareDepotAccount(
+                shareDepotResponse.getShareDepotWrapper());
+
+        if (!account.isPresent()) {
+            return Optional.empty();
+        }
+
+        Portfolio portfolio = securityHoldingsResponse.toShareDepotPortfolio(shareDepotResponse.getShareDepotWrapper(),
+                cashBalanceResponse.getCashValue());
+
+        List<Instrument> instruments = Lists.newArrayList();
+
+        String depotNumber = shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber();
+        securityHoldingsResponse.getSecurityHoldings().getShares().forEach(shareEntity -> {
+            InstrumentDetailsResponse instrumentDetails;
+
+            try {
+                instrumentDetails = getInstrumentDetails(depotNumber, shareEntity.getIsinCode());
+                if (instrumentDetails == null) {
+                    return;
+                }
+            } catch (HttpStatusCodeErrorException e) {
+                // If the user don't have an fund depot this request will get a response with status code 400.
+                // Just return and don't do anything.
+                return;
+            }
+
+            shareEntity.toInstrument(instrumentDetails.getInstrument()).ifPresent(instruments::add);
+        });
+
+        securityHoldingsResponse.getSecurityHoldings().getBonds().forEach(bondEntity -> {
+            InstrumentDetailsResponse instrumentDetails;
+            try {
+                instrumentDetails = getInstrumentDetails(depotNumber, bondEntity.getIsinCode());
+                if (instrumentDetails == null) {
+                    return;
+                }
+                log.info("#lf - stockdepot - bond details: " + MAPPER.writeValueAsString(instrumentDetails));
+            } catch (HttpStatusCodeErrorException e) {
+                // If the user don't have an fund depot this request will get a response with status code 400.
+                // Just return and don't do anything.
+                return;
+            } catch (JsonProcessingException e) {
+                // Just continue
+            }
+            bondEntity.toInstrument().ifPresent(instruments::add);
+        });
+        portfolio.setInstruments(instruments);
+        return Optional.of(new Pair<>(account.get(), AccountFeatures.createForPortfolios(portfolio)));
+    }
+    /////////////////////////////////////
 }
+
