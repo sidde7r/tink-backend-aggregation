@@ -21,6 +21,30 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.ws.rs.core.MediaType;
 import org.apache.http.HttpStatus;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
@@ -123,31 +147,6 @@ import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.MediaType;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.Security;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecutor, PersistentLogin, TransferExecutor {
 
@@ -452,7 +451,6 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
     private String getDepotNumberForHolding(String depotNumber) {
         return depotNumber.replaceAll("^01[0]*", "");
     }
-
     private void updateDepotAccounts() {
         Optional<SebResponse> sebResponse = fetchInvestments(DEPOT_URL);
 
@@ -481,16 +479,18 @@ public class SEBApiAgent extends AbstractAgent implements RefreshableItemExecuto
                 .collect(Collectors.groupingBy(h -> String.valueOf(h.getDepotNumber())));
 
         depots.forEach(depot -> {
-            Account account = depot.toAccount(depotIdAccountNumberMappings.get(depot.getId()));
-            Portfolio portfolio = depot.toPortfolio();
-
+            String accountNumber = depotIdAccountNumberMappings.get(depot.getId());
             String depotNumber = getDepotNumberForHolding(depot.getId());
-            if (depotNumber.isEmpty()) {
+            if (depotNumber.isEmpty() || Strings.isNullOrEmpty(accountNumber)) {
                 return;
             }
 
+            Account account = depot.toAccount(accountNumber);
+            Portfolio portfolio = depot.toPortfolio();
+
             List<Instrument> instruments = Lists.newArrayList();
-            holdingByDepotNumber.get(depotNumber).forEach(holding -> {
+            holdingByDepotNumber.getOrDefault(depotNumber, Collections.emptyList())
+                    .forEach(holding -> {
                 holding.toInstrument().ifPresent(instrument -> {
                     Double estimatedAverageAcquisitionPrice = instrument.getMarketValue() / instrument.getQuantity();
                     if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice()) > 1) {
