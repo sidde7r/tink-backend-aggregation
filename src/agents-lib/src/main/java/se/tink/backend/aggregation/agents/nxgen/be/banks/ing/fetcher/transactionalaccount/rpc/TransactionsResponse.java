@@ -58,7 +58,11 @@ public class TransactionsResponse implements PaginatorResponse {
             if (IngConstants.ErrorCodes.FETCHED_TRANSACTIONS_OUTSIDE_RANGE_CODE
                     .equalsIgnoreCase(errorCode.get())) {
                 return false;
-            } else {
+            }
+            else if(IngConstants.ErrorCodes.STARTING_DATE_ENTERED_IS_WRONG.equalsIgnoreCase(errorCode.get())){
+                return false;
+            }
+            else {
                 throw new IllegalStateException(
                         String.format("%s with error code: %s",
                                 IngConstants.LogMessage.TRANSACTION_FETCHING_ERROR,
