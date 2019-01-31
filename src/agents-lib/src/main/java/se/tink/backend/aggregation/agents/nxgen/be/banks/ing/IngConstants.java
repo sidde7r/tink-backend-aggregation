@@ -216,6 +216,7 @@ public class IngConstants {
         public static final String FETCHED_TRANSACTIONS_OUTSIDE_RANGE_CODE = "ews/01/l130-000";
         public static final String TRANSFER_AMOUNT_EXCEEDS_LIMIT_CODE = "e51/trsg048-000";
         public static final String TRANSFER_AMOUNT_EXCEEDS_BALANCE = "e52/trsg014-000";
+        public static final String STARTING_DATE_ENTERED_IS_WRONG = "e50/01/g036-000";
     }
 
     public enum EndUserMessage implements LocalizableEnum {
