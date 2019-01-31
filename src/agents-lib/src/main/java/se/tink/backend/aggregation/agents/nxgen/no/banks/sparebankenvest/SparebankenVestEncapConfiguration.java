@@ -35,11 +35,6 @@ public class SparebankenVestEncapConfiguration implements EncapConfiguration {
     }
 
     @Override
-    public String getSuffixForDeviceHash() {
-        return "ijljlsfss";
-    }
-
-    @Override
     public String getRsaPubKeyString() {
         return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3maOiHUOhZR75rlXiyic"
                 + "csi5mp5OEdkamnC1oRO1o71eP2u7v3i3sEIHQ9jHaIw6kHCrHqFCPvgjvbzcM8vC"

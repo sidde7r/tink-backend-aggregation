@@ -228,8 +228,6 @@ public class HandelsbankenNOConstants {
 
         public static final String appId = "com.evry.mobilebanken.handelsbanken";
 
-        public static final String suffixForDeviceHash = "ijljlsfss";
-
         public static final String
                 rsaPubKeyString =
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3maOiHUOhZR75rlXiyic"

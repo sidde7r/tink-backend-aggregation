@@ -35,11 +35,6 @@ public class SparebankenSorEncapConfiguration implements EncapConfiguration {
     }
 
     @Override
-    public String getSuffixForDeviceHash() {
-        return "ijljlsfss";
-    }
-
-    @Override
     public String getRsaPubKeyString() {
         // found in PROD-esbi-server-pub.pem
         return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3maOiHUOhZR75rlXiyic"
