@@ -17,6 +17,7 @@ java_library(
         "//po:i18n",
         "//src/agents-api",
         "//src/agents-lib",
+        "//src/agents-lib:agents",
         "//src/agents-models",
         "//src/aggregation-api",
         "//src/aggregationcontroller-api",
