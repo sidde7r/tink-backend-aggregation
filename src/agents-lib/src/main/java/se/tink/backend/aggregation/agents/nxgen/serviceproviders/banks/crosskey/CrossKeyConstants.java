@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey;
 
 import com.google.common.collect.ImmutableMap;
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.agents.models.Instrument;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
@@ -39,6 +39,7 @@ public class CrossKeyConstants {
         public static final String ERR_PASSWORD_TOKEN_LOGIN_FAILED = "ERR_PASSWORD_TOKEN_LOGIN_FAILED";
         public static final String ERR_PASSWORD_MISSING = "ERR_PASSWORD_MISSING";  // happens if field is missing (i.e. null)
         public static final String ERR_PASSWORD_NOT_VALID = "ERR_PASSWORD_NOT_VALID";
+        public static final String PIN_CODE_INVALID = "PIN_CODE_INVALID";
         public static final String APP_VERSION = "1.8.0-iOS";
         public static final String LANGUAGE = "sv";
     }

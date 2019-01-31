@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.rpc.CrossKeyError;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public enum CrossKeyMessage implements CrossKeyError {
-    EXPIRED_PASSWORD("Invalid password, please contact Ålandsbanken at: 0204 292 910.", AuthorizationError.ACCOUNT_BLOCKED),
+    PIN_CODE_INVALID(LoginError.INCORRECT_CREDENTIALS.userMessage().get(), LoginError.INCORRECT_CREDENTIALS),
+    EXPIRED_PASSWORD("Invalid password, please contact Ålandsbanken at: 0204 292 910.", LoginError.INCORRECT_CREDENTIALS),
     BLOCKED_PASSWORD("Your password is blocked, please contact Ålandsbanken at: 0204 292 910.", AuthorizationError.ACCOUNT_BLOCKED),
     BLOCKED_USER("Authorization failed, please contact Ålandsbanken at: 0204 292 910.", AuthorizationError.ACCOUNT_BLOCKED),
     USER_LOCKED("Authorization failed, please contact Ålandsbanken at: 0204 292 910.", AuthorizationError.ACCOUNT_BLOCKED),
@@ -40,6 +42,6 @@ public enum CrossKeyMessage implements CrossKeyError {
                 .filter(value -> value.name().equals(error))
                 .map(value -> (CrossKeyError) value)
                 .findFirst()
-                .orElse(CrossKeyMessage.find(error, unexpectedFailure));
+                .orElseThrow(() -> unexpectedFailure.get());
     }
 }
