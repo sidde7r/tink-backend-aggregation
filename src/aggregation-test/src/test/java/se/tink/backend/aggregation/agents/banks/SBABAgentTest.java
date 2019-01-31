@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.banks;
 
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.AgentTestContext;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.banks.sbab.SBABAgent;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
 import se.tink.libraries.account.identifiers.TestAccount;
 import se.tink.libraries.social.security.TestSSN;
@@ -23,12 +25,24 @@ public class SBABAgentTest extends AbstractAgentTest<SBABAgent> {
     public SBABAgentTest() {
         super(SBABAgent.class);
 
-        credentials = createCredentials(TestSSN.TOLVAN, null, CredentialsTypes.MOBILE_BANKID);
+        credentials = createCredentials("ssn", null, CredentialsTypes.MOBILE_BANKID);
 
         testContext = new AgentTestContext(credentials);
     }
 
     @Test
+    public void testRefresh() throws Exception {
+        new AgentIntegrationTest.Builder("se", "sbab-bankid")
+                .addCredentialField(Field.Key.USERNAME,"ssn")
+                .loadCredentialsBefore(false)
+                .saveCredentialsAfter(false)
+                .build()
+                .testRefresh();
+
+    }
+
+    @Test
+    @Deprecated // This test is broken
     public void testLoginWithMobileBankIdAndRefreshAccounts() throws Exception {
         testAgent(credentials);
         System.out.println(MAPPER.writeValueAsString(testContext.getUpdatedAccounts()));
