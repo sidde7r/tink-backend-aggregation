@@ -1570,7 +1570,7 @@
     "popular" : false,
     "refreshFrequency" : 0.0,
     "refreshFrequencyFactor" : 1.0,
-    "status" : "ENABLED",
+    "status" : "TEMPORARY_DISABLED",
     "transactional" : true,
     "type" : "BANK",
     "displayDescription" : null,
