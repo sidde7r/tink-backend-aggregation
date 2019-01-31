@@ -246,7 +246,6 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                                 && !field.isSensitive());
     }
 
-    @Ignore("Ignored until we have fixed all 47 offending providers")
     @Test
     public void validatePasswordFieldsAreMasked() {
         validateFields(
