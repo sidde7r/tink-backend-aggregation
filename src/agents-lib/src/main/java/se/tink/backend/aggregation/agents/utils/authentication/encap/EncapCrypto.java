@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.security.KeyPair;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.SecureRandom;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.Base64;
@@ -18,14 +17,6 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class EncapCrypto {
-    private static final SecureRandom RANDOM = new SecureRandom();
-
-    static byte[] getRandomBytes(int numBytes) {
-        byte[] bytes = new byte[numBytes];
-        RANDOM.nextBytes(bytes);
-        return bytes;
-    }
-
     static String computeEMD(byte[] rand16BytesKey, byte[] rand16BytesIv, byte[] inputData) {
         byte[] aesCbcResult = AES.encryptCbc(rand16BytesKey, rand16BytesIv, inputData);
         return Base64.getEncoder().encodeToString(aesCbcResult);

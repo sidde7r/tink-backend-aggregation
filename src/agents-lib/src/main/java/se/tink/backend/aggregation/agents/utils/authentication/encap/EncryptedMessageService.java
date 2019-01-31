@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.utils.authentication.encap.rpc.encrypted.RequestBody;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class EncryptedMessageService {
@@ -106,8 +107,8 @@ public class EncryptedMessageService {
     }
 
     static String encryptAndSendMessage(TinkHttpClient client, String plainTextMessage) {
-        byte[] key = EncapCrypto.getRandomBytes(16);
-        byte[] iv = EncapCrypto.getRandomBytes(16);
+        byte[] key = RandomUtils.secureRandom(16);
+        byte[] iv = RandomUtils.secureRandom(16);
         byte[] pubKeyBytes = EncodingUtils.decodeBase64String(EncapConstants.B64_ELLIPTIC_CURVE_PUBLIC_KEY);
 
         HashMap<String, String> cryptoRequestParams = getCryptoRequestParams(
