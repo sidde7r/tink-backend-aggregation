@@ -7,11 +7,9 @@ import se.tink.libraries.user.rpc.User;
 import com.google.common.base.Preconditions;
 
 public class CreditCardAccount extends Account {
-    private final Amount availableCredit;
 
     private CreditCardAccount(Builder<CreditCardAccount, DefaultCreditCardBuilder> builder) {
         super(builder);
-        this.availableCredit = builder.getAvailableCredit();
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier) {
@@ -64,41 +62,17 @@ public class CreditCardAccount extends Account {
                 .setName(name);
     }
 
-    public Amount getAvailableCredit() {
-        return new Amount(this.availableCredit.getCurrency(), this.availableCredit.getValue());
-    }
-
     @Override
     public AccountTypes getType() {
         return AccountTypes.CREDIT_CARD;
-    }
-
-    @Override
-    public se.tink.backend.agents.rpc.Account toSystemAccount(User user) {
-        se.tink.backend.agents.rpc.Account account = super.toSystemAccount(user);
-
-        account.setAvailableCredit(this.availableCredit.getValue());
-
-        return account;
     }
 
     public abstract static class Builder<
             A extends CreditCardAccount, T extends CreditCardAccount.Builder<A, T>>
             extends Account.Builder<A, T> {
 
-        private Amount availableCredit;
-
         public Builder(String uniqueIdentifier) {
             super(uniqueIdentifier);
-        }
-
-        public Amount getAvailableCredit() {
-            return Amount.createFromAmount(this.availableCredit).orElseThrow(NullPointerException::new);
-        }
-
-        public Builder<A, T> setAvailableCredit(Amount availableCredit) {
-            this.availableCredit = availableCredit;
-            return self();
         }
     }
 

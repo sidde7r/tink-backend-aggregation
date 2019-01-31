@@ -145,8 +145,8 @@ public class AccountEntity {
     }
 
     public CreditCardAccount toCreditCardAccount() {
-        Amount availableCredit = new Amount(currency, 0d); // Not possible to get available credit
-        return CreditCardAccount.builder(accountNoInt, new Amount(currency, balance), availableCredit)
+
+        return CreditCardAccount.builder(accountNoInt, new Amount(currency, balance), calculateAvailableCredit())
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
@@ -154,7 +154,9 @@ public class AccountEntity {
     }
 
     public CheckingAccount toCheckingAccount() {
+
         return CheckingAccount.builder(accountNoInt, new Amount(currency, balance))
+                .setAvailableCredit(calculateAvailableCredit())
                 .setAccountNumber(accountNoExt)
                 .setName(accountName)
                 .setBankIdentifier(accountNoInt)
@@ -177,5 +179,9 @@ public class AccountEntity {
     public void logTransactionalAccount() {
         log.infoExtraLong(SerializationUtils.serializeToString(this),
                 DanskeBankConstants.LogTags.TRANSACTIONAL_ACCOUNT);
+    }
+
+    private Amount calculateAvailableCredit() {
+        return new Amount(currency, Math.max(balanceAvailable - balance, 0.0));
     }
 }
