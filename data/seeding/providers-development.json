@@ -1,69 +1,68 @@
 {
-  "providers":
-  [
-    {
-      "className": "demo.empty.EmptyAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "Empty Agent",
-      "fields": [
+    "providers": [
         {
-          "description": "Username",
-          "immutable": true,
-          "maxLength": 0,
-          "minLength": 0,
-          "name": "username",
-          "numeric": true
+            "className": "demo.empty.EmptyAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "Empty Agent",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "maxLength": 0,
+                    "minLength": 0,
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "PIN",
+                    "hint": "NNNN",
+                    "masked": true,
+                    "maxLength": 0,
+                    "minLength": 0,
+                    "name": "password"
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "name": "empty-agent",
+            "passwordHelpText": "This agent will return zero accounts and transcations.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "PIN",
-          "hint": "NNNN",
-          "masked": true,
-          "maxLength": 0,
-          "minLength": 0,
-          "name": "password"
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "SEK",
+            "displayName": "Demo - MultiSupplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "maxLength": 0,
+                    "minLength": 0,
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "PIN",
+                    "hint": "NNNN",
+                    "masked": true,
+                    "maxLength": 0,
+                    "minLength": 0,
+                    "name": "password"
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "name": "demo-multisupplemental",
+            "passwordHelpText": "This agent will return zero accounts and transcations.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "name": "empty-agent",
-      "passwordHelpText": "This agent will return zero accounts and transcations.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "SEK",
-      "displayName": "Demo - MultiSupplemental",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "maxLength": 0,
-          "minLength": 0,
-          "name": "username",
-          "numeric": true
-        },
-        {
-          "description": "PIN",
-          "hint": "NNNN",
-          "masked": true,
-          "maxLength": 0,
-          "minLength": 0,
-          "name": "password"
-        }
-      ],
-      "market": "SE",
-      "multiFactor": true,
-      "name": "demo-multisupplemental",
-      "passwordHelpText": "This agent will return zero accounts and transcations.",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    }
-  ]
+    ]
 }

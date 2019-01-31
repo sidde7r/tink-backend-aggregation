@@ -1,82 +1,82 @@
 {
-  "market": "EE",
-  "currency": "EUR",
-  "providers": [
-    {
-      "name":"ee-aslhv-password",
-      "displayName":"AS LHV Pank",
-      "popular":true,
-      "type":"BANK",
-      "status":"ENABLED",
-      "credentialsType":"PASSWORD",
-      "multiFactor":false,
-      "className":"nxgen.ee.banks.aslhv.AsLhvAgent",
-      "passwordHelpText":null,
-      "transactional":"true",
-      "payload": null,
-      "tutorialUrl":null,
-      "fields":[
+    "market": "EE",
+    "currency": "EUR",
+    "providers": [
         {
-          "name":"username",
-          "description":"User name",
-          "immutable":true
+            "name": "ee-aslhv-password",
+            "displayName": "AS LHV Pank",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.ee.banks.aslhv.AsLhvAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "payload": null,
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "User name",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "Password",
+                    "masked": true,
+                    "numeric": false,
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "name":"password",
-          "description":"Password",
-          "masked":true,
-          "numeric":false,
-          "sensitive":true
+            "name": "ee-test-password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "ee-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         }
-      ]
-    },
-    {
-      "name": "ee-test-password",
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
-      "groupDisplayName": "Test Password",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          },
-          {
-              "description": "Password",
-              "masked": true,
-              "sensitive": true,
-              "name": "password"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  },
-  {
-      "name": "ee-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  }
-  ]
+    ]
 }

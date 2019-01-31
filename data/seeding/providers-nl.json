@@ -1,127 +1,127 @@
 {
-  "currency": "EUR",
-  "market": "NL",
-  "providers": [
-    {
-      "className": "abnamro.AbnAmroAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "ABN AMRO",
-      "fields": [],
-      "groupDisplayName": null,
-      "name": "nl-abnamro",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK",
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1
-    },
-    {
-      "className": "nxgen.nl.banks.bunq.BunqAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "bunq",
-      "fields": [
+    "currency": "EUR",
+    "market": "NL",
+    "providers": [
         {
-          "description": "API Key",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "name": "nl-bunq-apikey",
-      "passwordHelpText": "You get the API key from your bunq app by going to Profile > Security.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "payload": "https://api.bunq.com",
-      "type": "BANK",
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1
-    },
-    {
-      "className": "nxgen.nl.banks.bunq.BunqAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "bunq - sandbox",
-      "fields": [
-        {
-          "description": "API Key",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "name": "nl-bunq-sandbox-apikey",
-      "passwordHelpText": "You get the API key from your bunq app by going to Profile > Security.",
-      "popular": true,
-      "status": "DISABLED",
-      "transactional": true,
-      "payload": "https://sandbox.public.api.bunq.com",
-      "type": "BANK",
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1
-    },
-    {
-      "name": "nl-test-password",
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
-      "groupDisplayName": "Test Password",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "className": "abnamro.AbnAmroAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "ABN AMRO",
+            "fields": [],
+            "groupDisplayName": null,
+            "name": "nl-abnamro",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "nl-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
+            "className": "nxgen.nl.banks.bunq.BunqAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "bunq",
+            "fields": [
+                {
+                    "description": "API Key",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "name": "nl-bunq-apikey",
+            "passwordHelpText": "You get the API key from your bunq app by going to Profile > Security.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "payload": "https://api.bunq.com",
+            "type": "BANK",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1
+        },
         {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "className": "nxgen.nl.banks.bunq.BunqAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "bunq - sandbox",
+            "fields": [
+                {
+                    "description": "API Key",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "name": "nl-bunq-sandbox-apikey",
+            "passwordHelpText": "You get the API key from your bunq app by going to Profile > Security.",
+            "popular": true,
+            "status": "DISABLED",
+            "transactional": true,
+            "payload": "https://sandbox.public.api.bunq.com",
+            "type": "BANK",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1
+        },
+        {
+            "name": "nl-test-password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "nl-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "nl-ics-oauth2",
+            "displayName": "ICS",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.nl.creditcards.ICS.ICSAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "abn https://127.0.0.1:7357/api/v1/thirdparty/callback"
         }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-    },
-    {
-      "name": "nl-ics-oauth2",
-      "displayName": "ICS",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.nl.creditcards.ICS.ICSAgent",
-      "passwordHelpText": null,
-      "transactional": "true",
-      "tutorialUrl": null,
-      "fields": [],
-      "payload": "abn https://127.0.0.1:7357/api/v1/thirdparty/callback"
-    }
-  ]
+    ]
 }

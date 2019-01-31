@@ -1,2098 +1,2178 @@
 {
-  "market": "DK",
-  "currency": "DKK",
-  "providers": [
-    {
-      "className": "nxgen.dk.banks.jyske.JyskeAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Jyske Bank",
-      "fields":[
+    "market": "DK",
+    "currency": "DKK",
+    "providers": [
         {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.jyske.JyskeAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Jyske Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": true,
+            "name": "dk-jyskebank-codecard",
+            "passwordHelpText": "Use the same mobile code you use in your Jyske Bank mobile app. You select your mobile code on jyskenetbank.dk under administration \"Agreements and mobile\".",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked": true,
-          "maxLength": 6,
-          "minLength": 6,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-        }
-      ],
-      "multiFactor": true,
-      "name": "dk-jyskebank-codecard",
-      "passwordHelpText": "Use the same mobile code you use in your Jyske Bank mobile app. You select your mobile code on jyskenetbank.dk under administration \"Agreements and mobile\".",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.danskebank.DanskeBankDKAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Danske Bank",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.danskebank.DanskeBankDKAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Service code",
+                    "hint": "NNNN",
+                    "masked": true,
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-danskebank-servicecode",
+            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Service code",
-          "hint": "NNNN",
-          "masked": true,
-          "maxLength": 4,
-          "minLength": 4,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{4})",
-          "patternError": "Please enter four digits."
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-danskebank-servicecode",
-      "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.nordea.NordeaDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayDescription": "NemID Login",
-      "displayName": "Nordea",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.nordea.NordeaDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayDescription": "NemID Login",
+            "displayName": "Nordea",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-nordea-nemid",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-nordea-nemid",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Ringkjøbing Landbobank",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Ringkjøbing Landbobank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-ringkjobinglandbobank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "24",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked": true,
-          "maxLength": 6,
-          "minLength": 6,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-ringkjobinglandbobank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "24",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sydbank",
-      "name": "dk-sydbank-password",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sydbank",
+            "name": "dk-sydbank-password",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "1",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked": true,
-          "maxLength": 6,
-          "minLength": 6,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-        }
-      ],
-      "multiFactor": false,
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "1",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Skjern Bank",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Skjern Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-skjernbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked": true,
-          "maxLength": 6,
-          "minLength": 6,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-skjernbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Nordjyske Bank",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Nordjyske Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-nordjyskebank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "20",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked": true,
-          "maxLength": 6,
-          "minLength": 6,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-nordjyskebank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "20",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Alm Brand Bank",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Alm Brand Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-almbrandbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "23",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked": true,
-          "maxLength": 6,
-          "minLength": 6,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-almbrandbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "23",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Nordfyns Bank",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Nordfyns Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-nordfynsbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "8",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked": true,
-          "maxLength": 6,
-          "minLength": 6,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-nordfynsbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "8",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Djurslands Bank",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric": true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Djurslands Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-djurslandsbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "13",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked": true,
-          "maxLength": 6,
-          "minLength": 6,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-djurslandsbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "13",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen Sjælland",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric":true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen Sjælland",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassensjaelland-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "42",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked":true,
-          "maxLength":6,
-          "minLength":6,
-          "sensitive": true,
-          "name": "password",
-          "numeric":true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-
-        }
-      ],
-      "multiFactor":false,
-      "name": "dk-sparekassensjaelland-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "42",
-      "popular":false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Østjydsk Bank",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric":true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Østjydsk Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-ostjydskbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "19",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked":true,
-          "maxLength":6,
-          "minLength":6,
-          "sensitive": true,
-          "name": "password",
-          "numeric":true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-        }
-      ],
-      "multiFactor":false,
-      "name": "dk-ostjydskbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "19",
-      "popular":false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Kreditbanken",
-      "fields":[
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username",
-          "numeric":true
+            "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Kreditbanken",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username",
+                    "numeric": true
+                },
+                {
+                    "description": "Mobile code",
+                    "hint": "NNNNNN",
+                    "masked": true,
+                    "maxLength": 6,
+                    "minLength": 6,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter 6 digits."
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-kreditbanken-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "15",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Mobile code",
-          "hint": "NNNNNN",
-          "masked":true,
-          "maxLength":6,
-          "minLength":6,
-          "sensitive": true,
-          "name": "password",
-          "numeric":true,
-          "pattern": "([0-9]{6})",
-          "patternError": "Please enter 6 digits."
-        }
-      ],
-      "multiFactor":false,
-      "name": "dk-kreditbanken-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "15",
-      "popular":false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "BankNordik",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "BankNordik",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-banknordik-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "6503",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-banknordik-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "6503",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Basisbank",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Basisbank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-basisbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "1671",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-basisbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "1671",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Borbjerg Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Borbjerg Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-borbjergsparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9634",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-borbjergsparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9634",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Broager Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Broager Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-broagersparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9797",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-broagersparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9797",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Dragsholm Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Dragsholm Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-dragsholmsparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "0537",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-dragsholmsparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "0537",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Dronninglund Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Dronninglund Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-dronninglundsparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9044",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-dronninglundsparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9044",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Fanø Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Fanø Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-fanosparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9684",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-fanosparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9684",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Folkesparekassen",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Folkesparekassen",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-folkesparekassen-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9860",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-folkesparekassen-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9860",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Frøs Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Frøs Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-frossparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9740",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-frossparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9740",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Jutlander Bank",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Jutlander Bank",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-jutlanderbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9217",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-jutlanderbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9217",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Klim Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Klim Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-klimsparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9135",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-klimsparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9135",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Langå Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Langå Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-langasparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9283",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-langasparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9283",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Middelfart Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Middelfart Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-middelfartsparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "0755",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-middelfartsparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "0755",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Rise Flemløse Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Rise Flemløse Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-riseflemloesesparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "0847",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-riseflemloesesparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "0847",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Rønde Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Rønde Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-rondeparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9354",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-rondeparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9354",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen Balling",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen Balling",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassenballing-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9312",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sparekassenballing-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9312",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen Bredebro",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen Bredebro",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassenbredebro-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9827",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sparekassenbredebro-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9827",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen Den lille Bikube",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen Den lille Bikube",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassendenlillebikube-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "0579",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sparekassendenlillebikube-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "0579",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen Djursland",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen Djursland",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassendjursland-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9388",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sparekassendjursland-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9388",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen for Nr. Nebel og Omegn",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen for Nr. Nebel og Omegn",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassennebelogomegn-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9682",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sparekassennebelogomegn-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9682",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen Kronjylland",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen Kronjylland",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassenkronjylland-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9335",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sparekassenkronjylland-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9335",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen Thy",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen Thy",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassenthy-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9090",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sparekassenthy-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9090",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sparekassen Vendsyssel",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sparekassen Vendsyssel",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sparekassenvendsyssel-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9070",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sparekassenvendsyssel-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9070",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Sønderhå-Hørsted Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Sønderhå-Hørsted Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-sønderhahørstedsparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9124",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-sønderhahørstedsparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9124",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Andelskassen Oikos",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Andelskassen Oikos",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-andelskassenoikos-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "8414",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-andelskassenoikos-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "8414",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "J.A.K. Andelskasse Østervrå",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "J.A.K. Andelskasse Østervrå",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-jakandelskasseostervra-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "8412",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-jakandelskasseostervra-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "8412",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Stadil Sparekasse",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Stadil Sparekasse",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-stadilsparekasse-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9629",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-stadilsparekasse-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9629",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Forbrugsforeningen",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Forbrugsforeningen",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-forbrugsforeningen-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9922",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-forbrugsforeningen-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9922",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Lån & Spar Bank A/S",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Lån & Spar Bank A/S",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-lansparbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "0400",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "dk-lansparbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "0400",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Saxo Privatbank A/S",
-      "fields": [
-        {
-          "description": "User-ID",
-          "hint": "CPR or NemID number.",
-          "name": "username"
+            "className": "nxgen.dk.banks.sdcdk.SdcDkAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Saxo Privatbank A/S",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-saxoprivatbank-password",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "payload": "9695",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Nykredit",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-nykredit-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "32",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Spar Nord",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-sparnord-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "369",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "AL-Bank",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-albank-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "20",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Handelsbanken DK",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-handelsbanken-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "37",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "SEB Wealth Management",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": false,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-sebwealth-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "51",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Coop",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-coop-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "888",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Vestjysk",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-vestjysk-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "19",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Andelskassen",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-andelskassen-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "48",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Den Jyske Sparekasse",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-denjyskesparekasse-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "508",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Fynske",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-fynske-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "338",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Grønlandsbanken",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-grønlandsbanken-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "4",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Lægernes",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-lægernes-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "30",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Salling",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-salling-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "28",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Lollands",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-lollands-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "95",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Merkur",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-merkur-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "87",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "PenSam",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-pensam-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "29",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Totalbanken",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-totalbanken-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "93",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Møns",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-møns-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "55",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Hvidbjerg",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-hvidbjerg-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "25",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "PFA",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-pfa-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "826",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Swedbank DK",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-swedbank-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "830",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Frørup Andelskasse",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-frørupandelskasse-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "67",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Frøslev-Mollerup Sparekasse",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-frøslevmollerupsparekasse-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "62",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Andelskassen Fælleskassen",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-andelskassenfælleskassen-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "41",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Faster Andelskasse",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-fasterandelskasse-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "82",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Københavns Andelskasse",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-københavnsandelskasse-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "80",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "BIL Danmark",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-bil-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "53",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "className": "nxgen.serviceproviders.banks.bec.BecAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Søby-Skader-Halling Sparekasse",
+            "fields": [
+                {
+                    "description": "CPR no./User no.",
+                    "name": "username",
+                    "hint": "CPR or User number.",
+                    "numeric": true
+                },
+                {
+                    "description": "Pin Code",
+                    "masked": true,
+                    "name": "password",
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "hint": "NNNN",
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter four digits.",
+                    "numeric": true
+                }
+            ],
+            "name": "dk-søbyskaderhallingsparekasse-password",
+            "passwordHelpText": "Use the same pin code as you would in your bank's mobile app.",
+            "payload": "139",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": "true",
+            "type": "BANK"
+        },
+        {
+            "name": "dk-test-password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "dk-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         }
-      ],
-      "multiFactor": false,
-      "name": "dk-saxoprivatbank-password",
-      "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
-      "payload": "9695",
-      "popular": false,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Nykredit",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-nykredit-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"32",
-      "popular":true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Spar Nord",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-sparnord-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"369",
-      "popular":true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"AL-Bank",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-albank-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"20",
-      "popular":true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Handelsbanken DK",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-handelsbanken-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"37",
-      "popular":true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"SEB Wealth Management",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":false,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-sebwealth-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"51",
-      "popular":true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Coop",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-coop-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"888",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Vestjysk",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-vestjysk-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"19",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Andelskassen",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-andelskassen-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"48",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Den Jyske Sparekasse",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-denjyskesparekasse-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"508",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Fynske",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-fynske-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"338",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Grønlandsbanken",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-grønlandsbanken-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"4",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Lægernes",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-lægernes-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"30",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Salling",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-salling-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"28",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Lollands",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-lollands-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"95",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Merkur",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-merkur-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"87",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"PenSam",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-pensam-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"29",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Totalbanken",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-totalbanken-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"93",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Møns",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-møns-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"55",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Hvidbjerg",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-hvidbjerg-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"25",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"PFA",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-pfa-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"826",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Swedbank DK",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-swedbank-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"830",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Frørup Andelskasse",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-frørupandelskasse-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"67",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Frøslev-Mollerup Sparekasse",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-frøslevmollerupsparekasse-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"62",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Andelskassen Fælleskassen",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-andelskassenfælleskassen-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"41",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Faster Andelskasse",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-fasterandelskasse-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"82",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Københavns Andelskasse",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-københavnsandelskasse-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"80",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"BIL Danmark",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-bil-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"53",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "className":"nxgen.serviceproviders.banks.bec.BecAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Søby-Skader-Halling Sparekasse",
-      "fields":[
-        {"description":"CPR no./User no.",
-          "name":"username",
-          "hint": "CPR or User number.",
-          "numeric":true},
-
-        {"description":"Pin Code",
-          "masked":true,
-          "name":"password",
-          "maxLength":4,
-          "minLength":4,
-          "hint":"NNNN",
-          "pattern":"([0-9]{4})",
-          "patternError":"Please enter four digits.",
-          "numeric":true}
-      ],
-      "name":"dk-søbyskaderhallingsparekasse-password",
-      "passwordHelpText":"Use the same pin code as you would in your bank's mobile app.",
-      "payload":"139",
-      "popular":false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status":"ENABLED",
-      "transactional":"true",
-      "type":"BANK"
-    },
-    {
-      "name": "dk-test-password",
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName":"Test Password",
-      "groupDisplayName":"Test Password",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          },
-          {
-              "description": "Password",
-              "masked": true,
-              "sensitive": true,
-              "name": "password"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  },
-  {
-      "name": "dk-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  }
-  ]
+    ]
 }

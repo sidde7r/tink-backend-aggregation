@@ -1,552 +1,552 @@
 {
-  "market": "GB",
-  "currency": "GBP",
-  "providers": [
-    {
-      "name": "uk-modelo-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.modelo.ModeloAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Modelo test",
-      "fields": [],
-      "payload": "tink:modelo",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Change me.",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-aib-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.aib.AibAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "AIB",
-      "fields": [
+    "market": "GB",
+    "currency": "GBP",
+    "providers": [
         {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink2:aib",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-bankofireland-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Bank of Ireland",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink2:bankofireland",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-barclays-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.barclays.BarclaysAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Barclays",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink:barclays",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-danskebank-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.danskebank.DanskeBankAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Danske Bank",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink2:danskebank",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-monzo-oauth2",
-      "displayName": "Monzo",
-      "groupDisplayName": "Monzo",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.uk.openbanking.monzo.MonzoAgent",
-      "passwordHelpText": "",
-      "transactional": true,
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink"
-    },
-    {
-      "name": "uk-halifax-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.halifax.HalifaxAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Halifax",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink:halifax",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-hsbc-oauth2",
-      "className": "nxgen.uk.openbanking.hsbc.HsbcAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "HSBC",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink:hsbc",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-ulster-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.ulster.UlsterAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Ulster Bank",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink2:ulster",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-natwest-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.natwest.NatWestAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "NatWest",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink2:natwest",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-markandspencer-oauth2",
-      "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "M&S Bank",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink:markandspencer",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-firstdirect-oauth2",
-      "className": "nxgen.uk.openbanking.firstdirect.FirstDirectAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "First Direct",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink:firstdirect",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-lloyds-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.lloyds.LloydsAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Lloyds",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink:lloyds",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-rbs-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.rbs.RbsAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Royal Bank of Scotland",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink2:rbs",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-bankofscotland-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.bankofscotland.BankOfScotlandAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Bank of Scotland",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink:bankofscotland",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-santander-oauth2",
-      "capabilities": [
-        "TRANSFERS"
-      ],
-      "className": "nxgen.uk.openbanking.santander.SantanderAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Santander",
-      "fields": [
-        {
-          "name": "info",
-          "value": "Connecting your bank",
-          "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
-          "immutable": true
-        }
-      ],
-      "payload": "tink:santander",
-      "groupDisplayName": "",
-      "multiFactor": false,
-      "passwordhelptext": "Authentication is done on external page",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-americanexpress-password",
-      "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "American Express",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true,
-          "minLength": 1
+            "name": "uk-modelo-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.modelo.ModeloAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Modelo test",
+            "fields": [],
+            "payload": "tink:modelo",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Change me.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password",
-          "minLength": 1
-        }
-      ],
-      "groupDisplayName": "American Express",
-      "multiFactor": false,
-      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "uk-revolut-password",
-      "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
-      "displayName": "Revolut",
-      "popular": false,
-      "credentialsType": "PASSWORD",
-      "multiFactor": true,
-      "fields": [
-        {
-          "description": "Phone number",
-          "name": "username",
-          "pattern": "\\+?[1-9][0-9]+",
-          "minLength": 5,
-          "maxLength": 16,
-          "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +44 NNN NNN NNNN"
+            "name": "uk-aib-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.aib.AibAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "AIB",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink2:aib",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Passcode",
-          "pattern": "[0-9]{4}",
-          "sensitive": true,
-          "name": "password",
-          "masked": true,
-          "minLength": 4,
-          "maxLength": 4,
-          "patternError": "Please enter your four digit passcode."
+            "name": "uk-bankofireland-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.bankofireland.BankOfIrelandAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Bank of Ireland",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink2:bankofireland",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-barclays-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.barclays.BarclaysAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Barclays",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:barclays",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-danskebank-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.danskebank.DanskeBankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink2:danskebank",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-monzo-oauth2",
+            "displayName": "Monzo",
+            "groupDisplayName": "Monzo",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.uk.openbanking.monzo.MonzoAgent",
+            "passwordHelpText": "",
+            "transactional": true,
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink"
+        },
+        {
+            "name": "uk-halifax-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.halifax.HalifaxAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Halifax",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:halifax",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-hsbc-oauth2",
+            "className": "nxgen.uk.openbanking.hsbc.HsbcAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "HSBC",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:hsbc",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-ulster-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.ulster.UlsterAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Ulster Bank",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink2:ulster",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-natwest-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.natwest.NatWestAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "NatWest",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink2:natwest",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-markandspencer-oauth2",
+            "className": "nxgen.uk.openbanking.markandspencer.MarkAndSpencerAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "M&S Bank",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:markandspencer",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-firstdirect-oauth2",
+            "className": "nxgen.uk.openbanking.firstdirect.FirstDirectAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "First Direct",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:firstdirect",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-lloyds-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.lloyds.LloydsAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Lloyds",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:lloyds",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-rbs-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.rbs.RbsAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Royal Bank of Scotland",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink2:rbs",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-bankofscotland-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.bankofscotland.BankOfScotlandAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Bank of Scotland",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:bankofscotland",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-santander-oauth2",
+            "capabilities": [
+                "TRANSFERS"
+            ],
+            "className": "nxgen.uk.openbanking.santander.SantanderAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Santander",
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink:santander",
+            "groupDisplayName": "",
+            "multiFactor": false,
+            "passwordhelptext": "Authentication is done on external page",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-americanexpress-password",
+            "className": "nxgen.uk.creditcards.amex.v62.AmericanExpressV62UKAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true,
+                    "minLength": 1
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password",
+                    "minLength": 1
+                }
+            ],
+            "groupDisplayName": "American Express",
+            "multiFactor": false,
+            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "uk-revolut-password",
+            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+            "displayName": "Revolut",
+            "popular": false,
+            "credentialsType": "PASSWORD",
+            "multiFactor": true,
+            "fields": [
+                {
+                    "description": "Phone number",
+                    "name": "username",
+                    "pattern": "\\+?[1-9][0-9]+",
+                    "minLength": 5,
+                    "maxLength": 16,
+                    "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +44 NNN NNN NNNN"
+                },
+                {
+                    "description": "Passcode",
+                    "pattern": "[0-9]{4}",
+                    "sensitive": true,
+                    "name": "password",
+                    "masked": true,
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "patternError": "Please enter your four digit passcode."
+                }
+            ],
+            "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "uk-n26-password",
+            "displayName": "N26",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": true,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ]
+        },
+        {
+            "name": "uk-test-password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "uk-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         }
-      ],
-      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "uk-n26-password",
-      "displayName": "N26",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": true,
-      "fields": [
-          {
-              "description": "Username",
-              "name": "username",
-              "immutable": true
-          },
-          {
-              "description": "Password",
-              "masked": true,
-              "name": "password",
-              "sensitive": true
-          }
-      ]
-    },
-    {
-      "name": "uk-test-password",
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
-      "groupDisplayName": "Test Password",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          },
-          {
-              "description": "Password",
-              "masked": true,
-              "sensitive": true,
-              "name": "password"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  },
-  {
-      "name": "uk-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  }
-  ]
+    ]
 }

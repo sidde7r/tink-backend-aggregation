@@ -1,2468 +1,2468 @@
 {
-  "market": "FR",
-  "currency": "EUR",
-  "providers": [
-    {
-      "name": "fr-lcl-password",
-      "displayName": "LCL",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.fr.banks.lcl.LclAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": true,
-      "fields": [
+    "market": "FR",
+    "currency": "EUR",
+    "providers": [
         {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
+            "name": "fr-lcl-password",
+            "displayName": "LCL",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fr.banks.lcl.LclAgent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": true,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ]
         },
         {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
+            "name": "fr-banquepopulairealsace-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Alsace Lorraine Champagne",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "047",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulaireaquitaine-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Aquitaine Centre Atlantique",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "009",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulaireouest-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Grand Ouest",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "038",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulaireauvergne-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Auvergne Rhône Alpes",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "068",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulairebourgogne-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Bourgogne Franche-Comté",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "008",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulairebred-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire BRED",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "10107",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulairemediterranee-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Méditerranée",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "046",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulairenord-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Nord",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "035",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulaireoccitane-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Occitane",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "078",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulairerivesdeparis-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Rives de Paris",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "002",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulairesud-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Sud",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "066",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-banquepopulairevaldefrance-password",
+            "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Banque Populaire",
+            "displayName": "Banque Populaire Val de France",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "minLength": 1,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 1,
+                    "name": "password"
+                }
+            ],
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "status": "ENABLED",
+            "payload": "087",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-n26-password",
+            "displayName": "N26",
+            "groupDisplayName": "N26",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.serviceproviders.banks.n26.N26Agent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": true,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password",
+                    "sensitive": true
+                }
+            ]
+        },
+        {
+            "name": "fr-revolut-password",
+            "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
+            "displayName": "Revolut",
+            "credentialsType": "PASSWORD",
+            "multiFactor": true,
+            "fields": [
+                {
+                    "description": "Phone number",
+                    "name": "username",
+                    "pattern": "\\+?[1-9][0-9]+",
+                    "minLength": 5,
+                    "maxLength": 16,
+                    "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +33 NNN NNN NNNN"
+                },
+                {
+                    "description": "Passcode",
+                    "name": "password",
+                    "pattern": "[0-9]{4}",
+                    "sensitive": true,
+                    "masked": true,
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "patternError": "Please enter your four digit passcode."
+                }
+            ],
+            "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-bnpparibas-password",
+            "displayName": "BNP Paribas",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fr.banks.bnpparibas.BnpParibasAgent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": "true",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password"
+                }
+            ]
+        },
+        {
+            "name": "fr-banquetransatlantique-password",
+            "displayName": "Banque Transatlantique",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueAgent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password"
+                }
+            ]
+        },
+        {
+            "name": "fr-creditmutuel-password",
+            "displayName": "Credit Mutuel",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fr.banks.creditmutuel.CreditMutuelAgent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": "true",
+            "payload": "CM",
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password"
+                }
+            ]
+        },
+        {
+            "name": "fr-cic-password",
+            "displayName": "CIC",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fr.banks.cic.CicBankAgent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": "true",
+            "payload": "CIC",
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password"
+                }
+            ]
+        },
+        {
+            "name": "fr-monabanq-password",
+            "displayName": "MonaBanq",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.fr.banks.monabanq.MonaBanqAgent",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "immutable": true
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password"
+                }
+            ]
+        },
+        {
+            "className": "nxgen.fr.creditcards.amex.AmericanExpressFRAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "name": "fr-americanexpress-password",
+            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "fr-creditagricolealpesprovence-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Alpes Provence",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "813",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolealsacevosges-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Alsace Vosges",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "872",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoleanjoumaine-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Anjou Maine",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "879",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoleaquitaine-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Aquitaine",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "833",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoleatlantiquevendee-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Atlantique Vendée",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "847",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolebriepicardie-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Brie Picardie",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "887",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolecentreest-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Centre-Est",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "878",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolecentrefrance-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Centre France",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "868",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolecentreloire-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Centre Loire",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "848",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolecentreouest-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Centre Ouest",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "895",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolechampagnebourgogne-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Champagne-Bourgogne",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "810",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolecharentemaritime-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Charente-Maritime Deux-Sèvres",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "817",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolecharenteperigord-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Charente-Périgord",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "824",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolecorse-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Corse",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "820",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolecotesdarmor-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Côtes d'Armor",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "822",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolefinistere-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Finistère",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "829",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolefranchecomte-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Franche-Comté",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "825",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoleguadeloupe-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole de Guadeloupe",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "900",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoleiledefrance-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole d'Île-de-France",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "882",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoleilleetvilaine-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Ille-et-Vilaine",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "836",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolelanguedoc-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Languedoc",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "835",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolereunion-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Réunion",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "903",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoleloirehauteloire-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Loire Haute Loire",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "845",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolelorraine-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Lorraine",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "861",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolemartiniqueguyane-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Martinique et Guyane",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "902",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolemorbihan-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Morbihan",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "860",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolenorddefrance-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Nord de France",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "867",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolenordest-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Nord Est",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "802",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolenordmidipyrenees-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Nord Mini Pyrenées",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "812",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolenormandie-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Normandie",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "866",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolenormandieseine-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Normandie-Seine",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "883",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoleprovencecotedazur-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Provence Côte d'Azur",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "891",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolepyreneesgascogne-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Pyrenées Gascogne",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "869",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolesavoie-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Des Savoie",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "881",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolesudmediterranee-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Sud Mediterranée",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "871",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolesudrohnealpes-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Sud Rhône Alpes",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "839",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoletoulouse-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Toulouse 31",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "831",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricoletouraineetpoitou-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Touraine et Poitou",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "894",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-creditagricolevaldefrance-password",
+            "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
+            "credentialsType": "PASSWORD",
+            "groupDisplayName": "Crédit Agricole",
+            "displayName": "Crédit Agricole Val de France",
+            "fields": [
+                {
+                    "description": "Account number (11 digits)",
+                    "immutable": true,
+                    "pattern": "[0-9]{11}",
+                    "minLength": 11,
+                    "maxLength": 11,
+                    "name": "accountNumber",
+                    "patternError": "Your account number was incorrect. Please try again."
+                },
+                {
+                    "description": "Personal code (6 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{6}",
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "name": "accountCode",
+                    "patternError": "Your personal code was incorrect. Please try again."
+                },
+                {
+                    "description": "App passcode (4 digits)",
+                    "immutable": false,
+                    "sensitive": true,
+                    "masked": true,
+                    "pattern": "[0-9]{4}",
+                    "minLength": 4,
+                    "maxLength": 4,
+                    "name": "appCode",
+                    "patternError": "App passcode was incorrect. Please try again."
+                }
+            ],
+            "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
+            "status": "ENABLED",
+            "payload": "844",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "fr-societegenerale-password",
+            "className": "nxgen.fr.banks.societegenerale.SocieteGeneraleAgent",
+            "displayName": "Société Générale",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "transactional": true,
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "immutable": true,
+                    "pattern": "[0-9]{8}"
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password",
+                    "pattern": "[0-9]{6}"
+                }
+            ],
+            "type": "BANK",
+            "status": "ENABLED"
+        },
+        {
+            "name": "fr-caisseepargne-password",
+            "className": "nxgen.fr.banks.caisseepargne.CaisseEpargneAgent",
+            "displayName": "Caisse d'Épargne",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "transactional": true,
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "immutable": true,
+                    "pattern": "^[0-9]{9,10}$"
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password",
+                    "pattern": "^[0-9]{8}$"
+                }
+            ],
+            "type": "BANK",
+            "status": "ENABLED"
+        },
+        {
+            "name": "fr-labanquepostale-password",
+            "className": "nxgen.fr.banks.labanquepostale.LaBanquePostaleAgent",
+            "displayName": "La Banque Postale",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "transactional": true,
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "immutable": true,
+                    "pattern": "[0-9]{10}"
+                },
+                {
+                    "description": "Password",
+                    "sensitive": true,
+                    "masked": true,
+                    "name": "password",
+                    "pattern": "[0-9]{6}"
+                }
+            ],
+            "type": "BANK",
+            "status": "ENABLED"
+        },
+        {
+            "name": "fr-test-password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "fr-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         }
-      ]
-    },
-    {
-      "name": "fr-banquepopulairealsace-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Alsace Lorraine Champagne",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "047",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulaireaquitaine-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Aquitaine Centre Atlantique",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "009",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulaireouest-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Grand Ouest",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "038",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulaireauvergne-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Auvergne Rhône Alpes",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "068",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulairebourgogne-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Bourgogne Franche-Comté",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "008",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulairebred-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire BRED",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "10107",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulairemediterranee-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Méditerranée",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "046",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulairenord-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Nord",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "035",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulaireoccitane-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Occitane",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "078",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulairerivesdeparis-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Rives de Paris",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "002",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulairesud-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Sud",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "066",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-banquepopulairevaldefrance-password",
-      "className": "nxgen.fr.banks.banquepopulaire.BanquePopulaireAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Banque Populaire",
-      "displayName": "Banque Populaire Val de France",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "minLength": 1,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "minLength": 1,
-          "name": "password"
-        }
-      ],
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "status": "ENABLED",
-      "payload": "087",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-n26-password",
-      "displayName": "N26",
-      "groupDisplayName": "N26",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.serviceproviders.banks.n26.N26Agent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": true,
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "name": "password",
-          "sensitive": true
-        }
-      ]
-    },
-    {
-      "name": "fr-revolut-password",
-      "className": "nxgen.serviceproviders.banks.revolut.RevolutAgent",
-      "displayName": "Revolut",
-      "credentialsType": "PASSWORD",
-      "multiFactor": true,
-      "fields": [
-        {
-          "description": "Phone number",
-          "name": "username",
-          "pattern": "\\+?[1-9][0-9]+",
-          "minLength": 5,
-          "maxLength": 16,
-          "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +33 NNN NNN NNNN"
-        },
-        {
-          "description": "Passcode",
-          "name": "password",
-          "pattern": "[0-9]{4}",
-          "sensitive": true,
-          "masked": true,
-          "minLength": 4,
-          "maxLength": 4,
-          "patternError": "Please enter your four digit passcode."
-        }
-      ],
-      "passwordhelptext": "Enter your full phone number in international format starting with '+', and the four digit passcode you set up in your Revolut app.",
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-bnpparibas-password",
-      "displayName": "BNP Paribas",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.fr.banks.bnpparibas.BnpParibasAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": "true",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password"
-        }
-      ]
-    },
-    {
-      "name": "fr-banquetransatlantique-password",
-      "displayName": "Banque Transatlantique",
-      "popular": false,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.fr.banks.banquetransatlantique.BanqueTransatlantiqueAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": "true",
-      "tutorialUrl": null,
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password"
-        }
-      ]
-    },
-    {
-      "name": "fr-creditmutuel-password",
-      "displayName": "Credit Mutuel",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.fr.banks.creditmutuel.CreditMutuelAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": "true",
-      "payload": "CM",
-      "tutorialUrl": null,
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password"
-        }
-      ]
-    },
-    {
-      "name": "fr-cic-password",
-      "displayName": "CIC",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.fr.banks.cic.CicBankAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": "true",
-      "payload": "CIC",
-      "tutorialUrl": null,
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password"
-        }
-      ]
-    },
-    {
-      "name": "fr-monabanq-password",
-      "displayName": "MonaBanq",
-      "popular": true,
-      "type": "BANK",
-      "status": "ENABLED",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "className": "nxgen.fr.banks.monabanq.MonaBanqAgent",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "transactional": "true",
-      "tutorialUrl": null,
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "immutable": true
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password"
-        }
-      ]
-    },
-    {
-      "className": "nxgen.fr.creditcards.amex.AmericanExpressFRAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "American Express",
-      "fields": [
-        {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "name": "fr-americanexpress-password",
-      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "name": "fr-creditagricolealpesprovence-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Alpes Provence",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "813",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolealsacevosges-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Alsace Vosges",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "872",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoleanjoumaine-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Anjou Maine",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "879",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoleaquitaine-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Aquitaine",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "833",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoleatlantiquevendee-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Atlantique Vendée",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "847",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolebriepicardie-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Brie Picardie",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "887",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolecentreest-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Centre-Est",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "878",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolecentrefrance-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Centre France",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "868",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolecentreloire-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Centre Loire",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "848",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolecentreouest-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Centre Ouest",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "895",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolechampagnebourgogne-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Champagne-Bourgogne",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "810",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolecharentemaritime-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Charente-Maritime Deux-Sèvres",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "817",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolecharenteperigord-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Charente-Périgord",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "824",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolecorse-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Corse",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "820",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolecotesdarmor-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Côtes d'Armor",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "822",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolefinistere-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Finistère",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "829",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolefranchecomte-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Franche-Comté",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "825",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoleguadeloupe-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole de Guadeloupe",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "900",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoleiledefrance-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole d'Île-de-France",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "882",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoleilleetvilaine-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Ille-et-Vilaine",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "836",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolelanguedoc-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Languedoc",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "835",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolereunion-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Réunion",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "903",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoleloirehauteloire-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Loire Haute Loire",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "845",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolelorraine-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Lorraine",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "861",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolemartiniqueguyane-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Martinique et Guyane",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "902",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolemorbihan-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Morbihan",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "860",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolenorddefrance-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Nord de France",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "867",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolenordest-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Nord Est",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "802",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolenordmidipyrenees-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Nord Mini Pyrenées",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "812",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolenormandie-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Normandie",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "866",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolenormandieseine-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Normandie-Seine",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "883",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoleprovencecotedazur-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Provence Côte d'Azur",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "891",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolepyreneesgascogne-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Pyrenées Gascogne",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "869",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolesavoie-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Des Savoie",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "881",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolesudmediterranee-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Sud Mediterranée",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "871",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolesudrohnealpes-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Sud Rhône Alpes",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "839",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoletoulouse-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Toulouse 31",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "831",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricoletouraineetpoitou-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Touraine et Poitou",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "894",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-creditagricolevaldefrance-password",
-      "className": "nxgen.serviceproviders.banks.creditagricole.CreditAgricoleAgent",
-      "credentialsType": "PASSWORD",
-      "groupDisplayName": "Crédit Agricole",
-      "displayName": "Crédit Agricole Val de France",
-      "fields": [
-        {
-          "description": "Account number (11 digits)",
-          "immutable": true,
-          "pattern": "[0-9]{11}",
-          "minLength": 11,
-          "maxLength": 11,
-          "name": "accountNumber",
-          "patternError": "Your account number was incorrect. Please try again."
-        },
-        {
-          "description": "Personal code (6 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{6}",
-          "minLength": 6,
-          "maxLength": 6,
-          "name": "accountCode",
-          "patternError": "Your personal code was incorrect. Please try again."
-        },
-        {
-          "description": "App passcode (4 digits)",
-          "immutable": false,
-          "sensitive": true,
-          "masked": true,
-          "pattern": "[0-9]{4}",
-          "minLength": 4,
-          "maxLength": 4,
-          "name": "appCode",
-          "patternError": "App passcode was incorrect. Please try again."
-        }
-      ],
-      "passwordHelpText": "Sign in with your account number, personal code, and app pass code.",
-      "status": "ENABLED",
-      "payload": "844",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fr-societegenerale-password",
-      "className": "nxgen.fr.banks.societegenerale.SocieteGeneraleAgent",
-      "displayName": "Société Générale",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "transactional": true,
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "immutable": true,
-          "pattern": "[0-9]{8}"
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password",
-          "pattern": "[0-9]{6}"
-        }
-      ],
-      "type": "BANK",
-      "status": "ENABLED"
-    },
-    {
-      "name": "fr-caisseepargne-password",
-      "className": "nxgen.fr.banks.caisseepargne.CaisseEpargneAgent",
-      "displayName": "Caisse d'Épargne",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "transactional": true,
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "immutable": true,
-          "pattern": "^[0-9]{9,10}$"
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password",
-          "pattern": "^[0-9]{8}$"
-        }
-      ],
-      "type": "BANK",
-      "status": "ENABLED"
-    },
-    {
-      "name": "fr-labanquepostale-password",
-      "className": "nxgen.fr.banks.labanquepostale.LaBanquePostaleAgent",
-      "displayName": "La Banque Postale",
-      "credentialsType": "PASSWORD",
-      "multiFactor": false,
-      "transactional": true,
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "immutable": true,
-          "pattern": "[0-9]{10}"
-        },
-        {
-          "description": "Password",
-          "sensitive": true,
-          "masked": true,
-          "name": "password",
-          "pattern": "[0-9]{6}"
-        }
-      ],
-      "type": "BANK",
-      "status": "ENABLED"
-    },
-    {
-      "name": "fr-test-password",
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
-      "groupDisplayName": "Test Password",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          },
-          {
-              "description": "Password",
-              "masked": true,
-              "sensitive": true,
-              "name": "password"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  },
-  {
-      "name": "fr-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  }
-  ]
+    ]
 }

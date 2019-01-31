@@ -1,367 +1,365 @@
 {
-  "market": "FI",
-  "currency": "EUR",
-  "providers":
-  [
-
-    {
-      "className": "nxgen.fi.creditcards.amex.AmericanExpressFIAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "American Express",
-      "fields": [
+    "market": "FI",
+    "currency": "EUR",
+    "providers": [
         {
-          "description": "Username",
-          "immutable": true,
-          "name": "username"
+            "className": "nxgen.fi.creditcards.amex.AmericanExpressFIAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "American Express",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "name": "password"
+                }
+            ],
+            "name": "fi-americanexpress-password",
+            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "name": "password"
-        }
-      ],
-      "name": "fi-americanexpress-password",
-      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "CREDIT_CARD"
-    },
-    {
-      "className": "nxgen.fi.banks.omasp.OmaspAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Oma Säästöpankki",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "minLength": 1
+            "className": "nxgen.fi.banks.omasp.OmaspAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Oma Säästöpankki",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "minLength": 1
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "name": "fi-omasp-codecard",
+            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "name": "fi-omasp-codecard",
-      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.fi.banks.op.OpBankAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "OP",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "minLength": 1
+            "className": "nxgen.fi.banks.op.OpBankAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "OP",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "minLength": 1
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "name": "fi-op-codecard",
+            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "name": "fi-op-codecard",
-      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className":"nxgen.fi.banks.alandsbanken.AlandsBankenAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Ålandsbanken",
-      "fields":[
-        {
-          "description":"User-ID",
-          "name": "username",
-          "minLength": 1
+            "className": "nxgen.fi.banks.alandsbanken.AlandsBankenAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Ålandsbanken",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "name": "username",
+                    "minLength": 1
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "name": "fi-alandsbanken-codecard",
+            "passwordHelpText": "Use the same User-ID and password as you would in your bank's mobile app.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "type": "BANK",
+            "transactional": true
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": true,
-      "name": "fi-alandsbanken-codecard",
-      "passwordHelpText": "Use the same User-ID and password as you would in your bank's mobile app.",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "type": "BANK",
-      "transactional" :true
-    },
-    {
-      "className": "nxgen.fi.banks.poppankki.PopPankkiAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "POP Pankki",
-      "fields":[
-        {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "minLength": 1
+            "className": "nxgen.fi.banks.poppankki.PopPankkiAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "POP Pankki",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "minLength": 1
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "fi-poppankki-codecard",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "type": "BANK",
+            "transactional": true
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor": false,
-      "name": "fi-poppankki-codecard",
-      "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "type": "BANK",
-      "transactional": true
-    },
-    {
-      "className":"nxgen.fi.banks.saastopankki.SpAgent",
-      "credentialsType":"PASSWORD",
-      "displayName":"Säästöpankki",
-      "fields":[
-        {
-          "description": "Username",
-          "name": "username",
-          "numeric": true,
-          "minLength": 1
+            "className": "nxgen.fi.banks.saastopankki.SpAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Säästöpankki",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "numeric": true,
+                    "minLength": 1
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "fi-saastopankki-codecard",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "popular": false,
+            "status": "ENABLED",
+            "type": "BANK",
+            "transactional": true
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor":false,
-      "name":"fi-saastopankki-codecard",
-      "passwordHelpText":"Use the same password as you would in your bank's mobile app.",
-      "popular":false,
-      "status":"ENABLED",
-      "type":"BANK",
-      "transactional":true
-    },
-    {
-      "className": "nxgen.fi.banks.spankki.SpankkiAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "S-Pankki",
-      "fields": [
-        {
-          "description": "Username",
-          "name": "username",
-          "minLength": 1
+            "className": "nxgen.fi.banks.spankki.SpankkiAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "S-Pankki",
+            "fields": [
+                {
+                    "description": "Username",
+                    "name": "username",
+                    "minLength": 1
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "fi-spankki-codecard",
+            "passwordHelpText": "Use the same password as you would in your bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "type": "BANK",
+            "transactional": "true"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
-        }
-      ],
-      "multiFactor":false,
-      "name": "fi-spankki-codecard",
-      "passwordHelpText":"Use the same password as you would in your bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "type": "BANK",
-      "transactional": "true"
-    },
-    {
-      "className": "nxgen.fi.banks.nordea.v33.NordeaFIAgent",
-      "credentialsType": "THIRD_PARTY_APP",
-      "displayDescription": "Nordea Codes App",
-      "displayName": "Nordea",
-      "fields": [
-        {
-          "description": "User-ID",
-          "name": "username",
-          "numeric": true,
-          "minLength": 1
-        }
-      ],
-      "multiFactor": true,
-      "name": "fi-nordea-thirdpartyapp",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "type": "BANK",
-      "transactional": true
-    },
-    {
-      "className": "nxgen.fi.banks.handelsbanken.HandelsbankenFIAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Handelsbanken",
-      "fields": [
-        {
-          "description": "Username",
-          "hint": "NNNN NNNN",
-          "maxLength": 8,
-          "minLength": 8,
-          "name": "username",
-          "pattern": "[a-zA-Z0-9]{8}",
-          "patternError": "Please input a valid username."
+            "className": "nxgen.fi.banks.nordea.v33.NordeaFIAgent",
+            "credentialsType": "THIRD_PARTY_APP",
+            "displayDescription": "Nordea Codes App",
+            "displayName": "Nordea",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "name": "username",
+                    "numeric": true,
+                    "minLength": 1
+                }
+            ],
+            "multiFactor": true,
+            "name": "fi-nordea-thirdpartyapp",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "type": "BANK",
+            "transactional": true
         },
         {
-          "description": "Password",
-          "hint": "NNNN",
-          "masked": true,
-          "maxLength": 4,
-          "minLength": 4,
-          "sensitive": true,
-          "name": "password",
-          "numeric": true,
-          "pattern": "[0-9]{4}",
-          "patternError": "Please input a 4-digit password."
+            "className": "nxgen.fi.banks.handelsbanken.HandelsbankenFIAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Handelsbanken",
+            "fields": [
+                {
+                    "description": "Username",
+                    "hint": "NNNN NNNN",
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "name": "username",
+                    "pattern": "[a-zA-Z0-9]{8}",
+                    "patternError": "Please input a valid username."
+                },
+                {
+                    "description": "Password",
+                    "hint": "NNNN",
+                    "masked": true,
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "[0-9]{4}",
+                    "patternError": "Please input a 4-digit password."
+                },
+                {
+                    "description": "Online bank signup password",
+                    "masked": true,
+                    "name": "signupPassword",
+                    "patternError": "Please input the password also used for the web login."
+                }
+            ],
+            "name": "fi-handelsbanken-codecard",
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Online bank signup password",
-          "masked": true,
-          "name": "signupPassword",
-          "patternError": "Please input the password also used for the web login."
-        }
-      ],
-      "name": "fi-handelsbanken-codecard",
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.fi.banks.danskebank.DanskeBankFIAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Danske Bank",
-      "fields": [
-        {
-          "description": "Username",
-          "maxLength": 8,
-          "minLength": 8,
-          "numeric": true,
-          "name": "username",
-          "pattern": "[0-9]{8}",
-          "patternError": "Please input a 8-digit username."
+            "className": "nxgen.fi.banks.danskebank.DanskeBankFIAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "description": "Username",
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "numeric": true,
+                    "name": "username",
+                    "pattern": "[0-9]{8}",
+                    "patternError": "Please input a 8-digit username."
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "numeric": true,
+                    "sensitive": true,
+                    "name": "password",
+                    "pattern": "[0-9]{4}",
+                    "patternError": "Please input a 4-digit password."
+                }
+            ],
+            "name": "fi-danskebank-codecard",
+            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+            "popular": true,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "maxLength": 4,
-          "minLength": 4,
-          "numeric": true,
-          "sensitive": true,
-          "name": "password",
-          "pattern": "[0-9]{4}",
-          "patternError": "Please input a 4-digit password."
-        }
-      ],
-      "name": "fi-danskebank-codecard",
-      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-      "popular": true,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "className": "nxgen.fi.banks.aktia.AktiaAgent",
-      "credentialsType": "PASSWORD",
-      "displayName": "Aktia",
-      "fields": [
-        {
-          "description": "Username",
-          "maxLength": 8,
-          "minLength": 8,
-          "numeric": true,
-          "name": "username",
-          "pattern": "[0-9]{8}",
-          "patternError": "Please input a 8-digit username."
+            "className": "nxgen.fi.banks.aktia.AktiaAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Aktia",
+            "fields": [
+                {
+                    "description": "Username",
+                    "maxLength": 8,
+                    "minLength": 8,
+                    "numeric": true,
+                    "name": "username",
+                    "pattern": "[0-9]{8}",
+                    "patternError": "Please input a 8-digit username."
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "name": "fi-aktia-codecard",
+            "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
+            "popular": false,
+            "refreshFrequency": 1,
+            "refreshFrequencyFactor": 1,
+            "status": "TEMPORARY_DISABLED",
+            "transactional": true,
+            "type": "BANK"
         },
         {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password"
+            "name": "fi-test-password",
+            "className": "nxgen.demo.banks.password.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Password",
+            "groupDisplayName": "Test Password",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "fi-test-multi-supplemental",
+            "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Multi-Supplemental",
+            "groupDisplayName": "Test Multi-Supplemental",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         }
-      ],
-      "name": "fi-aktia-codecard",
-      "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-      "popular": false,
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
-      "status": "TEMPORARY_DISABLED",
-      "transactional": true,
-      "type": "BANK"
-    },
-    {
-      "name": "fi-test-password",
-      "className": "nxgen.demo.banks.password.PasswordDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Password",
-      "groupDisplayName": "Test Password",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          },
-          {
-              "description": "Password",
-              "masked": true,
-              "sensitive": true,
-              "name": "password"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  },
-  {
-      "name": "fi-test-multi-supplemental",
-      "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
-      "displayDescription": "Password",
-      "credentialsType": "PASSWORD",
-      "displayName": "Test Multi-Supplemental",
-      "groupDisplayName": "Test Multi-Supplemental",
-      "fields": [
-          {
-              "description": "Username",
-              "immutable": true,
-              "name": "username"
-          }
-      ],
-      "multiFactor": true,
-      "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
-      "popular": true,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "TEST"
-  }
-  ]
+    ]
 }

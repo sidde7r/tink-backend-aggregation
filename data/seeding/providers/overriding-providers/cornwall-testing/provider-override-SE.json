@@ -1,17 +1,17 @@
 {
-  "clusterid" : "cornwall-testing",
-  "provider-configuration" : [
-    {
-      "credentialsType": "PASSWORD",
-      "displayName": "SEB Abstract",
-      "groupDisplayName": null,
-      "name": "se-seb-abstract",
-      "popular": false,
-      "status": "DISABLED",
-      "transactional": true,
-      "type": "BANK",
-      "market": "SE",
-      "currency": "SEK"
-    }
-  ]
+    "clusterid": "cornwall-testing",
+    "provider-configuration": [
+        {
+            "credentialsType": "PASSWORD",
+            "displayName": "SEB Abstract",
+            "groupDisplayName": null,
+            "name": "se-seb-abstract",
+            "popular": false,
+            "status": "DISABLED",
+            "transactional": true,
+            "type": "BANK",
+            "market": "SE",
+            "currency": "SEK"
+        }
+    ]
 }
