@@ -138,6 +138,6 @@ public abstract class IngConstants {
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from(PROVIDER_NAME + "-unknown-account-type");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("IngDirect_unknown_account_type");
     }
 }
