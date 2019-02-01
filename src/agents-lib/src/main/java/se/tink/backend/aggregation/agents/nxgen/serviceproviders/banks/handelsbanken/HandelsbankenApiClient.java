@@ -26,6 +26,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -46,7 +47,7 @@ public abstract class HandelsbankenApiClient {
     }
 
     public EntryPointResponse fetchEntryPoint() {
-        return createRequest(handelsbankenConfiguration.getEntryPoint())
+       return createRequest(handelsbankenConfiguration.getEntryPoint())
                 .get(EntryPointResponse.class);
     }
 
@@ -99,12 +100,15 @@ public abstract class HandelsbankenApiClient {
     public KeepAliveResponse keepAlive(ApplicationEntryPointResponse applicationEntryPoint) {
         try {
             // it's 'only' a ping so Handelsbanken doesn't return anything when alive but returns XML if not...
-            KeepAliveResponse keepAliveResponse = createRequest(applicationEntryPoint.toKeepAlive())
-                    .get(KeepAliveResponse.class);
-            if (keepAliveResponse == null) {
-                return KeepAliveResponse.aliveEntryPoint();
+            HttpResponse httpResponse = createRequest(applicationEntryPoint.toKeepAlive())
+                    .get(HttpResponse.class);
+
+            if (httpResponse.hasBody()) {
+
+                return httpResponse.getBody(KeepAliveResponse.class);
             }
-            return keepAliveResponse;
+
+            return KeepAliveResponse.aliveEntryPoint();
         } catch (HttpResponseException e) {
             LOGGER.warn(HandelsbankenConstants.URLS.KeepAlive.LOG_TAG
                     + " - Keeping session alive failed");
