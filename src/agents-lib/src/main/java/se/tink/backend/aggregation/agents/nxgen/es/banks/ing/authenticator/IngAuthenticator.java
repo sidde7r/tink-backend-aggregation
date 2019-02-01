@@ -2,13 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator;
 
 import com.google.common.base.Strings;
 import java.util.List;
-import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngApiClient;
@@ -17,16 +18,16 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.L
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.LoginPinPad;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.LoginPinPositions;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.authenticator.rpc.LoginTicket;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.rpc.ErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class IngAuthenticator implements Authenticator {
 
-    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
+    private static final Pattern NIF_PATTERN = Pattern.compile("^[0-9]{8}[a-zA-Z]$");
+    private static final Pattern NIE_PATTERN = Pattern.compile("^[a-zA-Z][0-9]{7}[a-zA-Z]$");
+    private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
 
     private final IngApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -36,13 +37,32 @@ public class IngAuthenticator implements Authenticator {
         this.sessionStorage = sessionStorage;
     }
 
-    // Currently only know the difference between NIE and NON_NIE types (NON_NIE might contain more types).
-    private static int getUsernameType(String username) {
+    /**
+     * Validates username type and returns the corresponding document type number.
+     *
+     * NIF rule: 8 digits followed by 1 letter, DDDDDDDDL
+     * NIE rule: 1 letter followed by 7 digits followed by 1 letter, LDDDDDDDL
+     * PASSPORT rule: 2 letters followed by 6 digits, LLDDDDDD
+     *
+     * These are the only possible formats that I've found that the ING accept on the frontend side. Anything I try
+     * outside these formats result in "incorrect format" error.
+     */
+    public static int getUsernameType(String username) throws LoginException {
+
+        if (NIF_PATTERN.matcher(username).matches()) {
+            return IngConstants.UsernameType.NIF;
+        }
+
         if (NIE_PATTERN.matcher(username).matches()) {
             return IngConstants.UsernameType.NIE;
         }
 
-        return IngConstants.UsernameType.NON_NIE;
+        if (PASSPORT_PATTERN.matcher(username).matches()) {
+            return IngConstants.UsernameType.PASSPORT;
+        }
+
+        // Shouldn't happen since the same regex is in the provider configuration for username
+        throw LoginError.INCORRECT_CREDENTIALS.exception();
     }
 
     @Override
@@ -65,19 +85,10 @@ public class IngAuthenticator implements Authenticator {
 
             HttpResponse response = hre.getResponse();
 
-            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-                Optional<String> errorSummary = errorResponse.getErrorSummary();
-
-                if (errorResponse.hasErrorCode(IngConstants.ErrorCode.INVALID_LOGIN_DOCUMENT_TYPE)) {
-                    // This should not happen, if it does: The method `getUsernameType` is wrong.
-                    throw new IllegalStateException(String.format("Invalid username type: %s",
-                            errorSummary.orElse(null)));
-                }
-                // Fall through and re-throw original exception.
+            if (response.getStatus() == HttpStatus.SC_FORBIDDEN) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            // Re-throw the exception.
             throw hre;
         }
 

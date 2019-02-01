@@ -38,16 +38,9 @@ public abstract class IngConstants {
     }
 
     public static class UsernameType {
-        // These types might need to be made more granular at a later time.
-
-        // The following formats of usernames matches (regex) NON_NIE (0):
-        //  [0-9]+z
-        //  [0-9]+y
-        public static final int NON_NIE = 0;
-
-        // The following formats of usernames matches (regex) NIE (1):
-        //  x[0-9]+[A-Z]
+        public static final int NIF = 0;
         public static final int NIE = 1;
+        public static final int PASSPORT = 2;
     }
 
     public static class ErrorCode {
