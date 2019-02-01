@@ -25,13 +25,6 @@ import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
-/**
- * Today two way mapping between Aggregation's Account and core account forces
- * the classes to have exactly the same fields. Can be cleaned up when the two
- * way dependency is resolved. An example of logic that breaks:
- *
- * {@link se.tink.backend.aggregation.workers.AgentWorkerContext#updateAccount(Account, AccountAssets)}
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
