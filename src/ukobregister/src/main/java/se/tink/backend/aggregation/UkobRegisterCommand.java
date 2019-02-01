@@ -70,7 +70,7 @@ public class UkobRegisterCommand {
     private static TinkHttpClient createHttpClient(UkOpenBankingConfiguration config,
             SoftwareStatement softwareStatement) {
 
-        TinkHttpClient httpClient = new TinkHttpClient(null, null);
+        TinkHttpClient httpClient = new TinkHttpClient();
         httpClient.disableSignatureRequestHeader();
         httpClient.trustRootCaCertificate(config.getRootCAData(), config.getRootCAPassword());
 

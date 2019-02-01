@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
-import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.libraries.metrics.utils.MetricsUtils;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -21,9 +20,9 @@ public class MetricFilter extends Filter {
     private final MetricRegistry registry;
     private final Provider provider;
 
-    public MetricFilter(AgentWorkerContext context) {
-        registry = context.getMetricRegistry();
-        provider = context.getRequest().getProvider();
+    public MetricFilter(MetricRegistry registry, Provider provider) {
+        this.registry = registry;
+        this.provider = provider;
     }
 
     private MetricId populateMetric(MetricId metric, HttpResponse response) {

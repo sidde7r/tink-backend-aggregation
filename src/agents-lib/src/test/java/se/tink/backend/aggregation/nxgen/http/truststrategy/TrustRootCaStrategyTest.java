@@ -70,14 +70,14 @@ public class TrustRootCaStrategyTest {
 
     @Test(expected = HttpResponseException.class)
     public void testTrustedRootCa() {
-        TinkHttpClient httpClient = new TinkHttpClient(null, null);
+        TinkHttpClient httpClient = new TinkHttpClient();
         httpClient.trustRootCaCertificate(JKS_DATA, JKS_PASSWORD);
         httpClient.request("https://modelobank2018.o3bank.co.uk:4201/token").get(String.class);
     }
 
     @Test(expected = HttpClientException.class)
     public void testNonTrustedRootCa() {
-        TinkHttpClient httpClient = new TinkHttpClient(null, null);
+        TinkHttpClient httpClient = new TinkHttpClient();
         httpClient.request("https://modelobank2018.o3bank.co.uk:4201/token").get(String.class);
     }
 }

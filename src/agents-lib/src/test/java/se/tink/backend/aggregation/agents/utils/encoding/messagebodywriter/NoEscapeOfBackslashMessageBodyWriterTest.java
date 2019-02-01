@@ -24,7 +24,7 @@ public class NoEscapeOfBackslashMessageBodyWriterTest {
         noEscapeBodyWriter = new NoEscapeOfBackslashMessageBodyWriter(HashMap.class);
 
         // a bit strange, but this way we can get the default message body writer for Json
-        defaultMessageBodyWriter = new TinkHttpClient(null, null).getInternalClient()
+        defaultMessageBodyWriter = new TinkHttpClient().getInternalClient()
                 .getMessageBodyWorkers()
                 .getMessageBodyWriter(HashMap.class, null, null, MediaType.APPLICATION_JSON_TYPE);
 

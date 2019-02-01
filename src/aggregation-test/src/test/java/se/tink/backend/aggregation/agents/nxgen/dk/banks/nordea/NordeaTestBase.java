@@ -30,7 +30,10 @@ public class NordeaTestBase {
 
         context = new AgentTestContext(credentials);
 
-        tinkHttpClient = spy(new TinkHttpClient(context, credentials));
+        tinkHttpClient = spy(
+                new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
+                        context.getLogOutputStream(), null, null)
+        );
         tinkHttpClient.setDebugOutput(TestConfig.CLIENT_DEBUG_OUTPUT);
         tinkHttpClient.addFilter(new NordeaDkFilter());
 

@@ -26,7 +26,7 @@ public abstract class AlandsBankenTest {
         PersistentStorage persistentStorage = new PersistentStorage();
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_ID, AlandsBankenTestConfig.DEVICE_ID);
         persistentStorage.put(CrossKeyConstants.Storage.DEVICE_TOKEN, AlandsBankenTestConfig.DEVICE_TOKEN);
-        client = spy(new CrossKeyApiClient(new TinkHttpClient(null, credentials), new AlandsBankenFIConfiguration()));
+        client = spy(new CrossKeyApiClient(new TinkHttpClient(), new AlandsBankenFIConfiguration()));
         CrossKeyAutoAuthenticator authenticator = new CrossKeyAutoAuthenticator(client,
                 new CrossKeyPersistentStorage(persistentStorage), credentials);
         authenticator.autoAuthenticate();

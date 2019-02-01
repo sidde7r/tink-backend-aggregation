@@ -34,7 +34,10 @@ public class OpBankSessionHandlerTest {
         AgentContext context = new AgentTestContext(null);
         SupplementalInformationController supplementalInformationController = new SupplementalInformationController(
                 context, credentials);
-        bankClient = new OpBankApiClient(new TinkHttpClient(context, null));
+        bankClient = new OpBankApiClient(
+                new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
+                        context.getLogOutputStream(), null, null)
+        );
         OpBankPersistentStorage persistentStorage = new OpBankPersistentStorage(credentials, new PersistentStorage());
         persistentStorage.put(OpBankConstants.Authentication.APPLICATION_INSTANCE_ID, OpBankTestConfig.APPLICATION_INSTANCE_ID);
         OpAutoAuthenticator opBankAuthenticator =

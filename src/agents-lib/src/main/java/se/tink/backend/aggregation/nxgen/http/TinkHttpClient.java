@@ -11,6 +11,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
@@ -43,9 +44,9 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
+import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -65,14 +66,13 @@ import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
 import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.workers.AgentWorkerContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
-    private final AgentAggregatorIdentifier agentAggregatorIdentifier;
     private TinkApacheHttpRequestExecutor requestExecutor;
     private Client internalClient = null;
     private final ClientConfig internalClientConfig;
@@ -89,8 +89,9 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final LoggingFilter debugOutputLoggingFilter= new LoggingFilter(new PrintStream(System.out));
     private boolean debugOutput = false;
 
-    private final AgentContext context;
-    private final Credentials credentials;
+    private final ByteArrayOutputStream logOutputStream;
+    private final MetricRegistry metricRegistry;
+    private final Provider provider;
 
     private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
@@ -157,35 +158,32 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             }
         }
     }
-    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials,
-            @Nullable SignatureKeyPair signatureKeyPair) {
-        this.context = context;
-        this.agentAggregatorIdentifier = context;
-        this.credentials = credentials;
 
+    public TinkHttpClient(@Nullable AggregatorInfo aggregatorInfo, @Nullable MetricRegistry metricRegistry,
+            @Nullable ByteArrayOutputStream logOutPutStream, @Nullable SignatureKeyPair signatureKeyPair, @Nullable Provider provider) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
         this.internalHttpClientBuilder = HttpClientBuilder.create()
-                                        .setRequestExecutor(requestExecutor)
-                                        .setDefaultCookieStore(this.internalCookieStore);
+                .setRequestExecutor(requestExecutor)
+                .setDefaultCookieStore(this.internalCookieStore);
 
         this.internalSslContextBuilder = new SSLContextBuilder()
                 .useProtocol("TLSv1.2")
                 .setSecureRandom(new SecureRandom());
 
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
+        this.logOutputStream = logOutPutStream;
+        this.aggregator = Objects.nonNull(aggregatorInfo) ? aggregatorInfo : AggregatorInfo.getAggregatorForTesting();
+        this.metricRegistry = metricRegistry;
+        this.provider = provider;
 
         // Add an initial redirect handler to fix any illegal location paths
         addRedirectHandler(new FixRedirectHandler());
 
         // Add the filter that is responsible to add persistent data to each request
         addFilter(this.persistentHeaderFilter);
-
-        // The context should only be null if the HttpClient if used for a test
-        this.aggregator = Objects.isNull(agentAggregatorIdentifier) ?
-                AggregatorInfo.getAggregatorForTesting() : agentAggregatorIdentifier.getAggregatorInfo();
 
         setTimeout(DEFAULTS.TIMEOUT_MS);
         setChunkedEncoding(DEFAULTS.CHUNKED_ENCODING);
@@ -195,8 +193,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
     }
 
-    public TinkHttpClient(@Nullable AgentContext context, @Nullable Credentials credentials) {
-        this(context, credentials, null);
+    public TinkHttpClient() {
+        this(null, null, null, null, null);
     }
 
     private void constructInternalClient() {
@@ -233,22 +231,21 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         this.internalClient = new TinkApacheHttpClient4(httpHandler, this.internalClientConfig);
 
         // Add agent debug `LoggingFilter`, todo: move this into nxgen
-        if (this.context != null) {
-            try {
-                if (this.context.getLogOutputStream() != null) {
-                    this.internalClient.addFilter(
-                            new LoggingFilter(
-                                    new PrintStream(
-                                            this.context.getLogOutputStream(),
-                                            true,
-                                            "UTF-8")));
-                }
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalStateException(e);
+        try {
+            if (this.logOutputStream != null) {
+                this.internalClient.addFilter(
+                        new LoggingFilter(
+                                new PrintStream(
+                                        logOutputStream,
+                                        true,
+                                        "UTF-8")));
             }
-            if (this.context instanceof AgentWorkerContext) {
-                addFilter(new MetricFilter((AgentWorkerContext) this.context));
-            }
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
+        if (this.metricRegistry != null && this.provider != null) {
+            addFilter(
+                    new MetricFilter(this.metricRegistry, this.provider));
         }
         if (this.debugOutput) {
             this.internalClient.addFilter(debugOutputLoggingFilter);

@@ -29,7 +29,7 @@ public class BelfiusTest {
 
     protected BelfiusAuthenticator setupAuthentication(PersistentStorage persistentStorage, Credentials credentials) {
         this.apiClient = spy(
-                new BelfiusApiClient(new TinkHttpClient(null, credentials),
+                new BelfiusApiClient(new TinkHttpClient(),
                         new BelfiusSessionStorage(new SessionStorage()), BelfiusConstants.Request.LOCALE_DUTCH)
         );
         ProviderConfigModel marketProviders = readProvidersConfiguration("be");
