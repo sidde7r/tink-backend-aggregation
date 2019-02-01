@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
@@ -12,6 +13,12 @@ public class LaCaixaConstants {
             TypeMapper.<Instrument.Type>builder()
                     .put(Instrument.Type.STOCK, "10160", "15888", "15890")
                     .put(Instrument.Type.FUND, "10060")
+                    .build();
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.SAVINGS, "LIBRETA")
+                    .put(AccountTypes.CHECKING, "CUENTA CORRIENTE")
                     .build();
 
     public static class ApiService {
