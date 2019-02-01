@@ -254,19 +254,16 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                                 && !field.isMasked());
     }
 
-    @Ignore("Ignored until we have fixed all 8 offending providers")
     @Test
     public void validateCardNumberFieldsAreSensitive() {
         validateFields((conf, field) -> isCardNumberField(field) && !field.isSensitive());
     }
 
-    @Ignore("Ignored until we have fixed the two offending providers")
     @Test
     public void validateCardNumberFieldsAreImmutable() {
         validateFields((conf, field) -> isCardNumberField(field) && !field.isImmutable());
     }
 
-    @Ignore("Ignored until we have fixed the offending provider")
     @Test
     public void validateCardNumberFieldsAreNumeric() {
         validateFields((conf, field) -> isCardNumberField(field) && !field.isNumeric());
