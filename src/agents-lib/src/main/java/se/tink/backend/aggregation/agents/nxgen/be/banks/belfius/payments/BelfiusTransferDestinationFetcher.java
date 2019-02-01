@@ -86,7 +86,7 @@ public class BelfiusTransferDestinationFetcher implements TransferDestinationFet
         AccountIdentifier accountIdentifier =
                 new SepaEurIdentifier(account.getAccountNumber().replace(" ", ""));
 
-        return new TransferAccountEntity(accountIdentifier, BelfiusConstants.TRANSACTION_BANK_NAME, account.getName());
+        return new TransferAccountEntity(accountIdentifier, BelfiusConstants.TRANSACTION_BANK_NAME, account.getHolderName());
     }
 
     private static Predicate<Account> ACCOUNTS_FOR_TRANSFER_TO_OWN_PREDICATE =
