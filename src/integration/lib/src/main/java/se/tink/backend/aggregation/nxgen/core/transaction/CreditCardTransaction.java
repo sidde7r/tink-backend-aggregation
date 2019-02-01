@@ -40,9 +40,11 @@ public final class CreditCardTransaction extends Transaction {
         getCreditAccount().ifPresent(creditAccount ->
                 transaction.setPayload(TransactionPayloadTypes.SUB_ACCOUNT, creditAccount.getAccountNumber()));
 
-        if (Objects.nonNull(creditCard) && Objects.nonNull(creditCard.getCardNumber())) {
-            transaction.setPayload(TransactionPayloadTypes.CREDIT_CARD_NUMBER, creditCard.getCardNumber());
-        }
+        // Temporarily comment this out until all environments is running version
+        // 201901311727-d8f13362 (or later) of aggregation-controller, system and main.
+        // if (Objects.nonNull(creditCard) && Objects.nonNull(creditCard.getCardNumber())) {
+        //      transaction.setPayload(TransactionPayloadTypes.CREDIT_CARD_NUMBER, creditCard.getCardNumber());
+        // }
 
         return transaction;
     }
