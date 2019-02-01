@@ -12,10 +12,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitSE
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="SE"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="SE"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="SE"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="SE"}[30m])) by (className) > 2
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: urgent
@@ -49,10 +49,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitBE
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="BE"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="BE"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="BE"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="BE"}[30m])) by (className) > 2
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: urgent
@@ -86,10 +86,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitGB
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="GB"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="GB"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="GB"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="GB"}[30m])) by (className) > 2
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -123,10 +123,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitAT
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="AT"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="AT"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="AT"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="AT"}[30m])) by (className) > 2
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -160,10 +160,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitDE
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="DE"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="DE"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="DE"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="DE"}[30m])) by (className) > 2
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -197,10 +197,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitDK
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="DK"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="DK"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="DK"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="DK"}[30m])) by (className) > 1
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -234,10 +234,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitEE
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="EE"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="EE"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="EE"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="EE"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="EE"}[30m])) by (className) > 1
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="EE"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -270,11 +270,11 @@ spec:
         # ES
   - alert: LoginSuccessRateLowWithAttemptLimitES
     expr: |
-        # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="ES"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="ES"}[30m])) by (className) < 0.95)
-        # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="ES"}[30m])) by (className) > 1
+       # Successful/Cancelled attempts above 95%
+       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="ES"}[30m])) by (action,className)
+           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[30m])) by (action,className) < 0.95)
+       # At least this many attempts.
+       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -307,11 +307,11 @@ spec:
       # FI
   - alert: LoginSuccessRateLowWithAttemptLimitFI
     expr: |
-        # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="FI"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="FI"}[30m])) by (className) < 0.95)
-        # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="FI"}[30m])) by (className) > 1
+       # Successful/Cancelled attempts above 95%
+       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="FI"}[30m])) by (action,className)
+           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[30m])) by (action,className) < 0.95)
+       # At least this many attempts.
+       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -345,10 +345,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitFR
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="FR"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="FR"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="FR"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="FR"}[30m])) by (className) > 1
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -382,10 +382,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitNL
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="NL"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="NL"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="NL"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="NL"}[30m])) by (className) > 3
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -419,10 +419,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitNO
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="NO"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="NO"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="NO"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="NO"}[30m])) by (className) > 1
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -456,10 +456,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitBG
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="BG"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="BG"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="BG"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BG"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="BG"}[30m])) by (className) > 1
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BG"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -492,11 +492,11 @@ spec:
     # CA
   - alert: LoginSuccessRateLowWithAttemptLimitCA
     expr: |
-        # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="CA"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="CA"}[30m])) by (className) < 0.95)
-        # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="CA"}[30m])) by (className) > 1
+       # Successful/Cancelled attempts above 95%
+       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="CA"}[30m])) by (action,className)
+           / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="CA"}[30m])) by (action,className) < 0.95)
+       # At least this many attempts.
+       and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="CA"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
@@ -530,10 +530,10 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitRO
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action="login", outcome=~"completed|cancelled", market="RO"}[30m])) by (className)
-            / sum(increase(tink_agent_login_total{action="login", market="RO"}[30m])) by (className) < 0.95)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="RO"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="RO"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
-        and sum(increase(tink_agent_login_total{action="login", market="RO"}[30m])) by (className) > 1
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="RO"}[30m])) by (action,className) > 2
     for: 5m
     labels:
         severity: ping
