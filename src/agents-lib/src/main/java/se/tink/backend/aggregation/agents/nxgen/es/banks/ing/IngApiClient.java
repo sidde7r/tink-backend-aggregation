@@ -79,21 +79,15 @@ public class IngApiClient {
     }
 
     public Movements getApiRestProductsMovements(String productUUID, LocalDate fromDate,
-            LocalDate toDate,
-            int page) {
-        return getApiRestProductsMovements(productUUID, fromDate, toDate, IngConstants.FetchControl.PAGE_SIZE,
-                IngConstants.FetchControl.PAGE_SIZE * page);
-    }
+            LocalDate toDate, int offset) {
 
-    Movements getApiRestProductsMovements(String productUUID, LocalDate fromDate,
-            LocalDate toDate, int limit, int offset) {
-        URL url = new URL(IngConstants.Url.GENOMA_API_REST_PRODUCTS_MOVEMENTS).parameter("product", productUUID);
-        return client.request(url)
+        return client.request(new URL(IngConstants.Url.GENOMA_API_REST_PRODUCTS_MOVEMENTS)
+                .parameter("product", productUUID))
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParam(IngConstants.Query.FROM_DATE, IngUtils.DATE_FORMATTER.format(fromDate))
                 .queryParam(IngConstants.Query.TO_DATE, IngUtils.DATE_FORMATTER.format(toDate))
-                .queryParam(IngConstants.Query.LIMIT, Integer.toString(limit))
+                .queryParam(IngConstants.Query.LIMIT, Integer.toString(IngConstants.FetchControl.PAGE_SIZE))
                 .queryParam(IngConstants.Query.OFFSET, Integer.toString(offset))
                 .get(Movements.class);
     }

@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.fetcher.rpc;
 
+import java.util.Collections;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -13,7 +14,7 @@ public final class Movements {
     private int total;
 
     public List<Element> getElements() {
-        return elements;
+        return elements == null ? Collections.emptyList() : elements;
     }
 
     public void setElements(List<Element> elements) {
