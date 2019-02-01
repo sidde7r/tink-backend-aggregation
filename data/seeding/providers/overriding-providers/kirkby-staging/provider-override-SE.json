@@ -1238,7 +1238,7 @@
                     "patternError": "Please enter four digits.",
                     "type": null,
                     "value": null,
-                    "sensitive": false,
+                    "sensitive": true,
                     "checkbox": false,
                     "additionalInfo": null
                 }

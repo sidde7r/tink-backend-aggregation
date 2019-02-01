@@ -20,7 +20,8 @@
                     "masked": true,
                     "maxLength": 0,
                     "minLength": 0,
-                    "name": "password"
+                    "name": "password",
+                    "sensitive": true
                 }
             ],
             "market": "SE",
@@ -52,7 +53,8 @@
                     "masked": true,
                     "maxLength": 0,
                     "minLength": 0,
-                    "name": "password"
+                    "name": "password",
+                    "sensitive": true
                 }
             ],
             "market": "SE",

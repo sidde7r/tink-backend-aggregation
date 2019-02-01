@@ -1222,7 +1222,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-nykredit-password",
@@ -1255,7 +1256,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-sparnord-password",
@@ -1288,7 +1290,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-albank-password",
@@ -1321,7 +1324,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-handelsbanken-password",
@@ -1354,7 +1358,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-sebwealth-password",
@@ -1387,7 +1392,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-coop-password",
@@ -1420,7 +1426,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-vestjysk-password",
@@ -1453,7 +1460,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-andelskassen-password",
@@ -1486,7 +1494,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-denjyskesparekasse-password",
@@ -1519,7 +1528,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-fynske-password",
@@ -1552,7 +1562,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-grønlandsbanken-password",
@@ -1585,7 +1596,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-lægernes-password",
@@ -1618,7 +1630,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-salling-password",
@@ -1651,7 +1664,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-lollands-password",
@@ -1684,7 +1698,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-merkur-password",
@@ -1717,7 +1732,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-pensam-password",
@@ -1750,7 +1766,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-totalbanken-password",
@@ -1783,7 +1800,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-møns-password",
@@ -1816,7 +1834,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-hvidbjerg-password",
@@ -1849,7 +1868,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-pfa-password",
@@ -1882,7 +1902,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-swedbank-password",
@@ -1915,7 +1936,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-frørupandelskasse-password",
@@ -1948,7 +1970,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-frøslevmollerupsparekasse-password",
@@ -1981,7 +2004,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-andelskassenfælleskassen-password",
@@ -2014,7 +2038,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-fasterandelskasse-password",
@@ -2047,7 +2072,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-københavnsandelskasse-password",
@@ -2080,7 +2106,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-bil-password",
@@ -2113,7 +2140,8 @@
                     "hint": "NNNN",
                     "pattern": "([0-9]{4})",
                     "patternError": "Please enter four digits.",
-                    "numeric": true
+                    "numeric": true,
+                    "sensitive": true
                 }
             ],
             "name": "dk-søbyskaderhallingsparekasse-password",

@@ -1476,7 +1476,7 @@
                     "patternError": "Please enter four digits, or leave blank.",
                     "type": null,
                     "value": null,
-                    "sensitive": false,
+                    "sensitive": true,
                     "checkbox": false,
                     "additionalInfo": null
                 }

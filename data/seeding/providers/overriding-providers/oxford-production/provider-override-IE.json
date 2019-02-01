@@ -132,7 +132,7 @@
                     "patternError": "Please enter 6 digits.",
                     "type": null,
                     "value": null,
-                    "sensitive": false,
+                    "sensitive": true,
                     "checkbox": false,
                     "additionalInfo": null
                 }
@@ -247,7 +247,7 @@
                     "patternError": null,
                     "type": null,
                     "value": null,
-                    "sensitive": false,
+                    "sensitive": true,
                     "checkbox": false,
                     "additionalInfo": null
                 },
@@ -339,7 +339,7 @@
                     "patternError": "Please enter 5 digits.",
                     "type": null,
                     "value": null,
-                    "sensitive": false,
+                    "sensitive": true,
                     "checkbox": false,
                     "additionalInfo": null
                 }

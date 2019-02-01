@@ -15,7 +15,8 @@
                 {
                     "description": "Password",
                     "masked": true,
-                    "name": "password"
+                    "name": "password",
+                    "sensitive": true
                 }
             ],
             "name": "fi-americanexpress-password",

@@ -729,7 +729,8 @@
                 {
                     "name": "password",
                     "description": "PIN",
-                    "masked": true
+                    "masked": true,
+                    "sensitive": true
                 }
             ]
         }
