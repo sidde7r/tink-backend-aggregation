@@ -1915,6 +1915,8 @@
     "de-winterlingerbank-password",
     "de-wlbank-password",
     "de-wüstenrot60420000-password",
-    "de-wüstenrot60420020-password"
+    "de-wüstenrot60420020-password",
+    "de-test-password",
+    "de-test-multi-supplemental"
   ]
 }

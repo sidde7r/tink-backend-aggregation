@@ -22,6 +22,8 @@
     "at-raiffeisen8-password",
     "at-raiffeisen9-password",
     "at-revolut-password",
-    "at-volksbank-password"
+    "at-volksbank-password",
+    "at-test-password",
+    "at-test-multi-supplemental"
   ]
 }

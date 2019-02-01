@@ -14,6 +14,8 @@
     "es-n26-password",
     "es-openbank-password",
     "es-revolut-password",
-    "es-targobank-password"
+    "es-targobank-password",
+    "es-test-password",
+    "es-test-multi-supplemental"
   ]
 }
