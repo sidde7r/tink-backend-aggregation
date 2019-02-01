@@ -35,6 +35,7 @@ java_library(
         "//src/libraries/demo_credentials:demo-credentials",
         "//src/libraries/discovered_web_service",
         "//src/libraries/discovery",
+        "//src/libraries/document_container",
         "//src/libraries/draining",
         "//src/libraries/enums",
         "//src/libraries/executor_utils:executor-utils",
