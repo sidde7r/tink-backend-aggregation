@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -42,7 +43,6 @@ import se.tink.backend.aggregation.workers.commands.InstantiateAgentWorkerComman
 import se.tink.backend.aggregation.workers.commands.KeepAliveAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LockAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.LoginAgentWorkerCommand;
-import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.RefreshItemAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderMetricsAgentWorkerCommand;
 import se.tink.backend.aggregation.workers.commands.ReportProviderTransferMetricsAgentWorkerCommand;
