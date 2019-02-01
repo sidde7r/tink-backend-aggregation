@@ -87,8 +87,7 @@ public class FetchLoanDetailsResponse {
     }
 
     public Amount getInitialBalance() {
-        return Optional.of(new Amount(NordeaFIConstants.CURRENCY, credit.getLimit()))
-                .orElseGet(() -> new Amount(NordeaFIConstants.CURRENCY, amount.getGranted()));
+        return new Amount(NordeaFIConstants.CURRENCY, amount.getGranted());
     }
 
     public Amount getPaid() {
