@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.workers;
 
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 
 public class AgentWorkerRefreshOperationCreatorWrapper implements Runnable {
 

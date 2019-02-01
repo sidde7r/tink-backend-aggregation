@@ -13,7 +13,7 @@ import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.utils.CurrencyConstants;
 import se.tink.backend.aggregation.agents.models.Transaction;
 

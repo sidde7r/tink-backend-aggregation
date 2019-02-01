@@ -72,7 +72,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;

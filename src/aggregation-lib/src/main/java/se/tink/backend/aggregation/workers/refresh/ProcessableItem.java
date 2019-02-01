@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Ordering;
 import java.util.List;
 import java.util.Set;
-import se.tink.backend.aggregation.rpc.RefreshableItem;
+import se.tink.libraries.credentials.service.RefreshableItem;
 
 public enum ProcessableItem {
     ACCOUNTS,

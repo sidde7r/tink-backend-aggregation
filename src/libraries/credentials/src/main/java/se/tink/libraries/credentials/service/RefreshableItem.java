@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.libraries.credentials.service;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

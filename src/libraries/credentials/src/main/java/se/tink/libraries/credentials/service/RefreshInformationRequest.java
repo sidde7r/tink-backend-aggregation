@@ -1,9 +1,7 @@
-package se.tink.backend.aggregation.rpc;
+package se.tink.libraries.credentials.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.user.rpc.User;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;

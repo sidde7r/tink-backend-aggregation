@@ -20,7 +20,7 @@ import se.tink.libraries.credentials.service.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
-import se.tink.backend.aggregation.rpc.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
