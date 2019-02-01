@@ -20,6 +20,7 @@ import se.tink.backend.aggregation.agents.creditcards.okq8.model.LoginResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -78,7 +79,8 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
         }
 
         if (isFetchAgain(loginResponse)) {
-            throw new IllegalStateException("okq8 - login failed - could not fetch necessary account info");
+            // Could not get a non-empty response within attempt limit.
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
 
         loginResponseFromAuthenticationRequest = Optional.of(loginResponse);
