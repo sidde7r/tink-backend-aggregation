@@ -221,8 +221,10 @@
             "fields": [
                 {
                     "name": "username",
-                    "description": "Username",
-                    "immutable": true
+                    "description": "NIF/NIE or passport number",
+                    "immutable": true,
+                    "pattern": "(^[0-9]{8}[a-zA-Z]$)|(^[a-zA-Z][0-9]{7}[a-zA-Z]$)|(^[a-zA-Z]{2}[0-9]{6}$)",
+                    "patternError": "Please verify that you have entered a correct NIF/NIE, or passport number."
                 },
                 {
                     "name": "date-of-birth",
