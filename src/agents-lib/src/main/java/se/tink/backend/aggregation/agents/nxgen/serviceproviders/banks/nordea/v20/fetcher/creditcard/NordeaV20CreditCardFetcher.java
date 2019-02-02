@@ -1,12 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.creditcard;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.creditcard.rpc.CardDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.parsers.NordeaV20Parser;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -16,6 +18,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 public class NordeaV20CreditCardFetcher implements AccountFetcher<CreditCardAccount>,
         TransactionKeyPaginator<CreditCardAccount, String> {
+
+    private static final AggregationLogger log = new AggregationLogger(NordeaV20CreditCardFetcher.class);
     private final NordeaV20ApiClient client;
     private final NordeaV20Parser parser;
 
@@ -26,12 +30,18 @@ public class NordeaV20CreditCardFetcher implements AccountFetcher<CreditCardAcco
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return client.getAccountProductsOfTypes(NordeaV20Constants.ProductType.CARD).stream()
-                .filter(pe -> !NordeaV20Constants.CardGroup.DEBIT_CARD.equalsIgnoreCase(pe.getCardGroup()))
-                .map(pe -> {
-                    CardDetailsResponse cardDetailsResponse = client.fetchCardDetails(pe.getNordeaAccountIdV2());
-                    return parser.parseCreditCardAccount(pe, cardDetailsResponse.getCardDetails());
-                }).collect(Collectors.toList());
+
+        try {
+            return client.getAccountProductsOfTypes(NordeaV20Constants.ProductType.CARD).stream()
+                    .filter(pe -> !NordeaV20Constants.CardGroup.DEBIT_CARD.equalsIgnoreCase(pe.getCardGroup()))
+                    .map(pe -> {
+                        CardDetailsResponse cardDetailsResponse = client.fetchCardDetails(pe.getNordeaAccountIdV2());
+                        return parser.parseCreditCardAccount(pe, cardDetailsResponse.getCardDetails());
+                    }).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Could not fetch credit card: ", e);
+            return Collections.emptyList();
+        }
     }
 
     @Override
