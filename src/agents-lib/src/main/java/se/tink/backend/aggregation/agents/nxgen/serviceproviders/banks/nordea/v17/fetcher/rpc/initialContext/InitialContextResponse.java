@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v1
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@XmlRootElement
 public class InitialContextResponse extends NordeaResponse {
     private BankingServiceEntity bankingServiceResponse;
     @JsonProperty("getInitialContextOut")
