@@ -114,8 +114,8 @@ public class NordeaDkParser extends NordeaV20Parser {
     @Override
     public CreditCardAccount parseCreditCardAccount(ProductEntity pe, CardDetailsEntity cardDetails) {
         return CreditCardAccount.builder(pe.getAccountNumber(false),
-                new Amount(pe.getCurrency(), cardDetails.getCurrentBalance()),
-                new Amount(pe.getCurrency(), cardDetails.constructAvailableFunds()))
+                new Amount(pe.getCurrency(), pe.getBalance()),
+                new Amount(pe.getCurrency(), pe.getFundsAvailable()))
                 .setAccountNumber(pe.getAccountNumber(true))
                 .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
