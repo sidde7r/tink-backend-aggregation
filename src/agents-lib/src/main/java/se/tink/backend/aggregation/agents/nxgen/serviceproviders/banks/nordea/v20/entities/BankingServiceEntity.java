@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BankingServiceEntity {
-    public ErrorMessage errorMessage;
+    private ErrorMessage errorMessage;
 
     public ErrorMessage getErrorMessage() {
         return errorMessage;
