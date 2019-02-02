@@ -15,7 +15,7 @@ import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class NordeaV17Constants {
-    private static final String VERSION = "V1.7";
+    private static final String VERSION = "V1.8";
 
     public static class Service {
         private static final String SERVICE_VERSION = "Service" + VERSION;
