@@ -18,11 +18,16 @@ public class CardsEntity {
     private String ownerName;
 
     public Double getCurrentBalance() {
+
+        if (creditLimit == null) {
+            return getFundsAvailable();
+        }
+
         return getFundsAvailable() - creditLimit;
     }
 
     public Double getFundsAvailable() {
-        if (fundsAvailable == 0) {
+        if (fundsAvailable == null || fundsAvailable == 0) {
             return balance;
         }
         return fundsAvailable;
