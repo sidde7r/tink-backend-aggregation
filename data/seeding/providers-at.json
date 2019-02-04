@@ -733,6 +733,85 @@
                     "sensitive": true
                 }
             ]
-        }
+        },
+
+        {
+            "name": "erste-bank-test",
+            "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Erste Bank",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "easy-bank-demo",
+            "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Easy Bank",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
+        {
+            "name": "bawag-demo",
+            "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "BAWAG",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
+        },
     ]
 }
