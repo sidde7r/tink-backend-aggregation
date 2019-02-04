@@ -81,7 +81,7 @@ public class HandelsbankenSEAccountTest {
         when(transactionsResponse.getAccount()).thenReturn(transactionsAccount);
         when(transactionsAccount.getClearingNumber()).thenReturn("1234");
 
-        tinkAccount = account.toTransactionalAccount(transactionsResponse, true).orElseThrow(() -> new IllegalStateException("No account found!"));
+        tinkAccount = account.toTransactionalAccount(transactionsResponse).orElseThrow(() -> new IllegalStateException("No account found!"));
     }
 
     private void assertTinkAccountIsValid() {
