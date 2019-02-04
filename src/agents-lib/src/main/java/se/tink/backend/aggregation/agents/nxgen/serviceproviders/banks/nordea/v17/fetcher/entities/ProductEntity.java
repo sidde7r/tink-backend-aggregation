@@ -165,9 +165,14 @@ public class ProductEntity {
         String accountNumber = productNumber.get("$").toString();
 
         if (includeClearingNumber) {
+
+            if (productTypeExtension.get("$") == null) {
+                return accountNumber;
+            }
+
             String accountTypeCode = productTypeExtension.get("$").toString();
 
-            if (accountTypeCode != null && personalAccountCodes.contains(accountTypeCode.toUpperCase())
+            if (!Strings.isNullOrEmpty(accountTypeCode) && personalAccountCodes.contains(accountTypeCode.toUpperCase())
                     && accountNumber.length() == 10) {
                 return personalAccountClearingNumber + accountNumber;
             }
