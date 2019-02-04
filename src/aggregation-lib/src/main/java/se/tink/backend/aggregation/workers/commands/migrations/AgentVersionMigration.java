@@ -1,7 +1,11 @@
 package se.tink.backend.aggregation.workers.commands.migrations;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.assertj.core.util.Lists;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
@@ -9,6 +13,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class AgentVersionMigration {
 
+  public static final String DUPLICATE = "-duplicate";
   private ControllerWrapper wrapper;
 
   /**
@@ -76,7 +81,11 @@ public abstract class AgentVersionMigration {
    */
   protected void migrateAccounts(CredentialsRequest request, List<Account> accounts) {
     List<Account> accountList =
-        accounts.stream().map(a -> migrateAccount(a)).collect(Collectors.toList());
+        deduplicateAccounts(accounts)
+            .stream()
+            .map(a -> migrateAccount(a))
+            .collect(Collectors.toList());
+
     request.setAccounts(accountList);
   }
 
@@ -96,5 +105,55 @@ public abstract class AgentVersionMigration {
 
   private final ControllerWrapper getControlWrapper() {
     return this.wrapper;
+  }
+
+  /**
+   * * This method tag duplicated accounts with adding `-duplicate` at the end of {@link *
+   * Account#bankId}. To decide which account should be market as duplicate the {@link *
+   * Account#closed} property is used. When this property is set to <code>true</code> we consider *
+   * this account as older and one which might have longer history, so we would like to continue *
+   * with using this account after migration.
+   *
+   * @param list that should be deduplicated
+   * @return {@link List<Account>} that contains all the accounts with different bankId (add suffix
+   *     -duplicate)
+   */
+  private List<Account> deduplicateAccounts(List<Account> list) {
+    List<Account> deduplicatedList = new ArrayList<>();
+    Map<String, List<Account>> duplicatesDetection = new HashMap<>();
+    // Find duplicated accounts
+    list.stream()
+        .forEach(
+            a -> {
+              if (!duplicatesDetection.containsKey(a.getBankId())) {
+                duplicatesDetection.put(a.getBankId(), Lists.newArrayList());
+              }
+              duplicatesDetection.get(a.getBankId()).add(a);
+            });
+    // Add all not duplicted accounts
+    deduplicatedList.addAll(
+        duplicatesDetection
+            .entrySet()
+            .stream()
+            .filter(e -> e.getValue().size() == 1)
+            .map(e -> e.getValue().get(0))
+            .collect(Collectors.toList()));
+
+    // Deduplicat Accounts by adding '-duplicate' at the end of bankid
+    duplicatesDetection
+        .entrySet()
+        .stream()
+        .filter(e -> e.getValue().size() == 2)
+        .map(e -> e.getValue())
+        .forEach(
+            l -> {
+              // Look for opened accounts and mark one of them as duplicate
+              // if no open accounts - choose randomly
+              Account account = l.stream().filter(a -> !a.isClosed()).findAny().orElse(l.get(0));
+              account.setBankId(account.getBankId() + DUPLICATE);
+              deduplicatedList.addAll(l);
+            });
+
+    return deduplicatedList;
   }
 }

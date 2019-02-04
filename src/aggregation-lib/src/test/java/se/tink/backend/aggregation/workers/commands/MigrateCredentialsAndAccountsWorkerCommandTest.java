@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -330,6 +332,181 @@ public class MigrateCredentialsAndAccountsWorkerCommandTest {
     Assert.assertNotEquals(a, request.getAccounts().get(0));
     Assert.assertEquals(newBankId, request.getAccounts().get(0).getBankId());
     Assert.assertTrue(request.isUpdate());
+  }
+
+  @Test
+  public void deduplicateAccounts_whenDuplicates_noneClosed() throws Exception {
+    CredentialsRequest request = createRequest();
+    Account clone = request.getAccounts().get(0).clone();
+    request.getAccounts().add(clone);
+
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            request,
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME,
+                    new AgentVersionMigration() {
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        return true;
+                      }
+
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        return true;
+                      }
+
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {}
+
+                      @Override
+                      public void migrateData(CredentialsRequest request) {}
+
+                      @Override
+                      protected Account migrateAccount(Account account) {
+                        return account;
+                      }
+                    });
+              }
+            });
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertTrue(request.getAccounts().size() == 2);
+    List<Account> oldAccount =
+        request
+            .getAccounts()
+            .stream()
+            .filter(a -> !a.getBankId().contains("-duplicate"))
+            .collect(Collectors.toList());
+    Assert.assertTrue(oldAccount.size() == 1);
+    Assert.assertTrue(
+        request
+                .getAccounts()
+                .stream()
+                .filter(a -> a.getBankId().contains("-duplicate"))
+                .collect(Collectors.toList())
+                .size()
+            == 1);
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+  }
+
+  @Test
+  public void deduplicateAccounts_whenDuplicates_oneClosed() throws Exception {
+    CredentialsRequest request = createRequest();
+    Account clone = request.getAccounts().get(0).clone();
+    clone.setClosed(true);
+    request.getAccounts().add(clone);
+
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            request,
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME,
+                    new AgentVersionMigration() {
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        return true;
+                      }
+
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        return true;
+                      }
+
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {}
+
+                      @Override
+                      public void migrateData(CredentialsRequest request) {}
+
+                      @Override
+                      protected Account migrateAccount(Account account) {
+                        return account;
+                      }
+                    });
+              }
+            });
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertTrue(request.getAccounts().size() == 2);
+    List<Account> oldAccount =
+        request
+            .getAccounts()
+            .stream()
+            .filter(a -> !a.getBankId().contains("-duplicate"))
+            .collect(Collectors.toList());
+    Assert.assertTrue(oldAccount.get(0).isClosed());
+    Assert.assertTrue(oldAccount.size() == 1);
+    Assert.assertTrue(
+        request
+                .getAccounts()
+                .stream()
+                .filter(a -> a.getBankId().contains("-duplicate"))
+                .collect(Collectors.toList())
+                .size()
+            == 1);
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
+  }
+
+  @Test
+  public void deduplicateAccounts_whenNoDuplicates() throws Exception {
+    CredentialsRequest request = createRequest();
+    Account e = request.getAccounts().get(0).clone();
+    e.setBankId(e.getBankId() + "x");
+    request.getAccounts().add(e);
+
+    MigrateCredentialsAndAccountsWorkerCommand command =
+        createCommand(
+            request,
+            new HashMap<String, AgentVersionMigration>() {
+              {
+                put(
+                    PROVIDER_NAME,
+                    new AgentVersionMigration() {
+                      @Override
+                      public boolean shouldChangeRequest(CredentialsRequest request) {
+                        return true;
+                      }
+
+                      @Override
+                      public boolean shouldMigrateData(CredentialsRequest request) {
+                        return true;
+                      }
+
+                      @Override
+                      public void changeRequest(CredentialsRequest request) {}
+
+                      @Override
+                      public void migrateData(CredentialsRequest request) {}
+
+                      @Override
+                      protected Account migrateAccount(Account account) {
+                        return account;
+                      }
+                    });
+              }
+            });
+    Assert.assertTrue(request.getAccounts().size() == 2);
+    Assert.assertTrue(
+        request
+            .getAccounts()
+            .stream()
+            .filter(a -> a.getBankId().contains("-duplicate"))
+            .collect(Collectors.toList())
+            .isEmpty());
+    Assert.assertTrue(
+        request
+                .getAccounts()
+                .stream()
+                .filter(a -> !a.getBankId().contains("-duplicate"))
+                .collect(Collectors.toList())
+                .size()
+            == 2);
+
+    AgentWorkerCommandResult result = command.execute();
+    Assert.assertEquals(result, AgentWorkerCommandResult.CONTINUE);
   }
 
   private CredentialsRequest createRequest() {
