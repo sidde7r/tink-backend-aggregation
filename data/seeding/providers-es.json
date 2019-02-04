@@ -351,7 +351,7 @@
                 {
                     "description": "Phone number",
                     "name": "username",
-                    "pattern": "\\+?[1-9][0-9]+",
+                    "pattern": "\\+[1-9][0-9]+",
                     "minLength": 5,
                     "maxLength": 16,
                     "patternError": "Please enter your full phone number in international format, starting with '+' and including country code. Example: +34 NNN NNN NNNN"
