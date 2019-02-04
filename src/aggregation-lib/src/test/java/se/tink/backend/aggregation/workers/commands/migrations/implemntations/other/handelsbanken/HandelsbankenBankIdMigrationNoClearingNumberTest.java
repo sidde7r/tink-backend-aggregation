@@ -80,17 +80,47 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
   }
 
   @Test
-  public void shouldMigrateData_yes() {}
+  public void shouldMigrateData_yes() {
+    this.request.getAccounts().add(this.oldFormat);
+    boolean migrateData = migration.shouldMigrateData(request);
+    assertTrue(migrateData);
+  }
 
   @Test
-  public void shouldMigrateData_alreadyNewFormat_no() {}
+  // We do not check if data was already migrated in this case
+  public void shouldMigrateData_alreadyNewFormat_yes() {
+    this.request.getAccounts().add(this.newFormat);
+    boolean migrateData = migration.shouldMigrateData(request);
+    assertTrue(migrateData);
+  }
 
   @Test
-  public void shouldMigrateData_noAccountsToMgrate_no() {}
+  public void shouldMigrateData_noAccountsToMigrate_onlyLoans() {
+    this.oldFormat.setType(AccountTypes.LOAN);
+    this.request.getAccounts().add(this.oldFormat);
+    boolean migrateData = migration.shouldMigrateData(request);
+    assertFalse(migrateData);
+  }
+
+  @Test
+  public void shouldMigrateData_noAccountsToMigrate_onlyInvestments() {
+    this.oldFormat.setType(AccountTypes.INVESTMENT);
+    this.request.getAccounts().add(this.oldFormat);
+    boolean migrateData = migration.shouldMigrateData(request);
+    assertFalse(migrateData);
+  }
+
+  @Test
+  public void shouldMigrateData_noAccountsToMigrate_noAccounts() {
+    boolean migrateData = migration.shouldMigrateData(request);
+    assertFalse(migrateData);
+  }
 
   @Test
   public void changeRequest() {
     migration.changeRequest(request);
+    assertTrue(NEW_AGENT_NAME.contains(request.getProvider().getClassName()));
+    assertFalse(request.getProvider().getClassName().contains(OLD_AGENT_NAME));
   }
 
   @Test
