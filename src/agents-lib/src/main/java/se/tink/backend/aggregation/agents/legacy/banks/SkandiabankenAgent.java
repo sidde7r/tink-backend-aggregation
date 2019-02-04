@@ -16,22 +16,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -39,10 +23,20 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.jsoup.Jsoup;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.FetchAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
+import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
+import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
 import se.tink.backend.aggregation.agents.banks.skandiabanken.model.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.skandiabanken.model.AccountListResponse;
 import se.tink.backend.aggregation.agents.banks.skandiabanken.model.AuthenticateBankIdResponse;
@@ -65,26 +59,53 @@ import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
 import se.tink.libraries.strings.StringUtils;
 
-public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin, RefreshableItemExecutor {
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_ACCOUNTS;
+import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRANSACTIONS;
+import static se.tink.libraries.credentials.service.RefreshableItem.CREDITCARD_ACCOUNTS;
+import static se.tink.libraries.credentials.service.RefreshableItem.CREDITCARD_TRANSACTIONS;
+import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
+import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
+
+public class SkandiabankenAgent extends AbstractAgent implements
+        PersistentLogin,
+        RefreshCheckingAccountsExecutor,
+        RefreshSavingsAccountsExecutor,
+        RefreshCreditCardAccountsExecutor,
+        RefreshInvestmentAccountsExecutor {
+
     private static final int MAX_PAGES_LIMIT = 150;
     private static final String BASE_URL_SECURE = "https://login.skandia.se";
     private static final String AUTHENTICATE_WITH_BANKID_AUTOSTART_URL =
@@ -106,6 +127,8 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
     private static final int BANKID_CANCELLED = 4;
     private static final int BANKID_DONE = 5;
     private static final int NUM_QR_REFRESH_RETRY_ATTEMPTS = 3;
+
+
 
     /**
      * Extract request verification token from a HTML document body.
@@ -518,7 +541,8 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         return accounts;
     }
 
-    private void refreshInvestmentAccounts() {
+    private Map<Account, AccountFeatures>refreshInvestmentAccounts() {
+        Map<Account, AccountFeatures> investmentAccounts = new HashMap<>();
         String investmentsUrl = getBaseUrlWithCustomerOwner() + "/customer/" + customerId + "/investments";
         InvestmentsResponse investmentsResponse = createClientRequest(investmentsUrl).get(InvestmentsResponse.class);
 
@@ -558,49 +582,30 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
 
             portfolio.setCashValue(investmentResponse.getDisposableAmount());
             portfolio.setInstruments(instruments);
-            financialDataCacher.cacheAccount(account, AccountFeatures.createForPortfolios(portfolio));
+            investmentAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
         });
+        return investmentAccounts;
     }
 
-    private void updateAccountsPerType(RefreshableItem type) {
+    private List<Account> updateAccountsPerType(RefreshableItem type) {
+        return getAccounts().entrySet().stream()
+                .filter(set -> type.isAccountType(set.getValue().getType()))
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+    }
+
+    private Map<Account, List<Transaction>> updateTransactionsPerAccountType(RefreshableItem type) {
+        Map<Account, List<Transaction>> accountTransactions = new HashMap<>();
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> financialDataCacher.cacheAccount(set.getValue()));
+                .forEach(set -> accountTransactions.put(set.getValue(),
+                        updateAccountAndTransactions(set.getKey().getId(), set.getValue())));
+        return accountTransactions;
     }
 
-    private void updateTransactionsPerAccountType(RefreshableItem type) {
-        getAccounts().entrySet().stream()
-                .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> updateAccountAndTransactions(set.getKey().getId(), set.getValue()));
-    }
 
-    @Override
-    public void refresh(RefreshableItem item) {
-        switch (item) {
-        case CHECKING_ACCOUNTS:
-        case SAVING_ACCOUNTS:
-        case CREDITCARD_ACCOUNTS:
-            updateAccountsPerType(item);
-            break;
 
-        case CHECKING_TRANSACTIONS:
-        case SAVING_TRANSACTIONS:
-        case CREDITCARD_TRANSACTIONS:
-            updateTransactionsPerAccountType(item);
-            break;
-
-        case INVESTMENT_ACCOUNTS:
-            try {
-                refreshInvestmentAccounts();
-            } catch (Exception e) {
-                // Just catch and exit gently
-                log.warn("Caught exception while logging investment data", e);
-            }
-            break;
-        }
-    }
-
-    private void updateAccountAndTransactions(String skandiabankenAccountId, Account account) {
+    private List<Transaction> updateAccountAndTransactions(String skandiabankenAccountId, Account account) {
         String accountUrl = getBaseUrlWithCustomerOwner() + "/customer/" + customerId + "/account/"
                 + skandiabankenAccountId;
 
@@ -633,7 +638,7 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
             }
         }
 
-        financialDataCacher.updateTransactions(account, accumulatedTransactions);
+        return accumulatedTransactions;
     }
 
     private List<Transaction> getListOfTransactions(AccountEntity accountEntity) {
@@ -754,6 +759,46 @@ public class SkandiabankenAgent extends AbstractAgent implements PersistentLogin
         credentials.setSupplementalInformation(autostartToken.orElse(null));
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         supplementalRequester.requestSupplementalInformation(credentials, false);
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCheckingAccounts() {
+        return new FetchAccountsResponse(updateAccountsPerType(CHECKING_ACCOUNTS));
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCheckingTransactions() {
+        return new FetchTransactionsResponse(updateTransactionsPerAccountType(CHECKING_TRANSACTIONS));
+    }
+
+    @Override
+    public FetchAccountsResponse fetchCreditCardAccounts() {
+        return new FetchAccountsResponse(updateAccountsPerType(CREDITCARD_ACCOUNTS));
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchCreditCardTransactions() {
+        return new FetchTransactionsResponse(updateTransactionsPerAccountType(CREDITCARD_TRANSACTIONS));
+    }
+
+    @Override
+    public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
+        return new FetchInvestmentAccountsResponse(refreshInvestmentAccounts());
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchInvestmentTransactions() {
+        return new FetchTransactionsResponse(Collections.emptyMap());
+    }
+
+    @Override
+    public FetchAccountsResponse fetchSavingsAccounts() {
+        return new FetchAccountsResponse(updateAccountsPerType(SAVING_ACCOUNTS));
+    }
+
+    @Override
+    public FetchTransactionsResponse fetchSavingsTransactions() {
+        return new FetchTransactionsResponse(updateTransactionsPerAccountType(SAVING_TRANSACTIONS));
     }
 
     private enum UserMessage implements LocalizableEnum {
