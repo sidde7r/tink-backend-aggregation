@@ -6,16 +6,17 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implemntations.other.handelsbanken.HandelsbankenBankIdMigrationNoClearingNumber;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerCommand {
 
-  private final ControllerWrapper controllerWrapper;
-  private final CredentialsRequest request;
-  protected ImmutableMap<String, AgentVersionMigration> migrations =
-      ImmutableMap.of(
-          // Add your migrations here
-          );
+    private final ControllerWrapper controllerWrapper;
+    private final CredentialsRequest request;
+    protected ImmutableMap<String, AgentVersionMigration> migrations =
+            ImmutableMap.of(
+                    // Add your migrations here
+                    "handelsbanken-bankid", new HandelsbankenBankIdMigrationNoClearingNumber());
 
     public MigrateCredentialsAndAccountsWorkerCommand(
             CredentialsRequest request, ControllerWrapper controllerWrapper) {
@@ -65,7 +66,6 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
             migration.updateAccounts(request);
         }
     }
-  }
 
     @Override
     public void postProcess() throws Exception {

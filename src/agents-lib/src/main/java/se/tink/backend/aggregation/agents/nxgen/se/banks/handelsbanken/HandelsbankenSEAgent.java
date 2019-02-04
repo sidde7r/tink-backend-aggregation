@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenSECardDeviceAuthenticator;
@@ -33,27 +34,18 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
-
-import java.util.Optional;
 
 public class HandelsbankenSEAgent
         extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration> {
 
-    public HandelsbankenSEAgent(CredentialsRequest request, AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
-        // useUniqueIdWithoutClearingNumber
-        // temporary method to feature toggle what unique id to use for Handelsbanken SE
-        // this support should be removed once all clusters have been migrated to use
-        // Handelsbanken internal account number for transactional accounts and account
-        // based credit cards (allkort)
-        // Trigger new release // Ove
-        // *** the request costructor argument
-        super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration(request));
+    public HandelsbankenSEAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration());
     }
 
     @Override

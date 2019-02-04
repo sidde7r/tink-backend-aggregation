@@ -157,13 +157,4 @@ public abstract class HandelsbankenApiClient {
                 .header(HandelsbankenConstants.Headers.X_SHB_APP_VERSION,
                         handelsbankenConfiguration.getAppVersion());
     }
-
-    // useUniqueIdWithoutClearingNumber
-    // temporary method to feature toggle what unique id to use for Handelsbanken SE
-    // this support should be removed once all clusters have been migrated to use
-    // Handelsbanken internal account number for transactional accounts and account
-    // based credit cards (allkort)
-    public boolean useUniqueIdWithoutClearingNumber() {
-        return false;
-    }
 }

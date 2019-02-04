@@ -36,17 +36,21 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
         return false;
     }
 
-  @Override
-  public boolean shouldMigrateData(CredentialsRequest request) {
-    return !request
-        .getAccounts()
-        .stream()
-        .filter(checkIfAccountIsProperTypeToBeMigrated)
-        .filter(a -> !Strings.isNullOrEmpty(a.getAccountNumber()))
-        .filter(a -> CLEARING_NUMBER_PATTERN.matcher(a.getAccountNumber()).matches())
-        .collect(Collectors.toList())
-        .isEmpty();
-  }
+    @Override
+    public boolean shouldMigrateData(CredentialsRequest request) {
+        return !request.getAccounts()
+                .stream()
+                .filter(checkIfAccountIsProperTypeToBeMigrated)
+                .filter(a -> !Strings.isNullOrEmpty(a.getAccountNumber()))
+                // Filter out dupicated acounts
+                .filter(a -> !a.getBankId().endsWith("-duplicate"))
+                // Longer than the account without clearing number
+                .filter(a -> a.getBankId().length() > 9)
+                //        .filter(a ->
+                // CLEARING_NUMBER_PATTERN.matcher(a.getAccountNumber()).matches())
+                .collect(Collectors.toList())
+                .isEmpty();
+    }
 
     @Override
     public void changeRequest(CredentialsRequest request) {}
