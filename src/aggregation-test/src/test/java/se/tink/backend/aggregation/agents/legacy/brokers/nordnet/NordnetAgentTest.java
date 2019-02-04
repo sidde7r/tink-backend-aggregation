@@ -1,9 +1,9 @@
-package se.tink.backend.aggregation.agents.legacy.brokers.nordnet;
+package se.tink.backend.aggregation.agents.brokers.nordnet;
 
 import org.junit.Test;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
-import se.tink.backend.aggregation.agents.legacy.brokers.NordnetAgent;
+import se.tink.backend.aggregation.agents.brokers.NordnetAgent;
 import se.tink.libraries.social.security.TestSSN;
 
 public class NordnetAgentTest extends AbstractAgentTest<NordnetAgent> {
