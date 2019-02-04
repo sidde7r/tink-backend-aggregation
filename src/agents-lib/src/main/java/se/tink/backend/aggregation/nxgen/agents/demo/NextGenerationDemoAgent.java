@@ -30,7 +30,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
     //TODO Requires changes when multi-currency is implemented. Will do for now
-    private final String currency;
+    protected final String currency;
 
     public NextGenerationDemoAgent(CredentialsRequest request,
             AgentContext context,
