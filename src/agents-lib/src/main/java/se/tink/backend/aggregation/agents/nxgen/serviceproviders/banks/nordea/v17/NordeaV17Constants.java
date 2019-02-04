@@ -203,4 +203,7 @@ public class NordeaV17Constants {
         }
     }
 
+    public static class CardType {
+        public static final String CREDIT_CARD = "creditcard";
+    }
 }

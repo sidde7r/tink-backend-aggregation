@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.serializer.NordeaHashMapDeserializer;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.amount.Amount;
@@ -22,7 +23,8 @@ public class ProductEntity {
     @JsonDeserialize(using = NordeaHashMapDeserializer.Double.class)
     private Double balance;
     private Map<String, Object> branchId = new HashMap<String, Object>();
-    private Map<String, Object> cardGroup = new HashMap<String, Object>();
+    @JsonDeserialize(using = NordeaHashMapDeserializer.class)
+    private String cardGroup;
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String currency;
     private Map<String, Object> fundsAvailable = new HashMap<String, Object>();
@@ -50,7 +52,7 @@ public class ProductEntity {
         return branchId;
     }
 
-    public Map<String, Object> getCardGroup() {
+    public String getCardGroup() {
         return cardGroup;
     }
 
@@ -114,7 +116,7 @@ public class ProductEntity {
         this.branchId = branchId;
     }
 
-    public void setCardGroup(Map<String, Object> cardGroup) {
+    public void setCardGroup(String cardGroup) {
         this.cardGroup = cardGroup;
     }
 
@@ -163,9 +165,14 @@ public class ProductEntity {
         String accountNumber = productNumber.get("$").toString();
 
         if (includeClearingNumber) {
+
+            if (productTypeExtension.get("$") == null) {
+                return accountNumber;
+            }
+
             String accountTypeCode = productTypeExtension.get("$").toString();
 
-            if (accountTypeCode != null && personalAccountCodes.contains(accountTypeCode.toUpperCase())
+            if (!Strings.isNullOrEmpty(accountTypeCode) && personalAccountCodes.contains(accountTypeCode.toUpperCase())
                     && accountNumber.length() == 10) {
                 return personalAccountClearingNumber + accountNumber;
             }
@@ -244,5 +251,10 @@ public class ProductEntity {
             }
         }
         return null;
+    }
+
+    @JsonIgnore
+    public boolean isCreditCard() {
+        return NordeaV17Constants.CardType.CREDIT_CARD.equalsIgnoreCase(cardGroup);
     }
 }

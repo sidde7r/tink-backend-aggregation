@@ -57,8 +57,8 @@ public class NordeaNoParser extends NordeaV17Parser {
     public LoanAccount parseLoanAccount(ProductEntity pe, LoanDetailsEntity loanDetails) {
         LoanAccount.Builder<?, ?> accountBuilder = LoanAccount.builder(pe.getAccountNumber(false),
                 pe.getBalanceAmount().orElse(loanDetails.getBalanceAmount()))
-                .setAccountNumber(pe.getAccountNumber(true))
-                .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
+                .setAccountNumber(pe.getAccountNumber(false))
+                .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2());
 
         loanDetails.getLoanData().ifPresent(loanData -> accountBuilder.setInterestRate(loanData.getInterest())
@@ -77,8 +77,8 @@ public class NordeaNoParser extends NordeaV17Parser {
     public TransactionalAccount parseTransactionalAccount(ProductEntity pe) {
         return TransactionalAccount.builder(getTinkAccountType(pe), pe.getAccountNumber(false),
                 pe.getBalanceAmount().orElse(Amount.inNOK(pe.getBalance())))
-                .setAccountNumber(pe.getAccountNumber(true))
-                .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
+                .setAccountNumber(pe.getAccountNumber(false))
+                .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .build();
     }
@@ -89,8 +89,8 @@ public class NordeaNoParser extends NordeaV17Parser {
                 pe.getNegativeBalanceAmount().orElse(Amount.inNOK(-1 * pe.getBalance())),
                 pe.getCurrency().map(c -> new Amount(c, cardsEntity.getFundsAvailable()))
                         .orElse(Amount.inNOK(cardsEntity.getFundsAvailable())))
-                .setAccountNumber(pe.getAccountNumber(true))
-                .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(true)))
+                .setAccountNumber(pe.getAccountNumber(false))
+                .setName(getTinkAccountName(pe).orElse(pe.getAccountNumber(false)))
                 .setBankIdentifier(pe.getNordeaAccountIdV2())
                 .build();
     }
