@@ -64,19 +64,23 @@ abstract class ProductMovementsFetcher<A extends Account, T extends Transaction>
         LocalDate fromDate = LocalDate.of(year.getValue(), month, 1);
         // Last day of the month
         LocalDate toDate = fromDate.with(TemporalAdjusters.lastDayOfMonth());
-        int page = 0;
+
+        int currOffset = 0;
         Movements movements = null;
 
         do {
 
-            movements = apiClient.getApiRestProductsMovements(product.getUuid(), fromDate, toDate, page);
+            movements = apiClient.getApiRestProductsMovements(product.getUuid(), fromDate, toDate, currOffset);
 
-            if (movements != null && movements.getElements() != null) {
-                movements.getElements().forEach(movement -> transactions.add(toTinkTransaction(account, movement)));
+            if (movements == null) {
+                break;
             }
 
-            page++;
-        } while (movements.getTotal() > movements.getOffset() + movements.getCount());
+            movements.getElements().forEach(movement -> transactions.add(toTinkTransaction(account, movement)));
+
+            currOffset += movements.getCount();
+
+        } while (movements.getTotal() > currOffset);
 
         return PaginatorResponseImpl.create(transactions);
     }

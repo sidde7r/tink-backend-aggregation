@@ -68,7 +68,8 @@ public abstract class IngConstants {
         /**
          * Cuenta NARANJA
          */
-        private static final int ORANGE_ACCOUNT = 20;
+        private static final int ORANGE_ACCOUNT_20 = 20;
+        private static final int ORANGE_ACCOUNT_26 = 26;
         /**
          * Fondo Dinámico, Fondo Renta Fija, Fondo S&P 500, Fondo Ibex 35...
          */
@@ -102,7 +103,8 @@ public abstract class IngConstants {
             case CASH_ACCOUNT:
             case ACCOUNT_WITHOUT_PAYROLL:
                 return Optional.of(AccountTypes.CHECKING);
-            case ORANGE_ACCOUNT:
+            case ORANGE_ACCOUNT_20:
+            case ORANGE_ACCOUNT_26:
                 return Optional.of(AccountTypes.SAVINGS);
             case INVESTMENT_FUND:
                 return Optional.of(AccountTypes.INVESTMENT);
@@ -136,6 +138,6 @@ public abstract class IngConstants {
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from(PROVIDER_NAME + "-unknown-account-type");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("IngDirect_unknown_account_type");
     }
 }
