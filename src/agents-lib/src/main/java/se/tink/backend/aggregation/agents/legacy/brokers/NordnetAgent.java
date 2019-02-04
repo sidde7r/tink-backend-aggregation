@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,7 +200,7 @@ public class NordnetAgent extends AbstractAgent
     // If we want to reenable it we should investigate if amount is returned in SEK for all
     // transactions in their
     // newer API that their app is using.
-    return null;
+    return new FetchTransactionsResponse(Collections.emptyMap());
   }
 
   @Override
@@ -252,6 +253,6 @@ public class NordnetAgent extends AbstractAgent
 
   @Override
   public FetchTransactionsResponse fetchInvestmentTransactions() {
-    return null;
+    return new FetchTransactionsResponse(Collections.emptyMap());
   }
 }
