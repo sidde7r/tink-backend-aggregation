@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
@@ -97,6 +98,11 @@ public class OwnCsdAccountEntity {
 
     public List<CsdAccountRightsEntity> getRights() {
         return rights;
+    }
+
+    @JsonIgnore
+    public boolean isNotClosed() {
+        return !HandelsbankenNOConstants.InvestmentConstants.STATUS_CLOSED.equalsIgnoreCase(status);
     }
 
     @JsonIgnore
