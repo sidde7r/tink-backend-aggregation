@@ -82,22 +82,27 @@ public class PurchaseHistoryGenerator {
             transactions.addAll(generateOneDayOfTransactions(dateCursor, currency));
         }
 
+        transactions.addAll(generateSalary(from, to));
+
         return PaginatorResponseImpl.create(transactions, false);
     }
 
-    public PaginatorResponse generateSalary(TransactionalAccount account, Date from, Date to) {
+
+    public List<Transaction> generateSalary(Date from, Date to) {
+        double salary = 3500;
+        String currency = "EUR";
         int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
         List<Transaction> transactions = IntStream.range(0, numberOfMonths)
                 .mapToObj(i -> Transaction.builder()
-                        .setAmount(new Amount(account.getBalance().getCurrency(),
-                                account.getBalance().getValue() / 36))
+                        .setAmount(new Amount(currency,
+                                salary))
                         .setPending(false)
                         .setDescription("monthly savings")
                         .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
                 )
                 .collect(toList());
 
-        return PaginatorResponseImpl.create(transactions, false);
+        return transactions;
     }
 
     //TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the account
