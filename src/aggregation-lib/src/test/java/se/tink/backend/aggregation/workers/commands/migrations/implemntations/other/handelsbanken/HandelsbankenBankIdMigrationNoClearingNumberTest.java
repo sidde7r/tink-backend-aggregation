@@ -23,6 +23,8 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
 
     public static final String PROVIDER_NAME = "handelsbanken-bankid";
     public static final String NEW_AGENT_NAME = HandelsbankenSEAgent.class.getCanonicalName();
+    private static final String OLD_HANDELSBANKEN_AGENT =
+            "banks.handelsbanken.v6.HandelsbankenV6Agent";
     private HandelsbankenBankIdMigrationNoClearingNumber migration;
     private CredentialsRequest request;
     private List<Account> accountList;
@@ -79,6 +81,11 @@ public class HandelsbankenBankIdMigrationNoClearingNumberTest {
         assertTrue(this.migration.shouldChangeRequest(this.request));
     }
 
+    @Test
+    public void shouldChangeRequest_oldAgent_yes() {
+        provider.setClassName(OLD_HANDELSBANKEN_AGENT);
+        assertTrue(this.migration.shouldChangeRequest(this.request));
+    }
     @Test
     public void shouldMigrateData_yes() {
         this.request.getAccounts().add(this.oldFormat);

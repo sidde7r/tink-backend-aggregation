@@ -13,6 +13,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMigration {
     private static final Pattern CLEARING_NUMBER_PATTERN = Pattern.compile("([0-9]{4})-.*");
     private static final int ACCOUNT_NUMBER_WITHOUT_CLEARING_START_POSITION = 4;
+    private static final String OLD_HANDELSBANKEN_AGENT =
+            "banks.handelsbanken.v6.HandelsbankenV6Agent";
     private Predicate<Account> checkIfAccountIsProperTypeToBeMigrated =
             a -> {
                 // only migrate Transactional accounts and CREDIT_CARD of type "Allkort"
@@ -28,9 +30,9 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
     @Override
     public boolean shouldChangeRequest(CredentialsRequest request) {
 
-        if (request.getProvider()
-                .getClassName()
-                .endsWith(HandelsbankenSEAgent.class.getSimpleName())) {
+        String agentName = request.getProvider().getClassName();
+        if (agentName.endsWith(HandelsbankenSEAgent.class.getSimpleName())
+                || agentName.endsWith(OLD_HANDELSBANKEN_AGENT)) {
             return true;
         }
         return false;
@@ -53,7 +55,9 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
     }
 
     @Override
-    public void changeRequest(CredentialsRequest request) {}
+    public void changeRequest(CredentialsRequest request) {
+        request.getProvider().setClassName("nxgen.se.banks.handelsbanken.HandelsbankenSEAgent");
+    }
 
     @Override
     public void migrateData(CredentialsRequest request) {
