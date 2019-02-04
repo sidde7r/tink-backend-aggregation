@@ -21,8 +21,8 @@
     "at-erstebank-thirdparty",
     "at-test-password",
     "at-test-multi-supplemental",
-    "test-bawag",
-    "test-easy-bank",
-    "test-erste-bank"
+    "at-test-bawag",
+    "at-test-easy-bank",
+    "at-test-erste-bank"
   ]
 }
