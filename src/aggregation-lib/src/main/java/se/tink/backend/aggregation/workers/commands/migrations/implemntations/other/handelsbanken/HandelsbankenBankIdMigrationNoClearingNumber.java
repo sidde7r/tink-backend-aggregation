@@ -11,31 +11,30 @@ import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigra
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMigration {
-  private static final Pattern CLEARING_NUMBER_PATTERN = Pattern.compile("([0-9]{4})-.*");
-  private static final int ACCOUNT_NUMBER_WITHOUT_CLEARING_START_POSITION = 4;
-  private Predicate<Account> checkIfAccountIsProperTypeToBeMigrated =
-      a -> {
-        // only migrate Transactional accounts and CREDIT_CARD of type "Allkort"
-        if (a.getType() != AccountTypes.SAVINGS
-            && a.getType() != AccountTypes.CHECKING
-            && a.getType() != AccountTypes.OTHER
-            && a.getType() != AccountTypes.CREDIT_CARD) {
-          return false;
+    private static final Pattern CLEARING_NUMBER_PATTERN = Pattern.compile("([0-9]{4})-.*");
+    private static final int ACCOUNT_NUMBER_WITHOUT_CLEARING_START_POSITION = 4;
+    private Predicate<Account> checkIfAccountIsProperTypeToBeMigrated =
+            a -> {
+                // only migrate Transactional accounts and CREDIT_CARD of type "Allkort"
+                if (a.getType() != AccountTypes.SAVINGS
+                        && a.getType() != AccountTypes.CHECKING
+                        && a.getType() != AccountTypes.OTHER
+                        && a.getType() != AccountTypes.CREDIT_CARD) {
+                    return false;
+                }
+                return true;
+            };
+
+    @Override
+    public boolean shouldChangeRequest(CredentialsRequest request) {
+
+        if (request.getProvider()
+                .getClassName()
+                .endsWith(HandelsbankenSEAgent.class.getSimpleName())) {
+            return true;
         }
-        return true;
-      };
-
-  @Override
-  public boolean shouldChangeRequest(CredentialsRequest request) {
-
-    if (!request
-        .getProvider()
-        .getClassName()
-        .endsWith(HandelsbankenSEAgent.class.getSimpleName())) {
-      return true;
+        return false;
     }
-    return false;
-  }
 
   @Override
   public boolean shouldMigrateData(CredentialsRequest request) {
@@ -49,24 +48,22 @@ public class HandelsbankenBankIdMigrationNoClearingNumber extends AgentVersionMi
         .isEmpty();
   }
 
-  @Override
-  public void changeRequest(CredentialsRequest request) {
-    request.getProvider().setClassName("nxgen.se.banks.handelsbanken.HandelsbankenSEAgent");
-  }
+    @Override
+    public void changeRequest(CredentialsRequest request) {}
 
-  @Override
-  public void migrateData(CredentialsRequest request) {
-    request
-        .getAccounts()
-        .stream()
-        .filter(checkIfAccountIsProperTypeToBeMigrated)
-        .filter(a -> !Strings.isNullOrEmpty(a.getAccountNumber()))
-        .filter(a -> CLEARING_NUMBER_PATTERN.matcher(a.getAccountNumber()).matches())
-        .forEach(
-            a ->
-                a.setBankId(
-                    a.getAccountNumber()
-                        .replaceAll("[^0-9]", "")
-                        .substring(ACCOUNT_NUMBER_WITHOUT_CLEARING_START_POSITION)));
-  }
+    @Override
+    public void migrateData(CredentialsRequest request) {
+        request.getAccounts()
+                .stream()
+                .filter(checkIfAccountIsProperTypeToBeMigrated)
+                .filter(a -> !Strings.isNullOrEmpty(a.getAccountNumber()))
+                .filter(a -> CLEARING_NUMBER_PATTERN.matcher(a.getAccountNumber()).matches())
+                .forEach(
+                        a ->
+                                a.setBankId(
+                                        a.getAccountNumber()
+                                                .replaceAll("[^0-9]", "")
+                                                .substring(
+                                                        ACCOUNT_NUMBER_WITHOUT_CLEARING_START_POSITION)));
+    }
 }

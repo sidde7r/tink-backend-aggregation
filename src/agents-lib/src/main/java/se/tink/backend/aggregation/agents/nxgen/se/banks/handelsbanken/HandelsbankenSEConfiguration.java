@@ -66,7 +66,6 @@ public class HandelsbankenSEConfiguration implements HandelsbankenConfiguration<
     @Override
     public String getAppVersion() {
         return HandelsbankenSEConstants.Headers.APP_VERSION;
-
     }
 
     @Override
@@ -75,9 +74,16 @@ public class HandelsbankenSEConfiguration implements HandelsbankenConfiguration<
     }
 
     @Override
-    public AuthorizeResponse toAuthorized(ValidateSignatureResponse validateSignature, Credentials credentials,
-            HandelsbankenSEApiClient client) throws SessionException {
-        new SignatureValidator(validateSignature, HandelsbankenSEConstants.DeviceAuthentication.VALID_SIGNATURE_RESULT, credentials).validate();
+    public AuthorizeResponse toAuthorized(
+            ValidateSignatureResponse validateSignature,
+            Credentials credentials,
+            HandelsbankenSEApiClient client)
+            throws SessionException {
+        new SignatureValidator(
+                        validateSignature,
+                        HandelsbankenSEConstants.DeviceAuthentication.VALID_SIGNATURE_RESULT,
+                        credentials)
+                .validate();
         return client.authorize(validateSignature);
     }
 
