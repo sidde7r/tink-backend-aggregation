@@ -734,7 +734,6 @@
                 }
             ]
         },
-
         {
             "name": "erste-bank-test",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
@@ -812,6 +811,6 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
-        },
+        }
     ]
 }
