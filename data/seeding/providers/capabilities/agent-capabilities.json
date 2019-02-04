@@ -47,6 +47,7 @@
   "nxgen.demo.banks.bankid.FailingBankIdDemoAgent": [],
   "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS", "INVESTMENTS"],
   "nxgen.demo.banks.password.PasswordDemoAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS", "INVESTMENTS"],
+  "nxgen.demo.banks.finovate.PasswordDemoAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS", "INVESTMENTS"],
   "nxgen.dk.banks.bankdatadk.BankdataDkAgent": ["CHECKING_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS"],
   "nxgen.dk.banks.danskebank.DanskeBankDKAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS", "INVESTMENTS"],
   "nxgen.dk.banks.jyske.JyskeAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS"],
