@@ -2,13 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.fi.creditcards.amex;
 
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.fi.creditcards.amex.fetcher.rpc.TimelineFIRequest;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.AmericanExpressConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v45.authenticator.entities.CardEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Configuration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.AmericanExpressV62Constants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.fetcher.entities.CardEntity;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public class AmericanExpressFIConfiguration implements AmericanExpressConfiguration {
+public class AmericanExpressFIConfiguration implements AmericanExpressV62Configuration {
+
+    @Override
+    public String getLocale() {
+        return AmericanExpressFIConstants.BodyValues.LOCALE;
+    }
 
     @Override
     public String getAppId() {
@@ -21,35 +26,27 @@ public class AmericanExpressFIConfiguration implements AmericanExpressConfigurat
     }
 
     @Override
-    public String getFace() {
-        return AmericanExpressFIConstants.HeaderValues.FACE;
-    }
-
-    @Override
-    public String getLocale() {
-        return AmericanExpressFIConstants.BodyValues.LOCALE;
-    }
-
-    @Override
-    public String getClientVersion() {
-        return AmericanExpressFIConstants.BodyValues.CLIENT_VERSION;
-    }
-
-    @Override
     public String getBankId(CardEntity cardEntity) {
-        return cardEntity.getCardKey();
+        return cardEntity.getCardNumberDisplay();
     }
 
     @Override
-    public Amount toAmount(Double amount) {
-        return Amount.inEUR(amount);
+    public Amount toAmount(Double value) {
+        // When the amount is 0.0 and we try to switch sign we end up with -0.0 what we would like
+        // to avoid
+        Amount amount = Amount.inEUR(value);
+        if (amount.isZero()) {
+            return amount;
+        }
+        // We are switching sign as Amex app shows values inversely to our standard
+        return amount.negate();
     }
 
     @Override
     public TimelineFIRequest createTimelineRequest(Integer cardIndex) {
         TimelineFIRequest request = new TimelineFIRequest();
-        request.setTimeZone(AmericanExpressConstants.RequestValue.TIME_ZONE);
-        request.setTimeZoneOffset(AmericanExpressConstants.RequestValue.TIME_ZONE_OFFSET);
+        request.setTimeZone(AmericanExpressV62Constants.RequestValue.TIME_ZONE);
+        request.setTimeZoneOffset(AmericanExpressV62Constants.RequestValue.TIME_ZONE_OFFSET);
         request.setSortedIndex(cardIndex);
         request.setLocalTime(new ThreadSafeDateFormat("MM-dd-YYYY'T'HH:mm:ss").format(new Date()));
         request.setPendingChargeEnabled(true);
