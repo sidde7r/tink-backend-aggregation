@@ -6,7 +6,7 @@
   "banks.nordea.NordeaAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS", "PAYMENTS", "MORTGAGE_AGGREGATION", "TRANSFERS"],
   "banks.norwegian.NorwegianAgent": ["CREDIT_CARDS"],
   "banks.sbab.SBABAgent": ["SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS", "PAYMENTS", "MORTGAGE_AGGREGATION", "TRANSFERS"],
-  "banks.se.alandsbanken.AlandsBankenAgent": [],
+  "nxgen.se.banks.alandsbanken.AlandsBankenSEAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS", "LOANS"],
   "banks.se.collector.CollectorAgent": ["TRANSFERS"],
   "banks.seb.SEBApiAgent": ["MORTGAGE_AGGREGATION", "TRANSFERS"],
   "brokers.NordnetAgent": ["SAVINGS_ACCOUNTS", "INVESTMENTS"],

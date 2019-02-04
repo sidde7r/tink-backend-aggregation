@@ -1781,7 +1781,7 @@
         },
         {
             "capabilitiesSerialized": "[]",
-            "className": "banks.se.alandsbanken.AlandsBankenAgent",
+          "className": "nxgen.se.banks.alandsbanken.AlandsBankenSEAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
             "displayName": "Ålandsbanken",
