@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.legacy.brokers;
+package se.tink.backend.aggregation.agents.brokers;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
