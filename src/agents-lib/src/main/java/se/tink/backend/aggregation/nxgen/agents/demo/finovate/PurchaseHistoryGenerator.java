@@ -85,39 +85,27 @@ public class PurchaseHistoryGenerator {
             transactions.addAll(generateOneDayOfTransactions(dateCursor, currency));
         }
 
-        transactions.addAll(generateRecurringCost(from, to));
-        transactions.addAll(generateSalary(from, to));
+
+        transactions.addAll(addMontlyRecurringCost(from, to, "Netflix", -9.99));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Spotify", -9.99));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Gym Membership", -45.99));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Bank Transfer Erste", -100));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Bank Transfer EasyBank", -50));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Salary", 3500));
 
         return PaginatorResponseImpl.create(transactions, false);
     }
 
-    private List<Transaction> generateRecurringCost(Date from, Date to) {
-        double salary = -9.99;
+
+    private List<Transaction> addMontlyRecurringCost(Date from, Date to, String name, double amount) {
         String currency = "EUR";
         int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
         List<Transaction> transactions = IntStream.range(0, numberOfMonths)
                 .mapToObj(i -> Transaction.builder()
                         .setAmount(new Amount(currency,
-                                salary))
+                                amount))
                         .setPending(false)
-                        .setDescription("Netflix")
-                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
-                )
-                .collect(toList());
-
-        return transactions;
-    }
-
-    private List<Transaction> generateSalary(Date from, Date to) {
-        double salary = 3500;
-        String currency = "EUR";
-        int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
-        List<Transaction> transactions = IntStream.range(0, numberOfMonths)
-                .mapToObj(i -> Transaction.builder()
-                        .setAmount(new Amount(currency,
-                                salary))
-                        .setPending(false)
-                        .setDescription("Salary")
+                        .setDescription(name)
                         .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
                 )
                 .collect(toList());
