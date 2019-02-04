@@ -40,16 +40,16 @@ public class SdcDkAgent extends SdcAgent {
 
     private Authenticator constructSmsAuthenticator() {
         LOG.info("SDC bank using SMS authentication");
-        SdcAutoAuthenticator noAutoAuthenticator = new SdcAutoAuthenticator(bankClient,
+        SdcAutoAuthenticator dkAutoAuthenticator = new SdcAutoAuthenticator(bankClient,
                 sdcSessionStorage, agentConfiguration, credentials, sdcPersistentStorage);
-        SdcSmsOtpAuthenticator noSmsOtpAuthenticator = new SdcSmsOtpAuthenticator(bankClient,
+        SdcSmsOtpAuthenticator dkSmsOtpAuthenticator = new SdcSmsOtpAuthenticator(bankClient,
                 sdcSessionStorage, agentConfiguration, credentials, sdcPersistentStorage);
 
         SmsOtpAuthenticationPasswordController smsOtpController = new SmsOtpAuthenticationPasswordController(catalog,
-                supplementalInformationHelper, noSmsOtpAuthenticator);
+                supplementalInformationHelper, dkSmsOtpAuthenticator);
 
         return new AutoAuthenticationController(request, context, smsOtpController,
-                noAutoAuthenticator);
+                dkAutoAuthenticator);
     }
 
     private Authenticator constructPinAuthenticator() {
