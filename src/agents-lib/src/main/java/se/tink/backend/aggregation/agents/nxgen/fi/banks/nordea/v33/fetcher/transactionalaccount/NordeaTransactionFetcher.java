@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginator;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
@@ -14,6 +15,7 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
     private static final Logger LOG = LoggerFactory.getLogger(NordeaTransactionFetcher.class);
     private static final long TRANSACTION_FETCHER_BACKOFF = 2500;
     private static final int MAX_RETRY_ATTEMPTS = 2;
+    private static final int GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS = 500;
     private final NordeaFIApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -47,7 +49,8 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
             int startIndex,
             int attempt) {
 
-        if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+        if (hre.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR
+                || hre.getResponse().getStatus() == HttpStatus.SC_GATEWAY_TIMEOUT) {
             if (attempt <= MAX_RETRY_ATTEMPTS) {
                 backoffAWhile();
                 LOG.debug(String.format(
@@ -56,6 +59,10 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
                 ));
 
                 return fetchTransactions(account, numberOfTransactions, startIndex, ++attempt);
+            }
+            // this is an ugly fix for Nordea FI since they tend to throw INTERNAL SERVER ERROR after 500 tx fetched
+            if (startIndex > GOOD_ENOUGH_NUMBER_OF_TRANSACTIONS) {
+                return PaginatorResponseImpl.createEmpty(false);
             }
         }
 
