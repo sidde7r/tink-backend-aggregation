@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment;
 
+import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.PositionsListEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 
@@ -38,8 +41,19 @@ public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<Investme
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        // The investor portal contains both fund and stock accounts
-        InvestmentsOverviewResponse investmentsOverviewResponse = getInvestmentsOverview();
+        // The investor portal contains both fund and stock accounts. Current assumption is that for users without
+        // investment we get 401 in response. Returning en empty list if that's the case.
+        InvestmentsOverviewResponse investmentsOverviewResponse;
+
+        try {
+            investmentsOverviewResponse = getInvestmentsOverview();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
+                return Collections.emptyList();
+            }
+
+            throw e;
+        }
 
         // Handelsbanken's own stock portal contains information about available balance for the stock accounts
         // which is not available from the investor portal. Wrapped with try catch since it's only used for setting
