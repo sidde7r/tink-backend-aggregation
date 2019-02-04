@@ -212,6 +212,7 @@ public class HandelsbankenNOConstants {
         public static final String STOCK_PORTAL = "stock portal";
         public static final String INVESTOR_PORTAL = "investor";
         public static final String HB_NORWAY = "HB-NORWAY";
+        public static final String STATUS_CLOSED = "AVSLUTTET";
     }
 
     public static final class EncapConstants {

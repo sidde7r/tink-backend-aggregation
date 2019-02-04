@@ -65,6 +65,7 @@ public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<Investme
         }
 
         return investmentsOverviewResponse.getOwnCsdAccounts().stream()
+                .filter(OwnCsdAccountEntity::isNotClosed)
                 .map(this::convertToTinkAccount)
                 .collect(Collectors.toList());
     }
