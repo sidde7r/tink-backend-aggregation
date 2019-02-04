@@ -735,7 +735,7 @@
             ]
         },
         {
-            "name": "erste-bank-test",
+            "name": "test-erste-bank",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "displayDescription": "Password",
             "credentialsType": "PASSWORD",
@@ -761,7 +761,7 @@
             "type": "TEST"
         },
         {
-            "name": "easy-bank-demo",
+            "name": "test-easy-bank",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "displayDescription": "Password",
             "credentialsType": "PASSWORD",
@@ -787,7 +787,7 @@
             "type": "TEST"
         },
         {
-            "name": "bawag-demo",
+            "name": "test-bawag",
             "className": "nxgen.demo.banks.finovate.PasswordDemoAgent",
             "displayDescription": "Password",
             "credentialsType": "PASSWORD",
