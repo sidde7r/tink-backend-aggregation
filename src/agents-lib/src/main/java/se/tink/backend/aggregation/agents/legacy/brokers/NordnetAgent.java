@@ -46,7 +46,7 @@ public class NordnetAgent extends AbstractAgent
   private final Credentials credentials;
   private final NordnetApiClient apiClient;
 
-  // cache
+
   private AccountResponse accounts = null;
 
   public NordnetAgent(
