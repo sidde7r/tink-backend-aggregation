@@ -18,7 +18,7 @@ public class LoanDetailsEntity extends LoanEntity {
     private BasicLoanInfo basicInfo;
 
     public LoanAccount toAccount() {
-        return LoanAccount.builder(getLoanNumber(), getBalance().toTinkAmount())
+        return LoanAccount.builder(getLoanNumber(), getBalance().toTinkAmount().negate())
                 .setAccountNumber(getLoanNumber())
                 .setInterestRate(basicInfo.getInterestRateTotal() / 100)
                 .setDetails(LoanDetails.builder(getType())
