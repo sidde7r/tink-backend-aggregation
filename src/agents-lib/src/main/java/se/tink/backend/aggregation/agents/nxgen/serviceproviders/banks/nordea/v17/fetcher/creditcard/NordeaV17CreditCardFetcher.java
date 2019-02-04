@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v1
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.creditcard.rpc.CardBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.entities.ProductEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.parsers.NordeaV17Parser;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
@@ -36,6 +37,7 @@ public class NordeaV17CreditCardFetcher implements AccountFetcher<CreditCardAcco
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return client.getAccountProductsOfTypes(ProductType.CARD).stream()
+                .filter(ProductEntity::isCreditCard)
                 .map(pe -> {
                     CardBalancesResponse cardBalancesResponse = client.fetchCardDetails(pe.getNordeaAccountIdV2());
                     List<CardsEntity> distinctCardEntities = cardBalancesResponse.getGetCardBalancesOut()
