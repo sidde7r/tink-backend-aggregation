@@ -19,6 +19,9 @@ import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 
+/*
+This is a temporary solution and should be deleted as soon as the demo is done
+ */
 public class NextGenerationDemoTransactionFetcher
         implements AccountFetcher<TransactionalAccount>,
         TransactionPaginator<TransactionalAccount> {

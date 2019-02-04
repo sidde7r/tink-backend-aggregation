@@ -21,6 +21,12 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+/*
+This is a temporary solution and should be deleted as soon as the demo is done
+ BAWAG: Will have salary and savings
+ Erste: Will have loans
+ Easy:  Will have investments
+ */
 public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     private static String username;
@@ -69,85 +75,103 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoInvestmentAccount getInvestmentAccounts() {
-        if (!username.equals("tink")) {
-            return null;
+        if (request.getProvider().equals("at-test-easy-bank")) {
+
+            if (!username.equals("tink")) {
+                return null;
+            }
+
+            return new DemoInvestmentAccount() {
+                @Override
+                public String getAccountId() {
+                    return "7777-444444444444";
+                }
+
+                @Override
+                public String getName() {
+                    return "SmallInvestment";
+                }
+
+                @Override
+                public double getAccountBalance() {
+                    return 4563;
+                }
+            };
         }
 
-        return new DemoInvestmentAccount() {
-            @Override
-            public String getAccountId() {
-                return "7777-444444444444";
-            }
-
-            @Override
-            public String getName() {
-                return "SmallInvestment";
-            }
-
-            @Override
-            public double getAccountBalance() {
-                return 4563;
-            }
-        };
+        return null;
     }
 
     @Override
     public DemoSavingsAccount getDemoSavingsAccounts() {
-        return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(this.username, this.provider);
+        if(request.getProvider().equals("at-test-bawag")) {
+            return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(this.username, this.provider);
+        }
+
+        return null;
     }
 
     @Override
     public DemoLoanAccount getDemoLoanAccounts() {
-        if (!username.equals("tink")) {
-            return null;
+        if (request.getProvider().equals("at-test-erste-bank")) {
+
+            if (!username.equals("tink")) {
+                return null;
+            }
+
+            return new DemoLoanAccount() {
+                @Override
+                public String getMortgageId() {
+                    return "7777-333333333333";
+                }
+
+                @Override
+                public String getBlancoId() {
+                    return "7777-333334444444";
+                }
+
+                @Override
+                public String getMortgageLoanName() {
+                    return "Loan";
+                }
+
+                @Override
+                public String getBlancoLoanName() {
+                    return "Santander";
+                }
+
+                @Override
+                public double getMortgageInterestName() {
+                    return 0.53;
+                }
+
+                @Override
+                public double getBlancoInterestName() {
+                    return 1.73;
+                }
+
+                @Override
+                public double getMortgageBalance() {
+                    return -2300D;
+                }
+
+                @Override
+                public double getBlancoBalance() {
+                    return -5D;
+                }
+            };
         }
 
-        return new DemoLoanAccount() {
-            @Override
-            public String getMortgageId() {
-                return "7777-333333333333";
-            }
-
-            @Override
-            public String getBlancoId() {
-                return "7777-333334444444";
-            }
-
-            @Override
-            public String getMortgageLoanName() {
-                return "Loan";
-            }
-
-            @Override
-            public String getBlancoLoanName() {
-                return "Santander";
-            }
-
-            @Override
-            public double getMortgageInterestName() {
-                return 0.53;
-            }
-
-            @Override
-            public double getBlancoInterestName() {
-                return 1.73;
-            }
-
-            @Override
-            public double getMortgageBalance() {
-                return -2300D;
-            }
-
-            @Override
-            public double getBlancoBalance() {
-                return -5D;
-            }
-        };
+        return null;
     }
 
     @Override
     public DemoTransactionAccount getTransactionalAccountAccounts() {
-        return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(this.username, this.provider);
+        if (request.getProvider().equals("at-test-bawag")) {
+            return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(this.username, this.provider);
+        }
+
+        return null;
     }
 
     //Override to new transaction fetcher

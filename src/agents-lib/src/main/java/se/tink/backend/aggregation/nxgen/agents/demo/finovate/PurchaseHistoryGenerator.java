@@ -21,6 +21,9 @@ import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
 import static java.util.stream.Collectors.toList;
 
+/*
+This is a temporary solution and should be deleted as soon as the demo is done
+ */
 public class PurchaseHistoryGenerator {
 
     private final List<GeneratePurchaseBase> generatePurchaseBase;
