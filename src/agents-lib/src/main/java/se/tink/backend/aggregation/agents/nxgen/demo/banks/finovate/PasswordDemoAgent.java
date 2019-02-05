@@ -94,7 +94,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
                 @Override
                 public double getAccountBalance() {
-                    return 4563;
+                    return 10000;
                 }
             };
         }
