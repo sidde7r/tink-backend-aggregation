@@ -1,5 +1,5 @@
 java_library(
-    name = "agents-models",
+    name = "models",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [

@@ -18,7 +18,7 @@ java_library(
         "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-lib:agents",
-        "//src/agents-models",
+        "//src/agents/models",
         "//src/aggregation-api",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
