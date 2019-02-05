@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "aggregation-test",
+    name = "integration-tests",
     size = "large",
     srcs = glob(["src/test/**/*.java"]),
     data = [
@@ -22,8 +22,8 @@ junit_test(
         "//src/agents-lib",
         "//src/agents-lib:agents",
         "//src/agents/models",
-        "//src/aggregation-api",
-        "//src/aggregation-lib",
+        "//src/aggregation/api",
+        "//src/aggregation/lib",
         "//src/aggregationcontroller-api",
         "//src/libraries/account:enums",
         "//src/libraries/account_identifier:account-identifier",

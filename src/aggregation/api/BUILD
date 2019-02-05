@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "aggregation-api",
+    name = "api",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -40,7 +40,7 @@ java_library(
 )
 
 junit_test(
-    name = "aggregation-api-test",
+    name = "api-test",
     srcs = glob(["src/test/**/*.java"]),
     data = ["//data:tink-ca"],
     runtime_deps = [
@@ -48,7 +48,7 @@ junit_test(
     ],
     deps = [
         "//src/agents/api",
-        "//src/aggregation-api",
+        "//src/aggregation/api",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_annotations:api-annotations-testlib-test",
         "//src/libraries/credentials:service",

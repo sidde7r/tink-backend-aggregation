@@ -12,7 +12,7 @@ test_sources:
 
 targets:
   //...:all
-  //:aggregation-test
+  //src/aggregation/integration-tests
   -//deb:all
   -//third_party:all
 

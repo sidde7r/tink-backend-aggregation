@@ -56,7 +56,7 @@ pkg_tar(
 
 pkg_tar(
     name = "aggregation_bin_tar",
-    srcs = ["//src/aggregation-service:renamed-aggregation-deploy-jar"],
+    srcs = ["//src/aggregation/service:renamed-aggregation-deploy-jar"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
 )
