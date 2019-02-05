@@ -41,7 +41,7 @@ public class PurchaseHistoryGenerator {
     private double randomisePurchase(GeneratePurchaseBase base, String currency) {
         double finalPrice = 0;
         for (Double price : base.getItemPrices()) {
-            finalPrice += (randomGenerator.nextInt(AVEREAGE_PURCHASES_PER_DAY) + 1) * price;
+            finalPrice += (randomGenerator.nextInt(AVEREAGE_PURCHASES_PER_DAY) + 1) * -price;
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -106,7 +106,7 @@ public class PurchaseHistoryGenerator {
                                 amount))
                         .setPending(false)
                         .setDescription(name)
-                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
+                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -i)).build()
                 )
                 .collect(toList());
 
@@ -122,7 +122,7 @@ public class PurchaseHistoryGenerator {
                                 account.getBalance().getValue() / 36))
                         .setPending(false)
                         .setDescription("monthly savings")
-                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
+                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -i)).build()
                 )
                 .collect(toList());
 
