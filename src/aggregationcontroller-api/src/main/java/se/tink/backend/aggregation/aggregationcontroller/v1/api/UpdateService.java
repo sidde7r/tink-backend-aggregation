@@ -51,11 +51,11 @@ public interface UpdateService {
     @Produces(MediaType.APPLICATION_JSON)
     Account updateAccount(UpdateAccountRequest request);
 
-
     /**
-     * This method does currently only update the account's bankid. It may in the future be extended to update further
-     * metadata. This method should only be used in very specific situations. Not as a regular update. For regular cases
-     * refer to <code>updateAccount</code> on <code>POST /accounts/update</code>.
+     * This method does currently only update the account's bankid. It may in the future be extended
+     * to update further metadata. This method should only be used in very specific situations. Not
+     * as a regular update. For regular cases refer to <code>updateAccount</code> on <code>
+     * POST /accounts/update</code>.
      *
      * @param accountId the id of the account to update
      * @param newBankId bankId in new format
@@ -65,7 +65,7 @@ public interface UpdateService {
     @Path("/accounts/{id}/bankid")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Account updateAccountMetaData(@PathParam(value = "id") String accountId, String newBankId);
+    Account updateAccountsBankId(@PathParam(value = "id") String accountId, String newBankId);
 
     @POST
     @Path("/accounts/transfer-destinations/update")
