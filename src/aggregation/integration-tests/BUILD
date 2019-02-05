@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 junit_test(
-    name = "aggregation-test",
+    name = "integration-tests",
     size = "large",
     srcs = glob(["src/test/**/*.java"]),
     data = [

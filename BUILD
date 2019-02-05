@@ -6,11 +6,6 @@ alias(
 )
 
 alias(
-    name = "aggregation-test",
-    actual = "//src/aggregation-test",
-)
-
-alias(
     name = "provider-configuration",
     actual = "//src/provider-configuration-service:provider-configuration",
 )
