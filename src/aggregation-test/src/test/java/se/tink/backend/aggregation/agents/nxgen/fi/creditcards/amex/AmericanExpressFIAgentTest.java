@@ -1,21 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.creditcards.amex;
 
-import java.util.List;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentTestContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.backend.aggregation.utils.CurrencyConstants;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.AgentTestContext;
+import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
+import se.tink.backend.aggregation.utils.CurrencyConstants;
+import se.tink.libraries.credentials.service.RefreshableItem;
+
+import java.util.List;
 
 @Ignore
 public class AmericanExpressFIAgentTest extends NextGenerationBaseAgentTest<AmericanExpressFIAgent> {
@@ -81,14 +82,8 @@ public class AmericanExpressFIAgentTest extends NextGenerationBaseAgentTest<Amer
 
         credentials.setStatus(CredentialsStatus.UPDATING);
 
-        if (!(agent instanceof RefreshableItemExecutor)) {
-            throw new AssertionError(String.format("%s is not an instance of RefreshExecutor",
-                    agent.getClass().getSimpleName()));
-        }
-
-        RefreshableItemExecutor refreshExecutor = (RefreshableItemExecutor) agent;
-        for (RefreshableItem item : RefreshableItem.values()) {
-            refreshExecutor.refresh(item);
+        for (RefreshableItem item : RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL)) {
+            RefreshExecutorUtils.executeSegregatedRefresher(agent, item, testContext);
         }
 
         List<Account> accounts = this.testContext.getUpdatedAccounts();
