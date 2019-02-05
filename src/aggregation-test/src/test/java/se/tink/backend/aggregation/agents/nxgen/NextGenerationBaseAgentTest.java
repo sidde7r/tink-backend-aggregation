@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen;
 
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.agents.rpc.ProviderTypes;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.AgentTestContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
+import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 
@@ -43,16 +43,11 @@ public abstract class NextGenerationBaseAgentTest<T extends NextGenerationAgent>
 
         agent.login();
 
-        if (!(agent instanceof RefreshableItemExecutor)) {
-            throw new AssertionError(String.format("%s is not an instance of RefreshExecutor",
-                    agent.getClass().getSimpleName()));
-        }
-
         credentials.setStatus(CredentialsStatus.UPDATING);
 
-        RefreshableItemExecutor refreshExecutor = (RefreshableItemExecutor) agent;
-        for (RefreshableItem item : RefreshableItem.values()) {
-            refreshExecutor.refresh(item);
+
+        for (RefreshableItem item : RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL)) {
+            RefreshExecutorUtils.executeSegregatedRefresher(agent, item, testContext);
         }
     }
 

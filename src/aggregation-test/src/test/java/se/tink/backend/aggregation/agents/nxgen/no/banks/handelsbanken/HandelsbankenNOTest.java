@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken;
 
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.Agent;
-import se.tink.backend.aggregation.agents.AgentTestContext;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.aggregation.agents.Agent;
+import se.tink.backend.aggregation.agents.AgentTestContext;
+import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
+import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
+import se.tink.backend.aggregation.utils.CurrencyConstants;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.backend.aggregation.utils.CurrencyConstants;
 
 /**
  * This test makes use of an active handelsbanken session. Log in to the Handelsbanken app and go to the
@@ -57,9 +57,8 @@ public class HandelsbankenNOTest extends NextGenerationBaseAgentTest<Handelsbank
         hbAgent.populateSessionStorage(SESSION_STAMP_FIELD_KEY, SESSION_STAMP_FIELD_VALUE);
         hbAgent.populateSessionStorage(SESSION_STAMP_KEY, SESSION_STAMP_VALUE);
 
-        RefreshableItemExecutor refreshExecutor = (RefreshableItemExecutor) agent;
-        for (RefreshableItem item : RefreshableItem.values()) {
-            refreshExecutor.refresh(item);
+        for (RefreshableItem item : RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL)) {
+            RefreshExecutorUtils.executeSegregatedRefresher(agent, item, testContext);
         }
     }
 

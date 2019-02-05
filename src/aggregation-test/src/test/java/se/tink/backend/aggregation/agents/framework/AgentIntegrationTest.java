@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.AbstractConfigurationBase;
@@ -15,28 +17,18 @@ import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
-import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
-import se.tink.backend.aggregation.agents.RefreshInvestmentAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshLoanAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
-import se.tink.backend.aggregation.agents.RefreshableItemExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.agents.nxgen.framework.validation.ValidatorFactory;
 import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
-import se.tink.libraries.transfer.rpc.Transfer;
 
 import java.io.File;
 import java.io.IOException;
@@ -204,7 +196,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         } else {
             List<RefreshableItem> sortedItems = RefreshableItem.sort(refreshableItems);
             for (RefreshableItem item : sortedItems) {
-                refresh(agent, item);
+                RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
             }
 
             if (RefreshableItem.hasAccounts(sortedItems)) {
@@ -233,95 +225,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         }
 
         log.info("Done with refresh.");
-    }
-
-    private void refresh(Agent agent, RefreshableItem item) {
-        if (agent instanceof RefreshableItemExecutor) {
-            log.warn("Using old RefreshableItemExecutor");
-            RefreshableItemExecutor refreshExecutor = (RefreshableItemExecutor) agent;
-            refreshExecutor.refresh(item);
-        } else {
-            executeSegregatedRefresher(agent, item);
-        }
-    }
-
-    private void executeSegregatedRefresher(Agent agent, RefreshableItem item) {
-        Class executorKlass = RefreshExecutorUtils.getRefreshExecutor(item);
-        if (executorKlass == null) {
-            log.warn(String.format("No implementation for %s", item.name()));
-            return;
-        }
-        // Segregated refresh executor
-        if (executorKlass.isAssignableFrom(agent.getAgentClass())) {
-            switch (item) {
-                case EINVOICES:
-                    context.updateEinvoices(((RefreshEInvoiceExecutor) agent).fetchEInvoices().getEInvoices());
-                    break;
-                case TRANSFER_DESTINATIONS:
-                    context.updateTransferDestinationPatterns(
-                            ((RefreshTransferDestinationExecutor) agent)
-                                    .fetchTransferDestinations(context.getUpdatedAccounts())
-                                    .getTransferDestinations());
-                    break;
-                case CHECKING_ACCOUNTS:
-                    context.cacheAccounts(((RefreshCheckingAccountsExecutor) agent).fetchCheckingAccounts().getAccounts());
-                    break;
-                case CHECKING_TRANSACTIONS:
-                    ((RefreshCheckingAccountsExecutor) agent)
-                            .fetchCheckingTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
-                    break;
-                case SAVING_ACCOUNTS:
-                    context.cacheAccounts(((RefreshSavingsAccountsExecutor) agent).fetchSavingsAccounts().getAccounts());
-                    break;
-                case SAVING_TRANSACTIONS:
-                    ((RefreshSavingsAccountsExecutor) agent)
-                            .fetchSavingsTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
-
-                    break;
-                case CREDITCARD_ACCOUNTS:
-                    context.cacheAccounts(
-                            ((RefreshCreditCardAccountsExecutor) agent).fetchCreditCardAccounts().getAccounts());
-                    break;
-                case CREDITCARD_TRANSACTIONS:
-
-                    ((RefreshCreditCardAccountsExecutor) agent)
-                            .fetchCreditCardTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
-                    break;
-                case LOAN_ACCOUNTS:
-                    ((RefreshLoanAccountsExecutor) agent)
-                            .fetchLoanAccounts()
-                            .getAccounts()
-                            .forEach((key, value) -> context.cacheAccount(key, value));
-                    break;
-                case LOAN_TRANSACTIONS:
-                    ((RefreshLoanAccountsExecutor) agent)
-                            .fetchLoanTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
-                    break;
-                case INVESTMENT_ACCOUNTS:
-                    ((RefreshInvestmentAccountsExecutor) agent)
-                            .fetchInvestmentAccounts()
-                            .getAccounts()
-                            .forEach((key, value) -> context.cacheAccount(key, value));
-                    break;
-                case INVESTMENT_TRANSACTIONS:
-                    ((RefreshInvestmentAccountsExecutor) agent)
-                            .fetchInvestmentTransactions()
-                            .getTransactions()
-                            .forEach((key, value) -> context.updateTransactions(key, value));
-                    break;
-                default:
-                    throw new IllegalStateException(
-                            String.format("Invalid refreshable item detected %s", item.name()));
-            }
-        }
     }
 
     private void doBankTransfer(Agent agent, Transfer transfer) throws Exception {
@@ -612,7 +515,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public AgentIntegrationTest build() {
             if (refreshableItems.isEmpty()) {
-                refreshableItems.addAll(Arrays.asList(RefreshableItem.values()));
+                refreshableItems.addAll(RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
             }
 
             Preconditions.checkNotNull(provider, "Provider was not set.");

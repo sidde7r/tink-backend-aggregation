@@ -4,12 +4,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.dropwizard.configuration.ConfigurationException;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import org.junit.Assert;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -23,16 +17,23 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregation.utils.StringMasker;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigurationBase {
     protected Class<T> cls;
@@ -240,7 +241,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         Assert.assertTrue("Agent could not login successfully", agent.login());
 
         try {
-            ((RefreshableItemExecutor) agent).refresh(RefreshableItem.EINVOICES);
+            RefreshExecutorUtils.executeSegregatedRefresher(agent, RefreshableItem.EINVOICES, testContext);
             testContext.processEinvoices();
             agent.logout();
         } finally {
@@ -372,13 +373,12 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     private void refresh(Agent agent) throws Exception {
-        if (agent instanceof RefreshableItemExecutor) {
-            RefreshableItemExecutor refreshExecutor = (RefreshableItemExecutor) agent;
-            for (RefreshableItem item : RefreshableItem.values()) {
-                refreshExecutor.refresh(item);
-            }
-        } else {
+        if (agent instanceof DeprecatedRefreshExecutor) {
             ((DeprecatedRefreshExecutor) agent).refresh();
+        } else {
+            for (RefreshableItem item : RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL)) {
+                RefreshExecutorUtils.executeSegregatedRefresher(agent, item, testContext);
+            }
         }
     }
 
