@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "aggregation-lib",
+    name = "lib",
     srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data:cryptography-test",
@@ -19,7 +19,7 @@ java_library(
         "//src/agents-lib",
         "//src/agents-lib:agents",
         "//src/agents/models",
-        "//src/aggregation-api",
+        "//src/aggregation/api",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account:rpc",
@@ -108,7 +108,7 @@ java_library(
 )
 
 junit_test(
-    name = "aggregation-lib-test",
+    name = "lib-test",
     srcs = glob(["src/test/**/*.java"]),
     data = [
         "//data:agents",
@@ -126,8 +126,8 @@ junit_test(
         "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-lib:agents",
-        "//src/aggregation-api",
-        "//src/aggregation-lib",
+        "//src/aggregation/api",
+        "//src/aggregation/lib",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account_identifier:account-identifier",
