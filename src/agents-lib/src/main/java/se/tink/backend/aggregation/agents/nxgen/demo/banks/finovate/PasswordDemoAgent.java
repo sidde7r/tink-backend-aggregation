@@ -104,7 +104,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoSavingsAccount getDemoSavingsAccounts() {
-        if(request.getProvider().getName().equals("at-test-bawag")) {
+        if(request.getProvider().getName().equals("at-test-erste-bank")) {
             return DemoAccountDefinitionGenerator.getDemoSavingsAccounts(this.username, this.provider);
         }
 
@@ -113,7 +113,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoLoanAccount getDemoLoanAccounts() {
-        if (request.getProvider().getName().equals("at-test-erste-bank")) {
+        if (request.getProvider().getName().equals("at-test-bawag")) {
 
             if (!username.equals("tink")) {
                 return null;
@@ -167,7 +167,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public DemoTransactionAccount getTransactionalAccountAccounts() {
-        if (request.getProvider().getName().equals("at-test-bawag")) {
+        if (request.getProvider().getName().equals("at-test-erste-bank")) {
             return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(this.username, this.provider);
         }
 
