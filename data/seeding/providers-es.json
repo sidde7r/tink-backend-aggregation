@@ -203,8 +203,10 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-                    "numeric": true,
-                    "minLength": 1
+                    "pattern": "[a-zA-Z0-9]{6,10}",
+                    "minLength": 6,
+                    "maxLength": 10,
+                    "patternError": "Your password should be from 6 to 10 characters long anc can contain digits, numbers or letters."
                 }
             ]
         },
