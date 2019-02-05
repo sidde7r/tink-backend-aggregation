@@ -5,7 +5,7 @@ java_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//src/agents-lib",
-        "//src/agents-lib:agents",
+        "//src/integration/agents",
         "//src/libraries/serialization",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",
     ],
