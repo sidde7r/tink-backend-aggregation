@@ -65,7 +65,7 @@ public class SparebankenVestConstants {
 
     public static final class Headers {
         static final String USER_AGENT =
-                "Tink Mobile/2.5.28 (iOS; 10.2, iPhone) SpvApp/2.3.4 Cordova/4.2.0 SpvID/79FB7C2A7A31";
+                "Tink Mobile/2.5.28 (iOS; 10.2, iPhone) SpvApp/3.2.4 Cordova/4.5.3 SpvID/5146244D-D272-4584-BA30-B4F3755276EE";
         static final String MOBILE_NAME_COOKIE_KEY = "mobileName";
         static final String MOBILE_NAME_COOKIE_VALUE = "Tink";
         static final String ORIGIN_KEY = "Origin";
