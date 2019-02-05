@@ -1,9 +1,14 @@
 {
     "clusterid": "oxford-staging",
     "providers": [
-        "at-volksbank-password",
+        "at-americanexpress-password",
+        "at-erstebank-password",
+        "at-erstebank-thirdparty",
+        "at-n26-password",
         "at-raiffeisen0-password",
         "at-raiffeisen1-password",
+        "at-raiffeisen10-password",
+        "at-raiffeisen11-password",
         "at-raiffeisen2-password",
         "at-raiffeisen3-password",
         "at-raiffeisen4-password",
@@ -12,17 +17,12 @@
         "at-raiffeisen7-password",
         "at-raiffeisen8-password",
         "at-raiffeisen9-password",
-        "at-raiffeisen10-password",
-        "at-raiffeisen11-password",
-        "at-n26-password",
         "at-revolut-password",
-        "at-americanexpress-password",
-        "at-erstebank-password",
-        "at-erstebank-thirdparty",
-        "at-test-password",
-        "at-test-multi-supplemental",
         "at-test-bawag",
         "at-test-easy-bank",
-        "at-test-erste-bank"
+        "at-test-erste-bank",
+        "at-test-multi-supplemental",
+        "at-test-password",
+        "at-volksbank-password"
     ]
 }
