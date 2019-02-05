@@ -1,7 +1,5 @@
-package(default_visibility = ["//visibility:public"])
-
 java_library(
-    name = "agents-api",
+    name = "api",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [

@@ -15,7 +15,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//po:i18n",
-        "//src/agents-api",
+        "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-lib:agents",
         "//src/agents-models",
@@ -123,7 +123,7 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        "//src/agents-api",
+        "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-lib:agents",
         "//src/aggregation-api",

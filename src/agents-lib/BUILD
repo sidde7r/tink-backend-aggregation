@@ -18,7 +18,7 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agents-api",
+        "//src/agents/api",
         "//src/agents-models",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
@@ -111,7 +111,7 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agents-api",
+        "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-models",
         "//src/aggregation-api",
@@ -207,7 +207,7 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        "//src/agents-api",
+        "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-models",
         "//src/aggregationcontroller-api",
@@ -277,7 +277,7 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        "//src/agents-api",
+        "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-lib:agents",
         "//src/agents-models",
