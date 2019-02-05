@@ -40,7 +40,7 @@ java_library(
     srcs = glob(["src/main/**/service/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agents-api",
+        "//src/agents/api",
         "//src/libraries/generic_application:generic-application",
         "//src/libraries/signableoperation:rpc",
         "//src/libraries/strings",
