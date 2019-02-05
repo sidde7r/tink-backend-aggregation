@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -50,4 +52,8 @@ public class CardEntity {
         return activeStatus;
     }
 
+    @JsonIgnore
+    public boolean isActive() {
+        return DnbConstants.CardStatus.ACTIVE.equalsIgnoreCase(activeStatus);
+    }
 }
