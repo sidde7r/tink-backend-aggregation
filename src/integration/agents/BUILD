@@ -10,9 +10,9 @@ java_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agents-lib",
         "//src/aggregation/api",
         "//src/integration/api",
+        "//src/integration/lib",
         "//src/integration/models",
         "//src/libraries/abnamro",
         "//src/libraries/account:enums",
@@ -103,11 +103,11 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        "//src/agents-lib",
         "//src/aggregation/api",
         "//src/aggregationcontroller_api",
         "//src/integration/agents",
         "//src/integration/api",
+        "//src/integration/lib",
         "//src/integration/models",
         "//src/libraries/abnamro",
         "//src/libraries/account_identifier",
