@@ -107,4 +107,8 @@ public final class DnbConstants {
 
         public static final String SSN_FORMAT_ERROR = "ukjent brukeridentitet eller feil format på brukeridentitet";
     }
+
+    public static class CardStatus {
+        public static final String ACTIVE = "active";
+    }
 }

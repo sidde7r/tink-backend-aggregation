@@ -21,6 +21,7 @@ public class DnbCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
         List<CreditCardAccount> creditcardAccounts = Lists.newArrayList();
 
         List<String> cardIds = apiClient.listCards().getCreditCards().stream()
+                .filter(CardEntity::isActive)
                 .map(CardEntity::getCardid)
                 .collect(Collectors.toList());
 
