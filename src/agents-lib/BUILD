@@ -19,7 +19,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/agents/api",
-        "//src/agents-models",
+        "//src/agents/models",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account:enums",
@@ -113,7 +113,7 @@ java_library(
     deps = [
         "//src/agents/api",
         "//src/agents-lib",
-        "//src/agents-models",
+        "//src/agents/models",
         "//src/aggregation-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account:enums",
@@ -209,7 +209,7 @@ junit_test(
     deps = [
         "//src/agents/api",
         "//src/agents-lib",
-        "//src/agents-models",
+        "//src/agents/models",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",
         "//src/libraries/account:enums",
@@ -280,7 +280,7 @@ junit_test(
         "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-lib:agents",
-        "//src/agents-models",
+        "//src/agents/models",
         "//src/aggregation-api",
         "//src/aggregationcontroller-api",
         "//src/libraries/abnamro:abn_amro",

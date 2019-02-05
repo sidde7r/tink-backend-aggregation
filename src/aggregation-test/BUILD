@@ -21,7 +21,7 @@ junit_test(
         "//src/agents/api",
         "//src/agents-lib",
         "//src/agents-lib:agents",
-        "//src/agents-models",
+        "//src/agents/models",
         "//src/aggregation-api",
         "//src/aggregation-lib",
         "//src/aggregationcontroller-api",

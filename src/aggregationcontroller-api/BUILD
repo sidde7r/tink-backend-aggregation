@@ -4,7 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/agents/api",
-        "//src/agents-models",
+        "//src/agents/models",
         "//src/aggregation-api",
         "//src/libraries/account:rpc",
         "//src/libraries/amount",
