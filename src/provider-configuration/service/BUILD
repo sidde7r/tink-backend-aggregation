@@ -1,5 +1,5 @@
 java_library(
-    name = "provider-configuration-service",
+    name = "service",
     srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data",

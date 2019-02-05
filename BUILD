@@ -7,7 +7,7 @@ alias(
 
 alias(
     name = "provider-configuration",
-    actual = "//src/provider-configuration-service:provider-configuration",
+    actual = "//src/provider-configuration/service:provider-configuration",
 )
 
 alias(
