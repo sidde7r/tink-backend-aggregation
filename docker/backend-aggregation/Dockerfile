@@ -16,7 +16,7 @@ COPY tools ${SERVICE_DIR}/tools
 COPY data ${SERVICE_DIR}/data
 
 COPY src/${SERVICE_NAME}-service/target/lib ${SERVICE_DIR}/lib
-COPY src/${SERVICE_NAME}-service/target/${SERVICE_NAME}-service.jar ${SERVICE_DIR}/
+COPY src/${SERVICE_NAME}-service/target/${SERVICE_NAME}_service.jar ${SERVICE_DIR}/
 
 ENV MAX_HEAP_SIZE=2560m
 

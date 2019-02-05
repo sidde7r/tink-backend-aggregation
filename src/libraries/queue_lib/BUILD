@@ -1,5 +1,5 @@
 java_library(
-    name = "queue-lib",
+    name = "queue_lib",
     srcs = glob(["src/main/**/*.java"]),
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],

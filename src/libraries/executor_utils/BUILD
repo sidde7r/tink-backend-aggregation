@@ -1,5 +1,5 @@
 java_library(
-    name = "executor-utils",
+    name = "executor_utils",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [

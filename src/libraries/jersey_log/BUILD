@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "jersey-log",
+    name = "jersey_log",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -36,16 +36,16 @@ java_library(
         "//third_party:org_codehaus_plexus_plexus_utils",
 
         # Api utils
-        "//src/libraries/api_headers:api-headers",
-        "//src/libraries/api_annotations:api-annotations",
+        "//src/libraries/api_headers",
+        "//src/libraries/api_annotations",
     ],
 )
 
 junit_test(
-    name = "jersey-log-test",
+    name = "jersey_log_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":jersey-log",
+        "//src/libraries/jersey_log",
         "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",

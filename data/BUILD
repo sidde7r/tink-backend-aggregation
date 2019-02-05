@@ -11,7 +11,7 @@ filegroup(
 )
 
 filegroup(
-    name = "common-lib-test",
+    name = "common_lib_test",
     srcs = glob([
         "test/*",
         "templates/*",
@@ -32,7 +32,7 @@ filegroup(
 )
 
 filegroup(
-    name = "tink-ca",
+    name = "tink_ca",
     srcs = ["security/TinkCA.truststore"],
     visibility = ["//visibility:public"],
 )
@@ -44,7 +44,7 @@ filegroup(
 )
 
 filegroup(
-    name = "aggregation-test",
+    name = "aggregation_test",
     srcs = glob([
         "aggregation/**",
         "demo/**",
@@ -54,7 +54,7 @@ filegroup(
 )
 
 filegroup(
-    name = "provider-configuration-test",
+    name = "provider_configuration_test",
     srcs = glob([
         "seeding/providers-*.json",
         "seeding/providers/**",
@@ -63,7 +63,7 @@ filegroup(
 )
 
 filegroup(
-    name = "cryptography-test",
+    name = "cryptography_test",
     srcs = [
         "test/cryptography/private_rsa_key.pem",
         "test/cryptography/public_rsa_key.pub",
@@ -72,7 +72,7 @@ filegroup(
 )
 
 filegroup(
-    name = "agent-unit-tests",
+    name = "agent_unit_tests",
     srcs = glob([
         "test/agents/**",
     ]),
@@ -80,7 +80,7 @@ filegroup(
 )
 
 filegroup(
-    name = "tesseract-training-set",
+    name = "tesseract_training_set",
     srcs = glob(
         include = ["tesseract/**"],
     ),

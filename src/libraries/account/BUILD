@@ -13,7 +13,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account:enums",
-        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/account_identifier",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//src/libraries/transfer:rpc",

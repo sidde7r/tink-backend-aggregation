@@ -1,12 +1,12 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "dropwizard-utils",
+    name = "dropwizard_utils",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/discovery",
-        "//src/libraries/jersey_log:jersey-log",
+        "//src/libraries/jersey_log",
         "//src/libraries/log",
         "//src/libraries/uuid",
         "//third_party:com_netflix_governator",
@@ -19,10 +19,10 @@ java_library(
 )
 
 junit_test(
-    name = "dropwizard-utils-test",
+    name = "dropwizard_utils_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":dropwizard-utils",
+        "//src/libraries/dropwizard_utils",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",

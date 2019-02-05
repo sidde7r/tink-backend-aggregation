@@ -15,7 +15,7 @@ java_library(
     deps = [
         "//src/libraries/date",
         "//src/libraries/enums",
-        "//src/libraries/generic_application:generic-application",
+        "//src/libraries/generic_application",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
         "//src/libraries/strings",

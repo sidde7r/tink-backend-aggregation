@@ -2,7 +2,7 @@ java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
     visibility = ["//visibility:public"],
-    deps = ["//src/libraries/account_identifier:account-identifier"],
+    deps = ["//src/libraries/account_identifier"],
 )
 
 java_library(
@@ -11,7 +11,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/account:enums",
-        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/date",
         "//src/libraries/enums",
@@ -32,7 +32,7 @@ java_library(
     srcs = glob(["src/main/**/mocks/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/account_identifier:account-identifier",
+        "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/enums",
         "//src/libraries/transfer:enums",

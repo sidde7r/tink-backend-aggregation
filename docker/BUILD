@@ -6,12 +6,12 @@ load(
 
 container_image(
     name = "aggregation_image",
-    base = "@openjdk-jdk8//image",
+    base = "@openjdk_jdk8//image",
     cmd = [
         "java",
         "-jar",
         "-Xmx2560m",
-        "/usr/share/tink-backend-aggregation/aggregation-service.jar",
+        "/usr/share/tink-backend-aggregation/aggregation_service.jar",
         "server",
         "/etc/tink/aggregation-server.yml",
     ],
@@ -21,12 +21,12 @@ container_image(
 
 container_image(
     name = "provider_configuration_image",
-    base = "@openjdk-jdk8//image",
+    base = "@openjdk_jdk8//image",
     cmd = [
         "java",
         "-jar",
         "-Xmx2560m",
-        "/usr/share/tink-backend-provider-configuration/provider-configuration-service.jar",
+        "/usr/share/tink-backend-provider-configuration/provider_configuration_service.jar",
         "server",
         "/etc/tink/provider-configuration-server.yml",
     ],

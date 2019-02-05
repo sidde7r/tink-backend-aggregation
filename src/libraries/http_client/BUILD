@@ -1,11 +1,11 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "http-client",
+    name = "http_client",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/request_tracing:request-tracing",
+        "//src/libraries/request_tracing",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:com_sun_jersey_jersey_server",
@@ -14,12 +14,12 @@ java_library(
 )
 
 junit_test(
-    name = "http-client-test",
+    name = "http_client_test",
     srcs = glob(["src/test/**/*.java"]),
-    data = ["//data:tink-ca"],
+    data = ["//data:tink_ca"],
     deps = [
-        ":http-client",
-        "//src/libraries/request_tracing:request-tracing",
+        "//src/libraries/http_client",
+        "//src/libraries/request_tracing",
         "//third_party:ch_qos_logback_logback_classic",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_sun_jersey_jersey_client",

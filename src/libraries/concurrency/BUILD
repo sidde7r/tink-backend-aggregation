@@ -15,12 +15,12 @@ java_library(
 )
 
 junit_test(
-    name = "concurrency-test",
+    name = "concurrency_test",
     srcs = glob(["src/test/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        ":concurrency",
-        "//src/libraries/executor_utils:executor-utils",
+        "//src/libraries/concurrency",
+        "//src/libraries/executor_utils",
         "//src/libraries/log",
         "//src/libraries/metrics",
         "//third_party:com_google_code_findbugs_jsr305",

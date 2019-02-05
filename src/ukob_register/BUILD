@@ -1,5 +1,5 @@
 java_binary(
-    name = "ukob-register",
+    name = "ukob_register",
     srcs = glob(["src/main/java/se/tink/backend/aggregation/UkobRegisterCommand.java"]),
     main_class = "se.tink.backend.aggregation.UkobRegisterCommand",
     visibility = ["//visibility:public"],

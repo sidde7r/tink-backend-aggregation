@@ -1,14 +1,14 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "account-identifier",
+    name = "account_identifier",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/date",
         "//src/libraries/log",
         "//src/libraries/uuid",
-        "//src/libraries/giro_validation:giro-validation",
+        "//src/libraries/giro_validation",
 
         # Guava
         "//third_party:com_google_guava_guava",
@@ -29,11 +29,11 @@ java_library(
 )
 
 junit_test(
-    name = "account-identifier-test",
+    name = "account_identifier_test",
     srcs = glob(["src/test/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        ":account-identifier",
+        "//src/libraries/account_identifier",
         "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",

@@ -9,11 +9,11 @@ java_library(
         "//src/agents-lib",
         "//src/aggregation/api",
         "//src/aggregation/lib",
-        "//src/aggregationcontroller-api",
+        "//src/aggregationcontroller_api",
         "//src/libraries/auth",
         "//src/libraries/discovery",
         "//src/libraries/draining",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/dropwizard_utils",
         "//src/libraries/metrics",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
@@ -27,8 +27,8 @@ java_binary(
     srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data",
-        "//etc:development-aggregation-server",
-        "//etc:development-minikube-aggregation-server",
+        "//etc:development_aggregation_server",
+        "//etc:development_minikube_aggregation_server",
     ],
     main_class = "se.tink.backend.aggregation.AggregationServiceContainer",
     visibility = ["//visibility:public"],
@@ -39,12 +39,12 @@ java_binary(
         "//src/agents-lib",
         "//src/aggregation/api",
         "//src/aggregation/lib",
-        "//src/aggregationcontroller-api",
+        "//src/aggregationcontroller_api",
         "//src/libraries/auth",
         "//src/libraries/console_json_logger",
         "//src/libraries/discovery",
         "//src/libraries/draining",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/dropwizard_utils",
         "//src/libraries/metrics",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
@@ -54,10 +54,10 @@ java_binary(
 )
 
 genrule(
-    name = "renamed-aggregation-deploy-jar",
+    name = "renamed_aggregation_deploy",
     # Implicitly built, see: https://docs.bazel.build/versions/master/be/java.html#java_binary_implicit_outputs
     srcs = [":aggregation_deploy.jar"],
-    outs = ["aggregation-service.jar"],
+    outs = ["aggregation_service.jar"],
     cmd = "cp $(location :aggregation_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )

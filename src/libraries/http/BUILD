@@ -1,5 +1,5 @@
 java_library(
-    name = "http-utils",
+    name = "http_utils",
     srcs = glob(["src/main/java/se/tink/libraries/http/utils/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -9,7 +9,7 @@ java_library(
 )
 
 java_library(
-    name = "http-annotations",
+    name = "http_annotations",
     srcs = glob(["src/main/java/se/tink/libraries/http/annotations/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [

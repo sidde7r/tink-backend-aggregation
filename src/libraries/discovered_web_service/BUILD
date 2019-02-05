@@ -4,7 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/discovery",
-        "//src/libraries/http_client:http-client",
+        "//src/libraries/http_client",
         "//src/libraries/log",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_http_client_google_http_client",

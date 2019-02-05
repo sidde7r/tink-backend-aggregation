@@ -1,9 +1,9 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "jersey-utils",
+    name = "jersey_utils",
     srcs = glob(["src/main/**/*.java"]),
-    data = ["//data:tink-ca"],
+    data = ["//data:tink_ca"],
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/net",
@@ -20,10 +20,10 @@ java_library(
 )
 
 junit_test(
-    name = "jersey-utils-test",
+    name = "jersey_utils_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":jersey-utils",
+        "//src/libraries/jersey_utils",
         "//src/libraries/net",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",

@@ -14,10 +14,10 @@ java_library(
 )
 
 junit_test(
-    name = "uuid-test",
+    name = "uuid_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":uuid",
+        "//src/libraries/uuid",
         "//third_party:org_assertj_assertj_core",
     ],
 )

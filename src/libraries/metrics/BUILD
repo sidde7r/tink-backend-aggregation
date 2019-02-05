@@ -37,21 +37,19 @@ java_library(
 )
 
 junit_test(
-    name = "metrics-test",
+    name = "metrics_test",
     srcs = glob(["src/test/**/*.java"]),
     runtime_deps = [
         "//third_party:net_bytebuddy_byte_buddy",
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        ":metrics",
-        "//third_party:junit_junit",
-        "//third_party:org_assertj_assertj_core",
+        "//src/libraries/metrics",
         "//third_party:com_google_guava_guava",
-
-        # Prometheus
         "//third_party:io_prometheus_simpleclient",
         "//third_party:io_prometheus_simpleclient_common",
+        "//third_party:junit_junit",
+        "//third_party:org_assertj_assertj_core",
         "//third_party:org_mockito_mockito_core",
     ],
 )
