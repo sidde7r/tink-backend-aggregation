@@ -66,7 +66,7 @@ java_library(
         "//src/libraries/transfer:rpc",
         "//src/libraries/user:rpc",
         "//src/libraries/uuid",
-        "//src/provider-configuration-api",
+        "//src/provider-configuration/api",
         "//third_party:com_amazonaws_aws_java_sdk_s3",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//third_party:com_auth0_java_jwt",

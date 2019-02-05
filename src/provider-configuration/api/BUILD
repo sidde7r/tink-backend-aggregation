@@ -1,5 +1,5 @@
 java_library(
-    name = "provider-configuration-api",
+    name = "api",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
