@@ -58,6 +58,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
+import java.io.EOFException;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -148,13 +149,30 @@ public final class TinkApacheHttpClient4Handler extends TerminatingClientHandler
             Object redirects = context.getAttribute(DefaultRedirectStrategy.REDIRECT_LOCATIONS);
             r.getProperties().put(DefaultRedirectStrategy.REDIRECT_LOCATIONS, redirects);
 
-            if (!r.hasEntity()) {
+            if (!isAvailable(r)) {
+                r.close();
+                r.setEntityInputStream(new ByteArrayInputStream(new byte[0]));
+            } else if (!r.hasEntity()) {
                 r.bufferEntity();
                 r.close();
             }
+
             return r;
         } catch (Exception e) {
             throw new HttpClientException(e, null);
+        }
+    }
+
+    private boolean isAvailable(ClientResponse r) {
+        try {
+            return r.hasEntity();
+        } catch (ClientHandlerException e) {
+            Throwable t = e.getCause();
+            if (t != null && t instanceof EOFException) {
+                return false;
+            }
+
+            throw e;
         }
     }
 
