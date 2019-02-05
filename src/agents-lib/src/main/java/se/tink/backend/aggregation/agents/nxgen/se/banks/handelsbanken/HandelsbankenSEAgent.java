@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.authenticator.HandelsbankenSECardDeviceAuthenticator;
@@ -33,27 +34,18 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
-
-import java.util.Optional;
 
 public class HandelsbankenSEAgent
         extends HandelsbankenAgent<HandelsbankenSEApiClient, HandelsbankenSEConfiguration> {
 
-    public HandelsbankenSEAgent(CredentialsRequest request, AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
-        // useUniqueIdWithoutClearingNumber
-        // temporary method to feature toggle what unique id to use for Handelsbanken SE
-        // this support should be removed once all clusters have been migrated to use
-        // Handelsbanken internal account number for transactional accounts and account
-        // based credit cards (allkort)
-        // Trigger new release // Ove
-        // *** the request costructor argument
-        super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration(request));
+    public HandelsbankenSEAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair, new HandelsbankenSEConfiguration());
     }
 
     @Override
@@ -72,16 +64,21 @@ public class HandelsbankenSEAgent
         HandelsbankenAutoAuthenticator autoAuthenticator = constructAutoAuthenticator();
 
         return new TypedAuthenticator[] {
-                constructAutoAuthenticationController(
-                        new HandelsbankenSECardDeviceAuthenticator(bankClient,
-                                handelsbankenPersistentStorage,
-                                new SupplementalInformationController(context, credentials),
-                                handelsbankenConfiguration, autoAuthenticator),
-                        autoAuthenticator),
-                new BankIdAuthenticationController<>(context,
-                        new HandelsbankenBankIdAuthenticator(bankClient,
-                                credentials, handelsbankenPersistentStorage,
-                                handelsbankenSessionStorage))
+            constructAutoAuthenticationController(
+                    new HandelsbankenSECardDeviceAuthenticator(
+                            bankClient,
+                            handelsbankenPersistentStorage,
+                            new SupplementalInformationController(context, credentials),
+                            handelsbankenConfiguration,
+                            autoAuthenticator),
+                    autoAuthenticator),
+            new BankIdAuthenticationController<>(
+                    context,
+                    new HandelsbankenBankIdAuthenticator(
+                            bankClient,
+                            credentials,
+                            handelsbankenPersistentStorage,
+                            handelsbankenSessionStorage))
         };
     }
 
@@ -89,54 +86,56 @@ public class HandelsbankenSEAgent
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController(
             HandelsbankenSEApiClient bankClient,
             HandelsbankenSessionStorage handelsbankenSessionStorage) {
-        return Optional
-                .of(new InvestmentRefreshController(metricRefreshController, updateController,
-                                new HandelsbankenSEInvestmentFetcher(bankClient,
-                                        handelsbankenSessionStorage, credentials)
-                        )
-                );
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new HandelsbankenSEInvestmentFetcher(
+                                bankClient, handelsbankenSessionStorage, credentials)));
     }
 
     @Override
     protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController(
-            HandelsbankenSEApiClient client,
-            HandelsbankenSessionStorage sessionStorage) {
-        return Optional.of(new EInvoiceRefreshController(
-                metricRefreshController,
-                new HandelsbankenSEEInvoiceFetcher(client, sessionStorage)
-        ));
+            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
+        return Optional.of(
+                new EInvoiceRefreshController(
+                        metricRefreshController,
+                        new HandelsbankenSEEInvoiceFetcher(client, sessionStorage)));
     }
 
     @Override
     protected Optional<TransferController> constructTransferController(
             HandelsbankenSEApiClient client,
-            HandelsbankenSessionStorage sessionStorage, AgentContext context) {
+            HandelsbankenSessionStorage sessionStorage,
+            AgentContext context) {
 
-        HandelsbankenSEPaymentExecutor paymentExecutor = new HandelsbankenSEPaymentExecutor(client,
-                sessionStorage);
+        HandelsbankenSEPaymentExecutor paymentExecutor =
+                new HandelsbankenSEPaymentExecutor(client, sessionStorage);
 
         Catalog catalog = context.getCatalog();
-        return Optional.of(new TransferController(
-                paymentExecutor,
-                new HandelsbankenSEBankTransferExecutor(
-                        client,
-                        sessionStorage,
-                        new ExecutorExceptionResolver(catalog),
-                        new TransferMessageFormatter(
-                                catalog,
-                                TransferMessageLengthConfig.createWithMaxLength(
-                                        14,
-                                        12),
-                                new StringNormalizerSwedish(",.-?!/+"))),
-                new HandelsbankenSEEInvoiceExecutor(client, sessionStorage),
-                paymentExecutor));
+        return Optional.of(
+                new TransferController(
+                        paymentExecutor,
+                        new HandelsbankenSEBankTransferExecutor(
+                                client,
+                                sessionStorage,
+                                new ExecutorExceptionResolver(catalog),
+                                new TransferMessageFormatter(
+                                        catalog,
+                                        TransferMessageLengthConfig.createWithMaxLength(14, 12),
+                                        new StringNormalizerSwedish(",.-?!/+"))),
+                        new HandelsbankenSEEInvoiceExecutor(client, sessionStorage),
+                        paymentExecutor));
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController(
-            HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
-        return Optional.of(new TransferDestinationRefreshController(metricRefreshController,
-                new HandelsbankenSETransferDestinationFetcher(client, sessionStorage)));
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController(
+                    HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
+        return Optional.of(
+                new TransferDestinationRefreshController(
+                        metricRefreshController,
+                        new HandelsbankenSETransferDestinationFetcher(client, sessionStorage)));
     }
 
     @Override
@@ -162,7 +161,6 @@ public class HandelsbankenSEAgent
     protected TransactionPaginator<CreditCardAccount> constructCreditCardTransactionPaginator(
             HandelsbankenSEApiClient client, HandelsbankenSessionStorage sessionStorage) {
         return new TransactionKeyPaginationController<>(
-                new HandelsbankenSECreditCardTransactionPaginator(client, sessionStorage)
-        );
+                new HandelsbankenSECreditCardTransactionPaginator(client, sessionStorage));
     }
 }

@@ -57,35 +57,22 @@ import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.ha
 
 public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
-    // useUniqueIdWithoutClearingNumber
-    // temporary method to feature toggle what unique id to use for Handelsbanken SE
-    // this support should be removed once all clusters have been migrated to use
-    // Handelsbanken internal account number for transactional accounts and account
-    // based credit cards (allkort)
-    private final boolean uniqueIdWithoutClearingNumber;
-
     // local cache for transactions response since SHB has changed their tx-fetching
     // we get all tx in one request today, no need to paginate since this is all we get
     // the url as String is the key
     private final Map<String, TransactionsSEResponse> transactionsCache = new HashMap<>();
-    private final Map<String, CreditCardSETransactionsResponse> creditCardransactionsCache = new HashMap<>();
-    private final Map<String, PendingTransactionsResponse> pendingTransactionsCache = new HashMap<>();
+    private final Map<String, CreditCardSETransactionsResponse> creditCardTransactionsCache =
+            new HashMap<>();
+    private final Map<String, PendingTransactionsResponse> pendingTransactionsCache =
+            new HashMap<>();
 
-    public HandelsbankenSEApiClient(TinkHttpClient client,
-            HandelsbankenSEConfiguration configuration) {
+    public HandelsbankenSEApiClient(
+            TinkHttpClient client, HandelsbankenSEConfiguration configuration) {
         super(client, configuration);
-
-        // useUniqueIdWithoutClearingNumber
-        // temporary method to feature toggle what unique id to use for Handelsbanken SE
-        // this support should be removed once all clusters have been migrated to use
-        // Handelsbanken internal account number for transactional accounts and account
-        // based credit cards (allkort)
-        this.uniqueIdWithoutClearingNumber = configuration.useUniqueIdentifierWithoutClearing();
     }
 
     public InitBankIdResponse initBankId(
-            EntryPointResponse entryPoint,
-            InitBankIdRequest initBankIdRequest) {
+            EntryPointResponse entryPoint, InitBankIdRequest initBankIdRequest) {
         return createPostRequest(entryPoint.toBankIdLogin())
                 .post(InitBankIdResponse.class, initBankIdRequest);
     }
@@ -98,10 +85,11 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
         return createPostRequest(authenticate.toAuthorize()).post(AuthorizeResponse.class);
     }
 
-    public CreateProfileResponse createProfile(InitNewProfileResponse initNewProfile,
+    public CreateProfileResponse createProfile(
+            InitNewProfileResponse initNewProfile,
             EncryptedUserCredentialsRequest encryptedUserCredentialsRequest) {
-        return createPostRequest(initNewProfile.toCreateProfile()).post(CreateProfileResponse.class,
-                encryptedUserCredentialsRequest);
+        return createPostRequest(initNewProfile.toCreateProfile())
+                .post(CreateProfileResponse.class, encryptedUserCredentialsRequest);
     }
 
     public CheckAgreementResponse checkAgreement(CommitProfileResponse commitProfile) {
@@ -120,8 +108,9 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
             return transactionsCache.get(txUrl);
         }
 
-        TransactionsSEResponse txResponse = createRequest(account.getAccountTransactionsUrl())
-                .get(TransactionsSEResponse.class);
+        TransactionsSEResponse txResponse =
+                createRequest(account.getAccountTransactionsUrl())
+                        .get(TransactionsSEResponse.class);
         transactionsCache.put(txUrl, txResponse);
 
         return txResponse;
@@ -136,8 +125,8 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
             return pendingTransactionsCache.get(txUrl);
         }
 
-        PendingTransactionsResponse txResponse = createRequest(pendingUrl)
-                .get(PendingTransactionsResponse.class);
+        PendingTransactionsResponse txResponse =
+                createRequest(pendingUrl).get(PendingTransactionsResponse.class);
         pendingTransactionsCache.put(txUrl, txResponse);
 
         return txResponse;
@@ -154,15 +143,17 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .map(url -> createRequest(url).get(EInvoiceDetails.class));
     }
 
-    public Optional<ApproveEInvoiceResponse> approveEInvoice(EInvoiceDetails eInvoiceDetails,
-            ApproveEInvoiceRequest request) {
-        return eInvoiceDetails.toApproval()
+    public Optional<ApproveEInvoiceResponse> approveEInvoice(
+            EInvoiceDetails eInvoiceDetails, ApproveEInvoiceRequest request) {
+        return eInvoiceDetails
+                .toApproval()
                 .map(url -> createPostRequest(url).post(ApproveEInvoiceResponse.class, request));
     }
 
     public Optional<SignEInvoicesResponse> signEInvoice(
             ApproveEInvoiceResponse approveEInvoiceResponse) {
-        return approveEInvoiceResponse.toSignature()
+        return approveEInvoiceResponse
+                .toSignature()
                 .map(url -> createPostRequest(url).post(SignEInvoicesResponse.class));
     }
 
@@ -171,20 +162,23 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .get(HandelsbankenSEPaymentContext.class);
     }
 
-    public Optional<PaymentDetails> createPayment(HandelsbankenSEPaymentContext paymentContext,
-            CreatePaymentRequest request) {
-        return paymentContext.toCreate()
+    public Optional<PaymentDetails> createPayment(
+            HandelsbankenSEPaymentContext paymentContext, CreatePaymentRequest request) {
+        return paymentContext
+                .toCreate()
                 .map(url -> createPostRequest(url).post(PaymentDetails.class, request));
     }
 
-    public Optional<UpdatablePayment> updatePayment(UpdatablePayment updatablePayment,
-            UpdatePaymentRequest request) {
-        return updatablePayment.toUpdate()
+    public Optional<UpdatablePayment> updatePayment(
+            UpdatablePayment updatablePayment, UpdatePaymentRequest request) {
+        return updatablePayment
+                .toUpdate()
                 .map(url -> createPostRequest(url).put(updatablePayment.getClass(), request));
     }
 
     public Optional<PaymentDetails> signPayment(PaymentDetails paymentDetails) {
-        return paymentDetails.toSignature()
+        return paymentDetails
+                .toSignature()
                 .map(url -> createPostRequest(url).post(PaymentDetails.class));
     }
 
@@ -194,15 +188,17 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     @Override
-    public CreditCardSETransactionsResponse creditCardTransactions(HandelsbankenCreditCard creditCard) {
+    public CreditCardSETransactionsResponse creditCardTransactions(
+            HandelsbankenCreditCard creditCard) {
 
         String txUrl = creditCard.getCardTransactionsUrl().get();
-        if (creditCardransactionsCache.containsKey(txUrl)) {
-            return creditCardransactionsCache.get(txUrl);
+        if (creditCardTransactionsCache.containsKey(txUrl)) {
+            return creditCardTransactionsCache.get(txUrl);
         }
 
-        CreditCardSETransactionsResponse txResponse = creditCardTransactions(creditCard.getCardTransactionsUrl());
-        creditCardransactionsCache.put(txUrl, txResponse);
+        CreditCardSETransactionsResponse txResponse =
+                creditCardTransactions(creditCard.getCardTransactionsUrl());
+        creditCardTransactionsCache.put(txUrl, txResponse);
 
         return txResponse;
     }
@@ -213,7 +209,8 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     public Optional<PaymentDetails> paymentDetails(PendingTransaction pendingTransaction) {
-        return pendingTransaction.toPaymentDetails()
+        return pendingTransaction
+                .toPaymentDetails()
                 .map(url -> createRequest(url).get(PaymentDetails.class));
     }
 
@@ -224,29 +221,34 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     public Optional<FundHoldingsResponse> fundHoldings(CustodyAccount custodyAccount) {
-        return custodyAccount.toFundHoldings()
+        return custodyAccount
+                .toFundHoldings()
                 .map(url -> createRequest(url).get(FundHoldingsResponse.class));
     }
 
     public Optional<CustodyAccountResponse> custodyAccount(CustodyAccount custodyAccount) {
-        return custodyAccount.toCustodyAccount()
+        return custodyAccount
+                .toCustodyAccount()
                 .map(url -> createRequest(url).get(CustodyAccountResponse.class));
     }
 
     public Optional<PensionDetailsResponse> pensionDetails(CustodyAccount custodyAccount) {
-        return custodyAccount.toPensionDetails()
+        return custodyAccount
+                .toPensionDetails()
                 .map(url -> createRequest(url).get(PensionDetailsResponse.class));
     }
 
     public Optional<SecurityHoldingContainer> securityHolding(SecurityHolding securityHolding) {
-        return securityHolding.toSecurityHolding()
+        return securityHolding
+                .toSecurityHolding()
                 .map(url -> createRequest(url).get(SecurityHoldingContainer.class));
     }
 
     public Optional<HandelsbankenSEFundAccountHoldingDetail> fundHoldingDetail(
             HandelsbankenSEPensionFund pensionFund) {
-        return pensionFund.toFundHoldingDetail().map(url ->
-                createRequest(url).get(HandelsbankenSEFundAccountHoldingDetail.class));
+        return pensionFund
+                .toFundHoldingDetail()
+                .map(url -> createRequest(url).get(HandelsbankenSEFundAccountHoldingDetail.class));
     }
 
     public HandelsbankenSETransferContext transferContext(
@@ -255,8 +257,8 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .get(HandelsbankenSETransferContext.class);
     }
 
-    public TransferSpecificationResponse createTransfer(Creatable creatable,
-            TransferSpecificationRequest transferSpecification) {
+    public TransferSpecificationResponse createTransfer(
+            Creatable creatable, TransferSpecificationRequest transferSpecification) {
         try {
             return createPostRequest(creatable.toCreate())
                     .post(TransferSpecificationResponse.class, transferSpecification);
@@ -267,8 +269,7 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
     }
 
     public TransferSignatureResponse signTransfer(Signable signable) {
-        return createPostRequest(signable.toSignature())
-                .post(TransferSignatureResponse.class);
+        return createPostRequest(signable.toSignature()).post(TransferSignatureResponse.class);
     }
 
     public ValidateRecipientResponse validateRecipient(
@@ -278,10 +279,12 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .post(ValidateRecipientResponse.class, validateRecipient);
     }
 
-    public PaymentRecipient lookupRecipient(HandelsbankenSEPaymentContext paymentContext,
-            String giroNumberFormatted) {
+    public PaymentRecipient lookupRecipient(
+            HandelsbankenSEPaymentContext paymentContext, String giroNumberFormatted) {
         return createRequest(
-                paymentContext.toLookupRecipient().parameter(GIRO_NUMBER, giroNumberFormatted))
+                        paymentContext
+                                .toLookupRecipient()
+                                .parameter(GIRO_NUMBER, giroNumberFormatted))
                 .get(PaymentRecipient.class);
     }
 
@@ -297,15 +300,5 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
 
     public interface Signable {
         URL toSignature();
-    }
-
-    // useUniqueIdWithoutClearingNumber
-    // temporary method to feature toggle what unique id to use for Handelsbanken SE
-    // this support should be removed once all clusters have been migrated to use
-    // Handelsbanken internal account number for transactional accounts and account
-    // based credit cards (allkort)
-    @Override
-    public boolean useUniqueIdWithoutClearingNumber() {
-        return uniqueIdWithoutClearingNumber;
     }
 }

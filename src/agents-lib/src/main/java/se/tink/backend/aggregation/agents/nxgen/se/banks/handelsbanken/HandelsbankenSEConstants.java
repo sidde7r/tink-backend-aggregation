@@ -65,13 +65,6 @@ public class HandelsbankenSEConstants {
 
         public static final String CREDIT_CARD_IGNORE_TYPE = "A";
 
-        // useUniqueIdWithoutClearingNumber
-        // temporary method to feature toggle what unique id to use for Handelsbanken SE
-        // this support should be removed once all clusters have been migrated to use
-        // Handelsbanken internal account number for transactional accounts and account
-        // based credit cards (allkort)
-        public static final String WITHOUT_CLEARING_NUMBER = "WITHOUT_CLEARING_NUMBER";
-
         public static final class Transactions {
             public static final Pattern PENDING_PATTERN = Pattern.compile("^prel\\.?(\\s)?", Pattern.CASE_INSENSITIVE);
         }
