@@ -3,9 +3,9 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agents/api",
-        "//src/agents/models",
         "//src/aggregation/api",
+        "//src/integration/api",
+        "//src/integration/models",
         "//src/libraries/account:rpc",
         "//src/libraries/amount",
         "//src/libraries/api_annotations:api-annotations",
