@@ -2,7 +2,7 @@ package(default_visibility = ["//visibility:public"])
 
 alias(
     name = "aggregation",
-    actual = "//src/aggregation-service:aggregation",
+    actual = "//src/aggregation/service:aggregation",
 )
 
 alias(

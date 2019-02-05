@@ -1,5 +1,5 @@
 java_library(
-    name = "aggregation-service",
+    name = "service",
     srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data",
@@ -7,8 +7,8 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/agents-lib",
-        "//src/aggregation-api",
-        "//src/aggregation-lib",
+        "//src/aggregation/api",
+        "//src/aggregation/lib",
         "//src/aggregationcontroller-api",
         "//src/libraries/auth",
         "//src/libraries/discovery",
@@ -37,8 +37,8 @@ java_binary(
     ],
     deps = [
         "//src/agents-lib",
-        "//src/aggregation-api",
-        "//src/aggregation-lib",
+        "//src/aggregation/api",
+        "//src/aggregation/lib",
         "//src/aggregationcontroller-api",
         "//src/libraries/auth",
         "//src/libraries/console_json_logger",
