@@ -1,5 +1,5 @@
 java_library(
-    name = "provider-configuration-service",
+    name = "service",
     srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data",
@@ -15,8 +15,8 @@ java_library(
         "//src/libraries/provider:enums",
         "//src/libraries/repository",
         "//src/libraries/serialization",
-        "//src/provider-configuration-api",
-        "//src/provider-configuration-lib",
+        "//src/provider-configuration/api",
+        "//src/provider-configuration/lib",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_core",
@@ -49,8 +49,8 @@ java_binary(
         "//src/libraries/provider:enums",
         "//src/libraries/repository",
         "//src/libraries/serialization",
-        "//src/provider-configuration-api",
-        "//src/provider-configuration-lib",
+        "//src/provider-configuration/api",
+        "//src/provider-configuration/lib",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_core",

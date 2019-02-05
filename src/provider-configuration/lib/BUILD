@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "provider-configuration-lib",
+    name = "lib",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -19,7 +19,7 @@ java_library(
         "//src/libraries/repository",
         "//src/libraries/serialization",
         "//src/libraries/service_version:service-version",
-        "//src/provider-configuration-api",
+        "//src/provider-configuration/api",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
@@ -40,7 +40,7 @@ java_library(
 )
 
 junit_test(
-    name = "provider-configuration-lib-test",
+    name = "lib-test",
     srcs = glob(["src/test/**/*.java"]),
     data = [
         "//data:provider-configuration-test",
@@ -53,8 +53,8 @@ junit_test(
         "//src/libraries/field:rpc",
         "//src/libraries/metrics",
         "//src/libraries/pair",
-        "//src/provider-configuration-api",
-        "//src/provider-configuration-lib",
+        "//src/provider-configuration/api",
+        "//src/provider-configuration/lib",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
