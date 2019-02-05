@@ -5,8 +5,8 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agents/api",
-        "//src/agents/models",
+        "//src/integration/api",
+        "//src/integration/models",
         "//src/libraries/account_identifier:account-identifier",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/credentials:service",
@@ -47,8 +47,8 @@ junit_test(
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
-        "//src/agents/api",
         "//src/aggregation/api",
+        "//src/integration/api",
         "//src/libraries/api_annotations:api-annotations",
         "//src/libraries/api_annotations:api-annotations-testlib-test",
         "//src/libraries/credentials:service",

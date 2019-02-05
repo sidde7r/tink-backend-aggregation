@@ -20,10 +20,10 @@ junit_test(
     deps = [
         "//src/agents-lib",
         "//src/agents-lib:agents",
-        "//src/agents/api",
-        "//src/agents/models",
         "//src/aggregation/api",
         "//src/aggregation/lib",
+        "//src/integration/api",
+        "//src/integration/models",
         "//src/aggregationcontroller-api",
         "//src/libraries/account:enums",
         "//src/libraries/account_identifier:account-identifier",
