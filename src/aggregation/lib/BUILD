@@ -16,7 +16,7 @@ java_library(
     deps = [
         "//po:i18n",
         "//src/agents-lib",
-        "//src/agents-lib:agents",
+        "//src/integration/agents",
         "//src/aggregation/api",
         "//src/integration/api",
         "//src/integration/models",
@@ -124,7 +124,7 @@ junit_test(
     ],
     deps = [
         "//src/agents-lib",
-        "//src/agents-lib:agents",
+        "//src/integration/agents",
         "//src/aggregation/api",
         "//src/aggregation/lib",
         "//src/aggregationcontroller-api",
