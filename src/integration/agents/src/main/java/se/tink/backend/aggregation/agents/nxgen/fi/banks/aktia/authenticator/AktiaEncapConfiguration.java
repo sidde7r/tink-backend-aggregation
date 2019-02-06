@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator;
 
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapConfiguration;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapConfiguration;
 
 public class AktiaEncapConfiguration implements EncapConfiguration {
     @Override
     public String getApplicationVersion() {
-        return "115";
+        return "174";
     }
 
     @Override

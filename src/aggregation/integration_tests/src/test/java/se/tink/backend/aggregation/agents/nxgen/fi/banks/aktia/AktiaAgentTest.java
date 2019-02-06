@@ -1,48 +1,27 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia;
 
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.NextGenerationBaseAgentTest;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.utils.CurrencyConstants;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-public class AktiaAgentTest extends NextGenerationBaseAgentTest<AktiaAgent> {
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
+@Ignore
+public class AktiaAgentTest {
+    private static final String USERNAME = "USERNAME";
+    private static final String PASSWORD = "PASSWORD";
 
-    private Credentials credentials;
-
-    public AktiaAgentTest() {
-        super(AktiaAgent.class);
-    }
-
-    @Before
-    public void setup() {
-        credentials = new Credentials();
-        credentials.setStatus(CredentialsStatus.CREATED);
-        credentials.setUsername(USERNAME);
-    }
-
-    @Test
-    public void testPasswordLogin() throws Exception {
-        credentials.setPassword(PASSWORD);
-        credentials.setType(CredentialsTypes.PASSWORD);
-
-        testLogin(credentials);
-    }
+    private final AgentIntegrationTest.Builder builder =
+            new AgentIntegrationTest.Builder("fi", "fi-aktia-codecard")
+                    .addCredentialField(Field.Key.USERNAME, USERNAME)
+                    .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                    .doLogout(false)
+                    .expectLoggedIn(false)
+                    .loadCredentialsBefore(true)
+                    .saveCredentialsAfter(true);
 
     @Test
     public void testRefresh() throws Exception {
-        credentials.setPassword(PASSWORD);
-        credentials.setType(CredentialsTypes.PASSWORD);
-
-        testRefresh(credentials);
-    }
-
-    @Override
-    public String getCurrency() {
-        return CurrencyConstants.FI.getCode();
+        builder.build()
+                .testRefresh();
     }
 }

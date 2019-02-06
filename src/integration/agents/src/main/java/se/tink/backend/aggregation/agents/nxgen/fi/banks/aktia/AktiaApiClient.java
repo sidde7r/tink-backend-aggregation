@@ -1,95 +1,183 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.LoginDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.OtpChallengeAuthenticationRequest;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.OtpChallengeAuthenticationResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.OtpDevicePinningRequest;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.OtpDevicePinningResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.rpc.AccountDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.rpc.AccountsSummaryResponse;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.agents.rpc.Credentials;
-
+import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
-import java.util.Collections;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.Oauth2Request;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationCompleteRequest;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationInitResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationOtpRequest;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationOtpResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.entities.AccountSummaryListEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.rpc.AccountsSummaryResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.fetcher.transactionalaccount.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class AktiaApiClient {
-    private final TinkHttpClient client;
-    private final Credentials credentials;
+    private final TinkHttpClient httpClient;
+    private OAuth2Token accessToken;
 
-    private AktiaApiClient(TinkHttpClient client, Credentials credentials) {
-        this.client = client;
-        this.credentials = credentials;
+    public AktiaApiClient(TinkHttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
-    public static AktiaApiClient createApiClient(TinkHttpClient client, Credentials credentials) {
-        return new AktiaApiClient(client, credentials);
+    private String getFirstHeader(HttpResponse response, String headerKey) {
+        MultivaluedMap<String, String> headers = response.getHeaders();
+        return headers.getFirst(headerKey);
     }
 
-    // == START Login ==
-    public void authenticate(String username, String password) {
-        MultivaluedMap<String, String> request = new MultivaluedMapImpl();
-        request.put("grant_type", Collections.singletonList("password"));
-        request.put("scope", Collections.singletonList("aktiaUser"));
-        request.put("password", Collections.singletonList(password));
-        request.put("username", Collections.singletonList(username));
+    public RegistrationInitResponse registrationInit(String username, String password)
+            throws AuthenticationException {
+        Oauth2Request requestBody = new Oauth2Request(AktiaConstants.Oauth2Scopes.REGISTRATION_INIT,
+                username,
+                password);
 
-        AuthenticationResponse response = client.request(AktiaConstants.Url.AUTHENTICATE)
-                .header("Authorization", AktiaConstants.Session.AUTHORIZATION_HEADER)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(AuthenticationResponse.class, request);
+        try {
+            HttpResponse response = httpClient.request(AktiaConstants.Url.OAUTH2_REGISTRATION_INIT)
+                    .addBasicAuth(AktiaConstants.HttpHeaders.BASIC_AUTH_USERNAME,
+                            AktiaConstants.HttpHeaders.BASIC_AUTH_PASSWORD)
+                    .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                    .post(HttpResponse.class, requestBody);
 
-        // Set the Authorization header for the session
-        client.addPersistentHeader("Authorization", response.getTokenType() + " " + response.getAccessToken());
+            RegistrationInitResponse registrationInitResponse = response.getBody(
+                    RegistrationInitResponse.class);
+
+            String loginStatus = getFirstHeader(response, AktiaConstants.HttpHeaders.LOGIN_STATUS);
+            registrationInitResponse.setLoginStatus(loginStatus);
+
+            String otpCard = getFirstHeader(response, AktiaConstants.HttpHeaders.OTP_CARD);
+            registrationInitResponse.setOtpCard(otpCard);
+
+            String otpIndex = getFirstHeader(response, AktiaConstants.HttpHeaders.OTP_INDEX);
+            registrationInitResponse.setOtpIndex(otpIndex);
+
+            return registrationInitResponse;
+        } catch (HttpResponseException hre) {
+            HttpResponse response = hre.getResponse();
+            if (response.getStatus() != HttpStatus.SC_BAD_REQUEST) {
+                throw hre;
+            }
+
+            String loginStatus = getFirstHeader(response, AktiaConstants.HttpHeaders.LOGIN_STATUS);
+            if (AktiaConstants.ErrorCodes.INVALID_CREDENTIALS.equalsIgnoreCase(loginStatus)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            throw hre;
+        }
     }
 
-    public LoginDetailsResponse loginDetails() {
-        return client.request(AktiaConstants.Url.LOGIN_CHALLENGE)
-                .get(LoginDetailsResponse.class);
+    public RegistrationOtpResponse registrationOtpChallengeResponse(OAuth2Token token, String otpResponse) {
+        RegistrationOtpRequest requestBody = new RegistrationOtpRequest(otpResponse);
+
+        return httpClient.request(AktiaConstants.Url.REGISTRATION_INIT)
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_JSON)
+                .addBearerToken(token)
+                .post(RegistrationOtpResponse.class, requestBody);
     }
 
-    public OtpChallengeAuthenticationResponse finalizeChallenge(OtpChallengeAuthenticationRequest request) {
-        return client.request(AktiaConstants.Url.FINALIZE_CHALLENGE)
-                .post(OtpChallengeAuthenticationResponse.class, request);
-    }
-    // == END Login ==
+    public boolean registrationComplete(OAuth2Token token, String encapToken) {
+        RegistrationCompleteRequest requestBody = new RegistrationCompleteRequest(encapToken);
 
-    // == START Pinning ==
-    public OtpDevicePinningResponse deviceRegistration(OtpDevicePinningRequest request) {
-        return client.request(AktiaConstants.Url.DEVICE_REGISTRATION)
-                .post(OtpDevicePinningResponse.class, request);
-    }
-    // == END Pinning ==
+        HttpResponse response = httpClient.request(AktiaConstants.Url.REGISTRATION_COMPLETE)
+                .accept(MediaType.WILDCARD)
+                .type(MediaType.APPLICATION_JSON)
+                .addBearerToken(token)
+                .post(HttpResponse.class, requestBody);
 
-    // == START Accounts ==
-    public AccountsSummaryResponse accountsSummary() {
-        return client.request(AktiaConstants.Url.SUMMARY)
-                .get(AccountsSummaryResponse.class);
+        return response.getStatus() == HttpStatus.SC_OK;
     }
 
-    public AccountDetailsResponse accountDetails(String accountId) {
-        return client.request(AktiaConstants.Url.ACCOUNT_DETAILS.parameter("accountId", accountId))
-                .get(AccountDetailsResponse.class);
+    public AuthenticationInitResponse authenticationInit(String encapToken) {
+        Oauth2Request requestBody = new Oauth2Request(AktiaConstants.Oauth2Scopes.AUTHENTICATION_INIT,
+                AktiaConstants.HttpParameters.OAUTH2_USERNAME,
+                encapToken);
+
+        HttpResponse response = httpClient.request(AktiaConstants.Url.OAUTH2_AUTHENTICATION_INIT)
+                .addBasicAuth(AktiaConstants.HttpHeaders.BASIC_AUTH_USERNAME,
+                        AktiaConstants.HttpHeaders.BASIC_AUTH_PASSWORD)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(HttpResponse.class, requestBody);
+
+        AuthenticationInitResponse authenticationInitResponse = response.getBody(
+                AuthenticationInitResponse.class);
+
+        String loginStatus = getFirstHeader(response, AktiaConstants.HttpHeaders.LOGIN_STATUS);
+        authenticationInitResponse.setLoginStatus(loginStatus);
+
+        return authenticationInitResponse;
     }
 
-    public String transactions(String accountId) {
-        return client.request(AktiaConstants.Url.TRANSACTIONS.parameter("accountId", accountId))
+    public Optional<String> getAuthenticationId(OAuth2Token token) {
+        AuthenticationIdResponse authenticationIdResponse = httpClient.request(AktiaConstants.Url.AUTHENTICATION_INIT)
+                .body("{}", MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.WILDCARD)
+                .addBearerToken(token)
+                .post(AuthenticationIdResponse.class);
+
+        return authenticationIdResponse.getId();
+    }
+
+    public OAuth2Token getAndSaveAuthenticatedToken(String encapToken) {
+        Oauth2Request requestBody = new Oauth2Request(AktiaConstants.Oauth2Scopes.AUTHENTICATION_COMPLETE,
+                AktiaConstants.HttpParameters.OAUTH2_USERNAME,
+                encapToken);
+
+        TokenResponse token = httpClient.request(AktiaConstants.Url.OAUTH2_AUTHENTICATION_COMPLETE)
+                .addBasicAuth(AktiaConstants.HttpHeaders.BASIC_AUTH_USERNAME,
+                        AktiaConstants.HttpHeaders.BASIC_AUTH_PASSWORD)
+                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .post(TokenResponse.class, requestBody);
+
+        // Save it for normal api access.
+        this.accessToken = token.getToken();
+
+        return this.accessToken;
+    }
+
+    public String getLoginDetails() {
+        return httpClient.request(AktiaConstants.Url.LOGIN_DETAILS)
+                .addBearerToken(accessToken)
+                .accept(MediaType.APPLICATION_JSON)
                 .get(String.class);
     }
 
-    public String productsSummary() {
-        return client.request(AktiaConstants.Url.SUMMARY_2)
-                .get(String.class);
+    public List<AccountSummaryListEntity> getAccountList() {
+        return httpClient.request(AktiaConstants.Url.ACCOUNT_LIST_0)
+                .addBearerToken(accessToken)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(AccountsSummaryResponse.class)
+                .getAccountSummary()
+                .getAccountSummaryList();
     }
-    // == END Accounts ==
 
-    // == START Investments ==
-    public String investments() {
-        return client.request(AktiaConstants.Url.INVESTMENTS)
-                .get(String.class);
+    public TransactionsResponse getAccountTransactions(String aktiaAccountId) {
+        return httpClient.request(
+                AktiaConstants.Url.ACCOUNT_TRANSACTIONS
+                        .parameter(AktiaConstants.HttpParameters.ACCOUNT_ID, aktiaAccountId))
+                .addBearerToken(accessToken)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(TransactionsResponse.class);
     }
-    // == END Investments ==
+
+    public TransactionsResponse getAccountTransactionsWithPageKey(String aktiaAccountId, String pageKey) {
+        return httpClient.request(
+                AktiaConstants.Url.ACCOUNT_TRANSACTIONS
+                        .parameter(AktiaConstants.HttpParameters.ACCOUNT_ID, aktiaAccountId)
+                        .queryParam(AktiaConstants.HttpParameters.PAGE_KEY, pageKey))
+                .addBearerToken(accessToken)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(TransactionsResponse.class);
+    }
 }
