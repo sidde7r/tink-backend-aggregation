@@ -245,7 +245,7 @@ public class EncapSoapUtils {
                 "Could not parse security token from server response.");
 
         Element element = (Element) node;
-        Node securityTokenNode = element.getElementsByTagName("ns3:so").item(0);
+        Node securityTokenNode = element.getElementsByTagNameNS("*", "so").item(0);
 
         Preconditions.checkNotNull(securityTokenNode,
                 "Could not parse security token from server response.");
@@ -259,7 +259,7 @@ public class EncapSoapUtils {
                 "Could not parse samUserId from server response.");
 
         Element element = (Element) node;
-        Node samUserIdNode = element.getElementsByTagName("ns3:samUserId").item(0);
+        Node samUserIdNode = element.getElementsByTagNameNS("*", "samUserId").item(0);
 
         Preconditions.checkNotNull(samUserIdNode,
                 "Could not parse samUserId from server response.");
