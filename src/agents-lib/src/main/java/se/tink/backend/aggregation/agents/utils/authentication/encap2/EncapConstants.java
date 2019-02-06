@@ -36,7 +36,7 @@ public class EncapConstants {
         public static final URL ACTIVATION_SERVICE =
                 new URL(HOST + SOAP_BASE + "/SECSMobileActivationService_V1_0");
         public static final URL AUTHENTICATION_SERVICE =
-                new URL(HOST + SOAP_BASE + "/SECSMobileAuthenticationService_V1_0");
+                new URL(HOST + SOAP_BASE + "/SECSMobileAuthenticationService_V2_0");
     }
 
     public static final class HttpHeaders {

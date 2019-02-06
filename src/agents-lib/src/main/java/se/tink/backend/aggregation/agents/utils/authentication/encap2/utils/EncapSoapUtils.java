@@ -166,12 +166,12 @@ public class EncapSoapUtils {
                 configuration.getRsaPubKeyString()
         );
 
-        return "<soap:Envelope xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:n1=\"urn:sam.sec.fs.evry.com:ws:mobileauthentication:v1\" xmlns:n2=\"urn:sam.sec.fs.evry.com:domain:authentication:v1\" xmlns:n3=\"urn:mobile.security.fs.edb.com:domain:mobileapplication:v1\" xmlns:n4=\"http://edb.com/ws/WSCommon_v21\">"
+        return "<soap:Envelope xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:n1=\"urn:sam.sec.fs.evry.com:ws:mobileauthentication:v2\" xmlns:n2=\"urn:sam.sec.fs.evry.com:domain:authentication:v1\" xmlns:n3=\"urn:mobile.security.fs.edb.com:domain:mobileapplication:v1\" xmlns:n4=\"http://edb.com/ws/WSCommon_v21\">"
                 + "<soap:Header>"
                 + "<n4:AutHeader>"
                 + "<n4:SourceApplication>SAMOBILE</n4:SourceApplication>"
                 + "<n4:DestinationApplication>SECPSAM</n4:DestinationApplication>"
-                + "<n4:Function>SECSMobileAuthenticationService_V1_0</n4:Function>"
+                + "<n4:Function>SECSMobileAuthenticationService_V2_0</n4:Function>"
                 + "<n4:Version>1.0.0</n4:Version>"
                 + "<n4:ClientContext>"
                 + String.format("<n4:userid>%s</n4:userid>", StringEscapeUtils.escapeXml(username))
