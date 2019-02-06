@@ -45,7 +45,8 @@ public final class WLConstants {
         public static final String INCORRECT_PASSWORD = ".*Z1110.*";
         public static final String ACCOUNT_LOCKED_TEMPORARILY = ".*Z9909.*";
         public static final String ACCOUNT_LOCKED_PERMANENTLY = ".*Z1159.*";
-        public static final Pattern ENCLOSED_JSON = Pattern.compile("\\/\\*-secure-\\s*(.*)\\s*\\*\\/");
+        public static final Pattern ENCLOSED_JSON =
+                Pattern.compile("\\/\\*-secure-\\s*(.*)\\s*\\*\\/");
     }
 
     public static class Forms {
@@ -56,7 +57,8 @@ public final class WLConstants {
         public static final String USERNAME = "username";
         public static final String PX2 = "px2";
         public static final String SECP = "secP";
-        public static final String SECP_VALUE = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+        public static final String SECP_VALUE =
+                "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
         public static final String SECP_VALUE_SHORT = "06XXXX";
         public static final String ADAPTER = "adapter";
         public static final String ADAPTER_SECURITY_SERVICE = "UC_SecurityService_DE";
@@ -91,5 +93,4 @@ public final class WLConstants {
     public static final int RSA_KEY_SIZE = 512;
 
     public static final String ALG = "RS256";
-
 }
