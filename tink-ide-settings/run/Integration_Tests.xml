@@ -3,5 +3,5 @@
                keep-in-sync="true"
                handler-id="BlazeCommandGenericRunConfigurationHandlerProvider"
                blaze-command="test">
-    <blaze-target>//src/aggregation/integration-tests</blaze-target>
+    <blaze-target>//src/aggregation/integration_tests</blaze-target>
 </configuration>

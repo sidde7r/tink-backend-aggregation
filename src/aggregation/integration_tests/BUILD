@@ -18,12 +18,12 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agents-lib",
         "//src/aggregation/api",
         "//src/aggregation/lib",
         "//src/aggregationcontroller_api",
         "//src/integration/agents",
         "//src/integration/api",
+        "//src/integration/lib",
         "//src/integration/models",
         "//src/libraries/account:enums",
         "//src/libraries/account_identifier",

@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "agents-lib",
+    name = "lib",
     srcs = glob(
         ["src/main/**/*.java"],
     ),
@@ -98,7 +98,7 @@ java_library(
 )
 
 junit_test(
-    name = "agents_lib_test",
+    name = "lib_test",
     srcs = glob(
         ["src/test/**/*.java"],
     ),
@@ -116,10 +116,10 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        "//src/agents-lib",
         "//src/aggregationcontroller_api",
         "//src/integration/agents",
         "//src/integration/api",
+        "//src/integration/lib",
         "//src/integration/models",
         "//src/libraries/abnamro",
         "//src/libraries/account:enums",

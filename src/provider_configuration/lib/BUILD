@@ -48,7 +48,7 @@ junit_test(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/agents-lib",
+        "//src/integration/lib",
         "//src/libraries/credentials:enums",
         "//src/libraries/field:rpc",
         "//src/libraries/metrics",
