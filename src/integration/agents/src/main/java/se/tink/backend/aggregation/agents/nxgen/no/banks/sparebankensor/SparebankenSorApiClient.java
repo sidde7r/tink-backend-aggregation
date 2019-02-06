@@ -141,7 +141,7 @@ public class SparebankenSorApiClient {
     }
 
     public TransactionListResponse fetchTransactions(String transactionsPath) {
-        URL url = new URL(SparebankenSorConstants.Url.TRANSACTIONS_URL_START + transactionsPath)
+        URL url = new URL(SparebankenSorConstants.Url.BASE_PATH + transactionsPath)
                 .queryParam(StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getKey(),
                         StaticUrlValuePairs.TRANSACTIONS_BATCH_SIZE.getValue())
                 .queryParam(StaticUrlValuePairs.RESERVED_TRANSACTIONS.getKey(),
@@ -181,6 +181,13 @@ public class SparebankenSorApiClient {
         return client.request(url)
                 .accept(MediaType.WILDCARD)
                 .get(String.class);
+    }
+
+    public String fetchLoanDetails(String detailsPath) {
+        URL url = new URL(SparebankenSorConstants.Url.BASE_PATH + detailsPath);
+
+        return getRequestWithCommonHeaders(url).get(String.class);
+
     }
 
     private RequestBuilder getRequestWithCommonHeaders(URL url) {

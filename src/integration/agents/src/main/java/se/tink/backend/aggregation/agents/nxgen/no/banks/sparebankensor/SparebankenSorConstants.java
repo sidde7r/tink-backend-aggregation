@@ -9,6 +9,7 @@ public class SparebankenSorConstants {
         static final String HOST = "https://nettbank.sor.no";
         private static final String SECESB_REST_PATH = HOST + "/secesb/rest";
         private static final String AUTHENTICATE_LOGIN_PATH = HOST + "/authenticate/login";
+        public static final String BASE_PATH = SECESB_REST_PATH + "/era";
 
         public static final URL APP_INFORMATION = new URL(
                 HOST + "/smbmobile/" + StaticUrlValues.ORG_ID + "/appversion_ios.json");
@@ -22,7 +23,6 @@ public class SparebankenSorConstants {
         public static final String SECESB_IDENTIFY_CUSTOMER = SECESB_REST_PATH + "/era/era/public/customers/";
         public static final String BANKID_MOBILE = AUTHENTICATE_LOGIN_PATH + "/bankidmobile;jsessionid=";
         public static final String POLL_BANKID = AUTHENTICATE_LOGIN_PATH + "/rest/bankidmobilestatus.json;jsessionid=";
-        public static final String TRANSACTIONS_URL_START = SECESB_REST_PATH + "/era";
     }
 
     public static final class UrlQueryParameters {
@@ -79,11 +79,13 @@ public class SparebankenSorConstants {
         public static final LogTag BANKID_LOG_TAG = LogTag.from("#SparebankenSor_bankId");
         public static final LogTag CREDIT_CARD_LOG_TAG = LogTag.from("#SparebankenSor_creditcards");
         public static final LogTag LOAN_LOG_TAG = LogTag.from("#SparebankenSor_loans");
+        public static final LogTag LOAN_DETAILS = LogTag.from("#SparebankenSor_loan_details");
     }
 
     public static class Accounts {
         public static final String CHECKING_ACCOUNT = "spending";
         public static final String SAVINGS_ACCOUNT = "saving";
+        public static final String LOAN = "loan";
     }
 
     public static class Storage {
@@ -91,5 +93,9 @@ public class SparebankenSorConstants {
         public static final String ACCOUNT_TRANSACTION_URLS = "accountTransactionUrls";
         public static final String TRANSACTIONS = "transactions";
         public static final String TEMPORARY_STORAGE_LINKS = "links";
+    }
+
+    public static class Link {
+        public static final String DETAILS = "details";
     }
 }
