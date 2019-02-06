@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.binary.Hex;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenti
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.authenticator.rpc.VerifyCustomerResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.loan.rpc.SoTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.entitites.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankensor.fetcher.transactionalaccount.rpc.TransactionListResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -31,6 +33,8 @@ public class SparebankenSorApiClient {
     private final SessionStorage sessionStorage;
     private String jSessionId;
     private final SecureRandom secureRandom;
+
+    private List<AccountEntity> accountList;
 
     public SparebankenSorApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
@@ -121,9 +125,19 @@ public class SparebankenSorApiClient {
                 .post(HttpResponse.class, sendSmsRequest);
     }
 
-    public AccountListResponse fetchAccounts() {
-        return getRequestWithCommonHeaders(Url.FETCH_ACCOUNTS)
+    public List<AccountEntity> fetchAccounts() {
+
+        if (accountList != null && !accountList.isEmpty()) {
+            return accountList;
+        }
+
+        AccountListResponse accountListResponse = getRequestWithCommonHeaders(Url.FETCH_ACCOUNTS)
                 .get(AccountListResponse.class);
+
+        List<AccountEntity> accountList = accountListResponse.getAccountList();
+        this.accountList = accountList;
+
+        return accountList;
     }
 
     public TransactionListResponse fetchTransactions(String transactionsPath) {
