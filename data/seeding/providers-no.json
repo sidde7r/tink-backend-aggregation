@@ -34,7 +34,7 @@
             "passwordHelpText": "Log on to your Internet bank, go to settings and then mobile bank. Choose the option to add phone and follow the instructions. Enter the received activation code.",
             "popular": true,
             "type": "BANK",
-            "status": "ENABLED",
+            "status": "DISABLED",
             "multiFactor": false,
             "transactional": true
         },
