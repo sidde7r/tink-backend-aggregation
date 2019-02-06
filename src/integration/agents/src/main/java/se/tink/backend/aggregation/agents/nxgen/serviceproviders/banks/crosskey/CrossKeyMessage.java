@@ -11,6 +11,7 @@ import se.tink.libraries.i18n.LocalizableKey;
 public enum CrossKeyMessage implements CrossKeyError {
     PIN_CODE_INVALID(LoginError.INCORRECT_CREDENTIALS.userMessage().get(), LoginError.INCORRECT_CREDENTIALS),
     EXPIRED_PASSWORD("Invalid password, please contact Ålandsbanken at: 0204 292 910.", LoginError.INCORRECT_CREDENTIALS),
+    TAN_INVALID("Invalid key card code.", LoginError.INCORRECT_CREDENTIALS),
     BLOCKED_PASSWORD("Your password is blocked, please contact Ålandsbanken at: 0204 292 910.", AuthorizationError.ACCOUNT_BLOCKED),
     BLOCKED_USER("Authorization failed, please contact Ålandsbanken at: 0204 292 910.", AuthorizationError.ACCOUNT_BLOCKED),
     USER_LOCKED("Authorization failed, please contact Ålandsbanken at: 0204 292 910.", AuthorizationError.ACCOUNT_BLOCKED),
