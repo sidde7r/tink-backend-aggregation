@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20;
 
 import com.google.common.base.Preconditions;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants.Payment;
@@ -35,7 +37,6 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.LogResponseFilter;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class NordeaV20ApiClient {
     // magic switch to toggle response logging, for beta
@@ -134,6 +135,10 @@ public class NordeaV20ApiClient {
     }
 
     private <T extends NordeaResponse> T validate(T response) {
+        if (response == null) {
+            return response;
+        }
+
         Optional<String> errorCode = response.getErrorCode();
 
         if (errorCode.isPresent()) {
@@ -167,6 +172,6 @@ public class NordeaV20ApiClient {
 
     public List<CustodyAccount> fetchCustodyAccounts() {
         CustodyAccountsResponse response = request(new CustodyAccountsRequest(), CustodyAccountsResponse.class, LOG_RESPONSE);
-        return response.getCustodyAccounts();
+        return response != null ? response.getCustodyAccounts() : Collections.emptyList();
     }
 }
