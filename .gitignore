@@ -43,3 +43,4 @@ Thumbs.db
 
 # Misc
 .env
+.DS_Store
