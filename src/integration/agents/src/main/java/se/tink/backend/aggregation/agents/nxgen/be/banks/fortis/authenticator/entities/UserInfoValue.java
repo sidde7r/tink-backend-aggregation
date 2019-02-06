@@ -4,19 +4,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class UserInfoValue {
-	private UserDataValue userData;
-	private BranchData branchData;
-	private CustomerData customerData;
+    private UserDataValue userData;
+    private BranchData branchData;
+    private CustomerData customerData;
 
-	public UserDataValue getUserData(){
-		return userData;
-	}
+    public UserDataValue getUserData() {
+        return userData;
+    }
 
-	public BranchData getBranchData(){
-		return branchData;
-	}
+    public BranchData getBranchData() {
+        return branchData;
+    }
 
-	public CustomerData getCustomerData(){
-		return customerData;
-	}
+    public CustomerData getCustomerData() {
+        return customerData;
+    }
 }

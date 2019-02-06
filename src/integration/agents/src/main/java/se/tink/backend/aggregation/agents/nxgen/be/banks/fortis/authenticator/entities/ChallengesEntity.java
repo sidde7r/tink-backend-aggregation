@@ -3,5 +3,4 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.e
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ChallengesEntity {
-}
+public class ChallengesEntity {}

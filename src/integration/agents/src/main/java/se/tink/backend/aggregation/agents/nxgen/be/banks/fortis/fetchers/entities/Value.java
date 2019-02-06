@@ -16,5 +16,4 @@ public class Value {
     public Collection<TransactionalAccount> toTinkAccounts() {
         return viewList.get(0).toTinkAccounts();
     }
-
 }

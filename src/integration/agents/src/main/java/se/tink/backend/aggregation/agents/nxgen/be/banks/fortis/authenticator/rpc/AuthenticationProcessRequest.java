@@ -9,7 +9,8 @@ public class AuthenticationProcessRequest {
     private String distributorId;
     private String authenticationMeanId;
 
-    public AuthenticationProcessRequest( EBankingUserId ebankingUserId, String distributorId, String authenticationMeanId) {
+    public AuthenticationProcessRequest(
+            EBankingUserId ebankingUserId, String distributorId, String authenticationMeanId) {
         this.ebankingUserId = ebankingUserId;
         this.distributorId = distributorId;
         this.authenticationMeanId = authenticationMeanId;

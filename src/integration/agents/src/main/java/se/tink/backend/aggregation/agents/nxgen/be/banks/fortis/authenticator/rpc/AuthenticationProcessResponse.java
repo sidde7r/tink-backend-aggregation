@@ -6,14 +6,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AuthenticationProcessResponse {
-	private EBankingBusinessMessageBulkEntity businessMessageBulk;
-	private EbankingValue value;
+    private EBankingBusinessMessageBulkEntity businessMessageBulk;
+    private EbankingValue value;
 
-	public EBankingBusinessMessageBulkEntity getBusinessMessageBulk() {
-		return businessMessageBulk;
-	}
+    public EBankingBusinessMessageBulkEntity getBusinessMessageBulk() {
+        return businessMessageBulk;
+    }
 
-	public EbankingValue getValue() {
-		return value;
-	}
+    public EbankingValue getValue() {
+        return value;
+    }
 }

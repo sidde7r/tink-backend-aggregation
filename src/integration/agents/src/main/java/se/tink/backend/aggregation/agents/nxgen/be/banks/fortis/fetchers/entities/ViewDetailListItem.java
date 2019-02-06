@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
 import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class ViewDetailListItem {
@@ -50,7 +50,8 @@ public class ViewDetailListItem {
     }
 
     private Amount getTinkAmount() {
-        return new Amount(getAccount().getBalance().getCurrency(),
+        return new Amount(
+                getAccount().getBalance().getCurrency(),
                 Double.parseDouble(getAccount().getBalance().getAmount()));
     }
 
@@ -63,14 +64,17 @@ public class ViewDetailListItem {
             toTinkAccount();
             return true;
         } catch (Exception e) {
-            LOGGER.errorExtraLong("error validating transaction!", FortisConstants.LOGTAG.TRANSACTION_VALIDATION_ERR,
+            LOGGER.errorExtraLong(
+                    "error validating transaction!",
+                    FortisConstants.LOGTAG.TRANSACTION_VALIDATION_ERR,
                     e);
             return false;
         }
     }
 
     private AccountIdentifier getIbanIdentifier() {
-        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban(), AccountIdentifier.Type.IBAN.toString());
+        return AccountIdentifier.create(
+                AccountIdentifier.Type.IBAN, getIban(), AccountIdentifier.Type.IBAN.toString());
     }
 
     private HolderName getHoldername() {
@@ -83,8 +87,8 @@ public class ViewDetailListItem {
                 .setHolderName(getHoldername())
                 .setName(getAccountName())
                 .addIdentifier(getIbanIdentifier())
-                .putInTemporaryStorage(FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID, account.getProductId())
+                .putInTemporaryStorage(
+                        FortisConstants.STORAGE.ACCOUNT_PRODUCT_ID, account.getProductId())
                 .build();
     }
-
 }
