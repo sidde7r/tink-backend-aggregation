@@ -21,7 +21,7 @@ Python 2.7.9
 ## Start the server
 ```
 $ source .venv/bin/activate
-(.venv) $ python agent-test-server.py
+(.venv) $ python agent_test_server.py
 Agent test server listening on 127.0.0.1:7357
 ```
 
