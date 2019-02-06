@@ -19,4 +19,8 @@ public class KeyDerivation {
     public static byte[] pbkdf2WithHmacSha256(String password, byte[] salt, int iterations, int outputLength) {
         return pbkdf2(password, salt, iterations, outputLength, "PBKDF2WithHmacSHA256");
     }
+
+    public static byte[] pbkdf2WithHmacSha1(String password, byte[] salt, int iterations, int outputLength) {
+        return pbkdf2(password, salt, iterations, outputLength, "PBKDF2WithHmacSHA1");
+    }
 }

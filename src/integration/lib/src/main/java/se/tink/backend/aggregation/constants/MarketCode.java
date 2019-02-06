@@ -37,6 +37,7 @@ public enum MarketCode {
     SK,
     US,
     UK,
+    MX,
     @Deprecated
     TEST // TODO: Remove
 }

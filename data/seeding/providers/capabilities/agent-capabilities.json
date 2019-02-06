@@ -522,6 +522,9 @@
     "nxgen.nl.creditcards.ICS.ICSAgent": [
         "CREDIT_CARDS"
     ],
+    "nxgen.mx.banks.bbva.BBVAAgent": [
+        "CHECKING_ACCOUNTS"
+    ],
     "nxgen.ro.banks.raiffeisen.RaiffeisenAgent": [
         "CHECKING_ACCOUNTS"
     ],
