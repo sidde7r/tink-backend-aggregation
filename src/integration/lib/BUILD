@@ -120,7 +120,6 @@ junit_test(
         "//src/aggregation/api",
         "//src/aggregation/lib",
         "//src/aggregationcontroller_api",
-        "//src/integration/agents",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/models",
