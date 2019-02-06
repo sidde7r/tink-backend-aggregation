@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.wrappers;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,18 +53,16 @@ public class CryptoWrapperTest {
         assertThat(latestCryptoConfiguration.isPresent()).isFalse();
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ensureWhenListEmpty_cryptoKeyByIdNotPresent() {
-        Optional<byte[]> cryptoKeyByKeyId = createCryptoWrapper(0).getCryptoKeyByKeyId(0);
-
-        assertThat(cryptoKeyByKeyId.isPresent()).isFalse();
+        createCryptoWrapper(0).getCryptoKeyByKeyId(0);
     }
 
     @Test
     public void ensureWhenRandomIntBetweenOneAndTen_cryptoKeyByKeyIdIsPresent() {
-        Optional<byte[]> cryptoKeyByKeyId = cryptoWrapper.getCryptoKeyByKeyId(NUMBER_BETWEEN_ZERO_AND_DEFAULT);
+        byte[] cryptoKeyByKeyId = cryptoWrapper.getCryptoKeyByKeyId(NUMBER_BETWEEN_ZERO_AND_DEFAULT);
 
-        assertThat(cryptoKeyByKeyId.isPresent()).isTrue();
+        assertThat(Objects.nonNull(cryptoKeyByKeyId)).isTrue();
     }
 
     @Test
@@ -84,9 +83,9 @@ public class CryptoWrapperTest {
 
     @Test
     public void ensureGetCryptoKeyByKeyId_returnsCorrectCryptoKeyByKeyId() {
-        Optional<byte[]> cryptoKeyByKeyId = cryptoWrapper.getCryptoKeyByKeyId(NUMBER_BETWEEN_ZERO_AND_DEFAULT);
+        byte[] cryptoKeyByKeyId = cryptoWrapper.getCryptoKeyByKeyId(NUMBER_BETWEEN_ZERO_AND_DEFAULT);
 
-        assertThat(new String(cryptoKeyByKeyId.get())).isEqualTo(
+        assertThat(new String(cryptoKeyByKeyId)).isEqualTo(
                 String.format(KEY_STRING_FORMAT, NUMBER_BETWEEN_ZERO_AND_DEFAULT));
     }
 

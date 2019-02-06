@@ -1,15 +1,15 @@
 package se.tink.backend.aggregation.storage.database.models;
 
+import java.util.Base64;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import org.apache.commons.codec.binary.Base64;
 import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "crypto_configurations")
 public class CryptoConfiguration {
-    private static final Base64 BASE64 = new Base64();
+    private static final Base64.Decoder BASE64_DECODER = Base64.getDecoder();
 
     @EmbeddedId
     private CryptoConfigurationId cryptoConfigurationId;
@@ -42,7 +42,7 @@ public class CryptoConfiguration {
     }
 
     public byte[] getDecodedKey() {
-        return BASE64.decode(base64encodedkey);
+        return BASE64_DECODER.decode(base64encodedkey);
     }
 
 }

@@ -54,18 +54,11 @@ public class CredentialsCrypto {
         EncryptedCredentials encryptedCredentials = Preconditions.checkNotNull(
                 SerializationUtils.deserializeFromString(sensitiveData, EncryptedCredentials.class));
 
-        Optional<byte[]> key = cryptoWrapper.getCryptoKeyByKeyId(encryptedCredentials.getKeyId());
-
-        if (!key.isPresent()) {
-            logger.error(String.format("Could not find encryption key for %s:%d",
-                    cryptoWrapper.getClientName(),
-                    encryptedCredentials.getKeyId()));
-            return false;
-        }
+        byte[] key = cryptoWrapper.getCryptoKeyByKeyId(encryptedCredentials.getKeyId());
 
         switch (encryptedCredentials.getVersion()) {
         case EncryptedCredentialsV1.VERSION:
-            CredentialsCryptoV1.decryptCredential(key.get(), credentials, sensitiveData);
+            CredentialsCryptoV1.decryptCredential(key, credentials, sensitiveData);
             break;
         default:
             // NYI.
