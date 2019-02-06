@@ -84,7 +84,7 @@ public final class WLConstants {
 
     public static final String DEVICE_ID = UUID.randomUUID().toString().toUpperCase();
 
-    public static final String WL_APP_VERSION = "2.5.007";
+    public static final String WL_APP_VERSION = "3.0.001";
 
     public static final String ENVIRONMENT = "iphone";
     public static final String MODEL = "iPhone9,3";
