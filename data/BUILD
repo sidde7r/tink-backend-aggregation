@@ -11,15 +11,6 @@ filegroup(
 )
 
 filegroup(
-    name = "common_lib_test",
-    srcs = glob([
-        "test/*",
-        "templates/*",
-    ]),
-    visibility = ["//visibility:public"],
-)
-
-filegroup(
     name = "version",
     srcs = ["version.json"],
     visibility = ["//visibility:public"],
