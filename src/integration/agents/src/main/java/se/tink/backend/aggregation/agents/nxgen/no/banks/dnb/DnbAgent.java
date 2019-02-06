@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingac
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.DnbCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.DnbCreditTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.authenticator.DnbAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmentfetcher.DnbInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.session.DnbSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.no.bankid.BankIdAuthenticationControllerNO;
@@ -24,14 +24,12 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class DnbAgent extends NextGenerationAgent {
     private final DnbApiClient apiClient;
     private final DnbAuthenticator authenticator;
     private final DnbAccountFetcher accountFetcher;
     private final DnbTransactionFetcher transactionFetcher;
-    private final DnbInvestmentFetcher investementFetcher;
     private final DnbCreditCardFetcher creditCardFetcher;
     private final DnbCreditTransactionFetcher creditTransactionFetcher;
 
@@ -43,7 +41,6 @@ public class DnbAgent extends NextGenerationAgent {
         this.transactionFetcher = new DnbTransactionFetcher(apiClient);
         this.creditCardFetcher = new DnbCreditCardFetcher(apiClient);
         this.creditTransactionFetcher = new DnbCreditTransactionFetcher(apiClient);
-        this.investementFetcher = new DnbInvestmentFetcher(apiClient, credentials);
     }
 
     @Override
@@ -71,7 +68,13 @@ public class DnbAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController, investementFetcher));
+
+        // Disabling investments as our current code doesn't work as expected.
+
+        // DnbInvestmentFetcher investementFetcher = new DnbInvestmentFetcher(apiClient, credentials);
+        // return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController, investementFetcher));
+
+        return Optional.empty();
     }
 
     @Override
