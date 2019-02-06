@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 public class FortisConstants {
 
     public static final String APP_VERSION = "18.0.15";
+    public static final String NEGATIVE_TRANSACTION_TYPE = "F";
 
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()

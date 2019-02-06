@@ -27,9 +27,18 @@ public class TransferItem {
     private static final AggregationLogger LOGGER = new AggregationLogger(TransferItem.class);
 
 
+    private boolean isTransactionNegative()
+    {
+        return FortisConstants.NEGATIVE_TRANSACTION_TYPE.equalsIgnoreCase(amountType);
+    }
+
     private Amount getTinkAmount() {
         try {
-            return new Amount(amount.getCurrency(), NumberFormat.getInstance(Locale.FRANCE).parse(amount.getAmount()));
+            Amount result =  new Amount(amount.getCurrency(), NumberFormat.getInstance(Locale.FRANCE).parse(amount.getAmount()));
+            if (isTransactionNegative()) {
+                return result.negate();
+            }
+            return result;
         } catch (ParseException e) {
             throw new IllegalStateException("Cannot parse amount in transaction: " + e.toString());
         }
