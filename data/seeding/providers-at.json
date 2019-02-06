@@ -7,7 +7,7 @@
             "displayName": "Volksbank Tirol",
             "popular": true,
             "type": "BANK",
-            "status": "ENABLED",
+            "status": "DISABLED",
             "credentialsType": "PASSWORD",
             "multiFactor": false,
             "className": "nxgen.at.banks.volksbank.VolksbankAgent",
