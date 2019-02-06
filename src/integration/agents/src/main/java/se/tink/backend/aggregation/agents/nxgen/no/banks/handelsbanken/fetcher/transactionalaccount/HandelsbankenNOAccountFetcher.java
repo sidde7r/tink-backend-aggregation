@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.HandelsbankenNOApiClient;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountFetchingResponse;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
@@ -16,9 +20,13 @@ public class HandelsbankenNOAccountFetcher implements AccountFetcher<Transaction
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        AccountFetchingResponse accountFetchingResponse = apiClient.fetchAccounts();
+        List<AccountEntity> accounts = apiClient.fetchAccounts();
 
-        return accountFetchingResponse.toTinkAccounts();
+        return Optional.ofNullable(accounts).orElse(Collections.emptyList())
+                .stream()
+                .filter(AccountEntity::isTransactionalAccount)
+                .map(AccountEntity::toTinkAccount)
+                .collect(Collectors.toList());
     }
 }
 
