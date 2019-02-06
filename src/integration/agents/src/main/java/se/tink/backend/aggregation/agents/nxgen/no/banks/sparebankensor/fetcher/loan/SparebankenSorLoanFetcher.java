@@ -41,8 +41,7 @@ public class SparebankenSorLoanFetcher implements AccountFetcher<LoanAccount> {
             apiClient.transigoLogon(transigoLogonUrl);
 
             // Not sure if this is the correct url for fetching loans, it's where the app goes if you choose
-            // loans although the current account is listed there as well. Logging to see if it will contain loans
-            // for users that actually have loans.
+            // loans although the current account is listed there as well.
             URL transigoAccountsUrl = new URL("https://nettbank.sor.no/payment/transigo/json/accounts");
             String transigoAccountsResponse = apiClient.transigoAccounts(transigoAccountsUrl);
 
