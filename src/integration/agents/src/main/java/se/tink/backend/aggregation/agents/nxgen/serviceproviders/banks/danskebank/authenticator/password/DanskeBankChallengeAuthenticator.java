@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password;
 
-import java.util.Base64;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -35,9 +35,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
+
+import java.util.Base64;
 
 public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenticator implements KeyCardAuthenticator,
         AutoAuthenticator {
@@ -185,6 +186,11 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
         String moreInformation = StringEscapeUtils.unescapeJava(checkDeviceResponse.getMoreInformation());
         MoreInformationEntity moreInformationEntity = DanskeBankDeserializer
                 .convertStringToObject(moreInformation, MoreInformationEntity.class);
+
+        // If another device has been pinned we can no longer sign in as trusted device.
+        if (moreInformationEntity.isChallengeInvalid()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
 
         HttpResponse injectJsCheckStep = this.apiClient.collectDynamicChallengeJavascript();
 

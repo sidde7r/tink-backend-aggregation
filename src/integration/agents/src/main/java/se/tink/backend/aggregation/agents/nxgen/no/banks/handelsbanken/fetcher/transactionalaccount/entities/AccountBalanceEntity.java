@@ -4,29 +4,29 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountBalanceEntity {
-    private Double availableBalance;
-    private Double accountingBalance;
-    private Double valueDatedBalance;
-    private Double creditLine;
-    private Double blockedAmount;
+    private double availableBalance;
+    private double accountingBalance;
+    private double valueDatedBalance;
+    private double creditLine;
+    private double blockedAmount;
 
-    public Double getAvailableBalance() {
+    public double getAvailableBalance() {
         return availableBalance;
     }
 
-    public Double getAccountingBalance() {
+    public double getAccountingBalance() {
         return accountingBalance;
     }
 
-    public Double getValueDatedBalance() {
+    public double getValueDatedBalance() {
         return valueDatedBalance;
     }
 
-    public Double getCreditLine() {
+    public double getCreditLine() {
         return creditLine;
     }
 
-    public Double getBlockedAmount() {
+    public double getBlockedAmount() {
         return blockedAmount;
     }
 }

@@ -15,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authentic
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.SecondLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.SendSmsRequest;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.authenticator.rpc.VerifyCustomerResponse;
-import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountFetchingResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.AksjerOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.AvailableBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.FinalizeAksjerLoginRequest;
@@ -23,6 +22,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.InitInvestmentsLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.InvestmentsOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.PositionsListEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountFetchingResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -34,6 +35,8 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class HandelsbankenNOApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
+
+    private List<AccountEntity> accountList;
 
     public HandelsbankenNOApiClient(TinkHttpClient client,
             SessionStorage sessionStorage) {
@@ -159,9 +162,18 @@ public class HandelsbankenNOApiClient {
                 .post(HttpResponse.class, sendSmsRequest);
     }
 
-    public AccountFetchingResponse fetchAccounts() {
-        return requestInSession(Url.ACCOUNTS.get())
+    public List<AccountEntity> fetchAccounts() {
+        if (accountList != null && !accountList.isEmpty()) {
+            return accountList;
+        }
+
+        AccountFetchingResponse accountsResponse = requestInSession(Url.ACCOUNTS.get())
                 .get(AccountFetchingResponse.class);
+
+        List<AccountEntity> accountList = accountsResponse.getAccounts();
+        this.accountList = accountList;
+
+        return accountList;
     }
 
     public HttpResponse fetchTransactions(String uri, int number, int index) {
