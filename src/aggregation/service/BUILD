@@ -6,10 +6,10 @@ java_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//src/integration/lib",
         "//src/aggregation/api",
         "//src/aggregation/lib",
         "//src/aggregationcontroller_api",
+        "//src/integration/lib",
         "//src/libraries/auth",
         "//src/libraries/discovery",
         "//src/libraries/draining",
@@ -36,10 +36,10 @@ java_binary(
         "//third_party:mysql_mysql_connector_java",
     ],
     deps = [
-        "//src/integration/lib",
         "//src/aggregation/api",
         "//src/aggregation/lib",
         "//src/aggregationcontroller_api",
+        "//src/integration/lib",
         "//src/libraries/auth",
         "//src/libraries/console_json_logger",
         "//src/libraries/discovery",
