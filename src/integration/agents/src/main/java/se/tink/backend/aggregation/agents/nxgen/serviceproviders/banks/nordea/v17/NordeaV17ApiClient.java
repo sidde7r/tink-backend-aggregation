@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.NordeaV17Constants.Payment;
@@ -35,7 +36,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v1
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class NordeaV17ApiClient {
     // magic switch to toggle response logging, for beta
@@ -130,9 +130,11 @@ public class NordeaV17ApiClient {
                 throw NordeaV17Constants.AUTHENTICATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
             } else if (NordeaV17Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
                 throw NordeaV17Constants.AUTHORIZATION_EXCEPTIONS_BY_CODE.get(errorCode.get());
+            } else if (NordeaV17Constants.BANKSERVICE_EXCEPTIONS_BY_CODE.containsKey(errorCode.get())) {
+                throw NordeaV17Constants.BANKSERVICE_EXCEPTIONS_BY_CODE.get(errorCode.get());
             }
 
-            return validate(response);
+                return validate(response);
         }
 
         return response;

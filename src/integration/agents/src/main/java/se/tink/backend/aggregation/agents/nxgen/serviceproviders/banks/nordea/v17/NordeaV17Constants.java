@@ -5,7 +5,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v17.fetcher.entities.payments.PaymentEntity;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -44,13 +46,18 @@ public class NordeaV17Constants {
             .put("MAS0004", LoginError.INCORRECT_CREDENTIALS.exception())
             .build();
 
+    public static final Map<String, BankServiceException> BANKSERVICE_EXCEPTIONS_BY_CODE = ImmutableMap.<String, BankServiceException>builder()
+            .put("MAS2720", BankServiceError.BANK_SIDE_FAILURE.exception(UserMessage.TOO_MANY_LOGINS.getKey()))
+            .build();
+
     public static final LogTag HTTP_REQUEST_LOG_TAG = LogTag.from("#nordea_v17_http_request");
     public static final LogTag CREDITCARD_LOG_TAG = LogTag.from("#nordea_v17_creditcard");
 
     public enum UserMessage implements LocalizableEnum {
         CODE_BLOCKED(new LocalizableKey("Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office.")),
         NO_VALID_BANKID(new LocalizableKey("You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID.")),
-        NO_VALID_AGREEMENT(new LocalizableKey("We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking"));
+        NO_VALID_AGREEMENT(new LocalizableKey("We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking")),
+        TOO_MANY_LOGINS(new LocalizableKey("You have used the service too many time today, please try again tomorrow."));
 
         private LocalizableKey userMessage;
 
