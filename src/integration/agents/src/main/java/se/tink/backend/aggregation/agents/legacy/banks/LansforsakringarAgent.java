@@ -1628,7 +1628,7 @@ public class LansforsakringarAgent extends AbstractAgent
                 log.warn("Could not build URI", e);
             }
 
-            Portfolio portfolio = investmentDepotWrapper.getDepot().toPortfolio(marketValue, cashValue);
+            Portfolio portfolio = investmentDepotWrapper.getDepot().toPortfolio(marketValue, cashValue, Portfolio.Type.ISK);
 
             SecurityHoldingsResponse funds;
             SecurityHoldingsResponse stocks;
