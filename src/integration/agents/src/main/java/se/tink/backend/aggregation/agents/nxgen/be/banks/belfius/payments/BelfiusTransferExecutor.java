@@ -252,7 +252,8 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
     }
 
     private Collection<TransactionalAccount> getTransactionalAccounts() {
-        BelfiusTransactionalAccountFetcher accountFetcher = new BelfiusTransactionalAccountFetcher(apiClient);
+        BelfiusTransactionalAccountFetcher accountFetcher =
+                new BelfiusTransactionalAccountFetcher(apiClient, belfiusSessionStorage);
         return accountFetcher.fetchAccounts();
     }
 

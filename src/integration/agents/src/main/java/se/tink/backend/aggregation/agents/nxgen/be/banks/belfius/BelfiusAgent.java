@@ -36,7 +36,8 @@ public class BelfiusAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
-        this.apiClient = new BelfiusApiClient(this.client, belfiusSessionStorage, getBelfiusLocale(request.getUser().getLocale()));
+        this.apiClient =
+                new BelfiusApiClient(this.client, belfiusSessionStorage, getBelfiusLocale(request.getUser().getLocale()));
     }
 
     @Override
@@ -63,7 +64,7 @@ public class BelfiusAgent extends NextGenerationAgent {
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
         BelfiusTransactionalAccountFetcher transactionalAccountFetcher =
-                new BelfiusTransactionalAccountFetcher(this.apiClient);
+                new BelfiusTransactionalAccountFetcher(this.apiClient, this.belfiusSessionStorage);
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,

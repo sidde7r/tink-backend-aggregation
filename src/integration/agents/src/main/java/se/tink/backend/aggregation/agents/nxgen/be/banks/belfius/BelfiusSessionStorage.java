@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
-import java.util.Optional;
+import com.google.common.base.Strings;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
+import java.util.Optional;
 
 public class BelfiusSessionStorage {
 
@@ -56,4 +58,12 @@ public class BelfiusSessionStorage {
         sessionStorage.put("challenge", challenge);
     }
 
+    public void setNumberOfAccounts(int size) {
+        sessionStorage.put("accounts", Integer.toString(size));
+    }
+
+    public int getNumberOfAccounts() {
+        String numberOfAccounts = sessionStorage.get("accounts");
+        return Strings.isNullOrEmpty(numberOfAccounts) ? 1 : Integer.valueOf(numberOfAccounts);
+    }
 }
