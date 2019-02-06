@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.log;
+package se.tink.backend.aggregation.nxgen.http.log;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.collect.ImmutableList;
@@ -15,7 +15,7 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
-import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilter;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.backend.agents.rpc.Credentials;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
