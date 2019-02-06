@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator.FortisAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.FortisTransactionalAccountFetcher;
@@ -20,13 +21,11 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.Optional;
-
 public class FortisAgent extends NextGenerationAgent {
     private final FortisApiClient apiClient;
 
-    public FortisAgent(CredentialsRequest request, AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public FortisAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         String[] payload = request.getProvider().getPayload().split(" ");
@@ -51,14 +50,19 @@ public class FortisAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         FortisTransactionalAccountFetcher accountFetcher =
                 new FortisTransactionalAccountFetcher(apiClient);
 
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(accountFetcher, 1), accountFetcher)));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(accountFetcher, 1),
+                                accountFetcher)));
     }
 
     @Override
@@ -82,7 +86,8 @@ public class FortisAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

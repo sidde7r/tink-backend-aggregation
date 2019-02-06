@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entiti
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.MovementsItem;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -26,7 +25,9 @@ public class TransactionValue {
     }
 
     public Collection<Transaction> toTinkTransactions() {
-        return movements.stream().filter(transaction -> transaction.isValid())
+        return movements
+                .stream()
+                .filter(transaction -> transaction.isValid())
                 .map(MovementsItem::toTinkTransaction)
                 .collect(Collectors.toList());
     }

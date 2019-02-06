@@ -35,8 +35,10 @@ public class ViewListItem {
     }
 
     public Collection<TransactionalAccount> toTinkAccounts() {
-        return viewDetailList.stream().filter(acc -> acc.isValid()).map(ViewDetailListItem::toTinkAccount)
+        return viewDetailList
+                .stream()
+                .filter(acc -> acc.isValid())
+                .map(ViewDetailListItem::toTinkAccount)
                 .collect(Collectors.toList());
     }
-
 }

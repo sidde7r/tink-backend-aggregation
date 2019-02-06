@@ -7,4 +7,3 @@ public class SignatureEntity {
     private String token;
     private String response;
 }
-

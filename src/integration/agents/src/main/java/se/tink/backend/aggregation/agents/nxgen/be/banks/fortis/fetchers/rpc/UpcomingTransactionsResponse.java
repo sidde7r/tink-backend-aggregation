@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.BusinessMessageBulk;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.UpcomingTransactionValue;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
-
 @JsonObject
-public class UpcomingTransactionsResponse  {
+public class UpcomingTransactionsResponse {
     private BusinessMessageBulk businessMessageBulk;
     private UpcomingTransactionValue value;
 

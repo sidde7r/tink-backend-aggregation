@@ -1,34 +1,41 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis;
 
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.agents.rpc.AccountTypes;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 
 public class FortisConstants {
 
     public static final String APP_VERSION = "18.0.15";
+    public static final String NEGATIVE_TRANSACTION_TYPE = "F";
 
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
                     .put(AccountTypes.CHECKING, "HELLO4YOU", "COMFORT PACK")
                     .put(AccountTypes.SAVINGS, "CPTE EPARGNE", "SPAARREKENING")
                     .build();
-    
+
     public static class URLS {
-        public static final String GET_DISTRIBUTOR_AUTHENTICATION_MEANS = "/EBIA-pr01/rpc/means/getDistributorAuthenticationMeans";
-        public static final String CREATE_AUTHENTICATION_PROCESS = "/EBIA-pr01/rpc/auth/createAuthenticationProcess";
+        public static final String GET_DISTRIBUTOR_AUTHENTICATION_MEANS =
+                "/EBIA-pr01/rpc/means/getDistributorAuthenticationMeans";
+        public static final String CREATE_AUTHENTICATION_PROCESS =
+                "/EBIA-pr01/rpc/auth/createAuthenticationProcess";
         public static final String GENERATE_CHALLENGES = "/EBIA-pr01/rpc/auth/generateChallenges";
         public static final String GET_USER_INFO = "/TFPL-pr01/rpc/intermediatelogon/getUserinfo";
-        public static final String GET_VIEW_ACCOUNT_LIST = "/AC52-pr01/rpc/accounts/getViewAccountList";
-        public static final String GET_E_BANKING_USERS = "/EBIA-pr01/rpc/identAuth/getEBankingUsers";
+        public static final String GET_VIEW_ACCOUNT_LIST =
+                "/AC52-pr01/rpc/accounts/getViewAccountList";
+        public static final String GET_E_BANKING_USERS =
+                "/EBIA-pr01/rpc/identAuth/getEBankingUsers";
         public static final String AUTHENTICATION_URL = "/SEEA-pa01/SEEAServer";
-        public static final String CHECK_FORCED_UPGRADE = "/EBIA-pr01/rpc/forceUpgrade/checkForcedUpgrade";
-        public static final String TRANSACTIONS = "/DBPL-pr01/rpc/transaction/GetInitialMovementList";
+        public static final String CHECK_FORCED_UPGRADE =
+                "/EBIA-pr01/rpc/forceUpgrade/checkForcedUpgrade";
+        public static final String TRANSACTIONS =
+                "/DBPL-pr01/rpc/transaction/GetInitialMovementList";
         public static final String LOGOUT = "/SEEA-pa01/logoff";
-        public static final String UPCOMING_TRANSACTIONS = "/DBPL-pr01/rpc/transaction/getUpcomingList";
+        public static final String UPCOMING_TRANSACTIONS =
+                "/DBPL-pr01/rpc/transaction/getUpcomingList";
     }
 
     public static class ERRORCODE {
@@ -69,7 +76,8 @@ public class FortisConstants {
     }
 
     public static class SECURITY {
-        public static final String CSRF_CHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+        public static final String CSRF_CHARS =
+                "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
         public static final String AXES = "en|TAB|fb|priv|TAB|";
         public static final String AXES_CHARS = "0123456789abcdef";
         public static final String A_TO_F = "0123456789ABCDEF";
@@ -96,11 +104,16 @@ public class FortisConstants {
 
     public static class LOGTAG {
         public static final LogTag LOGIN_ERROR = LogTag.from("FORTIS_LOGIN_ERROR");
-        public static final LogTag TRANSACTION_VALIDATION_ERROR = LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERROR");
+        public static final LogTag TRANSACTION_VALIDATION_ERROR =
+                LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERROR");
         public static final LogTag MULTIPLE_CHALLENGES = LogTag.from("FORTIS_MULTIPLE_CHALLENGES");
-        public static final LogTag MULTIPLE_USER_ENTITIES = LogTag.from("FORTIS_MULTIPLE_USER_ENTITIES");
-        public static final LogTag UPCOMING_TRANSACTIONS = LogTag.from("FORTIS_UPCOMING_TRANSACTIONS");
-        public static final LogTag UPCOMING_TRANSACTIONS_ERR = LogTag.from("FORTIS_UPCOMING_TRANSACTIONS_ERR");
-        public static final LogTag TRANSACTION_VALIDATION_ERR = LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERR");
+        public static final LogTag MULTIPLE_USER_ENTITIES =
+                LogTag.from("FORTIS_MULTIPLE_USER_ENTITIES");
+        public static final LogTag UPCOMING_TRANSACTIONS =
+                LogTag.from("FORTIS_UPCOMING_TRANSACTIONS");
+        public static final LogTag UPCOMING_TRANSACTIONS_ERR =
+                LogTag.from("FORTIS_UPCOMING_TRANSACTIONS_ERR");
+        public static final LogTag TRANSACTION_VALIDATION_ERR =
+                LogTag.from("FORTIS_TRANSACTION_VALIDATION_ERR");
     }
 }

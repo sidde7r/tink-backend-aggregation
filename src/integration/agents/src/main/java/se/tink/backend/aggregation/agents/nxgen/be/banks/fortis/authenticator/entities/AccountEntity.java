@@ -19,6 +19,6 @@ public class AccountEntity {
     private String accountSubFamily;
     private String contractNumber;
     private FlagsDTOEntity flagsDTO;
-    private BalanceEntity  balance;
+    private BalanceEntity balance;
     private ConvertedBalanceEntity convertedBalance;
 }

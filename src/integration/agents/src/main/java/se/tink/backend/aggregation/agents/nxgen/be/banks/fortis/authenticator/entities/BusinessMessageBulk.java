@@ -5,17 +5,17 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BusinessMessageBulk{
+public class BusinessMessageBulk {
 
-	@JsonProperty("globalIndicator")
-	private Object globalIndicator;
+    @JsonProperty("globalIndicator")
+    private Object globalIndicator;
 
-	@JsonProperty("messages")
-	private List<Object> messages;
+    @JsonProperty("messages")
+    private List<Object> messages;
 
-	@JsonProperty("text")
-	private Object text;
+    @JsonProperty("text")
+    private Object text;
 
-	@JsonProperty("pewCode")
-	private Object pewCode;
+    @JsonProperty("pewCode")
+    private Object pewCode;
 }

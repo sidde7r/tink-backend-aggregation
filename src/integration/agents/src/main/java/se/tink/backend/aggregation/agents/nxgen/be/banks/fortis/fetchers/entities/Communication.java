@@ -3,23 +3,23 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entiti
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class Communication{
-	private String type;
-	private String message;
+public class Communication {
+    private String type;
+    private String message;
 
-	public void setType(String type){
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getType(){
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setMessage(String message){
-		this.message = message;
-	}
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
-	public String getMessage(){
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 }

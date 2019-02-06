@@ -9,8 +9,11 @@ public class DistributorAuthenticationRequest {
     private String minimumDacLevel;
     private String distributorId;
 
-    public DistributorAuthenticationRequest(String targetActivities, String distributionChannelId,
-            String minimumDacLevel, String distributorId) {
+    public DistributorAuthenticationRequest(
+            String targetActivities,
+            String distributionChannelId,
+            String minimumDacLevel,
+            String distributorId) {
         this.targetActivities = targetActivities;
         this.distributionChannelId = distributionChannelId;
         this.minimumDacLevel = minimumDacLevel;

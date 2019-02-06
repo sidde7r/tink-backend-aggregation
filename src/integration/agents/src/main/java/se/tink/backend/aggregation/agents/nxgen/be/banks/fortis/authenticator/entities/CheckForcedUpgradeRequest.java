@@ -4,10 +4,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CheckForcedUpgradeRequest {
-	private final String distributorId;
+    private final String distributorId;
 
-	public CheckForcedUpgradeRequest(String distributorId) {
-		this.distributorId = distributorId;
-	}
+    public CheckForcedUpgradeRequest(String distributorId) {
+        this.distributorId = distributorId;
+    }
 }
-

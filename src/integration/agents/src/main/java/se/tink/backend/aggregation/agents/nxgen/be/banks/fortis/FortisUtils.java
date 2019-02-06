@@ -31,11 +31,7 @@ public class FortisUtils {
     }
 
     public static String calculateChallenge(
-            String muid,
-            String password,
-            String agreementId,
-            String challenge,
-            String processId) {
+            String muid, String password, String agreementId, String challenge, String processId) {
 
         return m3274(
                 FortisConstants.ENCRYPTION.OCRA,

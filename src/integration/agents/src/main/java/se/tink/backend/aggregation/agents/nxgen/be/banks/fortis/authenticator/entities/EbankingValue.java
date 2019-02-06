@@ -4,9 +4,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class EbankingValue {
-	private String authenticationProcessId;
+    private String authenticationProcessId;
 
-	public String getAuthenticationProcessId() {
-		return authenticationProcessId;
-	}
+    public String getAuthenticationProcessId() {
+        return authenticationProcessId;
+    }
 }
