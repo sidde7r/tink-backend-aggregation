@@ -89,8 +89,8 @@ public class PurchaseHistoryGenerator {
         transactions.addAll(addMontlyRecurringCost(from, to, "Netflix", -9.99));
         transactions.addAll(addMontlyRecurringCost(from, to, "Spotify", -9.99));
         transactions.addAll(addMontlyRecurringCost(from, to, "Gym Membership", -45.99));
-        transactions.addAll(addMontlyRecurringCost(from, to, "Bank Transfer Erste", -100));
-        transactions.addAll(addMontlyRecurringCost(from, to, "Bank Transfer EasyBank", -50));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Test Transfer Erste Bank", -100));
+        transactions.addAll(addMontlyRecurringCost(from, to, "Test Transfer Easy Bank", -50));
         transactions.addAll(addMontlyRecurringCost(from, to, "Salary", 3500));
 
         return PaginatorResponseImpl.create(transactions, false);
