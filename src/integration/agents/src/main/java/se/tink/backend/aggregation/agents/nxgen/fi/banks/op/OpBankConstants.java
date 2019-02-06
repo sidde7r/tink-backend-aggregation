@@ -127,7 +127,8 @@ public class OpBankConstants {
     public static class Authentication {
         public static final String APPLICATION_INSTANCE_ID = "applicationInstanceId";
         public static final int UNAUTHENTICATED_STATUS = 401;
-        public static final String UNAUTHENTICATED_MESSAGE = "KR_false_pin";
+        public static final String UNAUTHENTICATED_PIN = "KR_false_pin";
+        public static final String FALSE_CREDENTIALS = "KR_false_credentials";
 
         public static class Level {
             public static final String LOGGEDIN_WITH_LIGHTLOGIN = "VPT_LMA";
