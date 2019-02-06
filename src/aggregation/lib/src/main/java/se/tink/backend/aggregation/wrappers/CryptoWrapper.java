@@ -23,11 +23,14 @@ public class CryptoWrapper {
                 .max(Comparator.comparing(t -> t.getCryptoConfigurationId().getKeyId()));
     }
 
-    public Optional<byte[]> getCryptoKeyByKeyId(int keyId) {
+    public byte[] getCryptoKeyByKeyId(int keyId) {
         return cryptoConfigurations.stream()
                 .filter(t -> Objects.equals(t.getKeyId(), keyId))
                 .map(CryptoConfiguration::getDecodedKey)
-                .findFirst();
+                .findAny()
+                .orElseThrow(
+                        () -> new IllegalArgumentException(
+                                String.format("Could not find key with id: %s", keyId)));
     }
 
     public Optional<String> getClientName() {
