@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,6 +56,10 @@ public class TypeMapper<V> {
     }
 
     public Optional<V> translate(String typeKey) {
+        if (Strings.isNullOrEmpty(typeKey)) {
+            // `typeKey` comes from the bank and can be null.
+            return Optional.empty();
+        }
 
         typeKey = typeKey.toLowerCase();
         Optional<V> type = Optional.ofNullable(translator.get(typeKey));
