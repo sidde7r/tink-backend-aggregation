@@ -10,7 +10,7 @@ public class RaiffeisenAgentTest {
         new AgentIntegrationTest.Builder("at", RaiffeisenTestConfig.PROVIDER_NAME2)
                 .addCredentialField(Field.Key.USERNAME, RaiffeisenTestConfig.USERNAME2)
                 .addCredentialField(Field.Key.PASSWORD, RaiffeisenTestConfig.PASSWORD2)
-                .loadCredentialsBefore(true) // true ~ run python agent-test-server.py
+                .loadCredentialsBefore(true) // true ~ run python agent_test_server.py
                 .saveCredentialsAfter(true)
                 //.doLogout(true) // false is the default
                 .transactionsToPrint(0) // 0 ~ no limit
@@ -23,7 +23,7 @@ public class RaiffeisenAgentTest {
         new AgentIntegrationTest.Builder("at", RaiffeisenTestConfig.PROVIDER_NAME6)
                 .addCredentialField(Field.Key.USERNAME, RaiffeisenTestConfig.USERNAME6)
                 .addCredentialField(Field.Key.PASSWORD, RaiffeisenTestConfig.PASSWORD6)
-                .loadCredentialsBefore(true) // true ~ run python agent-test-server.py
+                .loadCredentialsBefore(true) // true ~ run python agent_test_server.py
                 .saveCredentialsAfter(true)
                 //.doLogout(true) // false is the default
                 .transactionsToPrint(0) // 0 ~ no limit
