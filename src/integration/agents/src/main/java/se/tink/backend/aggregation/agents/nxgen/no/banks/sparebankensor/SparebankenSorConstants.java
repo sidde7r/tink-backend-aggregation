@@ -83,6 +83,7 @@ public class SparebankenSorConstants {
 
     public static class Accounts {
         public static final String CHECKING_ACCOUNT = "spending";
+        public static final String SAVINGS_ACCOUNT = "saving";
     }
 
     public static class Storage {
