@@ -72,9 +72,10 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
        return TransactionalAccount.builder(getTinkAccountType(), accountNumber,
-               Amount.inNOK(accountBalance.getAvailableBalance()))
+               getBalance(accountBalance.getAvailableBalance()))
                .setAccountNumber(accountNumber)
                .setName(getProperties().getAlias())
+               .setHolderName(new HolderName(owner.getName()))
                .setBankIdentifier(id)
                .putInTemporaryStorage(SparebankenSorConstants.Storage.TEMPORARY_STORAGE_LINKS, links)
                .build();
@@ -104,7 +105,7 @@ public class AccountEntity {
     // Currently logging loan details.
     @JsonIgnore
     public LoanAccount toTinkLoan() {
-        return LoanAccount.builder(accountNumber, getLoanBalance())
+        return LoanAccount.builder(accountNumber, getBalance(accountBalance.getAccountingBalance()))
                 .setAccountNumber(accountNumber)
                 .setName(properties.getAlias())
                 .setHolderName(new HolderName(owner.getName()))
@@ -112,17 +113,15 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    private Amount getLoanBalance() {
+    private Amount getBalance(double balance) {
         String currency = properties.getCurrencyCode();
 
         if (Strings.isNullOrEmpty(currency)) {
-            LOGGER.warn(String.format(
-                    "Sparebanken Sor: No currency for loan found. Defaulting to NOK.",
-                    currency));
+            LOGGER.warn("Sparebanken Sor: No currency for account found. Defaulting to NOK.");
 
-            return Amount.inNOK(accountBalance.getAccountingBalance());
+            return Amount.inNOK(balance);
         }
 
-        return new Amount(currency, accountBalance.getAccountingBalance());
+        return new Amount(currency, balance);
     }
 }
