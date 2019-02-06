@@ -1,18 +1,18 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "api-annotations",
+    name = "api_annotations",
     srcs = glob(["src/main/**/*.java"]),
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
 )
 
 junit_test(
-    name = "api-annotations-testlib-test",
+    name = "api_annotations_test",
     srcs = glob(["src/test/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/api_annotations:api-annotations",
+        "//src/libraries/api_annotations",
         "//src/libraries/log",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",

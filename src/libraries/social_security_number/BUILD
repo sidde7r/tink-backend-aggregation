@@ -1,12 +1,12 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "social-security-number",
+    name = "social_security_number",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/date",
-        "//src/libraries/demo_credentials:demo-credentials",
+        "//src/libraries/demo_credentials",
         "//src/libraries/log",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
@@ -15,11 +15,11 @@ java_library(
 )
 
 junit_test(
-    name = "social-security-number-test",
+    name = "social_security_number_test",
     srcs = glob(["src/test/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        ":social-security-number",
+        "//src/libraries/social_security_number",
         "//third_party:com_google_guava_guava",
         "//third_party:joda_time_joda_time",
         "//third_party:junit_junit",

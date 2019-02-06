@@ -17,10 +17,10 @@ java_library(
 )
 
 junit_test(
-    name = "discovery-test",
+    name = "discovery_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":discovery",
+        "//src/libraries/discovery",
         "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_apache_curator_curator_x_discovery",

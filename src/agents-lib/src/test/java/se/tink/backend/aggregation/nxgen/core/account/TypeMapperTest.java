@@ -73,4 +73,21 @@ public final class TypeMapperTest {
                 .build();
     }
 
+    @Test
+    public void ensureTranslate_withNullInput_returnsEmpty() {
+        final TypeMapper<AccountTypes> mapper = TypeMapper.<AccountTypes>builder()
+                .put(AccountTypes.CHECKING, "checking_account")
+                .build();
+
+        Assert.assertEquals(mapper.translate(null), Optional.empty());
+    }
+
+    @Test
+    public void ensureTranslate_withEmptyInput_returnsEmpty() {
+        final TypeMapper<AccountTypes> mapper = TypeMapper.<AccountTypes>builder()
+                .put(AccountTypes.CHECKING, "checking_account")
+                .build();
+
+        Assert.assertEquals(mapper.translate(""), Optional.empty());
+    }
 }

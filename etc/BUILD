@@ -7,7 +7,7 @@ filegroup(
 )
 
 filegroup(
-    name = "development-aggregation-server",
+    name = "development_aggregation_server",
     srcs = [
         "development-aggregation-server.yml",
     ],
@@ -15,7 +15,7 @@ filegroup(
 )
 
 filegroup(
-    name = "development-credit-safe-server",
+    name = "development_credit_safe_server",
     srcs = [
         "development-credit-safe-server.yml",
     ],
@@ -23,7 +23,7 @@ filegroup(
 )
 
 filegroup(
-    name = "development-minikube-aggregation-server",
+    name = "development_minikube_aggregation_server",
     srcs = [
         "development-minikube-aggregation-server.yml",
     ],
@@ -31,7 +31,7 @@ filegroup(
 )
 
 filegroup(
-    name = "development-minikube-provider-configuration-server",
+    name = "development_minikube_provider_configuration_server",
     srcs = [
         "development-minikube-provider-configuration-server.yml",
     ],
@@ -39,7 +39,7 @@ filegroup(
 )
 
 filegroup(
-    name = "development-provider-configuration-server",
+    name = "development_provider_configuration_server",
     srcs = [
         "development-provider-configuration-server.yml",
     ],
@@ -47,7 +47,7 @@ filegroup(
 )
 
 filegroup(
-    name = "abn-development",
+    name = "abn_development",
     srcs = [
         "abn/development.yml",
     ],

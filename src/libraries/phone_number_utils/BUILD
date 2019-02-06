@@ -10,10 +10,10 @@ java_library(
 )
 
 junit_test(
-    name = "phone_number_utils-test",
+    name = "phone_number_utils_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":phone_number_utils",
+        "//src/libraries/phone_number_utils",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
     ],

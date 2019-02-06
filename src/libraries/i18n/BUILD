@@ -12,7 +12,7 @@ java_library(
 )
 
 junit_test(
-    name = "i18n-test",
+    name = "i18n_test",
     srcs = glob(["src/test/**/*.java"]),
     runtime_deps = [
         "//third_party:asm_asm",
@@ -20,7 +20,7 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        ":i18n",
+        "//src/libraries/i18n",
         "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",

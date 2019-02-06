@@ -56,14 +56,14 @@ pkg_tar(
 
 pkg_tar(
     name = "aggregation_bin_tar",
-    srcs = ["//src/aggregation/service:renamed-aggregation-deploy-jar"],
+    srcs = ["//src/aggregation/service:renamed_aggregation_deploy"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
 )
 
 pkg_tar(
     name = "provider_configuration_bin_tar",
-    srcs = ["//src/provider-configuration/service:renamed-provider-configuration-deploy-jar"],
+    srcs = ["//src/provider_configuration/service:renamed_provider_configuration_deploy"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-provider-configuration",
 )
@@ -120,7 +120,7 @@ pkg_deb(
 )
 
 pkg_deb(
-    name = "provider-configuration",
+    name = "provider_configuration",
     architecture = "amd64",
     data = ":provider_configuration_tar",
     description = "Tink Backend Provider Configuration Service",

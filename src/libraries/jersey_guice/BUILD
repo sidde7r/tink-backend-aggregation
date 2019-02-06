@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "jersey-guice",
+    name = "jersey_guice",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -19,7 +19,7 @@ java_library(
 )
 
 junit_test(
-    name = "jersey-guice-test",
+    name = "jersey_guice_test",
     srcs = glob(["src/test/**/*.java"]),
     runtime_deps = [
         "//third_party:asm_asm",
@@ -27,15 +27,9 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        ":jersey-guice",
-
-        # Governator
+        "//src/libraries/jersey_guice",
         "//third_party:com_netflix_governator",
-
-        # Mockito
-        "//third_party:org_mockito_mockito_core",
-
-        # Jersey
         "//third_party:io_dropwizard_dropwizard_jersey",
+        "//third_party:org_mockito_mockito_core",
     ],
 )

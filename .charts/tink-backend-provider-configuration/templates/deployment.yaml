@@ -77,7 +77,7 @@ spec:
         - "-XX:-OmitStackTraceInFastThrow"
         - "-Dnetworkaddress.cache.ttl=60"
         - "-XX:+ExitOnOutOfMemoryError"
-        - "/usr/share/tink-backend-provider-configuration/provider-configuration-service.jar"
+        - "/usr/share/tink-backend-provider-configuration/provider_configuration_service.jar"
         - "server"
         - "/etc/tink/provider-configuration-server.yml"
 

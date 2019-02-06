@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "request-tracing",
+    name = "request_tracing",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -12,10 +12,10 @@ java_library(
 )
 
 junit_test(
-    name = "request-tracing-test",
+    name = "request_tracing_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":request-tracing",
+        "//src/libraries/request_tracing",
         "//third_party:ch_qos_logback_logback_classic",
         "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",

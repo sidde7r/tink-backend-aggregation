@@ -220,7 +220,7 @@ spec:
         - "-XX:-OmitStackTraceInFastThrow"
         - "-Dnetworkaddress.cache.ttl=60"
         - "-XX:+ExitOnOutOfMemoryError"
-        - "/usr/share/tink-backend-aggregation/aggregation-service.jar"
+        - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
         - "server"
         - "/etc/tink/config.yml"
 

@@ -35,7 +35,7 @@ GenerateSuite = rule(
 )
 
 def junit_test(name, srcs, deps, **kwargs):
-    s_name = name.replace('-', '_')
+    s_name = name.replace('-', '_') + "_junit"
     GenerateSuite(name = s_name,
               outname = s_name)
     native.java_test(name = name,

@@ -1,1 +1,1 @@
-provider-service: bazel run :provider-configuration --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-provider-configuration-server.yml
+provider-service: bazel run :provider_configuration --jvmopt=-Djava.net.preferIPv4Stack=true server etc/development-minikube-provider-configuration-server.yml

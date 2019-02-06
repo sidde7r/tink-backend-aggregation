@@ -23,10 +23,10 @@ i18n_java_source(
 java_library(
     name = "i18n",
     srcs = [
-        ":i18n_de",
-        ":i18n_fr",
-        ":i18n_nl",
-        ":i18n_sv",
+        "//po:i18n_de",
+        "//po:i18n_fr",
+        "//po:i18n_nl",
+        "//po:i18n_sv",
     ],
     visibility = ["//visibility:public"],
 )

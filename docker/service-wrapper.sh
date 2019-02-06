@@ -20,5 +20,5 @@ java \
     -XX:OnOutOfMemoryError="kill -9 %p" \
     -XX:HeapDumpPath="${HEAPDUMP_PATH:-/heapdumps}" \
     -Dnetworkaddress.cache.ttl=${DNS_TTL:-60} \
-    -jar "${SERVICE_DIR}/${SERVICE_NAME}-service.jar" \
+    -jar "${SERVICE_DIR}/${SERVICE_NAME}_service.jar" \
     "$@"

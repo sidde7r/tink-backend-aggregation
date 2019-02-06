@@ -1,5 +1,5 @@
 java_library(
-    name = "demo-credentials",
+    name = "demo_credentials",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [

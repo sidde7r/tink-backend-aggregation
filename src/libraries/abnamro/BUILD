@@ -1,7 +1,7 @@
 load("//tools/bzl:junit.bzl", "junit_test")
 
 java_library(
-    name = "abn_amro",
+    name = "abnamro",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
@@ -28,10 +28,10 @@ java_library(
 )
 
 junit_test(
-    name = "abn_amro-test",
+    name = "abnamro_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":abn_amro",
+        "//src/libraries/abnamro",
         "//src/libraries/account:rpc",
         "//src/libraries/user:rpc",
         "//third_party:com_google_guava_guava",

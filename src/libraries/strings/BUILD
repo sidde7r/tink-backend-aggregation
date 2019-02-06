@@ -14,10 +14,10 @@ java_library(
 )
 
 junit_test(
-    name = "strings-test",
+    name = "strings_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":strings",
+        "//src/libraries/strings",
         "//third_party:com_google_guava_guava",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",

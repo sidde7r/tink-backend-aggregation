@@ -13,13 +13,13 @@ java_library(
 )
 
 junit_test(
-    name = "cryptography-test",
+    name = "cryptography_test",
     srcs = glob(["src/test/**/*.java"]),
     data = [
-        "//data:cryptography-test",
+        "//data:cryptography_test",
     ],
     deps = [
-        ":cryptography",
+        "//src/libraries/cryptography",
         "//third_party:junit_junit",
         "//third_party:org_assertj_assertj_core",
         "//third_party:org_bouncycastle_bcpkix_jdk15on",

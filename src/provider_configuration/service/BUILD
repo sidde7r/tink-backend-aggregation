@@ -9,14 +9,14 @@ java_library(
         "//src/libraries/auth",
         "//src/libraries/cli_print_utils",
         "//src/libraries/discovery",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/dropwizard_utils",
         "//src/libraries/field:rpc",
         "//src/libraries/metrics",
         "//src/libraries/provider:enums",
         "//src/libraries/repository",
         "//src/libraries/serialization",
-        "//src/provider-configuration/api",
-        "//src/provider-configuration/lib",
+        "//src/provider_configuration/api",
+        "//src/provider_configuration/lib",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_core",
@@ -26,12 +26,12 @@ java_library(
 )
 
 java_binary(
-    name = "provider-configuration",
+    name = "provider_configuration",
     srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data",
-        "//etc:development-minikube-provider-configuration-server",
-        "//etc:development-provider-configuration-server",
+        "//etc:development_minikube_provider_configuration_server",
+        "//etc:development_provider_configuration_server",
     ],
     main_class = "se.tink.backend.aggregation.provider.ProviderConfigurationServiceContainer",
     visibility = ["//visibility:public"],
@@ -43,14 +43,14 @@ java_binary(
         "//src/libraries/cli_print_utils",
         "//src/libraries/console_json_logger",
         "//src/libraries/discovery",
-        "//src/libraries/dropwizard_utils:dropwizard-utils",
+        "//src/libraries/dropwizard_utils",
         "//src/libraries/field:rpc",
         "//src/libraries/metrics",
         "//src/libraries/provider:enums",
         "//src/libraries/repository",
         "//src/libraries/serialization",
-        "//src/provider-configuration/api",
-        "//src/provider-configuration/lib",
+        "//src/provider_configuration/api",
+        "//src/provider_configuration/lib",
         "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_core",
@@ -60,10 +60,10 @@ java_binary(
 )
 
 genrule(
-    name = "renamed-provider-configuration-deploy-jar",
+    name = "renamed_provider_configuration_deploy",
     # Implicitly built, see: https://docs.bazel.build/versions/master/be/java.html#java_binary_implicit_outputs
-    srcs = [":provider-configuration_deploy.jar"],
-    outs = ["provider-configuration-service.jar"],
-    cmd = "cp $(location :provider-configuration_deploy.jar) \"$(@)\"",
+    srcs = [":provider_configuration_deploy.jar"],
+    outs = ["provider_configuration_service.jar"],
+    cmd = "cp $(location :provider_configuration_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )

@@ -6,11 +6,11 @@ alias(
 )
 
 alias(
-    name = "provider-configuration",
-    actual = "//src/provider-configuration/service:provider-configuration",
+    name = "provider_configuration",
+    actual = "//src/provider_configuration/service",
 )
 
 alias(
-    name = "ukob-register",
-    actual = "//src/ukobregister:ukob-register",
+    name = "ukob_register",
+    actual = "//src/ukob_register",
 )

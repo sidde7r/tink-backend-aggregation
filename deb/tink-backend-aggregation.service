@@ -25,7 +25,7 @@ ExecStart=/usr/bin/xvfb-run --auto-servernum -s "-screen 0 1280x1024x16" \
           -XX:+HeapDumpOnOutOfMemoryError \
           -XX:HeapDumpPath=/var/tmp/tink/heapdumps/tink-backend-aggregation \
           -XX:+ExitOnOutOfMemoryError \
-          -jar /usr/share/tink-backend-aggregation/aggregation-service.jar \
+          -jar /usr/share/tink-backend-aggregation/aggregation_service.jar \
           server /etc/tink/aggregation-server.yml
 
 [Install]

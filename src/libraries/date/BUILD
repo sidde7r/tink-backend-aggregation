@@ -24,10 +24,10 @@ java_library(
 )
 
 junit_test(
-    name = "date-test",
+    name = "date_test",
     srcs = glob(["src/test/**/*.java"]),
     deps = [
-        ":date",
+        "//src/libraries/date",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_lang_commons_lang",
         "//third_party:joda_time_joda_time",

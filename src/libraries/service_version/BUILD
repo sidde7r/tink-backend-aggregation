@@ -1,5 +1,5 @@
 java_library(
-    name = "service-version",
+    name = "service_version",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
