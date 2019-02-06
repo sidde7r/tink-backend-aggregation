@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -82,5 +83,9 @@ public class MoreInformationEntity {
 
     public String getSessionCookie() {
         return sessionCookie;
+    }
+
+    public boolean isChallengeInvalid() {
+        return DanskeBankConstants.SecuritySystem.CHALLENGE_INVALID.equalsIgnoreCase(otpChallenge);
     }
 }

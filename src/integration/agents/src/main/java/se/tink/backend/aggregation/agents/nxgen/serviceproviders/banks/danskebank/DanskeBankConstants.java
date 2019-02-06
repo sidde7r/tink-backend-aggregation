@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
-import java.text.MessageFormat;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+
+import java.text.MessageFormat;
 
 public final class DanskeBankConstants {
     public class Url {
@@ -65,6 +66,7 @@ public final class DanskeBankConstants {
     public class SecuritySystem {
         public static final String SERVICE_CODE_SC = "SC";
         public static final String SERVICE_CODE_JS = "JS";
+        public static final String CHALLENGE_INVALID = "INVALID";
     }
 
     public static class LogTags {
