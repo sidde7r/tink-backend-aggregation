@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.Dev
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.IdentificationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.RegistrationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.SamlResponse;
-import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapCryptoUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapMessageUtils;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.utils.EncapSoapUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -58,7 +57,6 @@ public class EncapClient {
                 .orElseThrow(() -> new IllegalStateException("Could not get activationSessionId"));
 
         String registrationMessage = messageUtils.buildRegistrationMessage();
-
         RegistrationResponse registrationResponse = messageUtils.encryptAndSend(registrationMessage,
                 RegistrationResponse.class);
         if (!registrationResponse.isValid()) {
@@ -66,32 +64,9 @@ public class EncapClient {
         }
 
         RegistrationResultEntity registrationResultEntity = registrationResponse.getResult();
+        storeRegistrationResult(registrationResultEntity);
 
-        int saltNextKeyId = registrationResultEntity.getClientSaltNextKeyId();
-        storage.setClientSaltKeyId(saltNextKeyId);
-
-        String saltNextKey = registrationResultEntity.getB64ClientSaltNextKey();
-        storage.setClientSaltKey(saltNextKey);
-
-        String registrationId = registrationResultEntity.getRegistration().getRegistrationId();
-        storage.setRegistrationId(registrationId);
-
-        String signingKeyPhrase = registrationResultEntity.getSigningKeyPhrase();
-        storage.setSigningKeyPhrase(signingKeyPhrase);
-
-        String otpChallenge = registrationResultEntity.getB64OtpChallenge();
-
-        String b64ChallengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
-                storage.getAuthenticationKey(),
-                otpChallenge);
-
-        String b64ChallengeResponseWithoutPin = EncapCryptoUtils.computeB64ChallengeResponse(
-                storage.getAuthenticationKeyWithoutPin(),
-                otpChallenge);
-
-        String activationMessage = messageUtils.buildActivationMessage(b64ChallengeResponse,
-                b64ChallengeResponseWithoutPin);
-
+        String activationMessage = messageUtils.buildActivationMessage(registrationResultEntity);
         SamlResponse samlResponse = messageUtils.encryptAndSend(activationMessage, SamlResponse.class);
         if (!samlResponse.isValid()) {
             throw new IllegalStateException("SamlResponse is not valid.");
@@ -101,15 +76,7 @@ public class EncapClient {
 
         String soapResponse = soapActivateDevice(username, activationSessionId, samlObjectB64);
 
-        String securityToken = soapUtils.getSecurityToken(soapResponse)
-                .orElseThrow(() -> new IllegalStateException("Could not find securityToken in activation response."));
-
-        String samUserId = soapUtils.getSamUserId(soapResponse)
-                .orElseThrow(() -> new IllegalStateException("Could not find samUserId in activation response."));
-
-        storage.setSamUserId(samUserId);
-
-        return new DeviceRegistrationResponse(samUserId, securityToken);
+        return createDeviceRegistrationResponse(soapResponse);
     }
 
     public DeviceAuthenticationResponse authenticateDevice() {
@@ -139,26 +106,9 @@ public class EncapClient {
 
         IdentificationEntity identificationEntity = identificationResponse.getResult();
 
-        // Update storage with next keyId and key
-        storage.setClientSaltKey(identificationEntity.getB64ClientSaltNextKey());
-        storage.setClientSaltKeyId(identificationEntity.getClientSaltNextKeyId());
+        storeIdentificationResult(identificationEntity);
 
-        String otpChallenge = identificationEntity.getB64OtpChallenge();
-
-        String challengeResponse;
-        if (useDeviceAndPin) {
-            // This happens when we have an authenticationId.
-            challengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
-                    storage.getAuthenticationKey(),
-                    otpChallenge);
-        } else {
-            challengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
-                    storage.getAuthenticationKeyWithoutPin(),
-                    otpChallenge);
-        }
-
-        String authenticationMessage = messageUtils.buildAuthenticationMessage(challengeResponse, useDeviceAndPin);
-
+        String authenticationMessage = messageUtils.buildAuthenticationMessage(identificationEntity, useDeviceAndPin);
         SamlResponse samlResponse = messageUtils.encryptAndSend(authenticationMessage, SamlResponse.class);
         if (!samlResponse.isValid()) {
             throw new IllegalStateException("SamlResponse is not valid.");
@@ -168,6 +118,26 @@ public class EncapClient {
 
         String soapResponse = soapAuthenticateDevice(username, samlObjectB64);
 
+        return createDeviceAuthenticationResponse(soapResponse);
+    }
+
+    public void saveDevice() {
+        storage.save();
+    }
+
+    private DeviceRegistrationResponse createDeviceRegistrationResponse(String soapResponse) {
+        String securityToken = soapUtils.getSecurityToken(soapResponse)
+                .orElseThrow(() -> new IllegalStateException("Could not find securityToken in activation response."));
+
+        String samUserId = soapUtils.getSamUserId(soapResponse)
+                .orElseThrow(() -> new IllegalStateException("Could not find samUserId in activation response."));
+
+        storage.setSamUserId(samUserId);
+
+        return new DeviceRegistrationResponse(samUserId, securityToken);
+    }
+
+    private DeviceAuthenticationResponse createDeviceAuthenticationResponse(String soapResponse) {
         String securityToken = soapUtils.getSecurityToken(soapResponse)
                 .orElseThrow(() -> new IllegalStateException("Could not find securityToken in activation response."));
 
@@ -178,8 +148,24 @@ public class EncapClient {
         return new DeviceAuthenticationResponse(samUserId, securityToken);
     }
 
-    public void saveDevice() {
-        storage.save();
+    private void storeIdentificationResult(IdentificationEntity identificationEntity) {
+        // Update storage with next keyId and key
+        storage.setClientSaltKey(identificationEntity.getB64ClientSaltNextKey());
+        storage.setClientSaltKeyId(identificationEntity.getClientSaltNextKeyId());
+    }
+
+    private void storeRegistrationResult(RegistrationResultEntity registrationResultEntity) {
+        int saltNextKeyId = registrationResultEntity.getClientSaltNextKeyId();
+        storage.setClientSaltKeyId(saltNextKeyId);
+
+        String saltNextKey = registrationResultEntity.getB64ClientSaltNextKey();
+        storage.setClientSaltKey(saltNextKey);
+
+        String registrationId = registrationResultEntity.getRegistration().getRegistrationId();
+        storage.setRegistrationId(registrationId);
+
+        String signingKeyPhrase = registrationResultEntity.getSigningKeyPhrase();
+        storage.setSigningKeyPhrase(signingKeyPhrase);
     }
 
     private boolean soapCreateAuthenticatedSession(String username) {

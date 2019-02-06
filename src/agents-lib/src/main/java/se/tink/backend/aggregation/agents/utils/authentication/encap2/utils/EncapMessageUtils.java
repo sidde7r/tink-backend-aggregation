@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapConfiguration;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapConstants;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapStorage;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.IdentificationEntity;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.RegistrationResultEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.RequestBody;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -53,15 +55,26 @@ public class EncapMessageUtils {
         return getUrlEncodedQueryParams(queryPairs);
     }
 
-    public String buildActivationMessage(String challengeResponse, String challengeResponseWithoutPin) {
+    public String buildActivationMessage(RegistrationResultEntity registrationResultEntity) {
+
+        String otpChallenge = registrationResultEntity.getB64OtpChallenge();
+
+        String b64ChallengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
+                storage.getAuthenticationKey(),
+                otpChallenge);
+
+        String b64ChallengeResponseWithoutPin = EncapCryptoUtils.computeB64ChallengeResponse(
+                storage.getAuthenticationKeyWithoutPin(),
+                otpChallenge);
+
         Map<String, String> queryPairs = new HashMap<>();
 
         queryPairs.put("activatedAuthMethods", EncapConstants.Message.DEVICE_PIN);
         queryPairs.put("applicationId", EncapConstants.Message.APPLICATION_ID);
         queryPairs.put("b64AuthenticationKey", storage.getAuthenticationKey());
         queryPairs.put("b64AuthenticationKeyWithoutPin", storage.getAuthenticationKeyWithoutPin());
-        queryPairs.put("b64ChallengeResponse", challengeResponse);
-        queryPairs.put("b64ChallengeResponseWithoutPin", challengeResponseWithoutPin);
+        queryPairs.put("b64ChallengeResponse", b64ChallengeResponse);
+        queryPairs.put("b64ChallengeResponseWithoutPin", b64ChallengeResponseWithoutPin);
         queryPairs.put("b64TotpKey", storage.getTotpKey());
         populateDeviceInformation(queryPairs);
         populateMetaInformation(queryPairs);
@@ -92,7 +105,21 @@ public class EncapMessageUtils {
         return getUrlEncodedQueryParams(queryPairs);
     }
 
-    public String buildAuthenticationMessage(String challengeResponse, boolean useDeviceAndPin) {
+    public String buildAuthenticationMessage(IdentificationEntity identificationEntity, boolean useDeviceAndPin) {
+        String otpChallenge = identificationEntity.getB64OtpChallenge();
+
+        String challengeResponse;
+        if (useDeviceAndPin) {
+            // This happens when we have an authenticationId.
+            challengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
+                    storage.getAuthenticationKey(),
+                    otpChallenge);
+        } else {
+            challengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
+                    storage.getAuthenticationKeyWithoutPin(),
+                    otpChallenge);
+        }
+
         Map<String, String> queryPairs = new HashMap<>();
 
         queryPairs.put("applicationId", EncapConstants.Message.APPLICATION_ID);
