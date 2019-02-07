@@ -3,6 +3,7 @@ build_flags:
   --test_output=streamed
   --action_env=PATH
   --action_env=LD_LIBRARY_PATH
+  --incompatible_disable_depset_in_cc_user_flags=false
 
 directories:
   .
