@@ -9,12 +9,13 @@ import com.sun.jersey.spi.container.ResourceFilterFactory;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
-import se.tink.libraries.log.LogUtils;
 
 public class ContainerAuthorizationResourceFilterFactory implements ResourceFilterFactory {
 
-    private static final LogUtils log = new LogUtils(ContainerAuthorizationResourceFilterFactory.class);
+    private static final Logger log = LoggerFactory.getLogger(ContainerAuthorizationResourceFilterFactory.class);
     
     @Context
     private HttpServletRequest request;
