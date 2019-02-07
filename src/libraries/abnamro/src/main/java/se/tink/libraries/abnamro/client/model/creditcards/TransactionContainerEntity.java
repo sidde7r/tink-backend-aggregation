@@ -3,11 +3,12 @@ package se.tink.libraries.abnamro.client.model.creditcards;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.ImmutableSet;
-import se.tink.libraries.log.legacy.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionContainerEntity {
-    private final static LogUtils log = new LogUtils(TransactionContainerEntity.class);
+    private final static Logger log = LoggerFactory.getLogger(TransactionContainerEntity.class);
     private final static ImmutableSet<String> PENDING_TYPES = ImmutableSet.of("AUTHORIZATION");
     private final static String EUR_CURRENCY_CODE = "EUR";
 
