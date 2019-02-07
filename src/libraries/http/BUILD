@@ -3,7 +3,7 @@ java_library(
     srcs = glob(["src/main/java/se/tink/libraries/http/utils/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/log",
+        "//third_party:org_slf4j_slf4j_api",
         "//third_party:com_sun_jersey_jersey_core",
     ],
 )

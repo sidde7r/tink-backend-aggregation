@@ -4,7 +4,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/concurrency",
-        "//src/libraries/log",
+        "//third_party:org_slf4j_slf4j_api",
         "//third_party:com_google_guava_guava",
     ],
 )
