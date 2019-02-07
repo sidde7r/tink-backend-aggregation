@@ -14,20 +14,21 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
 import javax.ws.rs.core.MediaType;
 import org.apache.http.conn.ssl.X509HostnameVerifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.abnamro.config.TrustStoreConfiguration;
-import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.net.BasicJerseyClientFactory;
 
 public abstract class Client {
 
     private static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
 
-    protected LogUtils log;
+    protected Logger log;
     private final String hostname;
     private com.sun.jersey.api.client.Client client;
 
     protected Client(Class<? extends Client> cls, TrustStoreConfiguration trustStoreConfiguration, String hostname) {
-        this.log = new LogUtils(cls);
+        this.log = LoggerFactory.getLogger(cls);
         this.hostname = hostname;
 
         SSLContext sslContext;
