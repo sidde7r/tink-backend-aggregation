@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.BelgianIdentifier;
 import se.tink.libraries.account.identifiers.FinnishIdentifier;
@@ -26,7 +28,7 @@ import se.tink.libraries.log.LogUtils;
 
 public abstract class AccountIdentifier {
     private static final String NAME_PARAMETER = "name";
-    private static final LogUtils log = new LogUtils(AccountIdentifier.class);
+    private static final Logger log = LoggerFactory.getLogger(AccountIdentifier.class);
 
     private String name;
 
