@@ -26,7 +26,8 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
     public void canFetchAccountsAndTransactions() throws Exception {
         autoAuthenticate();
 
-        BelfiusTransactionalAccountFetcher fetcher = new BelfiusTransactionalAccountFetcher(this.apiClient);
+        BelfiusTransactionalAccountFetcher fetcher =
+                new BelfiusTransactionalAccountFetcher(this.apiClient, this.sessionStorage);
 
         Collection<TransactionalAccount> accounts = fetcher.fetchAccounts();
 

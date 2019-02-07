@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transa
 
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusUpcomingTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
@@ -27,19 +28,23 @@ public class BelfiusTransactionalAccountFetcher implements
         UpcomingTransactionFetcher<TransactionalAccount> {
 
     private final BelfiusApiClient apiClient;
+    private BelfiusSessionStorage belfiusSessionStorage;
     private int numberOfTransactionPages;
 
-    public BelfiusTransactionalAccountFetcher(BelfiusApiClient apiClient) {
+    public BelfiusTransactionalAccountFetcher(BelfiusApiClient apiClient, BelfiusSessionStorage belfiusSessionStorage) {
         this.apiClient = apiClient;
+        this.belfiusSessionStorage = belfiusSessionStorage;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return this.apiClient.fetchProducts().stream()
+        List<TransactionalAccount> transactionalAccounts = this.apiClient.fetchProducts().stream()
                 .filter(entry -> entry.getValue().isTransactionalAccount())
                 .map(entry -> entry.getValue().toTransactionalAccount(entry.getKey()))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+        belfiusSessionStorage.setNumberOfAccounts(transactionalAccounts.size());
+        return transactionalAccounts;
     }
 
     @Override
@@ -63,7 +68,12 @@ public class BelfiusTransactionalAccountFetcher implements
 
         return PaginatorResponseImpl.create(transactionsPage,
                 response.hasNext()
-                        && numberOfTransactionPages < BelfiusConstants.MAX_NUMBER_OF_TRANSACTION_PAGES);
+                        && numberOfTransactionPages < numberOfPagesToFetchForAccount());
+    }
+
+    // Belfius will not allow use to click next to many times, share number of clicks evenly for the accounts
+    private int numberOfPagesToFetchForAccount() {
+        return BelfiusConstants.MAX_NUMBER_OF_TRANSACTION_PAGES / belfiusSessionStorage.getNumberOfAccounts();
     }
 
     @Override
