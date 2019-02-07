@@ -178,8 +178,7 @@ public class RetryableWebResource {
                                 Optional.ofNullable(lastException));
                     }
 
-                    log.warn(String.format("%s Sleeping for %d ms, then retrying another instance...",
-                            errorReason, sleepInterval));
+                    log.warn("{} Sleeping for {} ms, then retrying another instance...", errorReason, sleepInterval);
                     try {
                         sleeper.sleep(sleepInterval);
                     } catch (InterruptedException e) {
