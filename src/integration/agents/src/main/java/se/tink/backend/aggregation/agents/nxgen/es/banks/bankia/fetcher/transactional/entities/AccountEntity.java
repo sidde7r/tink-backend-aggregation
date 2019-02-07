@@ -50,7 +50,7 @@ public class AccountEntity {
         return TransactionalAccount.builder(getTinkAccountType(), iban.toLowerCase())
                 .setAccountNumber(iban)
                 .setName(getAccountName(iban))
-                .setBalance(realBalance.toTinkAmount())
+                .setBalance(availableBalance.toTinkAmount())
                 .setBankIdentifier(bankIdentifier)
                 .putInTemporaryStorage(BankiaConstants.StorageKey.COUNTRY, country)
                 .putInTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS, controlDigits)
