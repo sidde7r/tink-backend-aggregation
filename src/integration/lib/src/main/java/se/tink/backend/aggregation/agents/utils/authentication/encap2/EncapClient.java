@@ -145,7 +145,7 @@ public class EncapClient {
                 .orElseThrow(() -> new IllegalStateException("Could not find samUserId in activation response."));
 
         storage.setSamUserId(samUserId);
-        return new DeviceAuthenticationResponse(samUserId, securityToken);
+        return new DeviceAuthenticationResponse(samUserId, securityToken, storage.getHardwareId());
     }
 
     private void storeIdentificationResult(IdentificationEntity identificationEntity) {
