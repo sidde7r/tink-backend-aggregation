@@ -1,26 +1,37 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.authenticator.rpc.bankid.InitBankIdRequest;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.entities.CreditCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.creditcards.rpc.CreditCardsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.entities.SavingsAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.rpc.SavingsAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.rpc.CustomerResponse;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.rpc.ErrorStatusResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String> {
 
     private final VolvoFinansApiClient apiClient;
+    private final SessionStorage sessionStorage;
 
-    public VolvoFinansBankIdAutenticator(VolvoFinansApiClient apiClient) {
+    public VolvoFinansBankIdAutenticator(VolvoFinansApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -50,7 +61,10 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
 
         if (bankIdStatus.equals(BankIdStatus.DONE)) {
             try {
-                apiClient.keepAlive();
+                CustomerResponse customerResponse = apiClient.keepAlive();
+                if (isBankOpen(customerResponse)) {
+                    sessionStorage.put(VolvoFinansConstants.Storage.CUSTOMER, customerResponse);
+                }
             } catch (HttpResponseException e) {
                 if (e.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
                     throw LoginError.NOT_CUSTOMER.exception();
@@ -65,5 +79,68 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
     @Override
     public Optional<String> getAutostartToken() {
         return Optional.empty();
+    }
+
+    // this is a somewhat lengthy validation if the bank service is closed for service
+    private boolean isBankOpen(CustomerResponse customerResponse) throws AuthenticationException {
+        if (customerResponse.hasCard()) {
+            return canFetchCardTransactions();
+        } else if (customerResponse.hasSavings()) {
+            return canFetchSavingsTransactions();
+        }
+
+        return true;
+    }
+
+    private boolean canFetchSavingsTransactions() throws AuthenticationException {
+        SavingsAccountsResponse savingsAccounts = apiClient.savingsAccounts();
+
+        Optional<String> accountId = Optional.ofNullable(savingsAccounts)
+                .orElse(new SavingsAccountsResponse())
+                .stream()
+                .map(SavingsAccountEntity::getAccountId)
+                .findFirst();
+
+        return tryFetchTransactions(true, accountId);
+    }
+
+    private boolean canFetchCardTransactions() throws AuthenticationException {
+        CreditCardsResponse creditCards = apiClient.creditCardAccounts();
+
+        Optional<String> accountId = Optional.ofNullable(creditCards)
+                .orElse(new CreditCardsResponse())
+                .stream()
+                .map(CreditCardEntity::getAccountId)
+                .findFirst();
+
+        return tryFetchTransactions(false, accountId);
+    }
+
+    private boolean tryFetchTransactions(boolean savings, Optional<String> accountId) throws AuthenticationException {
+        LocalDate toDate = LocalDate.now();
+        LocalDate fromDate = LocalDate.now().minusDays(30);
+
+        if (!accountId.isPresent()) {
+            return true;
+        }
+
+        try {
+            if (savings) {
+                apiClient.savingsAccountTransactions(accountId.get(), fromDate, toDate,
+                        VolvoFinansConstants.Pagination.LIMIT, 0);
+            } else {
+                apiClient.creditCardAccountTransactions(accountId.get(), fromDate, toDate,
+                        VolvoFinansConstants.Pagination.LIMIT, 0);
+            }
+        } catch (HttpResponseException hre) {
+            HttpResponse response = hre.getResponse();
+            if (response.getStatus() == HttpStatus.SC_SERVICE_UNAVAILABLE) {
+                if (response.hasBody() && response.getBody(ErrorStatusResponse.class).isBankServiceClosed()) {
+                    throw BankServiceError.NO_BANK_SERVICE.exception();
+                }
+            }
+        }
+
+        return true;
     }
 }

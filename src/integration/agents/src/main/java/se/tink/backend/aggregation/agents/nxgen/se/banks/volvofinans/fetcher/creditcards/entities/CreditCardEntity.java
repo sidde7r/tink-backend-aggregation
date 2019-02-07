@@ -46,4 +46,8 @@ public class CreditCardEntity {
                 .putInTemporaryStorage(VolvoFinansConstants.UrlParameters.ACCOUNT_ID, accountId)
                 .build();
     }
+
+    public String getAccountId() {
+        return accountId;
+    }
 }

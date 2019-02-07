@@ -56,8 +56,16 @@ public class VolvoFinansConstants {
         public static int LIMIT = 100;
     }
 
+    public static class Storage {
+        public static final String CUSTOMER = "Customer";
+    }
+
     public class Fetcher {
         public static final String ACCOUNT_ROLE_MAIN_APPLICANT = "HUVUDSOKANDE";
+    }
+
+    public static final class ErrorStatus {
+        public static final String BANK_CLOSED = "STANGD";
     }
 
     public static final class Message {

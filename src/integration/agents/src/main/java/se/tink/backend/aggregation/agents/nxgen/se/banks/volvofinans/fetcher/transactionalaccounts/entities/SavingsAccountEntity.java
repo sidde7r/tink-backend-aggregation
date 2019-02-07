@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
@@ -44,10 +45,12 @@ public class SavingsAccountEntity {
                 .build();
     }
 
+    @JsonIgnore
     public boolean isAccountHolder() {
         return VolvoFinansConstants.Fetcher.ACCOUNT_ROLE_MAIN_APPLICANT.equalsIgnoreCase(accountRole);
     }
 
+    @JsonIgnore
     private HolderName getHolderName() {
         return Optional.ofNullable(accountHolders).orElse(Collections.emptyList()).stream()
                 .filter(holder ->
@@ -55,5 +58,9 @@ public class SavingsAccountEntity {
                 .findFirst()
                 .map(AccountHolderEntity::getName)
                 .map(HolderName::new).orElse(null);
+    }
+
+    public String getAccountId() {
+        return accountId;
     }
 }
