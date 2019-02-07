@@ -133,7 +133,7 @@ public abstract class NemidAuthenticationController {
     private String collectToken() throws AuthenticationException, AuthorizationException {
         // Try to get the token/errors multiple times. It (both token or error) might not have loaded yet.
         driver.switchTo().defaultContent();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 7; i++) {
             Optional<String> nemIdToken = getNemIdToken();
 
             if (nemIdToken.isPresent()) {
