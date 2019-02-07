@@ -12,7 +12,7 @@ test_sources:
 
 targets:
   //...:all
-  //src/aggregation/integration_tests
+  //src/integration/agents:agents_test
   -//deb:all
   -//third_party:all
 
@@ -22,5 +22,3 @@ import_run_configurations:
   tink_ide_settings/run/Server__Aggregation.xml
   tink_ide_settings/run/Minikube-Server__Aggregation.xml
   tink_ide_settings/run/All_Tests.xml
-  tink_ide_settings/run/Integration_Tests.xml
-  

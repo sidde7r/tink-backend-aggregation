@@ -1,7 +1,0 @@
-<configuration default="false" name="Integration Tests"
-               type="BlazeCommandRunConfigurationType" factoryName="Bazel Command"
-               keep-in-sync="true"
-               handler-id="BlazeCommandGenericRunConfigurationHandlerProvider"
-               blaze-command="test">
-    <blaze-target>//src/aggregation/integration_tests</blaze-target>
-</configuration>
