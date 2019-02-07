@@ -175,6 +175,8 @@ public class InvestmentEntity {
             return Portfolio.Type.KF;
         case "tjänstepension":
             return Portfolio.Type.PENSION;
+        case "värdepappersdepå":
+            return Portfolio.Type.DEPOT;
         default:
             return Portfolio.Type.OTHER;
         }
