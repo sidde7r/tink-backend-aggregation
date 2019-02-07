@@ -93,7 +93,17 @@ public class VolvoFinansBankIdAutenticator implements BankIdAuthenticator<String
     }
 
     private boolean canFetchSavingsTransactions() throws AuthenticationException {
-        SavingsAccountsResponse savingsAccounts = apiClient.savingsAccounts();
+        SavingsAccountsResponse savingsAccounts = null;
+
+        try {
+            savingsAccounts = apiClient.savingsAccounts();
+        } catch (HttpResponseException hre) {
+            if (hre.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+                return true;
+            }
+
+            throw hre;
+        }
 
         Optional<String> accountId = Optional.ofNullable(savingsAccounts)
                 .orElse(new SavingsAccountsResponse())
