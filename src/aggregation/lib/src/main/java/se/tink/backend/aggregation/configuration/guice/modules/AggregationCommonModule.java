@@ -17,6 +17,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import net.spy.memcached.BinaryConnectionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.service.version.VersionInformation;
 import se.tink.libraries.cache.CacheClient;
 import se.tink.libraries.cache.CacheInstrumentationDecorator;
@@ -28,7 +30,6 @@ import se.tink.libraries.concurrency.LockFactory;
 import se.tink.libraries.concurrency.TypedThreadPoolBuilder;
 import se.tink.libraries.concurrency.WrappedRunnableListenableFutureTask;
 import se.tink.backend.aggregation.configuration.models.CacheConfiguration;
-import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.metrics.HeapDumpGauge;
 import se.tink.libraries.metrics.MeterFactory;
 import se.tink.libraries.metrics.MetricCollector;
@@ -37,7 +38,7 @@ import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.PrometheusExportServer;
 
 public class AggregationCommonModule extends AbstractModule {
-    private static final LogUtils log = new LogUtils(AggregationCommonModule.class);
+    private static final Logger log = LoggerFactory.getLogger(AggregationCommonModule.class);
 
     @Override
     protected void configure() {
