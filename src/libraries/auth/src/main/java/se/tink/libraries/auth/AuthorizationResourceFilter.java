@@ -59,8 +59,7 @@ public class AuthorizationResourceFilter implements ContainerRequestFilter, Reso
 
     private void signalUnauthorized() {
         final Response response = Response.status(Response.Status.UNAUTHORIZED).entity("Not authorized.").build();
-        log.error(
-                String.format("[ip=%s url=%s] Unauthorized access.", request.getRemoteAddr(), request.getRequestURI()));
+        log.error("[ip={} url={}] Unauthorized access.", request.getRemoteAddr(), request.getRequestURI());
         throw new WebApplicationException(response);
     }
 
