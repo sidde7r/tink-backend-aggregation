@@ -23,12 +23,13 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SerializationUtils {
     private static final ObjectMapper BINARY_MAPPER = new ObjectMapper(new SmileFactory()).configure(
             DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private static final LogUtils log = new LogUtils(SerializationUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(SerializationUtils.class);
     private static final ObjectMapper STRING_MAPPER = new ObjectMapper().configure(
             DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
