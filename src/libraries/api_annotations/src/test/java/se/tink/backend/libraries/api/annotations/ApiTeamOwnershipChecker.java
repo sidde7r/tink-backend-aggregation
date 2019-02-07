@@ -16,11 +16,13 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.log.LogUtils;
 
 public class ApiTeamOwnershipChecker {
 
-    private static final LogUtils log = new LogUtils(ApiTeamOwnershipChecker.class);
+    private static final Logger log = LoggerFactory.getLogger(ApiTeamOwnershipChecker.class);
     private static final String DEFAULT_PACKAGE_PREFIX = "se.tink";
 
     private final String packagePrefix;
