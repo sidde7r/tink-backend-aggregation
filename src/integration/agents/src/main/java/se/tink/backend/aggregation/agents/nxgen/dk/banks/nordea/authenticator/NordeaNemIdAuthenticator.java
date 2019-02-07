@@ -1,19 +1,21 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator;
 
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkConstants;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.NordeaDkSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AgreementListEntity;
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AuthenticatedUserEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.AuthorizeAgreementDetails;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.entities.NemidAuthenticateUserEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthorizeAgreementRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.AuthorizeAgreementResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.InitialParametersResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemIdAuthenticateUserRequestBody;
-import se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea.authenticator.rpc.NemidAuthenticateUserResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.dk.nemid.NemIdParameters;
 
@@ -49,9 +51,18 @@ public class NordeaNemIdAuthenticator implements NemIdAuthenticator {
                         .setNemIdToken(nemIdToken)
                 );
 
-        NemidAuthenticateUserResponse authenticateUserResponse = bankClient.nemIdAuthenticateUser(authenticateUserRequest);
-        sessionStorage.setToken(authenticateUserResponse.getAuthenticateUserResponse().getAuthenticationToken().getToken());
-        List<AgreementListEntity> agreements = authenticateUserResponse.getAuthenticateUserResponse().getAgreements();
+        AuthenticatedUserEntity authenticateUserResponse = bankClient.nemIdAuthenticateUser(authenticateUserRequest)
+                .getAuthenticateUserResponse();
+
+        Optional<String> errorCode = authenticateUserResponse.getErrorCode();
+
+        if (errorCode.isPresent()) {
+            throw new IllegalStateException(NordeaV20Constants.GENERAL_ERROR_MESSAGES_BY_CODE
+                    .getOrDefault(errorCode.get(), "Nordea ErrorCode: " + errorCode.get()));
+        }
+
+        sessionStorage.setToken(authenticateUserResponse.getAuthenticationToken().getToken());
+        List<AgreementListEntity> agreements = authenticateUserResponse.getAgreements();
 
         if (agreements.size() < 1) {
             throw new IllegalStateException("No agreements found");
