@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.utils.authentication.encap2;
 
-import com.google.common.base.Strings;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.IdentificationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.RegistrationResultEntity;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceAuthenticationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceRegistrationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.IdentificationResponse;
@@ -79,11 +79,12 @@ public class EncapClient {
         return createDeviceRegistrationResponse(soapResponse);
     }
 
-    public DeviceAuthenticationResponse authenticateDevice() {
-        return authenticateDevice(null);
+    public DeviceAuthenticationResponse authenticateDevice(AuthenticationMethod authenticationMethod) {
+        return authenticateDevice(authenticationMethod, null);
     }
 
-    public DeviceAuthenticationResponse authenticateDevice(@Nullable String authenticationId) {
+    public DeviceAuthenticationResponse authenticateDevice(AuthenticationMethod authenticationMethod,
+            @Nullable String authenticationId) {
         if (!storage.load()) {
             throw new IllegalStateException("Storage is not valid.");
         }
@@ -92,10 +93,6 @@ public class EncapClient {
         if (!soapCreateAuthenticatedSession(username)) {
             throw new IllegalStateException("Could not create an authenticated session.");
         }
-
-        // Specify `usedDevice=DEVICE:PIN` only if the optional authenticationId is present.
-        // Otherwise it will be `usedDevice=DEVICE`.
-        boolean useDeviceAndPin = !Strings.isNullOrEmpty(authenticationId);
 
         String identificationMessage = messageUtils.buildIdentificationMessage(authenticationId);
         IdentificationResponse identificationResponse = messageUtils.encryptAndSend(identificationMessage,
@@ -108,7 +105,8 @@ public class EncapClient {
 
         storeIdentificationResult(identificationEntity);
 
-        String authenticationMessage = messageUtils.buildAuthenticationMessage(identificationEntity, useDeviceAndPin);
+        String authenticationMessage = messageUtils.buildAuthenticationMessage(identificationEntity,
+                authenticationMethod);
         SamlResponse samlResponse = messageUtils.encryptAndSend(authenticationMessage, SamlResponse.class);
         if (!samlResponse.isValid()) {
             throw new IllegalStateException("SamlResponse is not valid.");

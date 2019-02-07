@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.entities.AuthenticationIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.AuthenticationInitResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceAuthenticationResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
@@ -31,7 +32,8 @@ public class AktiaAuthenticationFlow {
     // Both registration (keyCard) and authentication (autoAuth) must login. Share the logic here.
     public void authenticate() throws SessionException, BankServiceException, AuthorizationException {
         try {
-            DeviceAuthenticationResponse authenticationResponse = encapClient.authenticateDevice();
+            DeviceAuthenticationResponse authenticationResponse = encapClient.authenticateDevice(
+                    AuthenticationMethod.DEVICE);
 
             AuthenticationInitResponse authenticationInitResponse = apiClient.authenticationInit(
                     authenticationResponse.getDeviceToken());
@@ -39,7 +41,9 @@ public class AktiaAuthenticationFlow {
             String authenticationId = apiClient.getAuthenticationId(authenticationInitResponse.getToken())
                     .orElseThrow(AuthorizationError.NO_VALID_PROFILE::exception);
 
-            authenticationResponse = encapClient.authenticateDevice(createAktiaAuthenticationId(authenticationId));
+            authenticationResponse = encapClient.authenticateDevice(
+                    AuthenticationMethod.DEVICE_AND_PIN,
+                    createAktiaAuthenticationId(authenticationId));
 
             OAuth2Token token = apiClient.getAndSaveAuthenticatedToken(authenticationResponse.getDeviceToken());
             if (!token.isValid()) {

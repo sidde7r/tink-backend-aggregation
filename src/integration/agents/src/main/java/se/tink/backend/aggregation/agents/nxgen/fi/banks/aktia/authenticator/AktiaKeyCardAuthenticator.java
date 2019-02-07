@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.AktiaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.aktia.authenticator.rpc.RegistrationOtpResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceAuthenticationResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceRegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
@@ -50,7 +51,8 @@ public class AktiaKeyCardAuthenticator implements KeyCardAuthenticator {
         String activationCode = otpResponse.getDeviceActivationCode();
         try {
             DeviceRegistrationResponse registrationResponse = encapClient.registerDevice(username, activationCode);
-            DeviceAuthenticationResponse authenticationResponse = encapClient.authenticateDevice();
+            DeviceAuthenticationResponse authenticationResponse = encapClient.authenticateDevice(
+                    AuthenticationMethod.DEVICE);
 
             if (!apiClient.registrationComplete(registrationToken, authenticationResponse.getDeviceToken())) {
                 // This should not happen.
