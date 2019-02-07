@@ -11,6 +11,8 @@ import javax.annotation.Nullable;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.Account;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.soap.LANGUAGE;
@@ -27,11 +29,10 @@ import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsum
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
-import se.tink.libraries.log.LogUtils;
 
 public class ConsumerMonitoringWrapper {
 
-    private static final LogUtils log = new LogUtils(ConsumerMonitoringWrapper.class);
+    private static final Logger log = LoggerFactory.getLogger(ConsumerMonitoringWrapper.class);
     private static final int PAGE_SIZE = 8000;
 
     private static final ObjectMapper XML_MAPPER = new XmlMapper();
