@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest;
 
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapConfiguration;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapConfiguration;
 
 public class SparebankenVestEncapConfiguration implements EncapConfiguration {
 

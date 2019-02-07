@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest;
 
 import java.util.Optional;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.SparebankenVestOneTimeActivationCodeAuthenticator;
@@ -11,7 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.loan.SparebankenVestLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.SparebankenVestTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.fetcher.transactionalaccount.SparebankenVestTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -31,15 +31,24 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class SparebankenVestAgent extends NextGenerationAgent {
     private final SparebankenVestApiClient apiClient;
+    private final EncapClient encapClient;
 
     public SparebankenVestAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new SparebankenVestApiClient(client);
+        this.encapClient = new EncapClient(
+                context,
+                request,
+                signatureKeyPair,
+                persistentStorage,
+                new SparebankenVestEncapConfiguration(),
+                DeviceProfileConfiguration.IOS_STABLE
+        );
     }
 
     @Override
@@ -49,9 +58,6 @@ public class SparebankenVestAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        EncapClient encapClient = new EncapClient(new SparebankenVestEncapConfiguration(), persistentStorage,
-                client, true, credentials.getField(Field.Key.USERNAME));
-
         return new AutoAuthenticationController(request, context,
                 new OneTimeActivationCodeAuthenticationController(
                         SparebankenVestOneTimeActivationCodeAuthenticator.create(apiClient, encapClient)),
