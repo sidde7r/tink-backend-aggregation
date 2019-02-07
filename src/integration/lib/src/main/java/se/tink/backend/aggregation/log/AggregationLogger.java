@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.agents.rpc.Account;
@@ -26,15 +28,55 @@ import se.tink.libraries.uuid.UUIDUtils;
  * The methods for (String, String, String) and similar are deprecated, and should be converted to type-safe
  * alternatives.
  */
-public class AggregationLogger extends se.tink.libraries.log.LogUtils {
+public class AggregationLogger {
+    protected Logger log;
 
     @VisibleForTesting
     static final int EXTRA_LONG_LIMIT = 1550;
 
     public AggregationLogger(Class clazz) {
-        super(clazz);
+        this.log = LoggerFactory.getLogger(clazz);
     }
 
+    public void debug(String message) {
+        log.debug(message);
+    }
+
+    public void debug(String message, Throwable e) {
+        log.debug(message, e);
+    }
+
+    public void error(String message) {
+        log.error(message);
+    }
+
+    public void error(String message, Throwable e) {
+        log.error(message, e);
+    }
+
+    public void info(String message) {
+        log.info(message);
+    }
+
+    public void info(String message, Throwable e) {
+        log.info(message, e);
+    }
+
+    public void trace(String message) {
+        log.trace(message);
+    }
+
+    public void trace(String message, Throwable e) {
+        log.trace(message, e);
+    }
+
+    public void warn(String message) {
+        log.warn(message);
+    }
+
+    public void warn(String message, Throwable e) {
+        log.warn(message, e);
+    }
 
     private static String concatenate(String message, Exception exception) {
         StringWriter exceptionStackTrace = new StringWriter();
