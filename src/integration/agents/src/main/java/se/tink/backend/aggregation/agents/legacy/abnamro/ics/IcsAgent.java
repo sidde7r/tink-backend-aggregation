@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.assertj.core.util.Lists;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -41,7 +42,6 @@ import se.tink.libraries.abnamro.client.model.creditcards.TransactionContainerEn
 import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.user.rpc.User;
 
@@ -74,7 +74,7 @@ public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccounts
 
     retryer =
         RetryerBuilder.<List<CreditCardAccountContainerEntity>>newBuilder(
-                new LogUtils(IcsAgent.class), "fetching ics transactions")
+                LoggerFactory.getLogger(IcsAgent.class), "fetching ics transactions")
             .withStopStrategy(StopStrategies.stopAfterAttempt(2))
             .withWaitStrategy(WaitStrategies.fixedWait(100, TimeUnit.MILLISECONDS))
             .retryIfExceptionOfType(IcsRetryableException.class)

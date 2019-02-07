@@ -8,11 +8,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.libraries.log.legacy.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RetryerBuilderTest {
 
-    private static final LogUtils log = new LogUtils(RetryerBuilderTest.class);
+    private static final Logger log = LoggerFactory.getLogger(RetryerBuilderTest.class);
 
     @Test
     public void testNullResult() throws ExecutionException, RetryException {

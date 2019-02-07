@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.abnamro.ics.retry;
 
 import com.github.rholder.retry.Attempt;
 import com.github.rholder.retry.RetryListener;
-import se.tink.libraries.log.legacy.LogUtils;
+import org.slf4j.Logger;
 
 public class RetryerBuilder {
 
-    public static <S> com.github.rholder.retry.RetryerBuilder<S> newBuilder(final LogUtils log, final String descriptor) {
+    public static <S> com.github.rholder.retry.RetryerBuilder<S> newBuilder(final Logger log, final String descriptor) {
         com.github.rholder.retry.RetryerBuilder<S> builder = com.github.rholder.retry.RetryerBuilder.newBuilder();
         builder.withRetryListener(new RetryListener() {
 
