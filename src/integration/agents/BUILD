@@ -93,6 +93,7 @@ junit_test(
         "//tools:phantomjs_linux",
         "//tools:phantomjs_mac",
     ],
+    tags = ["manual"],
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:ch_qos_logback_logback_classic",
