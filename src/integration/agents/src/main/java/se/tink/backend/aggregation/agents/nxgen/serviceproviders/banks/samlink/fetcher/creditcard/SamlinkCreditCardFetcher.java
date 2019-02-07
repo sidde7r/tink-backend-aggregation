@@ -9,8 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponseImpl;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class SamlinkCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
         TransactionKeyPaginator<CreditCardAccount, SamlinkCreditCardFetcher.TransactionKey> {

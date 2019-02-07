@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.enti
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.fetcher.rpc.LoanListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class Sparebank1LoanFetcher implements AccountFetcher<LoanAccount> {
     private final Sparebank1ApiClient apiClient;

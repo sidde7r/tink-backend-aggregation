@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.fetcher.creditcard.entities.CreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.samlink.rpc.LinksResponse;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class CreditCardsResponse extends LinksResponse {
     private List<CreditCard> cards;

@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenWe
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.authenticator.rpc.WebLoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class RaiffeisenTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final RaiffeisenWebApiClient apiClient;

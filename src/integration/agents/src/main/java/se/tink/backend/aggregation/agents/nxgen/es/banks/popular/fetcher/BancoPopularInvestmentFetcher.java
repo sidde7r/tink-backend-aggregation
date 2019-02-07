@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoP
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchAccountsRequest;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 
 public class BancoPopularInvestmentFetcher extends BancoPopularContractFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger log = new AggregationLogger(BancoPopularInvestmentFetcher.class);

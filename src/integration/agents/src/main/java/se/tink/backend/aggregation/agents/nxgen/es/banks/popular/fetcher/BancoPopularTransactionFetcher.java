@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.entities.BancoP
 import se.tink.backend.aggregation.agents.nxgen.es.banks.popular.fetcher.rpc.FetchTransactionsRequest;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class BancoPopularTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
 

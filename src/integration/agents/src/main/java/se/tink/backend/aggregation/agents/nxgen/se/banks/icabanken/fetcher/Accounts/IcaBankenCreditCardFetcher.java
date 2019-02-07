@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.fetcher.accou
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class IcaBankenCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
         TransactionKeyPaginator<CreditCardAccount, Date> {

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.BankdataApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bankdata.fetcher.entities.MastercardAgreementEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class BankdataCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private final BankdataApiClient bankClient;

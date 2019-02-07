@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import org.junit.Test;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.enums.AccountFlag;
 
 public class KbcAgreementDtoTest {

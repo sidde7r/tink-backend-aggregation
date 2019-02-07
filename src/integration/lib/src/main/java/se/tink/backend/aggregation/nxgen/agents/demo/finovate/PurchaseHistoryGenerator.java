@@ -1,5 +1,15 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.finovate;
 
+import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
+import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.DemoFileHandler;
+import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.GeneratePurchaseBase;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.DateUtils;
+
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -10,15 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
-import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
-import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.DemoFileHandler;
-import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.GeneratePurchaseBase;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.DateUtils;
+
 import static java.util.stream.Collectors.toList;
 
 /*

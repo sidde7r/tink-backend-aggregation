@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.c
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class HandelsbankenSECreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
 

@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.nxgen.core.account;
+package se.tink.backend.aggregation.nxgen.core.account.loan.util;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import java.io.Serializable;
 import java.util.Comparator;
 import se.tink.backend.aggregation.constants.MarketCode;
-import se.tink.backend.aggregation.nxgen.core.account.LoanDetails.Type;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 
 public abstract class LoanInterpreter implements Serializable {
 

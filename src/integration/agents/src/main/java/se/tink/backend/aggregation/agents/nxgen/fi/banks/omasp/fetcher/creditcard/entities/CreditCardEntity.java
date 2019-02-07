@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.fetcher.creditca
 import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.omasp.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject

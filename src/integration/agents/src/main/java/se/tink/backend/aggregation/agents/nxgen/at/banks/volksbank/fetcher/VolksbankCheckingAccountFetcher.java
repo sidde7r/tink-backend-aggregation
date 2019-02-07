@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;

@@ -4,7 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanDetailsAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.swedbank.loan.rpc.DetailedLoanResponse;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.libraries.amount.Amount;
 
 public abstract class BaseAbstractLoanEntity {

@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investm
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.EngagementResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 public class LaCaixaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {

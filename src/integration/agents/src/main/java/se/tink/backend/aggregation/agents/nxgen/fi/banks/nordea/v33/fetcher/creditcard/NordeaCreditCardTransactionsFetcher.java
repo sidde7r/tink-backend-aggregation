@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFICons
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class NordeaCreditCardTransactionsFetcher implements TransactionPagePaginator<CreditCardAccount> {

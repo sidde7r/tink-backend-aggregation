@@ -2,10 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.
 
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.HandelsbankenFIApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenFICreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardsResponse;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class CreditCardsFIResponse extends CreditCardsResponse<HandelsbankenFICreditCard> {
 

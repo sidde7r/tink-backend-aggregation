@@ -7,8 +7,8 @@ import java.util.HashMap;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1AmountUtils;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
-import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 @JsonObject
 public class LoanEntity {

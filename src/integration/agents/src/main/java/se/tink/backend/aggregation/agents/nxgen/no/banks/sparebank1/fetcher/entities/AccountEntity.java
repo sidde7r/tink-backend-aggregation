@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.Sparebank1Co
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebank1.entities.LinkEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.agents.rpc.AccountTypes;
 
 @JsonObject

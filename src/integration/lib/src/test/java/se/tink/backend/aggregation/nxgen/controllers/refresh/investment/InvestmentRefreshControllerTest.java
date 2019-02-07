@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.metrics.MetricId;
 
 @RunWith(MockitoJUnitRunner.class)

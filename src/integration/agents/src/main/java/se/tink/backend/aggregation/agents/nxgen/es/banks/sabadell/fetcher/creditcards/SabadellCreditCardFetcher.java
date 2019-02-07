@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConsta
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.FetchCreditCardsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class SabadellCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
     private SabadellApiClient apiClient;

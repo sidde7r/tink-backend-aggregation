@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entiti
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entities.HoldingEntity;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.investment.entities.PoolAccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject

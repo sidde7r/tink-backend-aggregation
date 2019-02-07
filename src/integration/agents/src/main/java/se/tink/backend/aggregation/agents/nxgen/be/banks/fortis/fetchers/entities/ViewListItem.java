@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 
 @JsonObject
 public class ViewListItem {

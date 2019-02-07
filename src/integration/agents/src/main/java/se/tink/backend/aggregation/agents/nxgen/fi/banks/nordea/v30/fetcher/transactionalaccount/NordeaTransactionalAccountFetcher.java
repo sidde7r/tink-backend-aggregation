@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.fetcher.tra
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v30.NordeaFiApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class NordeaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 

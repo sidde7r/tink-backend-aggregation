@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.nordea.v33.NordeaFIApiC
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.index.TransactionIndexPaginator;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -27,7 +27,7 @@ public class NordeaTransactionFetcher implements TransactionIndexPaginator<Trans
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int numberOfTransactions,
-            int startIndex) {
+                                                int startIndex) {
         return fetchTransactions(account, numberOfTransactions, startIndex, 1);
     }
 

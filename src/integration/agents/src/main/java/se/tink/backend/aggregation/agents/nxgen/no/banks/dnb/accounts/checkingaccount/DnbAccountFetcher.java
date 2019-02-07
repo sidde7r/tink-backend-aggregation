@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.entities.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.checkingaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class DnbAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private DnbApiClient apiClient;

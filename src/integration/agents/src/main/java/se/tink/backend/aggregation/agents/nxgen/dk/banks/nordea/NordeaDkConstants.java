@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.nordea;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.NordeaV20Constants;
-import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.agents.rpc.AccountTypes;

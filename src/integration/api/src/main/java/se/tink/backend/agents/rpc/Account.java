@@ -8,7 +8,17 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.AccountIdentifier.Type;
+import se.tink.libraries.account.enums.AccountExclusion;
+import se.tink.libraries.account.enums.AccountFlag;
+import se.tink.libraries.account.identifiers.GiroIdentifier;
+import se.tink.libraries.serialization.TypeReferences;
+import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
+
 import java.net.URI;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,14 +26,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import se.tink.libraries.account.enums.AccountExclusion;
-import se.tink.libraries.account.enums.AccountFlag;
-import se.tink.libraries.serialization.TypeReferences;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.AccountIdentifier.Type;
-import se.tink.libraries.account.identifiers.GiroIdentifier;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -227,7 +229,7 @@ public class Account implements Cloneable {
         this.holderName = holderName;
     }
 
-    public void setFlags(List<AccountFlag> flags) {
+    public void setFlags(Collection<AccountFlag> flags) {
         for (AccountFlag flag: flags) {
             this.putFlag(flag);
         }
@@ -253,7 +255,7 @@ public class Account implements Cloneable {
         return deserializeIdentifiers();
     }
 
-    public void setIdentifiers(List<AccountIdentifier> identifiers) {
+    public void setIdentifiers(Collection<AccountIdentifier> identifiers) {
         for (AccountIdentifier identifier : identifiers) {
             this.putIdentifier(identifier);
         }

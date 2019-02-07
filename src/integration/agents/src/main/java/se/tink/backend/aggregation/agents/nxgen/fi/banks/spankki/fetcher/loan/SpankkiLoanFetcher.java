@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.SpankkiApiClien
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.loan.entities.LoanOverviewEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 
 public class SpankkiLoanFetcher implements AccountFetcher<LoanAccount> {
 

@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.fr.banks.caisseepargne.fetcher.t
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class CaisseEpargneTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
         TransactionKeyPaginator<TransactionalAccount, String> {

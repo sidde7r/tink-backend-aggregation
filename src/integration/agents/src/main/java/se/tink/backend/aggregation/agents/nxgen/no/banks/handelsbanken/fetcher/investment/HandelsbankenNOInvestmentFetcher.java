@@ -23,7 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.i
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.InvestmentsOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.handelsbanken.fetcher.investment.rpc.PositionsListEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class HandelsbankenNOInvestmentFetcher implements AccountFetcher<InvestmentAccount> {

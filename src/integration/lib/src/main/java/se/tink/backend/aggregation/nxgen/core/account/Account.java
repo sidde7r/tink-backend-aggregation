@@ -4,48 +4,61 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.user.rpc.User;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BuildStep;
 import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.user.rpc.User;
+
+import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public abstract class Account {
     private static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
     private String name;
+    private String productName;
     private String accountNumber;
     private Amount balance;
     private Amount availableCredit;
-    private List<AccountIdentifier> identifiers;
+    private Set<AccountIdentifier> identifiers;
     private String uniqueIdentifier;
-    private String bankIdentifier;
+    private String apiIdentifier;
     private HolderName holderName;
     private TemporaryStorage temporaryStorage;
-    private List<AccountFlag> accountFlags;
+    private Set<AccountFlag> accountFlags;
 
+    @Deprecated
     protected Account(Builder<? extends Account, ? extends Account.Builder> builder) {
         this.name = builder.getName();
         this.accountNumber = builder.getAccountNumber();
         this.balance = builder.getBalance();
         this.availableCredit = builder.getAvailableCredit();
-        this.identifiers = ImmutableList.copyOf(builder.getIdentifiers());
+        this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
         this.uniqueIdentifier = sanitizeUniqueIdentifier(builder.getUniqueIdentifier());
-        this.bankIdentifier = builder.getBankIdentifier();
+        this.apiIdentifier = builder.getBankIdentifier();
         this.holderName = builder.getHolderName();
         this.temporaryStorage = builder.getTransientStorage();
-        this.accountFlags = ImmutableList.copyOf(builder.getAccountFlags());
+        this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         // Safe-guard against uniqueIdentifiers containing only formatting characters (e.g. '*' or
         // '-').
         Preconditions.checkState(
@@ -53,6 +66,162 @@ public abstract class Account {
                 "Unique identifier was empty after sanitation.");
     }
 
+    protected Account(StepBuilder<? extends Account, ?> builder) {
+        this.accountNumber = builder.getAccountNumber();
+        this.apiIdentifier = builder.getApiIdentifier();
+        this.balance = builder.getBalance();
+        this.identifiers = ImmutableSet.copyOf(builder.getIdentifiers());
+        this.uniqueIdentifier = builder.getUniqueIdentifier();
+        this.temporaryStorage = builder.getTemporaryStorage();
+        this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
+        this.productName = builder.getProductName();
+
+        // Use account number as alias if no explicit alias is set.
+        this.name =
+                Strings.isNullOrEmpty(builder.getAlias())
+                        ? builder.getAccountNumber()
+                        : builder.getAlias();
+        // Only use one holder name for now
+        this.holderName =
+                new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
+    }
+
+    public abstract static class StepBuilder<A extends Account, B extends BuildStep<A, B>>
+            implements BuildStep<A, B> {
+
+        private String uniqueIdentifier;
+        private String accountNumber;
+        private String apiIdentifier;
+        private Amount balance;
+        private String alias;
+        private String productName;
+
+        private final Collection<String> holderNames = Lists.newArrayList();
+        private final Set<AccountIdentifier> identifiers = new HashSet<>();
+        private final TemporaryStorage temporaryStorage = new TemporaryStorage();
+        private final Set<AccountFlag> accountFlags = new HashSet<>();
+
+        protected final void applyUniqueIdentifier(@Nonnull String uniqueIdentifier) {
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(uniqueIdentifier),
+                    "UniqueIdentifier must no be null or empty.");
+
+            uniqueIdentifier = StringUtils.removeNonAlphaNumeric(uniqueIdentifier);
+
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(uniqueIdentifier),
+                    "UniqueIdentifier was empty after sanitation.");
+
+            this.uniqueIdentifier = uniqueIdentifier;
+        }
+
+        protected final void applyAccountNumber(@Nonnull String accountNumber) {
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(accountNumber),
+                    "AccountNumber must not be null or empty.");
+
+            this.accountNumber = accountNumber;
+        }
+
+        protected final void applyBalance(@Nonnull Amount balance) {
+            Preconditions.checkNotNull(balance, "Balance must not be null.");
+
+            this.balance = balance;
+        }
+
+        @Override
+        public final B addAccountIdentifier(@Nonnull AccountIdentifier identifier) {
+            Preconditions.checkNotNull(identifier, "AccountIdentifier must not be null.");
+
+            if (identifiers.add(identifier)) {
+                return buildStep();
+            }
+
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Identifier %s is already present in the set.", identifier.getType()));
+        }
+
+        @Override
+        public final B setApiIdentifier(@Nonnull String identifier) {
+            this.apiIdentifier = identifier;
+            return buildStep();
+        }
+
+        @Override
+        public final B setAlias(@Nonnull String alias) {
+            this.alias = alias;
+            return buildStep();
+        }
+
+        @Override
+        public final B setProductName(@Nonnull String productName) {
+            this.productName = productName;
+            return buildStep();
+        }
+
+        @Override
+        public final B addHolderName(@Nonnull String holderName) {
+            this.holderNames.add(holderName);
+            return buildStep();
+        }
+
+        @Override
+        public final B addAccountFlags(@Nonnull AccountFlag... accountFlags) {
+            this.accountFlags.addAll(Arrays.asList(accountFlags));
+            return buildStep();
+        }
+
+        @Override
+        public final <V> B putInTemporaryStorage(@Nonnull String key, @Nonnull V value) {
+            this.temporaryStorage.put(key, value);
+            return buildStep();
+        }
+
+        protected abstract B buildStep();
+
+        String getUniqueIdentifier() {
+            return uniqueIdentifier;
+        }
+
+        String getAccountNumber() {
+            return accountNumber;
+        }
+
+        String getApiIdentifier() {
+            return apiIdentifier;
+        }
+
+        Amount getBalance() {
+            return balance;
+        }
+
+        String getAlias() {
+            return alias;
+        }
+
+        String getProductName() {
+            return productName;
+        }
+
+        Collection<String> getHolderNames() {
+            return holderNames;
+        }
+
+        Set<AccountIdentifier> getIdentifiers() {
+            return identifiers;
+        }
+
+        TemporaryStorage getTemporaryStorage() {
+            return temporaryStorage;
+        }
+
+        Set<AccountFlag> getAccountFlags() {
+            return accountFlags;
+        }
+    }
+
+    @Deprecated
     public static Builder<? extends Account, ?> builder(
             AccountTypes type, String uniqueIdentifier) {
         switch (type) {
@@ -77,12 +246,14 @@ public abstract class Account {
         return uniqueIdentifier.replaceAll("[^\\dA-Za-z]", "");
     }
 
-    public AccountTypes getType() {
-        return AccountTypes.CHECKING;
-    }
+    public abstract AccountTypes getType();
 
     public String getName() {
         return this.name;
+    }
+
+    public String getProductName() {
+        return productName;
     }
 
     public String getAccountNumber() {
@@ -105,7 +276,7 @@ public abstract class Account {
         return Lists.newArrayList(this.accountFlags);
     }
 
-    private String getUniqueIdentifier() {
+    String getUniqueIdentifier() {
         return this.uniqueIdentifier;
     }
 
@@ -117,9 +288,16 @@ public abstract class Account {
         return this.uniqueIdentifier.equals(sanitizeUniqueIdentifier(otherUniqueIdentifier));
     }
 
-    /** @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId */
+    /** @deprecated Use getApiIdentifier() instead.
+     * @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId */
+    @Deprecated
     public String getBankIdentifier() {
-        return this.bankIdentifier;
+        return this.apiIdentifier;
+    }
+
+    /** @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId */
+    public String getApiIdentifier() {
+        return this.apiIdentifier;
     }
 
     @Override
@@ -129,7 +307,7 @@ public abstract class Account {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getUniqueIdentifier());
+        return getUniqueIdentifier().hashCode();
     }
 
     public se.tink.backend.agents.rpc.Account toSystemAccount(User user) {
@@ -177,6 +355,8 @@ public abstract class Account {
         return SerializationUtils.serializeToString(map);
     }
 
+    /** @deprecated Use StepBuilder instead */
+    @Deprecated
     public abstract static class Builder<A extends Account, T extends Builder<A, T>> {
         protected final List<AccountIdentifier> identifiers = Lists.newArrayList();
         protected final List<AccountFlag> accountFlags = Lists.newArrayList();

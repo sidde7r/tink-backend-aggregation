@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.tran
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class ErsteBankAccountFetcher implements AccountFetcher<TransactionalAccount> {
 

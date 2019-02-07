@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inves
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAccount> {

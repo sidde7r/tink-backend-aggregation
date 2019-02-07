@@ -10,8 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accou
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.bec.accounts.checking.rpc.FetchAccountResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BecAccountFetcher implements AccountFetcher<TransactionalAccount> {

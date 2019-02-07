@@ -4,7 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaApiClien
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class LaCaixaTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
 

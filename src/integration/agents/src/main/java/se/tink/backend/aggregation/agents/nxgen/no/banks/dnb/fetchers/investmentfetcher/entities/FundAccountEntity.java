@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.fetchers.investmen
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collections;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.InvestmentAccount;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 

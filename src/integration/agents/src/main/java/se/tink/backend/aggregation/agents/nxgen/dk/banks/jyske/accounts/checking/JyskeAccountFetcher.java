@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeApiClient;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.entities.AccountEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class JyskeAccountFetcher implements AccountFetcher<TransactionalAccount> {
 

@@ -9,8 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtAntiCacheParser;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtOpeningDateParser;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.account.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;

@@ -3,12 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetc
 import java.util.ArrayList;
 import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26ApiClient;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.rpc.SavingsAccountResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class N26AccountFetcher implements AccountFetcher<TransactionalAccount> {
 

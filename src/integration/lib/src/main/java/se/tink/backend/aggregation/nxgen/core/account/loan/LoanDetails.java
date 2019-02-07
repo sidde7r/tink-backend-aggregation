@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.nxgen.core.account;
+package se.tink.backend.aggregation.nxgen.core.account.loan;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
 import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.libraries.date.DateUtils;

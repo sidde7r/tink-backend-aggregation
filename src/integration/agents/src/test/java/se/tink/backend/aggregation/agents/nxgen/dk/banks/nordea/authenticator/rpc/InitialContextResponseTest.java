@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v2
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.entities.ProductEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.fetcher.rpc.initialContext.InitialContextResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.nordea.v20.parsers.NordeaV20Parser;
-import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.agents.rpc.Credentials;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

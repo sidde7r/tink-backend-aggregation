@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.enti
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 @JsonObject
 public enum LoanTypeEntity {
