@@ -111,6 +111,10 @@ public class MessageResponse extends ResponseEntity {
                 || findError(response, BelfiusConstants.ErrorCodes.BENEFICIARY_WEEKLY_LIMIT);
     }
 
+    public static boolean requireSignOfDailyLimit(BelfiusResponse response) {
+        return findError(response, BelfiusConstants.ErrorCodes.DAILY_LIMIT);
+    }
+
     public static boolean requireSignOfBeneficiaryLimit(BelfiusResponse response) {
         return findError(response, BelfiusConstants.ErrorCodes.BENEFICIARY_LIMIT);
     }

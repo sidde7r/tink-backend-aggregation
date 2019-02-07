@@ -294,6 +294,7 @@ public class BelfiusConstants {
         public static final String IDENTICAL_PAYMENT = "12DB/000000";
         public static final String WEEKLY_READER_LIMIT_CODE = "1000/AMW036";
         public static final String BENEFICIARY_LIMIT = "1000/NOBENE";
+        public static final String DAILY_LIMIT = "1000/AMD063";
         public static final String WEEKLY_LIMIT = "1208/000000";
         public static final String BENEFICIARY_WEEKLY_LIMIT = "1000/AMW033";
         public static final String INVBALID_SIGN_BENEFICIARY_CODE = "90AC/000000";

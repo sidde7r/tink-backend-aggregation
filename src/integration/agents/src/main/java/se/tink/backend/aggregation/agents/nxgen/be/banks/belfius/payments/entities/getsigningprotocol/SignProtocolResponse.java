@@ -74,4 +74,8 @@ public class SignProtocolResponse extends BelfiusResponse {
     public String getErrorMessage() {
         return MessageResponse.getErrorMessage(this);
     }
+
+    public boolean requireSignDailyLimit() {
+        return MessageResponse.requireSignOfDailyLimit(this);
+    }
 }
