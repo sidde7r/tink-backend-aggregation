@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.tr
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.VolvoFinansConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.volvofinans.fetcher.transactionalaccounts.rpc.SavingsAccountsResponse;
@@ -16,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.DateUtils;
 import static org.apache.commons.lang3.ObjectUtils.max;
 
@@ -31,8 +34,18 @@ public class VolvoFinansTransactionalAccountFetcher implements AccountFetcher<Tr
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        SavingsAccountsResponse savingsAccountsResponse = apiClient.savingsAccounts();
-        return savingsAccountsResponse.getTinkAccounts();
+        try {
+            SavingsAccountsResponse savingsAccountsResponse = apiClient.savingsAccounts();
+            return savingsAccountsResponse.getTinkAccounts();
+        } catch (HttpResponseException hre) {
+            // when user doesn't have savings we can get NOT FOUND (most often if the user doesn't have credit card)
+            if (hre.getResponse().getStatus() == HttpStatus.SC_NOT_FOUND) {
+                return Collections.emptyList();
+            }
+
+            // this error is unknown, re-throw
+            throw hre;
+        }
     }
 
     @Override
