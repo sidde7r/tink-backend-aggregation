@@ -5,7 +5,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.SparebankenVestApiClient;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.entities.SecurityParamsRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.no.banks.sparebankenvest.authenticator.utils.SparebankenVestAuthUtils;
-import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapClient;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.models.DeviceRegistrationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 
 public class SparebankenVestOneTimeActivationCodeAuthenticator implements PasswordAuthenticator {
@@ -26,16 +27,19 @@ public class SparebankenVestOneTimeActivationCodeAuthenticator implements Passwo
     @Override
     public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
         apiClient.initLogin();
+        try {
+            DeviceRegistrationResponse deviceRegistrationResponse = encapClient.registerDevice(username, password);
 
-        String securityToken = encapClient.activateAndAuthenticateUser(password);
+            String htmlResponseString = apiClient.activate(deviceRegistrationResponse.getDeviceToken());
 
-        String htmlResponseString = apiClient.activate(securityToken);
+            SecurityParamsRequestBody securityParamsRequestBody =
+                    SparebankenVestAuthUtils.createSecurityParamsRequestBody(htmlResponseString);
+            htmlResponseString = apiClient.postSecurityParamsActivation(securityParamsRequestBody);
 
-        SecurityParamsRequestBody securityParamsRequestBody =
-                SparebankenVestAuthUtils.createSecurityParamsRequestBody(htmlResponseString);
-        htmlResponseString = apiClient.postSecurityParamsActivation(securityParamsRequestBody);
-
-        securityParamsRequestBody = SparebankenVestAuthUtils.createSecurityParamsRequestBody(htmlResponseString);
-        apiClient.finalizeLogin(securityParamsRequestBody);
+            securityParamsRequestBody = SparebankenVestAuthUtils.createSecurityParamsRequestBody(htmlResponseString);
+            apiClient.finalizeLogin(securityParamsRequestBody);
+        } finally {
+            encapClient.saveDevice();
+        }
     }
 }

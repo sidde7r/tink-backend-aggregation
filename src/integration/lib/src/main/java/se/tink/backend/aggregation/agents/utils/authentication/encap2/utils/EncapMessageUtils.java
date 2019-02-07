@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapConst
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.EncapStorage;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.IdentificationEntity;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.RegistrationResultEntity;
+import se.tink.backend.aggregation.agents.utils.authentication.encap2.enums.AuthenticationMethod;
 import se.tink.backend.aggregation.agents.utils.authentication.encap2.rpc.RequestBody;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -105,19 +106,24 @@ public class EncapMessageUtils {
         return getUrlEncodedQueryParams(queryPairs);
     }
 
-    public String buildAuthenticationMessage(IdentificationEntity identificationEntity, boolean useDeviceAndPin) {
+    public String buildAuthenticationMessage(IdentificationEntity identificationEntity,
+            AuthenticationMethod authenticationMethod) {
         String otpChallenge = identificationEntity.getB64OtpChallenge();
 
+        String usedAuthMethod;
         String challengeResponse;
-        if (useDeviceAndPin) {
-            // This happens when we have an authenticationId.
+        if (authenticationMethod == AuthenticationMethod.DEVICE_AND_PIN) {
             challengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
                     storage.getAuthenticationKey(),
                     otpChallenge);
-        } else {
+            usedAuthMethod = EncapConstants.Message.DEVICE_PIN;
+        } else if (authenticationMethod == AuthenticationMethod.DEVICE) {
             challengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
                     storage.getAuthenticationKeyWithoutPin(),
                     otpChallenge);
+            usedAuthMethod = EncapConstants.Message.DEVICE;
+        } else {
+            throw new IllegalStateException("Unknown encap authentication method.");
         }
 
         Map<String, String> queryPairs = new HashMap<>();
@@ -130,11 +136,7 @@ public class EncapMessageUtils {
         queryPairs.put("operation", EncapConstants.Message.OPERATION_AUTHENTICATE);
         queryPairs.put("registrationId", storage.getRegistrationId());
         queryPairs.put("saltHash1", storage.getSaltHash());
-        if (useDeviceAndPin) {
-            queryPairs.put("usedAuthMethod", EncapConstants.Message.DEVICE_PIN);
-        } else {
-            queryPairs.put("usedAuthMethod", EncapConstants.Message.DEVICE);
-        }
+        queryPairs.put("usedAuthMethod", usedAuthMethod);
 
         return getUrlEncodedQueryParams(queryPairs);
     }

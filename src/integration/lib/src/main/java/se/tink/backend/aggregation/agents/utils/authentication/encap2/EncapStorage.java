@@ -132,6 +132,11 @@ public class EncapStorage {
     }
 
     public void save() {
+        if (!this.hasInitiated) {
+            // Do not try to save it unless we have initiated (seeded or loaded) the storage.
+            return;
+        }
+
         Storage storageStructure = new Storage();
 
         storageStructure.put(EncapConstants.Storage.B64_DEVICE_HASH, deviceHash);
