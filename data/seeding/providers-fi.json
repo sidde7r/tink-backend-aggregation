@@ -307,10 +307,10 @@
             ],
             "name": "fi-aktia-codecard",
             "passwordhelptext": "Use the same password as you would in your bank's mobile app.",
-            "popular": false,
+            "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
-            "status": "TEMPORARY_DISABLED",
+            "status": "ENABLED",
             "transactional": true,
             "type": "BANK"
         },
