@@ -58,7 +58,7 @@ public class ApiTeamOwnershipChecker {
         if (!unannotatedResources.isEmpty()) {
             log.error("There were API methods incorrectly annotated:");
             unannotatedResources
-                    .forEach(m -> log.error(String.format(" * %s#%s", m.getDeclaringClass().getName(), m.getName())));
+                    .forEach(m -> log.error(" * {}#{}", m.getDeclaringClass().getName(), m.getName()));
             Assert.fail("There were API methods incorrectly annotated. See logged list.");
         }
     }
