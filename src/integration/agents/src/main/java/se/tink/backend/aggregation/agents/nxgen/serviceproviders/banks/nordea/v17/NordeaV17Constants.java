@@ -57,7 +57,7 @@ public class NordeaV17Constants {
         CODE_BLOCKED(new LocalizableKey("Your personal code has been locked. Contact Nordea customer services (0771-42 15 16) to order a new code, or contact your local Nordea office.")),
         NO_VALID_BANKID(new LocalizableKey("You're missing a valid Mobilt BankID. Download the BankID app and login to Internetbanken to order and connect to Mobil BankID.")),
         NO_VALID_AGREEMENT(new LocalizableKey("We could not find a valid internet banking agreement. If you login to Nordea's internetbank with e-code (card reader) you may sign an agreement for internet and telephone banking")),
-        TOO_MANY_LOGINS(new LocalizableKey("You have used the service too many time today, please try again tomorrow."));
+        TOO_MANY_LOGINS(new LocalizableKey("Message from bank: You have used the service too many time today, please try again tomorrow."));
 
         private LocalizableKey userMessage;
 
