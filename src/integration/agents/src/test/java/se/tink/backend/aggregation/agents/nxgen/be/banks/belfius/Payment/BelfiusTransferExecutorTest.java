@@ -8,7 +8,7 @@ import java.util.Locale;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.framework.ProviderConfigModel;
+import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.BelfiusTransferExecutor;
@@ -37,11 +37,11 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     // TODO Move this out to test helper.
-    private ProviderConfigModel readProvidersConfiguration(String market) {
+    private ProviderConfig readProvidersConfiguration(String market) {
         String providersFilePath = "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
         File providersFile = new File(providersFilePath);
         try {
-            return mapper.readValue(providersFile, ProviderConfigModel.class);
+            return mapper.readValue(providersFile, ProviderConfig.class);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -70,7 +70,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         t.setDestinationMessage("FromTink");
         t.getDestination().setName("");
         autoAuthenticate();
-        ProviderConfigModel marketProviders = readProvidersConfiguration("be");
+        ProviderConfig marketProviders = readProvidersConfiguration("be");
         Provider provider = marketProviders.getProvider("be-belfius-cardreader");
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
@@ -105,7 +105,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         t.setDestinationMessage("TestFromTink");
         t.getDestination().setName("");
         autoAuthenticate();
-        ProviderConfigModel marketProviders = readProvidersConfiguration("be");
+        ProviderConfig marketProviders = readProvidersConfiguration("be");
         Provider provider = marketProviders.getProvider("be-belfius-cardreader");
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
@@ -139,7 +139,7 @@ public class BelfiusTransferExecutorTest extends BelfiusTest {
         destinationAcc.setName("");
         t.setDestinationMessage("123/3456/12328");
         autoAuthenticate();
-        ProviderConfigModel marketProviders = readProvidersConfiguration("be");
+        ProviderConfig marketProviders = readProvidersConfiguration("be");
         Provider provider = marketProviders.getProvider("be-belfius-cardreader");
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
