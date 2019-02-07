@@ -48,7 +48,7 @@ public class Catalog {
         try {
             i18n = I18nFactory.getI18n(Catalog.class, I18N_MESSAGES_BUNDLE, locale);
         } catch (Exception e) {
-            log.error("Could not instantiate catalog for locale: " + locale);
+            log.error("Could not instantiate catalog for locale: {}", locale);
         }
     }
 
