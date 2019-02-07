@@ -3,6 +3,14 @@ package se.tink.backend.aggregation.agents.framework;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,25 +28,16 @@ import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
@@ -120,9 +119,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private Agent createAgent(CredentialsRequest credentialsRequest) {
         try {
-            AggregationServiceConfiguration aggregationServiceConfiguration =
+            AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
                     CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
-            configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
+            configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
             AgentFactory factory = new AgentFactory(configuration);
 
             Class<? extends Agent> cls = AgentClassFactory.getAgentClass(provider);
@@ -337,7 +336,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         private AisValidator validator;
 
         public Builder(String market, String providerName) {
-            ProviderConfigModel marketProviders = readProvidersConfiguration(market);
+            ProviderConfig marketProviders = readProvidersConfiguration(market);
             this.provider = marketProviders.getProvider(providerName);
             this.provider.setMarket(marketProviders.getMarket());
             this.provider.setCurrency(marketProviders.getCurrency());
@@ -347,12 +346,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             return market.replaceAll("[^a-zA-Z]", "");
         }
 
-        private ProviderConfigModel readProvidersConfiguration(String market) {
+        private ProviderConfig readProvidersConfiguration(String market) {
             String providersFilePath =
                     "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
             File providersFile = new File(providersFilePath);
             try {
-                return mapper.readValue(providersFile, ProviderConfigModel.class);
+                return mapper.readValue(providersFile, ProviderConfig.class);
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
@@ -516,7 +515,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         public AgentIntegrationTest build() {
             if (refreshableItems.isEmpty()) {
-                refreshableItems.addAll(RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
+                refreshableItems.addAll(
+                        RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL));
             }
 
             Preconditions.checkNotNull(provider, "Provider was not set.");
