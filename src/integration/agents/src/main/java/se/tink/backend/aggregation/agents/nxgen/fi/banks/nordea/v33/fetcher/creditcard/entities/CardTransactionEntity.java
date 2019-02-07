@@ -20,7 +20,10 @@ public class CardTransactionEntity {
     private String currency;
     @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonProperty("booking_date")
-    private Date bookingnDate;
+    private Date bookingDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonProperty("transaction_date")
+    private Date transactionDate;
     @JsonProperty("interest_date")
     private String interestDate;
     @JsonProperty("title")
@@ -36,7 +39,11 @@ public class CardTransactionEntity {
                 .setAmount(new Amount(NordeaFIConstants.CURRENCY, amount))
                 .setPending(!booked)
                 .setDescription(String.format("%s", title))
-                .setDate(bookingnDate)
+                .setDate(getDate())
                 .build();
+    }
+
+    private Date getDate(){
+        return booked ? bookingDate : transactionDate;
     }
 }
