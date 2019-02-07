@@ -20,18 +20,19 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.api.headers.TinkHttpHeaders;
 import se.tink.libraries.access_logging.AccessLoggingRequestDetails;
 import se.tink.libraries.access_logging.AccessLoggingUtils;
 import se.tink.libraries.auth.HttpAuthenticationMethod;
-import se.tink.libraries.log.LogUtils;
 
 public class AccessLoggingFilter implements ContainerRequestFilter, ContainerResponseFilter {
 
     @Context
     private HttpServletRequest servletRequest;
 
-    private static final LogUtils log = new LogUtils(AccessLoggingFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(AccessLoggingFilter.class);
     private static final Splitter SPLITTER_SPACE = Splitter.on(CharMatcher.WHITESPACE);
     private static final Splitter SPLITTER_SLASH = Splitter.on("/");
     private static final ObjectMapper MAPPER = new ObjectMapper();
