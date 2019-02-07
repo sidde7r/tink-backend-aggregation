@@ -24,7 +24,6 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.account.identifiers.TinkIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
-import se.tink.libraries.log.LogUtils;
 
 public abstract class AccountIdentifier {
     private static final String NAME_PARAMETER = "name";

@@ -18,7 +18,6 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.log.LogUtils;
 
 public class ApiTeamOwnershipChecker {
 
