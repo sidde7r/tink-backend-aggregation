@@ -23,7 +23,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RetryableWebResource {
     public static class Candidate implements Comparable<Candidate> {
@@ -211,7 +212,7 @@ public class RetryableWebResource {
 
     }
 
-    private final static LogUtils log = new LogUtils(RetryableWebResource.class);
+    private static final Logger log = LoggerFactory.getLogger(RetryableWebResource.class);
 
     public static void decorate(String serviceName, List<Candidate> candidates, WebResource resource,
             Sleeper sleeper, Ticker ticker) {
