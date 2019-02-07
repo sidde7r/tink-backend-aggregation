@@ -13,12 +13,9 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BunqSignatureHeaderFilter extends Filter {
-
-    private static final LogUtils log = new LogUtils(BunqSignatureHeaderFilter.class);
 
     private final PersistentStorage persistentStorage;
     private final String userAgent;
