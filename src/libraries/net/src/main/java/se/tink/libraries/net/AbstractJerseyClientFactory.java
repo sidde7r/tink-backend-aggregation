@@ -33,17 +33,18 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractJerseyClientFactory {
     
     private static final int READ_TIMEOUT_MS = 30000;
     private static final int CONNECT_TIMEOUT_MS = 10000;
 
-    protected final LogUtils log;
+    protected final Logger log;
 
     protected AbstractJerseyClientFactory(Class<? extends AbstractJerseyClientFactory> cls) {
-        log = new LogUtils(cls);
+        log = LoggerFactory.getLogger(cls);
     }
     
     public Client createBasicClient() {
