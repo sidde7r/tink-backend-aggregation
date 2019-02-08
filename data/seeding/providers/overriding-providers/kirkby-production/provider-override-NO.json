@@ -2569,7 +2569,7 @@
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
-            "status": "DISABLED",
+            "status": "ENABLED",
             "transactional": true,
             "type": "BANK",
             "displayDescription": null,
