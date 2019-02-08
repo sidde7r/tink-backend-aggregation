@@ -18,7 +18,6 @@ import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
@@ -72,12 +71,6 @@ public class AggregationServiceResource implements AggregationService {
         // TODO: Add commands appropriate for doing an inline refresh here in next iteration.
 
         return createCredentialsOperation.getRequest().getCredentials();
-    }
-
-    // TODO: Remove this endpoint when it's not available through the aggregation controller anymore.
-    @Override
-    public void deleteCredentials(DeleteCredentialsRequest request, ClientInfo clientInfo) {
-        HttpResponseHelper.ok();
     }
 
     @Override

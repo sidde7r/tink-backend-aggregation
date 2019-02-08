@@ -43,10 +43,6 @@ public class Credentials implements Cloneable {
     private Date nextUpdate;
     private String payload;
     private String providerName;
-
-    @JsonInclude(Include.NON_NULL)
-    private String secretKey;
-
     private CredentialsStatus status;
     private String statusPayload;
     private String statusPrompt;
@@ -83,15 +79,6 @@ public class Credentials implements Cloneable {
     public void clearSensitiveInformation(Provider provider) {
         setSensitivePayload(null);
         setFields(separateFields(provider, false));
-    }
-
-    /**
-     * Removes any information that is not to be returned to the client.
-     */
-    public void clearInternalInformation(Provider provider) {
-        clearSensitiveInformation(provider);
-        setSecretKey(null);
-        setPayload(null);
     }
 
     @Override
@@ -166,10 +153,6 @@ public class Credentials implements Cloneable {
 
     public Date getUpdated() {
         return updated;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
     }
 
     public String getSensitivePayloadSerialized() {
@@ -354,10 +337,6 @@ public class Credentials implements Cloneable {
 
     public void setProviderName(String provider) {
         this.providerName = provider;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
     }
 
     public void setSensitivePayloadSerialized(String sensitivePayloadSerialized) {
