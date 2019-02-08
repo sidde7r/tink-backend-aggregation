@@ -99,8 +99,6 @@ public class CredentialsStringMaskerTest {
                 .thenReturn(PASSWORD);
         when(mock.getSensitivePayload())
                 .thenReturn(SENSITIVE_PAYLOAD);
-        when(mock.getSecretKey())
-                .thenReturn(SECRET_KEY);
         when(mock.getUserId())
                 .thenReturn(USER_ID);
         when(mock.getUsername())
