@@ -60,9 +60,6 @@ public class CredentialsStringMasker implements StringMasker {
         case PASSWORD:
             value = credentials.getPassword();
             break;
-        case SECRET_KEY:
-            value = credentials.getSecretKey();
-            break;
         case USERNAME:
             value = credentials.getUsername();
             break;

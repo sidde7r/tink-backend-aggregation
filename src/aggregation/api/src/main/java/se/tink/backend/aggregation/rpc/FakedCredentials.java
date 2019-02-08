@@ -190,11 +190,6 @@ public class FakedCredentials extends Credentials {
     }
 
     @Override
-    public void setSecretKey(String secretKey) {
-        // Not saving on fake credential
-    }
-
-    @Override
     @JsonIgnore
     public void setStatusPrompt(String statusPrompt) {
         // Not saving on fake credential
