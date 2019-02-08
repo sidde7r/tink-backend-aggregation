@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,11 +15,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import org.joda.time.DateTime;
-import org.joda.time.Minutes;
 import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.provider.rpc.Provider;
-import se.tink.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -33,12 +29,6 @@ public class Credentials implements Cloneable {
     private static class FieldsMap extends HashMap<String, String> {
 
     }
-
-    private static final ImmutableSet<Field.Key> TRIM_FIELDS_WHITELIST = ImmutableSet.of(Field.Key.USERNAME);
-
-    private static final Minutes KEEP_ALIVE_MAX_AGE = Minutes.minutes(30);
-
-    private static final Minutes KEEP_ALIVE_MIN_AGE = Minutes.minutes(2);
 
     private Date debugUntil;
     private long providerLatency;
@@ -69,33 +59,6 @@ public class Credentials implements Cloneable {
         if (id == null) {
             id = StringUtils.generateUUID();
         }
-    }
-
-    public void addSerializedFields(String maskedFields) {
-        Map<String, String> fields = getFields();
-        Map<String, String> newFields = SerializationUtils.deserializeFromString(maskedFields, FieldsMap.class);
-        fields.putAll(newFields);
-        setFields(fields);
-    }
-
-    /**
-     * Removes any information that is not to be stored in the main database.
-     *
-     * @param provider
-     */
-    public void clearSensitiveInformation(Provider provider) {
-        setSensitivePayload(null);
-        setFields(separateFields(provider, false));
-    }
-
-    /**
-     * Removes any information that is not to be returned to the client.
-     */
-    public void clearInternalInformation(Provider provider) {
-        clearSensitiveInformation(provider);
-        setSecretKey(null);
-        setPayload(null);
-        setSensitiveDataSerialized(null);
     }
 
     @Override
@@ -166,10 +129,6 @@ public class Credentials implements Cloneable {
 
     public String getProviderName() {
         return this.providerName;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
     }
 
     public String getSensitivePayloadSerialized() {
@@ -274,11 +233,6 @@ public class Credentials implements Cloneable {
         return getField(Field.Key.USERNAME);
     }
 
-    @JsonIgnore
-    public boolean isDebug() {
-        return debugUntil != null && debugUntil.after(new Date());
-    }
-
     public Date getDebugUntil() {
         return debugUntil;
     }
@@ -370,10 +324,6 @@ public class Credentials implements Cloneable {
         this.providerName = provider;
     }
 
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
     public void setSensitivePayloadSerialized(String sensitivePayloadSerialized) {
         this.sensitivePayloadSerialized = sensitivePayloadSerialized;
     }
@@ -449,51 +399,6 @@ public class Credentials implements Cloneable {
                 .toString();
     }
 
-    /**
-     * Removes leading and trailing whitespace from whitelist of fields that we should trim
-     */
-    public void trimFields() {
-        Map<String, String> fields = getFields();
-
-        for (Field.Key key : TRIM_FIELDS_WHITELIST) {
-            String fieldKey = key.getFieldKey();
-            String field = fields.get(fieldKey);
-
-            if (field != null) {
-                fields.put(fieldKey, StringUtils.trim(field));
-            }
-        }
-
-        setFields(fields);
-    }
-
-    /**
-     * Check if this credential is a demo credential
-     */
-    @JsonIgnore
-    public boolean isDemoCredentials() {
-        for (DemoCredentials demoCredentials : DemoCredentials.values()) {
-            final String demoUsername = demoCredentials.getUsername();
-            if (fieldsSerialized != null && fieldsSerialized.contains(demoUsername)) {
-                setUsername(demoUsername); // If demo-username is found on another field than username
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @JsonIgnore
-    public <T> T getPersistentSession(Class<T> returnType) {
-        String payload = getSensitivePayload(Field.Key.PERSISTENT_LOGIN_SESSION_NAME);
-
-        if (Strings.isNullOrEmpty(payload)) {
-            return null;
-        }
-
-        return SerializationUtils.deserializeFromString(payload, returnType);
-    }
-
     @JsonIgnore
     public void setPersistentSession(Object object) {
         if (object == null) {
@@ -505,27 +410,6 @@ public class Credentials implements Cloneable {
 
     public void removePersistentSession() {
         removeSensitivePayload(Field.Key.PERSISTENT_LOGIN_SESSION_NAME);
-    }
-
-    /**
-     * Returns true if the credential is Mobile BankId and is successfully updated within 2 hours.
-     * <p>
-     * The reason to why there is a limit on 2 hours (KEEP_ALIVE_MAX_AGE) is because that the keep-alive logic is
-     * one-directional. Calls are made to aggregation to keep credentials alive against bank or services but we don't
-     * store if request was a success or failure. This check means that we not try to update credentials that was
-     * updated for more than 2 hours ago since they most likely would not be alive any longer.
-     * <p>
-     * The check on 2 minutes (KEEP_ALIVE_MIN_AGE) is because it is not necessary to update the credentials directly
-     * after it has been updated.
-     */
-    @JsonIgnore
-    public boolean isPossibleToKeepAlive() {
-
-        DateTime updateDateTime = new DateTime(updated);
-
-        return type == CredentialsTypes.MOBILE_BANKID && status == CredentialsStatus.UPDATED &&
-                updateDateTime.plus(KEEP_ALIVE_MAX_AGE).isAfterNow() &&
-                updateDateTime.plus(KEEP_ALIVE_MIN_AGE).isBeforeNow();
     }
 
     public void addSensitivePayload(Map<String, String> payload) {
