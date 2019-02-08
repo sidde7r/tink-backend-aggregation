@@ -14,11 +14,8 @@ java_library(
         "//src/libraries/field:rpc",
         "//src/libraries/provider:enums",
         "//src/libraries/serialization",
+        "//third_party:com_google_guava_guava",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_github_rholder_guava_retrying",
-        "//third_party:io_protostuff_protostuff_api",
-        "//third_party:io_swagger_swagger_annotations",
-        "//third_party:org_hibernate_hibernate_entitymanager",
-        "//third_party:org_opensaml_opensaml",
+        "//third_party:joda_time_joda_time",
     ],
 )
