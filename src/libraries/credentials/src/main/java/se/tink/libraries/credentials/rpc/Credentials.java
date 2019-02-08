@@ -9,9 +9,6 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import io.protostuff.Exclude;
-import io.protostuff.Tag;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,15 +16,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import se.tink.libraries.field.rpc.Field;
@@ -38,8 +26,6 @@ import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
-@Entity
-@Table(name = "credentials")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Credentials implements Cloneable {
 
@@ -54,91 +40,31 @@ public class Credentials implements Cloneable {
 
     private static final Minutes KEEP_ALIVE_MIN_AGE = Minutes.minutes(2);
 
-    @Exclude
-    @ApiModelProperty(name = "debugUntil", hidden = true)
     private Date debugUntil;
-    @Transient
-    @Exclude
-    @ApiModelProperty(name = "providerLatency", hidden = true)
     private long providerLatency;
 
     @JsonInclude(Include.NON_NULL)
-
-    @Type(type = "text")
-    @Exclude
-    @ApiModelProperty(name = "sensitiveDataSerialized", hidden = true)
     private String sensitiveDataSerialized;
 
     @JsonIgnore
-
-    @Column(name = "`fields`")
-    @Type(type = "text")
-    @Tag(9)
     private String fieldsSerialized;
-    @Id
-    @Tag(1)
-    @ApiModelProperty(name = "id", value = "The id of the credentials.", example = "6e68cc6287704273984567b3300c5822")
     private String id;
-    @Exclude
-    @ApiModelProperty(name = "nextUpdate", hidden = true)
     private Date nextUpdate;
-
-    @Type(type = "text")
-    @Exclude
-    @ApiModelProperty(name = "payload", hidden = true)
     private String payload;
-
-    @Tag(2)
-    @ApiModelProperty(name = "providerName", value = "The provider (financial institute) that the credentials belongs to.", example = "handelsbanken-bankid", required = true)
     private String providerName;
     @JsonInclude(Include.NON_NULL)
-    @Type(type = "text")
-    @Exclude
-    @ApiModelProperty(name = "secretKey", hidden = true)
     private String secretKey;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @Tag(4)
-    @ApiModelProperty(name = "status", value = "The status of the credentials.", allowableValues = CredentialsStatus.DOCUMENTED, example = "UPDATED")
     private CredentialsStatus status;
-
-    @Type(type = "text")
-    @Tag(6)
-    @ApiModelProperty(name = "statusPayload", value = "A user-friendly message connected to the status. Could be an error message or text describing what is currently going on in the refresh process.", example = "Analyzed 1,200 out of 1,200 transactions.")
     private String statusPayload;
-    @Type(type = "text")
-    @Tag(7)
-    @ApiModelProperty(name = "statusPrompt", hidden = true)
     private String statusPrompt;
-    @Tag(5)
-    @ApiModelProperty(name = "statusUpdated", value = "A timestamp of when the credentials' status was last updated.", example = "1493379467000")
-    @Column(columnDefinition = "DATETIME(6)")
     private Date statusUpdated;
-
-    @Type(type = "text")
-    @Tag(10)
-    @ApiModelProperty(name = "supplementalInformation", value = "A key-value structure to handle if status of credentials are AWAITING_SUPPLEMENTAL_INFORMATION.", example = "null")
     private String supplementalInformation;
-
-    @Enumerated(EnumType.STRING)
-    @Tag(3)
-    @ApiModelProperty(name = "type", value = "The type of credentials.", allowableValues = CredentialsTypes.DOCUMENTED, example = "MOBILE_BANKID")
     private CredentialsTypes type;
-    @Tag(8)
-    @ApiModelProperty(name = "updated", value = "A timestamp of when the credentials was the last time in status UPDATED.", example = "1493379467000")
-    @Column(columnDefinition = "DATETIME(6)")
     private Date updated;
-    @Exclude
-    @ApiModelProperty(name = "userId", value = "The id of the user that the credentials belongs to.", example = "c4ae034f96c740da91ae00022ddcac4d")
     private String userId;
-    @Exclude
-    @Transient
     @JsonIgnore // Shoudn't be used between containers.
-    @ApiModelProperty(name = "sensitivePayloadSerialized", hidden = true)
     private String sensitivePayloadSerialized;
 
-    @PrePersist
     private void generateIdIfMissing() {
         if (id == null) {
             id = StringUtils.generateUUID();
@@ -182,7 +108,6 @@ public class Credentials implements Cloneable {
     }
 
     @Deprecated
-    @ApiModelProperty(name = "additionalInformation", hidden = true)
     public String getAdditionalInformation() {
         return getField(Field.Key.ADDITIONAL_INFORMATION);
     }
@@ -231,7 +156,6 @@ public class Credentials implements Cloneable {
     }
 
     @Deprecated
-    @ApiModelProperty(name = "password", hidden = true)
     public String getPassword() {
         return getField(Field.Key.PASSWORD);
     }
@@ -252,7 +176,6 @@ public class Credentials implements Cloneable {
         return sensitivePayloadSerialized;
     }
 
-    @ApiModelProperty(name = "sensitivePayload", hidden = true)
     public Map<String, String> getSensitivePayload() {
         if (Strings.isNullOrEmpty(getSensitivePayloadSerialized())) {
             return Maps.newHashMap();
@@ -270,7 +193,6 @@ public class Credentials implements Cloneable {
         return sensitivePayload;
     }
 
-    @ApiModelProperty(name = "sensitivePayload", hidden = true)
     public String getSensitivePayload(String key) {
         if (getSensitivePayload() == null) {
             return null;
@@ -279,7 +201,6 @@ public class Credentials implements Cloneable {
         return getSensitivePayload().get(key);
     }
 
-    @ApiModelProperty(name = "sensitivePayload", hidden = true)
     public String getSensitivePayload(Field.Key key) {
         return getSensitivePayload(key.getFieldKey());
     }
@@ -349,7 +270,6 @@ public class Credentials implements Cloneable {
     }
 
     @Deprecated
-    @ApiModelProperty(name = "sensitivePayload", hidden = true)
     public String getUsername() {
         return getField(Field.Key.USERNAME);
     }
@@ -417,7 +337,6 @@ public class Credentials implements Cloneable {
         setField(key.getFieldKey(), value);
     }
 
-    @ApiModelProperty(name = "fields", value = "This is a key-value map of Field name and value found on the Provider to which the credentials belongs to. This parameter is required when creating credentials.", example = "{\"username\":\"198410045701\"}", required = true)
     public void setFields(Map<String, String> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
     }
