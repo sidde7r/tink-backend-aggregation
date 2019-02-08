@@ -22,7 +22,7 @@ public class CrossKeyTransaction {
     private String textCode;
     private String transactionId;
 
-    public Transaction toTinkAccount(CrossKeyConfiguration agentConfiguration) {
+    public Transaction toTinkTransaction(CrossKeyConfiguration agentConfiguration) {
         return agentConfiguration.parseTinkTransaction(this);
     }
 

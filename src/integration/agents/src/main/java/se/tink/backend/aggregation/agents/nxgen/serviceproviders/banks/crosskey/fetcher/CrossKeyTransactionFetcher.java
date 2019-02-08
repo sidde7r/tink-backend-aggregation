@@ -22,7 +22,7 @@ public class CrossKeyTransactionFetcher implements TransactionDatePaginator<Tran
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
         Collection<? extends Transaction> transactions = client.fetchTransactions(account, fromDate, toDate)
-                .getTinkAcccounts(agentConfiguration);
+                .getTinkTransactions(agentConfiguration);
 
         return PaginatorResponseImpl.create(transactions);
     }
