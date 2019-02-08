@@ -2,13 +2,17 @@ package se.tink.backend.aggregation.agents.framework;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import java.util.Collection;
-import java.util.HashSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.HashSet;
+
 import static org.junit.Assume.assumeNotNull;
 
 /**
+ * Note: Consider using the enum-based ArgumentManager instead.
+ *
  * Helper class allowing you to pass custom command line arguments to tests.
  * This has a couple of advantages over modifying (typically empty) string constants:
  * - Editing string constants makes the credentials show up in git diff, polluting the total diff and increasing the
