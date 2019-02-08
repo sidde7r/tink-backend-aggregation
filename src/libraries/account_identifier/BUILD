@@ -6,7 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/date",
-        "//src/libraries/log",
+        "//third_party:org_slf4j_slf4j_api",
         "//src/libraries/uuid",
         "//src/libraries/giro_validation",
 

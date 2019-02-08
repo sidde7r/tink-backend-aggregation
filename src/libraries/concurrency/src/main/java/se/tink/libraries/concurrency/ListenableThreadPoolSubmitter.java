@@ -14,8 +14,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.concurrency.logger.exception.FutureUncaughtExceptionLogger;
-import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.metrics.Counter;
 
 /**
@@ -43,7 +44,7 @@ public class ListenableThreadPoolSubmitter<T extends Callable<?>>
     private final IncrementCounterRunnable finishedRunningIncrementor;
     private ThreadPoolExecutor threadPool;
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
-    private static final LogUtils log = new LogUtils(ListenableThreadPoolSubmitter.class);
+    private static final Logger log = LoggerFactory.getLogger(ListenableThreadPoolSubmitter.class);
 
     private class QueuePopper extends AbstractExecutionThreadService {
         private Thread thread;

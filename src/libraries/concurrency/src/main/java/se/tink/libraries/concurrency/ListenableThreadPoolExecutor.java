@@ -16,7 +16,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
-import se.tink.libraries.log.legacy.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.metrics.Counter;
 
 /**
@@ -32,7 +33,7 @@ import se.tink.libraries.metrics.Counter;
  * @param <T> the type of the runnable that can be submitted.
  */
 public class ListenableThreadPoolExecutor<T extends Runnable> implements TerminatableExecutor, ListenableExecutor<T> {
-    private static final LogUtils log = new LogUtils(ListenableThreadPoolExecutor.class);
+    private static final Logger log = LoggerFactory.getLogger(ListenableThreadPoolExecutor.class);
 
     private final FutureCallback<Object> errorLoggingCallback;
 

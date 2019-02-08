@@ -13,18 +13,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
 
 public class AuthorizationResourceFilter implements ContainerRequestFilter, ResourceFilter {
 
     private static final Splitter AUTH_SPLITTER = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings().trimResults()
             .limit(2);
 
-    private final LogUtils log;
+    private final Logger log;
     private final HttpServletRequest request;
     private final Predicate<String> authenticationHeaderPredicate;
 
-    public AuthorizationResourceFilter(LogUtils log, Predicate<String> authenticationHeaderPredicate,
+    public AuthorizationResourceFilter(Logger log, Predicate<String> authenticationHeaderPredicate,
             HttpServletRequest request) {
         this.log = Preconditions.checkNotNull(log);
         this.authenticationHeaderPredicate = Preconditions.checkNotNull(authenticationHeaderPredicate);
@@ -59,8 +59,7 @@ public class AuthorizationResourceFilter implements ContainerRequestFilter, Reso
 
     private void signalUnauthorized() {
         final Response response = Response.status(Response.Status.UNAUTHORIZED).entity("Not authorized.").build();
-        log.error(
-                String.format("[ip=%s url=%s] Unauthorized access.", request.getRemoteAddr(), request.getRequestURI()));
+        log.error("[ip={} url={}] Unauthorized access.", request.getRemoteAddr(), request.getRequestURI());
         throw new WebApplicationException(response);
     }
 

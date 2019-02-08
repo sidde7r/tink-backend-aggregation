@@ -41,7 +41,8 @@ import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.PeriodFormat;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *  * @deprecated Use CountryDateUtils instead.
@@ -55,7 +56,7 @@ public class DateUtils {
     private static final ImmutableSet<String> HOLIDAYS;
     private static final ImmutableSet<LocalDate> HOLIDAYS_LOCAL_DATE;
     private static final ImmutableSet<java.time.LocalDate> HOLIDAYS_JAVA_LOCAL_DATE;
-    private static final LogUtils log = new LogUtils(DateUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(DateUtils.class);
     private static final Pattern PATTERN_SIX_OR_EIGHT_DIGITS = Pattern.compile("[0-9]{6}([0-9]{2})?"); // Either 6 or 8
     // digits
     private static final DateTimeFormatter DATE_TIME_FORMATTER_MONTHLY = DateTimeFormat.forPattern("yyyy-MM");

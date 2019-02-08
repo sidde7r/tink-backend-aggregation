@@ -13,7 +13,7 @@ junit_test(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/api_annotations",
-        "//src/libraries/log",
+        "//third_party:org_slf4j_slf4j_api",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:junit_junit",

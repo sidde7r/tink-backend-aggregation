@@ -14,6 +14,8 @@ import javax.annotation.Nonnull;
 import javax.ws.rs.core.MediaType;
 import org.apache.curator.framework.CuratorFramework;
 import org.assertj.core.util.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -27,12 +29,11 @@ import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class AgentTestContext extends AgentContext {
-    private static final LogUtils log = new LogUtils(AgentTestContext.class);
+    private static final Logger log = LoggerFactory.getLogger(AgentTestContext.class);
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final TinkHttpClient supplementalClient = new TinkHttpClient();
     private static final String SUPPLEMENTAL_TEST_API = "http://127.0.0.1:7357/api/v1/supplemental";

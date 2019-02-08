@@ -5,7 +5,7 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/log",
+        "//third_party:org_slf4j_slf4j_api",
         "//src/libraries/uuid",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",

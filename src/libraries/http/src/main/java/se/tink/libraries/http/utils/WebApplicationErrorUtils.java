@@ -2,7 +2,7 @@ package se.tink.libraries.http.utils;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
 
 public class WebApplicationErrorUtils {
 
@@ -22,7 +22,7 @@ public class WebApplicationErrorUtils {
      * @param responseCode the response code the user will receive.
      * @param logMessage   the message that will be logged.
      */
-    public static void error(final LogUtils logger, final Status responseCode, String logMessage) {
+    public static void error(final Logger logger, final Status responseCode, String logMessage) {
         final String enrichedLogMessage = String.format("[HTTP=%d] %s", responseCode.getStatusCode(), logMessage);
 
         if (400 <= responseCode.getStatusCode() && responseCode.getStatusCode() < 500)
@@ -43,7 +43,7 @@ public class WebApplicationErrorUtils {
      * @param logMessage   the message that will be logged.
      * @param e            an exception to be logged.
      */
-    public static void error(LogUtils logger, Status responseCode, String logMessage, Throwable e) {
+    public static void error(Logger logger, Status responseCode, String logMessage, Throwable e) {
         final String enrichedLogMessage = String.format("[HTTP=%d] %s", responseCode.getStatusCode(), logMessage);
 
         if (400 <= responseCode.getStatusCode() && responseCode.getStatusCode() < 500)

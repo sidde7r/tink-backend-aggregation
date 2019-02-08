@@ -10,11 +10,12 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SOAPLogHandler implements SOAPHandler<SOAPMessageContext> {
 
-    private static final LogUtils log = new LogUtils(SOAPLogHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(SOAPLogHandler.class);
 
     @Override
     public Set<QName> getHeaders() {

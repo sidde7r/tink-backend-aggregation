@@ -24,11 +24,12 @@ import java.util.UUID;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Hex;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public class StringUtils {
-    private static final LogUtils log = new LogUtils(StringUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(StringUtils.class);
     private static final double HUMAN_FORMATTING_UPPERCASE_THRESHOLD = 0.80;
     private static final Joiner JOINER = Joiner.on(" ").skipNulls();
     public static final char NON_BREAKING_WHITESPACE = (char) 160;

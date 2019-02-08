@@ -19,19 +19,20 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.account.enums.AccountTypes;
 import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.enums.FeatureFlags;
-import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.abnamro.client.model.ContractEntity;
 import se.tink.libraries.abnamro.client.model.RejectedContractEntity;
 import se.tink.libraries.strings.StringUtils;
 
 public class AbnAmroUtils {
 
-    private static final LogUtils log = new LogUtils(AbnAmroUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(AbnAmroUtils.class);
     private static final ImmutableSet VALID_LOCALES = ImmutableSet.of("en_US".toLowerCase(), "nl_NL".toLowerCase());
 
     // This is the name of the ABN AMRO provider for Grip 3.0 and later

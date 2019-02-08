@@ -16,11 +16,12 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
-import se.tink.libraries.log.LogUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ApiTeamOwnershipChecker {
 
-    private static final LogUtils log = new LogUtils(ApiTeamOwnershipChecker.class);
+    private static final Logger log = LoggerFactory.getLogger(ApiTeamOwnershipChecker.class);
     private static final String DEFAULT_PACKAGE_PREFIX = "se.tink";
 
     private final String packagePrefix;
@@ -56,7 +57,7 @@ public class ApiTeamOwnershipChecker {
         if (!unannotatedResources.isEmpty()) {
             log.error("There were API methods incorrectly annotated:");
             unannotatedResources
-                    .forEach(m -> log.error(String.format(" * %s#%s", m.getDeclaringClass().getName(), m.getName())));
+                    .forEach(m -> log.error(" * {}#{}", m.getDeclaringClass().getName(), m.getName()));
             Assert.fail("There were API methods incorrectly annotated. See logged list.");
         }
     }

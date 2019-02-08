@@ -12,12 +12,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.log.legacy.LogUtils;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBankTransactionPaginationKey> {
-    private static final LogUtils LOG = new LogUtils(OpBankAccountEntity.class);
 
     private String typeCode;
     private String roleCode;

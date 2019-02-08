@@ -4,7 +4,7 @@ java_library(
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/log",
+        "//third_party:org_slf4j_slf4j_api",
         "//src/libraries/metrics",
         "//src/libraries/net",
         "//src/libraries/queue_lib",

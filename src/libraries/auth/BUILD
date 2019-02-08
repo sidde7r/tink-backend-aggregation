@@ -6,7 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/http:http_annotations",
-        "//src/libraries/log",
+        "//third_party:org_slf4j_slf4j_api",
         "//third_party:com_google_guava_guava",
         "//third_party:com_lambdaworks_scrypt",
         "//third_party:com_yubico_yubico_validation_client2",

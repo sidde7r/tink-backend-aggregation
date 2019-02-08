@@ -10,7 +10,7 @@ java_library(
         "//src/libraries/credentials:rpc",
         "//src/libraries/date",
         "//src/libraries/enums",
-        "//src/libraries/log",
+        "//third_party:org_slf4j_slf4j_api",
         "//src/libraries/metrics",
         "//src/libraries/net",
         "//src/libraries/serialization",

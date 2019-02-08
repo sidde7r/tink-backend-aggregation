@@ -6,15 +6,16 @@ import com.sun.jersey.spi.container.ContainerResponse;
 import com.sun.jersey.spi.container.ContainerResponseFilter;
 import com.sun.jersey.spi.container.ResourceFilter;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.libraries.api.annotations.TeamOwnership;
-import se.tink.libraries.log.LogUtils;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.Timer;
 
 class ResponseTimerFilter implements ContainerRequestFilter, ContainerResponseFilter, ResourceFilter {
 
-    private static final LogUtils log = new LogUtils(ResponseTimerFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(ResponseTimerFilter.class);
     private static final String timerContextKey = "timerContext";
     private final MetricRegistry metricRegistry;
     private final String path;

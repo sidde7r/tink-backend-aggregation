@@ -17,6 +17,8 @@ import javax.ws.rs.core.MediaType;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.CollectBankIdResponse;
@@ -26,14 +28,13 @@ import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.m
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.InitiateBankIdResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.bankid.signicat.model.StatusMessage;
 import se.tink.libraries.i18n.Catalog;
-import se.tink.libraries.log.legacy.LogUtils;
 
 public class SignicatBankIdAuthenticator implements Runnable {
     private static final int AUTHENTICATION_BANKID_TIMEOUT = 120;
     private static final String AUTHENTICATION_BANKID_URL = "https://id.signicat.com/std/method/tink.se?id=sbid-inapp:default:sv&target=https%3A%2F%2Fwww.tink.se%2Fapi%2Fv1%2Fauthentication%2Fsaml";
     private static final boolean DEBUG = false;
     private static final String API_KEY = "B+=3e6uSUjeThen";
-    private static final LogUtils log = new LogUtils(SignicatBankIdAuthenticator.class);
+    private static final Logger log = LoggerFactory.getLogger(SignicatBankIdAuthenticator.class);
 
     private final SignicatBankIdHandler handler;
     private final String socialSecurityNumber;
