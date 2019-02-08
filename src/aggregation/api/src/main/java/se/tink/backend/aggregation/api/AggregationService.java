@@ -16,7 +16,6 @@ import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.DeleteCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -36,13 +35,6 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Credentials createCredentials(CreateCredentialsRequest request, @ClientContext ClientInfo clientInfo);
-
-    @POST
-    @Path("delete")
-    @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    void deleteCredentials(DeleteCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 
     @GET
     @Path("ping")
