@@ -1246,7 +1246,7 @@ public class SEBApiAgent extends AbstractAgent implements
         if (type == null) {
             String accountTypeDescription = accountEntity.KTOSLAG_TXT;
             log.warn("Unknown account-product type: " + accountTypeCode + " = " + accountTypeDescription);
-            type = AccountTypes.CHECKING;
+            type = AccountTypes.OTHER;
         }
         account.setType(type);
 
