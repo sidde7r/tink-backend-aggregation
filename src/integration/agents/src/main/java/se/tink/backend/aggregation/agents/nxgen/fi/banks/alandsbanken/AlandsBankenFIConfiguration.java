@@ -90,7 +90,6 @@ public class AlandsBankenFIConfiguration extends CrossKeyConfiguration {
                 .setAmount(new Amount(transaction.getCurrency(), transaction.getAmount()))
                 .setDescription(createDescription(transaction))
                 .setDate(transaction.getDueDate())
-                .setExternalId(transaction.getTransactionId())
                 .build();
     }
 
