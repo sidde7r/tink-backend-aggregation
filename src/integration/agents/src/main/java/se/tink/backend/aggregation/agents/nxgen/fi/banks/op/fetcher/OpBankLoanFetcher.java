@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankCreditEntity;
@@ -13,7 +15,6 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCre
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
@@ -32,6 +33,12 @@ public class OpBankLoanFetcher implements AccountFetcher<LoanAccount> {
         List<LoanAccount> loansAccounts = new ArrayList<>();
 
         FetchCreditsResponse fetchCreditsResponse = client.fetchCredits();
+
+        if (!fetchCreditsResponse.isSuccess()) {
+            LOGGER.warn(String.format("Fetch loans returned error: %s",
+                    SerializationUtils.serializeToString(fetchCreditsResponse)));
+            return Collections.emptyList();
+        }
 
         for (OpBankCreditEntity credit : fetchCreditsResponse.getCredits()) {
 
