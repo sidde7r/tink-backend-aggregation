@@ -11,7 +11,6 @@ import static org.mockito.Mockito.when;
 public class CredentialsStringMaskerTest {
 
     public static final String PASSWORD = "abc123";
-    public static final String SECRET_KEY = "efg789";
     public static final String USER_ID = "ööö";
     public static final String USERNAME = "user@test.se";
     public static final ImmutableMap<String, String> SENSITIVE_PAYLOAD = ImmutableMap.<String, String>builder()
@@ -27,16 +26,6 @@ public class CredentialsStringMaskerTest {
         String masked = stringMasker.getMasked("test me " + PASSWORD + " for some data");
 
         assertThat(masked).doesNotContain(PASSWORD);
-    }
-
-    @Test
-    public void testApplyWithSecretKey() {
-        CredentialsStringMasker stringMasker = new CredentialsStringMasker(mockCredentials(),
-                ImmutableList.of(CredentialsStringMasker.CredentialsProperty.SECRET_KEY));
-
-        String masked = stringMasker.getMasked("test me " + SECRET_KEY + " for some data");
-
-        assertThat(masked).doesNotContain(SECRET_KEY);
     }
 
     @Test
@@ -56,14 +45,12 @@ public class CredentialsStringMaskerTest {
 
         String unmasked = "username: " + USERNAME +
                 ", userid: " + USER_ID +
-                ", secret key: " + SECRET_KEY +
                 ", password: " + PASSWORD +
                 ", sensitive: " + SENSITIVE_PAYLOAD.toString();
 
         String masked = stringMasker.getMasked(unmasked);
         assertThat(masked).contains(USER_ID);
         assertThat(masked).doesNotContain(USERNAME);
-        assertThat(masked).doesNotContain(SECRET_KEY);
         assertThat(masked).doesNotContain(PASSWORD);
         for (String value : SENSITIVE_PAYLOAD.values()) {
             assertThat(masked).doesNotContain(value);
