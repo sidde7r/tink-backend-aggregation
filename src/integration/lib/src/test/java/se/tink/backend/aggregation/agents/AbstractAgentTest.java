@@ -4,15 +4,21 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.dropwizard.configuration.ConfigurationException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import org.junit.Assert;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.AbstractConfigurationBase;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
@@ -28,13 +34,6 @@ import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigurationBase {
     protected Class<T> cls;
     protected AgentFactory factory;
@@ -46,9 +45,9 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
 
         if (configuration == null) {
             try {
-                AggregationServiceConfiguration aggregationServiceConfiguration =
+                AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
                         CONFIGURATION_FACTORY.build(new File("etc/development.yml"));
-                configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
+                configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
             } catch (IOException | ConfigurationException e) {
                 log.warn("Couldn't set development configuration", e);
             }
@@ -241,7 +240,8 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         Assert.assertTrue("Agent could not login successfully", agent.login());
 
         try {
-            RefreshExecutorUtils.executeSegregatedRefresher(agent, RefreshableItem.EINVOICES, testContext);
+            RefreshExecutorUtils.executeSegregatedRefresher(
+                    agent, RefreshableItem.EINVOICES, testContext);
             testContext.processEinvoices();
             agent.logout();
         } finally {
@@ -376,7 +376,8 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
         if (agent instanceof DeprecatedRefreshExecutor) {
             ((DeprecatedRefreshExecutor) agent).refresh();
         } else {
-            for (RefreshableItem item : RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL)) {
+            for (RefreshableItem item :
+                    RefreshableItem.sort(RefreshableItem.REFRESHABLE_ITEMS_ALL)) {
                 RefreshExecutorUtils.executeSegregatedRefresher(agent, item, testContext);
             }
         }

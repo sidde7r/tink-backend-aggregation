@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.AbstractConfigurationBase;
-import se.tink.backend.aggregation.configuration.models.AggregationServiceConfiguration;
+import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.ConsumerMonitoringWrapper;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
 import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
@@ -29,8 +29,9 @@ public class ConsumerMonitoringTest extends AbstractConfigurationBase {
 
     @Before
     public void setUp() throws IOException, ConfigurationException {
-        AggregationServiceConfiguration aggregationServiceConfiguration = CONFIGURATION_FACTORY.build(CONFIG_FILE);
-        configuration = aggregationServiceConfiguration.getAgentsServiceConfiguration();
+        AgentsServiceConfigurationWrapper agentsServiceConfigurationWrapper =
+                CONFIGURATION_FACTORY.build(CONFIG_FILE);
+        configuration = agentsServiceConfigurationWrapper.getAgentsServiceConfiguration();
 
         String user = configuration.getCreditSafe().getUsername();
         String pass = configuration.getCreditSafe().getPassword();
@@ -55,8 +56,10 @@ public class ConsumerMonitoringTest extends AbstractConfigurationBase {
 
     @Test
     public void testGetMonitoredConsumers() throws JsonProcessingException {
-        PageableConsumerCreditSafeRequest request = new PageableConsumerCreditSafeRequest("TINK_TEST", 100, 1);
-        PageableConsumerCreditSafeResponse response = consumerMonitorWrapper.listMonitoredConsumers(request);
+        PageableConsumerCreditSafeRequest request =
+                new PageableConsumerCreditSafeRequest("TINK_TEST", 100, 1);
+        PageableConsumerCreditSafeResponse response =
+                consumerMonitorWrapper.listMonitoredConsumers(request);
 
         System.out.println("monitoredConsumers.size() = " + response.getConsumers().size());
         assertNotNull(response.getConsumers());
@@ -67,37 +70,39 @@ public class ConsumerMonitoringTest extends AbstractConfigurationBase {
         PortfolioListResponse portfolioListResponse = consumerMonitorWrapper.listPortfolios();
 
         for (String portfolio : portfolioListResponse.getPortfolios()) {
-            PageableConsumerCreditSafeRequest request = new PageableConsumerCreditSafeRequest(portfolio, 100, 1);
-            PageableConsumerCreditSafeResponse response = consumerMonitorWrapper.listMonitoredConsumers(request);
+            PageableConsumerCreditSafeRequest request =
+                    new PageableConsumerCreditSafeRequest(portfolio, 100, 1);
+            PageableConsumerCreditSafeResponse response =
+                    consumerMonitorWrapper.listMonitoredConsumers(request);
 
             System.out.println("portfolio = " + portfolio);
-            System.out.println("\tresponse.getTotalPortfolioSize() = " + response.getTotalPortfolioSize());
+            System.out.println(
+                    "\tresponse.getTotalPortfolioSize() = " + response.getTotalPortfolioSize());
         }
     }
 
     @Test
     public void testGetChangedConsumers() throws JsonProcessingException {
-        ChangedConsumerCreditSafeRequest request = new ChangedConsumerCreditSafeRequest("TINK_TEST", 100, 1, 2);
-        PageableConsumerCreditSafeResponse response = consumerMonitorWrapper.listChangedConsumers(request);
+        ChangedConsumerCreditSafeRequest request =
+                new ChangedConsumerCreditSafeRequest("TINK_TEST", 100, 1, 2);
+        PageableConsumerCreditSafeResponse response =
+                consumerMonitorWrapper.listChangedConsumers(request);
 
         System.out.println("changedConsumers.size() = " + response.getConsumers().size());
         assertNotNull(response.getConsumers());
     }
 
-    /**
-     * Created for manual removing of consumer
-     */
+    /** Created for manual removing of consumer */
     @Test
     public void testRemoveMonitoredConsumer() {
-        RemoveMonitoredConsumerCreditSafeRequest request = new RemoveMonitoredConsumerCreditSafeRequest();
+        RemoveMonitoredConsumerCreditSafeRequest request =
+                new RemoveMonitoredConsumerCreditSafeRequest();
         request.setPnr("{A_PNR}");
         request.setPortfolios(Lists.newArrayList("TINK_TEST"));
         consumerMonitorWrapper.removeMonitoring(request);
     }
 
-    /**
-     * Created for manual adding of consumer
-     */
+    /** Created for manual adding of consumer */
     @Test
     public void testAddMonitoredConsumer() {
         AddMonitoredConsumerCreditSafeRequest request = new AddMonitoredConsumerCreditSafeRequest();

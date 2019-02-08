@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.framework.ProviderConfigModel;
+import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller.IngCardReaderAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
@@ -62,7 +62,7 @@ public class IngTwoFactorAuthenticatorTest {
                 .thenReturn(ImmutableMap.of("otp", "OTP!"))
                 .thenReturn(ImmutableMap.of("challengeResponse", "Challenge me!"));
 
-        ProviderConfigModel marketProviders = readProvidersConfiguration("be");
+        ProviderConfig marketProviders = readProvidersConfiguration("be");
         Provider provider = marketProviders.getProvider("be-ing-cardreader");
         provider.setMarket(marketProviders.getMarket());
         provider.setCurrency(marketProviders.getCurrency());
@@ -75,11 +75,11 @@ public class IngTwoFactorAuthenticatorTest {
     }
 
     // TODO Move this out to test helper.
-    private ProviderConfigModel readProvidersConfiguration(String market) {
+    private ProviderConfig readProvidersConfiguration(String market) {
         String providersFilePath = "data/seeding/providers-" + escapeMarket(market).toLowerCase() + ".json";
         File providersFile = new File(providersFilePath);
         try {
-            return mapper.readValue(providersFile, ProviderConfigModel.class);
+            return mapper.readValue(providersFile, ProviderConfig.class);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

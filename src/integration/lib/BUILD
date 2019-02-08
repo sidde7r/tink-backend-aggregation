@@ -118,7 +118,6 @@ junit_test(
     ],
     deps = [
         "//src/aggregation/api",
-        "//src/aggregation/lib",
         "//src/aggregationcontroller_api",
         "//src/integration/api",
         "//src/integration/lib",
