@@ -10,21 +10,10 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import io.protostuff.Exclude;
-import io.protostuff.Tag;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import org.hibernate.annotations.Type;
 import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.provider.enums.ProviderStatuses;
@@ -34,7 +23,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Provider implements Cloneable {
-    private static final String DEMO_AGENT_CLASS_NAME = "demo.DemoAgent";
 
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
@@ -409,23 +397,6 @@ public class Provider implements Cloneable {
 
     public void setTutorialUrl(String tutorialUrl) {
         this.tutorialUrl = tutorialUrl;
-    }
-
-    @JsonIgnore
-    public double getCurrentRefreshFrequency() {
-        return refreshFrequency * refreshFrequencyFactor;
-    }
-
-    @JsonIgnore
-    public String getCleanDisplayName() {
-        // Some of our display names have the authetication method in a parenthesis after.
-        // e.g. Handelsbanken (Mobilt BankID)
-        return displayName.replaceAll(" \\([\\w \\-]+\\)", "");
-    }
-
-    @JsonIgnore
-    public boolean isUsingDemoAgent() {
-        return DEMO_AGENT_CLASS_NAME.equals(getClassName());
     }
 
     /**
