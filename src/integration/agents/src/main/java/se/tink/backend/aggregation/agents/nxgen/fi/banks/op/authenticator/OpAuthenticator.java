@@ -49,16 +49,7 @@ public class OpAuthenticator  implements KeyCardAuthenticator {
         try {
             apiClient.login(request);
         } catch (HttpResponseException e) {
-            HttpResponse response = e.getResponse();
-            if (response.getStatus() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
-                ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-
-                if (errorResponse.isIncorrectLoginCredentials()) {
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                }
-            }
-
-            throw e;
+            handleAuthenticationException(e);
         }
 
         OpBankAuthenticateResponse aResponse = apiClient.authenticate();
@@ -73,14 +64,33 @@ public class OpAuthenticator  implements KeyCardAuthenticator {
 
     @Override
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
-        OpBankAuthenticateResponse response = apiClient
-                .authenticate(new OpBankAuthenticateCodeRequest().setLang("en").setUserkey(code));
+
+        try {
+            OpBankAuthenticateResponse response = apiClient
+                    .authenticate(new OpBankAuthenticateCodeRequest().setLang("en").setUserkey(code));
+        } catch (HttpResponseException e) {
+            handleAuthenticationException(e);
+        }
+
         apiClient.setRepresentationType();
         apiClient.postLogin(this.authToken, persistentStorage.retrieveInstanceId());
 
         // update application instance id will throw if we are not allowed
         // to pin the device
         pinDeviceOrThrow(persistentStorage.retrieveInstanceId());
+    }
+
+    private void handleAuthenticationException(HttpResponseException e) throws LoginException {
+        HttpResponse response = e.getResponse();
+        if (response.getStatus() == HttpStatusCodes.STATUS_CODE_UNAUTHORIZED) {
+            ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
+
+            if (errorResponse.isIncorrectLoginCredentials()) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+        }
+
+        throw e;
     }
 
     private void pinDeviceOrThrow(String appInstanceId) throws LoginException {
