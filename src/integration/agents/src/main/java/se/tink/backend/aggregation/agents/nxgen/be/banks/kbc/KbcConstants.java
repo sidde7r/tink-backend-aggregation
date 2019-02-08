@@ -193,14 +193,20 @@ public class KbcConstants {
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
     }
 
-    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES = ImmutableMap.<String, AccountTypes>builder()
-            .put("3844", AccountTypes.CHECKING)
-            .put("3737", AccountTypes.CHECKING) // Business Pro
-            .put("0028", AccountTypes.CHECKING) // Company Card
-            .put("3591", AccountTypes.SAVINGS)
-            .put("3867", AccountTypes.SAVINGS) // Savings Pro
-            .put("3590", AccountTypes.SAVINGS) // Start2Save
-            .build();
+    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES =
+            ImmutableMap.<String, AccountTypes>builder()
+                    .put("0028", AccountTypes.CHECKING) // Company Card
+                    .put("3737", AccountTypes.CHECKING) // Business Pro
+                    .put("3844", AccountTypes.CHECKING)
+                    .put("3590", AccountTypes.SAVINGS) // Start2Save
+                    .put("3591", AccountTypes.SAVINGS)
+                    .put("3595", AccountTypes.SAVINGS) // KBC Tall Oaks Savings Account
+                    .put("3781", AccountTypes.SAVINGS) // KBC Start2Save4
+                    .put("3867", AccountTypes.SAVINGS) // KBC Savings Pro
+                    .put("4010", AccountTypes.SAVINGS) // KBC Brussels-Start2Save
+                    .put("4011", AccountTypes.SAVINGS) // KBC Brussels Savings Account
+                    .put("4019", AccountTypes.SAVINGS) // KBC Brussels Savings Account PRO
+                    .build();
 
     public static final class ErrorMessage {
         // Probably safe to remove we have HeaderErrorMessage
