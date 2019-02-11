@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsb
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.rpc.BaseResponse;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
+@JsonObject
 public abstract class HandelsbankenAccount extends BaseResponse {
 
     @JsonIgnore
