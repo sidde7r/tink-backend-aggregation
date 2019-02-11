@@ -5,11 +5,13 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.ExecutorExceptionResolver;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.i18n.LocalizableKey;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 public class HandelsbankenSEConstants {
 
@@ -63,6 +65,7 @@ public class HandelsbankenSEConstants {
                 "I" // // BUSINESS_PRIVATE_VISA
         );
 
+        public static final String ACCOUNT_TYPE_NAME_LABEL = "kontoform";
         public static final String CREDIT_CARD_IGNORE_TYPE = "A";
 
         public static final class Transactions {
@@ -143,8 +146,16 @@ public class HandelsbankenSEConstants {
         }
 
         public static class Accounts {
-            public static final String NAME_SAVINGS_1 = "Sparkonto";
-            public static final String NAME_SAVINGS_2 = "e-kapitalkonto";
+            public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("unknown_account_type");
+
+            public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER = TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.SAVINGS,
+                            "sparkonto",
+                            "e-kapitalkonto",
+                            "framtidskonto",
+                            "placeringskonto privat")
+                    .put(AccountTypes.CHECKING, "allkonto")
+                    .build();
         }
     }
 

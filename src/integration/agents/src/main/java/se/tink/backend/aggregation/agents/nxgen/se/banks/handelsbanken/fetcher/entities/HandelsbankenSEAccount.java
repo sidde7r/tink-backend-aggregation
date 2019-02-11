@@ -1,27 +1,35 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.creditcard.entities.CardInvoiceInfo;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsSEResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.validators.BankIdValidator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.entities.HandelsbankenAmount;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountInfoResponse;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.SwedishSHBInternalIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-import java.util.Optional;
-
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Fetcher.Accounts.NAME_SAVINGS_1;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants.Fetcher.Accounts.NAME_SAVINGS_2;
-
+@JsonObject
 public class HandelsbankenSEAccount extends HandelsbankenAccount {
+    private static final Logger LOG = LoggerFactory.getLogger(HandelsbankenSEAccount.class);
 
     private HandelsbankenAmount amountAvailable;
     private HandelsbankenAmount balance;
@@ -33,7 +41,8 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     private String holderName;
     private boolean isCard;
 
-    public Optional<TransactionalAccount> toTransactionalAccount(TransactionsSEResponse transactionsResponse) {
+    public Optional<TransactionalAccount> toTransactionalAccount(HandelsbankenApiClient client,
+            TransactionsSEResponse transactionsResponse) {
         if (isCreditCard()) {
             return Optional.empty();
         }
@@ -41,11 +50,7 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         BankIdValidator.validate(number);
 
         final String accountNumber = getAccountNumber(transactionsResponse);
-
-        AccountTypes accountType = AccountTypes.CHECKING;
-        if (NAME_SAVINGS_1.equalsIgnoreCase(name) || NAME_SAVINGS_2.equalsIgnoreCase(name)) {
-            accountType = AccountTypes.SAVINGS;
-        }
+        AccountTypes accountType = getAccountType(client, transactionsResponse);
 
         return Optional.of(TransactionalAccount.builder(accountType, number, findBalanceAmount().asAmount())
                 .setHolderName(new HolderName(holderName))
@@ -85,6 +90,43 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         // transactions.
         HandelsbankenSEAccount transactionsAccount = transactionsResponse.getAccount();
         return transactionsAccount.getClearingNumber() + "-" + numberFormatted;
+    }
+
+    private AccountTypes getAccountType(HandelsbankenApiClient client, TransactionsSEResponse transactionsResponse) {
+        String accountTypeName = "";
+        AccountInfoResponse accountInfo = null;
+
+        try {
+            URL accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
+            if (accountInfoURL != null) {
+                accountInfo = client.accountInfo(accountInfoURL);
+
+                accountTypeName = accountInfo.getValuesByLabel()
+                        .getOrDefault(HandelsbankenSEConstants.Fetcher.ACCOUNT_TYPE_NAME_LABEL, name);
+            }
+        } catch (Exception e) {
+            LOG.info("Unable to fetch account info " + e.getMessage());
+        }
+
+        AccountTypes accountType =
+                HandelsbankenSEConstants.Fetcher.Accounts.ACCOUNT_TYPE_MAPPER
+                        .translate(Strings.nullToEmpty(accountTypeName).toLowerCase())
+                        .orElse(AccountTypes.OTHER);
+        // log unknown account types
+        if (accountType == AccountTypes.OTHER && accountInfo != null) {
+            LOG.info(String.format("%s %s",
+                    HandelsbankenSEConstants.Fetcher.Accounts.UNKNOWN_ACCOUNT_TYPE,
+                    SerializationUtils.serializeToString(accountInfo)));
+        }
+
+        if (accountType == AccountTypes.OTHER) {
+            accountType = HandelsbankenSEConstants.Fetcher.Accounts.ACCOUNT_TYPE_MAPPER
+                    .translate(Strings.nullToEmpty(name).toLowerCase())
+                    .orElse(AccountTypes.OTHER);
+
+        }
+
+        return accountType;
     }
 
     /**
@@ -143,5 +185,9 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
     HandelsbankenSEAccount setAmountAvailable(HandelsbankenAmount amountAvailable) {
         this.amountAvailable = amountAvailable;
         return this;
+    }
+
+    public URL getAccountInfoUrl() {
+        return findLink(HandelsbankenConstants.URLS.Links.ACCOUNT_INFO);
     }
 }

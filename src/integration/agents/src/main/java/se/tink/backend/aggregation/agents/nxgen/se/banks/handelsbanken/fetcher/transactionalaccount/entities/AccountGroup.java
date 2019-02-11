@@ -25,7 +25,7 @@ public class AccountGroup {
                 .map(handelsbankenAccount -> {
                     TransactionsSEResponse transactionsResponse =
                             (TransactionsSEResponse)client.transactions(handelsbankenAccount);
-                    return handelsbankenAccount.toTransactionalAccount(transactionsResponse);
+                    return handelsbankenAccount.toTransactionalAccount(client, transactionsResponse);
                 })
                 .filter(Optional::isPresent)
                 .map(Optional::get);
