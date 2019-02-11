@@ -29,7 +29,7 @@ public class CsdAccountRightsEntity {
     @JsonProperty("class")
     private String rightsClass;
     private String country;
-    private Integer rightAmount;
+    private long rightAmount;
     private String pledgeSequenceNumber;
     private String languageCode;
     private String dividendMessage;
@@ -126,7 +126,7 @@ public class CsdAccountRightsEntity {
         return country;
     }
 
-    public Integer getRightAmount() {
+    public long getRightAmount() {
         return rightAmount;
     }
 
