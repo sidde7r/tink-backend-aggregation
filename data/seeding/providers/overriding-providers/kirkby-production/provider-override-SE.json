@@ -2393,7 +2393,7 @@
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 0,
-            "status": "TEMPORARY_DISABLED",
+            "status": "ENABLED",
             "transactional": false,
             "type": "OTHER",
             "displayDescription": null,
