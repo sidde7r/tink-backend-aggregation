@@ -113,6 +113,7 @@ public class OwnCsdAccountEntity {
 
         Portfolio portfolio = toPortfolio(positions, totalMarketValue,
                 availableBalanceByCsdAccountNumber);
+
         return InvestmentAccount.builder(csdAccountNumber)
                 .setAccountNumber(csdAccountNumber)
                 .setName(name)
@@ -154,9 +155,10 @@ public class OwnCsdAccountEntity {
         return positions.stream().mapToDouble(PositionEntity::getProfit).sum();
     }
 
-    @JsonObject
+    @JsonIgnore
     private Double setCashValueIfExists(HashMap<String, Double> availableBalanceByCsdAccountNumber) {
         // Cash value is only present for stock accounts, null for funds.
-        return availableBalanceByCsdAccountNumber.get(csdAccountNumber);
+        Double cashValue = availableBalanceByCsdAccountNumber.get(csdAccountNumber);
+        return cashValue != null ? cashValue : 0;
     }
 }
