@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop;
 
 import com.google.common.base.Strings;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import javax.ws.rs.core.HttpHeaders;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.authenticator.rpc.AuthenticateRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.creditcards.coop.fetcher.rpc.TransactionsRequest;
@@ -15,7 +13,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+
+import javax.ws.rs.core.HttpHeaders;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CoopApiClient {
 
@@ -27,11 +31,24 @@ public class CoopApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    public AuthenticateResponse authenticate(String username, String password) {
+    public AuthenticateResponse authenticate(String username, String password) throws AuthenticationException {
         AuthenticateRequest authenticateRequest = new AuthenticateRequest(username, password);
 
-        return createRequest(CoopConstants.Url.AUTHENTICATE)
-                .post(AuthenticateResponse.class, authenticateRequest);
+        try {
+
+            return createRequest(CoopConstants.Url.AUTHENTICATE)
+                    .post(AuthenticateResponse.class, authenticateRequest);
+        }catch (HttpResponseException e) {
+
+            int status = e.getResponse().getStatus();
+            if(status == 401) {
+
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            throw e;
+        }
+
     }
 
 
