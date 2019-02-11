@@ -267,10 +267,6 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
             p.setCurrency("SEK");
             return p;
         }
-
-        static {
-            Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        }
     }
 
     private Transfer create1SEKTestTransfer(String sourceAccount, String destinationAccount) {
@@ -292,9 +288,5 @@ public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {
         p.setPayload("SE");
         p.setCurrency("SEK");
         return p;
-    }
-
-    static {
-        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
     }
 }

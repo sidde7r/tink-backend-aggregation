@@ -2293,14 +2293,6 @@ java_library(
 )
 
 java_library(
-    name = "org_bouncycastle_bcprov_jdk15",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_bouncycastle_bcprov_jdk15//jar",
-    ],
-)
-
-java_library(
     name = "org_bouncycastle_bcprov_jdk15on",
     visibility = ["//visibility:public"],
     exports = [
@@ -2653,58 +2645,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@org_objenesis_objenesis//jar",
-    ],
-)
-
-java_library(
-    name = "org_opensaml_opensaml",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@ca_juliusdavies_not_yet_commons_ssl//jar",
-        "@commons_codec_commons_codec//jar",
-        "@commons_collections_commons_collections//jar",
-        "@commons_httpclient_commons_httpclient//jar",
-        "@commons_lang_commons_lang//jar",
-        "@commons_logging_commons_logging//jar",
-        "@joda_time_joda_time//jar",
-        "@org_apache_santuario_xmlsec//jar",
-        "@org_apache_velocity_velocity//jar",
-        "@org_bouncycastle_bcprov_jdk15//jar",
-        "@org_opensaml_opensaml//jar",
-        "@org_opensaml_openws//jar",
-        "@org_opensaml_xmltooling//jar",
-        "@org_owasp_esapi_esapi//jar",
-    ],
-)
-
-java_library(
-    name = "org_opensaml_openws",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@ca_juliusdavies_not_yet_commons_ssl//jar",
-        "@commons_codec_commons_codec//jar",
-        "@commons_httpclient_commons_httpclient//jar",
-        "@commons_logging_commons_logging//jar",
-        "@joda_time_joda_time//jar",
-        "@org_apache_santuario_xmlsec//jar",
-        "@org_bouncycastle_bcprov_jdk15//jar",
-        "@org_opensaml_openws//jar",
-        "@org_opensaml_xmltooling//jar",
-    ],
-)
-
-java_library(
-    name = "org_opensaml_xmltooling",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@ca_juliusdavies_not_yet_commons_ssl//jar",
-        "@commons_codec_commons_codec//jar",
-        "@commons_httpclient_commons_httpclient//jar",
-        "@commons_logging_commons_logging//jar",
-        "@joda_time_joda_time//jar",
-        "@org_apache_santuario_xmlsec//jar",
-        "@org_bouncycastle_bcprov_jdk15//jar",
-        "@org_opensaml_xmltooling//jar",
     ],
 )
 
