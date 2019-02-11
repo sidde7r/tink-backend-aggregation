@@ -79,7 +79,8 @@ public class HandelsbankenConstants {
             UPDATE("update"),
             VALIDATE_SIGNATURE("validateSignature"),
             VERIFY_SECURITY_CODE("verifySecurityCode"),
-            VALIDATE_RECIPIENT("validate-recipient");
+            VALIDATE_RECIPIENT("validate-recipient"),
+            ACCOUNT_INFO("account-info");
 
             private final String name;
 

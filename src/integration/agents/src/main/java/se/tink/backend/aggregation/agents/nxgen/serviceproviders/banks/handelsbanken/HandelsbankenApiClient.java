@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsba
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.entities.HandelsbankenCreditCard;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.loan.rpc.HandelsbankenLoansResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.AccountListResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -128,6 +129,10 @@ public abstract class HandelsbankenApiClient {
     public HandelsbankenLoansResponse loans(ApplicationEntryPointResponse applicationEntryPoint) {
         return createRequest(applicationEntryPoint.toLoans())
                 .get(handelsbankenConfiguration.getLoansResponse());
+    }
+
+    public AccountInfoResponse accountInfo(URL accountInfoUrl) {
+        return createRequest(accountInfoUrl).get(AccountInfoResponse.class);
     }
 
     public abstract TransactionsResponse transactions(HandelsbankenAccount handelsbankenAccount);
