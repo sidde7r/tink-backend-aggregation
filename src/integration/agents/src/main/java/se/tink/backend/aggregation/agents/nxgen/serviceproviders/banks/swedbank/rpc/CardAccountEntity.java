@@ -1,9 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CardAccountEntity {
+    private boolean blocked;
+    private boolean internetPurchases;
     private boolean visaBusinessCard;
     private LinksEntity links;
     private String name;
@@ -14,6 +17,14 @@ public class CardAccountEntity {
     private boolean availableForFavouriteAccount;
     private boolean availableForPriorityAccount;
     private String cardNumber;
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public boolean isInternetPurchases() {
+        return internetPurchases;
+    }
 
     public boolean isVisaBusinessCard() {
         return visaBusinessCard;
@@ -53,5 +64,10 @@ public class CardAccountEntity {
 
     public String getCardNumber() {
         return cardNumber;
+    }
+
+    @JsonIgnore
+    public boolean isNotBlocked() {
+        return !blocked;
     }
 }
