@@ -6,11 +6,11 @@ services:
     volumes:
       - "${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK}"
       - ..:/tink-backend
-      - $HOME/agent-cache/$BUILDKITE_AGENT_NAME/bazel-cache:/root/.cache/bazel
       - /usr/bin/buildkite-agent:/usr/bin/buildkite-agent:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker:ro
       - /usr/local/bin/google-cloud-sdk:/usr/local/bin/google-cloud-sdk:ro
+      - /bazel-remote-cache:/cache
     environment:
       - SSH_AUTH_SOCK
       - VERSION
