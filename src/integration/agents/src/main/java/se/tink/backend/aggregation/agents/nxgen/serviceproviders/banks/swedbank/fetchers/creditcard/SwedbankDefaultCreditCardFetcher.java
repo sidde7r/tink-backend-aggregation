@@ -44,6 +44,7 @@ public class SwedbankDefaultCreditCardFetcher implements AccountFetcher<CreditCa
             if (cardAccounts != null) {
                 tinkCardAccounts.addAll(
                         cardAccounts.stream()
+                                .filter(CardAccountEntity::isNotBlocked) // blocked card accounts have no links
                                 .map(CardAccountEntity::getLinks)
                                 .map(LinksEntity::getNext)
                                 .map(apiClient::cardAccountDetails)
