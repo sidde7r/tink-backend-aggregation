@@ -84,7 +84,7 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         // Pressing double payment will give us more information.
         if (paymentResponse.isErrorMessageIdentifier()) {
             SignProtocolResponse signProtocolResponse = apiClient.doublePayment();
-            if (signProtocolResponse.requireSignWeeklyLimit()) {
+            if (signOverWeeklyOrDailyLimit(signProtocolResponse)) {
                 signPayments();
             } else if (signProtocolResponse.isError()) {
                 LOGGER.warnExtraLong(String.format("Signing response: %s", signProtocolResponse.getErrorMessage()),
@@ -98,6 +98,10 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
             return Optional.of(catalog.getString(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT_AWAITING_PROCESSING));
         }
         return Optional.empty();
+    }
+
+    private boolean signOverWeeklyOrDailyLimit(SignProtocolResponse signProtocolResponse) {
+        return signProtocolResponse.requireSignWeeklyLimit() || signProtocolResponse.requireSignDailyLimit();
     }
 
 
