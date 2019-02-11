@@ -345,7 +345,7 @@
             "market": "BE",
             "multiFactor": true,
             "name": "be-ing-cardreader",
-            "passwordHelpText": "Please authenticate yourself with your ING credentials. You will also need your ING card reader to finish the authentication. By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions]‌‌‌(https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
+            "passwordHelpText": "Please authenticate yourself with your ING credentials. You will also need your ING card reader to finish the authentication. By connecting to this bank, you confirm that you have accepted the bank’s [terms and conditions](https://www.ing.be/static/legacy/SiteCollectionDocuments/GeneralRegulationsNewEN.pdf).",
             "payload": null,
             "popular": false,
             "refreshFrequency": 1,
