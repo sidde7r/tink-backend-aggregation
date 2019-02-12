@@ -35,6 +35,18 @@ public class TransactionalAccountTest {
     }
 
     @Test
+    public void otherAccountAsOther() {
+        TransactionalAccount.Builder<?, ?> transactionalBuilder =
+                TransactionalAccount.builder(AccountTypes.OTHER, ACCOUNT_NUMBER)
+                        .setHolderName(new HolderName("name"))
+                        .setAccountNumber(ACCOUNT_NUMBER)
+                        .setBalance(Amount.inDKK(12d));
+        TransactionalAccount transactionalAccount = transactionalBuilder.build();
+        assertEquals(Amount.inDKK(12d), transactionalAccount.getBalance());
+        assertEquals(AccountTypes.OTHER, transactionalAccount.getType());
+    }
+
+    @Test
     public void savingAccountBuilderRandomSettingOrder() {
         SavingsAccount savingsAccount =
                 SavingsAccount.builder(ACCOUNT_NUMBER)
