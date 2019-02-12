@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator;
 
 import com.google.api.client.http.HttpStatusCodes;
+import joptsimple.internal.Strings;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngCryptoUtils;
@@ -11,11 +14,15 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.MobileHelloResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import sun.rmi.server.InactiveGroupException;
 
 public class IngAutoAuthenticator implements AutoAuthenticator {
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(IngAutoAuthenticator.class);
     private static final int MAXIMUM_TRY = 3;
     private final IngApiClient apiClient;
     private final PersistentStorage persistentStorage;
@@ -36,35 +43,16 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
         MobileHelloResponseEntity mobileHelloResponseEntity = this.apiClient.mobileHello();
         this.ingHelper.addRequestUrls(mobileHelloResponseEntity.getRequests());
 
-        int otp = calcOtp();
-
         String authUrl = this.ingHelper.getUrl(IngConstants.RequestNames.AUTHENTICATE);
 
-        HttpResponse response =
-                this.apiClient.trustBuilderLogin(
-                        authUrl,
-                        this.persistentStorage.get(IngConstants.Storage.ING_ID),
-                        this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
-                        otp,
-                        this.persistentStorage.get(IngConstants.Storage.DEVICE_ID),
-                        this.persistentStorage.get(IngConstants.Storage.PSN));
-
+        HttpResponse response = trustBuilderLoginWithOtp(authUrl);
         // xiacheng, sometimes the otp counter is not overwritten by previous call
         // here is the recovery mode.
-        while (response.getHeaders()
-                        .getFirst(IngConstants.Headers.LOCATION)
-                        .contains(IngConstants.Headers.ERROR_CODE_WRONG_OTP)
-                && this.tryCounter++ < MAXIMUM_TRY) {
-            otp = calcOtp();
-            response =
-                    this.apiClient.trustBuilderLogin(
-                            authUrl,
-                            this.persistentStorage.get(IngConstants.Storage.ING_ID),
-                            this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
-                            otp,
-                            this.persistentStorage.get(IngConstants.Storage.DEVICE_ID),
-                            this.persistentStorage.get(IngConstants.Storage.PSN));
+        while (wrongOtp(response) && this.tryCounter++ < MAXIMUM_TRY) {
+            response = trustBuilderLoginWithOtp(authUrl);
         }
+
+        validateBuilderLoginResponse(response);
 
         String loginUrl = this.ingHelper.getUrl(IngConstants.RequestNames.LOGON);
 
@@ -76,6 +64,53 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
                         this.persistentStorage.get(IngConstants.Storage.DEVICE_ID));
 
         this.ingHelper.persist(loginResponseEntity);
+    }
+
+    private void validateBuilderLoginResponse(HttpResponse response) throws SessionException {
+        String locationHeader = response.getHeaders().getFirst(IngConstants.Headers.LOCATION);
+        if (!Strings.isNullOrEmpty(locationHeader)
+                && locationHeader.toLowerCase().contains(IngConstants.Headers.TAM_ERROR)
+                && (locationHeader.toLowerCase().contains(IngConstants.Headers.ERROR_CODE_WRONG_OTP)
+                        || locationHeader
+                                .toLowerCase()
+                                .contains(IngConstants.Headers.ERROR_CODE_LOGIN))) {
+            LOGGER.warn(
+                    String.format(
+                            "%s: %s",
+                            IngConstants.LogMessage.UNKNOWN_LOCATION_CODE,
+                            locationHeader.toLowerCase()));
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private boolean wrongOtp(HttpResponse response) {
+        String locationHeader = response.getHeaders().getFirst(IngConstants.Headers.LOCATION);
+        if (Strings.isNullOrEmpty(locationHeader)) {
+            return false;
+        }
+        if (!locationHeader.toLowerCase().contains(IngConstants.Headers.TAM_ERROR)
+                && locationHeader
+                        .toLowerCase()
+                        .contains(IngConstants.Headers.ERROR_CODE_WRONG_OTP)) {
+            LOGGER.warn(
+                    String.format(
+                            "%s: %s",
+                            IngConstants.LogMessage.UNKNOWN_LOCATION_CODE,
+                            locationHeader.toLowerCase()));
+        }
+
+        return locationHeader.toLowerCase().contains(IngConstants.Headers.ERROR_CODE_WRONG_OTP);
+    }
+
+    private HttpResponse trustBuilderLoginWithOtp(String authUrl) {
+        int otp = calcOtp();
+        return this.apiClient.trustBuilderLogin(
+                authUrl,
+                this.persistentStorage.get(IngConstants.Storage.ING_ID),
+                this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
+                otp,
+                this.persistentStorage.get(IngConstants.Storage.DEVICE_ID),
+                this.persistentStorage.get(IngConstants.Storage.PSN));
     }
 
     private int calcOtp() {
