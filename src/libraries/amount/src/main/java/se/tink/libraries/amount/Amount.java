@@ -19,8 +19,7 @@ public class Amount extends Number {
 
     public static Amount valueOf(String currency, long unscaledValue, int scale) {
         Objects.requireNonNull(currency);
-        BigDecimal value = toBigDecimal(unscaledValue,scale);
-        return new Amount(currency, value);
+        return new Amount(currency, unscaledValue, scale);
     }
 
     private static BigDecimal toBigDecimal(long unscaledValue, int scale) {
@@ -34,6 +33,10 @@ public class Amount extends Number {
     public Amount() {
         this.currency = null;
         this.value = 0D;
+    }
+
+    public Amount(String currency, long unscaledValue, int scale) {
+        this(currency, toBigDecimal(unscaledValue, scale));
     }
 
     public Amount(String currency, Number value) {
