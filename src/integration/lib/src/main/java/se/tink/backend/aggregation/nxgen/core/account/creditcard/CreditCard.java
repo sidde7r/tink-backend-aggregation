@@ -9,7 +9,7 @@ public class CreditCard {
         this.cardNumber = cardNumber;
     }
 
-    public static CreditCard of(String cardHolder, String cardNumber) {
+    public static CreditCard create(String cardHolder, String cardNumber) {
         return new CreditCard(cardHolder, cardNumber);
     }
 
