@@ -8,7 +8,7 @@ import com.sun.jersey.spi.container.ResourceFilter;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.libraries.api.annotations.TeamOwnership;
+import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.metrics.Timer;

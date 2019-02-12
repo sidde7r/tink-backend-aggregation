@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.queue;
 
 import org.xerial.snappy.Snappy;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
-import se.tink.backend.libraries.queue.sqs.EncodingHandler;
+import se.tink.libraries.queue.sqs.EncodingHandler;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.io.IOException;

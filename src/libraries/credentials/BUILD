@@ -1,3 +1,25 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
+java_library(
+    name = "demo",
+    srcs = glob(["src/main/**/demo/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//third_party:com_google_guava_guava",
+    ],
+)
+
+junit_test(
+    name = "demo_test",
+    srcs = glob(["src/test/**/demo/*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/libraries/credentials:demo",
+        "//third_party:junit_junit",
+        "//third_party:org_assertj_assertj_core",
+    ],
+)
+
 java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),

@@ -6,7 +6,7 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/date",
-        "//src/libraries/demo_credentials",
+        "//src/libraries/credentials:demo",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
         "//third_party:org_apache_commons_commons_lang3",

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.ws.rs.Path;
 import org.apache.commons.lang.StringUtils;
-import se.tink.backend.libraries.api.annotations.TeamOwnership;
+import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class ResourceTimerFilterFactory implements ResourceFilterFactory {

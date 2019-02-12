@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.storage.database.providers.ClientConfiguratio
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
 import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
-import se.tink.backend.libraries.queue.sqs.EncodingHandler;
-import se.tink.backend.libraries.queue.sqs.QueueMessageAction;
+import se.tink.libraries.queue.sqs.EncodingHandler;
+import se.tink.libraries.queue.sqs.QueueMessageAction;
 import java.io.IOException;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;

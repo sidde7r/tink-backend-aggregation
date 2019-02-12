@@ -2,7 +2,6 @@ package se.tink.backend.agents.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.MoreObjects;
@@ -16,7 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import se.tink.credentials.demo.DemoCredentials;
+import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 

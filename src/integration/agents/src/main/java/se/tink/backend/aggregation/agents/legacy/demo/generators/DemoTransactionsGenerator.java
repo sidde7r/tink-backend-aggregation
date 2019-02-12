@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.joda.time.DateTime;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.credentials.demo.DemoCredentials;
+import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.uuid.UUIDUtils;
 
