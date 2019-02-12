@@ -30,6 +30,12 @@ public final class DanskeBankConstants {
         public static final String LIST_CUSTODY_ACCOUNTS = FI_BASE + "/initialization/get";
         // == END Accounts ==
 
+        // == START Loans ==
+        public static final String LIST_LOANS = E4_BASE + "/realestate/loan/list";
+        public static final String LOAN_DETAILS = E4_BASE + "/realestate/loan/detail";
+        public static final String LOAN_AGREEMENT_DETAILS = E4_BASE + "/realestate/loan/agreementDetail";
+        // == END Loans ==
+
         // == START Credit card info ==
         public static final String LIST_CARD_INFO =  BASE + "/kk/api/cards/getlist";
         // == END Credit card info ==
@@ -72,7 +78,7 @@ public final class DanskeBankConstants {
     public static class LogTags {
         public static final LogTag AUTHENTICATION_BANKID = LogTag.from("Danske Bank - Authentication - BankID");
         public static final LogTag AUTHENTICATION_AUTO = LogTag.from("Danske Bank - Authentication - Auto");
-        public static final LogTag LOAN_ACCOUNT = LogTag.from("Danske Bank - Loan account");
+        public static final LogTag LOAN_ACCOUNT = LogTag.from("Loan_account");
         public static final LogTag TRANSACTIONAL_ACCOUNT = LogTag.from("Danske Bank - Transactional account");
     }
 
