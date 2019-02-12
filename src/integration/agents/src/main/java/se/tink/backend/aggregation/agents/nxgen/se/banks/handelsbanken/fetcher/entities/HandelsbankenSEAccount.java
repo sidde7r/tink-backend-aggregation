@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import java.util.Optional;
@@ -97,9 +98,9 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         AccountInfoResponse accountInfo = null;
 
         try {
-            URL accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
-            if (accountInfoURL != null) {
-                accountInfo = client.accountInfo(accountInfoURL);
+            Optional<URL> accountInfoURL = transactionsResponse.getAccount().getAccountInfoUrl();
+            if (accountInfoURL.isPresent()) {
+                accountInfo = client.accountInfo(accountInfoURL.get());
 
                 accountTypeName = accountInfo.getValuesByLabel()
                         .getOrDefault(HandelsbankenSEConstants.Fetcher.ACCOUNT_TYPE_NAME_LABEL, name);
@@ -187,7 +188,14 @@ public class HandelsbankenSEAccount extends HandelsbankenAccount {
         return this;
     }
 
-    public URL getAccountInfoUrl() {
-        return findLink(HandelsbankenConstants.URLS.Links.ACCOUNT_INFO);
+    @JsonIgnore
+    public Optional<URL> getAccountInfoUrl() {
+        try {
+            return Optional.of(findLink(HandelsbankenConstants.URLS.Links.ACCOUNT_INFO));
+        } catch (Exception e) {
+            LOG.info("Failed to find link for account info ", e.getMessage());
+        }
+
+        return Optional.empty();
     }
 }
