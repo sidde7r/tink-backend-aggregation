@@ -113,15 +113,9 @@ public class SebKortApiClient {
     }
 
     public ReservationsResponse fetchReservations(
-            String cardAccountId, Date fromDate, Date toDate) {
+            String cardAccountId) {
         return createRequestInSession(SebKortConstants.Urls.SEBKORT_RESERVATIONS)
                 .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
-                .queryParam(
-                        SebKortConstants.QueryKey.FROM_DATE,
-                        SebKortConstants.DATE_FORMAT.format(fromDate))
-                .queryParam(
-                        SebKortConstants.QueryKey.TO_DATE,
-                        SebKortConstants.DATE_FORMAT.format(toDate))
                 .get(ReservationsResponse.class);
     }
 }
