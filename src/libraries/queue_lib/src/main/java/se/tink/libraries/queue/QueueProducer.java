@@ -1,4 +1,4 @@
-package se.tink.backend.libraries.queue;
+package se.tink.libraries.queue;
 
 public interface QueueProducer {
 

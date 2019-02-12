@@ -7,8 +7,6 @@ import com.google.inject.Singleton;
 import io.dropwizard.lifecycle.setup.LifecycleEnvironment;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueEncoder;
 import se.tink.backend.aggregation.queue.AutomaticRefreshQueueHandler;
-import se.tink.backend.libraries.queue.QueueConsumer;
-import se.tink.backend.libraries.queue.QueueProducer;
 import se.tink.backend.libraries.queue.sqs.EncodingHandler;
 import se.tink.backend.libraries.queue.sqs.FakeHandler;
 import se.tink.backend.libraries.queue.sqs.FakeProducer;
@@ -17,6 +15,8 @@ import se.tink.backend.libraries.queue.sqs.SqsConsumer;
 import se.tink.backend.libraries.queue.sqs.SqsProducer;
 import se.tink.backend.libraries.queue.sqs.SqsQueue;
 import se.tink.backend.libraries.queue.sqs.configuration.SqsQueueConfiguration;
+import se.tink.libraries.queue.QueueConsumer;
+import se.tink.libraries.queue.QueueProducer;
 
 public class QueueModule extends AbstractModule {
     private SqsQueueConfiguration sqsQueueConfiguration;
