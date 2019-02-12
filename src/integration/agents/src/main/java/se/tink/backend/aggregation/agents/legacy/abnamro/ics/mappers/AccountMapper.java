@@ -4,8 +4,8 @@ import com.google.common.base.Preconditions;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountEntity;
-import se.tink.libraries.abnamro.utils.AbnAmroUtils;
+import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.CreditCardAccountEntity;
+import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
 
 public class AccountMapper {
     private final static Pattern VALID_BANK_ID_PATTERN = Pattern.compile("\\d{11,16}");

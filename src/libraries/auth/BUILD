@@ -6,11 +6,11 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/http:http_annotations",
-        "//third_party:org_slf4j_slf4j_api",
         "//third_party:com_google_guava_guava",
         "//third_party:com_lambdaworks_scrypt",
         "//third_party:com_yubico_yubico_validation_client2",
         "//third_party:io_dropwizard_dropwizard_core",
+        "//third_party:org_slf4j_slf4j_api",
         "//third_party:org_springframework_security",
     ],
 )

@@ -7,7 +7,6 @@ java_library(
     deps = [
         "//src/libraries/discovery",
         "//src/libraries/jersey_log",
-        "//third_party:org_slf4j_slf4j_api",
         "//src/libraries/uuid",
         "//third_party:com_netflix_governator",
         "//third_party:io_dropwizard_dropwizard_core",
@@ -15,6 +14,7 @@ java_library(
         "//third_party:io_protostuff_protostuff_core",
         "//third_party:io_protostuff_protostuff_runtime",
         "//third_party:io_swagger_swagger_jaxrs",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
 

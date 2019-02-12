@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.libraries.abnamro.config.AbnAmroConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AgentsServiceConfiguration {

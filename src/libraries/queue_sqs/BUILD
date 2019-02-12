@@ -4,7 +4,6 @@ java_library(
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//third_party:org_slf4j_slf4j_api",
         "//src/libraries/metrics",
         "//src/libraries/net",
         "//src/libraries/queue_lib",
@@ -14,5 +13,6 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:io_dropwizard_dropwizard_core",
         "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )

@@ -14,8 +14,8 @@ java_library(
         "//src/libraries/field:rpc",
         "//src/libraries/provider:enums",
         "//src/libraries/serialization",
-        "//third_party:com_google_guava_guava",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
+        "//third_party:com_google_guava_guava",
         "//third_party:joda_time_joda_time",
     ],
 )

@@ -4,7 +4,7 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import se.tink.libraries.abnamro.client.model.creditcards.CreditCardAccountEntity;
+import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.CreditCardAccountEntity;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
