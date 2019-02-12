@@ -5,7 +5,7 @@ set -euo pipefail
 export PATH="/usr/local/bin/google-cloud-sdk/bin:$PATH";
 echo "$GOOGLE_CLOUD_ACCOUNT_JSON" | base64 --decode | gcloud auth activate-service-account --key-file=-;
 
-./bazel-wrapper build docker:bundle.tar;
+./bazel-wrapper build --disk_cache=/cache docker:bundle.tar;
 docker load -i bazel-bin/docker/bundle.tar;
 
 docker tag gcr.io/tink-containers/tink-backend-aggregation:latest "gcr.io/tink-containers/tink-backend-aggregation:$VERSION";
