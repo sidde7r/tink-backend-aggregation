@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
-import se.tink.backend.aggregation.nxgen.core.creditcard.CreditCard;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCard;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.libraries.amount.Amount;
 
@@ -149,7 +149,7 @@ public class TransactionEntity {
         Amount amount = new Amount(billingCurrencyCode, -billingAmount);
 
         return CreditCardTransaction.builder()
-                .setCreditCard(CreditCard.create(maskedCardNumber))
+                .setCreditCard(CreditCard.create(nameOnCard, maskedCardNumber))
                 .setDate(date)
                 .setDescription(specification)
                 .setAmount(amount)
