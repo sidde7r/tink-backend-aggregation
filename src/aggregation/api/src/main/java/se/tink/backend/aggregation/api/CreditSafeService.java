@@ -12,12 +12,12 @@ import se.tink.libraries.api.annotations.Team;
 import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.PortfolioListResponse;
-import se.tink.backend.idcontrol.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
+import se.tink.libraries.creditsafe.consumermonitoring.api.AddMonitoredConsumerCreditSafeRequest;
+import se.tink.libraries.creditsafe.consumermonitoring.api.ChangedConsumerCreditSafeRequest;
+import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeRequest;
+import se.tink.libraries.creditsafe.consumermonitoring.api.PageableConsumerCreditSafeResponse;
+import se.tink.libraries.creditsafe.consumermonitoring.api.PortfolioListResponse;
+import se.tink.libraries.creditsafe.consumermonitoring.api.RemoveMonitoredConsumerCreditSafeRequest;
 
 @Path("/creditsafe")
 @Consumes(MediaType.APPLICATION_JSON)
