@@ -28,7 +28,7 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.strings.StringUtils;
-import se.tink.credentials.demo.DemoCredentials;
+import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.date.DateUtils;
 

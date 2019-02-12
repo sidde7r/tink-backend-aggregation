@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import se.tink.credentials.demo.DemoCredentials;
+import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 

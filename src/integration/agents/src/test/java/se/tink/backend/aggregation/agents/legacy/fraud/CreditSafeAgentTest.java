@@ -16,7 +16,7 @@ import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContentType;
 import se.tink.backend.aggregation.agents.utils.mappers.CoreUserMapper;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.credentials.demo.DemoCredentials;
+import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.social.security.TestSSN;

@@ -53,7 +53,7 @@ import se.tink.backend.aggregation.agents.models.fraud.FraudIdentityContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudIncomeContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudNonPaymentContent;
 import se.tink.backend.aggregation.agents.models.fraud.FraudRealEstateEngagementContent;
-import se.tink.credentials.demo.DemoCredentials;
+import se.tink.libraries.credentials.demo.DemoCredentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.strings.StringUtils;

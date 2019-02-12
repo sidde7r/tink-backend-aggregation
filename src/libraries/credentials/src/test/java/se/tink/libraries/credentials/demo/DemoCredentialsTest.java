@@ -1,4 +1,4 @@
-package se.tink.backend.core;
+package se.tink.libraries.credentials.demo;
 
 import org.junit.Assert;
 import org.junit.Test;

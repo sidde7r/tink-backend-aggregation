@@ -29,7 +29,7 @@ java_library(
         "//src/libraries/credentials:service",
         "//src/libraries/cryptography",
         "//src/libraries/date",
-        "//src/libraries/demo_credentials",
+        "//src/libraries/credentials:demo",
         "//src/libraries/discovered_web_service",
         "//src/libraries/discovery",
         "//src/libraries/document_container",

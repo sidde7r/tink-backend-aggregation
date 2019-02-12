@@ -11,7 +11,7 @@ java_library(
         "//src/libraries/api_annotations",
         "//src/libraries/credentials:service",
         "//src/libraries/creditsafe_consumer_monitoring",
-        "//src/libraries/demo_credentials",
+        "//src/libraries/credentials:demo",
         "//src/libraries/enums",
         "//src/libraries/field:rpc",
         "//src/libraries/generic_application",

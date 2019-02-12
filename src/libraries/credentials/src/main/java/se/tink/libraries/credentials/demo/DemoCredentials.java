@@ -1,4 +1,4 @@
-package se.tink.credentials.demo;
+package se.tink.libraries.credentials.demo;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
