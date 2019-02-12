@@ -1,10 +1,10 @@
-package se.tink.backend.libraries.queue.sqs;
+package se.tink.libraries.queue.sqs;
 
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.libraries.queue.QueueProducer;
+import se.tink.libraries.queue.QueueProducer;
 
 import java.io.IOException;
 

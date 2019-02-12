@@ -1,6 +1,6 @@
-package se.tink.backend.libraries.queue.sqs;
+package se.tink.libraries.queue.sqs;
 
-import se.tink.backend.libraries.queue.QueueProducer;
+import se.tink.libraries.queue.QueueProducer;
 
 public class FakeProducer implements QueueProducer {
 
