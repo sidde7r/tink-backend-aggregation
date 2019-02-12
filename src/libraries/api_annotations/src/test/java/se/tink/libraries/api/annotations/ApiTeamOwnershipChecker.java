@@ -1,4 +1,4 @@
-package se.tink.backend.libraries.api.annotations;
+package se.tink.libraries.api.annotations;
 
 import com.google.common.collect.ImmutableSet;
 import java.lang.reflect.Method;

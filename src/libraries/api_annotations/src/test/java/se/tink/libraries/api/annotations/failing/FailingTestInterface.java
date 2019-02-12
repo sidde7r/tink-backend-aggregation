@@ -1,4 +1,4 @@
-package se.tink.backend.libraries.api.annotations.failing;
+package se.tink.libraries.api.annotations.failing;
 
 import javax.ws.rs.Path;
 
