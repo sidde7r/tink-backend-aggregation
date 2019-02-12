@@ -93,7 +93,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -111,7 +111,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -130,7 +130,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -148,7 +148,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -167,7 +167,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -185,7 +185,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -204,7 +204,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -222,7 +222,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -241,7 +241,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -259,7 +259,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -278,7 +278,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -296,7 +296,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -315,7 +315,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -333,7 +333,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -352,7 +352,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -370,7 +370,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -389,7 +389,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -407,7 +407,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -426,7 +426,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -444,7 +444,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -463,7 +463,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -481,7 +481,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -500,7 +500,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -518,7 +518,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
                 Investigate immediately.
@@ -537,7 +537,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Login success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
@@ -555,7 +555,7 @@ spec:
     for: 5m
     labels:
         severity: ping
-        who: integration
+        who: '#integration-oncall'
     annotations:
         description: Refresh success rate is below 95% ( <{ $value }> ) for the last 30 minutes.
             Investigate immediately.
