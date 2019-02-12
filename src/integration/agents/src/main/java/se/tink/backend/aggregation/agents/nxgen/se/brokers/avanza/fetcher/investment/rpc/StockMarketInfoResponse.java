@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.inves
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.CompanyEntity;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.DividendEntity;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.KeyRatiosEntity;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.LatestTradeEntity;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.OrderDepthLevelEntity;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.PositionEntity;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.RelatedStockEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.CompanyEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.DividendEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.KeyRatiosEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.LatestTradeEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.OrderDepthLevelEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.PositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.RelatedStockEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
