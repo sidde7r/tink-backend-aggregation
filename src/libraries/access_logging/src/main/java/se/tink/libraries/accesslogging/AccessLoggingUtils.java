@@ -1,4 +1,4 @@
-package se.tink.libraries.access_logging;
+package se.tink.libraries.accesslogging;
 
 import com.google.common.base.Strings;
 import org.slf4j.Logger;

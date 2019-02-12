@@ -1,4 +1,4 @@
-package se.tink.libraries.access_logging;
+package se.tink.libraries.accesslogging;
 
 import se.tink.libraries.auth.HttpAuthenticationMethod;
 
