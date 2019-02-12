@@ -9,7 +9,6 @@ java_library(
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/models",
-        "//src/libraries/abnamro",
         "//src/libraries/account:enums",
         "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
@@ -75,6 +74,7 @@ java_library(
         "//third_party:org_seleniumhq_selenium_selenium_remote_driver",
         "@com_google_inject_guice//jar",
         "@com_sun_jersey_contribs_jersey_apache_client4//jar",
+        "//third_party:io_protostuff_protostuff_api",
     ],
 )
 
@@ -109,8 +109,8 @@ junit_test(
         "//src/integration/lib",
         "//src/integration/lib:lib_test",
         "//src/integration/models",
-        "//src/libraries/abnamro",
         "//src/libraries/account:enums",
+        "//src/libraries/account:rpc",
         "//src/libraries/account_identifier",
         "//src/libraries/account_identifier:account_identifier_test",
         "//src/libraries/amount",

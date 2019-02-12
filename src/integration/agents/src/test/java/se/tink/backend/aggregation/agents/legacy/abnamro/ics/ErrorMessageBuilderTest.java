@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.abnamro.ics;
 
 import java.util.concurrent.ExecutionException;
 import org.junit.Test;
-import se.tink.libraries.abnamro.client.exceptions.IcsException;
+import se.tink.backend.aggregation.agents.abnamro.client.exceptions.IcsException;
 import se.tink.libraries.i18n.Catalog;
 import static org.assertj.core.api.Assertions.assertThat;
 

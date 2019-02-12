@@ -6,9 +6,9 @@ import java.util.List;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.abnamro.client.model.AmountEntity;
-import se.tink.libraries.abnamro.client.model.PfmContractEntity;
-import se.tink.libraries.abnamro.utils.AbnAmroUtils;
+import se.tink.backend.aggregation.agents.abnamro.client.model.AmountEntity;
+import se.tink.backend.aggregation.agents.abnamro.client.model.PfmContractEntity;
+import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountConverterTest {
