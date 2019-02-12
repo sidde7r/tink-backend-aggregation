@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.se
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkortv2.SebKortApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -38,7 +39,11 @@ public class SEBKortTransactionFetcher implements TransactionDatePaginator<Credi
 
     private static List<Transaction> handleReservations(Date fromDate, Date toDate, List<Transaction> reservations) {
         return reservations.stream()
-                .filter(transaction -> transaction.getDate().after(fromDate) && transaction.getDate().before(toDate))
+                .filter(transactionInDateInterval(fromDate, toDate))
                 .collect(Collectors.toList());
+    }
+
+    private static Predicate<Transaction> transactionInDateInterval(Date fromDate, Date toDate) {
+        return transaction -> transaction.getDate().after(fromDate) && transaction.getDate().before(toDate);
     }
 }
