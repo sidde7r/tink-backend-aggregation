@@ -22,7 +22,10 @@ public class IngConstants {
                 + "AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10; MyING.be/8.4";
 
         public static final String LOCATION = "location";
-        public static final String ERROR_CODE_WRONG_OTP = "ERROR_CODE=3";
+        public static final String TAM_ERROR = "tam_op=error";
+        public static final String ERROR_CODE_WRONG_OTP = "error_code=3";
+        public static final String ERROR_CODE_LOGIN = "error_code=2";
+
     }
 
     static final class Crypto {
@@ -249,6 +252,7 @@ public class IngConstants {
     public static final class LogMessage {
         public static final String CHALLENGE_EXCHANGE_ERROR = "#ING_challenge_exchange_failed";
         public static final String UNKNOWN_RETURN_CODE = "#ING_unknown_returncode";
+        public static final String UNKNOWN_LOCATION_CODE = "#ING_unknown_location";
         public static final String URL_NOT_FOUND = "#ING_url_not_found";
         public static final String TRANSACTION_FETCHING_ERROR = "#ING_transaction_fetching_failed";
         public static final String LOGIN_RESPONSE_NOT_FOUND = "Could not fetch login response.";
