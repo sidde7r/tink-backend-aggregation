@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
+import java.util.Optional;
 
 public class ResponseStatus {
     @JsonProperty("ClientMessage")
@@ -12,7 +13,7 @@ public class ResponseStatus {
     private String serverMessage;
 
     public String getClientMessage() {
-        return clientMessage;
+        return Optional.ofNullable(clientMessage).orElse("");
     }
 
     public int getCode() {
@@ -20,7 +21,7 @@ public class ResponseStatus {
     }
 
     public String getServerMessage() {
-        return serverMessage;
+        return Optional.ofNullable(serverMessage).orElse("");
     }
 
     public void setClientMessage(String clientMessage) {
