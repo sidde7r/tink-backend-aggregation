@@ -815,12 +815,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_opensaml_openws",
-    artifact = "org.opensaml:openws:1.5.0",
-    sha1 = "4cb7919a5cbb9203a56c63487cc9f773dfa9930f",
-)
-
-maven_jar(
     name = "javax_xml_bind_jaxb_api",
     artifact = "javax.xml.bind:jaxb-api:2.2.7",
     sha1 = "2f51c4bb4724ea408096ee9100ff2827e07e5b7c",
@@ -1082,12 +1076,6 @@ maven_jar(
     name = "io_dropwizard_dropwizard_metrics_graphite",
     artifact = "io.dropwizard:dropwizard-metrics-graphite:0.7.1",
     sha1 = "fa2d12fb3f9367d96ba6282a9081a4444bc1d426",
-)
-
-maven_jar(
-    name = "org_bouncycastle_bcprov_jdk15",
-    artifact = "org.bouncycastle:bcprov-jdk15:1.46",
-    sha1 = "d726ceb2dcc711ef066cc639c12d856128ea1ef1",
 )
 
 maven_jar(
@@ -1723,12 +1711,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_opensaml_xmltooling",
-    artifact = "org.opensaml:xmltooling:1.4.0",
-    sha1 = "841308b1a32a0bdaaad3d469a7133eea25103c7b",
-)
-
-maven_jar(
     name = "commons_collections_commons_collections",
     artifact = "commons-collections:commons-collections:3.1",
     sha1 = "40fb048097caeacdb11dbb33b5755854d89efdeb",
@@ -1828,12 +1810,6 @@ maven_jar(
     name = "org_apache_commons_commons_lang3",
     artifact = "org.apache.commons:commons-lang3:3.4",
     sha1 = "5fe28b9518e58819180a43a850fbc0dd24b7c050",
-)
-
-maven_jar(
-    name = "org_opensaml_opensaml",
-    artifact = "org.opensaml:opensaml:2.6.0",
-    sha1 = "9ac35d10b55430a015493c1a4ebdc8ece6f67e6f",
 )
 
 maven_jar(

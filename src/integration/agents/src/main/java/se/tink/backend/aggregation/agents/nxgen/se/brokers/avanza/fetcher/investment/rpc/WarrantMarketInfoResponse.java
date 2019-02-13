@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.inves
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.PositionEntity;
-import se.tink.backend.aggregation.agents.brokers.avanza.v2.model.UnderlyingOrderbookEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.PositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.brokers.avanza.fetcher.investment.entities.UnderlyingOrderbookEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
