@@ -67,9 +67,7 @@ public class LoginResponseEntity extends BaseMobileResponseEntity {
     private Optional<URL> findRequest(Predicate<RequestEntity> requestPredicate) {
         return Optional.ofNullable(requests)
                 .map(Collection::stream)
-                .flatMap(requests -> requests
-                        .filter(requestPredicate)
-                        .findFirst())
+                .flatMap(requests -> requests.filter(requestPredicate).findFirst())
                 .map(RequestEntity::asSSORequest);
     }
 
@@ -84,9 +82,7 @@ public class LoginResponseEntity extends BaseMobileResponseEntity {
     private Optional<String> findRequestUrlForLogging(Predicate<RequestEntity> requestPredicate) {
         return Optional.ofNullable(this.requests)
                 .map(Collection::stream)
-                .flatMap(requests -> requests
-                        .filter(requestPredicate)
-                        .findFirst())
+                .flatMap(requests -> requests.filter(requestPredicate).findFirst())
                 .map(RequestEntity::getUrl);
     }
 }

@@ -69,6 +69,7 @@ public class RequestEntity {
     }
 
     public URL asSSORequest() {
-        return new URL(IngConstants.Urls.BASE_SSO_REQUEST + StringEscapeUtils.unescapeHtml(this.url));
+        return new URL(
+                IngConstants.Urls.BASE_SSO_REQUEST + StringEscapeUtils.unescapeHtml(this.url));
     }
 }

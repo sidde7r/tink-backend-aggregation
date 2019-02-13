@@ -8,10 +8,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class AppCredentialsResponse {
     @JsonProperty("X-ENROLMENT-PROTOCOL-VERSION")
     private String xEnrolmentProtocolVersion;
+
     @JsonProperty("X-ENROLMENT-MESSAGE")
     private String xEnrolmentMessage;
+
     @JsonProperty("X-ENROLMENT-STATUS-CODE")
     private String xEnrolmentStatusCode;
+
     @JsonProperty("X-ENROLMENT-ENC-CREDENTIALS")
     private String xEnrolmentEncCredentials;
 

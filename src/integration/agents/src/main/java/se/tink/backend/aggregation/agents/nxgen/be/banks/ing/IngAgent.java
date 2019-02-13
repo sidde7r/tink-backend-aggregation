@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
@@ -28,7 +29,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import java.util.Optional;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers.USER_AGENT;
 
@@ -37,7 +37,8 @@ public class IngAgent extends NextGenerationAgent {
     private final IngHelper ingHelper;
     private final IngTransferHelper ingTransferHelper;
 
-    public IngAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public IngAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new IngApiClient(client);
         this.ingHelper = new IngHelper(sessionStorage);
@@ -52,7 +53,9 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(request, context,
+        return new AutoAuthenticationController(
+                request,
+                context,
                 new IngCardReaderAuthenticationController(
                         new IngCardReaderAuthenticator(apiClient, persistentStorage, ingHelper),
                         supplementalInformationHelper),
@@ -60,13 +63,15 @@ public class IngAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(credentials, apiClient, ingHelper);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        IngTransactionFetcher transactionFetcher =
+                new IngTransactionFetcher(credentials, apiClient, ingHelper);
 
-        TransactionPagePaginationController<TransactionalAccount> transactionPagePaginationController =
-                new TransactionPagePaginationController<>(
-                        transactionFetcher,
-                        IngConstants.Fetcher.START_PAGE);
+        TransactionPagePaginationController<TransactionalAccount>
+                transactionPagePaginationController =
+                        new TransactionPagePaginationController<>(
+                                transactionFetcher, IngConstants.Fetcher.START_PAGE);
 
         TransactionFetcherController<TransactionalAccount> transactionFetcherController =
                 new TransactionFetcherController<>(
@@ -110,7 +115,8 @@ public class IngAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.of(
                 new TransferDestinationRefreshController(
                         metricRefreshController,
@@ -124,7 +130,8 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        BankTransferExecutor bankTransferExecutor = new IngTransferExecutor(apiClient, persistentStorage, ingHelper, ingTransferHelper);
+        BankTransferExecutor bankTransferExecutor =
+                new IngTransferExecutor(apiClient, persistentStorage, ingHelper, ingTransferHelper);
 
         return Optional.of(new TransferController(null, bankTransferExecutor, null, null));
     }

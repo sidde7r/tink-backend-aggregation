@@ -15,69 +15,73 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionsResponse implements PaginatorResponse {
-  private static final AggregationLogger LOGGER = new AggregationLogger(TransactionsResponse.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(TransactionsResponse.class);
 
-  private TransactionsResponseEntity mobileResponse;
+    private TransactionsResponseEntity mobileResponse;
 
-  public TransactionsResponseEntity getMobileResponse() {
-    return Preconditions.checkNotNull(mobileResponse);
-  }
-
-  @Override
-  public Collection<Transaction> getTinkTransactions() {
-    if (!fetchedInsideAllowedRange()) {
-      return Collections.emptyList();
+    public TransactionsResponseEntity getMobileResponse() {
+        return Preconditions.checkNotNull(mobileResponse);
     }
 
-    return getMobileResponse()
-        .getMovements()
-        .stream()
-        .map(TransactionEntity::toTinkTransaction)
-        .collect(Collectors.toList());
-  }
+    @Override
+    public Collection<Transaction> getTinkTransactions() {
+        if (!fetchedInsideAllowedRange()) {
+            return Collections.emptyList();
+        }
 
-  @Override
-  public Optional<Boolean> canFetchMore() {
-    return Optional.of(fetchedInsideAllowedRange() && !fetchedLessThanFullBatch());
-  }
-
-  private boolean fetchedInsideAllowedRange() {
-    String returnCode = getMobileResponse().getReturnCode();
-
-    if (IngConstants.ReturnCodes.OK.equalsIgnoreCase(returnCode)) {
-      return true;
+        return getMobileResponse()
+                .getMovements()
+                .stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
-    if (!IngConstants.ReturnCodes.NOK.equalsIgnoreCase(returnCode)) {
-      // Don't know if there are other codes than ok and nok, logging those here if so.
-      LOGGER.warn(String.format("%s: %s", IngConstants.LogMessage.UNKNOWN_RETURN_CODE, returnCode));
-      throw new IllegalStateException(
-          String.format("%s", IngConstants.LogMessage.TRANSACTION_FETCHING_ERROR));
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(fetchedInsideAllowedRange() && !fetchedLessThanFullBatch());
     }
 
-    Optional<String> errorCode = getMobileResponse().getErrorCode();
+    private boolean fetchedInsideAllowedRange() {
+        String returnCode = getMobileResponse().getReturnCode();
 
-    if (errorCode.isPresent()) {
-      if (IngConstants.ErrorCodes.FETCHED_TRANSACTIONS_OUTSIDE_RANGE_CODE.equalsIgnoreCase(
-          errorCode.get())) {
-        return false;
-      } else if (IngConstants.ErrorCodes.STARTING_DATE_ENTERED_IS_WRONG.equalsIgnoreCase(
-          errorCode.get())) {
-        return false;
-      } else {
+        if (IngConstants.ReturnCodes.OK.equalsIgnoreCase(returnCode)) {
+            return true;
+        }
+
+        if (!IngConstants.ReturnCodes.NOK.equalsIgnoreCase(returnCode)) {
+            // Don't know if there are other codes than ok and nok, logging those here if so.
+            LOGGER.warn(
+                    String.format(
+                            "%s: %s", IngConstants.LogMessage.UNKNOWN_RETURN_CODE, returnCode));
+            throw new IllegalStateException(
+                    String.format("%s", IngConstants.LogMessage.TRANSACTION_FETCHING_ERROR));
+        }
+
+        Optional<String> errorCode = getMobileResponse().getErrorCode();
+
+        if (errorCode.isPresent()) {
+            if (IngConstants.ErrorCodes.FETCHED_TRANSACTIONS_OUTSIDE_RANGE_CODE.equalsIgnoreCase(
+                    errorCode.get())) {
+                return false;
+            } else if (IngConstants.ErrorCodes.STARTING_DATE_ENTERED_IS_WRONG.equalsIgnoreCase(
+                    errorCode.get())) {
+                return false;
+            } else {
+                throw new IllegalStateException(
+                        String.format(
+                                "%s with error code: %s",
+                                IngConstants.LogMessage.TRANSACTION_FETCHING_ERROR,
+                                errorCode.get()));
+            }
+        }
+
         throw new IllegalStateException(
-            String.format(
-                "%s with error code: %s",
-                IngConstants.LogMessage.TRANSACTION_FETCHING_ERROR, errorCode.get()));
-      }
+                String.format("%s", IngConstants.LogMessage.TRANSACTION_FETCHING_ERROR));
     }
 
-    throw new IllegalStateException(
-        String.format("%s", IngConstants.LogMessage.TRANSACTION_FETCHING_ERROR));
-  }
-
-  private boolean fetchedLessThanFullBatch() {
-    return getMobileResponse().getMovements().size()
-        < IngConstants.Fetcher.MAX_TRANSACTIONS_IN_BATCH;
-  }
+    private boolean fetchedLessThanFullBatch() {
+        return getMobileResponse().getMovements().size()
+                < IngConstants.Fetcher.MAX_TRANSACTIONS_IN_BATCH;
+    }
 }
