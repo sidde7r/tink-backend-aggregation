@@ -5,8 +5,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 public class StarlingConstants {
 
     public static class URL {
-        private static final String API_STARLING_COM = "https://api-sandbox.starlingbank.com/";
-        public static final String AUTH_STARLING_COM = "https://oauth-sandbox.starlingbank.com/";
+        private static final String API_STARLING_COM = "https://api.starlingbank.com/";
+        public static final String AUTH_STARLING_COM = "https://oauth.starlingbank.com/";
         public static final String OAUTH2_TOKEN = API_STARLING_COM + "oauth/access-token";
         public static final String ACCOUNTS = API_STARLING_COM + "/api/v2/accounts";
         public static final String ACCOUNT_HOLDER =
