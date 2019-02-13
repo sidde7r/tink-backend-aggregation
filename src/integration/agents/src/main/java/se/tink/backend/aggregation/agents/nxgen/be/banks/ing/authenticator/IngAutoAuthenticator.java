@@ -64,7 +64,7 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
             BaseResponse baseRes = IngHelper.getLoginError(res);
             throw new IllegalStateException(
                     String.format(
-                            "%s%s%s",
+                            "%s%s%s%s",
                             "AutoAuth not successful! Code: ",
                             baseRes.getMobileResponse().getErrorCode().get(),
                             " Message: ",
