@@ -3,5 +3,5 @@
                keep-in-sync="true"
                handler-id="BlazeCommandGenericRunConfigurationHandlerProvider"
                blaze-command="test">
-    <blaze-target>//:all</blaze-target>
+    <blaze-target>//:all_tests</blaze-target>
 </configuration>
