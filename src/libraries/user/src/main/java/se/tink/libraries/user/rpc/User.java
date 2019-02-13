@@ -189,14 +189,4 @@ public class User implements Serializable {
         return MoreObjects.toStringHelper(this).add("id", id).add("username", username).toString();
     }
 
-    /**
-     * True/False if tracking is enabled for this user
-     *
-     * @return if tracking is enabled
-     */
-    @JsonIgnore
-    public boolean isTrackingEnabled() {
-        return flags == null
-                || !FeatureFlags.FeatureFlagGroup.TRACKING_DISABLED.isFlagInGroup(flags);
-    }
 }
