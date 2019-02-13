@@ -9,9 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import io.protostuff.Exclude;
-import io.protostuff.Tag;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.net.URI;
@@ -22,7 +19,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import javax.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.libraries.transfer.enums.MessageType;
@@ -49,80 +45,42 @@ public class Transfer implements Serializable, Cloneable {
             new TypeReference<Map<TransferPayloadType, String>>() {
             };
 
-
-    @Tag(1)
-    @ApiModelProperty(name = "amount", example = "10", required = true, value = "The amount that will be transferred")
     private BigDecimal amount;
     @JsonIgnore
-    @Exclude
     private Double oldAmount;
-    @Tag(2)
-    @ApiModelProperty(name = "credentialsId", example = "342220f1e0484c0481b2b468d7fbcfc4", value = "The id of the Credentials used to make the transfer. Will be the credentials of which the source account belongs to.")
     private UUID credentialsId;
-    @Tag(3)
-    @ApiModelProperty(name = "currency", example = "SEK", required = true, value = "The currency of the amount")
     private String currency;
-
-    @Tag(4)
     @JsonProperty("destinationUri")
-    @ApiModelProperty(name = "destinationUri", example = "se://6000123456789", required = true, value = "The destination account or recipient of the transfer, on the form of a uri. ")
     private String destination;
-    @Exclude
     @JsonIgnore
     private String originalDestination;
-
-    @Tag(5)
-    @ApiModelProperty(name = "destinationMessage", example = "Happy birthday!", required = true, value = "The message to the recipient. Optional for bank transfers but required for payments. If the payment recipient requires an OCR, it should be set as destinationMessage.")
     private String destinationMessage;
-    @Tag(6)
-    @ApiModelProperty(name = "id", example = "a4516bda6ff545e0aa24e54b859579e0", value = "The id of this transfer.")
     private UUID id;
-
-    @Tag(7)
     @JsonProperty("sourceUri")
-    @ApiModelProperty(name = "sourceUri", example = "tink://1e09bab571d84b1cbe8d49c0be9c030f", required = true, value = "The source account of the transfer, on the form of a uri.")
     private String source;
-    @Exclude
     @JsonIgnore
     private String originalSource;
-
-    @Tag(8)
-    @ApiModelProperty(name = "sourceMessage", example = "Gift to Sophie", value = "A note to show to the source account.")
     private String sourceMessage;
-    @Tag(9)
-    @ApiModelProperty(name = "userId", example = "2f37e3ff1e5342b39c41bee3ee73cf8e", value = "The id of the user making the transfer.")
     private UUID userId;
-    @Tag(10)
-    @ApiModelProperty(name = "type", example = "BANK_TRANSFER", value = "The type of the transfer.", allowableValues = TransferType.DOCUMENTED)
     private String type;
-
-    @Tag(11)
-    @ApiModelProperty(name = "dueDate", example = "1471349422000", required = true, value = "The date the payment or bank transfer should be executed. If bank transfer, and no dueDate is given, it will be executed immediately")
     private Date dueDate;
-    @Tag(12)
-    @ApiModelProperty(name = "messageType", example = "STRUCTURED", value = "Transfer's message type, required in Belgium.", allowableValues = MessageType.OPTIONS)
     private String messageType;
-    @Exclude
-    @ApiModelProperty(name = "payloadSerialized", hidden = true)
     private String payloadSerialized;
 
     public Transfer() {
         id = UUID.randomUUID();
     }
 
-    @Transient
     @JsonIgnore
     public String getHash() {
         return getHash(false);
     }
 
-    @Transient
     @JsonIgnore
     public String getHashIgnoreSource() {
         return getHash(true);
     }
 
-    @Transient
     @JsonIgnore
     private String getHash(boolean ignoreSource) {
         AccountIdentifier source = getSource();
@@ -224,7 +182,6 @@ public class Transfer implements Serializable, Cloneable {
     }
 
     @JsonIgnore
-    @Transient
     public void setGeneratedDestinationMessage(String generatedDestinationMessage) {
         this.destinationMessage = serializeGeneratedMessage(generatedDestinationMessage);
     }
@@ -242,7 +199,6 @@ public class Transfer implements Serializable, Cloneable {
     }
 
     @JsonIgnore
-    @Transient
     public void setGeneratedSourceMessage(String generatedSourceMessage) {
         this.sourceMessage = serializeGeneratedMessage(generatedSourceMessage);
     }
@@ -375,7 +331,6 @@ public class Transfer implements Serializable, Cloneable {
         }
     }
 
-    @Transient
     @JsonIgnore
     public Optional<Transfer> getOriginalTransfer() {
         String originalTransferSerialized = getPayload().get(TransferPayloadType.ORIGINAL_TRANSFER);
@@ -388,7 +343,6 @@ public class Transfer implements Serializable, Cloneable {
         return Optional.empty();
     }
 
-    @Transient
     @JsonIgnore
     public Optional<String> getPayloadValue(TransferPayloadType type) {
         Map<TransferPayloadType, String> payload = getPayload();
@@ -430,7 +384,6 @@ public class Transfer implements Serializable, Cloneable {
         }
     }
 
-    @Transient
     @JsonIgnore
     private String toOriginalTransferForPayload() {
         try {
@@ -440,13 +393,11 @@ public class Transfer implements Serializable, Cloneable {
         }
     }
 
-    @Transient
     @JsonIgnore
     public boolean isDestinationMessageGenerated() {
         return isMessageGenerated(destinationMessage);
     }
 
-    @Transient
     @JsonIgnore
     public boolean isSourceMessageGenerated() {
         return isMessageGenerated(sourceMessage);
@@ -467,13 +418,11 @@ public class Transfer implements Serializable, Cloneable {
         return TINK_GENERATED_MESSAGE_FORMAT + message;
     }
 
-    @Transient
     @JsonIgnore
     public boolean isOfType(TransferType type) {
         return getType() != null && getType().equals(type);
     }
 
-    @Transient
     @JsonIgnore
     public boolean isOneOfTypes(TransferType... types) {
         for (TransferType type : types) {
