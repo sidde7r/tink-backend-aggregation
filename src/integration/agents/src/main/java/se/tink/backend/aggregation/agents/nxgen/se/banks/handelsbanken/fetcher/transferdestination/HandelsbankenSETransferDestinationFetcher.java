@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuil
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.executor.transfer.rpc.HandelsbankenSETransferContext;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.Failure;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.rpc.HandelsbankenSEPaymentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.HandelsbankenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.handelsbanken.authenticator.rpc.ApplicationEntryPointResponse;
@@ -82,8 +83,8 @@ public class HandelsbankenSETransferDestinationFetcher implements TransferDestin
         try {
             return Optional.of(client.paymentContext(applicationEntryPoint));
         } catch (HttpResponseException e) {
-            HandelsbankenSEPaymentContext.Failure failure = e.getResponse()
-                    .getBody(HandelsbankenSEPaymentContext.Failure.class);
+            Failure failure = e.getResponse()
+                    .getBody(Failure.class);
             if (!failure.customerIsUnder16()) {
                 LOGGER.error(HandelsbankenSEConstants.Fetcher.Transfers.LOG_TAG +
                         " - unable to fetch payment context - " + failure);

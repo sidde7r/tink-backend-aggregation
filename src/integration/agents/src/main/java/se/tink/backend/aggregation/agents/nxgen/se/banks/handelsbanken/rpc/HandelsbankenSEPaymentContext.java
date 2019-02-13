@@ -45,11 +45,4 @@ public class HandelsbankenSEPaymentContext extends BaseResponse {
                 )
                 .orElse(Collections.emptyList());
     }
-
-    public class Failure extends BaseResponse {
-
-        public boolean customerIsUnder16() {
-            return HandelsbankenSEConstants.Fetcher.Transfers.UNDER_16.equals(getCode());
-        }
-    }
 }
