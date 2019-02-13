@@ -113,6 +113,18 @@ spec:
               name: aggregation-secrets
               key: monzo-client-secret
               optional: true
+        - name: STARLING_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: starling-client-id
+              optional: true
+        - name: STARLING_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: starling-client-secret
+              optional: true
         - name: FINTS_REG_NUMBER
           valueFrom:
             secretKeyRef:

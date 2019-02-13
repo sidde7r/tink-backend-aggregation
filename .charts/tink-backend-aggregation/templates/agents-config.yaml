@@ -45,6 +45,14 @@ data:
             redirectUrl: "{{ $agentsConfig.monzo.redirectUrl }}"
         {{- end }}
 
+        {{- if $agentsConfig.starling }}
+        starling:
+          tink:
+            clientId: "STARLING_CLIENT_ID"
+            clientSecret: "STARLING_CLIENT_SECRET"
+            redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
+        {{- end }}
+
         {{- if $agentsConfig.fints }}
         fints:
           regNumber: "FINTS_REG_NUMBER"
