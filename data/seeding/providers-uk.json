@@ -155,7 +155,6 @@
         {
             "name": "uk-starling-oauth2",
             "displayName": "Starling",
-            "groupDisplayName": "Starling",
             "popular": false,
             "type": "BANK",
             "status": "ENABLED",
