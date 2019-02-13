@@ -18,6 +18,7 @@
     "uk-americanexpress-password",
     "uk-revolut-password",
     "uk-n26-password",
+    "uk-starling-oauth2",
     "uk-test-password",
     "uk-test-multi-supplemental"
   ]
