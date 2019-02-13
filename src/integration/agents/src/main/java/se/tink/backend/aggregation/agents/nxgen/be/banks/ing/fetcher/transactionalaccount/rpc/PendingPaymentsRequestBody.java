@@ -7,8 +7,6 @@ public class PendingPaymentsRequestBody extends MultivaluedMapImpl {
 
     public PendingPaymentsRequestBody(String acc) {
         add(IngConstants.Fetcher.ACC, acc);
-        add(
-                IngConstants.Session.ValuePairs.DSE_TYPE.getKey(),
-                IngConstants.Session.ValuePairs.DSE_TYPE.getValue());
+        add(IngConstants.Session.ValuePairs.DSE_TYPE.getKey(), IngConstants.Session.ValuePairs.DSE_TYPE.getValue());
     }
 }

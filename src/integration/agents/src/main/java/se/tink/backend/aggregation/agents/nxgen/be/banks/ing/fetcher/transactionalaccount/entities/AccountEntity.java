@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities;
 
-import com.google.api.client.util.Strings;
 import javax.xml.bind.annotation.XmlRootElement;
-import se.tink.backend.agents.rpc.AccountTypes;
+
+import com.google.api.client.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.identifiers.SepaEurIdentifier;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 
 @XmlRootElement
 public class AccountEntity {
@@ -171,7 +172,8 @@ public class AccountEntity {
         return this.beneficiaryRules;
     }
 
-    public void setBeneficiaryRules(BeneficiaryRuleListEntity beneficiaryRules) {
+    public void setBeneficiaryRules(
+            BeneficiaryRuleListEntity beneficiaryRules) {
         this.beneficiaryRules = beneficiaryRules;
     }
 
@@ -221,10 +223,8 @@ public class AccountEntity {
     }
 
     public TransactionalAccount toTinkAccount(LoginResponseEntity loginResponse) {
-        return TransactionalAccount.builder(
-                        getTinkAccountType(),
-                        ibanNumber,
-                        Amount.inEUR(IngHelper.parseAmountStringToDouble(balance)))
+        return TransactionalAccount.builder(getTinkAccountType(), ibanNumber,
+                Amount.inEUR(IngHelper.parseAmountStringToDouble(balance)))
                 .setAccountNumber(ibanNumber)
                 .setName(type)
                 .setBankIdentifier(bbanNumber)
@@ -246,16 +246,15 @@ public class AccountEntity {
             return AccountTypes.OTHER;
         }
 
-        switch (this.category.toLowerCase()) {
-            case IngConstants.AccountTypes.CURRENT_ACCOUNT:
-                return AccountTypes.CHECKING;
-            case IngConstants.AccountTypes.SAVINGS_ACCOUNT:
-                return AccountTypes.SAVINGS;
-            default:
-                LOGGER.warn(
-                        String.format(
-                                "Could not map account type [%s] to a Tink account type", type));
-                return AccountTypes.OTHER;
+        switch(this.category.toLowerCase()) {
+        case IngConstants.AccountTypes.CURRENT_ACCOUNT:
+            return AccountTypes.CHECKING;
+        case IngConstants.AccountTypes.SAVINGS_ACCOUNT:
+            return AccountTypes.SAVINGS;
+        default:
+            LOGGER.warn(String.format(
+                    "Could not map account type [%s] to a Tink account type", type));
+            return AccountTypes.OTHER;
         }
     }
 }

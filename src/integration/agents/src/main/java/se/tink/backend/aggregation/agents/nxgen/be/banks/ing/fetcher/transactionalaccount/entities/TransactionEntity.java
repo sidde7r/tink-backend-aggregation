@@ -121,26 +121,21 @@ public class TransactionEntity {
     // for Fortis we need to expose the entire transaction details
     @JsonIgnore
     private RawDetails getRawDetails() {
-        if ((details == null || details.isEmpty())
-                && (extraDetails == null || extraDetails.isEmpty())) {
+        if ((details == null || details.isEmpty()) && (extraDetails == null || extraDetails.isEmpty())) {
             return null;
         }
 
         return new RawDetails(details, extraDetails);
     }
 
-    // There are two fields that contain transaction details: details and extraDetails. Each field
-    // is a list of
-    // strings. Return null if both fields are empty. The second element in details is the most
-    // descriptive, if
-    // that's not present try to take the first. If details is empty return first element in
-    // extraDetails.
+    // There are two fields that contain transaction details: details and extraDetails. Each field is a list of
+    // strings. Return null if both fields are empty. The second element in details is the most descriptive, if
+    // that's not present try to take the first. If details is empty return first element in extraDetails.
     @JsonIgnore
     private String getTinkDescription() {
         String descriptionText = getDescriptionText();
 
-        Matcher matcher =
-                IngConstants.Transactions.TRANSACTION_PREFIX_PATTERN.matcher(descriptionText);
+        Matcher matcher = IngConstants.Transactions.TRANSACTION_PREFIX_PATTERN.matcher(descriptionText);
         if (matcher.matches() && matcher.groupCount() > 1) {
             return descriptionText.replace(matcher.group(1), "").trim();
         }
