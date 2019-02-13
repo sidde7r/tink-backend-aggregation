@@ -90,6 +90,7 @@ public abstract class BankiaConstants {
                 .put("10300", AccountTypes.CHECKING)
                 .put("11186", AccountTypes.CHECKING)
                 .put("11239", AccountTypes.CHECKING)
+                .put("11660", AccountTypes.CHECKING)
                 .put("10450", AccountTypes.SAVINGS)
                 .build();
 
@@ -110,6 +111,6 @@ public abstract class BankiaConstants {
     }
 
     public static class Logging {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from(PROVIDER_NAME + "-unknown-account-type");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bankia_unknown_account_type");
     }
 }
