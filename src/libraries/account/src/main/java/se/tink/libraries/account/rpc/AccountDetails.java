@@ -1,17 +1,11 @@
 package se.tink.libraries.account.rpc;
 
-import io.protostuff.Tag;
 import java.util.Date;
 
 public class AccountDetails {
-
-    @Tag(1)
     private Double interest;
-    @Tag(2)
     private Integer numMonthsBound;
-    @Tag(3)
     private String type;
-    @Tag(4)
     private Date nextDayOfTermsChange;
     
     public AccountDetails() {

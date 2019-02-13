@@ -8,9 +8,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import io.protostuff.Exclude;
-import io.protostuff.Tag;
-import io.swagger.annotations.ApiModelProperty;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
@@ -18,12 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.account.enums.AccountExclusion;
 import se.tink.libraries.transfer.rpc.TransferDestination;
@@ -35,90 +26,34 @@ import se.tink.libraries.account.identifiers.GiroIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
-@Entity
-@Table(name = "accounts")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY,
         getterVisibility = JsonAutoDetect.Visibility.NONE,
         setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class Account implements Cloneable {
-    @Tag(1)
-    @ApiModelProperty(name = "accountNumber", value="The account number of the account. Not necessarily always a full clearingnumber-accountnumber. It can be formatted differently for different accounts and banks.", example = "1234-123456789", required = true)
     private String accountNumber;
-    @Exclude
-    @ApiModelProperty(name = "availableCredit", hidden = true)
     private double availableCredit;
-    @Tag(2)
-    @ApiModelProperty(name = "balance", value="The current balance of the account.", example = "34567.50", required = true)
     private double balance;
-    @Exclude
-    @ApiModelProperty(name = "bankId", hidden = true)
     private String bankId;
-    @Exclude
-    @ApiModelProperty(name = "certainDate", hidden = true)
     private Date certainDate;
-    @Tag(3)
-    @ApiModelProperty(name = "credentialsId", value="The internal identifier of the credentials that the account belongs to.", example = "6e68cc6287704273984567b3300c5822", required = true)
     private String credentialsId;
-    @Tag(4)
-    @ApiModelProperty(name = "excluded", value="Indicates if the user has excluded the account. This can be modified by the user.", example = "false", required = true)
     private boolean excluded;
-    @Tag(5)
-    @ApiModelProperty(name = "favored", value="Indicates if the user has favored the account. This can be modified by the user.", example = "false", required = true)
     private boolean favored;
-    @Id
-    @Tag(6)
-    @ApiModelProperty(name = "id", value="The internal identifier of account.", example = "a6bb87e57a8c4dd4874b241471a2b9e8", required = true)
     private String id;
-    @Tag(7)
-    @ApiModelProperty(name = "name", value="The display name of the account. This can be modified by the user.", example = "Privatkonto", required = true)
     private String name;
-    @Tag(8)
-    @ApiModelProperty(name = "ownership", value="The ownership ratio indicating how much of the account is owned by the user. This is used to determine how much of transactions belonging to this account should be attributed to the user when statistics are calculated. This can be modified by the user.", example = "0.5", required = true)
     private double ownership;
-    @Exclude
-    @ApiModelProperty(name = "payload", hidden = true)
     private String payload;
-    @Enumerated(EnumType.STRING)
-
-    @Tag(9)
-    @ApiModelProperty(name = "type", value = "The type of the account. This can be modified by the user.", required = true, allowableValues = AccountTypes.DOCUMENTED)
     private AccountTypes type;
-    @Exclude
-    @ApiModelProperty(name = "userId", hidden = true)
     private String userId;
-    @Exclude
-    @ApiModelProperty(name = "userModifiedExcluded", hidden = true)
     private boolean userModifiedExcluded;
-    @Exclude
-    @ApiModelProperty(name = "userModifiedName", hidden = true)
     private boolean userModifiedName;
-    @Exclude
-    @ApiModelProperty(name = "userModifiedType", hidden = true)
     private boolean userModifiedType;
-    @Tag(10)
-    @ApiModelProperty(name = "identifiers", value="All possible ways to uniquely identify this Account. An se-identifier is built up like: se://{clearingnumber}{accountnumber}", example = "[\"se://9999111111111111\"]")
     private String identifiers;
-    @Tag(11)
-    @Transient
-    @ApiModelProperty(name = "transferDestinations", value="This field contains all the destinations this Account can transfer money to, be that payment or bank transfer recipients. It will only be populated if getting accounts via GET /transfer/accounts (i.e. not through GET /accounts).")
     private List<TransferDestination> transferDestinations;
-    // Tag 12 can never be used again because nobody knows if something will break https://developers.google
-    // .com/protocol-buffers/docs/proto
-    @Tag(13)
-    @Transient
-    @ApiModelProperty(name = "details", value="If available, details are populated.")
     private AccountDetails details;
-    @Tag(15)
-    @ApiModelProperty(name = "holderName", value="The name of the account holder", example = "Thomas Alan Waits")
     private String holderName;
-    @Exclude
     private boolean closed;
-    @Tag(16)
-    @ApiModelProperty(name = "flags", value="A list of flags specifying attributes on an account", example = "[\"MANDATE\"]", allowableValues = AccountFlag.DOCUMENTED)
     private String flags;
-    @Tag(17)
-    @ApiModelProperty(name = "accountExclusion", value = "The type of account exclusion. This can be modified by the user.", required = true, allowableValues = AccountExclusion.DOCUMENTED)
     private AccountExclusion accountExclusion;
 
     @Override
@@ -140,10 +75,6 @@ public class Account implements Cloneable {
 
     public void setAccountExclusion(AccountExclusion accountExclusion) {
         this.accountExclusion = accountExclusion;
-    }
-
-    public static class PayloadKeys {
-        public static final String PARTNER_PAYLOAD = "PARTNER_PAYLOAD";
     }
 
     public String getAccountNumber() {
@@ -347,27 +278,6 @@ public class Account implements Cloneable {
         }
     }
 
-    @Transient
-    @JsonIgnore
-    public AccountIdentifier getPreferredIdentifier(Type destinationIdentifierType) {
-        switch (destinationIdentifierType) {
-        case SE:
-        case SE_PG:
-        case SE_BG:
-        case SE_SHB_INTERNAL:
-        case TINK:
-            return getIdentifier(Type.SE);
-        case FI:
-        case IBAN:
-            return getIdentifier(Type.IBAN);
-        case BE:
-            return getIdentifier(Type.BE);
-        case SEPA_EUR:
-            return getIdentifier(Type.SEPA_EUR);
-        }
-        return null;
-    }
-
     public void putIdentifier(AccountIdentifier identifier) {
         if (!identifier.isValid()) {
             return;
@@ -382,7 +292,6 @@ public class Account implements Cloneable {
         this.identifiers = SerializationUtils.serializeToString(Lists.newArrayList(ids));
     }
 
-    @Transient
     @JsonIgnore
     public AccountIdentifier getIdentifier(AccountIdentifier.Type type) {
         if (this.identifiers == null) {
@@ -398,7 +307,6 @@ public class Account implements Cloneable {
     }
 
     @JsonIgnore
-    @Transient
     public <T extends AccountIdentifier> T getIdentifier(AccountIdentifier.Type type, Class<T> cls) {
         AccountIdentifier identifier = getIdentifier(type);
         if (identifier == null) {
@@ -417,24 +325,6 @@ public class Account implements Cloneable {
             }
         }
         return accountIdentifiers;
-    }
-
-    public boolean definedBy(AccountIdentifier identifier) {
-        if (identifier.getType() == AccountIdentifier.Type.TINK) {
-            return getId().equals(identifier.getIdentifier());
-        }
-
-        if (getIdentifiers() == null) {
-            return false;
-        }
-
-        for (AccountIdentifier id : getIdentifiers()) {
-            if (identifier.equals(id)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public AccountDetails getDetails() {
@@ -460,7 +350,6 @@ public class Account implements Cloneable {
     }
 
     @JsonIgnore
-    @Transient
     public String getPayload(String key) {
         Map<String, String> map = getPayloadAsMap();
 
@@ -468,7 +357,6 @@ public class Account implements Cloneable {
     }
 
     @JsonIgnore
-    @Transient
     public void putPayload(String key, String value) {
         Map<String, String> map = getPayloadAsMap();
 
@@ -482,7 +370,6 @@ public class Account implements Cloneable {
     }
 
     @JsonIgnore
-    @Transient
     public void removePayload(String key) {
         Map<String, String> map = getPayloadAsMap();
 
@@ -496,7 +383,6 @@ public class Account implements Cloneable {
     }
 
     @JsonIgnore
-    @Transient
     public Map<String, String> getPayloadAsMap() {
 
         if (Strings.isNullOrEmpty(this.payload)) {
