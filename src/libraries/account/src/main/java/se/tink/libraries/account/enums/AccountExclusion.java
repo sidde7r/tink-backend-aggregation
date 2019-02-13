@@ -23,8 +23,6 @@ public enum AccountExclusion {
 
     NONE(EnumSet.noneOf(TinkFeature.class));
 
-    public static final String DOCUMENTED = "AGGREGATION, PFM_AND_SEARCH, PFM_DATA, NONE";
-
     public EnumSet<TinkFeature> excludedFeatures;
 
     AccountExclusion(EnumSet<TinkFeature> excludedFeatures) {
