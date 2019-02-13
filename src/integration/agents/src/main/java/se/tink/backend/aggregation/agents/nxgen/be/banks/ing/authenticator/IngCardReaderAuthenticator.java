@@ -20,10 +20,10 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.PrepareEnrollResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.AppCredentialsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.InitEnrollResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.BaseMobileResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -112,11 +112,26 @@ public class IngCardReaderAuthenticator {
 
         String loginUrl = this.ingHelper.getUrl(IngConstants.RequestNames.LOGON);
 
-        LoginResponseEntity loginResponseEntity = this.apiClient.login(
+        HttpResponse res = this.apiClient.login(
                 loginUrl,
                 ingId,
                 this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
                 this.cryptoInitValues.getDeviceId());
+
+
+        if(!IngHelper.isLoginSuccessful(res)){
+            BaseResponse errorResponse = IngHelper.getLoginError(res);
+
+            if(IngConstants.ErrorCodes.NO_ACCESS_TO_ONLINE_BANKING.equalsIgnoreCase(errorResponse.getMobileResponse().getErrorCode().get())){
+                throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+            }
+
+            String errormsg = String.format("%s%s%s%s", "Error during autoAuth! Code: ", errorResponse.getMobileResponse().getErrorCode().get(), " Message: ", errorResponse.getMobileResponse().getErrorText().get());
+            LOGGER.errorExtraLong(errormsg, IngConstants.Logs.UNKNOWN_ERROR_CODE, new IllegalStateException("Error during autoAuth!"));
+            throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
+        }
+
+        LoginResponseEntity loginResponseEntity = res.getBody(LoginResponseEntity.class);
 
         if (!IngConstants.ReturnCodes.OK.equalsIgnoreCase(loginResponseEntity.getReturnCode())) {
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
@@ -214,4 +229,7 @@ public class IngCardReaderAuthenticator {
         LOGGER.warn(String.format("%s: %s", IngConstants.LogMessage.UNKNOWN_RETURN_CODE, returnCode));
         throw new IllegalStateException(IngConstants.LogMessage.CHALLENGE_EXCHANGE_ERROR);
     }
+
+
+
 }

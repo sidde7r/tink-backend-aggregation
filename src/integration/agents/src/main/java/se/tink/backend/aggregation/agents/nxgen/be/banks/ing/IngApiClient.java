@@ -119,12 +119,12 @@ public class IngApiClient {
         this.client.request(logoutUrl).post(HttpResponse.class, logoutRequestBody);
     }
 
-    public LoginResponseEntity login(String url, String ingId, String virtualCardNumber, String deviceId) {
+    public HttpResponse login(String url, String ingId, String virtualCardNumber, String deviceId) {
         LoginRequestBody loginRequestBody = new LoginRequestBody(ingId, virtualCardNumber, deviceId);
         URL loginUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
         return this.client.request(loginUrl)
-                .post(LoginResponse.class, loginRequestBody).getMobileResponse();
+                .post(HttpResponse.class, loginRequestBody);
     }
 
     public HttpResponse getMenuItems() {
