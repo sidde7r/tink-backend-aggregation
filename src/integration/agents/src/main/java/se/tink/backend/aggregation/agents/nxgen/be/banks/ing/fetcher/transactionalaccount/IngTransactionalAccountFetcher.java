@@ -21,25 +21,17 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return this.ingHelper
-                .retrieveLoginResponse()
-                .flatMap(
-                        loginResponse ->
-                                this.apiClient
-                                        .fetchAccounts(loginResponse)
-                                        .map(AccountsResponse::getAccounts)
-                                        .map(
-                                                accounts ->
-                                                        accounts.stream()
-                                                                .filter(
-                                                                        AccountEntity
-                                                                                ::isDesiredType)
-                                                                .map(
-                                                                        account ->
-                                                                                account
-                                                                                        .toTinkAccount(
-                                                                                                loginResponse))
-                                                                .collect(Collectors.toList())))
+        return this.ingHelper.retrieveLoginResponse()
+                .flatMap(loginResponse ->
+                        this.apiClient.fetchAccounts(loginResponse)
+                                .map(AccountsResponse::getAccounts)
+                                .map(accounts ->
+                                        accounts.stream()
+                                                .filter(AccountEntity::isDesiredType)
+                                                .map(account -> account.toTinkAccount(loginResponse))
+                                                .collect(Collectors.toList())
+                                )
+                )
                 .orElseGet(Collections::emptyList);
     }
 }

@@ -27,9 +27,10 @@ public class XmlRequestListEntity {
     public Optional<URL> getExecuteTransferRequest() {
         return Optional.ofNullable(this.requestList)
                 .map(Collection::stream)
-                .flatMap(
-                        requests ->
-                                requests.filter(XmlRequestEntity::isExecuteTransfer).findFirst())
+                .flatMap(requests -> requests
+                        .filter(XmlRequestEntity::isExecuteTransfer)
+                        .findFirst()
+                )
                 .map(XmlRequestEntity::asSSORequest);
     }
 }

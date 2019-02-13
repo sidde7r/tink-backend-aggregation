@@ -24,10 +24,8 @@ public class CustomerEntity {
     private String tokenmol;
     private String appPbMStatus;
     private String bblAgreementFlag;
-
     @JsonProperty("CodeMktProfile")
     private String codeMktProfile;
-
     private String isOver18;
 
     public String getIngid() {
@@ -103,10 +101,7 @@ public class CustomerEntity {
     }
 
     public Optional<HolderName> getHolderName() {
-        return Optional.of(
-                        StringUtils.trimToEmpty(this.firstName)
-                                + " "
-                                + StringUtils.trimToEmpty(this.lastName))
+        return Optional.of(StringUtils.trimToEmpty(this.firstName) + " " + StringUtils.trimToEmpty(this.lastName))
                 .map(StringUtils::trimToNull)
                 .map(HolderName::new);
     }

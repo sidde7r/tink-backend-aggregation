@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.xml.XmlHeaderEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.xml.XmlRequestListEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.xml.XmlHeaderEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferdestination.entities.BeneficiaryListEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

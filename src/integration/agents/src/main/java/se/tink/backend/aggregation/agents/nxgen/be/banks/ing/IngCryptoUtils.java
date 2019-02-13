@@ -4,11 +4,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.primitives.Bytes;
 import com.google.common.primitives.Longs;
+
 import java.security.SecureRandom;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.DES;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
@@ -25,19 +27,17 @@ public class IngCryptoUtils {
         return Strings.padStart(randomDeviceIdString, 40, '0');
     }
 
-    public static byte[] generateEncryptedQueryData(
-            String registrationCode, byte[] sessionKey, byte[] sessionKeyAuth) {
+    public static byte[] generateEncryptedQueryData(String registrationCode, byte[] sessionKey, byte[] sessionKeyAuth) {
         byte[] formattedRegistrationCode = getFormattedRegistrationCode(registrationCode);
         byte[] timestamp = getUtcTimestamp();
-        byte[] dataToEncrypt =
-                Bytes.concat(sessionKey, sessionKeyAuth, formattedRegistrationCode, timestamp);
+        byte[] dataToEncrypt = Bytes.concat(sessionKey, sessionKeyAuth, formattedRegistrationCode, timestamp);
 
         RSAPublicKey publicKey = generateRSAPublicKey();
         return RSA.encryptEcbOaepSha1Mgf1(publicKey, dataToEncrypt);
     }
 
-    public static byte[] decryptAppCredentials(
-            String encryptedCredentialsResponse, byte[] sessionKey, byte[] sessionKeyAuth) {
+    public static byte[] decryptAppCredentials(String encryptedCredentialsResponse, byte[] sessionKey,
+            byte[] sessionKeyAuth) {
         byte[] responseInBytes = EncodingUtils.decodeBase64String(encryptedCredentialsResponse);
         byte[] message = Arrays.copyOfRange(responseInBytes, 0, 48);
         byte[] macValue = Arrays.copyOfRange(responseInBytes, 48, responseInBytes.length);
@@ -76,8 +76,7 @@ public class IngCryptoUtils {
         return buildOtpWithCounterAndData(counter, otpData);
     }
 
-    public static int calcOtpForSigningTransfer(
-            byte[] key, int counter, String challenge1, String challenge2) {
+    public static int calcOtpForSigningTransfer(byte[] key, int counter, String challenge1, String challenge2) {
         byte[] otpData = calcOtpData(key, counter);
         return calcOtp(counter, challenge1, challenge2, otpData);
     }
@@ -115,49 +114,12 @@ public class IngCryptoUtils {
         byte[] ctr1 = new byte[] {byte0, byte1, (byte) 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00};
         byte[] key1 = TripleDES.encryptEcbNoPadding(key, ctr1);
 
-        byte[] ctr2 =
-                new byte[] {
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x80,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x10,
-                    (byte) 0x00,
-                    byte0,
-                    byte1,
-                    (byte) 0xa5,
-                    (byte) 0x00,
-                    (byte) 0x03,
-                    (byte) 0x04,
-                    (byte) 0x00,
-                    (byte) 0x00,
-                    (byte) 0x80
-                };
+        byte[] ctr2 = new byte[] {
+                (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00,
+                (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x80, (byte)0x00,
+                (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00,
+                (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x10, (byte)0x00, byte0,
+                byte1, (byte)0xa5, (byte)0x00, (byte)0x03, (byte)0x04, (byte)0x00, (byte)0x00, (byte)0x80 };
         byte[] tmp0 = DES.encryptCbcNoPadding(key0, nullIv, ctr2);
 
         // tmp0 is the last 8 bytes of the encrypted data (which contain the counter)
@@ -201,8 +163,7 @@ public class IngCryptoUtils {
 
     private static RSAPublicKey generateRSAPublicKey() {
         byte[] modulusBytes = EncodingUtils.decodeHexString(IngConstants.Crypto.RSA_MODULUS_IN_HEX);
-        byte[] exponentBytes =
-                EncodingUtils.decodeHexString(IngConstants.Crypto.RSA_EXPONENT_IN_HEX);
+        byte[] exponentBytes = EncodingUtils.decodeHexString(IngConstants.Crypto.RSA_EXPONENT_IN_HEX);
 
         return RSA.getPublicKeyFromModulusAndExponent(modulusBytes, exponentBytes);
     }
@@ -236,8 +197,7 @@ public class IngCryptoUtils {
             nibbles.add(0xf);
         }
 
-        // always pad with 80 and then as many zeros that is needed to fill the last 8 byte (16
-        // nibbles) block
+        // always pad with 80 and then as many zeros that is needed to fill the last 8 byte (16 nibbles) block
         nibbles.add(0x8);
 
         while (nibbles.size() % 16 != 0) {

@@ -12,28 +12,22 @@ public class IngInternalTransferExecutor {
     private final LoginResponseEntity loginResponse;
     private final IngTransferHelper ingTransferHelper;
 
-    public IngInternalTransferExecutor(
-            IngApiClient apiClient,
-            LoginResponseEntity loginResponse,
+    public IngInternalTransferExecutor(IngApiClient apiClient, LoginResponseEntity loginResponse,
             IngTransferHelper ingTransferHelper) {
         this.apiClient = apiClient;
         this.loginResponse = loginResponse;
         this.ingTransferHelper = ingTransferHelper;
     }
 
-    public void executeInternalTransfer(
-            Transfer transfer, AccountEntity sourceAccount, AccountEntity destinationAccount) {
+    public void executeInternalTransfer(Transfer transfer, AccountEntity sourceAccount,
+            AccountEntity destinationAccount) {
         ValidateInternalTransferResponse validateTransferResponse =
-                apiClient.validateInternalTransfer(
-                        loginResponse,
-                        sourceAccount.getBbanNumber(),
-                        destinationAccount.getBbanNumber(),
-                        transfer);
+                apiClient.validateInternalTransfer(loginResponse, sourceAccount.getBbanNumber(),
+                        destinationAccount.getBbanNumber(), transfer);
 
         ingTransferHelper.verifyTransferValidationXmlResponse(validateTransferResponse);
 
-        ExecuteInternalTransferResponse response =
-                apiClient.executeInternalTransfer(validateTransferResponse);
+        ExecuteInternalTransferResponse response = apiClient.executeInternalTransfer(validateTransferResponse);
 
         ingTransferHelper.ensureTransferExecutionWasSuccess(response.getReturnCode());
     }

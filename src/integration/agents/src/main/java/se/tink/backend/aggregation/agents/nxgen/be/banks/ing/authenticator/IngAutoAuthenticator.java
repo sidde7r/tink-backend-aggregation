@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator;
 
+import com.google.api.client.http.HttpStatusCodes;
 import joptsimple.internal.Strings;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
@@ -10,12 +12,14 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngCryptoUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.MobileHelloResponseEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import sun.rmi.server.InactiveGroupException;
 
 public class IngAutoAuthenticator implements AutoAuthenticator {
     private static final AggregationLogger LOGGER =
@@ -60,15 +64,12 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
                         this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
                         this.persistentStorage.get(IngConstants.Storage.DEVICE_ID));
 
-        if (IngHelper.isLoginSuccessful(res)) {
+
+        if(IngHelper.isLoginSuccessful(res)){
             BaseResponse baseRes = IngHelper.getLoginError(res);
-            throw new IllegalStateException(
-                    String.format(
-                            "%s%s%s",
-                            "AutoAuth not successful! Code: ",
-                            baseRes.getMobileResponse().getErrorCode().get(),
-                            " Message: ",
-                            baseRes.getMobileResponse().getErrorText()));
+            throw new IllegalStateException(String.format("%s%s%s", "AutoAuth not successful! Code: ",
+                    baseRes.getMobileResponse().getErrorCode().get(),
+                    " Message: ", baseRes.getMobileResponse().getErrorText()));
         }
 
         LoginResponseEntity loginResponseEntity = res.getBody(LoginResponseEntity.class);

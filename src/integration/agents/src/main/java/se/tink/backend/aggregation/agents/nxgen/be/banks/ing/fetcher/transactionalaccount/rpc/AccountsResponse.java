@@ -18,7 +18,8 @@ public class AccountsResponse {
         return categories;
     }
 
-    public void setCategories(CategoryListEntity categories) {
+    public void setCategories(
+            CategoryListEntity categories) {
         this.categories = categories;
     }
 
@@ -26,7 +27,8 @@ public class AccountsResponse {
         return accounts;
     }
 
-    public void setAccounts(AccountListEntity accounts) {
+    public void setAccounts(
+            AccountListEntity accounts) {
         this.accounts = accounts;
     }
 
@@ -34,7 +36,8 @@ public class AccountsResponse {
         return memoDates;
     }
 
-    public void setMemoDates(MemoDatesEntity memoDates) {
+    public void setMemoDates(
+            MemoDatesEntity memoDates) {
         this.memoDates = memoDates;
     }
 

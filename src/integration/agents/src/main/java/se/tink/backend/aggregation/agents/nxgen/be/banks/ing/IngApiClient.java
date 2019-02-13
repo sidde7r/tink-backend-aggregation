@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.B
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.ConfirmEnrollRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.InitEnrollRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.LoginRequestBody;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.MobileHelloRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.MobileHelloResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.PrepareEnrollResponse;
@@ -55,14 +56,12 @@ public class IngApiClient {
         MobileHelloRequestBody mobileHelloRequestBody = new MobileHelloRequestBody();
         URL url = getUrlWithQueryParams(IngConstants.Urls.MOBILE_HELLO);
 
-        return this.client
-                .request(url)
+        return this.client.request(url)
                 .post(MobileHelloResponse.class, mobileHelloRequestBody)
                 .getMobileResponse();
     }
 
-    public void trustBuilderEnroll(
-            String url, String username, String cardNumber, String otp, String deviceId) {
+    public void trustBuilderEnroll(String url, String username, String cardNumber, String otp, String deviceId) {
         TrustBuilderRequestBody trustBuilderRequestBody =
                 new TrustBuilderRequestBody(username, cardNumber, otp, deviceId, "", true);
         URL trustBuilderUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
@@ -70,27 +69,17 @@ public class IngApiClient {
         this.client.request(trustBuilderUrl).post(HttpResponse.class, trustBuilderRequestBody);
     }
 
-    public HttpResponse trustBuilderLogin(
-            String url,
-            String ingId,
-            String virtualCardNumber,
-            int otp,
-            String deviceId,
-            String psn) {
-        TrustBuilderRequestBody trustBuilderRequestBody =
-                new TrustBuilderRequestBody(
-                        ingId, virtualCardNumber, Integer.toString(otp), deviceId, psn, false);
+    public HttpResponse trustBuilderLogin(String url, String ingId, String virtualCardNumber, int otp,
+            String deviceId, String psn) {
+        TrustBuilderRequestBody trustBuilderRequestBody = new TrustBuilderRequestBody(
+                ingId, virtualCardNumber, Integer.toString(otp), deviceId, psn, false);
         URL trustBuilderUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
-        return this.client
-                .request(trustBuilderUrl)
-                .post(HttpResponse.class, trustBuilderRequestBody);
+       return this.client.request(trustBuilderUrl).post(HttpResponse.class, trustBuilderRequestBody);
     }
 
-    public HttpResponse initEnroll(
-            String url, String username, String cardNumber, String deviceId) {
-        InitEnrollRequestBody initEnrollRequestBody =
-                new InitEnrollRequestBody(username, cardNumber, deviceId);
+    public HttpResponse initEnroll(String url, String username, String cardNumber, String deviceId) {
+        InitEnrollRequestBody initEnrollRequestBody = new InitEnrollRequestBody(username, cardNumber, deviceId);
         URL initEnrollUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
         return this.client.request(initEnrollUrl).post(HttpResponse.class, initEnrollRequestBody);
@@ -100,35 +89,25 @@ public class IngApiClient {
         AppCredentialsBody appCredentialsBody = new AppCredentialsBody(encryptedQueryData);
         URL getAppCredentialsUrl = new URL(IngConstants.Urls.HOST + url);
 
-        return this.client
-                .request(getAppCredentialsUrl)
-                .post(AppCredentialsResponse.class, appCredentialsBody);
+        return this.client.request(getAppCredentialsUrl).post(AppCredentialsResponse.class, appCredentialsBody);
     }
 
     public PrepareEnrollResponseEntity prepareEnroll(String url) {
         BaseBody prepareEnrollBody = new BaseBody();
         URL prepareEnrollUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
-        return this.client
-                .request(prepareEnrollUrl)
+        return this.client.request(prepareEnrollUrl)
                 .post(PrepareEnrollResponse.class, prepareEnrollBody)
                 .getMobileResponse();
     }
 
-    public BaseMobileResponseEntity confirmEnroll(
-            String url,
-            String ingId,
-            String signingId,
-            String challengeResponse,
-            int otpSystem,
-            String deviceId) {
-        ConfirmEnrollRequestBody confirmEnrollRequestBody =
-                new ConfirmEnrollRequestBody(
-                        ingId, signingId, challengeResponse, Integer.toString(otpSystem), deviceId);
+    public BaseMobileResponseEntity confirmEnroll(String url, String ingId, String signingId, String challengeResponse,
+            int otpSystem, String deviceId) {
+        ConfirmEnrollRequestBody confirmEnrollRequestBody = new ConfirmEnrollRequestBody(ingId, signingId,
+                challengeResponse, Integer.toString(otpSystem), deviceId);
         URL confirmEnrollUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
-        return this.client
-                .request(confirmEnrollUrl)
+        return this.client.request(confirmEnrollUrl)
                 .post(BaseResponse.class, confirmEnrollRequestBody)
                 .getMobileResponse();
     }
@@ -141,11 +120,11 @@ public class IngApiClient {
     }
 
     public HttpResponse login(String url, String ingId, String virtualCardNumber, String deviceId) {
-        LoginRequestBody loginRequestBody =
-                new LoginRequestBody(ingId, virtualCardNumber, deviceId);
+        LoginRequestBody loginRequestBody = new LoginRequestBody(ingId, virtualCardNumber, deviceId);
         URL loginUrl = getUrlWithQueryParams(new URL(IngConstants.Urls.HOST + url));
 
-        return this.client.request(loginUrl).post(HttpResponse.class, loginRequestBody);
+        return this.client.request(loginUrl)
+                .post(HttpResponse.class, loginRequestBody);
     }
 
     public HttpResponse getMenuItems() {
@@ -153,198 +132,119 @@ public class IngApiClient {
     }
 
     public Optional<AccountsResponse> fetchAccounts(LoginResponseEntity loginResponse) {
-        return loginResponse
-                .findAccountRequest()
-                .map(
-                        accountsUrl ->
-                                this.client
-                                        .request(getUrlWithQueryParams(accountsUrl))
-                                        .post(AccountsResponse.class, new BaseBody()));
+        return loginResponse.findAccountRequest().map(accountsUrl ->
+                this.client.request(getUrlWithQueryParams(accountsUrl)).post(AccountsResponse.class, new BaseBody())
+        );
     }
 
-    public TransactionsResponse getTransactions(
-            String url, String bankIdentifier, int startIndex, int endIndex) {
-        TransactionsRequestBody transactionsRequestBody =
-                new TransactionsRequestBody(
-                        bankIdentifier, Integer.toString(startIndex), Integer.toString(endIndex));
+    public TransactionsResponse getTransactions(String url, String bankIdentifier, int startIndex, int endIndex) {
+        TransactionsRequestBody transactionsRequestBody = new TransactionsRequestBody(
+                bankIdentifier, Integer.toString(startIndex), Integer.toString(endIndex));
 
         URL concatenatedUrl = new URL(IngConstants.Urls.BASE_SSO_REQUEST + url);
         URL transactionsUrl = getUrlWithQueryParams(concatenatedUrl);
 
-        return this.client
-                .request(transactionsUrl)
-                .post(TransactionsResponse.class, transactionsRequestBody);
+        return this.client.request(transactionsUrl).post(TransactionsResponse.class, transactionsRequestBody);
     }
 
-    public PendingPaymentsResponseEntity getPendingPayments(
-            LoginResponseEntity loginResponse, String bankIdentifier) {
+    public PendingPaymentsResponseEntity getPendingPayments(LoginResponseEntity loginResponse, String bankIdentifier) {
         PendingPaymentsRequestBody body = new PendingPaymentsRequestBody(bankIdentifier);
 
-        return loginResponse
-                .findPendingPaymentsRequest()
-                .map(
-                        url ->
-                                client.request(getUrlWithQueryParams(url))
-                                        .post(PendingPaymentsResponse.class, body)
-                                        .getMobileResponse())
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        "Could not find pending payments request in list of requests."));
+        return loginResponse.findPendingPaymentsRequest()
+                .map(url -> client.request(getUrlWithQueryParams(url))
+                        .post(PendingPaymentsResponse.class, body).getMobileResponse())
+                .orElseThrow(() ->
+                        new IllegalStateException("Could not find pending payments request in list of requests."));
     }
 
-    public Optional<TrustedBeneficiariesResponse> getBeneficiaries(
-            LoginResponseEntity loginResponse) {
-        return loginResponse
-                .findTrustedBeneficiariesRequest()
-                .map(
-                        url ->
-                                client.request(getUrlWithQueryParams(url))
-                                        .post(TrustedBeneficiariesResponse.class, new BaseBody()));
+    public Optional<TrustedBeneficiariesResponse> getBeneficiaries(LoginResponseEntity loginResponse) {
+        return loginResponse.findTrustedBeneficiariesRequest()
+                .map(url -> client.request(getUrlWithQueryParams(url))
+                        .post(TrustedBeneficiariesResponse.class, new BaseBody()));
     }
 
-    public ValidateInternalTransferResponse validateInternalTransfer(
-            LoginResponseEntity loginResponse,
-            String sourceAccount,
-            String destinationAccount,
-            Transfer transfer) {
-        Preconditions.checkNotNull(
-                sourceAccount, "Validate internal transfer: Source account can't be null");
-        Preconditions.checkNotNull(
-                destinationAccount,
-                "Validate internal transfer: Destination account can't be null");
+    public ValidateInternalTransferResponse validateInternalTransfer(LoginResponseEntity loginResponse,
+            String sourceAccount, String destinationAccount, Transfer transfer) {
+        Preconditions.checkNotNull(sourceAccount, "Validate internal transfer: Source account can't be null");
+        Preconditions.checkNotNull(destinationAccount, "Validate internal transfer: Destination account can't be null");
 
         ValidateInternalTransferBody body =
                 new ValidateInternalTransferBody(transfer, sourceAccount, destinationAccount);
 
-        return loginResponse
-                .findValidateTransferRequest()
-                .map(
-                        url ->
-                                client.request(getUrlWithQueryParams(url))
-                                        .post(ValidateInternalTransferResponse.class, body))
-                .orElseThrow(
-                        () ->
-                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                        .setMessage(
-                                                "Could not find the validate transfer request url.")
-                                        .build());
+        return loginResponse.findValidateTransferRequest()
+                .map(url -> client.request(getUrlWithQueryParams(url))
+                        .post(ValidateInternalTransferResponse.class, body))
+                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                                .setMessage("Could not find the validate transfer request url.")
+                                .build());
     }
 
-    public ValidateExternalTransferResponseEntity validateTrustedTransfer(
-            LoginResponseEntity loginResponse,
-            Transfer transfer,
-            AccountEntity sourceAccount,
-            String destinationAccountNumber) {
+    public ValidateExternalTransferResponseEntity validateTrustedTransfer(LoginResponseEntity loginResponse,
+            Transfer transfer, AccountEntity sourceAccount, String destinationAccountNumber) {
 
         ValidateTrustedTransferBody body =
                 new ValidateTrustedTransferBody(transfer, sourceAccount, destinationAccountNumber);
 
-        return loginResponse
-                .findValidateTrustedTransferRequest()
-                .map(
-                        url ->
-                                client.request(getUrlWithQueryParams(url))
-                                        .post(ValidateTrustedTransferResponse.class, body)
-                                        .getMobileResponse())
-                .orElseThrow(
-                        () ->
-                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                        .setMessage(
-                                                "Could not find the validate trusted transfer request url.")
-                                        .build());
+        return loginResponse.findValidateTrustedTransferRequest()
+                .map(url -> client.request(getUrlWithQueryParams(url))
+                        .post(ValidateTrustedTransferResponse.class, body)
+                        .getMobileResponse())
+                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage("Could not find the validate trusted transfer request url.")
+                        .build());
     }
 
-    public ValidateExternalTransferResponseEntity validateThirdPartyTransfer(
-            LoginResponseEntity loginResponse,
-            Transfer transfer,
-            AccountEntity sourceAccount,
-            String destinationAccountNumber,
-            String destinationName) {
+    public ValidateExternalTransferResponseEntity validateThirdPartyTransfer(LoginResponseEntity loginResponse,
+            Transfer transfer, AccountEntity sourceAccount, String destinationAccountNumber, String destinationName) {
 
-        ValidateThirdPartyTransferBody body =
-                new ValidateThirdPartyTransferBody(
-                        transfer, sourceAccount, destinationAccountNumber, destinationName);
+        ValidateThirdPartyTransferBody body = new ValidateThirdPartyTransferBody(transfer, sourceAccount,
+                destinationAccountNumber, destinationName);
 
-        return loginResponse
-                .findValidateThirdTransferRequest()
-                .map(
-                        url ->
-                                client.request(getUrlWithQueryParams(url))
-                                        .post(ValidateThirdPartyTransferResponse.class, body)
-                                        .getMobileResponse())
-                .orElseThrow(
-                        () ->
-                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                        .setMessage(
-                                                "Could not find the validate third party transfer request url.")
-                                        .build());
+        return loginResponse.findValidateThirdTransferRequest()
+                .map(url -> client.request(getUrlWithQueryParams(url))
+                        .post(ValidateThirdPartyTransferResponse.class, body).getMobileResponse())
+                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage("Could not find the validate third party transfer request url.")
+                        .build());
     }
 
     public ExecuteInternalTransferResponse executeInternalTransfer(
             ValidateInternalTransferResponse validateTransferResponse) {
 
-        return validateTransferResponse
-                .getRequests()
-                .getExecuteTransferRequest()
-                .map(
-                        url ->
-                                client.request(getUrlWithQueryParams(url))
-                                        .post(
-                                                ExecuteInternalTransferResponse.class,
-                                                new BaseBody()))
-                .orElseThrow(
-                        () ->
-                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                        .setMessage(
-                                                "Could not find the execute transfer request url.")
-                                        .build());
+        return validateTransferResponse.getRequests().getExecuteTransferRequest()
+                .map(url -> client.request(getUrlWithQueryParams(url))
+                        .post(ExecuteInternalTransferResponse.class, new BaseBody()))
+                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage("Could not find the execute transfer request url.")
+                        .build());
     }
 
     public BaseMobileResponseEntity executeTrustedTransfer(
-            ValidateExternalTransferResponseEntity validateExternalTransferResponseEntity,
-            int otp) {
+            ValidateExternalTransferResponseEntity validateExternalTransferResponseEntity, int otp) {
 
         ExecuteExternalTransferBody body = new ExecuteExternalTransferBody(Integer.toString(otp));
 
-        return validateExternalTransferResponseEntity
-                .findExecuteTrustedTransferRequest()
-                .map(
-                        url ->
-                                client.request(getUrlWithQueryParams(url))
-                                        .post(BaseResponse.class, body)
-                                        .getMobileResponse())
-                .orElseThrow(
-                        () ->
-                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                        .setMessage(
-                                                "Could not find the execute trusted transfer request url.")
-                                        .build());
+        return validateExternalTransferResponseEntity.findExecuteTrustedTransferRequest()
+                .map(url -> client.request(getUrlWithQueryParams(url))
+                        .post(BaseResponse.class, body).getMobileResponse())
+                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage("Could not find the execute trusted transfer request url.")
+                        .build());
     }
 
     public BaseMobileResponseEntity executeThirdPartyTransfer(
-            ValidateExternalTransferResponseEntity validateExternalTransferResponseEntity,
-            int otp) {
+            ValidateExternalTransferResponseEntity validateExternalTransferResponseEntity, int otp) {
 
         ExecuteExternalTransferBody body = new ExecuteExternalTransferBody(Integer.toString(otp));
 
-        return validateExternalTransferResponseEntity
-                .findExecuteThirdPartyTransferRequest()
-                .map(
-                        url -> {
-                            addQueryParamsToBody(body, url);
-                            return client.request(
-                                            getUrlWithQueryParams(
-                                                    new URL(IngConstants.Urls.BASE_SSO_REQUEST)))
-                                    .post(BaseResponse.class, body)
-                                    .getMobileResponse();
-                        })
-                .orElseThrow(
-                        () ->
-                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                        .setMessage(
-                                                "Could not find the execute third party transfer request url.")
-                                        .build());
+        return validateExternalTransferResponseEntity.findExecuteThirdPartyTransferRequest()
+                .map(url -> {
+                    addQueryParamsToBody(body, url);
+                    return client.request(getUrlWithQueryParams(new URL(IngConstants.Urls.BASE_SSO_REQUEST)))
+                        .post(BaseResponse.class, body).getMobileResponse();})
+                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage("Could not find the execute third party transfer request url.")
+                        .build());
     }
 
     private void addQueryParamsToBody(ExecuteExternalTransferBody body, URL url) {
@@ -355,11 +255,9 @@ public class IngApiClient {
     }
 
     private URL getUrlWithQueryParams(URL url) {
-        return url.queryParam(
-                        IngConstants.Session.ValuePairs.APP_NAME.getKey(),
+        return url.queryParam(IngConstants.Session.ValuePairs.APP_NAME.getKey(),
                         IngConstants.Session.ValuePairs.APP_NAME.getValue())
-                .queryParam(
-                        IngConstants.Session.ValuePairs.USER_PROFILE.getKey(),
+                .queryParam(IngConstants.Session.ValuePairs.USER_PROFILE.getKey(),
                         IngConstants.Session.ValuePairs.USER_PROFILE.getValue());
     }
 }
