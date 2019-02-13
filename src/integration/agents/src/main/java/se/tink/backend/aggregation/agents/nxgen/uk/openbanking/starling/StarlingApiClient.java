@@ -12,19 +12,16 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class StarlingApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
-
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public StarlingApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
@@ -62,8 +59,8 @@ public class StarlingApiClient {
     public TransactionsResponse fetchTransactions(Date from, Date to) {
 
         return request(StarlingConstants.URL.ANY_TRANSACTIONS)
-                .queryParam(StarlingConstants.RequestKey.FROM, dateFormat.format(from))
-                .queryParam(StarlingConstants.RequestKey.TO, dateFormat.format(to))
+                .queryParam(StarlingConstants.RequestKey.FROM, toFormattedDate(from))
+                .queryParam(StarlingConstants.RequestKey.TO, toFormattedDate(to))
                 .get(TransactionsResponse.class);
     }
 
@@ -79,5 +76,9 @@ public class StarlingApiClient {
                 .orElseThrow(() -> new IllegalStateException(SessionError.SESSION_EXPIRED.exception()));
 
         return token.toAuthorizeHeader();
+    }
+
+    private static String toFormattedDate(final Date date) {
+        return ThreadSafeDateFormat.FORMATTER_DAILY.format(date);
     }
 }
