@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
-import io.protostuff.Exclude;
-import io.protostuff.Tag;
-import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 import java.util.UUID;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -23,38 +20,16 @@ public class SignableOperation {
             SignableOperationStatuses.CREATED
     );
 
-    @Tag(1)
-    @ApiModelProperty(name = "created", example = "1471349422000", value = "The timestamp of the creation of the operation.")
     private Date created;
-    @Tag(2)
-    @ApiModelProperty(name = "id", example = "a4516bda6ff545e0aa24e54b859579e0", value = "The id of this operation.")
     private UUID id;
-    @Tag(3)
-    @ApiModelProperty(name = "status", example = "EXECUTED", value = "The status of the operation. CANCELLED, FAILED and EXECUTED are all endstates.", allowableValues = SignableOperationStatuses.DOCUMENTED)
     private String status;
-    @Exclude
-    @ApiModelProperty(name = "statusDetailsKey", hidden = true)
     private StatusDetailsKey statusDetailsKey;
-    @Tag(4)
-    @ApiModelProperty(name = "statusMessage", example = "The transfer has been sent to your bank.", value = "The status message of the operation")
     private String statusMessage;
-    @Tag(5)
-    @ApiModelProperty(name = "type", example = "TRANSFER", value = "The type of operation", allowableValues = SignableOperationTypes.DOCUMENTED)
     private String type;
-    @Tag(6)
-    @ApiModelProperty(name = "underlyingId", example = "1e09bab571d84b1cbe8d49c0be9c030f", value = "The id of the actual underlying operation (e.g. the id of a Transfer operation).")
     private UUID underlyingId;
-    @Tag(7)
-    @ApiModelProperty(name = "updated", example = "1471349422000", value = "The timestamp of the last update of the operation.")
     private Date updated;
-    @Tag(8)
-    @ApiModelProperty(name = "userId", example = "2f37e3ff1e5342b39c41bee3ee73cf8e", value = "The id of the user making the operation.")
     private UUID userId;
-    @Tag(9)
-    @ApiModelProperty(name = "credentialsId", example = "342220f1e0484c0481b2b468d7fbcfc4", value = "The id of the Credentials used to make the operation.")
     private UUID credentialsId;
-    @Exclude
-    @ApiModelProperty(name = "signableObject", hidden = true)
     private String signableObject;
 
     public SignableOperation() {
