@@ -13,7 +13,6 @@ import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
-import se.tink.libraries.provider.rpc.Provider;
 import se.tink.libraries.user.rpc.User;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroLegacyUserUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -74,10 +73,6 @@ public class AbnAmroIcsCredentials {
 
     public static boolean isAbnAmroIcsCredentials(Credentials credentials) {
         return Objects.equals(credentials.getProviderName(), ABN_AMRO_ICS_PROVIDER_NAME);
-    }
-
-    public static boolean isAbnAmroIcsProvider(Provider provider) {
-        return Objects.equals(provider.getName(), ABN_AMRO_ICS_PROVIDER_NAME);
     }
 
     public Credentials getCredentials() {
