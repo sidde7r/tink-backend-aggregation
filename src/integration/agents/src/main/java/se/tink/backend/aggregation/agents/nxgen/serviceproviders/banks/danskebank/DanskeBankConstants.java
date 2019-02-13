@@ -33,7 +33,6 @@ public final class DanskeBankConstants {
         // == START Loans ==
         public static final String LIST_LOANS = E4_BASE + "/realestate/loan/list";
         public static final String LOAN_DETAILS = E4_BASE + "/realestate/loan/detail";
-        public static final String LOAN_AGREEMENT_DETAILS = E4_BASE + "/realestate/loan/agreementDetail";
         // == END Loans ==
 
         // == START Credit card info ==
