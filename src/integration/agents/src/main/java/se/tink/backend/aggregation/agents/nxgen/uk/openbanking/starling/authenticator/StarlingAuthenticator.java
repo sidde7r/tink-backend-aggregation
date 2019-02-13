@@ -23,7 +23,7 @@ public class StarlingAuthenticator implements OAuth2Authenticator {
 
     @Override
     public URL buildAuthorizeUrl(String state) {
-        return new URL(StarlingConstants.URL.AUTH_STARLING_COM)
+        return new URL(StarlingConstants.Url.AUTH_STARLING)
                 .queryParam(StarlingConstants.RequestKey.CLIENT_ID, this.getClientId())
                 .queryParam(StarlingConstants.RequestKey.REDIRECT_URI, this.getRedirectUrl())
                 .queryParam(

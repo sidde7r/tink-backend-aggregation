@@ -1,38 +1,34 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class StarlingConstants {
 
-    public static class URL {
-        private static final String API_STARLING_COM = "https://api.starlingbank.com/";
-        public static final String AUTH_STARLING_COM = "https://oauth.starlingbank.com/";
-        public static final String OAUTH2_TOKEN = API_STARLING_COM + "oauth/access-token";
-        public static final String ACCOUNTS = API_STARLING_COM + "/api/v2/accounts";
-        public static final String ACCOUNT_HOLDER =
-                API_STARLING_COM + "/api/v2/account-holder/individual";
-        public static final String ANY_TRANSACTIONS = API_STARLING_COM + "/api/v1/transactions";
+    public static class UrlParams {
+        public static final String UID = "{uid}";
+    }
 
-        public static final String GET_PAYEES = API_STARLING_COM + "/api/v2/payees";
+    private static class ApiEndpoint {
 
-        private static final String ACCOUNT_IDENTIFIERS =
-                API_STARLING_COM + "/api/v2/accounts/%s/identifiers";
-        private static final String ACCOUNT_BALANCE =
-                API_STARLING_COM + "/api/v2/accounts/%s/balance";
-        private static final String EXECUTE_PAYMENT =
-                "/api/v2/payments/local/account/%s/category/%s";
+        static final String GET_OAUTH2_TOKEN = "/oauth/access-token";
+        static final String GET_ACCOUNTS = "/api/v2/accounts";
+        static final String GET_ACCOUNT_HOLDER =  "/api/v2/account-holder/individual";
+        static final String GET_ACCOUNT_IDENTIFIERS = "/api/v2/accounts/" + UrlParams.UID + "/identifiers";
+        static final String GET_ACCOUNT_BALANCE = "/api/v2/accounts/" + UrlParams.UID + "/balance";
+        static final String GET_ANY_TRANSACTIONS = "/api/v1/transactions";
+    }
 
-        public static String ACCOUNT_IDENTIFIERS(final String accountUid) {
-            return String.format(ACCOUNT_IDENTIFIERS, accountUid);
-        }
+    public static class Url {
+        public static final String AUTH_STARLING = "https://oauth.starlingbank.com";
+        private static final String API_STARLING = "https://api.starlingbank.com";
 
-        public static String ACCOUNT_BALANCE(final String accountUid) {
-            return String.format(ACCOUNT_BALANCE, accountUid);
-        }
-
-        public static String EXECUTE_PAYMENT(final String accountUid, final String categoryUid) {
-            return String.format(EXECUTE_PAYMENT, accountUid, categoryUid);
-        }
+        public static final URL GET_OAUTH2_TOKEN = new URL(AUTH_STARLING + ApiEndpoint.GET_OAUTH2_TOKEN);
+        public static final URL GET_ACCOUNTS = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNTS);
+        public static final URL GET_ACCOUNT_HOLDER = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_HOLDER);
+        public static final URL GET_ACCOUNT_IDENTIFIERS = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_IDENTIFIERS);
+        public static final URL GET_ACCOUNT_BALANCE = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_BALANCE);
+        public static final URL GET_ANY_TRANSACTIONS = new URL(API_STARLING + ApiEndpoint.GET_ANY_TRANSACTIONS);
     }
 
     public class RequestValue {
