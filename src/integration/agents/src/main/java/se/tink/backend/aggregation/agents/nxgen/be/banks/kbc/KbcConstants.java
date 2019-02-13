@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -38,7 +38,8 @@ public class KbcConstants {
         CARDS(createUrlWithHost("/MOB/A031/cards/1")),
         FUTURE_TRANSACTIONS(createUrlWithHost("/MOB/A031/future-transactions/1")),
         ACCOUNTS_FOR_TRANSFER_TO_OWN(createUrlWithHost("/MOB/A031/accounts/for-transfer-to/own/1")),
-        ACCOUNTS_FOR_TRANSFER_TO_OTHER(createUrlWithHost("/MOB/A031/accounts/for-transfer-to/other/1")),
+        ACCOUNTS_FOR_TRANSFER_TO_OTHER(
+                createUrlWithHost("/MOB/A031/accounts/for-transfer-to/other/1")),
         BENEFICIARIES_HISTORY(createUrlWithHost("/MOB/A031/beneficiaries/history/1")),
         TRANSFER_VALIDATE(createUrlWithHost("/MOB/A031/transfer/validate/1")),
         TRANSFER_TO_OTHER(createUrlWithHost("/MOB/A031/transfer/other/1")),
@@ -193,19 +194,35 @@ public class KbcConstants {
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
     }
 
-    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES =
-            ImmutableMap.<String, AccountTypes>builder()
-                    .put("0028", AccountTypes.CHECKING) // Company Card
-                    .put("3737", AccountTypes.CHECKING) // Business Pro
-                    .put("3844", AccountTypes.CHECKING)
-                    .put("3590", AccountTypes.SAVINGS) // Start2Save
-                    .put("3591", AccountTypes.SAVINGS)
-                    .put("3595", AccountTypes.SAVINGS) // KBC Tall Oaks Savings Account
-                    .put("3781", AccountTypes.SAVINGS) // KBC Start2Save4
-                    .put("3867", AccountTypes.SAVINGS) // KBC Savings Pro
-                    .put("4010", AccountTypes.SAVINGS) // KBC Brussels-Start2Save
-                    .put("4011", AccountTypes.SAVINGS) // KBC Brussels Savings Account
-                    .put("4019", AccountTypes.SAVINGS) // KBC Brussels Savings Account PRO
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(
+                            AccountTypes.CHECKING,
+                            "0028", // Company Card
+                            "0030", //
+                            "3737", // Business Pro
+                            "3844") // KBC-Zichtrekening
+                    .put(
+                            AccountTypes.SAVINGS,
+                            "3590", // Start2Save
+                            "3591",
+                            "3594", // KBC-Huurwaarborgspaarrekening
+                            "3595", // KBC Tall Oaks Savings Account
+                            "3781", // KBC Start2Save4
+                            "3867", // KBC Savings Pro
+                            "4010", // KBC Brussels-Start2Save
+                            "4011", // KBC Brussels Savings Account
+                            "4019", // KBC Brussels Savings Account PRO
+                            "4056") // KBC-Huurwaarborgspaarrekening
+                    .ignoreKeys(
+                            "1013", // KBC-Beleggersrekening
+                            "2117", // KBC-Pandrekening
+                            "3123", // ESOP-rekening
+                            "3465", // KBC-Business Comfortrekening
+                            "3637", // KBC-Business Compactrekening
+                            "4012", // KBC Brussels Security Deposit Account
+                            "4057") // KBC Security Deposit Account
                     .build();
 
     public static final class ErrorMessage {
@@ -215,14 +232,15 @@ public class KbcConstants {
 
         // Hoping the logging will log HeaderErrorMessage that can be used as replacement
         public static final String NOT_A_CUSTOMER = "managing branch not found";
-        public static final String ACCOUNT_BLOCKED = "type in the characters as they appear in the image below and then click 'confirm'";
+        public static final String ACCOUNT_BLOCKED =
+                "type in the characters as they appear in the image below and then click 'confirm'";
         public static final String ACCOUNT_BLOCKED2 = "your pin has been blocked";
         public static final String INCORRECT_SIGN_CODE = "your sign code is incorrect";
 
         // Probably only text messages log should give us information otherwise
         public static final String NO_TRANSACTIONS_FOUND = "no transactions in the most recent 12 months";
-
-        // Only text message no header or code, we do transfers in English to ensure that correctness
+        // Only text message no header or code, we do transfers in English to ensure that
+        // correctness
         public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
     }
 

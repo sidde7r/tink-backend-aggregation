@@ -5,18 +5,23 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
+import java.beans.Transient;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 @JsonObject
 public class AgreementDto implements GeneralAccountEntity {
+    private static final AggregationLogger LOGGER = new AggregationLogger(GeneralAccountEntity.class);
     private TypeEncValueTuple agreementNo;
     private TypeValuePair structureCode;
     private TypeValuePair productType;
@@ -182,26 +187,19 @@ public class AgreementDto implements GeneralAccountEntity {
         return new Amount(currency.getValue(), Double.valueOf(balance.getValue()));
     }
 
-    public boolean isKnownAccountType() {
-        return KbcConstants.ACCOUNT_TYPES.containsKey(productTypeNr.getValue());
-    }
-
-    public boolean isTransactionalAccount() {
-        switch (getAccountType()) {
-        case CHECKING:
-        case SAVINGS:
-            return true;
-        default:
-            return false;
+    @Transient
+    public Optional<AccountTypes> getAccountType() {
+        Optional<AccountTypes> accountType = KbcConstants.ACCOUNT_TYPE_MAPPER.translate(productTypeNr.getValue());
+        if(!accountType.isPresent()) {
+            LOGGER.infoExtraLong("account: " + SerializationUtils.serializeToString(this),
+                    KbcConstants.LogTags.ACCOUNTS);
         }
-    }
-
-    public AccountTypes getAccountType() {
-        return KbcConstants.ACCOUNT_TYPES.getOrDefault(productTypeNr.getValue(), AccountTypes.OTHER);
+        return accountType;
     }
 
     public TransactionalAccount toTransactionalAccount() {
-        return TransactionalAccount.builder(getAccountType(), agreementNo.getValue(), getAmount())
+        AccountTypes accountType = getAccountType().orElseThrow(IllegalArgumentException::new);
+        return TransactionalAccount.builder(accountType, agreementNo.getValue(), getAmount())
                 .setName(agreementMakeUp.getName().getValue())
                 .setHolderName(new HolderName(agreementName.getValue()))
                 .setBankIdentifier(agreementNo.getValue())
@@ -212,7 +210,7 @@ public class AgreementDto implements GeneralAccountEntity {
     }
 
     private Collection<AccountFlag> getAccountFlags() {
-        return getIsBusinessAccount() ? Collections.singletonList(AccountFlag.BUSINESS) : Collections.EMPTY_LIST;
+        return getIsBusinessAccount() ? Collections.singletonList(AccountFlag.BUSINESS) : Collections.emptyList();
     }
 
     private boolean getIsBusinessAccount() {
