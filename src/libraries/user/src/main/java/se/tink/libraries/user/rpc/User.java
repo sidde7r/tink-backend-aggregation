@@ -10,7 +10,6 @@ import com.google.common.collect.Lists;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
