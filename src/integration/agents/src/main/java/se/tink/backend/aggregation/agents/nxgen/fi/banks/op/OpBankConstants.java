@@ -93,7 +93,7 @@ public class OpBankConstants {
         public static final String OS_NAME = "ios";
         public static final String OS_VERSION = "10.3.1";
         public static final boolean ROOTED = false;
-        public static final String APP_VERSION = "22.0";
+        public static final String APP_VERSION = "25.0";
         public static final String HW_TYPE = "mobile";
         public static final String CORE = "KR2";
         public static final String APPLICATION_GROUP_ID = "mob";
