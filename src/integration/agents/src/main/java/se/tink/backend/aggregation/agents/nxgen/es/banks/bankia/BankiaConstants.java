@@ -102,7 +102,6 @@ public abstract class BankiaConstants {
     }
 
     public static class CardTypes {
-        public static final String DEBIT_CARD = "D";
         public static final String CREDIT_CARD = "C";
     }
 
@@ -112,6 +111,5 @@ public abstract class BankiaConstants {
 
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from(PROVIDER_NAME + "-unknown-account-type");
-        public static final LogTag NON_DEBIT_CARD = LogTag.from("#bankia_non_debit_card");
     }
 }
