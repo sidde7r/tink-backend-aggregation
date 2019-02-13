@@ -3,11 +3,7 @@ package se.tink.libraries.transfer.enums;
 import se.tink.libraries.account.AccountIdentifier;
 
 public enum TransferType {
-    EINVOICE,
-    PAYMENT,
-    BANK_TRANSFER;
-
-    public static final String DOCUMENTED = "BANK_TRANSFER,PAYMENT";
+    EINVOICE, PAYMENT, BANK_TRANSFER;
 
     public static TransferType typeOf(AccountIdentifier accountIdentifier) {
         if (accountIdentifier != null) {

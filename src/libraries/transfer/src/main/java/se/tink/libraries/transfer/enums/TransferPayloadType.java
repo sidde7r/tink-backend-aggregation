@@ -5,6 +5,5 @@ package se.tink.libraries.transfer.enums;
  * information available from the agent.
  */
 public enum TransferPayloadType {
-    PROVIDER_UNIQUE_ID,
-    ORIGINAL_TRANSFER
+    PROVIDER_UNIQUE_ID, ORIGINAL_TRANSFER
 }
