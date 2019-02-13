@@ -19,9 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * This Provider has been copied from {@link se.tink.libraries.provider.rpc.Provider} in an effort to remove :aggregation-apis
- * dependency on :main-api
- * <p>
  * Some of the objects here are not used by Aggregation at all, but are still needed until the Aggregation API has been
  * reworked. This is because users of the Aggregation API currently expects to get the same data back as it sends away
  * in the "enrichment" process.
