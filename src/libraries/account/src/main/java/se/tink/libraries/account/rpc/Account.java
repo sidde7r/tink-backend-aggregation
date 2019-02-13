@@ -77,10 +77,6 @@ public class Account implements Cloneable {
         this.accountExclusion = accountExclusion;
     }
 
-    public static class PayloadKeys {
-        public static final String PARTNER_PAYLOAD = "PARTNER_PAYLOAD";
-    }
-
     public String getAccountNumber() {
         return this.accountNumber;
     }
@@ -282,26 +278,6 @@ public class Account implements Cloneable {
         }
     }
 
-    @JsonIgnore
-    public AccountIdentifier getPreferredIdentifier(Type destinationIdentifierType) {
-        switch (destinationIdentifierType) {
-        case SE:
-        case SE_PG:
-        case SE_BG:
-        case SE_SHB_INTERNAL:
-        case TINK:
-            return getIdentifier(Type.SE);
-        case FI:
-        case IBAN:
-            return getIdentifier(Type.IBAN);
-        case BE:
-            return getIdentifier(Type.BE);
-        case SEPA_EUR:
-            return getIdentifier(Type.SEPA_EUR);
-        }
-        return null;
-    }
-
     public void putIdentifier(AccountIdentifier identifier) {
         if (!identifier.isValid()) {
             return;
@@ -349,24 +325,6 @@ public class Account implements Cloneable {
             }
         }
         return accountIdentifiers;
-    }
-
-    public boolean definedBy(AccountIdentifier identifier) {
-        if (identifier.getType() == AccountIdentifier.Type.TINK) {
-            return getId().equals(identifier.getIdentifier());
-        }
-
-        if (getIdentifiers() == null) {
-            return false;
-        }
-
-        for (AccountIdentifier id : getIdentifiers()) {
-            if (identifier.equals(id)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public AccountDetails getDetails() {
