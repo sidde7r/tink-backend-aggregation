@@ -13,8 +13,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.RequestEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.BaseResponse;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -74,13 +72,4 @@ public class IngHelper {
     public Optional<LoginResponseEntity> retrieveLoginResponse() {
         return this.sessionStorage.get(IngConstants.Storage.LOGIN_RESPONSE, LoginResponseEntity.class);
     }
-
-    public static boolean isLoginSuccessful(HttpResponse response){
-        return response.getBody(LoginResponseEntity.class) == null;
-    }
-
-    public static BaseResponse getLoginError(HttpResponse response){
-        return response.getBody(BaseResponse.class);
-    }
-
 }

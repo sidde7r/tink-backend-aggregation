@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngHelper;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.MobileHelloResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.rpc.BaseResponse;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
@@ -57,22 +56,12 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
 
         String loginUrl = this.ingHelper.getUrl(IngConstants.RequestNames.LOGON);
 
-        HttpResponse res =
+        LoginResponseEntity loginResponseEntity =
                 this.apiClient.login(
                         loginUrl,
                         this.persistentStorage.get(IngConstants.Storage.ING_ID),
                         this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
                         this.persistentStorage.get(IngConstants.Storage.DEVICE_ID));
-
-
-        if(IngHelper.isLoginSuccessful(res)){
-            BaseResponse baseRes = IngHelper.getLoginError(res);
-            throw new IllegalStateException(String.format("%s%s%s", "AutoAuth not successful! Code: ",
-                    baseRes.getMobileResponse().getErrorCode().get(),
-                    " Message: ", baseRes.getMobileResponse().getErrorText()));
-        }
-
-        LoginResponseEntity loginResponseEntity = res.getBody(LoginResponseEntity.class);
 
         this.ingHelper.persist(loginResponseEntity);
     }
