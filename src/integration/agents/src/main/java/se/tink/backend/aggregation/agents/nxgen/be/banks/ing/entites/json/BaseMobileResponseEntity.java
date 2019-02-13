@@ -30,13 +30,15 @@ public class BaseMobileResponseEntity {
 
     @JsonIgnore
     public Optional<String> getErrorCode() {
-        return errors != null &&  errors.get(0) != null ?
-                Optional.ofNullable(errors.get(0).getCode()) : Optional.empty();
+        return errors != null && errors.get(0) != null
+                ? Optional.ofNullable(errors.get(0).getCode())
+                : Optional.empty();
     }
 
     @JsonIgnore
     public Optional<String> getErrorText() {
-        return errors != null &&  errors.get(0) != null ?
-                Optional.ofNullable(errors.get(0).getText()) : Optional.empty();
+        return errors != null && errors.get(0) != null
+                ? Optional.ofNullable(errors.get(0).getText())
+                : Optional.empty();
     }
 }

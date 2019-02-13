@@ -9,6 +9,8 @@ public class TransactionsRequestBody extends MultivaluedMapImpl {
         add(IngConstants.Fetcher.ACC, acc);
         add(IngConstants.Fetcher.START_INDEX, startIndex);
         add(IngConstants.Fetcher.END_INDEX, endIndex);
-        add(IngConstants.Session.ValuePairs.DSE_TYPE.getKey(), IngConstants.Session.ValuePairs.DSE_TYPE.getValue());
+        add(
+                IngConstants.Session.ValuePairs.DSE_TYPE.getKey(),
+                IngConstants.Session.ValuePairs.DSE_TYPE.getValue());
     }
 }

@@ -14,28 +14,28 @@ public class IngConstants {
         static final URL MOBILE_HELLO = new URL(HOST + "/hb_mp/eb/ebmp/MobileHello?rootRef=/eb");
         static final URL MENU_ITEMS = new URL(HOST + "/api/homebank/sl-menu/items/en");
         public static final String BASE_SSO_REQUEST = HOST + "/hb_ms/eb/MobileSSORequest?";
-
     }
 
     public static final class Headers {
-        public static final String USER_AGENT = "Mozilla/5.0 (iPhone8,1; U; CPU OS 10.3.1 like Mac OS X; en-us) "
-                + "AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10; MyING.be/8.4";
+        public static final String USER_AGENT =
+                "Mozilla/5.0 (iPhone8,1; U; CPU OS 10.3.1 like Mac OS X; en-us) "
+                        + "AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10; MyING.be/8.4";
 
         public static final String LOCATION = "location";
         public static final String TAM_ERROR = "tam_op=error";
         public static final String ERROR_CODE_WRONG_OTP = "error_code=3";
         public static final String ERROR_CODE_LOGIN = "error_code=2";
-
     }
 
     static final class Crypto {
-        static final String RSA_MODULUS_IN_HEX = "00a7de4b19a0a738653bb4277b01d2a05b6916a616038ed23de75e8ce"
-                + "615290aebf31b826b9589e1d4eec160239ad144d6056e7c475cc76564474df659830b70b0fb7815cf"
-                + "f010421b76dc6cfec7fe67b990d4fa5f4aa346b167005b404e96cdad830e9d913a2823d4fc918df4b"
-                + "7257f842b151a9880639d4b75bcbea47fd80e41c15a2ff370d6ed13d9919b02a9d5b5dfd2aa812c65"
-                + "064b4f262812c4fee8e53c4845610acb743d4f6bcf4f4b1a4ad9fec9eac8c8c483939ffd66e19a87e"
-                + "d2e9b646c5e268aad2583a7a5d0fe43149a6b2f8f54442c6abf154096c151919267b5272ee1cb123c"
-                + "c055cbe81f01fb17a5c32f19e0eaba67164197a9a962eecfa5b5";
+        static final String RSA_MODULUS_IN_HEX =
+                "00a7de4b19a0a738653bb4277b01d2a05b6916a616038ed23de75e8ce"
+                        + "615290aebf31b826b9589e1d4eec160239ad144d6056e7c475cc76564474df659830b70b0fb7815cf"
+                        + "f010421b76dc6cfec7fe67b990d4fa5f4aa346b167005b404e96cdad830e9d913a2823d4fc918df4b"
+                        + "7257f842b151a9880639d4b75bcbea47fd80e41c15a2ff370d6ed13d9919b02a9d5b5dfd2aa812c65"
+                        + "064b4f262812c4fee8e53c4845610acb743d4f6bcf4f4b1a4ad9fec9eac8c8c483939ffd66e19a87e"
+                        + "d2e9b646c5e268aad2583a7a5d0fe43149a6b2f8f54442c6abf154096c151919267b5272ee1cb123c"
+                        + "c055cbe81f01fb17a5c32f19e0eaba67164197a9a962eecfa5b5";
         static final String RSA_EXPONENT_IN_HEX = "010001";
     }
 
@@ -155,7 +155,8 @@ public class IngConstants {
 
     public static final class Transactions {
         public static final Pattern TRANSACTION_PREFIX_PATTERN =
-                Pattern.compile("^((naar:|zu:|á:|to:|van:|von:|de:|from:)|(\\d{2}/\\d{2}\\s-\\s\\d{1,2}\\.\\d{2}\\s+[ap]m\\s-)).*",
+                Pattern.compile(
+                        "^((naar:|zu:|á:|to:|van:|von:|de:|from:)|(\\d{2}/\\d{2}\\s-\\s\\d{1,2}\\.\\d{2}\\s+[ap]m\\s-)).*",
                         Pattern.CASE_INSENSITIVE);
     }
 
@@ -170,7 +171,9 @@ public class IngConstants {
     public static final class Logs {
         public static final LogTag LOGIN_RESPONSE = LogTag.from("#ING_loginresponse");
         public static final LogTag CREDITCARDS = LogTag.from("#ING_creditcards");
-        public static final LogTag CREDITCARD_TRANSACTIONS = LogTag.from("#ING_creditcard_transactions");
+        public static final LogTag CREDITCARD_TRANSACTIONS =
+                LogTag.from("#ING_creditcard_transactions");
+        public static final LogTag UNKNOWN_ERROR_CODE = LogTag.from("#ING_UNKNOWN_ERROR_CODE");
     }
 
     public static final class Transfers {
@@ -220,20 +223,28 @@ public class IngConstants {
         public static final String TRANSFER_AMOUNT_EXCEEDS_LIMIT_CODE = "e51/trsg048-000";
         public static final String TRANSFER_AMOUNT_EXCEEDS_BALANCE = "e52/trsg014-000";
         public static final String STARTING_DATE_ENTERED_IS_WRONG = "e50/01/g036-000";
+        public static final String NO_ACCESS_TO_ONLINE_BANKING = "e50/01/g350-220";
     }
 
     public enum EndUserMessage implements LocalizableEnum {
-        INCORRECT_LOGIN_CREDENTIALS(new LocalizableKey("Check if your authentication parameters are correct:\n"
-                + "1. ING ID from your bank card\n2. Card ID from your bank card\n3. \"RESPONSE\" from the ING"
-                + " Card Reader")),
-        TRANSFER_AMOUNT_EXCEEDS_LIMIT(new LocalizableKey("The amount of this transaction exceeds your transfer"
-                + " limits. Please log in to Home'Bank to check your transfer limits.")),
+        INCORRECT_LOGIN_CREDENTIALS(
+                new LocalizableKey(
+                        "Check if your authentication parameters are correct:\n"
+                                + "1. ING ID from your bank card\n2. Card ID from your bank card\n3. \"RESPONSE\" from the ING"
+                                + " Card Reader")),
+        TRANSFER_AMOUNT_EXCEEDS_LIMIT(
+                new LocalizableKey(
+                        "The amount of this transaction exceeds your transfer"
+                                + " limits. Please log in to Home'Bank to check your transfer limits.")),
         TRANSFER_TO_EXTERNAL_ACCOUNTS_NOT_ALLOWED(
-                new LocalizableKey("Transfers to accounts from other banks is not allowed from this account.")),
+                new LocalizableKey(
+                        "Transfers to accounts from other banks is not allowed from this account.")),
         DATE_MUST_BE_BUSINESS_DAY(
-                new LocalizableKey("Execution date have to be a business day, choose another date.")),
+                new LocalizableKey(
+                        "Execution date have to be a business day, choose another date.")),
         MISSING_DESTINATION_NAME(
-                new LocalizableKey("Destination name have to be supplied for third party transfers.")),
+                new LocalizableKey(
+                        "Destination name have to be supplied for third party transfers.")),
         TRANSFER_VALIDATION_FAILED(new LocalizableKey("Transfer validation failed.")),
         TRANSFER_EXECUTION_FAILED(new LocalizableKey("Transfer execution failed."));
 
@@ -256,6 +267,7 @@ public class IngConstants {
         public static final String URL_NOT_FOUND = "#ING_url_not_found";
         public static final String TRANSACTION_FETCHING_ERROR = "#ING_transaction_fetching_failed";
         public static final String LOGIN_RESPONSE_NOT_FOUND = "Could not fetch login response.";
-        public static final String TRANSFER_ACCOUNTS_NOT_FOUND = "Could not fetch users' accounts when for transfer.";
+        public static final String TRANSFER_ACCOUNTS_NOT_FOUND =
+                "Could not fetch users' accounts when for transfer.";
     }
 }

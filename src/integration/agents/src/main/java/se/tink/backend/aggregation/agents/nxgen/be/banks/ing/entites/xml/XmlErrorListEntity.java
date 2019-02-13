@@ -17,13 +17,13 @@ public class XmlErrorListEntity {
         return errorList;
     }
 
-    public void setError(
-            List<XmlErrorEntity> errorList) {
+    public void setError(List<XmlErrorEntity> errorList) {
         this.errorList = errorList;
     }
 
     public Optional<String> getErrorCode() {
-        return errorList != null &&  errorList.get(0) != null ?
-                Optional.ofNullable(errorList.get(0).getCode()) : Optional.empty();
+        return errorList != null && errorList.get(0) != null
+                ? Optional.ofNullable(errorList.get(0).getCode())
+                : Optional.empty();
     }
 }
