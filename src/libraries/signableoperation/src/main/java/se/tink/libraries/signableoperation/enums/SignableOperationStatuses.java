@@ -1,12 +1,5 @@
 package se.tink.libraries.signableoperation.enums;
 
 public enum SignableOperationStatuses {
-    CREATED,
-    EXECUTING,
-    AWAITING_CREDENTIALS,
-    CANCELLED,
-    FAILED,
-    EXECUTED;
-
-    public static final String DOCUMENTED = "CREATED, EXECUTING, AWAITING_CREDENTIALS, CANCELLED, FAILED, EXECUTED";
+    CREATED, EXECUTING, AWAITING_CREDENTIALS, CANCELLED, FAILED, EXECUTED
 }
