@@ -2,10 +2,6 @@ java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
     visibility = ["//visibility:public"],
-    deps = [
-        "//third_party:com_fasterxml_jackson_core_jackson_annotations",
-        "//third_party:com_google_guava_guava",
-    ],
 )
 
 java_library(
