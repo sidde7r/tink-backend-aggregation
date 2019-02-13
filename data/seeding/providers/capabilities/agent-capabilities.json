@@ -126,6 +126,7 @@
   "nxgen.uk.openbanking.markandspencer.MarkAndSpencerAgent": ["CHECKING_ACCOUNTS"],
   "nxgen.uk.openbanking.modelo.ModeloAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.monzo.MonzoAgent": ["CHECKING_ACCOUNTS"],
+  "nxgen.uk.openbanking.starling.StarlingAgent": ["CHECKING_ACCOUNTS"],
   "nxgen.uk.openbanking.natwest.NatWestAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.rbs.RbsAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],
   "nxgen.uk.openbanking.santander.SantanderAgent": ["CHECKING_ACCOUNTS", "TRANSFERS"],

@@ -126,6 +126,11 @@ agentsServiceConfiguration:
         clientId: "dummyId"
         clientSecret: "dummySecret"
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    starling:
+      tink:
+        clientId: "dummyId"
+        clientSecret: "dummySecret"
+        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
     nordea:
       tink:
         clientId: "dummyId"

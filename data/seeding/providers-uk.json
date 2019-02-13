@@ -153,6 +153,27 @@
             "payload": "tink"
         },
         {
+            "name": "uk-starling-oauth2",
+            "displayName": "Starling",
+            "popular": false,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.uk.openbanking.starling.StarlingAgent",
+            "passwordHelpText": "",
+            "transactional": true,
+            "fields": [
+                {
+                    "name": "info",
+                    "value": "Connecting your bank",
+                    "helpText": "You will now be redirected to your bank. After logging in using your bank details you will be taken back to the Tink app!",
+                    "immutable": true
+                }
+            ],
+            "payload": "tink"
+        },
+        {
             "name": "uk-halifax-oauth2",
             "capabilities": [
                 "TRANSFERS"
