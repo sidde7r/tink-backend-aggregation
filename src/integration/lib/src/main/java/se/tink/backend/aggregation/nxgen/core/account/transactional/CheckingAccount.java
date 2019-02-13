@@ -44,8 +44,6 @@ public class CheckingAccount extends TransactionalAccount {
             AccountIdentifierStep<CheckingBuildStep>,
             CheckingBuildStep {
 
-        private Double interestRate;
-
         @Override
         public AccountNumberStep<CheckingBuildStep> setUniqueIdentifier(
                 @Nonnull String uniqueIdentifier) {
@@ -68,10 +66,6 @@ public class CheckingAccount extends TransactionalAccount {
         @Override
         public CheckingAccount build() {
             return new CheckingAccount(this);
-        }
-
-        Double getInterestRate() {
-            return interestRate;
         }
 
         @Override

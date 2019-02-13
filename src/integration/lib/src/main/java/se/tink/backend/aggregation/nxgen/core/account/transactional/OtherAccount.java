@@ -47,8 +47,6 @@ public class OtherAccount extends TransactionalAccount {
             AccountIdentifierStep<OtherBuildStep>,
             OtherBuildStep {
 
-        private Double interestRate;
-
         @Override
         public AccountNumberStep<OtherBuildStep> setUniqueIdentifier(
                 @Nonnull String uniqueIdentifier) {
@@ -71,10 +69,6 @@ public class OtherAccount extends TransactionalAccount {
         @Override
         public OtherAccount build() {
             return new OtherAccount(this);
-        }
-
-        Double getInterestRate() {
-            return interestRate;
         }
 
         @Override
