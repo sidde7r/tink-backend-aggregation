@@ -7,12 +7,17 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountEntity implements GeneralAccountEntity {
+    @JsonIgnore
+    private static final AggregationLogger LOG = new AggregationLogger(AccountEntity.class);
+
     private String accountName;
     private String accountNumber;
     private String type;
@@ -158,9 +163,12 @@ public class AccountEntity implements GeneralAccountEntity {
         case "SAVINGS":
             account.setType(AccountTypes.SAVINGS);
             break;
-        default:
         case "CHECKING":
             account.setType(AccountTypes.CHECKING);
+            break;
+        default:
+            LOG.info(String.format("unknown_account_type %s", SerializationUtils.serializeToString(this)));
+            account.setType(AccountTypes.OTHER);
             break;
         }
 
