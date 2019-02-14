@@ -17,12 +17,12 @@ public class OtherAccount extends TransactionalAccount {
     @Deprecated
     private OtherAccount(Builder<OtherAccount, DefaultOtherAccountBuilder> builder) {
         super(builder);
-        LOG.info("Unknown_account_type - deprecated " + this.getAccountNumber());
+        LOG.info("Unknown_account_type - deprecated " + this.getName());
     }
 
     private OtherAccount(OtherAccountBuilder builder) {
         super(builder);
-        LOG.info("Unknown_account_type " + this.getAccountNumber());
+        LOG.info("Unknown_account_type " + this.getName());
     }
 
 
