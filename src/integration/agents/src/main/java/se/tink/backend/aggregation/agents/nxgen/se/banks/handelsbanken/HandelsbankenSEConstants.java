@@ -154,7 +154,11 @@ public class HandelsbankenSEConstants {
                             "e-kapitalkonto",
                             "framtidskonto",
                             "placeringskonto privat")
-                    .put(AccountTypes.CHECKING, "allkonto")
+                    .put(AccountTypes.CHECKING,
+                            "allkonto",
+                            "allkonto ung",
+                            "privatkonto",
+                            "checkkonto")
                     .build();
         }
     }
