@@ -13,7 +13,7 @@ public class IngHttpFilter extends Filter {
         HttpResponse httpResponse = nextFilter(httpRequest);
         int httpStatus = httpResponse.getStatus();
         String responseBody = httpResponse.getBody(String.class);
-        boolean isUnavailable = responseBody.toLowerCase().contains("Unavailable");
+        boolean isUnavailable = responseBody.toLowerCase().contains("unavailable");
         if (httpStatus >= 500 && isUnavailable) {
             throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
