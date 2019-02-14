@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.exceptions;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.libraries.i18n.LocalizableKey;
 
-public class BankServiceException extends AuthenticationException {
-    private BankServiceError error;
+public class BankServiceException extends AgentRuntimeExceptionImpl {
+    private final BankServiceError error;
 
     public BankServiceException(BankServiceError error) {
         super(error);

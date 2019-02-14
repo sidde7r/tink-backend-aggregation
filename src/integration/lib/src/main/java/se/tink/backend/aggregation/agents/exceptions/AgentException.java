@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.exceptions;
 
-import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AgentBaseError;
 
 interface AgentException {
-    AgentError getError();
+    AgentBaseError getError();
 }
