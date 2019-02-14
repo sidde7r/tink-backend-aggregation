@@ -13,9 +13,11 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListLoansRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListLoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.ListTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
@@ -64,16 +66,12 @@ public class DanskeBankApiClient {
         return accounts;
     }
 
-    public String listLoans(ListLoansRequest request) {
-        return postRequest(DanskeBankConstants.Url.LIST_LOANS, String.class, request);
+    public ListLoansResponse listLoans(ListLoansRequest request) {
+        return postRequest(DanskeBankConstants.Url.LIST_LOANS, ListLoansResponse.class, request);
     }
 
-    public String loanDetails(LoanDetailsRequest request) {
-        return postRequest(DanskeBankConstants.Url.LOAN_DETAILS, String.class, request);
-    }
-
-    public String loanAgreementDetails(LoanDetailsRequest request) {
-        return postRequest(DanskeBankConstants.Url.LOAN_AGREEMENT_DETAILS, String.class, request);
+    public LoanDetailsResponse loanDetails(LoanDetailsRequest request) {
+        return postRequest(DanskeBankConstants.Url.LOAN_DETAILS, LoanDetailsResponse.class, request);
     }
 
     public ListTransactionsResponse listTransactions(ListTransactionsRequest request) {

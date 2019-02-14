@@ -3,13 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeba
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankAccountLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankCreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankMultiTransactionsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.DanskeBankInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.filters.DanskeBankHttpFilter;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
@@ -24,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBankApiClient> extends NextGenerationAgent {
     protected final MarketSpecificApiClient apiClient;
@@ -67,10 +67,11 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                 new DanskeBankInvestmentFetcher(this.apiClient)));
     }
 
+    // Fetches loans from the accounts endpoint
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
         return Optional.of(new LoanRefreshController(this.metricRefreshController, this.updateController,
-                        new DanskeBankLoanFetcher(this.credentials, this.apiClient, this.configuration),
+                        new DanskeBankAccountLoanFetcher(this.credentials, this.apiClient, this.configuration),
                         creatTransactionFetcherController()));
     }
 
