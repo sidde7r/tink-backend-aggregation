@@ -33,10 +33,7 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                 ListAccountsRequest.createFromLanguageCode(languageCode));
 
         // log any loan account of unknown product type
-        listAccounts.getAccounts().stream()
-                .filter(AccountEntity::isLoanAccount)
-                .filter(DanskeBankPredicates.knownLoanAccountProducts(configuration.getLoanAccountTypes()).negate())
-                .forEach(AccountEntity::logLoanAccount);
+        logUnknownLoanAccountTypes(listAccounts);
 
         return listAccounts
                 .getAccounts().stream()
@@ -44,5 +41,12 @@ public class DanskeBankAccountLoanFetcher implements AccountFetcher<LoanAccount>
                 .map(AccountEntity::toLoanAccount)
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    private void logUnknownLoanAccountTypes(ListAccountsResponse listAccounts) {
+        listAccounts.getAccounts().stream()
+                .filter(AccountEntity::isLoanAccount)
+                .filter(DanskeBankPredicates.knownLoanAccountProducts(configuration.getLoanAccountTypes()).negate())
+                .forEach(AccountEntity::logLoanAccount);
     }
 }
