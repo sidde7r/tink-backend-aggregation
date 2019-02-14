@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -58,12 +60,17 @@ public class RefreshItemAgentWorkerCommand extends AgentWorkerCommand implements
                 log.info("Refreshing item: {}", item.name());
 
                 Agent agent = context.getAgent();
-                if (agent instanceof DeprecatedRefreshExecutor){
+                if (agent instanceof DeprecatedRefreshExecutor) {
                     ((DeprecatedRefreshExecutor) agent).refresh();
                 } else {
                     RefreshExecutorUtils.executeSegregatedRefresher(agent, item, context);
                 }
                 action.completed();
+            } catch(BankServiceException e) {
+                    // The way frontend works now the message will not be displayed to the user.
+                    context.updateStatus(CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
+                    action.unavailable();
+                    return AgentWorkerCommandResult.ABORT;
             } catch (Exception e) {
                 action.failed();
                 log.warn("Couldn't refresh RefreshableItem({})", item);

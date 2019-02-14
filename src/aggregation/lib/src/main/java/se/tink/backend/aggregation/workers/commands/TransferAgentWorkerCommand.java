@@ -3,12 +3,15 @@ package se.tink.backend.aggregation.workers.commands;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
+
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.HttpLoggableExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
+import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.http.log.HttpLoggingFilterFactory;
@@ -147,7 +150,15 @@ public class TransferAgentWorkerCommand extends SignableOperationAgentWorkerComm
             context.updateSignableOperation(signableOperation);
 
             return AgentWorkerCommandResult.ABORT;
+        } catch(BankServiceException e) {
+            metricAction.unavailable();
+            log.error(transfer, "Could not execute transfer.", e);
 
+            signableOperation.setStatus(SignableOperationStatuses.FAILED);
+            signableOperation.setStatusMessage(catalog.getString(e.getUserMessage()));
+            context.updateSignableOperation(signableOperation);
+
+            return AgentWorkerCommandResult.ABORT;
         } catch (Exception e) {
             // Catching this exception here means that the Credentials will not get status TEMPORARY_ERROR.
             metricAction.failed();
