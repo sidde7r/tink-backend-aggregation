@@ -171,6 +171,7 @@ public class IngConstants {
         public static final LogTag LOGIN_RESPONSE = LogTag.from("#ING_loginresponse");
         public static final LogTag CREDITCARDS = LogTag.from("#ING_creditcards");
         public static final LogTag CREDITCARD_TRANSACTIONS = LogTag.from("#ING_creditcard_transactions");
+        public static final LogTag UNKNOWN_ERROR_CODE = LogTag.from("#ING_UNKNOWN_ERROR_CODE");
     }
 
     public static final class Transfers {
@@ -220,6 +221,7 @@ public class IngConstants {
         public static final String TRANSFER_AMOUNT_EXCEEDS_LIMIT_CODE = "e51/trsg048-000";
         public static final String TRANSFER_AMOUNT_EXCEEDS_BALANCE = "e52/trsg014-000";
         public static final String STARTING_DATE_ENTERED_IS_WRONG = "e50/01/g036-000";
+        public static final String NO_ACCESS_TO_ONLINE_BANKING = "e50/01/g350-220";
     }
 
     public enum EndUserMessage implements LocalizableEnum {

@@ -61,6 +61,7 @@ public class IngCardReaderAuthenticator {
         checkForUserInputError(initEnrollHttpResponse);
 
         InitEnrollResponse initEnrollResponse = initEnrollHttpResponse.getBody(InitEnrollResponse.class);
+        validateResponseHeader(initEnrollResponse.getMobileResponse());
         InitEnrollResponseEntity initEnrollResponseEntity = initEnrollResponse.getMobileResponse();
         this.ingHelper.addRequestUrls(initEnrollResponseEntity.getRequests());
 
@@ -118,10 +119,30 @@ public class IngCardReaderAuthenticator {
                 this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
                 this.cryptoInitValues.getDeviceId());
 
-        if (!IngConstants.ReturnCodes.OK.equalsIgnoreCase(loginResponseEntity.getReturnCode())) {
+        validateResponseHeader(loginResponseEntity);
+        this.ingHelper.persist(loginResponseEntity);
+    }
+
+    private void validateResponseHeader(BaseMobileResponseEntity responseEntity) throws LoginException {
+        if (IngConstants.ReturnCodes.NOK.equalsIgnoreCase(responseEntity.getReturnCode())) {
+            String errorCode = responseEntity.getErrorCode().orElse("No error code");
+            if (IngConstants.ErrorCodes.NO_ACCESS_TO_ONLINE_BANKING.equalsIgnoreCase(
+                    errorCode)) {
+                throw LoginError.REGISTER_DEVICE_ERROR.exception();
+            }
+            String errormsg =
+                    String.format(
+                            "%s%s%s%s",
+                            "Error during autoAuth! Code: ",
+                            errorCode,
+                            " Message: ",
+                            responseEntity.getErrorText().get());
+            LOGGER.errorExtraLong(
+                    errormsg,
+                    IngConstants.Logs.UNKNOWN_ERROR_CODE,
+                    new IllegalStateException("Error during autoAuth!"));
             throw LoginError.CREDENTIALS_VERIFICATION_ERROR.exception();
         }
-        this.ingHelper.persist(loginResponseEntity);
     }
 
     private void calcAndPersistAuthValues(String ingId, InitEnrollResponseEntity initEnrollResponseEntity) {
