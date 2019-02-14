@@ -18,7 +18,6 @@ java_library(
 
 java_binary(
     name = "aggregation",
-    srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data",
         "//etc:development_aggregation_server",
@@ -27,16 +26,8 @@ java_binary(
     main_class = "se.tink.backend.aggregation.AggregationServiceContainer",
     visibility = ["//visibility:public"],
     runtime_deps = [
+        "//src/aggregation/service",
         "//third_party:mysql_mysql_connector_java",
-    ],
-    deps = [
-        "//src/aggregation/lib",
-        "//src/libraries/draining",
-        "//src/libraries/dropwizard_utils",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:com_netflix_governator",
-        "//third_party:io_dropwizard_dropwizard_core",
     ],
 )
 
