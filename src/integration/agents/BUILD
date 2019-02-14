@@ -44,6 +44,7 @@ java_library(
         "//third_party:com_google_inject_guice",
         "//third_party:com_google_instrumentation_instrumentation_api",
         "//third_party:com_nimbusds_srp6a",
+        "//third_party:com_sun_jersey_contribs_jersey_apache_client4",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:commons_httpclient_commons_httpclient",
         "//third_party:de_jollyday_jollyday",
@@ -71,8 +72,6 @@ java_library(
         "//third_party:org_seleniumhq_selenium_selenium_htmlunit_driver",
         "//third_party:org_seleniumhq_selenium_selenium_remote_driver",
         "//third_party:org_slf4j_slf4j_api",
-        "@com_google_inject_guice//jar",
-        "@com_sun_jersey_contribs_jersey_apache_client4//jar",
     ],
 )
 
@@ -130,6 +129,7 @@ junit_test(
         "//third_party:com_fasterxml_jackson_datatype_jackson_datatype_joda",
         "//third_party:com_github_rholder_guava_retrying",
         "//third_party:com_github_tomakehurst_wiremock",
+        "//third_party:com_google_http_client_google_http_client",
         "//third_party:com_maxmind_geoip2_geoip2",
         "//third_party:com_sun_jersey_jersey_client",
         "//third_party:de_jollyday_jollyday",
@@ -147,10 +147,5 @@ junit_test(
         "//third_party:org_seleniumhq_selenium_selenium_firefox_driver",
         "//third_party:org_slf4j_slf4j_api",
         "//third_party:pl_pragmatists_junitparams",
-        "@com_github_rholder_guava_retrying//jar",
-        "@com_github_tomakehurst_wiremock//jar",
-        "@com_google_http_client_google_http_client//jar",
-        "@com_sun_jersey_jersey_client//jar",
-        "@org_jsoup_jsoup//jar",
     ],
 )
