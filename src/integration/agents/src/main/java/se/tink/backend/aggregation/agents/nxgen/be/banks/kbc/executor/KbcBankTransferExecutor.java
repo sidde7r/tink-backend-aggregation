@@ -197,17 +197,17 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
 
     private String signingChallengeAndValidationManual(String signTypeId, String signTypeSigningId)
             throws AuthenticationException {
-        String finalSigningId = signTypeSigningId;
 
         SigningChallengeUcrResponse signingChallengeUcrResponse =
                 apiClient.signingChallengeUcr(signTypeId, signTypeSigningId);
         String challenge = signingChallengeUcrResponse.getChallenge().getValue();
 
-        String response = supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
+        String response = supplementalInformationHelper
+                .waitForSignForTransferChallengeResponse(challenge, signTypeSigningId);
         String panNr = credentials.getField(Field.Key.USERNAME);
         apiClient.signingValidationUcr(response, panNr, signTypeSigningId);
 
-        return finalSigningId;
+        return signTypeSigningId;
     }
 
     private String calculateSignatureOtp(List<String> dataFields) {
