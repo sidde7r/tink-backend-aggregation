@@ -5,7 +5,6 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/aggregation/api",
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/models",
@@ -100,9 +99,6 @@ junit_test(
         "//third_party:org_objenesis_objenesis",
     ],
     deps = [
-        "//src/aggregation/api",
-        "//src/aggregation/lib",
-        "//src/aggregationcontroller_api",
         "//src/integration/agents",
         "//src/integration/api",
         "//src/integration/lib",
