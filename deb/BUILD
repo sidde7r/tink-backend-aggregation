@@ -56,14 +56,14 @@ pkg_tar(
 
 pkg_tar(
     name = "aggregation_bin_tar",
-    srcs = ["//src/aggregation/service:renamed_aggregation_deploy"],
+    srcs = ["//src/aggregation/service:bin_deploy"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
 )
 
 pkg_tar(
     name = "provider_configuration_bin_tar",
-    srcs = ["//src/provider_configuration/service:renamed_provider_configuration_deploy"],
+    srcs = ["//src/provider_configuration/service:bin_deploy"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-provider-configuration",
 )

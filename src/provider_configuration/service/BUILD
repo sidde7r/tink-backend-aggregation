@@ -22,7 +22,7 @@ java_library(
 )
 
 java_binary(
-    name = "provider_configuration",
+    name = "bin",
     data = [
         "//data",
         "//etc:development_minikube_provider_configuration_server",
@@ -37,10 +37,10 @@ java_binary(
 )
 
 genrule(
-    name = "renamed_provider_configuration_deploy",
+    name = "bin_deploy",
     # Implicitly built, see: https://docs.bazel.build/versions/master/be/java.html#java_binary_implicit_outputs
-    srcs = [":provider_configuration_deploy.jar"],
+    srcs = [":bin_deploy.jar"],
     outs = ["provider_configuration_service.jar"],
-    cmd = "cp $(location :provider_configuration_deploy.jar) \"$(@)\"",
+    cmd = "cp $(location :bin_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )

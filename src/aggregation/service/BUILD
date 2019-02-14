@@ -17,7 +17,7 @@ java_library(
 )
 
 java_binary(
-    name = "aggregation",
+    name = "bin",
     data = [
         "//data",
         "//etc:development_aggregation_server",
@@ -32,10 +32,10 @@ java_binary(
 )
 
 genrule(
-    name = "renamed_aggregation_deploy",
+    name = "bin_deploy",
     # Implicitly built, see: https://docs.bazel.build/versions/master/be/java.html#java_binary_implicit_outputs
-    srcs = [":aggregation_deploy.jar"],
+    srcs = [":bin_deploy.jar"],
     outs = ["aggregation_service.jar"],
-    cmd = "cp $(location :aggregation_deploy.jar) \"$(@)\"",
+    cmd = "cp $(location :bin_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )

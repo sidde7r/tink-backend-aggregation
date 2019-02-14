@@ -2,12 +2,12 @@ package(default_visibility = ["//visibility:public"])
 
 alias(
     name = "aggregation",
-    actual = "//src/aggregation/service:aggregation",
+    actual = "//src/aggregation/service:bin",
 )
 
 alias(
     name = "provider_configuration",
-    actual = "//src/provider_configuration/service:provider_configuration",
+    actual = "//src/provider_configuration/service:bin",
 )
 
 alias(
