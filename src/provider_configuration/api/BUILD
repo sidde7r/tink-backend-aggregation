@@ -7,8 +7,6 @@ java_library(
         "//src/libraries/credentials:enums",
         "//src/libraries/field:rpc",
         "//src/libraries/http:http_annotations",
-        "//src/libraries/http_client",
-        "//src/libraries/jersey_utils",
         "//src/libraries/provider:enums",
         "//src/libraries/provider:rpc",
         "//src/libraries/serialization",
