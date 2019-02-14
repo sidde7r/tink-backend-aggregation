@@ -23,7 +23,6 @@ java_library(
 
 java_binary(
     name = "provider_configuration",
-    srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data",
         "//etc:development_minikube_provider_configuration_server",
@@ -32,21 +31,8 @@ java_binary(
     main_class = "se.tink.backend.aggregation.provider.ProviderConfigurationServiceContainer",
     visibility = ["//visibility:public"],
     runtime_deps = [
+        "//src/provider_configuration/service",
         "//third_party:mysql_mysql_connector_java",
-    ],
-    deps = [
-        "//src/libraries/cli_print_utils",
-        "//src/libraries/dropwizard_utils",
-        "//src/libraries/field:rpc",
-        "//src/libraries/provider:enums",
-        "//src/libraries/repository",
-        "//src/libraries/serialization",
-        "//src/provider_configuration/lib",
-        "//third_party:com_google_guava_guava",
-        "//third_party:com_google_inject_guice",
-        "//third_party:io_dropwizard_dropwizard_core",
-        "//third_party:org_springframework_data_spring_data_jpa",
-        "//third_party:org_springframework_spring_expression",
     ],
 )
 
