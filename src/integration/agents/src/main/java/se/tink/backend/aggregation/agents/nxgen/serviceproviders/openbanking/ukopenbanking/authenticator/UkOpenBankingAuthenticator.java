@@ -38,7 +38,6 @@ public class UkOpenBankingAuthenticator implements OpenIdAuthenticator {
                         .withWellknownConfiguration(wellKnownConfiguration)
                         .withIntentId(intentId)
                         .build()
-        )
-                .queryParam("authondevice","YES");
+        );
     }
 }
