@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
 
     private final Provider tinkProvider;
-    private UkOpenBankingApiClient apiClient;
+    protected UkOpenBankingApiClient apiClient;
 
     protected SoftwareStatement softwareStatement;
     protected ProviderConfiguration providerConfiguration;
@@ -115,7 +115,12 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         UkOpenBankingAuthenticator authenticator = new UkOpenBankingAuthenticator(apiClient);
-        return OpenIdAuthenticationFlow.create(
+        return createOpenIdFlowWithAuthenticator(authenticator);
+    }
+
+    protected final Authenticator createOpenIdFlowWithAuthenticator(
+            UkOpenBankingAuthenticator authenticator) {
+         return OpenIdAuthenticationFlow.create(
                 request,
                 context,
                 persistentStorage,
