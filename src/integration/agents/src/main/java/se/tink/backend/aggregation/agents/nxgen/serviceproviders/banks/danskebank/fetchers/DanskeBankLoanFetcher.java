@@ -38,7 +38,7 @@ public class DanskeBankLoanFetcher implements AccountFetcher<LoanAccount> {
 
         // just to not mess with the entire refresh, until we can verify
         // this actually works, return empty if exception
-        // remove try/catch once we see it works
+        // TODO: remove try/catch once we see it works
         try {
             // this is only mortgages (real estate)
             ListLoansResponse loansResponse = apiClient.listLoans(ListLoansRequest.createFromLanguageCode(languageCode));
