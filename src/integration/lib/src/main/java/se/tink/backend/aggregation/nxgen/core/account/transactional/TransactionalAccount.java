@@ -37,8 +37,9 @@ public abstract class TransactionalAccount extends Account {
             case SAVINGS:
                 return SavingsAccount.builder(uniqueIdentifier);
             case CHECKING:
-            case OTHER:
                 return CheckingAccount.builder(uniqueIdentifier);
+            case OTHER:
+                return OtherAccount.builder(uniqueIdentifier);
             default:
                 throw new IllegalStateException(
                         String.format("Unknown TransactionalAccount type (%s)", type));

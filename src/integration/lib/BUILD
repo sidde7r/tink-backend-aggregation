@@ -34,6 +34,7 @@ java_library(
         "//src/libraries/metrics",
         "//src/libraries/net",
         "//src/libraries/pair",
+        "//src/libraries/queue_sqs",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
         "//src/libraries/strings",
