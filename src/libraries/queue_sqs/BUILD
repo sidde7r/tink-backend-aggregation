@@ -5,7 +5,6 @@ java_library(
     visibility = ["//visibility:public"],
     deps = [
         "//src/libraries/metrics",
-        "//src/libraries/net",
         "//src/libraries/queue_lib",
         "//third_party:com_amazonaws_aws_java_sdk_sqs",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",

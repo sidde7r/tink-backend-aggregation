@@ -5,8 +5,8 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
-        "//src/libraries/date",
         "//src/libraries/credentials:demo",
+        "//src/libraries/date",
         "//third_party:com_google_guava_guava",
         "//third_party:commons_codec_commons_codec",
         "//third_party:org_apache_commons_commons_lang3",

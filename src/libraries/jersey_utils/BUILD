@@ -24,7 +24,6 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     deps = [
         "//src/libraries/jersey_utils",
-        "//src/libraries/net",
         "//third_party:com_github_tomakehurst_wiremock",
         "//third_party:com_google_guava_guava",
         "//third_party:com_sun_jersey_jersey_client",
