@@ -5,18 +5,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.Set;
 import se.tink.libraries.field.rpc.Field;
-import se.tink.libraries.provider.rpc.Provider;
 import se.tink.libraries.credentials.enums.CredentialsStatus;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -235,29 +230,6 @@ public class Credentials implements Cloneable {
 
     public Date getDebugUntil() {
         return debugUntil;
-    }
-
-    public void onlySensitiveInformation(Provider provider) {
-        setFields(separateFields(provider, true));
-    }
-
-    private Map<String, String> separateFields(Provider provider, boolean masked) {
-        Map<String, String> fields = Maps.newHashMap();
-
-        Set<Entry<String, String>> credentialsFields = getFields().entrySet();
-        List<Field> providerFields = provider.getFields();
-
-        for (final Entry<String, String> fieldEntry : credentialsFields) {
-            Field field = providerFields.stream().filter(f -> Objects.equal(fieldEntry.getKey(), f.getName()))
-                    .findFirst().orElse(null);
-
-            if (field != null && field.isMasked() == masked) {
-                // Fields exists and has same config of masked as asked for
-                fields.put(fieldEntry.getKey(), fieldEntry.getValue());
-            }
-        }
-
-        return fields;
     }
 
     // @Deprecated
