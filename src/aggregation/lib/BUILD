@@ -14,6 +14,7 @@ java_library(
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
     deps = [
+        "//po:i18n",
         "//src/aggregation/api",
         "//src/aggregationcontroller_api",
         "//src/integration/agents",
