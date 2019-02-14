@@ -36,4 +36,8 @@ public class BankIdBodyEntity {
     public boolean isTimeOut() {
         return IcaBankenConstants.BankIdStatus.TIMEOUT.equalsIgnoreCase(status);
     }
+
+    public boolean isFailed() {
+        return IcaBankenConstants.BankIdStatus.FAILED.equalsIgnoreCase(status);
+    }
 }

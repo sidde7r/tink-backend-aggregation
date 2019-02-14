@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
@@ -29,6 +30,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
     private final IcabankenPersistentStorage icabankenPersistentStorage;
 
     private String autostarttoken;
+    private int pollCounter = 0;
 
     public IcaBankenBankIdAuthenticator(IcaBankenApiClient apiClient, IcaBankenSessionStorage icaBankenSessionStorage,
             IcabankenPersistentStorage icabankenPersistentStorage) {
@@ -73,6 +75,7 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             persistUserInstallationIdIfMissing(sessionBodyEntity);
         }
 
+        pollCounter++;
         return bankIdStatus;
     }
 
@@ -101,11 +104,12 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
             throws AuthenticationException, AuthorizationException {
 
         BankIdResponse bankIdResponse = response.getBody(BankIdResponse.class);
+
         BankIdBodyEntity bankIdBodyEntity = bankIdResponse.getBody();
+        ResponseStatusEntity responseStatus = bankIdResponse.getResponseStatus();
 
         // If body is empty we look for error cause in the response status
         if (bankIdBodyEntity.getStatus() == null) {
-            ResponseStatusEntity responseStatus = bankIdResponse.getResponseStatus();
 
             if (responseStatus.isNotACustomer()) {
                 throw LoginError.NOT_CUSTOMER.exception();
@@ -122,6 +126,14 @@ public class IcaBankenBankIdAuthenticator implements BankIdAuthenticator<String>
 
         if (bankIdBodyEntity.isTimeOut()) {
             throw BankIdError.TIMEOUT.exception();
+        }
+
+        // We sometimes see these temporary errors from Icabanken that we have deemed to be on their side
+        // as users that have gotten this error have manged to update at a later time. Setting a condition
+        // that we have managed to poll at least once before getting the error. Getting errors on first poll
+        // may indicate that something's wrong on our side.
+        if (bankIdBodyEntity.isFailed() && responseStatus.isSomethingWentWrong() && pollCounter > 0) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 

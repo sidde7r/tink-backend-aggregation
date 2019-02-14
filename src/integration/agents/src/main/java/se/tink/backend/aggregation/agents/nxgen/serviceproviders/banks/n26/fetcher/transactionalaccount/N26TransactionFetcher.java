@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.fetcher.transactionalaccount;
 
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26ApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.n26.N26Constants;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -21,7 +22,12 @@ public class N26TransactionFetcher implements TransactionKeyPaginator<Transactio
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(TransactionalAccount account, String key) {
         try {
-            return n26ApiClient.fetchTransactions(key);
+            String spaceId = account.getFromTemporaryStorage(N26Constants.SPACE_ID);
+            if (Strings.isNullOrEmpty(spaceId)) {
+                return n26ApiClient.fetchTransactions(key);
+            } else {
+                return n26ApiClient.fetchSpaceTransactions(spaceId, key);
+            }
         } catch (HttpClientException hce) {
             // N26 times out if you paginate too far back. Stop paginating if it does
             LOGGER.warnExtraLong("N26 Transaction Pagination error:", N26Constants.Logging.TRANSACTION_PAGINATION_ERROR,

@@ -16,6 +16,19 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import org.apache.commons.lang3.StringEscapeUtils;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -106,11 +119,6 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
@@ -120,6 +128,7 @@ import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatt
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
@@ -133,20 +142,6 @@ import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class ICABankenAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
@@ -1502,36 +1497,31 @@ public class ICABankenAgent extends AbstractAgent
                         response.getEntity(CollectBankIdResponse.class);
 
                 if (response.getStatus() == 409) {
+                    CollectBankIdResponseBody responseBody = bankIdResponse.getBody();
+                    String serverMessage = bankIdResponse.getResponseStatus().getServerMessage().toLowerCase();
+                    String clientMessage = bankIdResponse.getResponseStatus().getClientMessage().toLowerCase();
 
-                    if (bankIdResponse.getBody().isTimeOut()) {
+                    if (responseBody.isTimeOut()) {
                         throw BankIdError.TIMEOUT.exception();
                     }
 
-                    if (bankIdResponse.getBody().isFailure()) {
+                    if (responseBody.isFailure()) {
                         throw BankIdError.CANCELLED.exception();
                     }
 
-                    if (bankIdResponse
-                            .getResponseStatus()
-                            .getServerMessage()
-                            .toLowerCase()
-                            .contains("no active accounts")) {
+                    if (serverMessage.contains("signing not found")) {
+                        throw BankIdError.INTERRUPTED.exception();
+                    }
+
+                    if (serverMessage.contains("no active accounts")) {
                         throw LoginError.NOT_CUSTOMER.exception();
                     }
 
-                    if (bankIdResponse
-                            .getResponseStatus()
-                            .getClientMessage()
-                            .toLowerCase()
-                            .contains("fel personnummer eller lösenord")) {
+                    if (clientMessage.contains("fel personnummer eller lösenord")) {
                         throw LoginError.INCORRECT_CREDENTIALS.exception();
                     }
 
-                    if (bankIdResponse
-                            .getResponseStatus()
-                            .getClientMessage()
-                            .toLowerCase()
-                            .contains("konto har ännu inte blivit verifierat")) {
+                    if (clientMessage.contains("konto har ännu inte blivit verifierat")) {
                         throw AuthorizationError.ACCOUNT_BLOCKED.exception();
                     }
                 }

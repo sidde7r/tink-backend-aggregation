@@ -9,6 +9,7 @@ public class N26Constants {
     public static final String AUTHENTICATION_ERROR = "invalid_grant";
     public static final String CURRENCY_EUR = "EUR";
     public static final int ONETHOUSAND = 1000;
+    public static final String SPACE_ID = "spaceId";
 
     public static class URLS {
         public static final String HOST = "https://api.tech26.de";
@@ -16,6 +17,9 @@ public class N26Constants {
         public static final String ACCOUNT = "/api/accounts";
         public static final String TRANSACTION =  "/api/smrt/transactions";
         public static final String SAVINGS = "/api/hub/savings/accounts";
+        public static final String FIXED_SAVINGS = "/api/hub/savings/fixedterms/accounts";
+        public static final String SPACES_TRANSACTIONS = "/api/spaces/{spaceId}/transactions";
+        public static final String SPACES_SAVINGS = "/api/spaces";
         public static final String LOGOUT = "/api/me/logout";
     }
 
@@ -27,7 +31,10 @@ public class N26Constants {
         public static final String FULL = "full";
         public static final String LASTID = "lastId";
         public static final String LIMIT = "limit";
-        public static final String LIMIT_DEFAULT = "20";
+        public static final String TRANSACTION_LIMIT_DEFAULT = "20";
+        public static final String SPACE_TRANSACTIONS_SIZE = "size";
+        public static final String SPACE_LIMIT_DEFAULT = "20";
+        public static final String SPACE_BEFOREID = "beforeId";
     }
     
     public static class Body {
