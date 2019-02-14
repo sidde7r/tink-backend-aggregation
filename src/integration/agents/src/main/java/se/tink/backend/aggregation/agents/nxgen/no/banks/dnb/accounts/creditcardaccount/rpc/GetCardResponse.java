@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.accounts.creditcardaccount.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.no.banks.dnb.DnbConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
@@ -144,11 +146,27 @@ public class GetCardResponse {
         return creditCard;
     }
 
-    public CreditCardAccount toTinkCard() {
-        return CreditCardAccount.builder(StringUtils.hashAsStringSHA1(cardNumber), Amount.inNOK(-balanceAmount),
+    public CreditCardAccount toTinkCard(String cardId) {
+        return CreditCardAccount.builder(StringUtils.hashAsStringSHA1(cardNumber), getCardBalance(),
                 Amount.inNOK(availableAmount))
                 .setAccountNumber(cardNumber.replaceAll(" ", ""))
                 .setName(productName)
+                .setBankIdentifier(cardId)
+                .putInTemporaryStorage(DnbConstants.CreditCard.TRANSACTION_TYPE, getTransactionType())
                 .build();
+    }
+
+    @JsonIgnore
+    private Amount getCardBalance() {
+        if (mainCard) {
+            return Amount.inNOK(-balanceAmount);
+        } else {
+            return Amount.inNOK(0.0);
+        }
+    }
+
+    @JsonIgnore
+    private String getTransactionType() {
+        return mainCard ? DnbConstants.CreditCard.MAINHOLDER : DnbConstants.CreditCard.COHOLDER;
     }
 }

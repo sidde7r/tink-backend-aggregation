@@ -178,17 +178,7 @@ public class DnbApiClient {
 
     public FetchCreditCardTransactionsResponse fetchCreditCardTransactions(Account account) {
 
-        if (this.cards == null) {
-            throw new IllegalStateException("No credit card fetched");
-        }
-
-        // NOTE: There is a bug from dnb, card number from the response of "list cards" will always masked to 16 digits,
-        // e.g. For AMex card, it will be masked to **** **** ***n nnnn. When getCard detail, card number is masked correctly as
-        // **** **** **n nnnn for AMex. In order to match the card number, it is not enough to trim the spaces, but also the '*'s
-        String cardId = this.cards.stream()
-                .filter(c -> Objects.equal(c.getCardNumber().replaceAll("[^0-9]", ""),
-                        account.getAccountNumber().replaceAll("[^0-9]", "")))
-                .findFirst().get().getCardid();
+        String cardId = account.getApiIdentifier();
 
         if (cardId == null) {
             throw new IllegalStateException("No matching card Id found");
