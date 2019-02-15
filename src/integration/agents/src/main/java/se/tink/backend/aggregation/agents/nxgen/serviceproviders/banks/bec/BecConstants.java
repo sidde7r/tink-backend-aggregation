@@ -65,7 +65,7 @@ public final class BecConstants {
     static final class Meta {
 
         static final String APP_TYPE = "mb0";
-        static final String APP_VERSION = "3.0.6-17";
+        static final String APP_VERSION = "5.1.0";
         static final String LOCALE = "en-GB";
         static final String OS_VERSION = "Android 6.0";
         static final String DEVICE_TYPE = "HTC / HTC One_M8 / MRA58K release-keys / htc_europe / htc_m8 / htc / htc/htc_europe/htc_m8:6.0/MRA58K/662736.4:user/release-keys / htc_m8 / qcom";
