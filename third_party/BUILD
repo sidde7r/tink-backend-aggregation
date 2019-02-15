@@ -894,22 +894,6 @@ java_library(
 )
 
 java_library(
-    name = "org_antlr_antlr4_runtime",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_antlr_antlr4_runtime//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_commons_commons_collections4",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_commons_commons_collections4//jar",
-    ],
-)
-
-java_library(
     name = "org_apache_commons_commons_csv",
     visibility = ["//visibility:public"],
     exports = [
@@ -918,26 +902,10 @@ java_library(
 )
 
 java_library(
-    name = "org_apache_commons_commons_exec",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_commons_commons_exec//jar",
-    ],
-)
-
-java_library(
     name = "org_apache_commons_commons_lang3",
     visibility = ["//visibility:public"],
     exports = [
         "@org_apache_commons_commons_lang3//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_commons_commons_math",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_commons_commons_math//jar",
     ],
 )
 
@@ -1092,27 +1060,7 @@ java_library(
     ],
 )
 
-java_library(
-    name = "org_apache_httpcomponents_httpmime",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_httpcomponents_httpcore//jar",
-        "@org_apache_httpcomponents_httpmime//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_kafka_kafka_clients",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_jpountz_lz4_lz4//jar",
-        "@org_apache_kafka_kafka_clients//jar",
-        "@org_slf4j_slf4j_api//jar",
-        "@org_xerial_snappy_snappy_java//jar",
-    ],
-)
-
-java_library(
+java_library( # is this used?
     name = "org_apache_kafka_kafka_streams",
     visibility = ["//visibility:public"],
     exports = [
@@ -1127,25 +1075,7 @@ java_library(
     ],
 )
 
-java_library(
-    name = "org_apache_lucene_lucene_analyzers_common",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_analyzers_common//jar",
-        "@org_apache_lucene_lucene_core//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_codecs",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_codecs//jar",
-        "@org_apache_lucene_lucene_core//jar",
-    ],
-)
-
-java_library(
+java_library( # TODO: check is this used?
     name = "org_apache_lucene_lucene_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -1153,116 +1083,7 @@ java_library(
     ],
 )
 
-java_library(
-    name = "org_apache_lucene_lucene_grouping",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_grouping//jar",
-        "@org_apache_lucene_lucene_queries//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_highlighter",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_highlighter//jar",
-        "@org_apache_lucene_lucene_memory//jar",
-        "@org_apache_lucene_lucene_queries//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_join",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_grouping//jar",
-        "@org_apache_lucene_lucene_join//jar",
-        "@org_apache_lucene_lucene_queries//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_memory",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_memory//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_misc",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_misc//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_queries",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_queries//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_queryparser",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_queries//jar",
-        "@org_apache_lucene_lucene_queryparser//jar",
-        "@org_apache_lucene_lucene_sandbox//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_sandbox",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_sandbox//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_spatial",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_spatial4j_spatial4j//jar",
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_queries//jar",
-        "@org_apache_lucene_lucene_spatial//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_lucene_lucene_suggest",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_lucene_lucene_analyzers_common//jar",
-        "@org_apache_lucene_lucene_core//jar",
-        "@org_apache_lucene_lucene_misc//jar",
-        "@org_apache_lucene_lucene_suggest//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_mahout_commons_commons_cli",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_mahout_commons_commons_cli//jar",
-    ],
-)
-
-java_library(
+java_library( # TODO: check is this used?
     name = "org_apache_mahout_mahout_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -1279,45 +1100,6 @@ java_library(
         "@org_slf4j_slf4j_api//jar",
         "@xmlpull_xmlpull//jar",
         "@xpp3_xpp3_min//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_mahout_mahout_math",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_guava_guava//jar",
-        "@org_apache_commons_commons_math3//jar",
-        "@org_apache_mahout_mahout_math//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_maven_maven_artifact",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_maven_maven_artifact//jar",
-        "@org_codehaus_plexus_plexus_utils//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_santuario_xmlsec",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@commons_logging_commons_logging//jar",
-        "@org_apache_santuario_xmlsec//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_thrift_libthrift",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_httpcomponents_httpclient//jar",
-        "@org_apache_httpcomponents_httpcore//jar",
-        "@org_apache_thrift_libthrift//jar",
-        "@org_slf4j_slf4j_api//jar",
     ],
 )
 
@@ -1340,43 +1122,6 @@ java_library(
         "@org_apache_xmlgraphics_batik_util//jar",
         "@xml_apis_xml_apis//jar",
         "@xml_apis_xml_apis_ext//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_xmlgraphics_batik_ext",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_xmlgraphics_batik_ext//jar",
-        "@xml_apis_xml_apis//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_xmlgraphics_batik_util",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_apache_xmlgraphics_batik_util//jar",
-    ],
-)
-
-java_library(
-    name = "org_apache_zookeeper_zookeeper",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":io_netty_netty_all",
-        "@jline_jline//jar",
-        "@log4j_log4j//jar",
-        "@org_apache_zookeeper_zookeeper//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "org_aspectj_aspectjrt",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_aspectj_aspectjrt//jar",
     ],
 )
 
@@ -2278,21 +2023,6 @@ java_library(
     name = "org_reflections_reflections",
     visibility = ["//visibility:public"],
     exports = ["@org_reflections_reflections//jar"],
-)
-
-java_library(
-    name = "org_apache_avro_avro",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_thoughtworks_paranamer_paranamer//jar",
-        "@org_apache_avro_avro//jar",
-        "@org_apache_commons_commons_compress//jar",
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
-        "@org_slf4j_slf4j_api//jar",
-        "@org_tukaani_xz//jar",
-        "@org_xerial_snappy_snappy_java//jar",
-    ],
 )
 
 java_library(
