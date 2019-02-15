@@ -1,4 +1,0 @@
-test --test_output=errors
-build --javacopt="-source 8"
-build --javacopt="-target 8"
-run --jvmopt=-Djava.net.preferIPv4Stack=true

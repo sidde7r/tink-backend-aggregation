@@ -13,6 +13,9 @@ java_library(
         "//tools:phantomjs_mac",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//src/libraries/queue_sqs",
+    ],
     deps = [
         "//src/integration/api",
         "//src/integration/models",
@@ -34,7 +37,6 @@ java_library(
         "//src/libraries/metrics",
         "//src/libraries/net",
         "//src/libraries/pair",
-        "//src/libraries/queue_sqs",
         "//src/libraries/serialization",
         "//src/libraries/signableoperation:enums",
         "//src/libraries/strings",

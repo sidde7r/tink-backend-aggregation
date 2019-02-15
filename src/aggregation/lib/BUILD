@@ -13,8 +13,10 @@ java_library(
     ],
     resources = glob(["src/main/resources/**"]),
     visibility = ["//visibility:public"],
-    deps = [
+    runtime_deps = [
         "//po:i18n",
+    ],
+    deps = [
         "//src/aggregation/api",
         "//src/aggregationcontroller_api",
         "//src/integration/agents",
