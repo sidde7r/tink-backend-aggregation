@@ -69,13 +69,6 @@ public class OpBankAccountEntityTest {
         assertEquals(AccountTypes.SAVINGS, account.toTransactionalAccount().getType());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void ensureTransactionalAccounts_cantBeOfTypePension() {
-        account.setBankingServiceTypeCode("711037");
-
-        assertEquals(AccountTypes.PENSION, account.toTransactionalAccount().getType());
-    }
-
     @Test
     public void getAccountTypeOther() {
         account.setBankingServiceTypeCode("710011");
@@ -85,9 +78,6 @@ public class OpBankAccountEntityTest {
         assertEquals(AccountTypes.OTHER, account.toTransactionalAccount().getType());
 
         account.setBankingServiceTypeCode("710013");
-        assertEquals(AccountTypes.OTHER, account.toTransactionalAccount().getType());
-
-        account.setBankingServiceTypeCode("712050");
         assertEquals(AccountTypes.OTHER, account.toTransactionalAccount().getType());
 
         account.setBankingServiceTypeCode("110001");

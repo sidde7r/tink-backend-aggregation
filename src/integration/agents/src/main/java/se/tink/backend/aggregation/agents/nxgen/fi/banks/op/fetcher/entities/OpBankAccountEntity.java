@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.List;
@@ -9,8 +10,10 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -65,6 +68,12 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
      * Currently there are no identifiers set for the tink account.
      * This is because we have temporarily decided to not use identifiers for non-swedish bank-agents.
      */
+    @JsonIgnore
+    public boolean isTransactionalAccount() {
+        return OpBankConstants.AccountType.ACCOUNT.equalsIgnoreCase(type);
+    }
+
+    @JsonIgnore
     public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(getTinkAccountType(), accountNumber, Amount.inEUR(balance))
                 .setAccountNumber(accountNumber)
@@ -73,11 +82,13 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
                 .build();
     }
 
+    @JsonIgnore
     public AccountTypes getTinkAccountType() {
-        return Optional.ofNullable(OpBankConstants.TypeCode.ACCOUNT_TYPES_BY_TYPE_CODE.get(bankingServiceTypeCode))
+        return OpBankConstants.ACCOUNT_TYPE_MAPPER.translate(bankingServiceTypeCode)
                 .orElse(AccountTypes.OTHER);
     }
 
+    @JsonIgnore
     private String getAccountName() {
 
         if (!Strings.isNullOrEmpty(accountNameGivenByUser)) {

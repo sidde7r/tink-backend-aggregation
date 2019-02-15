@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class OpBankConstants {
 
@@ -150,46 +150,6 @@ public class OpBankConstants {
         public static final String TYPE_VALUE = "all";
     }
 
-    public static class TypeCode {
-        public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_BY_TYPE_CODE =
-                ImmutableMap.<String, AccountTypes>builder()
-                        .put("710001", AccountTypes.CHECKING)
-                        .put("710002", AccountTypes.CHECKING)
-
-                        .put("710011", AccountTypes.OTHER)
-                        .put("710012", AccountTypes.OTHER)
-                        .put("710013", AccountTypes.OTHER)
-
-                        // På ett Målkonto sparar du enkelt för kommande behov.
-                        // På ett Målkonto är besparingarna tillgängliga då du behöver dem.
-                        .put("711030", AccountTypes.SAVINGS)
-
-                        .put("711037", AccountTypes.PENSION)
-
-                        // Tillväxtränta är hushållets reservkonto som ger bättre avkastning på
-                        // besparingarna. På ett Tillväxträntekonto är besparingarna tillgängliga
-                        // då du behöver dem.
-                        .put("712035", AccountTypes.SAVINGS)
-
-                        // Gruppränta är ett gruppkonto, där den ränta som betalas på insättningarna
-                        // växer i takt med de totala insättningarna - upp till maximiräntan.
-                        .put("712050", AccountTypes.OTHER)
-
-                        // För ett tidsbundet räntekonto fastställs en förfallodag,
-                        // före vilken medlen på kontot inte får lyftas
-                        .put("712007", AccountTypes.SAVINGS)
-
-                        // På ett fortlöpande räntekonto placerar du pengar utan någon
-                        // fastställd placeringstid
-                        .put("712008", AccountTypes.SAVINGS)
-                        .put("712015", AccountTypes.SAVINGS)
-
-                        .put("110001", AccountTypes.OTHER)
-                        .put("120000", AccountTypes.OTHER)
-                        .put("120001", AccountTypes.OTHER)
-                        .build();
-    }
-
     public static final class Fetcher {
         public static final String COLLATERAL_CREDIT = "WITH_COLLATERAL";
         public static final String CONTINUING_CREDIT = "CONTINUING_CREDIT";
@@ -234,5 +194,31 @@ public class OpBankConstants {
         public static boolean isHandled(String name) {
             return findLoanType(name) != OTHER_LOAN;
         }
+    }
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING,
+                            "710001",
+                            "710002")
+                    .put(AccountTypes.SAVINGS,
+                            "711030",  // Goal savings account
+                            "712035", // Growth interest rate (Tillväxtränta)
+                            "712007", // Time bound interest account
+                            "712008", // Continuous interest account
+                            "712015", // Continuous interest account
+                            "712050", // Group interest account
+                            "711037") // TODO: Pension account, should be parsed as pension account when possible
+                    .put(AccountTypes.OTHER,
+                            "710011",
+                            "710012",
+                            "710013",
+                            "110001",
+                            "120000",
+                            "120001")
+                    .build();
+
+    public static class AccountType {
+        public static final String ACCOUNT = "ACCOUNT";
     }
 }
