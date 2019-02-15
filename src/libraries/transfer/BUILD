@@ -2,7 +2,6 @@ java_library(
     name = "enums",
     srcs = glob(["src/main/**/enums/*.java"]),
     visibility = ["//visibility:public"],
-    deps = ["//src/libraries/account_identifier"],
 )
 
 java_library(
@@ -20,7 +19,7 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_fasterxml_jackson_core_jackson_databind",
         "//third_party:com_google_guava_guava",
-        "//third_party:org_slf4j_slf4j_api"
+        "//third_party:org_slf4j_slf4j_api",
     ],
 )
 
@@ -31,7 +30,6 @@ java_library(
     deps = [
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
-        "//src/libraries/enums",
         "//src/libraries/transfer:enums",
         "//src/libraries/transfer:rpc",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
