@@ -159,18 +159,6 @@ java_library(
 )
 
 java_library(
-    name = "com_github_jknack_handlebars",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_github_jknack_handlebars//jar",
-        "@org_antlr_antlr4_runtime//jar",
-        "@org_apache_commons_commons_lang3//jar",
-        "@org_mozilla_rhino//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
     name = "com_github_rholder_guava_retrying",
     visibility = ["//visibility:public"],
     exports = [
@@ -303,33 +291,6 @@ java_library(
     exports = [
         "@com_google_code_findbugs_jsr305//jar",
         "@com_google_instrumentation_instrumentation_api//jar",
-    ],
-)
-
-java_library(
-    name = "com_google_protobuf_protobuf_java",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_protobuf_protobuf_java//jar",
-    ],
-)
-
-java_library(
-    name = "com_google_protobuf_protobuf_java_util",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_gson_gson//jar",
-        "@com_google_guava_guava//jar",
-        "@com_google_protobuf_protobuf_java//jar",
-        "@com_google_protobuf_protobuf_java_util//jar",
-    ],
-)
-
-java_library(
-    name = "com_googlecode_concurrent_trees_concurrent_trees",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_googlecode_concurrent_trees_concurrent_trees//jar",
     ],
 )
 
