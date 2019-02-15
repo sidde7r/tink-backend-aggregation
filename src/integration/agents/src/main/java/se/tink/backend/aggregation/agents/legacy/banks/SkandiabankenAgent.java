@@ -16,6 +16,23 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -73,25 +90,6 @@ import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
 import se.tink.libraries.strings.StringUtils;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_ACCOUNTS;
 import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRANSACTIONS;
 import static se.tink.libraries.credentials.service.RefreshableItem.CREDITCARD_ACCOUNTS;
@@ -263,11 +261,18 @@ public class SkandiabankenAgent extends AbstractAgent implements
             throw BankIdError.TIMEOUT.exception();
         }
 
+        // This is the response from the app when a user is not a customer. There's nothing else to go on...
+        if (interAppURL.equalsIgnoreCase("/message/")) {
+            throw LoginError.NOT_CUSTOMER.exception();
+        }
+
         if (interAppURL.startsWith("/login/message")) {
             fetchAndLogMessage(interAppURL);
             throw new IllegalStateException(String.format("#login-refactoring - message %s, state %s",
                     collectResponse.getMessage(), collectResponse.getState()));
-        } else if (interAppURL.contains("otpchooser")) {
+        }
+
+        if (interAppURL.contains("otpchooser")) {
             throw AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.CONFIRM_BANKID.getKey());
         }
 
