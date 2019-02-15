@@ -1,32 +1,40 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities;
 
+import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBankTransactionPaginationKey> {
 
-    private String typeCode;
-    private String roleCode;
+    // Account related fields
+    private String type;
     private String accountNumber;
-    private String bic;
+    private String encryptedAccountNumber;
+    private String bankingServiceTypeCode;
+    private String versionNumber;
     private String productName;
-    private String name;
+    private String accountNameGivenByUser;
+    private double amountAvailable;
+    private String ownerName;
+    private boolean mainAccountOfWebServiceAgreement;
     private double balance;
-    private double balanceNoReservations;
-    private Double liquidFunds;
-    private double creditLimit;
+    private double netBalance;
+    private double lineOfCredit;
+    private double blocking;
+    private String roleCode;
+    private String startDateOfAuthorization;
+
+    // Transaction related fields
     private List<OpBankTransactionEntity> transactions;
     private String startDate;
     private boolean hasMore;
@@ -66,44 +74,25 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
     }
 
     public AccountTypes getTinkAccountType() {
-        return Optional.ofNullable(OpBankConstants.TypeCode.ACCOUNT_TYPES_BY_TYPE_CODE.get(typeCode))
+        return Optional.ofNullable(OpBankConstants.TypeCode.ACCOUNT_TYPES_BY_TYPE_CODE.get(bankingServiceTypeCode))
                 .orElse(AccountTypes.OTHER);
     }
 
     private String getAccountName() {
-        if (StringUtils.trimToNull(name) != null) {
-            return name;
-        } else if (StringUtils.trimToNull(productName) != null) {
-            return productName;
-        } else {
-            return accountNumber;
+
+        if (!Strings.isNullOrEmpty(accountNameGivenByUser)) {
+            return accountNameGivenByUser;
         }
-    }
 
-    public boolean isFrom(Account account) {
-        return account != null && accountNumber != null && accountNumber.equals(account.getAccountNumber());
-    }
+        if (!Strings.isNullOrEmpty(productName)) {
+            return productName;
+        }
 
-    public String getTypeCode() {
-        return typeCode;
-    }
-
-    public OpBankAccountEntity setTypeCode(String typeCode) {
-        this.typeCode = typeCode;
-        return this;
-    }
-
-    public String getRoleCode() {
-        return roleCode;
-    }
-
-    public OpBankAccountEntity setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
-        return this;
-    }
-
-    public String getAccountNumber() {
         return accountNumber;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public OpBankAccountEntity setAccountNumber(String accountNumber) {
@@ -111,102 +100,84 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
         return this;
     }
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public String getEncryptedAccountNumber() {
+        return encryptedAccountNumber;
+    }
+
+    public OpBankAccountEntity setBankingServiceTypeCode(String bankingServiceTypeCode) {
+        this.bankingServiceTypeCode = bankingServiceTypeCode;
+        return this;
+    }
+
+    public String getBankingServiceTypeCode() {
+        return bankingServiceTypeCode;
+    }
+
+    public String getVersionNumber() {
+        return versionNumber;
+    }
+
     public String getProductName() {
         return productName;
     }
 
-    public OpBankAccountEntity setProductName(String productName) {
-        this.productName = productName;
-        return this;
+    public String getAccountNameGivenByUser() {
+        return accountNameGivenByUser;
     }
 
-    public String getBic() {
-        return bic;
+    public double getAmountAvailable() {
+        return amountAvailable;
     }
 
-    public OpBankAccountEntity setBic(String bic) {
-        this.bic = bic;
-        return this;
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public boolean isMainAccountOfWebServiceAgreement() {
+        return mainAccountOfWebServiceAgreement;
     }
 
     public double getBalance() {
         return balance;
     }
 
-    public OpBankAccountEntity setBalance(double balance) {
-        this.balance = balance;
-        return this;
+    public double getNetBalance() {
+        return netBalance;
     }
 
-    public double getBalanceNoReservations() {
-        return balanceNoReservations;
+    public double getLineOfCredit() {
+        return lineOfCredit;
     }
 
-    public OpBankAccountEntity setBalanceNoReservations(double balanceNoReservations) {
-        this.balanceNoReservations = balanceNoReservations;
-        return this;
+    public double getBlocking() {
+        return blocking;
     }
 
-    public Double getLiquidFunds() {
-        return liquidFunds;
+    public String getRoleCode() {
+        return roleCode;
     }
 
-    public OpBankAccountEntity setLiquidFunds(Double liquidFunds) {
-        this.liquidFunds = liquidFunds;
-        return this;
-    }
-
-    public double getCreditLimit() {
-        return creditLimit;
-    }
-
-    public OpBankAccountEntity setCreditLimit(double creditLimit) {
-        this.creditLimit = creditLimit;
-        return this;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public OpBankAccountEntity setStartDate(String startDate) {
-        this.startDate = startDate;
-        return this;
+    public String getStartDateOfAuthorization() {
+        return startDateOfAuthorization;
     }
 
     public List<OpBankTransactionEntity> getTransactions() {
         return transactions;
     }
 
-    public OpBankAccountEntity setTransactions(List<OpBankTransactionEntity> transactions) {
-        this.transactions = transactions;
-        return this;
+    public String getStartDate() {
+        return startDate;
     }
 
     public boolean isHasMore() {
         return hasMore;
     }
 
-    public OpBankAccountEntity setHasMore(boolean hasMore) {
-        this.hasMore = hasMore;
-        return this;
-    }
-
     public String getTimestampPrevious() {
         return timestampPrevious;
-    }
-
-    public OpBankAccountEntity setTimestampPrevious(String timestampPrevious) {
-        this.timestampPrevious = timestampPrevious;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public OpBankAccountEntity setName(String name) {
-        this.name = name;
-        return this;
     }
 }
