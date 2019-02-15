@@ -33,7 +33,6 @@ java_library(
     deps = [
         "//src/libraries/credentials:enums",
         "//src/libraries/field:rpc",
-        "//src/libraries/provider:rpc",
         "//src/libraries/serialization",
         "//src/libraries/strings",
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
