@@ -1553,46 +1553,12 @@ java_library(
 )
 
 java_library(
-    name = "org_seleniumhq_selenium_jetty_repacked",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_jetty_repacked//jar",
-    ],
-)
-
-java_library(
-    name = "org_seleniumhq_selenium_selenium_android_driver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@cglib_cglib_nodep//jar",
-        "@com_google_guava_guava//jar",
-        "@net_java_dev_jna_jna//jar",
-        "@net_java_dev_jna_platform//jar",
-        "@org_apache_commons_commons_exec//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
-        "@org_json_json//jar",
-        "@org_seleniumhq_selenium_selenium_android_driver//jar",
-        "@org_seleniumhq_selenium_selenium_api//jar",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
-    ],
-)
-
-java_library(
     name = "org_seleniumhq_selenium_selenium_api",
     visibility = ["//visibility:public"],
     exports = [
         "@com_google_guava_guava//jar",
         "@org_json_json//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
-    ],
-)
-
-java_library(
-    name = "org_seleniumhq_selenium_selenium_chrome_driver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_selenium_chrome_driver//jar",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
     ],
 )
 
@@ -1637,25 +1603,6 @@ java_library(
     ],
 )
 
-java_library(
-    name = "org_seleniumhq_selenium_selenium_ie_driver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_java_dev_jna_jna//jar",
-        "@net_java_dev_jna_platform//jar",
-        "@org_seleniumhq_selenium_selenium_ie_driver//jar",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
-    ],
-)
-
-java_library(
-    name = "org_seleniumhq_selenium_selenium_iphone_driver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_selenium_iphone_driver//jar",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
-    ],
-)
 
 java_library(
     name = "org_seleniumhq_selenium_selenium_java",
@@ -1717,52 +1664,6 @@ java_library(
         "@org_json_json//jar",
         "@org_seleniumhq_selenium_selenium_api//jar",
         "@org_seleniumhq_selenium_selenium_remote_driver//jar",
-    ],
-)
-
-java_library(
-    name = "org_seleniumhq_selenium_selenium_safari_driver",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":io_netty_netty_all",
-        "@org_seleniumhq_selenium_selenium_remote_driver//jar",
-        "@org_seleniumhq_selenium_selenium_safari_driver//jar",
-        "@org_webbitserver_webbit//jar",
-    ],
-)
-
-java_library(
-    name = "org_seleniumhq_selenium_selenium_server",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@commons_codec_commons_codec//jar",
-        "@mx4j_mx4j_tools//jar",
-        "@net_jcip_jcip_annotations//jar",
-        "@org_bouncycastle_bcpkix_jdk15on//jar",
-        "@org_bouncycastle_bcprov_jdk15on//jar",
-        "@org_mortbay_jetty_servlet_api_2_5//jar",
-        "@org_seleniumhq_selenium_jetty_repacked//jar",
-        "@org_seleniumhq_selenium_selenium_java//jar",
-        "@org_seleniumhq_selenium_selenium_server//jar",
-        "@org_yaml_snakeyaml//jar",
-    ],
-)
-
-java_library(
-    name = "org_seleniumhq_selenium_selenium_support",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_seleniumhq_selenium_selenium_api//jar",
-        "@org_seleniumhq_selenium_selenium_support//jar",
-    ],
-)
-
-java_library(
-    name = "org_slf4j_jcl_over_slf4j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_slf4j_jcl_over_slf4j//jar",
-        "@org_slf4j_slf4j_api//jar",
     ],
 )
 
