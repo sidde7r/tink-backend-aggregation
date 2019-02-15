@@ -311,29 +311,10 @@ java_library(
 )
 
 java_library(
-    name = "com_jcraft_jsch",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_jcraft_jsch//jar",
-    ],
-)
-
-java_library(
     name = "com_lambdaworks_scrypt",
     visibility = ["//visibility:public"],
     exports = [
         "@com_lambdaworks_scrypt//jar",
-    ],
-)
-
-java_library(
-    name = "com_mandrillapp_wrapper_lutung_lutung",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_gson_gson//jar",
-        "@com_mandrillapp_wrapper_lutung_lutung//jar",
-        "@commons_logging_commons_logging//jar",
-        "@org_apache_httpcomponents_httpclient//jar",
     ],
 )
 
@@ -346,7 +327,7 @@ java_library(
     ],
 )
 
-java_library(
+java_library( # is it used??
     name = "com_maxmind_geoip2_geoip2",
     visibility = ["//visibility:public"],
     exports = [
@@ -356,54 +337,6 @@ java_library(
         "@com_maxmind_db_maxmind_db//jar",
         "@com_maxmind_geoip2_geoip2//jar",
         "@org_apache_httpcomponents_httpclient//jar",
-    ],
-)
-
-java_library(
-    name = "com_turo_pushy",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_gson_gson//jar",
-        "@com_turo_pushy//jar",
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_dns//jar",
-        "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_codec_http2//jar",
-        "@io_netty_netty_codec_socks//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_handler//jar",
-        "@io_netty_netty_handler_proxy//jar",
-        "@io_netty_netty_resolver//jar",
-        "@io_netty_netty_resolver_dns//jar",
-        "@io_netty_netty_tcnative_boringssl_static//jar",
-        "@io_netty_netty_transport//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "com_restfb_restfb",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_restfb_restfb//jar",
-    ],
-)
-
-java_library(
-    name = "com_spatial4j_spatial4j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_spatial4j_spatial4j//jar",
-    ],
-)
-
-java_library(
-    name = "com_stripe_stripe_java",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_gson_gson//jar",
-        "@com_stripe_stripe_java//jar",
     ],
 )
 
@@ -439,33 +372,6 @@ java_library(
     exports = [
         "@com_sun_jersey_jersey_core//jar",
         "@com_sun_jersey_jersey_server//jar",
-    ],
-)
-
-java_library(
-    name = "com_sun_jersey_jersey_servlet",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_sun_jersey_jersey_server//jar",
-        "@com_sun_jersey_jersey_servlet//jar",
-    ],
-)
-
-java_library(
-    name = "com_thoughtworks_xstream_xstream",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_thoughtworks_xstream_xstream//jar",
-        "@xmlpull_xmlpull//jar",
-        "@xpp3_xpp3_min//jar",
-    ],
-)
-
-java_library(
-    name = "com_twitter_jsr166e",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_twitter_jsr166e//jar",
     ],
 )
 
@@ -2961,22 +2867,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_auth0_java_jwt//jar",
-    ],
-)
-
-java_library(
-    name = "com_sproutsocial_nsqj_j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_sproutsocial_nsqj_j//jar",
-    ],
-)
-
-java_library(
-    name = "com_sun_media_jai_imageio",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_sun_media_jai_imageio//jar",
     ],
 )
 
