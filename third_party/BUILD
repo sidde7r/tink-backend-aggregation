@@ -386,34 +386,10 @@ java_library(
 )
 
 java_library(
-    name = "commons_beanutils_commons_beanutils",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@commons_beanutils_commons_beanutils//jar",
-    ],
-)
-
-java_library(
     name = "commons_codec_commons_codec",
     visibility = ["//visibility:public"],
     exports = [
         "@commons_codec_commons_codec//jar",
-    ],
-)
-
-java_library(
-    name = "commons_collections_commons_collections",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@commons_collections_commons_collections//jar",
-    ],
-)
-
-java_library(
-    name = "commons_configuration_commons_configuration",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@commons_configuration_commons_configuration//jar",
     ],
 )
 
@@ -442,28 +418,10 @@ java_library(
 )
 
 java_library(
-    name = "commons_logging_commons_logging",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@commons_logging_commons_logging//jar",
-    ],
-)
-
-java_library(
     name = "commons_pool_commons_pool",
     visibility = ["//visibility:public"],
     exports = [
         "@commons_pool_commons_pool//jar",
-    ],
-)
-
-java_library(
-    name = "de_grundid_opendatalab_geojson_jackson",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@de_grundid_opendatalab_geojson_jackson//jar",
     ],
 )
 
@@ -474,15 +432,6 @@ java_library(
         "@de_jollyday_jollyday//jar",
         "@javax_xml_bind_jaxb_api//jar",
         "@joda_time_joda_time//jar",
-    ],
-)
-
-java_library(
-    name = "dom4j_dom4j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@dom4j_dom4j//jar",
-        "@xml_apis_xml_apis//jar",
     ],
 )
 
@@ -589,25 +538,6 @@ java_library(
     ],
 )
 
-java_library(
-    name = "io_dropwizard_dropwizard_jackson",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@ch_qos_logback_logback_classic//jar",
-        "@ch_qos_logback_logback_core//jar",
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_fasterxml_jackson_datatype_jackson_datatype_guava//jar",
-        "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
-        "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
-        "@com_google_guava_guava//jar",
-        "@io_dropwizard_dropwizard_jackson//jar",
-        "@io_dropwizard_dropwizard_util//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
 java_import(
     name = "io_dropwizard_dropwizard_jersey",
     jars = [
@@ -630,25 +560,6 @@ java_import(
         "@io_dropwizard_dropwizard_logging//jar",
         "@io_dropwizard_dropwizard_validation//jar",
         "@org_eclipse_jetty_orbit_javax_servlet//jar",
-    ],
-)
-
-java_library(
-    name = "io_dropwizard_dropwizard_jetty",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_codahale_metrics_metrics_jetty9//jar",
-        "@io_dropwizard_dropwizard_jetty//jar",
-        "@io_dropwizard_dropwizard_logging//jar",
-        "@org_eclipse_jetty_jetty_continuation//jar",
-        "@org_eclipse_jetty_jetty_http//jar",
-        "@org_eclipse_jetty_jetty_io//jar",
-        "@org_eclipse_jetty_jetty_security//jar",
-        "@org_eclipse_jetty_jetty_server//jar",
-        "@org_eclipse_jetty_jetty_servlet//jar",
-        "@org_eclipse_jetty_jetty_servlets//jar",
-        "@org_eclipse_jetty_jetty_util//jar",
     ],
 )
 
@@ -706,113 +617,7 @@ java_library(
     ],
 )
 
-java_library(
-    name = "io_dropwizard_dropwizard_metrics_graphite",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_codahale_metrics_metrics_core//jar",
-        "@com_codahale_metrics_metrics_graphite//jar",
-        "@io_dropwizard_dropwizard_metrics//jar",
-        "@io_dropwizard_dropwizard_metrics_graphite//jar",
-    ],
-)
-
-java_library(
-    name = "io_dropwizard_dropwizard_servlets",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_codahale_metrics_metrics_annotation//jar",
-        "@com_codahale_metrics_metrics_core//jar",
-        "@io_dropwizard_dropwizard_servlets//jar",
-        "@io_dropwizard_dropwizard_util//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "io_dropwizard_dropwizard_util",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_annotations//jar",
-        "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_guava_guava//jar",
-        "@io_dropwizard_dropwizard_util//jar",
-    ],
-)
-
-java_library(
-    name = "io_dropwizard_dropwizard_validation",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_classmate//jar",
-        "@io_dropwizard_dropwizard_util//jar",
-        "@io_dropwizard_dropwizard_validation//jar",
-        "@javax_el_javax_el_api//jar",
-        "@javax_validation_validation_api//jar",
-        "@org_glassfish_web_javax_el//jar",
-        "@org_hibernate_hibernate_validator//jar",
-        "@org_jboss_logging_jboss_logging//jar",
-    ],
-)
-
-java_library(
-    name = "io_grpc_grpc_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_guava_guava//jar",
-        "@io_grpc_grpc_core//jar",
-        "@io_opencensus_opencensus_api//jar",
-        "@io_opencensus_opencensus_grpc_metrics//jar",
-    ],
-    runtime_deps = [
-        ":com_google_instrumentation_instrumentation_api",
-    ],
-)
-
-java_library(
-    name = "io_grpc_grpc_context",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_grpc_grpc_context//jar",
-    ],
-)
-
-java_library(
-    name = "io_grpc_grpc_netty",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_grpc_grpc_core//jar",
-        "@io_grpc_grpc_netty//jar",
-        "@io_netty_netty_codec_http2//jar",
-        "@io_opencensus_opencensus_api//jar",
-        "@io_opencensus_opencensus_grpc_metrics//jar",
-    ],
-    runtime_deps = [
-        ":io_grpc_grpc_protobuf_lite",
-    ],
-)
-
-java_library(
-    name = "io_grpc_grpc_protobuf",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_findbugs_jsr305//jar",
-        "@com_google_code_gson_gson//jar",
-        "@com_google_guava_guava//jar",
-        "@com_google_protobuf_protobuf_java//jar",
-        "@com_google_protobuf_protobuf_java_util//jar",
-        "@io_grpc_grpc_core//jar",
-        "@io_grpc_grpc_protobuf//jar",
-        "@io_grpc_grpc_protobuf_lite//jar",
-        "@io_grpc_grpc_protobuf_nano//jar",
-        "@io_opencensus_opencensus_api//jar",
-        "@io_opencensus_opencensus_grpc_metrics//jar",
-    ],
-)
-
-java_library(
+java_library( # is it necessary ?
     name = "io_grpc_grpc_protobuf_lite",
     visibility = ["//visibility:public"],
     exports = [
@@ -823,53 +628,6 @@ java_library(
         "@io_grpc_grpc_protobuf_nano//jar",
         "@io_opencensus_opencensus_api//jar",
         "@io_opencensus_opencensus_grpc_metrics//jar",
-    ],
-)
-
-java_library(
-    name = "io_grpc_grpc_stub",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_grpc_grpc_core//jar",
-        "@io_grpc_grpc_stub//jar",
-        "@io_opencensus_opencensus_api//jar",
-        "@io_opencensus_opencensus_grpc_metrics//jar",
-    ],
-)
-
-java_library(
-    name = "io_grpc_grpc_auth",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_grpc_grpc_auth//jar",
-        "@io_grpc_grpc_core//jar",
-        "@io_opencensus_opencensus_api//jar",
-        "@io_opencensus_opencensus_grpc_metrics//jar",
-    ],
-)
-
-java_library(
-    name = "io_intercom_intercom_java",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_intercom_intercom_java//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":io_netty_netty_all",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_buffer",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_common//jar",
     ],
 )
 
@@ -892,89 +650,6 @@ java_library(
         "@io_netty_netty_buffer//jar",
         "@io_netty_netty_codec//jar",
         "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_resolver//jar",
-        "@io_netty_netty_transport//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_codec_http2",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_codec_http2//jar",
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_handler//jar",
-        "@io_netty_netty_resolver//jar",
-        "@io_netty_netty_transport//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_codec_socks",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_socks//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_common",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_common//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_handler",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_buffer//jar",
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_handler//jar",
-        "@io_netty_netty_transport//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_handler_proxy",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_codec//jar",
-        "@io_netty_netty_codec_http//jar",
-        "@io_netty_netty_codec_socks//jar",
-        "@io_netty_netty_handler_proxy//jar",
-        "@io_netty_netty_transport//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_resolver",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_common//jar",
-        "@io_netty_netty_resolver//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_tcnative_boringssl_static",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_tcnative_boringssl_static//jar",
-    ],
-)
-
-java_library(
-    name = "io_netty_netty_transport",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_netty_netty_buffer//jar",
         "@io_netty_netty_common//jar",
         "@io_netty_netty_resolver//jar",
         "@io_netty_netty_transport//jar",
