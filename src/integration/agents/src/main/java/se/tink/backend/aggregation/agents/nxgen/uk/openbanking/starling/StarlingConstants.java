@@ -23,7 +23,7 @@ public class StarlingConstants {
         public static final String AUTH_STARLING = "https://oauth.starlingbank.com";
         private static final String API_STARLING = "https://api.starlingbank.com";
 
-        public static final URL GET_OAUTH2_TOKEN = new URL(AUTH_STARLING + ApiEndpoint.GET_OAUTH2_TOKEN);
+        public static final URL GET_OAUTH2_TOKEN = new URL(API_STARLING + ApiEndpoint.GET_OAUTH2_TOKEN);
         public static final URL GET_ACCOUNTS = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNTS);
         public static final URL GET_ACCOUNT_HOLDER = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_HOLDER);
         public static final URL GET_ACCOUNT_IDENTIFIERS = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_IDENTIFIERS);
