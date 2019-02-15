@@ -1913,15 +1913,6 @@ java_library(
 )
 
 java_library(
-    name = "org_webbitserver_webbit",
-    visibility = ["//visibility:public"],
-    exports = [
-        ":io_netty_netty_all",
-        "@org_webbitserver_webbit//jar",
-    ],
-)
-
-java_library(
     name = "org_xerial_snappy_snappy_java",
     visibility = ["//visibility:public"],
     exports = [
@@ -1957,66 +1948,6 @@ java_library(
     name = "org_hamcrest_hamcrest_library",
     visibility = ["//visibility:public"],
     exports = ["@org_hamcrest_hamcrest_library//jar"],
-)
-
-java_library(
-    name = "xalan_serializer",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@xalan_serializer//jar",
-        "@xml_apis_xml_apis//jar",
-    ],
-)
-
-java_library(
-    name = "xalan_xalan",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@xalan_serializer//jar",
-        "@xalan_xalan//jar",
-        "@xml_apis_xml_apis//jar",
-    ],
-)
-
-java_library(
-    name = "xerces_xercesImpl",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@xerces_xercesImpl//jar",
-        "@xml_apis_xml_apis//jar",
-    ],
-)
-
-java_library(
-    name = "xml_apis_xml_apis",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@xml_apis_xml_apis//jar",
-    ],
-)
-
-java_library(
-    name = "xml_apis_xml_apis_ext",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@xml_apis_xml_apis_ext//jar",
-    ],
-)
-
-java_library(
-    name = "xmlpull_xmlpull",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@xmlpull_xmlpull//jar",
-    ],
-)
-
-java_library(
-    name = "xpp3_xpp3_min",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@xpp3_xpp3_min//jar",
-    ],
 )
 
 java_library(
