@@ -1722,39 +1722,6 @@ java_library(
 )
 
 java_library(
-    name = "org_springframework_spring_aop",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aopalliance_aopalliance//jar",
-        "@org_springframework_spring_aop//jar",
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_core//jar",
-    ],
-)
-
-java_library(
-    name = "org_springframework_spring_beans",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_core//jar",
-    ],
-)
-
-java_library(
-    name = "org_springframework_spring_context",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aopalliance_aopalliance//jar",
-        "@org_springframework_spring_aop//jar",
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_context//jar",
-        "@org_springframework_spring_core//jar",
-        "@org_springframework_spring_expression//jar",
-    ],
-)
-
-java_library(
     name = "org_springframework_spring_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -1769,47 +1736,6 @@ java_library(
     exports = [
         "@org_springframework_spring_core//jar",
         "@org_springframework_spring_expression//jar",
-    ],
-)
-
-java_library(
-    name = "org_springframework_spring_jdbc",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_core//jar",
-        "@org_springframework_spring_jdbc//jar",
-        "@org_springframework_spring_tx//jar",
-    ],
-)
-
-java_library(
-    name = "org_springframework_spring_orm",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_core//jar",
-        "@org_springframework_spring_jdbc//jar",
-        "@org_springframework_spring_orm//jar",
-        "@org_springframework_spring_tx//jar",
-    ],
-)
-
-java_library(
-    name = "org_springframework_spring_tx",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_springframework_spring_beans//jar",
-        "@org_springframework_spring_core//jar",
-        "@org_springframework_spring_tx//jar",
-    ],
-)
-
-java_library(
-    name = "org_w3c_css_sac",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_w3c_css_sac//jar",
     ],
 )
 
