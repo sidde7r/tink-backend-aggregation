@@ -82,14 +82,6 @@ java_library(
 )
 
 java_library(
-    name = "com_fasterxml_classmate",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_classmate//jar",
-    ],
-)
-
-java_library(
     name = "com_fasterxml_jackson_core_jackson_annotations",
     visibility = ["//visibility:public"],
     exports = [
@@ -139,62 +131,11 @@ java_library(
 )
 
 java_library(
-    name = "com_fasterxml_jackson_dataformat_jackson_dataformat_yaml",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_core//jar",
-        "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_datatype_jackson_datatype_guava",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_datatype_jackson_datatype_guava//jar",
-    ],
-)
-
-java_library(
     name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
     visibility = ["//visibility:public"],
     exports = [
         "@com_fasterxml_jackson_core_jackson_annotations//jar",
         "@com_fasterxml_jackson_datatype_jackson_datatype_joda//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_base",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_base//jar",
-        "@com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider//jar",
-        "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_module_jackson_module_afterburner",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_module_jackson_module_afterburner//jar",
-    ],
-)
-
-java_library(
-    name = "com_fasterxml_jackson_module_jackson_module_jaxb_annotations",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_module_jackson_module_jaxb_annotations//jar",
     ],
 )
 
@@ -3027,14 +2968,6 @@ java_library(
         "@org_slf4j_slf4j_api//jar",
         "@org_tukaani_xz//jar",
         "@org_xerial_snappy_snappy_java//jar",
-    ],
-)
-
-java_library(
-    name = "com_clearspring_analytics_stream",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_clearspring_analytics_stream//jar",
     ],
 )
 
