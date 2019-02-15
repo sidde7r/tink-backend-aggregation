@@ -1,18 +1,3 @@
-java_library(
-    name = "aopalliance_aopalliance",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@aopalliance_aopalliance//jar",
-    ],
-)
-
-java_library(
-    name = "apporiented_com_hierarchical_clustering",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@apporiented_com_hierarchical_clustering//jar",
-    ],
-)
 
 java_library(
     name = "asm_asm",
@@ -31,46 +16,12 @@ java_library(
 )
 
 java_library(
-    name = "ca_juliusdavies_not_yet_commons_ssl",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@ca_juliusdavies_not_yet_commons_ssl//jar",
-        "@commons_httpclient_commons_httpclient//jar",
-    ],
-)
-
-java_library(
-    name = "cglib_cglib",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@asm_asm//jar",
-        "@cglib_cglib//jar",
-    ],
-)
-
-java_library(
-    name = "cglib_cglib_nodep",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@cglib_cglib_nodep//jar",
-    ],
-)
-
-java_library(
     name = "ch_qos_logback_logback_classic",
     visibility = ["//visibility:public"],
     exports = [
         "@ch_qos_logback_logback_classic//jar",
         "@ch_qos_logback_logback_core//jar",
         "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "ch_qos_logback_logback_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@ch_qos_logback_logback_core//jar",
     ],
 )
 
@@ -88,14 +39,6 @@ java_library(
     exports = [
         "@ch_qos_logback_contrib_logback_jackson//jar",
         "@ch_qos_logback_contrib_logback_json_classic//jar",
-        "@ch_qos_logback_contrib_logback_json_core//jar",
-    ],
-)
-
-java_library(
-    name = "ch_qos_logback_contrib_logback_json_core",
-    visibility = ["//visibility:public"],
-    exports = [
         "@ch_qos_logback_contrib_logback_json_core//jar",
     ],
 )
