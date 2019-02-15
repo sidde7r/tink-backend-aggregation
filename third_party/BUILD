@@ -122,7 +122,7 @@ java_library(
     ],
 )
 
-java_library(
+java_library( # TODO check is this used?
     name = "com_fasterxml_jackson_datatype_jackson_datatype_joda",
     visibility = ["//visibility:public"],
     exports = [
@@ -234,14 +234,6 @@ java_library(
 )
 
 java_library(
-    name = "com_googlecode_libphonenumber",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_googlecode_libphonenumber//jar",
-    ],
-)
-
-java_library(
     name = "com_google_inject_extensions_guice_multibindings",
     visibility = ["//visibility:public"],
     exports = [
@@ -310,16 +302,7 @@ java_library(
     ],
 )
 
-java_library(
-    name = "com_maxmind_db_maxmind_db",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@com_maxmind_db_maxmind_db//jar",
-    ],
-)
-
-java_library( # is it used??
+java_library( # TODO check is it used??
     name = "com_maxmind_geoip2_geoip2",
     visibility = ["//visibility:public"],
     exports = [
@@ -705,14 +688,6 @@ java_library(
 )
 
 java_library(
-    name = "io_protostuff_protostuff_collectionschema",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_protostuff_protostuff_collectionschema//jar",
-    ],
-)
-
-java_library(
     name = "io_protostuff_protostuff_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -762,20 +737,12 @@ java_library(
     ],
 )
 
-java_library(
+java_library( # TODO: check is this used?
     name = "jfree_jcommon",
     visibility = ["//visibility:public"],
     exports = [
         "@jfree_jcommon//jar",
         "@junit_junit//jar",
-    ],
-)
-
-java_library(
-    name = "jline_jline",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@jline_jline//jar",
     ],
 )
 
@@ -820,7 +787,7 @@ java_library(
     ],
 )
 
-java_library(
+java_library( # TODO: check is this used?
     name = "net_sourceforge_htmlunit_htmlunit",
     visibility = ["//visibility:public"],
     exports = [
@@ -849,15 +816,6 @@ java_library(
 )
 
 java_library(
-    name = "net_sourceforge_jexcelapi_jxl",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@log4j_log4j//jar",
-        "@net_sourceforge_jexcelapi_jxl//jar",
-    ],
-)
-
-java_library(
     name = "net_spy_spymemcached",
     visibility = ["//visibility:public"],
     exports = [
@@ -865,7 +823,7 @@ java_library(
     ],
 )
 
-java_library(
+java_library( # TODO: check is this used?
     name = "oauth_signpost_signpost_commonshttp4",
     visibility = ["//visibility:public"],
     exports = [
@@ -1159,63 +1117,6 @@ java_library(
 )
 
 java_library(
-    name = "org_eclipse_jetty_jetty_continuation",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_jetty_continuation//jar",
-    ],
-)
-
-java_library(
-    name = "org_eclipse_jetty_jetty_http",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_jetty_http//jar",
-        "@org_eclipse_jetty_jetty_util//jar",
-    ],
-)
-
-java_library(
-    name = "org_eclipse_jetty_jetty_io",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_jetty_io//jar",
-        "@org_eclipse_jetty_jetty_util//jar",
-    ],
-)
-
-java_library(
-    name = "org_eclipse_jetty_jetty_security",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_jetty_security//jar",
-        "@org_eclipse_jetty_jetty_server//jar",
-    ],
-)
-
-java_library(
-    name = "org_eclipse_jetty_jetty_server",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_jetty_http//jar",
-        "@org_eclipse_jetty_jetty_io//jar",
-        "@org_eclipse_jetty_jetty_server//jar",
-        "@org_eclipse_jetty_jetty_util//jar",
-        "@org_eclipse_jetty_orbit_javax_servlet//jar",
-    ],
-)
-
-java_library(
-    name = "org_eclipse_jetty_jetty_servlet",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_jetty_security//jar",
-        "@org_eclipse_jetty_jetty_server//jar",
-        "@org_eclipse_jetty_jetty_servlet//jar",
-    ],
-)
-
-java_library(
     name = "org_eclipse_jetty_jetty_servlets",
     visibility = ["//visibility:public"],
     exports = [
@@ -1228,37 +1129,10 @@ java_library(
 )
 
 java_library(
-    name = "org_eclipse_jetty_jetty_util",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_jetty_util//jar",
-    ],
-)
-
-java_library(
-    name = "org_eclipse_jetty_jetty_websocket",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_jetty_http//jar",
-        "@org_eclipse_jetty_jetty_io//jar",
-        "@org_eclipse_jetty_jetty_util//jar",
-        "@org_eclipse_jetty_jetty_websocket//jar",
-    ],
-)
-
-java_library(
     name = "org_eclipse_jetty_orbit_javax_servlet",
     visibility = ["//visibility:public"],
     exports = [
         "@org_eclipse_jetty_orbit_javax_servlet//jar",
-    ],
-)
-
-java_library(
-    name = "org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar",
     ],
 )
 
@@ -1372,14 +1246,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@org_modelmapper_modelmapper//jar",
-    ],
-)
-
-java_library(
-    name = "org_mortbay_jetty_servlet_api_2_5",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_mortbay_jetty_servlet_api_2_5//jar",
     ],
 )
 
@@ -1626,7 +1492,7 @@ java_library(
     exports = ["@org_hamcrest_hamcrest_core//jar"],
 )
 
-java_library(
+java_library( # TODO: check is this used?
     name = "org_hamcrest_hamcrest_library",
     visibility = ["//visibility:public"],
     exports = ["@org_hamcrest_hamcrest_library//jar"],
