@@ -10,7 +10,7 @@ public class CodeExchangeForm extends AbstractForm {
         put(StarlingConstants.RequestKey.CLIENT_ID, clientId);
         put(StarlingConstants.RequestKey.CLIENT_SECRET, clientSecret);
         put(StarlingConstants.RequestKey.GRANT_TYPE, grantType);
-//        put(StarlingConstants.RequestKey.REDIRECT_URI, redirectUri);
+        put(StarlingConstants.RequestKey.REDIRECT_URI, redirectUri);
     }
 
     public static Builder builder() {
