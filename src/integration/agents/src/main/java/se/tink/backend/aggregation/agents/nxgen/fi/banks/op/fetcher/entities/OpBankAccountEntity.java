@@ -63,11 +63,6 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
         return new OpBankTransactionPaginationKey(startDate, timestampPrevious);
     }
 
-    /*
-     * Convert OpBank account entity to a Tink account.
-     * Currently there are no identifiers set for the tink account.
-     * This is because we have temporarily decided to not use identifiers for non-swedish bank-agents.
-     */
     @JsonIgnore
     public boolean isTransactionalAccount() {
         return OpBankConstants.AccountType.ACCOUNT.equalsIgnoreCase(type);
@@ -78,6 +73,8 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
         return TransactionalAccount.builder(getTinkAccountType(), accountNumber, Amount.inEUR(balance))
                 .setAccountNumber(accountNumber)
                 .setName(getAccountName())
+                .setHolderName(new HolderName(ownerName))
+                .addIdentifier(new IbanIdentifier(accountNumber))
                 .setBankIdentifier(accountNumber)
                 .build();
     }
