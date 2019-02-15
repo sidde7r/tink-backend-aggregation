@@ -111,4 +111,10 @@ public final class DnbConstants {
     public static class CardStatus {
         public static final String ACTIVE = "active";
     }
+
+    public static class CreditCard {
+        public static final String TRANSACTION_TYPE = "TransactionType";
+        public static final String COHOLDER = "COHOLDER";
+        public static final String MAINHOLDER = "MAINHOLDER";
+    }
 }

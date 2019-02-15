@@ -27,7 +27,7 @@ public class DnbCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
                 .collect(Collectors.toList());
 
         for (String cardId : cardIds) {
-            creditcardAccounts.add(apiClient.getCard(cardId).toTinkCard());
+            creditcardAccounts.add(apiClient.getCard(cardId).toTinkCard(cardId));
         }
 
         return creditcardAccounts;
