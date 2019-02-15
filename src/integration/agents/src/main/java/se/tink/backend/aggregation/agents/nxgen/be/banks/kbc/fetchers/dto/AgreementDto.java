@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @JsonObject
 public class AgreementDto implements GeneralAccountEntity {
-    private static final AggregationLogger LOGGER = new AggregationLogger(GeneralAccountEntity.class);
+    private static final AggregationLogger LOGGER = new AggregationLogger(AgreementDto.class);
     private TypeEncValueTuple agreementNo;
     private TypeValuePair structureCode;
     private TypeValuePair productType;
