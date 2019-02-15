@@ -63,6 +63,16 @@ public class IngAutoAuthenticator implements AutoAuthenticator {
                         this.persistentStorage.get(IngConstants.Storage.VIRTUAL_CARDNUMBER),
                         this.persistentStorage.get(IngConstants.Storage.DEVICE_ID));
 
+        if (IngConstants.ReturnCodes.NOK.equalsIgnoreCase(loginResponseEntity.getReturnCode())) {
+            throw new IllegalStateException(
+                    String.format(
+                            "%s%s%s%s",
+                            "AutoAuth not successful! Code: ",
+                            loginResponseEntity.getErrorCode().orElse("No error code"),
+                            " Message: ",
+                            loginResponseEntity.getErrorText()));
+        }
+
         this.ingHelper.persist(loginResponseEntity);
     }
 
