@@ -1159,28 +1159,10 @@ java_library(
 )
 
 java_library(
-    name = "org_codehaus_jackson_jackson_mapper_asl",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_codehaus_jackson_jackson_core_asl//jar",
-        "@org_codehaus_jackson_jackson_mapper_asl//jar",
-    ],
-)
-
-java_library(
     name = "org_codehaus_plexus_plexus_utils",
     visibility = ["//visibility:public"],
     exports = [
         "@org_codehaus_plexus_plexus_utils//jar",
-    ],
-)
-
-java_library(
-    name = "org_codehaus_woodstox_stax2_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_xml_stream_stax_api//jar",
-        "@org_codehaus_woodstox_stax2_api//jar",
     ],
 )
 
@@ -1402,30 +1384,6 @@ java_library(
 )
 
 java_library(
-    name = "org_jboss_logging_jboss_logging",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_jboss_logging_jboss_logging//jar",
-    ],
-)
-
-java_library(
-    name = "org_jfree_jfreesvg",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_jfree_jfreesvg//jar",
-    ],
-)
-
-java_library(
-    name = "org_joda_joda_convert",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_joda_joda_convert//jar",
-    ],
-)
-
-java_library(
     name = "org_json_json",
     visibility = ["//visibility:public"],
     exports = [
@@ -1438,23 +1396,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@org_jsoup_jsoup//jar",
-    ],
-)
-
-java_library(
-    name = "org_jvnet_jaxb2_commons_jaxb2_basics_runtime",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_jvnet_jaxb2_commons_jaxb2_basics_runtime//jar",
-    ],
-)
-
-java_library(
-    name = "org_liquibase_liquibase_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_liquibase_liquibase_core//jar",
-        "@org_yaml_snakeyaml//jar",
     ],
 )
 
@@ -1499,56 +1440,10 @@ java_library(
 )
 
 java_library(
-    name = "org_owasp_esapi_esapi",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_owasp_esapi_esapi//jar",
-    ],
-)
-
-java_library(
     name = "org_pojava_pojava",
     visibility = ["//visibility:public"],
     exports = [
         "@org_pojava_pojava//jar",
-    ],
-)
-
-java_library(
-    name = "org_quartz_scheduler_quartz",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@c3p0_c3p0//jar",
-        "@org_quartz_scheduler_quartz//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "org_rythmengine_rythm_engine",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_stevesoft_pat_pat//jar",
-        "@org_eclipse_jdt_core_compiler_ecj//jar",
-        "@org_mvel_mvel2//jar",
-        "@org_rythmengine_rythm_engine//jar",
-    ],
-)
-
-java_library(
-    name = "org_scala_lang_scala_library",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_scala_lang_scala_library//jar",
-    ],
-)
-
-java_library(
-    name = "org_scala_lang_scala_reflect",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_scala_lang_scala_library//jar",
-        "@org_scala_lang_scala_reflect//jar",
     ],
 )
 
