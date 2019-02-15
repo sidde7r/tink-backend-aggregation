@@ -33,12 +33,12 @@ junit_test(
     srcs = glob(["src/test/**/*.java"]),
     data = ["//data:tink_ca"],
     runtime_deps = [
+        "//src/aggregation/api",
+        "//src/libraries/api_annotations",
         "//third_party:ch_qos_logback_logback_classic",
     ],
     deps = [
-        "//src/aggregation/api",
         "//src/integration/api",
-        "//src/libraries/api_annotations",
         "//src/libraries/api_annotations:api_annotations_test",
         "//src/libraries/credentials:service",
         "//src/libraries/user:rpc",
