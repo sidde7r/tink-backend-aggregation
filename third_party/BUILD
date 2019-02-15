@@ -418,14 +418,6 @@ java_library(
 )
 
 java_library(
-    name = "commons_pool_commons_pool",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@commons_pool_commons_pool//jar",
-    ],
-)
-
-java_library(
     name = "de_jollyday_jollyday",
     visibility = ["//visibility:public"],
     exports = [
@@ -703,15 +695,6 @@ java_library(
 )
 
 java_library(
-    name = "io_prometheus_simpleclient_logback",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_prometheus_simpleclient//jar",
-        "@io_prometheus_simpleclient_logback//jar",
-    ],
-)
-
-java_library(
     name = "io_prometheus_simpleclient_servlet",
     visibility = ["//visibility:public"],
     exports = [
@@ -754,14 +737,6 @@ java_library(
 )
 
 java_library(
-    name = "io_reactivex_rxjava",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@io_reactivex_rxjava//jar",
-    ],
-)
-
-java_library(
     name = "io_swagger_swagger_annotations",
     visibility = ["//visibility:public"],
     exports = [
@@ -788,83 +763,10 @@ java_library(
 )
 
 java_library(
-    name = "javax_activation_activation",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_activation_activation//jar",
-    ],
-)
-
-java_library(
-    name = "javax_annotation_jsr250_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_annotation_jsr250_api//jar",
-    ],
-)
-
-java_library(
-    name = "javax_el_javax_el_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_el_javax_el_api//jar",
-    ],
-)
-
-java_library(
-    name = "javax_inject_javax_inject",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_inject_javax_inject//jar",
-    ],
-)
-
-java_library(
-    name = "javax_mail_mail",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_activation_activation//jar",
-        "@javax_mail_mail//jar",
-    ],
-)
-
-java_library(
-    name = "javax_servlet_javax_servlet_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_servlet_javax_servlet_api//jar",
-    ],
-)
-
-java_library(
-    name = "javax_transaction_jta",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_transaction_jta//jar",
-    ],
-)
-
-java_library(
     name = "javax_validation_validation_api",
     visibility = ["//visibility:public"],
     exports = [
         "@javax_validation_validation_api//jar",
-    ],
-)
-
-java_library(
-    name = "javax_xml_bind_jaxb_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_xml_bind_jaxb_api//jar",
-    ],
-)
-
-java_library(
-    name = "javax_xml_stream_stax_api",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_xml_stream_stax_api//jar",
     ],
 )
 
@@ -902,22 +804,6 @@ java_library(
 )
 
 java_library(
-    name = "log4j_log4j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@log4j_log4j//jar",
-    ],
-)
-
-java_library(
-    name = "mx4j_mx4j_tools",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@mx4j_mx4j_tools//jar",
-    ],
-)
-
-java_library(
     name = "mysql_mysql_connector_java",
     visibility = ["//visibility:public"],
     exports = [
@@ -930,88 +816,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@net_bytebuddy_byte_buddy//jar",
-    ],
-)
-
-java_library(
-    name = "net_java_dev_jna_jna",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_java_dev_jna_jna//jar",
-    ],
-)
-
-java_library(
-    name = "net_java_dev_jna_platform",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_java_dev_jna_platform//jar",
-    ],
-)
-
-java_library(
-    name = "net_jcip_jcip_annotations",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_jcip_jcip_annotations//jar",
-    ],
-)
-
-java_library(
-    name = "net_jpountz_lz4_lz4",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_jpountz_lz4_lz4//jar",
-    ],
-)
-
-java_library(
-    name = "net_sf_opencsv_opencsv",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_sf_opencsv_opencsv//jar",
-    ],
-)
-
-java_library(
-    name = "net_sf_qualitycheck_quality_check",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_findbugs_jsr305//jar",
-        "@net_sf_qualitycheck_quality_check//jar",
-    ],
-)
-
-java_library(
-    name = "net_sf_uadetector_uadetector_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_findbugs_jsr305//jar",
-        "@javax_annotation_jsr250_api//jar",
-        "@net_sf_qualitycheck_quality_check//jar",
-        "@net_sf_uadetector_uadetector_core//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "net_sf_uadetector_uadetector_resources",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@com_google_code_findbugs_jsr305//jar",
-        "@javax_annotation_jsr250_api//jar",
-        "@net_sf_qualitycheck_quality_check//jar",
-        "@net_sf_uadetector_uadetector_core//jar",
-        "@net_sf_uadetector_uadetector_resources//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "net_sourceforge_argparse4j_argparse4j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_sourceforge_argparse4j_argparse4j//jar",
     ],
 )
 
@@ -1053,27 +857,11 @@ java_library(
 )
 
 java_library(
-    name = "net_sourceforge_htmlunit_htmlunit_core_js",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_sourceforge_htmlunit_htmlunit_core_js//jar",
-    ],
-)
-
-java_library(
     name = "net_sourceforge_jexcelapi_jxl",
     visibility = ["//visibility:public"],
     exports = [
         "@log4j_log4j//jar",
         "@net_sourceforge_jexcelapi_jxl//jar",
-    ],
-)
-
-java_library(
-    name = "net_sourceforge_nekohtml_nekohtml",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_sourceforge_nekohtml_nekohtml//jar",
     ],
 )
 
@@ -2487,12 +2275,6 @@ java_library(
 )
 
 java_library(
-    name = "io_takari_junit_takari_cpsuite",
-    visibility = ["//visibility:public"],
-    exports = ["@io_takari_junit_takari_cpsuite//jar"],
-)
-
-java_library(
     name = "org_reflections_reflections",
     visibility = ["//visibility:public"],
     exports = ["@org_reflections_reflections//jar"],
@@ -2542,14 +2324,6 @@ java_library(
     visibility = ["//visibility:public"],
     exports = [
         "@com_auth0_java_jwt//jar",
-    ],
-)
-
-java_library(
-    name = "net_sourceforge_lept4j",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@net_sourceforge_lept4j//jar",
     ],
 )
 
