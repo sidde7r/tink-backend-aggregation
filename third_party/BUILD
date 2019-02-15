@@ -1,12 +1,4 @@
 java_library(
-    name = "antlr_antlr",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@antlr_antlr//jar",
-    ],
-)
-
-java_library(
     name = "aopalliance_aopalliance",
     visibility = ["//visibility:public"],
     exports = [
