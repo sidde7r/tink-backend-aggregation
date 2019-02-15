@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class StarlingConstants {
 
     public static class UrlParams {
-        public static final String UID = "{uid}";
+        public static final String UID = "uid";
     }
 
     private static class ApiEndpoint {
@@ -14,8 +14,8 @@ public class StarlingConstants {
         static final String GET_OAUTH2_TOKEN = "/oauth/access-token";
         static final String GET_ACCOUNTS = "/api/v2/accounts";
         static final String GET_ACCOUNT_HOLDER =  "/api/v2/account-holder/individual";
-        static final String GET_ACCOUNT_IDENTIFIERS = "/api/v2/accounts/" + UrlParams.UID + "/identifiers";
-        static final String GET_ACCOUNT_BALANCE = "/api/v2/accounts/" + UrlParams.UID + "/balance";
+        static final String GET_ACCOUNT_IDENTIFIERS = "/api/v2/accounts/{" + UrlParams.UID + "}/identifiers";
+        static final String GET_ACCOUNT_BALANCE = "/api/v2/accounts/{" + UrlParams.UID + "}/balance";
         static final String GET_ANY_TRANSACTIONS = "/api/v1/transactions";
     }
 
