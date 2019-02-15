@@ -1,18 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki;
 
-import java.util.Arrays;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.AgentError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AgentBaseError;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.spankki.entities.StatusEntity;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.libraries.i18n.LocalizableKey;
+
+import java.util.Arrays;
 
 public class SpankkiConstants {
     private static final String BASE_URL = "https://mobile.s-pankki.fi";
@@ -88,9 +89,9 @@ public class SpankkiConstants {
         UNKNOWN_ERROR(-1, null);
 
         private final int statusCode;
-        private final AgentError agentError;
+        private final AgentBaseError agentError;
 
-        ServerResponse(int statusCode, AgentError agentError) {
+        ServerResponse(int statusCode, AgentBaseError agentError) {
 
             this.statusCode = statusCode;
             this.agentError = agentError;
@@ -114,7 +115,7 @@ public class SpankkiConstants {
             }
         }
 
-        private static void throwAgentError(Exception e) throws AuthenticationException, AuthorizationException {
+        private static void throwAgentError(Throwable e) throws AuthenticationException, AuthorizationException {
             if (e instanceof AuthenticationException) {
                 throw (AuthenticationException) e;
             } else if (e instanceof AuthorizationException) {

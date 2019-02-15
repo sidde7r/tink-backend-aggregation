@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.creditcard.
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.IngTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferdestination.IngTransferDestinationFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.filter.IngHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -48,6 +49,7 @@ public class IngAgent extends NextGenerationAgent {
     protected void configureHttpClient(TinkHttpClient client) {
         client.setUserAgent(USER_AGENT);
         client.setFollowRedirects(false);
+        client.addFilter(new IngHttpFilter());
     }
 
     @Override
