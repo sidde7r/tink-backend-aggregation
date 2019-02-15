@@ -56,14 +56,6 @@ java_library(
 )
 
 java_library(
-    name = "org_freemarker",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_freemarker//jar",
-    ],
-)
-
-java_library(
     name = "com_datastax_cassandra_cassandra_driver_core",
     visibility = ["//visibility:public"],
     exports = [
@@ -1293,15 +1285,6 @@ java_library(
 )
 
 java_library(
-    name = "org_glassfish_web_javax_el",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@javax_el_javax_el_api//jar",
-        "@org_glassfish_web_javax_el//jar",
-    ],
-)
-
-java_library(
     name = "org_hibernate_hibernate_annotations",
     visibility = ["//visibility:public"],
     exports = [
@@ -1313,29 +1296,6 @@ java_library(
         "@org_hibernate_hibernate_commons_annotations//jar",
         "@org_hibernate_hibernate_core//jar",
         "@org_hibernate_javax_persistence_hibernate_jpa_2_0_api//jar",
-        "@org_slf4j_slf4j_api//jar",
-        "@xml_apis_xml_apis//jar",
-    ],
-)
-
-java_library(
-    name = "org_hibernate_hibernate_commons_annotations",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@org_hibernate_hibernate_commons_annotations//jar",
-        "@org_slf4j_slf4j_api//jar",
-    ],
-)
-
-java_library(
-    name = "org_hibernate_hibernate_core",
-    visibility = ["//visibility:public"],
-    exports = [
-        "@antlr_antlr//jar",
-        "@commons_collections_commons_collections//jar",
-        "@dom4j_dom4j//jar",
-        "@javax_transaction_jta//jar",
-        "@org_hibernate_hibernate_core//jar",
         "@org_slf4j_slf4j_api//jar",
         "@xml_apis_xml_apis//jar",
     ],
