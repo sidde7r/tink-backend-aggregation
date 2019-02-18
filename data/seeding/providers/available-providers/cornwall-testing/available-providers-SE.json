@@ -35,6 +35,18 @@
     "volkswagenkortet-bankid",
     "se-seb-abstract",
     "se-test-password",
-    "se-test-multi-supplemental"
+    "se-test-multi-supplemental",
+    "chevrolet-v2-bankid",
+    "circlek-v2-bankid",
+    "eurocard-v2-bankid",
+    "finnair-v2-bankid",
+    "ingo-v2-bankid",
+    "nknyckeln-v2-bankid",
+    "nordicchoice-v2-bankid",
+    "opel-v2-bankid",
+    "saab-v2-bankid",
+    "saseurobonus-v2-bankid",
+    "sebwallet-v2-bankid",
+    "sjprio-v2-bankid"
   ]
 }
