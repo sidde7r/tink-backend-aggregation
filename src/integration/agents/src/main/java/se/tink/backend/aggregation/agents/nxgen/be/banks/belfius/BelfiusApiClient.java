@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.AuthenticateWithCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.AuthenticateWithCodeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.rpc.CheckStatusRequest;
@@ -137,10 +138,12 @@ public class BelfiusApiClient {
         return response;
     }
 
-    public PrepareLoginResponse prepareLogin(String panNumber) {
-        return post(BelfiusConstants.Url.GEPA_RENDERING_URL,
+    public PrepareLoginResponse prepareLogin(String panNumber) throws LoginException {
+        PrepareLoginResponse prepareLoginResponse = post(BelfiusConstants.Url.GEPA_RENDERING_URL,
                 PrepareLoginResponse.class,
                 PrepareLoginRequest.create(panNumber));
+        prepareLoginResponse.validate();
+        return prepareLoginResponse;
     }
 
     public LoginResponse login(String deviceTokenHashed, String deviceTokenHashedIosComparison, String signature)

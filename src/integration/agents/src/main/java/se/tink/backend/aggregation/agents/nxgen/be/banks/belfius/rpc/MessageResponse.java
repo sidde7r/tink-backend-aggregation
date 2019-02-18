@@ -29,11 +29,14 @@ public class MessageResponse extends ResponseEntity {
     }
 
     public static void validate(BelfiusResponse response) throws IllegalStateException {
-        MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
-        if (messageResponse != null
-                && (messageResponse.isWrongCredentialsMessage()
-                || messageResponse.isSessionExpiredMessage())) {
-            throw new IllegalStateException(messageResponse.getMessageDetail());
+        MessageResponse erroResponse =
+                response.filter(MessageResponse.class).findFirst().orElse(null);
+        if (erroResponse != null) {
+            if (erroResponse.isWrongCredentialsMessage() // Handled in LoginResponse::validate
+                    || erroResponse.isMobileBankingDisabled()) { // Handled in PrepareLoginResponse::validate
+                return;
+            }
+            throw new IllegalStateException(erroResponse.getMessageDetail());
         }
     }
 
@@ -57,7 +60,12 @@ public class MessageResponse extends ResponseEntity {
 
     private boolean isWrongCredentialsMessage() {
         return BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE.equalsIgnoreCase(messageType)
-                && !messageDetail.contains(BelfiusConstants.ErrorCodes.WRONG_CREDENTIALS_CODE);
+                && messageDetail.contains(BelfiusConstants.ErrorCodes.WRONG_CREDENTIALS_CODE);
+    }
+
+    private boolean isMobileBankingDisabled() {
+        return BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE.equalsIgnoreCase(messageType)
+                && messageDetail.contains(BelfiusConstants.ErrorCodes.MISSING_MOBILEBANKING_SUBSCRIPTION);
     }
 
     private boolean isSessionExpiredMessage() {
