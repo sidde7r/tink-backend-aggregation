@@ -119,18 +119,4 @@ pkg_deb(
     version_file = ".version",
 )
 
-pkg_deb(
-    name = "provider_configuration",
-    architecture = "amd64",
-    data = ":provider_configuration_tar",
-    description = "Tink Backend Provider Configuration Service",
-    homepage = "https://tink.se",
-    maintainer = "Tink AB <support@tink.se>",
-    package = "tink-backend-provider-configuration",
-    postinst = ":control/postinst",
-    preinst = ":control/preinst",
-    prerm = ":control/prerm",
-    version_file = ".version",
-)
-
 # end package debs
