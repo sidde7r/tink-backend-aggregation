@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountEntity;
@@ -29,10 +30,11 @@ public class BbvaCreditCardFetcher  implements AccountFetcher<CreditCardAccount>
     public Collection<CreditCardAccount> fetchAccounts() {
         FetchProductsResponse productsResponse = apiClient.fetchProducts();
 
-        // credit card logging
-        logCreditCardData(productsResponse.getCards());
-
-        return Collections.emptyList();
+        return productsResponse
+                .getCards()
+                .stream()
+                .map(c -> c.toTinkCreditCard())
+                .collect(Collectors.toList());
     }
 
     @Override
