@@ -1,6 +1,7 @@
 package se.tink.backend.agents.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.CaseFormat;
@@ -28,6 +29,7 @@ import se.tink.libraries.uuid.UUIDUtils;
  * in the "enrichment" process.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Credentials implements Cloneable {
     private static class FieldsMap extends HashMap<String, String> {
     }
