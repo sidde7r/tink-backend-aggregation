@@ -16,8 +16,13 @@ container_image(
         "server",
         "/etc/tink/aggregation-server.yml",
     ],
-    tars = ["//deb:aggregation_tar"],
     workdir = "/usr/share/tink-backend-aggregation",
+    deps = [
+        "//deb:aggregation_bin_tar",
+        "//deb:aggregation_data_tar",
+        "//deb:libkbc_wbaes_bin_tar",
+        "//deb:phantomjs_bin_tar",
+    ],
 )
 
 container_push(
@@ -40,7 +45,10 @@ container_image(
         "server",
         "/etc/tink/provider-configuration-server.yml",
     ],
-    tars = ["//deb:provider_configuration_tar"],
+    tars = [
+        "//deb:provider_configuration_bin_tar",
+        "//deb:provider_configuration_data_tar",
+    ],
     workdir = "/usr/share/tink-backend-provider-configuration",
 )
 
