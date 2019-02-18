@@ -237,8 +237,11 @@ public class KbcConstants {
         public static final String ACCOUNT_BLOCKED2 = "your pin has been blocked";
         public static final String INCORRECT_SIGN_CODE = "your sign code is incorrect";
 
-        // Probably only text messages log should give us information otherwise
+        // As of 18.10 only text messages and the generic error code 02
         public static final String NO_TRANSACTIONS_FOUND = "no transactions in the most recent 12 months";
+        public static final String NO_TRANSACTIONS_FOUND_NL = "geen verrichtingen in de recentste 12 maanden";
+        public static final String NO_TRANSACTIONS_FOUND_FR = "aucune opération les 12 derniers mois";
+        public static final String NO_TRANSACTIONS_FOUND_DE = "keine transaktionen in den letzten 12 monaten";
         // Only text message no header or code, we do transfers in English to ensure that
         // correctness
         public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
@@ -248,7 +251,7 @@ public class KbcConstants {
         public static final String INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT = "D9FE50";
         public static final String INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT = "D9E028";
         public static final String INCORRECT_CARD_NUMBER = "D93058";
-        public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_1 = "D9FE51";
+        public static final String CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC = "D9FE51";
         public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_2 = "D9C104";
         public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_3 = "D9E027";
     }
