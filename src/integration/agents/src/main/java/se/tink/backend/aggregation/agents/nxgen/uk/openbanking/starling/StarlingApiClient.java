@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.CodeExchangeForm;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.CodeExchangeResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.OAuthTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.TokenRefreshForm;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountBalanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountHolderResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountIdentifiersResponse;
@@ -33,7 +34,15 @@ public class StarlingApiClient {
         return client.request(StarlingConstants.Url.GET_OAUTH2_TOKEN)
                 .body(codeExchangeForm, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .post(CodeExchangeResponse.class)
+                .post(OAuthTokenResponse.class)
+                .toOauth2Token();
+    }
+
+    public OAuth2Token refreshAccessToken(TokenRefreshForm refreshForm) {
+        return client.request(StarlingConstants.Url.GET_OAUTH2_TOKEN)
+                .body(refreshForm, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .accept(MediaType.APPLICATION_JSON_TYPE)
+                .post(OAuthTokenResponse.class)
                 .toOauth2Token();
     }
 
