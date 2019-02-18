@@ -194,6 +194,19 @@ public class KbcConstants {
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
     }
 
+    public static final String[] IGNORED_ACCOUNT_TYPES = {
+            "0029", // KBC-Derdenrekening
+            "0038", // KBC-Rubriekrekening
+            "1013", // KBC-Beleggersrekening
+            "2117", // KBC-Pandrekening
+            "3123", // ESOP-rekening
+            "0346", // KBC-Vermogensrekening
+            "3465", // KBC-Business Comfortrekening
+            "3637", // KBC-Business Compactrekening
+            "3774", // Compte épargne Call32 corporate KBC
+            "4012", // KBC Brussels Security Deposit Account
+            "4057", // KBC Security Deposit Account
+            "4058"}; // Compte d'épargne gar.locative KBC Brussels
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
@@ -209,20 +222,17 @@ public class KbcConstants {
                             "3591",
                             "3594", // KBC-Huurwaarborgspaarrekening
                             "3595", // KBC Tall Oaks Savings Account
+                            "3614", // KBC-Spaarrekening
                             "3781", // KBC Start2Save4
+                            "3866", // KBC-Spaarrekening PLUS
                             "3867", // KBC Savings Pro
                             "4010", // KBC Brussels-Start2Save
                             "4011", // KBC Brussels Savings Account
+                            "4013", // KBC Brussels-Groeispaarrekening
                             "4019", // KBC Brussels Savings Account PRO
                             "4056") // KBC-Huurwaarborgspaarrekening
                     .ignoreKeys(
-                            "1013", // KBC-Beleggersrekening
-                            "2117", // KBC-Pandrekening
-                            "3123", // ESOP-rekening
-                            "3465", // KBC-Business Comfortrekening
-                            "3637", // KBC-Business Compactrekening
-                            "4012", // KBC Brussels Security Deposit Account
-                            "4057") // KBC Security Deposit Account
+                            IGNORED_ACCOUNT_TYPES)
                     .build();
 
     public static final class ErrorMessage {
