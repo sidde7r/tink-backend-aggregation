@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -36,6 +38,13 @@ public class SendDataForProcessingAgentWorkerCommand extends AgentWorkerCommand 
 
     @Override
     public void postProcess() throws Exception {
+        Credentials credentials = context.getRequest().getCredentials();
+
+        if (credentials.getStatus() != CredentialsStatus.UPDATING) {
+            log.warn("Status does not warrant processing: {}", credentials.getStatus());
+            return;
+        }
+
         metrics.start(AgentWorkerOperationMetricType.POST_PROCESS_COMMAND);
         try {
             for (ProcessableItem processableItem : processableItems) {
