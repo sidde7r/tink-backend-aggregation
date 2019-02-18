@@ -27,6 +27,7 @@ public class CryptoUtils {
 
     public static byte[] encryptPublicKeyAndNonce(byte[] key, byte[] iv, KeyPair ecKey, byte[] nonce) {
         byte[] publicKey = EllipticCurve.convertPublicKeyToPoint(ecKey, false);
+        publicKey = Arrays.copyOfRange(publicKey, 1, publicKey.length);
         byte[] publicKeyAndNonce = Bytes.concat(publicKey, nonce);
 
         return AES.encryptCfbSegmentationSize8NoPadding(key, iv, publicKeyAndNonce);
