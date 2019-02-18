@@ -2067,7 +2067,6 @@ maven_jar(
 maven_jar(
     name = "org_eclipse_jetty_jetty_webapp",
     artifact = "org.eclipse.jetty:jetty-webapp:9.2.13.v20150730",
-    repository = "https://oss.sonatype.org/content/groups/jetty/",
     sha1 = "716b5cdea1e818cd0e36dfea791f620d49bd2d2a",
 )
 
