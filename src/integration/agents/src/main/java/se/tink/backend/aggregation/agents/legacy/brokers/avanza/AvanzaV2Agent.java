@@ -8,6 +8,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import java.time.LocalDate;
@@ -24,6 +25,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
+import org.eclipse.jetty.http.HttpStatus;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -48,6 +54,7 @@ import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.BondMarketInfoRe
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.CertificateMarketInfoResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.EquityLinkedBondMarketInfoResponse;
+import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.ExchangeTradedFundInfoResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.FundMarketInfoResponse;
 import se.tink.backend.aggregation.agents.brokers.avanza.v2.rpc.FutureForwardMarketInfoResponse;
@@ -63,17 +70,14 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /** Latest verified version: iOS v2.12.0 */
 public class AvanzaV2Agent extends AbstractAgent
@@ -129,9 +133,18 @@ public class AvanzaV2Agent extends AbstractAgent
         InitiateBankIdRequest initiateBankIdRequest = new InitiateBankIdRequest();
         initiateBankIdRequest.setIdentificationNumber(credentials.getField(Field.Key.USERNAME));
 
-        InitiateBankIdResponse initiateBankIdResponse =
-                createClientRequest(Urls.BANK_ID_INIT)
-                        .post(InitiateBankIdResponse.class, initiateBankIdRequest);
+        InitiateBankIdResponse initiateBankIdResponse;
+        try {
+            initiateBankIdResponse =
+                    createClientRequest(Urls.BANK_ID_INIT)
+                            .post(InitiateBankIdResponse.class, initiateBankIdRequest);
+        } catch (UniformInterfaceException e) {
+            handleBankIdInitErrors(e.getResponse());
+
+            // Error unknown, re-throw original exception
+            throw e;
+        }
+
 
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
@@ -142,12 +155,21 @@ public class AvanzaV2Agent extends AbstractAgent
 
         for (int i = 0; i < 30; i++) {
 
-            ClientResponse bankIdClientResponse =
-                    createClientRequest(
-                                    String.format(
-                                            Urls.BANK_ID_COLLECT,
-                                            initiateBankIdResponse.getTransactionId()))
-                            .get(ClientResponse.class);
+            ClientResponse bankIdClientResponse;
+            try {
+                bankIdClientResponse =
+                        createClientRequest(
+                                String.format(
+                                        Urls.BANK_ID_COLLECT,
+                                        initiateBankIdResponse.getTransactionId()))
+                                .get(ClientResponse.class);
+            } catch (UniformInterfaceException e) {
+
+                handleBankIdPollErrors(e.getResponse());
+
+                // Error unknown, re-throw original exception
+                throw e;
+            }
 
             if (bankIdClientResponse.getStatus() != Status.OK.getStatusCode()) {
                 log.warn(
@@ -200,6 +222,32 @@ public class AvanzaV2Agent extends AbstractAgent
 
         // This only happens in the case of a timeout.
         throw BankIdError.TIMEOUT.exception();
+    }
+
+    private void handleBankIdInitErrors(ClientResponse response) throws BankIdException {
+
+        if (response != null && response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR_500) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        }
+
+        if (response != null && response.getStatus() == HttpStatus.SERVICE_UNAVAILABLE_503) {
+           throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+    }
+
+    private void handleBankIdPollErrors(ClientResponse response) throws BankIdException {
+
+        if (response != null && response.getStatus() == HttpStatus.INTERNAL_SERVER_ERROR_500) {
+            ErrorResponse errorResponse = response.getEntity(ErrorResponse.class);
+
+            if (errorResponse.isUserCancel()) {
+                throw BankIdError.CANCELLED.exception();
+            }
+        }
+
+        if (response != null && response.getStatus() == HttpStatus.SERVICE_UNAVAILABLE_503) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
     }
 
     private Builder createClientRequest(String url) {

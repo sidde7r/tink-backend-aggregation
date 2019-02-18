@@ -12,7 +12,7 @@
   "brokers.NordnetAgent": ["SAVINGS_ACCOUNTS", "INVESTMENTS"],
   "brokers.avanza.AvanzaV2Agent": ["SAVINGS_ACCOUNTS", "INVESTMENTS"],
   "brokers.lysa.LysaAgent": [],
-  "creditcards.coop.v2.CoopV2Agent": ["CREDIT_CARDS"],
+  "nxgen.se.creditcards.coop.CoopAgent": ["CREDIT_CARDS"],
   "creditcards.ikano.api.IkanoApiAgent": ["CREDIT_CARDS"],
   "creditcards.okq8.OKQ8BankAgent": ["CREDIT_CARDS"],
   "creditcards.rikskortet.RikskortetAgent": ["CREDIT_CARDS"],

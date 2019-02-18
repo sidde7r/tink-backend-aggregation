@@ -82,4 +82,9 @@ public class AvanzaV2Constants {
     public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("avanza_unknown_accountype");
     }
+
+    public static class AuthError {
+        public static final String USER_CANCEL = "user_cancel";
+        public static final String CANCELLED = "cancelled";
+    }
 }
