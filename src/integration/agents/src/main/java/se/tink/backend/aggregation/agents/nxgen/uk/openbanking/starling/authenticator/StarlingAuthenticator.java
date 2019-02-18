@@ -3,9 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authent
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
+import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingConstants;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.CodeExchangeForm;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.rpc.TokenRefreshForm;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Authenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -48,11 +50,18 @@ public class StarlingAuthenticator implements OAuth2Authenticator {
     @Override
     public OAuth2Token refreshAccessToken(String refreshToken)
             throws SessionException, BankServiceException {
-        return null; // Implement later
+
+        TokenRefreshForm refreshForm =
+                TokenRefreshForm.builder()
+                        .withRefreshToken(getRefreshToken())
+                        .asClient(getClientId(), getClientSecret())
+                        .build();
+
+        return apiClient.refreshAccessToken(refreshForm);
     }
 
     @Override
-    public void useAccessToken(OAuth2Token accessToken) {}
+    public void useAccessToken(OAuth2Token accessToken) {/* Using persistent storage instead. */}
 
     private String getClientId() {
 
@@ -85,5 +94,23 @@ public class StarlingAuthenticator implements OAuth2Authenticator {
         }
 
         return redirectUrl;
+    }
+
+    public String getRefreshToken() throws SessionException {
+
+        OAuth2Token token =
+                persistentStorage
+                        .get(StarlingConstants.StorageKey.OAUTH_TOKEN, OAuth2Token.class)
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+
+        if (!token.canRefresh()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        return token.getRefreshToken()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Could not get refresh token, even though canRefresh == true."));
     }
 }

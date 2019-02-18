@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
-public class CodeExchangeResponse {
+public class OAuthTokenResponse {
 
     @JsonProperty("access_token")
     private String accessToken;
