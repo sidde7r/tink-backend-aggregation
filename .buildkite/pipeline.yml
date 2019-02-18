@@ -40,14 +40,14 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
 
-  - name: ':debian: Build and Upload'
+  - name: ':debian: tink-backend-aggregation'
     branches: 'staging'
-    command: .buildkite/build-and-upload-deb.sh
+    command: .buildkite/build-and-upload-deb.sh //deb:aggregation deb/tink-backend-aggregation tink-backend-aggregation
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.5.1:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
-    timeout_in_minutes: 30
 
   - wait
 
