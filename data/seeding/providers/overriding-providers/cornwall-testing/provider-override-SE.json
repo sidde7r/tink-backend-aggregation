@@ -12,6 +12,330 @@
             "type": "BANK",
             "market": "SE",
             "currency": "SEK"
+        },
+        {
+            "name": "chevrolet-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.chevrolet.ChevroletMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Chevrolet Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "circlek-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.circlek.CircleKMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Circle K Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "eurocard-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.eurocard.EurocardMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Eurocard Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "finnair-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.finnair.FinnairMastercardSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Finnair Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "ingo-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.ingo.IngoMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Ingo Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "nknyckeln-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.nknyckeln.NkNyckelnMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "NK Nyckeln Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "nordicchoice-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.nordicchoice.NordicChoiceClubMastercardSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Nordic Choice Club Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "opel-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.opel.OpelMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Opel Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "saab-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.saab.SaabMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SAAB Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "saseurobonus-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.saseurobonus.SasEurobonusMastercardSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SAS Eurobonus Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "sebwallet-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.sebwallet.SebWalletMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SEB Wallet Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
+        },
+        {
+            "name": "sjprio-v2-bankid",
+            "className": "nxgen.se.creditcards.sebkortv2.sjprio.SjPrioMastercardAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "SJ Prio Mastercard",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "pattern": "(19|20)[0-9]{10}",
+                    "immutable": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please enter a valid social security number."
+                }
+            ],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "CREDIT_CARD"
         }
     ]
 }
