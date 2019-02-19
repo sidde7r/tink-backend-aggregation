@@ -6,18 +6,21 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 
 public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "nb-NO";
     private static final String APP_NAME = "com.danskebank.mobilebank3no";
     private static final String APP_REFERER = "MobileBanking3 NO";
-    private static final String APP_VERSION = "0.41.0";
+    private static final String APP_VERSION = "0.43.0";
     private static final String BRAND = "FOK";
     private static final String LANGUAGE_CODE = "NB";
     private static final String MARKET_CODE = "NO";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
-    private static final String CLIENT_SECRET = "NRRM1W2ckjUdBwhbHtP38yIZevM9yr46v0wosfIWM4sYSFuCNy";
-    private static final String APP_VERSION_HEADER = "MobileBank ios NO 1120743";
+    private static final String CLIENT_SECRET = "Et7TLuUT6WfZbz9RLlwYKUQMVK99Gq4yU3FZqsebMO7MHFtSZ2";
+    private static final String APP_VERSION_HEADER = "MobileBank ios NO 1315712";
+    private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
+    private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
 
     @Override
     public String getAppVersionHeader() {
@@ -109,5 +112,20 @@ public class DanskeBankNOConfiguration implements DanskeBankConfiguration {
                 .put("1FP", Loan.Type.MORTGAGE)
                 .put("1LD", Loan.Type.MORTGAGE)
                 .put("1F9", Loan.Type.MORTGAGE).build();
+    }
+
+    @Override
+    public String getStepUpTokenKey() {
+        return STEP_UP_TOKEN_KEY;
+    }
+
+    @Override
+    public String getDeviceSerialNumberKey() {
+        return DEVICE_SERIAL_NO_KEY;
+    }
+
+    @Override
+    public String getSecuritySystem() {
+        return DanskeBankConstants.SecuritySystem.SERVICE_CODE_SC;
     }
 }
