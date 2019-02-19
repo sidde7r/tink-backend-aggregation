@@ -110,12 +110,6 @@ bind(
 )
 
 maven_jar(
-    name = "com_google_api_grpc_proto_google_common_protos",
-    artifact = "com.google.api.grpc:proto-google-common-protos:0.1.9",
-    sha1 = "3760f6a6e13c8ab070aa629876cdd183614ee877",
-)
-
-maven_jar(
     name = "io_opencensus_opencensus_api",
     artifact = "io.opencensus:opencensus-api:0.12.3",
     sha1 = "743f074095f29aa985517299545e72cc99c87de0",
@@ -126,7 +120,6 @@ maven_jar(
     artifact = "io.opencensus:opencensus-contrib-grpc-metrics:0.12.3",
     sha1 = "a4c7ff238a91b901c8b459889b6d0d7a9d889b4d",
 )
-
 
 maven_jar(
     name = "com_google_errorprone_error_prone_annotations",
@@ -143,12 +136,6 @@ maven_jar(
 # @aopalliance_aopalliance//jar:jar
 
 maven_jar(
-    name = "org_springframework_data_spring_cql",
-    artifact = "org.springframework.data:spring-cql:1.5.1.RELEASE",
-    sha1 = "15de7e2c2e1c600afd338e5547aaacf11d3c2667",
-)
-
-maven_jar(
     name = "aopalliance_aopalliance",
     artifact = "aopalliance:aopalliance:1.0",
     sha1 = "0235ba8b489512805ac13a8f9ea77a1ca5ebe3e8",
@@ -158,12 +145,6 @@ maven_jar(
     name = "org_apache_lucene_lucene_grouping",
     artifact = "org.apache.lucene:lucene-grouping:4.4.0",
     sha1 = "c0ead8ee2937ed00a60efe825e3b6ae1e1f268d9",
-)
-
-maven_jar(
-    name = "javax_annotation_jsr250_api",
-    artifact = "javax.annotation:jsr250-api:1.0",
-    sha1 = "5025422767732a1ab45d93abfea846513d742dcf",
 )
 
 maven_jar(
@@ -206,24 +187,6 @@ maven_jar(
     name = "com_codahale_metrics_metrics_httpclient",
     artifact = "com.codahale.metrics:metrics-httpclient:3.0.2",
     sha1 = "c658daf41b1ecf934ccd21e83eeeb18703355afb",
-)
-
-maven_jar(
-    name = "org_freemarker",
-    artifact = "org.freemarker:freemarker:2.3.27-incubating",
-    sha1 = "fa71f754fd3c4123358c2b1e5eef630cd99d752f"
-)
-
-maven_jar(
-    name = "org_owasp_esapi_esapi",
-    artifact = "org.owasp.esapi:esapi:2.0.1",
-    sha1 = "2ea3b87c948dbc0c77a17fe24fda961ecc38c6f2",
-)
-
-maven_jar(
-    name = "com_google_protobuf_protobuf_java_util",
-    artifact = "com.google.protobuf:protobuf-java-util:3.5.1",
-    sha1 = "6e40a6a3f52455bd633aa2a0dba1a416e62b4575",
 )
 
 maven_jar(
@@ -283,12 +246,6 @@ maven_jar(
     name = "com_netflix_governator_core",
     artifact = "com.netflix.governator:governator-core:1.17.2",
     sha1 = "c9e0129f8526b8f0b44ffcae0d74feb6b7b71b55",
-)
-
-maven_jar(
-    name = "net_sf_qualitycheck_quality_check",
-    artifact = "net.sf.qualitycheck:quality-check:1.3",
-    sha1 = "5387135c674a783fd2dec7f05b6c17a7f6517c8b",
 )
 
 maven_jar(
@@ -454,12 +411,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_google_protobuf_protobuf_java",
-    artifact = "com.google.protobuf:protobuf-java:3.5.1",
-    sha1 = "8c3492f7662fa1cbf8ca76a0f5eb1146f7725acd",
-)
-
-maven_jar(
     name = "jline_jline",
     artifact = "jline:jline:0.9.94",
     sha1 = "99a18e9a44834afdebc467294e1138364c207402",
@@ -538,12 +489,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_joda_joda_convert",
-    artifact = "org.joda:joda-convert:1.2",
-    sha1 = "35ec554f0cd00c956cc69051514d9488b1374dec",
-)
-
-maven_jar(
     name = "com_fasterxml_jackson_jaxrs_jackson_jaxrs_json_provider",
     artifact = "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.9.7",
     sha1 = "134f1518a9516be01b25526a935d4fd68610b89c",
@@ -583,12 +528,6 @@ maven_jar(
     name = "com_fasterxml_jackson_core_jackson_annotations",
     artifact = "com.fasterxml.jackson.core:jackson-annotations:2.9.7",
     sha1 = "4b838e5c4fc17ac02f3293e9a558bb781a51c46d",
-)
-
-maven_jar(
-    name = "net_sf_uadetector_uadetector_resources",
-    artifact = "net.sf.uadetector:uadetector-resources:2014.10",
-    sha1 = "973d8ec015a740b20cd3cdbc593315c521cb0128",
 )
 
 maven_jar(
@@ -646,12 +585,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "javax_mail_mail",
-    artifact = "javax.mail:mail:1.4.5",
-    sha1 = "85319c87280f30e1afc54c355f91f44741beac49",
-)
-
-maven_jar(
     name = "c3p0_c3p0",
     artifact = "c3p0:c3p0:0.9.1.1",
     sha1 = "302704f30c6e7abb7a0457f7771739e03c973e80",
@@ -673,12 +606,6 @@ maven_jar(
     name = "org_slf4j_jul_to_slf4j",
     artifact = "org.slf4j:jul-to-slf4j:1.7.6",
     sha1 = "322e2af1694ccc75d33f4d11216c852121d8fefd",
-)
-
-maven_jar(
-    name = "net_sf_opencsv_opencsv",
-    artifact = "net.sf.opencsv:opencsv:2.0",
-    sha1 = "97a2765dc2db1083e7c5afcc210db5f7cad3b442",
 )
 
 maven_jar(
@@ -760,18 +687,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "de_grundid_opendatalab_geojson_jackson",
-    artifact = "de.grundid.opendatalab:geojson-jackson:1.6",
-    sha1 = "15535b9779fef7395c98533eb4b5c8b1e0479023",
-)
-
-maven_jar(
-    name = "org_apache_geronimo_specs_geronimo_jpa_2_0_spec",
-    artifact = "org.apache.geronimo.specs:geronimo-jpa_2.0_spec:1.1",
-    sha1 = "f4d90788691f5f5f201f39a53a23d392cde660a3",
-)
-
-maven_jar(
     name = "javax_inject_javax_inject",
     artifact = "javax.inject:javax.inject:1",
     sha1 = "6975da39a7040257bd51d21a231b76c915872d38",
@@ -790,28 +705,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_restfb_restfb",
-    artifact = "com.restfb:restfb:1.43.0",
-    sha1 = "8689d1e66a4800f5945c4d4874996d22f4fe9a25",
-)
-
-maven_jar(
     name = "org_apache_commons_commons_collections4",
     artifact = "org.apache.commons:commons-collections4:4.0",
     sha1 = "da217367fd25e88df52ba79e47658d4cf928b0d1",
-)
-
-maven_jar(
-    name = "org_scala_lang_scala_library",
-    artifact = "org.scala-lang:scala-library:2.10.5",
-    sha1 = "57ac67a6cf6fd591e235c62f8893438e8d10431d",
-)
-
-maven_jar(
-    name = "io_intercom_intercom_java",
-    artifact = "io.intercom:intercom-java:2.2.3",
-    repository = "http://jcenter.bintray.com",
-    sha1 = "7786e9027bb186313fee886463ddeb6b895f1794",
 )
 
 maven_jar(
@@ -887,12 +783,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_apache_thrift_libthrift",
-    artifact = "org.apache.thrift:libthrift:0.9.2",
-    sha1 = "9b067e2e2c5291e9f0d8b3561b1654286e6d81ee",
-)
-
-maven_jar(
     name = "oauth_signpost_signpost_commonshttp4",
     artifact = "oauth.signpost:signpost-commonshttp4:1.2",
     sha1 = "1054da42a9c8e2acfbdf875cecebec047557a83f",
@@ -917,12 +807,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_jcraft_jsch",
-    artifact = "com.jcraft:jsch:0.1.53",
-    sha1 = "658b682d5c817b27ae795637dfec047c63d29935",
-)
-
-maven_jar(
     name = "com_codahale_metrics_metrics_jetty9",
     artifact = "com.codahale.metrics:metrics-jetty9:3.0.2",
     sha1 = "39cc25ad4db6320f6a97f755ebe00ed5def71b9a",
@@ -935,27 +819,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_antlr_antlr4_runtime",
-    artifact = "org.antlr:antlr4-runtime:4.0",
-    sha1 = "02ddf21287c175a7f1d348745f3fbf43730faba3",
-)
-
-maven_jar(
     name = "org_json_json",
     artifact = "org.json:json:20080701",
     sha1 = "d652f102185530c93b66158b1859f35d45687258",
-)
-
-maven_jar(
-    name = "com_googlecode_concurrent_trees_concurrent_trees",
-    artifact = "com.googlecode.concurrent-trees:concurrent-trees:1.0.0",
-    sha1 = "af805a5c473736f81277b6211bfc9f853c8566a7",
-)
-
-maven_jar(
-    name = "commons_pool_commons_pool",
-    artifact = "commons-pool:commons-pool:1.5.4",
-    sha1 = "75b6e20c596ed2945a259cea26d7fadd298398e6",
 )
 
 maven_jar(
@@ -989,12 +855,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_mandrillapp_wrapper_lutung_lutung",
-    artifact = "com.mandrillapp.wrapper.lutung:lutung:0.0.3",
-    sha1 = "5d8854c1c5b3af84ab7c8f14004cd201db7b8168",
-)
-
-maven_jar(
     name = "mysql_mysql_connector_java",
     artifact = "mysql:mysql-connector-java:5.1.42",
     sha1 = "80a448a3ec2178b649bb2e3cb3610fab06e11669",
@@ -1016,12 +876,6 @@ maven_jar(
     name = "antlr_antlr",
     artifact = "antlr:antlr:2.7.6",
     sha1 = "cf4f67dae5df4f9932ae7810f4548ef3e14dd35e",
-)
-
-maven_jar(
-    name = "commons_beanutils_commons_beanutils",
-    artifact = "commons-beanutils:commons-beanutils:1.7.0",
-    sha1 = "5675fd96b29656504b86029551973d60fb41339b",
 )
 
 maven_jar(
@@ -1073,12 +927,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_dropwizard_dropwizard_metrics_graphite",
-    artifact = "io.dropwizard:dropwizard-metrics-graphite:0.7.1",
-    sha1 = "fa2d12fb3f9367d96ba6282a9081a4444bc1d426",
-)
-
-maven_jar(
     name = "asm_asm",
     artifact = "asm:asm:3.1",
     sha1 = "c157def142714c544bdea2e6144645702adf7097",
@@ -1088,12 +936,6 @@ maven_jar(
     name = "io_dropwizard_dropwizard_lifecycle",
     artifact = "io.dropwizard:dropwizard-lifecycle:0.7.1",
     sha1 = "12c282d9682628d7c33654e0d62f1dbf2a883d20",
-)
-
-maven_jar(
-    name = "org_apache_maven_maven_artifact",
-    artifact = "org.apache.maven:maven-artifact:3.2.3",
-    sha1 = "e75bf0b42e46bada3c1883fec3f7ef57cce84161",
 )
 
 maven_jar(
@@ -1247,12 +1089,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "net_sourceforge_jexcelapi_jxl",
-    artifact = "net.sourceforge.jexcelapi:jxl:2.6.12",
-    sha1 = "7faf62e0697f7a88954622dfe8c8de33ed142ac7",
-)
-
-maven_jar(
     name = "org_eclipse_jetty_jetty_io",
     artifact = "org.eclipse.jetty:jetty-io:9.0.7.v20131107",
     sha1 = "512e9d2e088ae7c70c4a68381423cb68b9ed42d6",
@@ -1286,12 +1122,6 @@ maven_jar(
     name = "org_apache_lucene_lucene_spatial",
     artifact = "org.apache.lucene:lucene-spatial:4.4.0",
     sha1 = "a17b2d60f82dbff1ee67c59a5a1e60a3916ee1fb",
-)
-
-maven_jar(
-    name = "net_sf_uadetector_uadetector_core",
-    artifact = "net.sf.uadetector:uadetector-core:0.9.22",
-    sha1 = "e40e4e391e27fdb798a574a3ee0c26debe36c6cd",
 )
 
 maven_jar(
@@ -1368,12 +1198,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_liquibase_liquibase_core",
-    artifact = "org.liquibase:liquibase-core:3.1.1",
-    sha1 = "8f69599b04156a222ae7cd00b0dd844f1323b683",
-)
-
-maven_jar(
     name = "io_netty_netty_codec_http2",
     artifact = "io.netty:netty-codec-http2:4.1.22.Final",
     sha1 = "6d01daf652551a3219cc07122b765d4c4924dcf8",
@@ -1389,13 +1213,6 @@ maven_jar(
     name = "org_slf4j_jcl_over_slf4j",
     artifact = "org.slf4j:jcl-over-slf4j:1.7.6",
     sha1 = "ab1648fe1dd6f1e5c2ec6d12f394672bb8c1036a",
-)
-
-
-maven_jar(
-    name = "com_turo_pushy",
-    artifact = "com.turo:pushy:0.12.0",
-    sha1 = "24c55011bb2da52a79edbbd21933766ae1047a5f",
 )
 
 maven_jar(
@@ -1459,12 +1276,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_scala_lang_scala_reflect",
-    artifact = "org.scala-lang:scala-reflect:2.10.5",
-    sha1 = "7392facb48876c67a89fcb086112b195f5f6bbc3",
-)
-
-maven_jar(
     name = "org_apache_mahout_mahout_core",
     artifact = "org.apache.mahout:mahout-core:0.9",
     sha1 = "22a63210e10d39be2edcc01564f5d5f68f91eeb7",
@@ -1516,18 +1327,6 @@ maven_jar(
     name = "net_sourceforge_htmlunit_htmlunit_core_js",
     artifact = "net.sourceforge.htmlunit:htmlunit-core-js:2.11",
     sha1 = "d11718ebc89876ebe2743a1f200d21f599bc5e0f",
-)
-
-maven_jar(
-    name = "org_quartz_scheduler_quartz",
-    artifact = "org.quartz-scheduler:quartz:2.2.3",
-    sha1 = "d4d8ea088852beeb89f54d3040fe1cbaa8491dcd",
-)
-
-maven_jar(
-    name = "apporiented_com_hierarchical_clustering",
-    artifact = "com.apporiented:hierarchical-clustering:1.0.3",
-    sha1 = "802582e69569b283cd91010d640cd4f851759a88",
 )
 
 maven_jar(
@@ -1603,12 +1402,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "ca_juliusdavies_not_yet_commons_ssl",
-    artifact = "ca.juliusdavies:not-yet-commons-ssl:0.3.9",
-    sha1 = "e20f0960c000681c91d00de846a43cf2051b8f69",
-)
-
-maven_jar(
     name = "org_bouncycastle_bcprov_jdk15on",
     artifact = "org.bouncycastle:bcprov-jdk15on:1.59",
     sha1 = "2507204241ab450456bdb8e8c0a8f986e418bd99",
@@ -1681,30 +1474,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_jvnet_jaxb2_commons_jaxb2_basics_runtime",
-    artifact = "org.jvnet.jaxb2_commons:jaxb2-basics-runtime:0.6.5",
-    sha1 = "d6142ae0b68f06dbab141eb0533659f90e05bcde",
-)
-
-maven_jar(
-    name = "com_github_jknack_handlebars",
-    artifact = "com.github.jknack:handlebars:0.10.0",
-    sha1 = "18269e1c33c61d410b88a622083aaca940f9e493",
-)
-
-maven_jar(
-    name = "org_jfree_jfreesvg",
-    artifact = "org.jfree:jfreesvg:2.1",
-    sha1 = "206679ef09f39b57b2f73dc79bd09785efe007af",
-)
-
-maven_jar(
-    name = "io_prometheus_simpleclient_logback",
-    artifact = "io.prometheus:simpleclient_logback:0.0.19",
-    sha1 = "17623f01b8caa5300ec5a3d16cced2f12c0ac8fb",
-)
-
-maven_jar(
     name = "com_github_rholder_guava_retrying",
     artifact = "com.github.rholder:guava-retrying:2.0.0",
     sha1 = "974bc0a04a11cc4806f7c20a34703bd23c34e7f4",
@@ -1729,12 +1498,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_reactivex_rxjava",
-    artifact = "io.reactivex:rxjava:1.0.13",
-    sha1 = "b8668706414b5936d38c8a9e4c2be16e3c999c62",
-)
-
-maven_jar(
     name = "commons_logging_commons_logging",
     artifact = "commons-logging:commons-logging:1.1.3",
     sha1 = "f6f66e966c70a83ffbdb6f17a0919eaf7c8aca7f",
@@ -1750,12 +1513,6 @@ maven_jar(
     name = "io_netty_netty_codec_http",
     artifact = "io.netty:netty-codec-http:4.1.22.Final",
     sha1 = "3805f3ca0d57630200defc7f9bb6ed3382dcb10b",
-)
-
-maven_jar(
-    name = "org_apache_santuario_xmlsec",
-    artifact = "org.apache.santuario:xmlsec:1.5.4",
-    sha1 = "dff1ca1279fd24182ee530982927156256c02f8d",
 )
 
 maven_jar(
@@ -1819,12 +1576,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_codahale_metrics_metrics_graphite",
-    artifact = "com.codahale.metrics:metrics-graphite:3.0.2",
-    sha1 = "88626d5a305d1c018ac777162ea483f934cf196b",
-)
-
-maven_jar(
     name = "org_codehaus_jackson_jackson_mapper_asl",
     artifact = "org.codehaus.jackson:jackson-mapper-asl:1.8.9",
     sha1 = "e430ed24d67dfc126ee16bc23156a044950c3168",
@@ -1873,21 +1624,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_twitter_jsr166e",
-    artifact = "com.twitter:jsr166e:1.1.0",
-    sha1 = "233098147123ee5ddcd39ffc57ff648be4b7e5b2",
-)
-
-maven_jar(
     name = "com_codahale_metrics_metrics_json",
     artifact = "com.codahale.metrics:metrics-json:3.0.2",
     sha1 = "46198fe0284104519b60ff2ad49f71c98ba942f2",
-)
-
-maven_jar(
-    name = "com_stripe_stripe_java",
-    artifact = "com.stripe:stripe-java:1.18.0",
-    sha1 = "3d4782ca0f44546679e72d5db94219506ebeef0c",
 )
 
 maven_jar(
@@ -2137,18 +1876,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_protostuff_protostuff_collectionschema",
-    artifact = "io.protostuff:protostuff-collectionschema:1.5.1",
-    sha1 = "0e47e085db363cec2cc9f27320ad17aacff11e35",
-)
-
-maven_jar(
-    name = "org_rythmengine_rythm_engine",
-    artifact = "org.rythmengine:rythm-engine:1.1.7",
-    sha1 = "1a9133bb668026221a3146360a81978b56af2a67",
-)
-
-maven_jar(
     name = "net_bytebuddy_byte_buddy",
     artifact = "net.bytebuddy:byte-buddy:1.5.5",
     sha1 = "8557b6465cea17f3769678235e77d5cb076c1170",
@@ -2158,24 +1885,6 @@ maven_jar(
     name = "org_objenesis_objenesis",
     artifact = "org.objenesis:objenesis:2.4",
     sha1 = "2916b6c96b50c5b3ec4452ed99401db745aabb27",
-)
-
-maven_jar(
-    name = "org_mvel_mvel2",
-    artifact = "org.mvel:mvel2:2.2.8.Final",
-    sha1 = "a0d38dc2422594621b71604f91255af1001114c0",
-)
-
-maven_jar(
-    name = "com_stevesoft_pat_pat",
-    artifact = "com.stevesoft.pat:pat:1.5.3",
-    sha1 = "4b96b36954e8f86023dd64ff24fa211d8bb16a98",
-)
-
-maven_jar(
-    name = "org_eclipse_jdt_core_compiler_ecj",
-    artifact = "org.eclipse.jdt.core.compiler:ecj:4.6.1",
-    sha1 = "5555607add54eb79c5a0729134e663fe2e6300c2",
 )
 
 maven_jar(
@@ -2217,24 +1926,6 @@ maven_jar(
 # TODO: build grpc jars
 
 maven_jar(
-    name = "io_grpc_grpc_protobuf",
-    artifact = "io.grpc:grpc-protobuf:1.11.0",
-    sha1 = "b87abe640170a6eaee11834098e6eec6b53b85b3",
-)
-
-maven_jar(
-    name = "io_grpc_grpc_auth",
-    artifact = "io.grpc:grpc-auth:jar:1.11.0",
-    sha1 = "3dfdf60818519be4847a1a9109a9b162dcf42803",
-)
-
-maven_jar(
-    name = "io_grpc_grpc_context",
-    artifact = "io.grpc:grpc-context:jar:1.11.0",
-    sha1 = "ce572ec046f6967d34fbac35eda20b4d0ed58c78",
-)
-
-maven_jar(
     name = "io_grpc_grpc_protobuf_lite",
     artifact = "io.grpc:grpc-protobuf-lite:1.11.0",
     sha1 = "f2263f20d2545c208bd5bdd6ca47c3a164df0671",
@@ -2247,21 +1938,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "io_grpc_grpc_stub",
-    artifact = "io.grpc:grpc-stub:1.11.0",
-    sha1 = "692522483a8fd32916125733b7030c8c4b722f84",
-)
-
-maven_jar(
     name = "io_grpc_grpc_core",
     artifact = "io.grpc:grpc-core:1.11.0",
     sha1 = "d0aa483ab2189b16f06f101f6e82dd601bb4a266",
-)
-
-maven_jar(
-    name = "io_grpc_grpc_netty",
-    artifact = "io.grpc:grpc-netty:1.11.0",
-    sha1 = "fd1f99288a19c0d881f02ca0fb35d9527a8e0f79",
 )
 
 maven_jar(
@@ -2294,72 +1973,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_thoughtworks_paranamer_paranamer",
-    artifact = "com.thoughtworks.paranamer:paranamer:2.7",
-    sha1 = "3ed64c69e882a324a75e890024c32a28aff0ade8",
-)
-
-maven_jar(
-    name = "org_apache_commons_commons_compress",
-    artifact = "org.apache.commons:commons-compress:1.8.1",
-    sha1 = "a698750c16740fd5b3871425f4cb3bbaa87f529d",
-)
-
-maven_jar(
-    name = "org_apache_avro_avro",
-    artifact = "org.apache.avro:avro:1.8.2",
-    sha1 = "91e3146dfff4bd510181032c8276a3a0130c0697",
-)
-
-maven_jar(
-    name = "org_tukaani_xz",
-    artifact = "org.tukaani:xz:1.5",
-    sha1 = "9c64274b7dbb65288237216e3fae7877fd3f2bee",
-)
-
-maven_jar(
-    name = "net_sf_supercsv_super_csv",
-    artifact = "net.sf.supercsv:super-csv:2.1.0",
-    sha1 = "c6466dd0e28c034272b9f70a3f1896c03f1f2b27",
-)
-
-maven_jar(
-    name = "com_github_jbellis_jamm",
-    artifact = "com.github.jbellis:jamm:0.3.0",
-    sha1 = "a08af6071e57d4eb5d13db780c7810f73b549f1a",
-)
-
-maven_jar(
-    name = "com_boundary_high_scale_lib",
-    artifact = "com.boundary:high-scale-lib:1.0.6",
-    sha1 = "7b44147cb2729e1724d2d46d7b932c56b65087f0",
-)
-
-maven_jar(
-    name = "com_yammer_metrics_metrics_core",
-    artifact = "com.yammer.metrics:metrics-core:2.2.0",
-    sha1 = "f82c035cfa786d3cbec362c38c22a5f5b1bc8724",
-)
-
-maven_jar(
-    name = "org_antlr_antlr_runtime",
-    artifact = "org.antlr:antlr-runtime:3.5.2",
-    sha1 = "cd9cd41361c155f3af0f653009dcecb08d8b4afd",
-)
-
-maven_jar(
-    name = "com_googlecode_concurrentlinkedhashmap_concurrentlinkedhashmap_lru",
-    artifact = "com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru:1.3",
-    sha1 = "beb907bae0604fdc153cbcc2f0dc84d3ae35bf36",
-)
-
-maven_jar(
-    name = "com_clearspring_analytics_stream",
-    artifact = "com.clearspring.analytics:stream:2.9.5",
-    sha1 = "422b3fd1a2a38dc9ff9c9a2f6db9bda80962475e",
-)
-
-maven_jar(
     name = "org_apache_pdfbox_pdfbox",
     artifact = "org.apache.pdfbox:pdfbox:2.0.6",
     sha1 = "68616a583c5f9b9ba72140364d15a07cd937ce0e"
@@ -2372,12 +1985,6 @@ maven_jar(
 )
 
 maven_jar(
-    name = "com_googlecode_libphonenumber",
-    artifact = "com.googlecode.libphonenumber:libphonenumber:8.8.4",
-    sha1 = "1935df1efd2fcdd7c2e7d4f8cc08f245a2798346"
-)
-
-maven_jar(
     name = "com_nimbusds_srp6a",
     artifact = "com.nimbusds:srp6a:2.0.2",
     sha1 = "fc461127a39208502518ccbe51100c315e7625e8"
@@ -2387,12 +1994,6 @@ maven_jar(
     name = "com_auth0_java_jwt",
     artifact = "com.auth0:java-jwt:3.3.0",
     sha1 = "0e180a4b31f14c2a1cf203f457fb2149d2f6c1d2"
-)
-
-maven_jar(
-    name = "com_sproutsocial_nsqj_j",
-    artifact = "com.sproutsocial:nsq-j:0.9.1",
-    sha1 = "4d51d71be5236e737b178716b226bb87a03949c7"
 )
 
 maven_jar(
