@@ -6,20 +6,21 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 
 public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "en-GB";
     private static final String APP_NAME = "com.danskebank.mobilebank3fi";
     private static final String APP_REFERER = "MobileBanking3 FI";
-    private static final String APP_VERSION = "0.41.0";
+    private static final String APP_VERSION = "0.43.0";
     private static final String BRAND = "SAM";
     private static final String LANGUAGE_CODE = "FI";
     private static final String MARKET_CODE = "FI";
     private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
     private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
-    private static final String CLIENT_SECRET = "NRRM1W2ckjUdBwhbHtP38yIZevM9yr46v0wosfIWM4sYSFuCNy";
-    private static final String APP_VERSION_HEADER = "MobileBank ios FI 1120591";
+    private static final String CLIENT_SECRET = "Et7TLuUT6WfZbz9RLlwYKUQMVK99Gq4yU3FZqsebMO7MHFtSZ2";
+    private static final String APP_VERSION_HEADER = "MobileBank ios FI 1315101";
 
     @Override
     public String getAppVersionHeader() {
@@ -114,5 +115,10 @@ public class DanskeBankFIConfiguration implements DanskeBankConfiguration {
 
     public String getStepUpTokenKey() {
         return STEP_UP_TOKEN_KEY;
+    }
+
+    @Override
+    public String getSecuritySystem() {
+        return DanskeBankConstants.SecuritySystem.SERVICE_CODE_JS;
     }
 }
