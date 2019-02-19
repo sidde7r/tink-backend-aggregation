@@ -19,6 +19,8 @@ public abstract class CollectBankIdResponse {
             case "OUTSTANDING_TRANSACTION":
             case "NO_CLIENT":
                 return BankIdStatus.WAITING;
+            case "EXPIRED_TRANSACTION":
+                return BankIdStatus.TIMEOUT;
             default:
                 return BankIdStatus.FAILED_UNKNOWN;
         }
