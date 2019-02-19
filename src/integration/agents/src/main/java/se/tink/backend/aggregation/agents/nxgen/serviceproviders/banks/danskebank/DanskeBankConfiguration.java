@@ -19,4 +19,7 @@ public interface DanskeBankConfiguration {
     List<String> getCheckingAccountTypes();
     List<String> getSavingsAccountTypes();
     Map<String, Loan.Type> getLoanAccountTypes();
+    String getStepUpTokenKey();
+    String getDeviceSerialNumberKey();
+    String getSecuritySystem();
 }
