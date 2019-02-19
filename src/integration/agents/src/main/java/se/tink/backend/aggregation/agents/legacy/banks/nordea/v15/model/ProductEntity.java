@@ -190,6 +190,16 @@ public class ProductEntity implements GeneralAccountEntity {
     }
 
     @JsonIgnore
+    public boolean isDebitCard() {
+        if (cardGroup == null || cardGroup.get("$") == null) {
+            return false;
+        }
+
+        String cardType = cardGroup.get("$").toString();
+        return cardType.equalsIgnoreCase("debit");
+    }
+
+    @JsonIgnore
     public String getAccountId() {
         if (productId.containsKey("$")) {
             Object o = productId.get("$");

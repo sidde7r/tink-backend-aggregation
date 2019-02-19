@@ -915,6 +915,11 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
                 continue;
             }
 
+            // Don't parse debit cards as accounts
+            if (productEntity.isDebitCard()) {
+                continue;
+            }
+
             constructAccount(productEntity)
                     .ifPresent(account -> productEntityAccountMap.put(productEntity, account));
         }
