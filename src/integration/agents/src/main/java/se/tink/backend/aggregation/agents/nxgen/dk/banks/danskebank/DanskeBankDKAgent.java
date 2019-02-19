@@ -5,11 +5,12 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.DanskeBankChallengeAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.DanskeBankLoanFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -26,13 +27,18 @@ public class DanskeBankDKAgent extends DanskeBankAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-
+        client.disableSignatureRequestHeader();
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                        new DanskeBankPasswordAuthenticator(apiClient, deviceId, configuration));
+        DanskeBankChallengeAuthenticator danskeBankChallengeAuthenticator = new DanskeBankChallengeAuthenticator(
+                apiClient, persistentStorage, credentials, deviceId, configuration);
+
+        return new AutoAuthenticationController(request, context,
+                new KeyCardAuthenticationController(
+                        catalog, supplementalInformationHelper, danskeBankChallengeAuthenticator),
+                danskeBankChallengeAuthenticator);
     }
 
     // DK fetches loans at a separate loan endpoint

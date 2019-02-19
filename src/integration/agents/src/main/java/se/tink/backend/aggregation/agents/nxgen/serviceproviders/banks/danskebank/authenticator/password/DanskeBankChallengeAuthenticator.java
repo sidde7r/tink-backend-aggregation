@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password;
 
+import java.util.Base64;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.danskebank.DanskeBankFIApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankDeserializer;
@@ -38,14 +39,12 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 
-import java.util.Base64;
-
 public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenticator implements KeyCardAuthenticator,
         AutoAuthenticator {
 
     private static final AggregationLogger log = new AggregationLogger(DanskeBankPasswordAuthenticator.class);
     private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
-    private final DanskeBankFIApiClient apiClient;
+    private final DanskeBankApiClient apiClient;
     private final PersistentStorage persistentStorage;
     private final Credentials credentials;
     private final String deviceId;
@@ -54,7 +53,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private String finalizePackage;
     private WebDriver driver;
 
-    public DanskeBankChallengeAuthenticator(DanskeBankFIApiClient apiClient, PersistentStorage persistentStorage,
+    public DanskeBankChallengeAuthenticator(DanskeBankApiClient apiClient, PersistentStorage persistentStorage,
                                             Credentials credentials, String deviceId,
                                             DanskeBankConfiguration configuration) {
         this.apiClient = apiClient;
@@ -261,7 +260,7 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
     private void logonStepOne(String username, String password) throws AuthenticationException, AuthorizationException {
         // Get the dynamic logon javascript
         HttpResponse getResponse = this.apiClient.collectDynamicLogonJavascript(
-                DanskeBankConstants.SecuritySystem.SERVICE_CODE_JS, this.configuration.getBrand());
+                this.configuration.getSecuritySystem(), this.configuration.getBrand());
 
         // Add the authorization header from the response
         this.apiClient.addPersistentHeader("Authorization", getResponse.getHeaders().getFirst("Persistent-Auth"));

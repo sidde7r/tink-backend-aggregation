@@ -4,20 +4,23 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
 
 public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "en-GB";
     private static final String APP_NAME = "com.danskebank.mobilebank3dk";
     private static final String APP_REFERER = "MobileBanking3 DK";
-    private static final String APP_VERSION = "0.41.0";
+    private static final String APP_VERSION = "0.43.0";
     private static final String BRAND = "DB";
     private static final String LANGUAGE_CODE = "DA";
     private static final String MARKET_CODE = "DK";
     private static final String CLIENT_ID = "5ec4b8ad-a93d-43e1-831c-8e78ee6e661a";
-    private static final String CLIENT_SECRET = "NRRM1W2ckjUdBwhbHtP38yIZevM9yr46v0wosfIWM4sYSFuCNy";
-    private static final String APP_VERSION_HEADER = "MobileBank ios DK 1120961";
+    private static final String CLIENT_SECRET = "Et7TLuUT6WfZbz9RLlwYKUQMVK99Gq4yU3FZqsebMO7MHFtSZ2";
+    private static final String APP_VERSION_HEADER = "MobileBank ios DK 1315090";
+    private static final String DEVICE_SERIAL_NO_KEY = "x-device-serial-no";
+    private static final String STEP_UP_TOKEN_KEY = "x-stepup-token";
 
     @Override
     public String getAppVersionHeader() {
@@ -107,4 +110,18 @@ public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
                 .put("094", Loan.Type.VEHICLE).build();
     }
 
+    @Override
+    public String getStepUpTokenKey() {
+        return STEP_UP_TOKEN_KEY;
+    }
+
+    @Override
+    public String getDeviceSerialNumberKey() {
+        return DEVICE_SERIAL_NO_KEY;
+    }
+
+    @Override
+    public String getSecuritySystem() {
+        return DanskeBankConstants.SecuritySystem.SERVICE_CODE_SC;
+    }
 }
