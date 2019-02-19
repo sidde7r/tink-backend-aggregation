@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transa
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusProduct;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusUpcomingTransaction;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.rpc.FetchTransactionsResponse;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
+import se.tink.libraries.pair.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,13 +40,20 @@ public class BelfiusTransactionalAccountFetcher implements
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        List<TransactionalAccount> transactionalAccounts = this.apiClient.fetchProducts().stream()
-                .filter(entry -> entry.getValue().isTransactionalAccount())
-                .map(entry -> entry.getValue().toTransactionalAccount(entry.getKey()))
-                .filter(Objects::nonNull)
+        List<TransactionalAccount> transactionalAccounts = fetchTransactionalAccountPairedWithBelfiusProduct()
+                .stream()
+                .map(pair -> pair.first)
                 .collect(Collectors.toList());
         belfiusSessionStorage.setNumberOfAccounts(transactionalAccounts.size());
         return transactionalAccounts;
+    }
+
+    public List<Pair<TransactionalAccount, BelfiusProduct>> fetchTransactionalAccountPairedWithBelfiusProduct() {
+        return this.apiClient.fetchProducts().stream()
+                .filter(entry -> entry.getValue().isTransactionalAccount())
+                .map(entry -> new Pair<>(entry.getValue().toTransactionalAccount(entry.getKey()), entry.getValue()))
+                .filter(pair -> pair.first != null)
+                .collect(Collectors.toList());
     }
 
     @Override

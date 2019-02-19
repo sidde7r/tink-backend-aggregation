@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.common.base.Strings;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
@@ -81,16 +80,33 @@ public class BelfiusProduct implements GeneralAccountEntity{
     @JsonProperty("mlb_ZoomItAllowed")
     @JsonDeserialize(using = BelfiusStringDeserializer.class)
     private String zoomItAllowed;
-    //------- End logged for credit card
-
+    // ------- End logged for credit card
 
     private Optional<Amount> getAmount() {
-        // Ongoing transaction the available and amount differs, use available
-        if (Strings.isNullOrEmpty(this.available)) {
-            return BelfiusStringUtils.parseStringToAmount(this.amount);
-        } else {
-            return BelfiusStringUtils.parseStringToAmount(this.available);
+        return BelfiusStringUtils.parseStringToAmount(this.amount);
+    }
+
+    private Optional<Amount> getBalance() {
+        Optional<Amount> amount = getAmount();
+        Optional<Amount> available = getAvailableAmount();
+        if (amount.isPresent() && available.isPresent()) {
+            if (available.get().isLessThan(amount.get().doubleValue())) {
+                return available;
+            }
         }
+        return amount;
+    }
+
+
+    public Amount getAvailableBalance() {
+        Optional<Amount> amount = getAmount();
+        Optional<Amount> available = getAvailableAmount();
+        if (amount.isPresent() && available.isPresent()) {
+            if (available.get().isGreaterThan(amount.get().doubleValue())) {
+                return available.get();
+            }
+        }
+        return amount.orElseThrow(IllegalArgumentException::new);
     }
 
     public boolean isTransactionalAccount() {
@@ -108,8 +124,8 @@ public class BelfiusProduct implements GeneralAccountEntity{
     }
 
     public TransactionalAccount toTransactionalAccount(String key) {
-        return getAmount().map(amount ->
-                TransactionalAccount.builder(getAccountType(), this.extIntAccount, amount)
+        return getBalance().map(parsedAmount ->
+                TransactionalAccount.builder(getAccountType(), this.extIntAccount, parsedAmount)
                         .setAccountNumber(this.numberAccount)
                         .setName(this.denominationDescription)
                         .setBankIdentifier(key)
@@ -125,7 +141,7 @@ public class BelfiusProduct implements GeneralAccountEntity{
 
     public CreditCardAccount toCreditCardAccount(String key) {
         return getAmount().flatMap(amount ->
-                parseAvailable().map(availableAmount ->
+                parseAvailableForCreditCard().map(availableAmount ->
                         CreditCardAccount.builder(this.numberAccount, amount, availableAmount)
                                 .setAccountNumber(this.numberAccount)
                                 .setBankIdentifier(key)
@@ -135,12 +151,14 @@ public class BelfiusProduct implements GeneralAccountEntity{
         ).orElse(null);
     }
 
-    private Optional<Amount> parseAvailable() {
-        Optional<Amount> availableAmount = BelfiusStringUtils.parseStringToAmount(this.available);
-        if (availableAmount.isPresent()) {
-            return availableAmount;
-        }
+    private Optional<Amount> parseAvailableForCreditCard() {
+        Optional<Amount> parsedAvailableAmount = getAvailableAmount();
+        if (parsedAvailableAmount.isPresent()) return parsedAvailableAmount;
         return BelfiusStringUtils.parseStringToAmount(this.effectiveAvailableCard);
+    }
+
+    private Optional<Amount> getAvailableAmount() {
+        return BelfiusStringUtils.parseStringToAmount(this.available);
     }
 
     @Override
