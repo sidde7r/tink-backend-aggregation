@@ -12,6 +12,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.RateLimiter;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
@@ -19,6 +20,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -75,6 +77,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
@@ -309,7 +312,12 @@ public class SkandiabankenAgent extends AbstractAgent implements
 
         // Authenticate the user.
 
-        ClientResponse clientLoginResponse = createClientRequest(authorizeURL).post(ClientResponse.class);
+        ClientResponse clientLoginResponse = null;
+        try {
+            clientLoginResponse = createClientRequest(authorizeURL).post(ClientResponse.class);
+        } catch (ClientHandlerException che) {
+            handleException(che);
+        }
 
         String redirectUrl = clientLoginResponse.getHeaders().getFirst("Location");
         if (Strings.isNullOrEmpty(redirectUrl)) {
@@ -320,10 +328,12 @@ public class SkandiabankenAgent extends AbstractAgent implements
 
         clientLoginResponse.close();
 
-        LoginResponse loginResponse;
+        LoginResponse loginResponse = null;
         try {
             loginResponse = createClientRequest(getBaseUrlWithCustomerOwner() + "/login").post(LoginResponse.class,
                     params);
+        } catch (ClientHandlerException che) {
+            handleException(che);
         } catch (UniformInterfaceException e) {
 
             ErrorResponse errorResponse = e.getResponse().getEntity(ErrorResponse.class);
@@ -416,7 +426,7 @@ public class SkandiabankenAgent extends AbstractAgent implements
             final String accountUrl = getBaseUrlWithCustomerOwner() + "/customer/" + customerId + "/account/"
                     + skandiabankenAccountId + "/next?fwdKey=" + fwdKey + "&page=" + page;
             pagingRateLimiter.acquire();
-            accountEntity = createClientRequest(accountUrl).get(AccountEntity.class);
+            accountEntity = executeGet(accountUrl, AccountEntity.class);
 
             accumulatedTransactions.addAll(getListOfTransactions(accountEntity));
 
@@ -439,7 +449,7 @@ public class SkandiabankenAgent extends AbstractAgent implements
     }
 
     private List<LoginMethod> getLoginMethods() {
-        return createClientRequest(getBaseUrlWithCustomerOwner() + "/").get(LoginMethodsResponse.class)
+        return executeGet(getBaseUrlWithCustomerOwner() + "/", LoginMethodsResponse.class)
                 .getLoginMethods();
     }
 
@@ -530,8 +540,8 @@ public class SkandiabankenAgent extends AbstractAgent implements
         }
 
         String accountsUrl = getBaseUrlWithCustomerOwner() + "/customer/" + customerId;
+        ClientResponse clientResponse = executeGet(accountsUrl, ClientResponse.class);
 
-        ClientResponse clientResponse = createClientRequest(accountsUrl).get(ClientResponse.class);
         if (clientResponse.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
             return Collections.emptyMap();
         }
@@ -549,7 +559,7 @@ public class SkandiabankenAgent extends AbstractAgent implements
     private Map<Account, AccountFeatures>refreshInvestmentAccounts() {
         Map<Account, AccountFeatures> investmentAccounts = new HashMap<>();
         String investmentsUrl = getBaseUrlWithCustomerOwner() + "/customer/" + customerId + "/investments";
-        InvestmentsResponse investmentsResponse = createClientRequest(investmentsUrl).get(InvestmentsResponse.class);
+        InvestmentsResponse investmentsResponse = executeGet(investmentsUrl, InvestmentsResponse.class);
 
         Map<String, Account> accountById = investmentsResponse.stream().collect(Collectors.toMap(
                 InvestmentEntity::getId,
@@ -560,8 +570,8 @@ public class SkandiabankenAgent extends AbstractAgent implements
                 InvestmentEntity::toPortfolio));
 
         accountById.forEach((id, account) -> {
-            InvestmentResponse investmentResponse = createClientRequest(
-                    investmentsUrl + "/" + id).get(InvestmentResponse.class);
+            InvestmentResponse investmentResponse = executeGet(investmentsUrl + "/" + id,
+                    InvestmentResponse.class);
 
             List<Instrument> instruments = Lists.newArrayList();
 
@@ -615,7 +625,7 @@ public class SkandiabankenAgent extends AbstractAgent implements
                 + skandiabankenAccountId;
 
         pagingRateLimiter.acquire();
-        AccountEntity accountEntity = createClientRequest(accountUrl).get(AccountEntity.class);
+        AccountEntity accountEntity = executeGet(accountUrl, AccountEntity.class);
 
         // List of transactions
 
@@ -823,5 +833,25 @@ public class SkandiabankenAgent extends AbstractAgent implements
         public LocalizableKey getKey() {
             return userMessage;
         }
+    }
+
+    private <T> T executeGet(String url, Class<T> responseType) {
+        T response = null;
+
+        try {
+            response = createClientRequest(url).get(responseType);
+        } catch (ClientHandlerException e) {
+            handleException(e);
+        }
+
+        return response;
+    }
+
+    private void handleException(ClientHandlerException e) {
+        if (e.getCause() != null && e.getCause().getClass().equals(SocketTimeoutException.class)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
+        }
+
+        throw e;
     }
 }
