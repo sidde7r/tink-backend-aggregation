@@ -1,24 +1,23 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiConstants;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.FatalErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.ResponseError;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public abstract class BaseResponse {
+    @JsonProperty("Error")
     private ErrorResponse error;
 
     public ErrorResponse getError() {
         return error;
     }
 
-    @JsonProperty("Error")
-    public void setError(ErrorResponse error) {
-        this.error = error;
-    }
-
+    @JsonIgnore
     public void checkForErrors() throws UserErrorException, FatalErrorException {
         ResponseError err = error.buildError();
 
@@ -29,5 +28,17 @@ public abstract class BaseResponse {
 
             throw new FatalErrorException(error.getMessage());
         }
+    }
+
+    @JsonIgnore
+    public boolean isBankIdAlreadyInProgress() {
+        return error != null &&
+                IkanoApiConstants.ErrorCode.BANKID_IN_PROGRESS.equalsIgnoreCase(error.getCode());
+    }
+
+    @JsonIgnore
+    public boolean isBankIdCancel() {
+        return error != null &&
+                IkanoApiConstants.ErrorCode.BANKID_CANCELLED.equalsIgnoreCase(error.getCode());
     }
 }

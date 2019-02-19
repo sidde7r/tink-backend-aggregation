@@ -16,6 +16,7 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.regist
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoCrypt;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class IkanoApiClient {
@@ -55,6 +56,10 @@ public class IkanoApiClient {
                 .header("Username", credentials.getUsername())
                 .get(BankIdReference.class);
 
+        if (response.isBankIdAlreadyInProgress()) {
+            throw BankIdError.ALREADY_IN_PROGRESS.exception();
+        }
+
         response.checkForErrors();
 
         return response.getReference();
@@ -66,6 +71,14 @@ public class IkanoApiClient {
         BankIdSession response = createClientRequest(uri)
                 .header("Username", credentials.getUsername())
                 .get(BankIdSession.class);
+
+        if (response.isBankIdNoClient()) {
+            throw BankIdError.NO_CLIENT.exception();
+        }
+
+        if (response.isBankIdCancel()) {
+            throw BankIdError.CANCELLED.exception();
+        }
 
         response.checkForErrors();
 
