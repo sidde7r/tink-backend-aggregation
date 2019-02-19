@@ -94,7 +94,7 @@ public class BelfiusProduct implements GeneralAccountEntity{
                 return available;
             }
         }
-        return amount;
+        return amount.isPresent() ? amount : available;
     }
 
 
