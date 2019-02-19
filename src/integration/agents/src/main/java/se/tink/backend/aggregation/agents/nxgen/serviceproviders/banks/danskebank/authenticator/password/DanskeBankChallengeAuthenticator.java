@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskeban
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password.rpc.MoreInformationEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.rpc.FinalizeAuthenticationResponse;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
@@ -250,6 +251,12 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             } catch (HttpResponseException e) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
+        } catch (Exception e) {
+            if (driver != null) {
+                log.infoExtraLong(driver.getPageSource(), LogTag.from("danskebank_autherror"));
+            }
+
+            throw e;
         } finally {
             if (driver != null) {
                 driver.quit();
