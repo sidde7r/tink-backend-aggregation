@@ -2,19 +2,19 @@ package se.tink.backend.aggregation.agents.creditcards.ikano.api;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import javax.naming.LimitExceededException;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.errors.UserErrorException;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.Card;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.CardList;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private final IkanoApiClient apiClient;
@@ -53,6 +53,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
 
         try {
             String reference = apiClient.authenticateWithBankId();
+            openBankIdApp();
 
             pollBankIdSession(reference);
 
@@ -69,8 +70,6 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
             return true;
         } catch (CardNotFoundException e) {
             stopLoginAttempt("Inga kort för det angivna personnumret hittades, vänligen kontrollera personnumret och försök igen");
-        } catch (LimitExceededException e) {
-            stopLoginAttempt("Inloggningen med Mobilt BankID tog för lång tid, vänligen försök igen");
         } catch (UserErrorException e) {
             stopLoginAttempt(e.getMessage());
         }
@@ -79,24 +78,18 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     public void pollBankIdSession(String reference) throws Exception {
-        int i = 0;
 
-        openBankIdApp();
-
-        while (true) {
+        for (int i = 0; i < MAX_BANK_ID_POLLING_ATTEMPTS; i++) {
             boolean sessionReceived = apiClient.fetchBankIdSession(reference);
-            if (sessionReceived) {
-                break;
-            }
 
-            if (i > MAX_BANK_ID_POLLING_ATTEMPTS) {
-                throw new LimitExceededException();
+            if (sessionReceived) {
+                return;
             }
 
             Thread.sleep(bankIdPollIntervalMS);
-
-            i++;
         }
+
+        throw BankIdError.TIMEOUT.exception();
     }
 
     @Override
