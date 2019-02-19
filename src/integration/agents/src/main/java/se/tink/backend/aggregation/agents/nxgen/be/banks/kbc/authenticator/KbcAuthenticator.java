@@ -80,7 +80,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         try {
             apiClient.registerLogon(panNr, responseCode);
         } catch (IllegalStateException e) {
-            if (isIncorrectCardNumber(e)) {
+            if (isIncorrectCardNumber(e) || isIncorrectCard(e)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception(
                         KbcConstants.UserMessage.INCORRECT_CARD_NUMBER.getKey());
             }
@@ -161,6 +161,10 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
             return true;
         }
         return possibleUnhandledErrorCodeLogAndCheckTextMessage(e, KbcConstants.ErrorMessage.INCORRECT_CARD_NUMBER);
+    }
+
+    private boolean isIncorrectCard(IllegalStateException e) {
+        return matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC);
     }
 
     private boolean possibleUnhandledErrorCodeLogAndCheckTextMessage(IllegalStateException e, String textMessage) {

@@ -348,7 +348,7 @@ public class KbcApiClient {
                         registerLogonRequest,
                         RegisterLogonResponse.class);
         checkBlockedAccount(response.first.getHeader(), response.second);
-        verifyDoubleZeroResponseCode(response.first.getHeader());
+        verifyResponseCode(response.first.getHeader(), KbcConstants.ResultCode.DOUBLE_ZERO, response.second);
 
         return response.first;
     }

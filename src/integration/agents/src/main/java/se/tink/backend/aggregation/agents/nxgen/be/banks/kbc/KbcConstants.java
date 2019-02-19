@@ -194,6 +194,19 @@ public class KbcConstants {
         public static final LogTag ERROR_CODE_MESSAGE = LogTag.from("#be_kbc_error_message");
     }
 
+    public static final String[] IGNORED_ACCOUNT_TYPES = {
+            "0029", // KBC-Derdenrekening
+            "0038", // KBC-Rubriekrekening
+            "1013", // KBC-Beleggersrekening
+            "2117", // KBC-Pandrekening
+            "3123", // ESOP-rekening
+            "0346", // KBC-Vermogensrekening
+            "3465", // KBC-Business Comfortrekening
+            "3637", // KBC-Business Compactrekening
+            "3774", // Compte épargne Call32 corporate KBC
+            "4012", // KBC Brussels Security Deposit Account
+            "4057", // KBC Security Deposit Account
+            "4058"}; // Compte d'épargne gar.locative KBC Brussels
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
@@ -209,20 +222,17 @@ public class KbcConstants {
                             "3591",
                             "3594", // KBC-Huurwaarborgspaarrekening
                             "3595", // KBC Tall Oaks Savings Account
+                            "3614", // KBC-Spaarrekening
                             "3781", // KBC Start2Save4
+                            "3866", // KBC-Spaarrekening PLUS
                             "3867", // KBC Savings Pro
                             "4010", // KBC Brussels-Start2Save
                             "4011", // KBC Brussels Savings Account
+                            "4013", // KBC Brussels-Groeispaarrekening
                             "4019", // KBC Brussels Savings Account PRO
                             "4056") // KBC-Huurwaarborgspaarrekening
                     .ignoreKeys(
-                            "1013", // KBC-Beleggersrekening
-                            "2117", // KBC-Pandrekening
-                            "3123", // ESOP-rekening
-                            "3465", // KBC-Business Comfortrekening
-                            "3637", // KBC-Business Compactrekening
-                            "4012", // KBC Brussels Security Deposit Account
-                            "4057") // KBC Security Deposit Account
+                            IGNORED_ACCOUNT_TYPES)
                     .build();
 
     public static final class ErrorMessage {
@@ -237,8 +247,11 @@ public class KbcConstants {
         public static final String ACCOUNT_BLOCKED2 = "your pin has been blocked";
         public static final String INCORRECT_SIGN_CODE = "your sign code is incorrect";
 
-        // Probably only text messages log should give us information otherwise
+        // As of 18.10 only text messages and the generic error code 02
         public static final String NO_TRANSACTIONS_FOUND = "no transactions in the most recent 12 months";
+        public static final String NO_TRANSACTIONS_FOUND_NL = "geen verrichtingen in de recentste 12 maanden";
+        public static final String NO_TRANSACTIONS_FOUND_FR = "aucune opération les 12 derniers mois";
+        public static final String NO_TRANSACTIONS_FOUND_DE = "keine transaktionen in den letzten 12 monaten";
         // Only text message no header or code, we do transfers in English to ensure that
         // correctness
         public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
@@ -248,7 +261,7 @@ public class KbcConstants {
         public static final String INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT = "D9FE50";
         public static final String INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT = "D9E028";
         public static final String INCORRECT_CARD_NUMBER = "D93058";
-        public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_1 = "D9FE51";
+        public static final String CANNOT_LOGIN_USING_THIS_CARD_CONTACT_KBC = "D9FE51";
         public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_2 = "D9C104";
         public static final String ERROR_CODE_SEEN_BUT_CASE_NOT_IDENTIFIED_3 = "D9E027";
     }

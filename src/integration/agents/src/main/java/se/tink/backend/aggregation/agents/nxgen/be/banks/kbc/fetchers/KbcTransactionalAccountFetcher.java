@@ -58,19 +58,17 @@ public class KbcTransactionalAccountFetcher  implements AccountFetcher<Transacti
             if (noTransactionsFoundForLast12Months(e)) {
                 return new TransactionKeyPaginatorResponseImpl<>();
             }
-            // Will not throw e, to be able to find error codes throw e;
-            LOGGER.warnExtraLong(
-                    String.format("Language: %s Error message:%s",
-                            userLanguage,
-                            e.getMessage()),
-                    KbcConstants.LogTags.ERROR_CODE_MESSAGE);
-            return new TransactionKeyPaginatorResponseImpl<>();
+            throw e;
         }
     }
 
     private boolean noTransactionsFoundForLast12Months(IllegalStateException e) {
         return e.getMessage() != null &&
-                e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND);
+                (e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND)
+                || e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_NL)
+                || e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_FR)
+                || e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_DE)
+                );
     }
 
     @Override
