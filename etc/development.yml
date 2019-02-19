@@ -126,6 +126,14 @@ agentsServiceConfiguration:
         clientId: "dummyId"
         clientSecret: "dummySecret"
         redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+    rabobank:
+      tink:
+        clientId: "dummyId"
+        clientSecret: "dummySecret"
+        redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
+        clientSSLCertificate: "dummyClientCert"
+        clientSSLKey: "dummyClientSSLKey"
+        clientSSLKeyPassword: "dummyPassword"
     starling:
       tink:
         clientId: "dummyId"
