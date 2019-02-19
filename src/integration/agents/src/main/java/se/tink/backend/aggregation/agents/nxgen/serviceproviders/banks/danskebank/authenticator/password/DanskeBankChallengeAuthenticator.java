@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password;
 
+import com.google.common.base.Strings;
 import java.util.Base64;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
@@ -213,9 +214,14 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
                             this.credentials.getField(Field.Key.USERNAME), moreInformationEntity.getOtpChallenge()));
 
             // Extract key card entity to get challenge for next Js execution
+            String challengeInfo = driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo");
+            // if no challengeInfo available, force a new device pinning
+            if (Strings.isNullOrEmpty(challengeInfo)) {
+                log.infoExtraLong(driver.getPageSource(), LogTag.from("danskebank_autherror"));
+                throw SessionError.SESSION_EXPIRED.exception();
+            }
             KeyCardEntity keyCardEntity = DanskeBankDeserializer
-                    .convertStringToObject(driver.findElement(By.tagName("body")).getAttribute("trustedChallengeInfo"),
-                            KeyCardEntity.class);
+                    .convertStringToObject(challengeInfo, KeyCardEntity.class);
 
             // Generate a JSON-object with device secret and challenge and encode it with base64
             String generateResponseInput = BASE64_ENCODER.encodeToString(
@@ -251,12 +257,6 @@ public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenti
             } catch (HttpResponseException e) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-        } catch (Exception e) {
-            if (driver != null) {
-                log.infoExtraLong(driver.getPageSource(), LogTag.from("danskebank_autherror"));
-            }
-
-            throw e;
         } finally {
             if (driver != null) {
                 driver.quit();
