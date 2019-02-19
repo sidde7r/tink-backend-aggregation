@@ -6,6 +6,8 @@ import com.sun.jersey.spi.container.ContainerRequestFilter;
 import java.io.ByteArrayInputStream;
 import java.util.Objects;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.cluster.identification.ClusterId;
@@ -17,6 +19,7 @@ import static se.tink.backend.aggregation.cluster.identification.ClusterId.CLUST
 import static se.tink.backend.aggregation.cluster.identification.ClusterId.CLUSTER_NAME_HEADER;
 
 public class AggregationLoggerRequestFilter implements ContainerRequestFilter {
+    private static final Logger logger = LoggerFactory.getLogger(AggregationLoggerRequestFilter.class);
     // Changes to these keys MUST be mirrored in:
     // - tink-backend/etc/development-aggregation-server.yml
     // - tink-infrastructure/states/tink/aggregation/aggregation-server.yml
@@ -90,7 +93,7 @@ public class AggregationLoggerRequestFilter implements ContainerRequestFilter {
             MDC.put(PROVIDER_NAME_MDC_KEY, Optional.ofNullable(provider.getName()).orElse("-"));
             MDC.put(AGENT_NAME_MDC_KEY, Optional.ofNullable(provider.getClassName()).orElse("-"));
         } catch (Exception e) {
-            // nop
+            logger.warn("Failed to extract credentials information for logging.", e);
         }
     }
 
