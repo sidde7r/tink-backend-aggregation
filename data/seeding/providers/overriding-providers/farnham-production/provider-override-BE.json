@@ -129,6 +129,7 @@
                     "immutable": false,
                     "masked": false,
                     "name": "signfortransferinput",
+                    "numeric": true,
                     "value": null
                 },
                 {
@@ -163,6 +164,7 @@
                     "hint": "NNNNNNN",
                     "immutable": false,
                     "masked": false,
+                    "numeric": true,
                     "name": "signforbeneficiaryinput",
                     "value": null
                 }
