@@ -2,26 +2,23 @@ package se.tink.backend.aggregation.configuration;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 
 @JsonObject
 public class IntegrationsConfiguration {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    @JsonProperty private SbabConfiguration sbab;
-
-    @JsonProperty private FinTsIntegrationConfiguration fints;
-
-    @JsonProperty private String ukOpenBankingJson;
-
     private Map<String, Map<String, Object>> integrations = new HashMap<>();
+    @JsonProperty private SbabConfiguration sbab;
+    @JsonProperty private FinTsIntegrationConfiguration fints;
+    @JsonProperty private String ukOpenBankingJson;
     @JsonProperty private String proxyUri;
 
     public SbabConfiguration getSbab() {
@@ -44,7 +41,7 @@ public class IntegrationsConfiguration {
     public String getUkOpenBankingJson() {
         return ukOpenBankingJson;
     }
-    
+
     public <T extends ClientConfiguration> Optional<T> getClientConfiguration(
             String integrationName, String clientName, Class<T> clientConfigClass) {
         return Optional.of(integrations.get(integrationName))
