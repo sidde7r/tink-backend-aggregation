@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.configuration.integrations;
+package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class ICSConfiguration {
+public class ICSConfiguration implements ClientConfiguration {
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
     @JsonProperty private String clientSSLCertificate;

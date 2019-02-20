@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.configuration;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.ICSConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,8 +23,6 @@ public class IntegrationsConfiguration {
 
     private Map<String, Map<String, Object>> integrations = new HashMap<>();
     @JsonProperty private String proxyUri;
-
-    @JsonProperty private Map<String, ICSConfiguration> icsConfiguration;
 
     public SbabConfiguration getSbab() {
         return sbab;
@@ -62,9 +59,5 @@ public class IntegrationsConfiguration {
 
     public String getProxyUri() {
         return proxyUri;
-    }
-
-    public Optional<ICSConfiguration> getIcsConfiguration(String clientName) {
-        return getClientConfiguration(clientName, icsConfiguration);
     }
 }
