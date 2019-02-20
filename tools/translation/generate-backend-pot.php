@@ -15,5 +15,5 @@ echo "Removing duplicate strings from '" . $generatedFilename . "'..." . PHP_EOL
 exec('msguniq --use-first --no-location ../../po/' . $generatedFilename . ' -o ../../po/' . $generatedFilename);
 
 // Upload the generated tink-backend.pot file to OneSky
-$oneSkyClient->upload($generatedFilename);
+$oneSkyClient->upload($generatedFilename, $oneSkyProjectId);
 ?>
