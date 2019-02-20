@@ -4,12 +4,14 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.dropwizard.lifecycle.Managed;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
@@ -60,6 +62,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     protected Map<String, Pair<Account, AccountFeatures>> allAvailableAccountsByUniqueId;
     //Updated accounts have been sent to System side and has been updated with their stored Tink Id
     protected Map<String, Account> updatedAccountsByTinkId;
+    private Set<String> updatedAccountUniqueIds;
     // a collection of account to keep a record of what accounts we should aggregate data after opt-in flow,
     // selecting white listed accounts and eliminating blacklisted accounts
     protected List<Account> accountsToAggregate;
@@ -76,6 +79,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
 
         this.allAvailableAccountsByUniqueId = Maps.newHashMap();
         this.updatedAccountsByTinkId = Maps.newHashMap();
+        this.updatedAccountUniqueIds = Sets.newHashSet();
         this.accountsToAggregate = Lists.newArrayList();
 
         this.request = request;
@@ -287,11 +291,15 @@ public class AgentWorkerContext extends AgentContext implements Managed {
     }
 
     public Account sendAccountToUpdateService(String uniqueId) {
-
         Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(uniqueId);
 
         Account account = pair.first;
         AccountFeatures accountFeatures = pair.second;
+
+        // Only send the accounts once
+        if (updatedAccountUniqueIds.contains(uniqueId)) {
+            return account;
+        }
 
         if (!shouldAggregateDataForAccount(account)) {
             // Account marked to not aggregate data from.
@@ -321,6 +329,7 @@ public class AgentWorkerContext extends AgentContext implements Managed {
             throw e;
         }
 
+        updatedAccountUniqueIds.add(uniqueId);
         updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
 
         return updatedAccount;
