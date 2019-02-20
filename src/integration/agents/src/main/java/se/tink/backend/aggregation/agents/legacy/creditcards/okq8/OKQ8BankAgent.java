@@ -7,10 +7,12 @@ import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import javax.ws.rs.core.MediaType;
+import org.apache.http.HttpStatus;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
@@ -20,13 +22,12 @@ import se.tink.backend.aggregation.agents.creditcards.okq8.model.LoginResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private final ApacheHttpClient4 client;
@@ -93,7 +94,7 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
                 loginResponse.getAccountData().getAccount().isEmpty();
     }
 
-    private LoginResponse loginAndFetchAllTransactions() throws LoginException {
+    private LoginResponse loginAndFetchAllTransactions() throws LoginException, AuthorizationException {
         LoginRequest loginRequest = createLoginRequestForCredentials(credentials);
         ClientResponse response = createClientRequest(LOGIN_URL, client, DEFAULT_USER_AGENT)
                 .post(ClientResponse.class, loginRequest);
@@ -113,23 +114,29 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
         return loginRequest;
     }
 
-    private void ensureLoginSuccessful(ClientResponse loginResponse) throws LoginException {
-        if (!Objects.equals(loginResponse.getStatus(), 200)) {
-            LoginFailedResponse loginFailedResponse = loginResponse.getEntity(LoginFailedResponse.class);
-            switch (loginResponse.getStatus()) {
-            case 400:
-                if (loginFailedResponse.getMessage() != null &&
-                        loginFailedResponse.getMessage().toLowerCase().matches(".*ogiltigt? personnummer.*")) {
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                }
-                // fall through
-            default:
-                // TODO: Implement nicer errors from LoginError to not affect our login stats
-                throw new IllegalStateException(
-                        String.format("#login-refactoring - OKQ8 - Login failed with status: %s Reason: %s Message: %s",
-                                loginResponse.getStatus(), loginFailedResponse.getReason(), loginFailedResponse.getMessage()));
+    private void ensureLoginSuccessful(ClientResponse loginResponse) throws LoginException, AuthorizationException {
+
+        if (loginResponse.getStatus() == HttpStatus.SC_OK) {
+            return;
+        }
+
+        LoginFailedResponse loginFailedResponse = loginResponse.getEntity(LoginFailedResponse.class);
+
+        if (loginResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+            String errorMessage = Optional.ofNullable(loginFailedResponse.getMessage()).orElse("");
+
+            if (errorMessage.toLowerCase().matches(".*ogiltigt? personnummer.*")) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            if (errorMessage.toLowerCase().contains("inloggning blockerad")) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             }
         }
+
+        throw new IllegalStateException(
+                String.format("#OKQ8 Login failed with status: %s Reason: %s Message: %s",
+                        loginResponse.getStatus(), loginFailedResponse.getReason(), loginFailedResponse.getMessage()));
     }
 
     @Override
