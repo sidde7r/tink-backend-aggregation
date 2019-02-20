@@ -222,7 +222,9 @@ public class IngConstants {
         public static final String TRANSFER_AMOUNT_EXCEEDS_BALANCE = "e52/trsg014-000";
         public static final String STARTING_DATE_ENTERED_IS_WRONG = "e50/01/g036-000";
         public static final String NO_ACCESS_TO_ONLINE_BANKING = "e50/01/g350-220";
-    }
+        public static final String NO_LINKED_ACCOUNT = "e50/01/g353-000";
+        public static final String ACCOUNT_CANCELLED = "e50/01/g322-000";
+       }
 
     public enum EndUserMessage implements LocalizableEnum {
         INCORRECT_LOGIN_CREDENTIALS(new LocalizableKey("Check if your authentication parameters are correct:\n"
