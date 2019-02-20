@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class NordeaBaseConstants {
+    public static final String INTEGRATION_NAME = "nordea";
 
     public static class Url {
         private static final String API_BASE_URL = "https://api.nordeaopenbanking.com";

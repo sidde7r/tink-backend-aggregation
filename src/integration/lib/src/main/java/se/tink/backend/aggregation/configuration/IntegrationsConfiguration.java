@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.ICSConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.NordeaConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,8 +26,6 @@ public class IntegrationsConfiguration {
     @JsonProperty private String proxyUri;
 
     @JsonProperty private Map<String, ICSConfiguration> icsConfiguration;
-
-    @JsonProperty private Map<String, NordeaConfiguration> nordea;
 
     public SbabConfiguration getSbab() {
         return sbab;
@@ -58,10 +55,6 @@ public class IntegrationsConfiguration {
                 .map(c -> OBJECT_MAPPER.convertValue(c, clientConfigClass));
     }
 
-    public Optional<NordeaConfiguration> getNordea(String clientName) {
-        return getClientConfiguration(clientName, nordea);
-    }
-    
     @JsonAnySetter
     public void addIntegration(String integrationName, Map<String, Object> clientConfigMap) {
         integrations.put(integrationName, clientConfigMap);
