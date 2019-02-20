@@ -7,8 +7,6 @@ import se.tink.backend.aggregation.configuration.integrations.ICSConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.NordeaConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.StarlingConfiguration;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +18,6 @@ public class IntegrationsConfiguration {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @JsonProperty private SbabConfiguration sbab;
-
-    @JsonProperty private Map<String, StarlingConfiguration> starling;
 
     @JsonProperty private FinTsIntegrationConfiguration fints;
 
@@ -45,10 +41,6 @@ public class IntegrationsConfiguration {
 
     private <T> Optional<T> getClientConfiguration(String clientName, Map<String, T> configMap) {
         return Optional.ofNullable(configMap).map(m -> m.getOrDefault(clientName, null));
-    }
-
-    public Optional<StarlingConfiguration> getStarling(String clientName) {
-        return getClientConfiguration(clientName, starling);
     }
 
     public FinTsIntegrationConfiguration getFinTsIntegrationConfiguration() {
