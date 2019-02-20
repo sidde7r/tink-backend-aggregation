@@ -9,8 +9,8 @@ public class RaiffeisenConstants {
     // These are only for sandbox!
     public static final String CLIENT_ID_VALUE = "52c20546-32c0-42b1-afa2-18770029ec80";
     public static final String CLIENT_SECRET_VALUE = "P5cM0oP1sM5iV8uP3fF6dV3bU8uI0fD5kG2dO1sB1eF2pJ4pS4";
-    public static final String REDIRECT_URL_VALUE = "https://api.tink.se/api/v1/credentials/third-party/callback";
-    // for localhost: https://127.0.0.1:9100/api/v1/credentials/third-party/callback
+    public static final String REDIRECT_URL_VALUE = "https://127.0.0.1:7357/api/v1/thirdparty/callback";
+    // for localhost: https://127.0.0.1:7357/api/v1/thirdparty/callback
     // for staging: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
 
     public static final class URL {
