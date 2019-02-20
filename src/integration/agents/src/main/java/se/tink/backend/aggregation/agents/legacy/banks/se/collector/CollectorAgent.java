@@ -74,12 +74,11 @@ public class CollectorAgent extends AbstractAgent
                 try {
                     authenticateWithMobileBankID(credentials.getField(Field.Key.USERNAME));
                 } catch (UniformInterfaceException e) {
-                    if (!Objects.equals(e.getResponse().getStatus(), 500)) {
-                        throw e;
+                    if (Objects.equals(e.getResponse().getStatus(), 500)) {
+                        throw BankIdError.ALREADY_IN_PROGRESS.exception();
                     }
 
-                    log.info("User probably had an ongoing authentication request, try again");
-                    authenticateWithMobileBankID(credentials.getField(Field.Key.USERNAME));
+                    throw e;
                 }
                 break;
             case PASSWORD:
