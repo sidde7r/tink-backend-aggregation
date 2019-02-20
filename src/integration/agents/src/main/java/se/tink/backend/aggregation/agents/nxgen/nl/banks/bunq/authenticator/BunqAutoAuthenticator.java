@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator;
 
+import org.assertj.core.util.Strings;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -33,6 +34,7 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
 
     @Override
     public void autoAuthenticate() throws SessionException {
+        validateRsaKeyPairUsedLaterInFilter();
         try {
             // Here we need to use the token got from installation
             sessionStorage.put(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN,
@@ -48,6 +50,18 @@ public class BunqAutoAuthenticator implements AutoAuthenticator {
                     BunqConstants.LogTags.AUTO_AUTHENTICATION_FAILED, e);
 
             throw SessionError.SESSION_EXPIRED.exception();
+        }
+    }
+
+    private void validateRsaKeyPairUsedLaterInFilter() {
+        if (Strings.isNullOrEmpty(
+                persistentStorage.get(BunqConstants.StorageKeys.DEVICE_RSA_SIGNING_KEY_PAIR))) {
+            String errorMessage =
+                    String.format(
+                            "PersistentStorage is missing %s",
+                            BunqConstants.StorageKeys.DEVICE_RSA_SIGNING_KEY_PAIR);
+            log.warnExtraLong(errorMessage, BunqConstants.LogTags.AUTO_AUTHENTICATION_FAILED);
+            throw new IllegalStateException(errorMessage);
         }
     }
 }
