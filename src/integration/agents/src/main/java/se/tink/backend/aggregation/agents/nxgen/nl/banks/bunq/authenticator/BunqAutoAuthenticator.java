@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator;
 
-import org.assertj.core.util.Strings;
+import com.google.api.client.repackaged.com.google.common.base.Strings;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
