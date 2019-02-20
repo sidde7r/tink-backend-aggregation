@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.ICSConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.NordeaConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
@@ -21,8 +20,6 @@ public class IntegrationsConfiguration {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @JsonProperty private SbabConfiguration sbab;
-
-    @JsonProperty private Map<String, MonzoConfiguration> monzo;
 
     @JsonProperty private Map<String, StarlingConfiguration> starling;
 
@@ -48,10 +45,6 @@ public class IntegrationsConfiguration {
 
     private <T> Optional<T> getClientConfiguration(String clientName, Map<String, T> configMap) {
         return Optional.ofNullable(configMap).map(m -> m.getOrDefault(clientName, null));
-    }
-
-    public Optional<MonzoConfiguration> getMonzo(String clientName) {
-        return getClientConfiguration(clientName, monzo);
     }
 
     public Optional<StarlingConfiguration> getStarling(String clientName) {

@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticat
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.fetcher.transactional.MonzoTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.configuration.MonzoConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -25,7 +25,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class MonzoAgent extends NextGenerationAgent {
-
     private final String clientName;
     private final MonzoApiClient apiClient;
 
@@ -44,10 +43,16 @@ public class MonzoAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        MonzoConfiguration monzoConfiguration = configuration.getIntegrations().getMonzo(clientName)
-                .orElseThrow(() -> new IllegalStateException(
-                        String.format("No Monzo client configured for name: %s", clientName)
-                ));
+        MonzoConfiguration monzoConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(MonzoConstants.INTEGRATION_NAME, clientName, MonzoConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                String.format(
+                                                        "No Monzo client configured for name: %s",
+                                                        clientName)));
 
         persistentStorage.put(MonzoConstants.StorageKey.CLIENT_ID, monzoConfiguration.getClientId());
         persistentStorage.put(MonzoConstants.StorageKey.CLIENT_SECRET, monzoConfiguration.getClientSecret());
