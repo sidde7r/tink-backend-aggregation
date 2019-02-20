@@ -5,9 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import java.util.List;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.BaseResponse;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -45,7 +46,7 @@ public class CardList extends BaseResponse {
         return unregisteredCards;
     }
 
-    public void keepSelectedCardTypes(CardType cardType) throws IkanoApiAgent.CardNotFoundException {
+    public void keepSelectedCardTypes(CardType cardType) throws LoginException {
         ensureHasCards();
 
         List<Card> cardsWithCorrectType = Lists.newArrayList();
@@ -57,10 +58,13 @@ public class CardList extends BaseResponse {
         }
 
         cards = cardsWithCorrectType;
+
+        // Throw not a customer exception if user has no cards after filtering. If the user for example selects
+        // the shell provider and has an IKEA card the not a customer exception is the response.
         ensureHasCards();
     }
 
-    public void ensureRegisteredCardExists() throws IkanoApiAgent.CardNotFoundException {
+    public void ensureRegisteredCardExists() throws LoginException {
         boolean registeredCardExists = false;
 
         for (Card card : cards) {
@@ -71,13 +75,13 @@ public class CardList extends BaseResponse {
         }
 
         if (!registeredCardExists) {
-            throw new IkanoApiAgent.CardNotFoundException();
+            throw LoginError.NOT_CUSTOMER.exception();
         }
     }
 
-    private void ensureHasCards() throws IkanoApiAgent.CardNotFoundException {
+    public void ensureHasCards() throws LoginException {
         if (cards == null || cards.size() == 0) {
-            throw new IkanoApiAgent.CardNotFoundException();
+            throw LoginError.NOT_CUSTOMER.exception();
         }
     }
 }
