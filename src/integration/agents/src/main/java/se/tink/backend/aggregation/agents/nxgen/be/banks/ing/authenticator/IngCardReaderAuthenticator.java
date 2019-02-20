@@ -126,14 +126,17 @@ public class IngCardReaderAuthenticator {
     private void validateResponseHeader(BaseMobileResponseEntity responseEntity) throws LoginException {
         if (IngConstants.ReturnCodes.NOK.equalsIgnoreCase(responseEntity.getReturnCode())) {
             String errorCode = responseEntity.getErrorCode().orElse("No error code");
-            if (IngConstants.ErrorCodes.NO_ACCESS_TO_ONLINE_BANKING.equalsIgnoreCase(
-                    errorCode)) {
+            if (IngConstants.ErrorCodes.NO_ACCESS_TO_ONLINE_BANKING.equalsIgnoreCase(errorCode)
+                    || IngConstants.ErrorCodes.NO_LINKED_ACCOUNT.equalsIgnoreCase(errorCode)) {
                 throw LoginError.REGISTER_DEVICE_ERROR.exception();
+            }
+            if(IngConstants.ErrorCodes.ACCOUNT_CANCELLED.equalsIgnoreCase(errorCode)) {
+                throw LoginError.NOT_CUSTOMER.exception();
             }
             String errormsg =
                     String.format(
                             "%s%s%s%s",
-                            "Error during autoAuth! Code: ",
+                            "Error during authenticate! Code: ",
                             errorCode,
                             " Message: ",
                             responseEntity.getErrorText().get());
