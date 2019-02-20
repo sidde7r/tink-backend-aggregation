@@ -9,7 +9,7 @@ public class RaiffeisenAgentTest {
 
     @Test
     public void refresh() throws Exception {
-        new AgentIntegrationTest.Builder("ro", "ro-raiffeisen-psd2")
+        new AgentIntegrationTest.Builder("ro", "ro-raiffeisen-oauth2")
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .expectLoggedIn(false)
