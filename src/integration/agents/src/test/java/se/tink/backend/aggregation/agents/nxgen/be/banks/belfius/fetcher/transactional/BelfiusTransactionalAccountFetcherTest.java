@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional;
 
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusTest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusTransaction;
@@ -51,18 +52,33 @@ public class BelfiusTransactionalAccountFetcherTest extends BelfiusTest {
         FetchProductsResponse fetchProductsResponse = SerializationUtils
                 .deserializeFromString(ProductList.bigProductList, FetchProductsResponse.class);
 
-        List<TransactionalAccount> collect = fetchProductsResponse.stream()
+        List<TransactionalAccount> accounts = fetchProductsResponse.stream()
                 .filter(entry -> entry.getValue().isTransactionalAccount())
                 .map(entry -> entry.getValue().toTransactionalAccount(entry.getKey()))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
 
-        assertTrue(collect.get(0).getBalance().getValue() == 0);
-        assertTrue(collect.get(1).getBalance().getValue() == 847.24);
-        assertTrue(collect.get(2).getBalance().getValue() == 0);
-        assertTrue(collect.get(3).getBalance().getValue() == 0.01);
-        assertTrue(collect.get(4).getBalance().getValue() == 0);
-        assertTrue(collect.get(5).getBalance().getValue() == 38374.26);
+        assertTrue(accounts.get(0).getBalance().getValue() == 0);
+        assertTrue(accounts.get(1).getBalance().getValue() == 847.24);
+        assertTrue(accounts.get(2).getBalance().getValue() == 0);
+        assertTrue(accounts.get(3).getBalance().getValue() == 0.01);
+        assertTrue(accounts.get(4).getBalance().getValue() == 0);
+        assertTrue(accounts.get(5).getBalance().getValue() == 38374.26);
+    }
+
+    @Test
+    public void parseBalanceTest() {
+        FetchProductsResponse fetchProductsResponse = SerializationUtils
+                .deserializeFromString(ProductList.SMALL_BALANCED_PRODUCT_LIST, FetchProductsResponse.class);
+
+        List<TransactionalAccount> accounts = fetchProductsResponse.stream()
+                .filter(entry -> entry.getValue().isTransactionalAccount())
+                .map(entry -> entry.getValue().toTransactionalAccount(entry.getKey()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        Assert.assertEquals(12, accounts.get(0).getBalance().getValue(), 0.1);
+        Assert.assertEquals(42, accounts.get(1).getBalance().getValue(), 0.1);
     }
 
     @Test

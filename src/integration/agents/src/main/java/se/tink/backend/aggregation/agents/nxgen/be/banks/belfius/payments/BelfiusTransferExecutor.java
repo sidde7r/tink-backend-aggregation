@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusApiClien
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.BelfiusTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transactional.entities.BelfiusProduct;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.BelfiusPaymentResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entities.getsigningprotocol.SignProtocolResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -17,14 +18,15 @@ import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.pair.Pair;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils.createTransferSignature;
@@ -63,9 +65,9 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         boolean immediateTransfer = immediateTransfer(transfer);
         validateAndSetDueDate(transfer);
 
-        Collection<TransactionalAccount> accounts = getTransactionalAccounts();
-        Amount sourceAccountBalance = getSourceAccount(transfer, accounts).getBalance();
-        boolean ownAccount = tryFindAccount(accounts, transfer.getDestination()).isPresent();
+        List<Pair<TransactionalAccount, BelfiusProduct>> accountPairedWithProduct = getTransactionalAccounts();
+        Amount sourceAccountBalance = getSourceAccount(transfer, accountPairedWithProduct).second.getAvailableBalance();
+        boolean ownAccount = tryFindAccount(accountPairedWithProduct, transfer.getDestination()).isPresent();
 
         if (transfer.getMessageType().equals(MessageType.STRUCTURED)) {
             transfer.setDestinationMessage(formatStructuredMessage(transfer.getDestinationMessage()));
@@ -109,13 +111,19 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return transfer.getDueDate() == null;
     }
 
-    private TransactionalAccount getSourceAccount(Transfer transfer, Collection<TransactionalAccount> accounts) {
+    private Pair<TransactionalAccount, BelfiusProduct> getSourceAccount(
+            Transfer transfer, List<Pair<TransactionalAccount, BelfiusProduct>> accounts) {
         return tryFindAccount(accounts, transfer.getSource())
-                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get())
-                    .build());
+                .orElseThrow(
+                        () ->
+                                TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                                        .setMessage(
+                                                TransferExecutionException.EndUserMessage
+                                                        .INVALID_SOURCE
+                                                        .getKey()
+                                                        .get())
+                                        .build());
     }
-
 
     public void signPayments() {
         apiClient.getSignProtocol().cardReaderAllowed();
@@ -244,10 +252,11 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         }
     }
 
-    private Optional<TransactionalAccount> tryFindAccount(Collection<TransactionalAccount> accounts,
+    private Optional<Pair<TransactionalAccount, BelfiusProduct>> tryFindAccount(
+            List<Pair<TransactionalAccount, BelfiusProduct>> accounts,
             AccountIdentifier accountIdentifier) {
         return accounts.stream()
-                .filter(account -> matchingAccount(account, accountIdentifier))
+                .filter(accountProductPair -> matchingAccount(accountProductPair.first, accountIdentifier))
                 .findFirst();
     }
 
@@ -255,10 +264,10 @@ public class BelfiusTransferExecutor implements BankTransferExecutor {
         return accountEntity.getIdentifiers().stream().anyMatch(identifier -> identifier.equals(accountIdentifier));
     }
 
-    private Collection<TransactionalAccount> getTransactionalAccounts() {
+    private List<Pair<TransactionalAccount, BelfiusProduct>> getTransactionalAccounts() {
         BelfiusTransactionalAccountFetcher accountFetcher =
                 new BelfiusTransactionalAccountFetcher(apiClient, belfiusSessionStorage);
-        return accountFetcher.fetchAccounts();
+        return accountFetcher.fetchTransactionalAccountPairedWithBelfiusProduct();
     }
 
     public String createClientSha(Transfer transfer) {
