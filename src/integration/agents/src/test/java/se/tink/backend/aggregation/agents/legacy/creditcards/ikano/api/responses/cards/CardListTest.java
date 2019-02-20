@@ -1,23 +1,22 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards;
 
 import com.google.common.collect.Lists;
-import org.junit.Test;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.IkanoApiAgent;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
-
 import java.util.List;
+import org.junit.Test;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 
 public class CardListTest {
 
-    @Test(expected = IkanoApiAgent.CardNotFoundException.class)
-    public void ensureExceptionIsThrown_whenNoCardsAreFound() throws IkanoApiAgent.CardNotFoundException {
+    @Test(expected = LoginException.class)
+    public void ensureExceptionIsThrown_whenNoCardsAreFound() throws LoginException {
         CardList cards = new CardList();
 
         cards.keepSelectedCardTypes(CardType.PREEM);
     }
 
-    @Test(expected = IkanoApiAgent.CardNotFoundException.class)
-    public void ensureExceptionIsThrown_whenNoCardsMatchesTheSelectedCardType() throws IkanoApiAgent.CardNotFoundException {
+    @Test(expected = LoginException.class)
+    public void ensureExceptionIsThrown_whenNoCardsMatchesTheSelectedCardType() throws LoginException {
         CardList cardList = new CardList();
         List<Card> cards = Lists.newArrayList();
 
@@ -30,8 +29,8 @@ public class CardListTest {
         cardList.keepSelectedCardTypes(CardType.PREEM);
     }
 
-    @Test(expected = IkanoApiAgent.CardNotFoundException.class)
-    public void ensureExceptionIsThrown_whenNoRegisteredCardsWereFound() throws IkanoApiAgent.CardNotFoundException {
+    @Test(expected = LoginException.class)
+    public void ensureExceptionIsThrown_whenNoRegisteredCardsWereFound() throws LoginException {
         CardList cardList = new CardList();
         List<Card> cards = Lists.newArrayList();
 
@@ -49,7 +48,7 @@ public class CardListTest {
     }
 
     @Test
-    public void ensureExceptionIsNotThrown_whenRegisteredCardsWereFound() throws IkanoApiAgent.CardNotFoundException {
+    public void ensureExceptionIsNotThrown_whenRegisteredCardsWereFound() throws LoginException {
         CardList cardList = new CardList();
         List<Card> cards = Lists.newArrayList();
 

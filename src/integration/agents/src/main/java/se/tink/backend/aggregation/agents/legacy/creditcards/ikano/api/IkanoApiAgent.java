@@ -68,8 +68,6 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
             cards.ensureRegisteredCardExists();
 
             return true;
-        } catch (CardNotFoundException e) {
-            stopLoginAttempt("Inga kort för det angivna personnumret hittades, vänligen kontrollera personnumret och försök igen");
         } catch (UserErrorException e) {
             stopLoginAttempt(e.getMessage());
         }
@@ -154,7 +152,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     private void stopLoginAttempt(String message) {
-        log.info(message);
+        log.info("Ikano agent user error: " + message);
         statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, message);
     }
 

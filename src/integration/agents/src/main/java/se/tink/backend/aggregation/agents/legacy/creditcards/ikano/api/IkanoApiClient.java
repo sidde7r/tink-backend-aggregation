@@ -5,6 +5,8 @@ import com.sun.jersey.api.client.WebResource;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.requests.RegisterCardRequest;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.bankIdReference.BankIdReference;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.bankIdSession.BankIdSession;
@@ -14,8 +16,6 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engage
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.registerCard.RegisteredCards;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoCrypt;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 
@@ -97,6 +97,9 @@ public class IkanoApiClient {
                 .header("SessionKey", sessionKey)
                 .header("SessionId", sessionId)
                 .get(CardList.class);
+
+        // Throws not a customer exception if user has no cards
+        response.ensureHasCards();
 
         response.checkForErrors();
 
