@@ -152,7 +152,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     private void stopLoginAttempt(String message) {
-        log.info(message);
+        log.info("Ikano agent user error: " + message);
         statusUpdater.updateStatus(CredentialsStatus.AUTHENTICATION_ERROR, message);
     }
 
