@@ -38,11 +38,15 @@ public class LaCaixaConstants {
         static final String DEPOSITS_LIST_PATH = "valores/posicionValores/lista";
         // instruments
         static final String DEPOSIT_DETAILS_PATH = "valores/depositosValores/detalle";
-
+        // funds list
+        static final String FUNDS_LIST_PATH = "fondos/posicionGlobalLista";
+        // fund details
+        static final String FUND_DETAILS_PATH = "fondos/detalleFondos";
     }
 
     public static class ErrorCode {
         public static String EMPTY_LIST = "ERR_TRXM01_007";
+        public static String NO_SECURITIES = "131";
     }
 
     public static class Urls {
@@ -62,6 +66,8 @@ public class LaCaixaConstants {
         public static final URL FETCH_ENGAGEMENTS = new URL(BASE + ApiService.ENGAGEMENTS_PATH);
         public static final URL FETCH_DEPOSITS_LIST = new URL(BASE + ApiService.DEPOSITS_LIST_PATH);
         public static final URL FETCH_DEPOSIT_DETAILS = new URL(BASE + ApiService.DEPOSIT_DETAILS_PATH);
+        public static final URL FETCH_FUNDS_LIST = new URL(BASE + ApiService.FUNDS_LIST_PATH);
+        public static final URL FETCH_FUND_DETAILS = new URL(BASE + ApiService.FUND_DETAILS_PATH);
     }
 
     public static class DefaultRequestParams {

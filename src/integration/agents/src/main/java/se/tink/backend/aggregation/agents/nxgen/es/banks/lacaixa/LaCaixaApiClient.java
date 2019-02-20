@@ -12,6 +12,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditc
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.creditcard.rpc.GenericCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.EngagementResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.FundDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.FundDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.FundsListRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.FundsListResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.PositionDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.PositionValuesResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
@@ -98,6 +102,18 @@ public class LaCaixaApiClient {
                 .queryParam(LaCaixaConstants.QueryParams.GLOBAL_POSITION_TYPE,
                         globalPositionType)
                 .get(EngagementResponse.class);
+    }
+
+    public FundsListResponse fetchFundList(boolean moreData) {
+        FundsListRequest request = new FundsListRequest(moreData);
+        return createRequest(LaCaixaConstants.Urls.FETCH_FUNDS_LIST)
+                .post(FundsListResponse.class, request);
+    }
+
+    public FundDetailsResponse fetchFundDetails(String fundReference, String fundCode, String currency) {
+        FundDetailsRequest request = new FundDetailsRequest(fundReference, fundCode, currency);
+        return createRequest(LaCaixaConstants.Urls.FETCH_FUND_DETAILS)
+                .post(FundDetailsResponse.class, request);
     }
 
     public PositionValuesResponse fetchDepositList() {

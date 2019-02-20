@@ -10,9 +10,12 @@ public class ContractEntity {
     private ContractIdEntity contractId;
     private String codigoContrato;
     private String descripcionContrato;
+    @JsonProperty("contratoLOFormateado")
+    private String contractNumberFormatted;
     @JsonProperty("codigoProducto")
     private String productCode;
-    private String aliasContrato;
+    @JsonProperty("aliasContrato")
+    private String contractAlias;
     private String codigoDivisa;
     private String literalDivisa;
     private String importeEuros;
@@ -38,5 +41,13 @@ public class ContractEntity {
 
     public String getProductCode() {
         return productCode;
+    }
+
+    public String getContractNumberFormatted() {
+        return contractNumberFormatted;
+    }
+
+    public String getContractAlias() {
+        return contractAlias;
     }
 }

@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ContractGroupEntity {
     private String literalAgrupacion;
-    private String codigoAgrupacion;
+    @JsonProperty("codigoAgrupacion")
+    private String contractGroupCode;
     private boolean agrupacionCerrada;
     @JsonProperty("contrato")
     private List<ContractEntity> contracts;
@@ -21,5 +22,13 @@ public class ContractGroupEntity {
     public Map<String, String> getProductCodeByContractNumber() {
         return Optional.ofNullable(contracts).orElse(Collections.emptyList()).stream()
                 .collect(Collectors.toMap(ContractEntity::getContractNumber, ContractEntity::getProductCode));
+    }
+
+    public String getContractGroupCode() {
+        return contractGroupCode;
+    }
+
+    public List<ContractEntity> getContracts() {
+        return contracts;
     }
 }

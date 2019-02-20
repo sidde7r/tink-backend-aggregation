@@ -20,4 +20,12 @@ public class LaCaixaErrorResponse {
                 .toUpperCase()
                 .equalsIgnoreCase(LaCaixaConstants.ErrorCode.EMPTY_LIST);
     }
+
+    @JsonIgnore
+    public boolean isNoSecurities() {
+        return Strings.nullToEmpty(code)
+                .trim()
+                .toUpperCase()
+                .equalsIgnoreCase(LaCaixaConstants.ErrorCode.NO_SECURITIES);
+    }
 }
