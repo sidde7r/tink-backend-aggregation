@@ -44,7 +44,7 @@ public class IntegrationsConfiguration {
 
     public <T extends ClientConfiguration> Optional<T> getClientConfiguration(
             String integrationName, String clientName, Class<T> clientConfigClass) {
-        return Optional.of(integrations.get(integrationName))
+        return Optional.ofNullable(integrations.get(integrationName))
                 .map(i -> i.get(clientName))
                 .map(c -> OBJECT_MAPPER.convertValue(c, clientConfigClass));
     }
