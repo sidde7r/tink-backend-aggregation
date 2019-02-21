@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass;
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Bytes;
-import org.bouncycastle.jce.interfaces.ECPrivateKey;
-import org.bouncycastle.jce.interfaces.ECPublicKey;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.DecryptActivationDataResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.InitializeRegistrationDataResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.OtpChallengeResponse;
@@ -19,6 +17,7 @@ import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.security.KeyPair;
+import java.security.PublicKey;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
@@ -121,7 +120,7 @@ public class Digipass {
 
         byte[] activationKey = CryptoUtils.deriveActivationKey(this.activationPassword);
 
-        ECPublicKey serverPublicKey =
+        PublicKey serverPublicKey =
                 CryptoUtils.decryptPublicKey(
                         DigipassConstants.CommunicationCrypto.EC_CURVE_NAME,
                         activationKey,
@@ -129,7 +128,7 @@ public class Digipass {
                         EncodingUtils.decodeHexString(encryptedServerPublicKey));
 
         return CryptoUtils.calculateSharedSecret(
-                (ECPrivateKey) ellipticCurveKeyPair.getPrivate(), serverPublicKey);
+                ellipticCurveKeyPair.getPrivate(), serverPublicKey);
     }
 
     private void calculateOtpKey() {

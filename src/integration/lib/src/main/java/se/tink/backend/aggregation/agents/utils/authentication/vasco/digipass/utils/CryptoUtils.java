@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.u
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Bytes;
-import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
@@ -11,6 +10,8 @@ import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
 import se.tink.backend.aggregation.agents.utils.crypto.TripleDES;
 
 import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Arrays;
 
 public class CryptoUtils {
@@ -56,7 +57,7 @@ public class CryptoUtils {
                 Bytes.concat(new byte[] {0x04}, publicKeyBytes), curveName);
     }
 
-    public static byte[] calculateSharedSecret(ECPrivateKey privateKey, ECPublicKey publicKey) {
+    public static byte[] calculateSharedSecret(PrivateKey privateKey, PublicKey publicKey) {
         byte[] derivedKey = EllipticCurve.diffieHellmanDeriveKeyConcatXY(privateKey, publicKey);
         derivedKey = DataUtils.swapBytes(derivedKey);
         derivedKey = Hash.sha256(derivedKey);
