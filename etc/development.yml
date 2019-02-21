@@ -131,8 +131,7 @@ agentsServiceConfiguration:
         clientId: "dummyId"
         clientSecret: "dummySecret"
         redirectUrl: "https://api.tink.se/api/v1/credentials/third-party/callback"
-        clientSSLCertificate: "dummyClientCert"
-        clientSSLKey: "dummyClientSSLKey"
+        clientSSLP12: "dummyP12"
         clientSSLKeyPassword: "dummyPassword"
     starling:
       tink:

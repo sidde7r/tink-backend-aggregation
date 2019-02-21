@@ -19,46 +19,54 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
     private final PersistentStorage persistentStorage;
     private final RabobankApiClient apiClient;
 
-    public RabobankAuthenticator(final RabobankApiClient apiClient, final PersistentStorage persistentStorage) {
+    public RabobankAuthenticator(
+            final RabobankApiClient apiClient, final PersistentStorage persistentStorage) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
     }
 
     @Override
-    public URL buildAuthorizeUrl(String state) {
-        return new URL(RabobankConstants.URL.AUTHORIZE_RABOBANK)
-                .queryParam(RabobankConstants.QueryParams.RESPONSE_TYPE, RabobankConstants.QueryValues.CODE)
+    public URL buildAuthorizeUrl(final String state) {
+        return RabobankConstants.URLs.AUTHORIZE_RABOBANK
+                .queryParam(
+                        RabobankConstants.QueryParams.RESPONSE_TYPE,
+                        RabobankConstants.QueryValues.CODE)
                 .queryParam(RabobankConstants.QueryParams.REDIRECT_URI, getRedirectUri())
                 .queryParam(RabobankConstants.QueryParams.CLIENT_ID, getClientId())
-                .queryParam(RabobankConstants.QueryParams.SCOPE, "ais.balances.read ais.transactions.read-90days ais.transactions.read-history")
+                .queryParam(RabobankConstants.QueryParams.SCOPE, RabobankConstants.QueryValues.SCOPES)
                 .queryParam(RabobankConstants.QueryParams.STATE, state);
     }
 
     @Override
-    public OAuth2Token exchangeAuthorizationCode(String code){
-        ExchangeAuthorizationCodeRequest request = new ExchangeAuthorizationCodeRequest();
-        request.put(RabobankConstants.QueryParams.GRANT_TYPE, RabobankConstants.QueryValues.AUTHORIZATION_CODE);
+    public OAuth2Token exchangeAuthorizationCode(final String code) {
+        final ExchangeAuthorizationCodeRequest request = new ExchangeAuthorizationCodeRequest();
+        request.put(
+                RabobankConstants.QueryParams.GRANT_TYPE,
+                RabobankConstants.QueryValues.AUTHORIZATION_CODE);
         request.put(RabobankConstants.QueryParams.CODE, code);
         request.put(RabobankConstants.QueryParams.REDIRECT_URI, getRedirectUri());
         return apiClient.exchangeAuthorizationCode(request).toOauthToken();
     }
 
     @Override
-    public OAuth2Token refreshAccessToken(String refreshToken) throws SessionException, BankServiceException {
+    public OAuth2Token refreshAccessToken(final String refreshToken)
+            throws SessionException, BankServiceException {
         try {
-            RefreshTokenRequest request = new RefreshTokenRequest();
-            request.put(RabobankConstants.QueryParams.GRANT_TYPE, RabobankConstants.QueryValues.AUTHORIZATION_CODE);
+            final RefreshTokenRequest request = new RefreshTokenRequest();
+            request.put(
+                    RabobankConstants.QueryParams.GRANT_TYPE,
+                    RabobankConstants.QueryValues.AUTHORIZATION_CODE);
             request.put(RabobankConstants.QueryParams.REDIRECT_URI, getRedirectUri());
             request.put(RabobankConstants.QueryParams.REFRESH_TOKEN, refreshToken);
 
             return apiClient.refreshAccessToken(request).toOauthToken();
-        } catch (HttpResponseException exception) {
+        } catch (final HttpResponseException exception) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 
     @Override
-    public void useAccessToken(OAuth2Token accessToken) {
+    public void useAccessToken(final OAuth2Token accessToken) {
         persistentStorage.put(RabobankConstants.StorageKey.OAUTH_TOKEN, accessToken);
     }
 
