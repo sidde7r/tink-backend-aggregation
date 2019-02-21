@@ -13,12 +13,7 @@ public class IntegrationsConfiguration {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private Map<String, Map<String, Object>> integrations = new HashMap<>();
-    @JsonProperty private String ukOpenBankingJson;
     @JsonProperty private String proxyUri;
-
-    public String getUkOpenBankingJson() {
-        return ukOpenBankingJson;
-    }
 
     public Optional<Map<String, Object>> getIntegration(String integrationName) {
         return Optional.ofNullable(integrations.get(integrationName));
