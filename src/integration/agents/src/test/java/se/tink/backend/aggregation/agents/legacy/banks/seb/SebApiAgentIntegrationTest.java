@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks;
+package se.tink.backend.aggregation.agents.banks.seb;
 
 import org.junit.AfterClass;
 import org.junit.Before;

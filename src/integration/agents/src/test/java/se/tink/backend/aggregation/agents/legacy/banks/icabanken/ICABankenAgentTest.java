@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks;
+package se.tink.backend.aggregation.agents.banks.icabanken;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Calendar;
