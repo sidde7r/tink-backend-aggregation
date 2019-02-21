@@ -21,10 +21,6 @@ public class IntegrationsConfiguration {
     @JsonProperty private String ukOpenBankingJson;
     @JsonProperty private String proxyUri;
 
-    public SbabConfiguration getSbab() {
-        return sbab;
-    }
-
     public Optional<SbabClientConfiguration> getSbab(String clientName) {
         return Optional.ofNullable(sbab)
                 .flatMap(sc -> getClientConfiguration(clientName, sc.getClients()));
