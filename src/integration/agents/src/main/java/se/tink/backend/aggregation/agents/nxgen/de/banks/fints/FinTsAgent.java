@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -28,8 +27,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class FinTsAgent extends NextGenerationAgent {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
     private FinTsApiClient apiClient;
 
     public FinTsAgent(
@@ -56,11 +53,7 @@ public class FinTsAgent extends NextGenerationAgent {
         FinTsIntegrationConfiguration finTsIntegrationConfiguration =
                 configuration
                         .getIntegrations()
-                        .getIntegration(FinTsConstants.INTEGRATION_NAME)
-                        .map(
-                                i ->
-                                        OBJECT_MAPPER.convertValue(
-                                                i, FinTsIntegrationConfiguration.class))
+                        .getIntegration(FinTsConstants.INTEGRATION_NAME, FinTsIntegrationConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(

@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticator;
@@ -35,7 +34,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private final Provider tinkProvider;
     protected UkOpenBankingApiClient apiClient;
@@ -80,11 +78,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         UkOpenBankingConfiguration ukOpenBankingConfiguration =
                 configuration
                         .getIntegrations()
-                        .getIntegration(UkOpenBankingConstants.INTEGRATION_NAME)
-                        .map(
-                                i ->
-                                        OBJECT_MAPPER.convertValue(
-                                                i, UkOpenBankingConfiguration.class))
+                        .getIntegration(UkOpenBankingConstants.INTEGRATION_NAME, UkOpenBankingConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
