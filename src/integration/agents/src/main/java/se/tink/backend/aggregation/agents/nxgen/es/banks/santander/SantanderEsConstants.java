@@ -13,6 +13,7 @@ public class SantanderEsConstants {
         public static final URL SANMOV = new URL(HOST + "/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener");
         public static final URL SCH_BAMOBI = new URL(HOST + "/SCH_BAMOBI_WS_ENS/ws/BAMOBI_WS_Def_Listener");
         public static final URL SCH_BAMOBI_FONDOS = new URL(HOST + "/SCH_BAMOBI_FONDOS_ENS/ws/BAMOBI_WS_Def_Listener");
+        public static final URL SCH_BAMOBI_VALORES = new URL(HOST + "/SCH_BAMOBI_VALORES_ENS/ws/BAMOBI_WS_Def_Listener");
         public static final URL SCH_BAMOBI_PRESTAMOS = new URL(HOST + "/SCH_BAMOBI_PRESTAMOS_ENS/ws/BAMOBI_WS_Def_Listener");
     }
 
@@ -57,6 +58,7 @@ public class SantanderEsConstants {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("es_santander_unknown_account_type");
         public static final LogTag CREDIT_CARD_ACCOUNT = LogTag.from("es_santander_credit_card_account_log");
         public static final LogTag LOAN_ACCOUNT = LogTag.from("es_santander_loan");
+        public static final LogTag INVESTMENT_ACCOUNT = LogTag.from("es_santander_investment");
         public static final LogTag CREDIT_CARD_TRANSACTION = LogTag.from("es_santander_credit_card_transaction");
     }
 

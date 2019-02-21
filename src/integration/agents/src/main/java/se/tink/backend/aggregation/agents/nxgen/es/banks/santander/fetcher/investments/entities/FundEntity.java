@@ -22,7 +22,6 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 @XmlRootElement
 public class FundEntity {
-    private final static AggregationLogger log = new AggregationLogger(AccountEntity.class);
 
     @JsonProperty("comunes")
     private GeneralInfoEntity generalInfo;

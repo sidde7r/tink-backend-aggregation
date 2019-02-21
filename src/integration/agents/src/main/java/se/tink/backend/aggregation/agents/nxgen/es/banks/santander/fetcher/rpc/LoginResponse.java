@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.InfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.UserData;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.AccountEntity;
@@ -25,6 +26,8 @@ public class LoginResponse {
     private List<CardEntity> cards;
     @JsonProperty("fondos")
     private List<FundEntity> funds;
+    @JsonProperty("valores")
+    private List<PortfolioEntity> portfolios;
     @JsonProperty("prestamos")
     private List<LoanEntity> loans;
 
@@ -50,5 +53,9 @@ public class LoginResponse {
 
     public List<LoanEntity> getLoans() {
         return loans;
+    }
+
+    public List<PortfolioEntity> getPortfolios() {
+        return portfolios;
     }
 }
