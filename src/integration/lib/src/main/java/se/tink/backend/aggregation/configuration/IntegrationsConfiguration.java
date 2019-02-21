@@ -8,27 +8,15 @@ import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 
 @JsonObject
 public class IntegrationsConfiguration {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private Map<String, Map<String, Object>> integrations = new HashMap<>();
-    @JsonProperty private SbabConfiguration sbab;
     @JsonProperty private FinTsIntegrationConfiguration fints;
     @JsonProperty private String ukOpenBankingJson;
     @JsonProperty private String proxyUri;
-
-    public Optional<SbabClientConfiguration> getSbab(String clientName) {
-        return Optional.ofNullable(sbab)
-                .flatMap(sc -> getClientConfiguration(clientName, sc.getClients()));
-    }
-
-    private <T> Optional<T> getClientConfiguration(String clientName, Map<String, T> configMap) {
-        return Optional.ofNullable(configMap).map(m -> m.getOrDefault(clientName, null));
-    }
 
     public FinTsIntegrationConfiguration getFinTsIntegrationConfiguration() {
         return fints;
