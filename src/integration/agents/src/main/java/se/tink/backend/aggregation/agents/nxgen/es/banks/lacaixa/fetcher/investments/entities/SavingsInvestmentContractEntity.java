@@ -24,4 +24,14 @@ public class SavingsInvestmentContractEntity {
 
         return response;
     }
+
+    @JsonIgnore
+    public Optional<String> getContractName(String contractNumber) {
+        return Optional.ofNullable(contractGroups).orElse(Collections.emptyList()).stream()
+                .map(ContractGroupEntity::getContracts)
+                .flatMap(List::stream)
+                .filter(contract -> contractNumber.equalsIgnoreCase(contract.getContractNumberFormatted()))
+                .map(ContractEntity::getContractAlias)
+                .findFirst();
+    }
 }
