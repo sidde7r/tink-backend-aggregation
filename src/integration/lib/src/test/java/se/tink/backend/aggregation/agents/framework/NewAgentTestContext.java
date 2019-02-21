@@ -189,7 +189,21 @@ public class NewAgentTestContext extends AgentContext {
     @Override
     public void cacheAccount(Account account, AccountFeatures accountFeatures) {
         accountsByBankId.put(account.getBankId(), account);
-        accountFeaturesByBankId.put(account.getBankId(), accountFeatures);
+
+        AccountFeatures accountFeaturesToCache = accountFeatures;
+
+        if (accountFeaturesByBankId.containsKey(account.getBankId())) {
+            // FIXME: this check mirrors the check done in AgentWorkerContext.cacheAccount that is needed
+            // FIXME: because some agents still need to call updateTransactions, which still needs to call the
+            // FIXME: default cacheAccount method, which then clobbers the existing AccountFeatures cache.
+            // FIXME: Once the problem has been fixed in production code, we can remove this check as well.
+            AccountFeatures existingAccountFeatures = accountFeaturesByBankId.get(account.getBankId());
+            if (accountFeatures.isEmpty() && !existingAccountFeatures.isEmpty()) {
+                accountFeaturesToCache = existingAccountFeatures;
+            }
+        }
+
+        accountFeaturesByBankId.put(account.getBankId(), accountFeaturesToCache);
     }
 
     public Optional<AccountFeatures> getAccountFeatures(final String uniqueAccountIdentifier) {
