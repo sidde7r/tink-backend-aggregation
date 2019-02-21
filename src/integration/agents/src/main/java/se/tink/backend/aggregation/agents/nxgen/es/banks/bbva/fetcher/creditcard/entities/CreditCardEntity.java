@@ -39,8 +39,9 @@ public class CreditCardEntity {
                 .build();
     }
 
-    public String getSubfamilyTypeCode() {
-        return subfamilyTypeCode;
+    @JsonIgnore
+    public boolean isCreditCard() {
+        return BbvaConstants.AccountTypes.CREDIT_CARD.equals(this.subfamilyTypeCode);
     }
 
     @JsonIgnore
