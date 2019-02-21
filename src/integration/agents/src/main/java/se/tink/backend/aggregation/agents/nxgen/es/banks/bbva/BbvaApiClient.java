@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.UrlEncodedFormBody;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
@@ -44,8 +45,7 @@ public class BbvaApiClient {
 
     public BbvaApiClient(TinkHttpClient client) {
         this.client = client;
-        this.userAgent = String.format(BbvaConstants.Header.BBVA_USER_AGENT_VALUE,
-                generateRandomHex());
+        this.userAgent = String.format(BbvaConstants.Header.BBVA_USER_AGENT_VALUE, generateRandomHex());
     }
 
     // Non NIE usernames must be prepended with '0' (based on ambassador credentials) while NIE
@@ -74,10 +74,10 @@ public class BbvaApiClient {
         body.put(BbvaConstants.PostParameter.CONSUMER_ID_KEY, BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
 
         HttpResponse response = client.request(BbvaConstants.Url.SESSION)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent)
-                .post(HttpResponse.class, body);
+                        .type(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent)
+                        .post(HttpResponse.class, body);
 
         if (MediaType.TEXT_HTML.equalsIgnoreCase(response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE))) {
             throw SessionError.SESSION_EXPIRED.exception();
@@ -93,7 +93,8 @@ public class BbvaApiClient {
             }
 
             LOG.warn(
-                    String.format("Bank responded with error: %s",
+                    String.format(
+                            "Bank responded with error: %s",
                             SerializationUtils.serializeToString(initiateSessionResponse.getResult()))
             );
 
@@ -107,18 +108,27 @@ public class BbvaApiClient {
 
     public FetchProductsResponse fetchProducts() {
 
-        return createRefererRequest(BbvaConstants.Url.PRODUCTS)
-                .get(FetchProductsResponse.class);
+        return createRefererRequest(BbvaConstants.Url.PRODUCTS).get(FetchProductsResponse.class);
     }
 
-    public FetchAccountTransactionsResponse fetchAccountTransactions(Account account, int keyIndex) {
+    public FetchAccountTransactionsResponse fetchAccountTransactions(
+            Account account, int keyIndex) {
         FetchTransactionsRequestEntity request = createAccountTransactionsQuery(account);
 
         return createRefererRequest(BbvaConstants.Url.ACCOUNT_TRANSACTION)
                 .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, String.valueOf(keyIndex))
                 .queryParam(BbvaConstants.Query.PAGE_SIZE, String.valueOf(BbvaConstants.PAGE_SIZE))
                 .post(FetchAccountTransactionsResponse.class, request);
+    }
 
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(Account account, String keyIndex) {
+        return createRefererRequest(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
+                .queryParam(
+                        BbvaConstants.Query.CONTRACT_ID,
+                        account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID))
+                .queryParam(BbvaConstants.Query.CARD_TRANSACTION_TYPE, BbvaConstants.AccountTypes.CREDIT_CARD_SHORT_TYPE)
+                .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, keyIndex)
+                .get(CreditCardTransactionsResponse.class);
     }
 
     public SecurityProfitabilityResponse fetchSecurityProfitability(String portfolioId, String securityCode) {
@@ -156,8 +166,7 @@ public class BbvaApiClient {
     // LOGGING methods
     public String getLoanDetails(String id) {
         String url = new URL(BbvaConstants.Url.LOAN_DETAILS).parameter(BbvaConstants.Url.PARAM_ID, id).get();
-        return createRefererRequest(url)
-                .get(String.class);
+        return createRefererRequest(url).get(String.class);
     }
 
     public String getCardTransactions(String id) {

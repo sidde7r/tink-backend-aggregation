@@ -18,6 +18,8 @@ public final class BbvaConstants {
         public static final String SESSION = BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
         public static final String PRODUCTS = BASE_URL + "/ENPP/enpp_mult_web_mobility_02/products/v2";
         public static final String ACCOUNT_TRANSACTION = BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
+        public static final String CREDIT_CARD_TRANSACTIONS =
+                BASE_URL + "/ASO/cardTransactions/V01/";
         public static final String LOAN_DETAILS = BASE_URL + "/ASO/loans/V01/{" + PARAM_ID + "}";
         public static final String CARD_TRANSACTIONS = BASE_URL + "/ASO/cardTransactions/V01/{" + PARAM_ID + "}";
         public static final String SECURITY_PROFITABILITY = BASE_URL + "/ASO/securityActions/V01/listProfitability";
@@ -48,11 +50,14 @@ public final class BbvaConstants {
 
     public static class AccountType {
         public static final String CREDIT_CARD = "credit";
+        public static final String CREDIT_CARD_SHORT_TYPE = "C";
     }
 
     public static class Query {
         public static final String PAGINATION_OFFSET = "paginationKey";
         public static final String PAGE_SIZE = "pageSize";
+        public static final String CONTRACT_ID  = "contractId";
+        public static final String CARD_TRANSACTION_TYPE  = "cardTransactionType";
     }
 
     public final class PostParameter {

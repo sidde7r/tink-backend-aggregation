@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.libraries.amount.Amount;
@@ -27,16 +28,23 @@ public class CreditCardEntity {
 
     @JsonIgnore
     public CreditCardAccount toTinkCreditCard() {
-        return CreditCardAccount.builder(createUniqueIdFromName())
-                .setAccountNumber(id)
+        String uniqueId = createUniqueIdFromName();
+        return CreditCardAccount.builder(uniqueId)
+                // Using as number the ID created in previous step as that's how it's shown in the
+                // app
+                .setAccountNumber(uniqueId)
+                .putInTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
                 .setBalance(new Amount(currency, StringUtils.parseAmount(availableBalance)))
                 .setName(name)
                 .build();
     }
 
+    public String getSubfamilyTypeCode() {
+        return subfamilyTypeCode;
+    }
+
     @JsonIgnore
     private String createUniqueIdFromName() {
-        String s = name.split("[*]")[1];
-        return s;
+        return name.split("[*]")[1];
     }
 }

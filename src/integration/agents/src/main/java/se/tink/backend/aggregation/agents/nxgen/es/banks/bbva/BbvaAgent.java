@@ -4,6 +4,7 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.BbvaCreditCardTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.BbvaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.BbvaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.BbvaAccountFetcher;
@@ -18,6 +19,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRe
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
@@ -65,9 +67,12 @@ public class BbvaAgent extends NextGenerationAgent {
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         BbvaCreditCardFetcher creditCardFetcher = new BbvaCreditCardFetcher(apiClient);
+        BbvaCreditCardTransactionFetcher creditCardTransactionFetcher = new BbvaCreditCardTransactionFetcher(apiClient);
 
         return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
-                creditCardFetcher, creditCardFetcher));
+                creditCardFetcher, new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionKeyPaginationController<>(creditCardTransactionFetcher))
+                ));
     }
 
     @Override
