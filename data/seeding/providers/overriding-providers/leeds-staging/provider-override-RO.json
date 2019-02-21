@@ -1,0 +1,20 @@
+{
+  "clusterid": "leeds-staging",
+  "provider-configuration": [
+    {
+      "name": "ro-raiffeisen-oauth2",
+      "displayName": "Raiffeisen Bank International (Sandbox)",
+      "popular": true,
+      "type": "BANK",
+      "status": "ENABLED",
+      "credentialsType": "PASSWORD",
+      "multiFactor": false,
+      "className": "nxgen.ro.banks.raiffeisen.RaiffeisenAgent",
+      "passwordHelpText": null,
+      "transactional": "true",
+      "payload": "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback",
+      "tutorialUrl": null,
+      "fields": []
+    }
+  ]
+}
