@@ -14,7 +14,9 @@
       "transactional": "true",
       "payload": "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback",
       "tutorialUrl": null,
-      "fields": []
+      "fields": [],
+      "market": "RO",
+      "currency": "RON"
     }
   ]
 }
