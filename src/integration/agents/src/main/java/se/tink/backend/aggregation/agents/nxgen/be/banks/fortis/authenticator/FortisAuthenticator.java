@@ -32,6 +32,8 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.strings.StringUtils;
+
 
 public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
@@ -89,6 +91,9 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         String challenge = apiClient.fetchChallenges(challangeRequest);
 
         String loginCode = waitForLoginCode(challenge);
+        if(Strings.isNullOrEmpty(loginCode) || !StringUtils.isNumeric(loginCode)) {
+            throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
+        }
 
         AuthResponse authResponse =
                 AuthResponse.builder()
@@ -108,20 +113,21 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     private void sendChallenges(AuthResponse response) throws LoginException {
-
-        HttpResponse httpres = null;
+        HttpResponse httpResponse;
         try {
-            httpres = apiClient.authenticationRequest(response.getUrlEncodedFormat());
+            httpResponse = apiClient.authenticationRequest(response.getUrlEncodedFormat());
         } catch (Exception e) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        String responseBody = httpres.getBody(String.class);
+        String responseBody = httpResponse.getBody(String.class);
 
         if (!Strings.isNullOrEmpty(responseBody)
                 && responseBody.contains(FortisConstants.ERRORCODE.ERROR_CODE)) {
-            if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE_KO)
-                    || responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE)) {
+            if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE)) {
+                throw new IllegalStateException("Invalid signature");
+            }
+            if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE_KO)) {
                 throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             } else {
                 throw new IllegalStateException(String.format("Unknown error: %s", responseBody));
@@ -224,6 +230,19 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
                     FortisConstants.LOGTAG.LOGIN_ERROR);
             throw AuthorizationError.ACCOUNT_BLOCKED.exception();
         }
+
+        if (!Strings.isNullOrEmpty(userInfoResponse.getValue().getUserData().getMuidCode())
+                && !FortisConstants.ERRORCODE.MUID_OK.equalsIgnoreCase(userInfoResponse
+                .getValue()
+                .getUserData()
+                .getMuidCode())) {
+            LOGGER.warnExtraLong(
+                    String.format(
+                            "muidcode %s, daysPasswordStillValid %s",
+                            userInfoResponse.getValue().getUserData().getMuidCode(),
+                            userInfoResponse.getValue().getUserData().getDaysPasswordStillValid()),
+                    FortisConstants.LOGTAG.LOGIN_ERROR);
+        }
     }
 
     private boolean isCredentialsCorrect() {
@@ -296,6 +315,9 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         if (!Strings.isNullOrEmpty(responseBody)
                 && responseBody.contains(FortisConstants.ERRORCODE.ERROR_CODE)) {
             if (responseBody.contains(FortisConstants.ERRORCODE.INVALID_SIGNATURE)) {
+                throw new IllegalStateException("Invalid signature");
+            }
+            if (responseBody.contains(FortisConstants.ERRORCODE.MAXIMUM_NUMBER_OF_TRIES)) {
                 return false;
             }
             LOGGER.warnExtraLong(responseBody, FortisConstants.LOGTAG.LOGIN_ERROR);
