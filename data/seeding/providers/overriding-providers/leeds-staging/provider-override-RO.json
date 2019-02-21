@@ -1,5 +1,5 @@
 {
-  "clusterid": "oxford-staging",
+  "clusterid": "leeds-staging",
   "provider-configuration": [
     {
       "name": "ro-raiffeisen-oauth2",
@@ -12,7 +12,7 @@
       "className": "nxgen.ro.banks.raiffeisen.RaiffeisenAgent",
       "passwordHelpText": null,
       "transactional": "true",
-      "payload": "https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback",
+      "payload": "https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback",
       "tutorialUrl": null,
       "fields": [],
       "market": "RO",

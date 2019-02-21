@@ -21,10 +21,12 @@ public class RaiffeisenApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage storage;
+    private final String redirectUrl;
 
-    public RaiffeisenApiClient(TinkHttpClient client, PersistentStorage storage) {
+    public RaiffeisenApiClient(TinkHttpClient client, PersistentStorage storage, String redirectUrl) {
         this.client = client;
         this.storage = storage;
+        this.redirectUrl = redirectUrl;
     }
 
     private URL getUrl(String resource) {
@@ -49,7 +51,7 @@ public class RaiffeisenApiClient {
                 .queryParam(RaiffeisenConstants.QUERY.CLIENT_ID, RaiffeisenConstants.CLIENT_ID_VALUE)
                 .queryParam(RaiffeisenConstants.QUERY.RESPONSE_TYPE, RaiffeisenConstants.QUERY.RESPONSE_TYPE_CODE)
                 .queryParam(RaiffeisenConstants.QUERY.SCOPE, RaiffeisenConstants.QUERY.SCOPE_VALUE)
-                .queryParam(RaiffeisenConstants.QUERY.REDIRECT_URL, RaiffeisenConstants.REDIRECT_URL_VALUE)
+                .queryParam(RaiffeisenConstants.QUERY.REDIRECT_URL, redirectUrl)
                 .queryParam(RaiffeisenConstants.QUERY.STATE, state)
                 .getUrl();
     }
@@ -58,7 +60,7 @@ public class RaiffeisenApiClient {
 
         TokenRequest request = new TokenRequest(RaiffeisenConstants.BODY.GRANT_TYPE_CODE,
                 RaiffeisenConstants.CLIENT_ID_VALUE, RaiffeisenConstants.CLIENT_SECRET_VALUE, code,
-                RaiffeisenConstants.REDIRECT_URL_VALUE);
+                redirectUrl);
 
         return getRequest(RaiffeisenConstants.URL.TOKEN)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
@@ -69,7 +71,7 @@ public class RaiffeisenApiClient {
     public OAuth2Token refreshToken(String refreshToken) throws SessionException {
         try {
             RefreshRequest refreshRequest = new RefreshRequest(refreshToken, RaiffeisenConstants.CLIENT_ID_VALUE,
-                    RaiffeisenConstants.CLIENT_SECRET_VALUE, RaiffeisenConstants.REDIRECT_URL_VALUE);
+                    RaiffeisenConstants.CLIENT_SECRET_VALUE, redirectUrl);
 
             return getRequest(RaiffeisenConstants.URL.TOKEN)
                     .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)

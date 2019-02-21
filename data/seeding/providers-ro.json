@@ -13,7 +13,7 @@
             "className": "nxgen.ro.banks.raiffeisen.RaiffeisenAgent",
             "passwordHelpText": null,
             "transactional": "true",
-            "payload": null,
+            "payload": "https://127.0.0.1:7357/api/v1/thirdparty/callback",
             "tutorialUrl": null,
             "fields": []
         },
