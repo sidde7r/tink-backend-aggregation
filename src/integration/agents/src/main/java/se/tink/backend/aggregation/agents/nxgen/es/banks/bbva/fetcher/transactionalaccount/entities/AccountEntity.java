@@ -3,17 +3,22 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import static se.tink.libraries.account.AccountIdentifier.Type.IBAN;
 
 @JsonObject
 public class AccountEntity {
+    private static final AggregationLogger LOGGER = new AggregationLogger(AccountEntity.class);
+
     private String id;
     private String name;
     private String productDescription;
@@ -52,32 +57,30 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    // until we have seen more than on account we do this
-    public boolean isKnownAccountType() {
-        return isCheckingAccount();
-    }
+    public boolean isTransactionalAccount() {
+        Optional<AccountTypes> accountType = BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
 
-    @JsonIgnore
-    // until we have seen more than on account we do this
-    private boolean isCheckingAccount() {
-        String bbvaType = String.format("%s:%s", subfamilyCode, subfamilyTypeCode);
+        if (accountType.isPresent()) {
+            return accountType.get().equals(AccountTypes.CHECKING) ||
+                    accountType.get().equals(AccountTypes.SAVINGS);
+        }
 
-        return BbvaConstants.AccountTypes.CHECKING_TYPES.contains(bbvaType);
+        LOGGER.infoExtraLong(SerializationUtils.serializeToString(this),
+                BbvaConstants.Logging.UNKNOWN_ACCOUNT_TYPE);
+        return false;
     }
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
-        if (isCheckingAccount()) {
-            return AccountTypes.CHECKING;
-        }
+        Optional<AccountTypes> accountType = BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
 
-        return AccountTypes.OTHER;
+        return accountType.orElse(AccountTypes.OTHER);
     }
 
     @JsonIgnore
     // until we have seen more than on account we do this
     public boolean isCreditCard() {
-        return BbvaConstants.AccountTypes.CREDIT_CARD.equalsIgnoreCase(subfamilyTypeCode);
+        return BbvaConstants.AccountType.CREDIT_CARD.equalsIgnoreCase(subfamilyTypeCode);
     }
 
     public List<BalancesEntity> getAvailableBalances() {

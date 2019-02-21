@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
-import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
-import java.util.List;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class BbvaConstants {
 
@@ -46,8 +46,7 @@ public final class BbvaConstants {
         public static final String CHARSET = "UTF-8";
     }
 
-    public static class AccountTypes {
-        public static final List<String> CHECKING_TYPES = ImmutableList.of("accounts:personal");
+    public static class AccountType {
         public static final String CREDIT_CARD = "credit";
     }
 
@@ -94,6 +93,17 @@ public final class BbvaConstants {
                     .orElse(UNKNOWN);
         }
     }
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING,
+                            "0000011954",   // CUENTA NEGOCIOS - "personal" business account
+                            "0CA0000079",   // CUENTA BLUE
+                            "0CA0000245",   // CUENTA ON LINE
+                            "0000009340")   // CUENTA TRADER - marked as personal account by BBVA
+                    .put(AccountTypes.SAVINGS,
+                            "0000011102")   // CUENTA METAS - goal account
+                    .build();
 
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bbva_unknown_account_type");
