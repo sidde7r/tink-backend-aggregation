@@ -10,7 +10,6 @@
     "nl-demo",
     "nl-test-password",
     "nl-test-multi-supplemental",
-    "nl-ics-oauth2",
-    "ro-raiffeisen-oauth2"
+    "nl-ics-oauth2"
   ]
 }
