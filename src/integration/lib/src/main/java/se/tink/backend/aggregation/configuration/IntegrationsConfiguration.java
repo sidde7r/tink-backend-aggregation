@@ -7,20 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 
 @JsonObject
 public class IntegrationsConfiguration {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private Map<String, Map<String, Object>> integrations = new HashMap<>();
-    @JsonProperty private FinTsIntegrationConfiguration fints;
     @JsonProperty private String ukOpenBankingJson;
     @JsonProperty private String proxyUri;
-
-    public FinTsIntegrationConfiguration getFinTsIntegrationConfiguration() {
-        return fints;
-    }
 
     public String getUkOpenBankingJson() {
         return ukOpenBankingJson;
