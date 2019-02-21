@@ -45,7 +45,8 @@ public class BbvaApiClient {
 
     public BbvaApiClient(TinkHttpClient client) {
         this.client = client;
-        this.userAgent = String.format(BbvaConstants.Header.BBVA_USER_AGENT_VALUE, generateRandomHex());
+        this.userAgent =
+                String.format(BbvaConstants.Header.BBVA_USER_AGENT_VALUE, generateRandomHex());
     }
 
     // Non NIE usernames must be prepended with '0' (based on ambassador credentials) while NIE
@@ -59,33 +60,41 @@ public class BbvaApiClient {
     }
 
     public HttpResponse login(String username, String password) {
-        String loginBody = UrlEncodedFormBody.createLoginRequest(formatUsername(username), password);
+        String loginBody =
+                UrlEncodedFormBody.createLoginRequest(formatUsername(username), password);
 
         return client.request(BbvaConstants.Url.LOGIN)
                 .type(BbvaConstants.Header.CONTENT_TYPE_URLENCODED_UTF8)
                 .accept(MediaType.WILDCARD)
-                .header(BbvaConstants.Header.CONSUMER_ID_KEY, BbvaConstants.Header.CONSUMER_ID_VALUE)
+                .header(
+                        BbvaConstants.Header.CONSUMER_ID_KEY,
+                        BbvaConstants.Header.CONSUMER_ID_VALUE)
                 .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent)
                 .post(HttpResponse.class, loginBody);
     }
 
     public InitiateSessionResponse initiateSession() throws SessionException, BankServiceException {
         Map<String, String> body = new HashMap<>();
-        body.put(BbvaConstants.PostParameter.CONSUMER_ID_KEY, BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
+        body.put(
+                BbvaConstants.PostParameter.CONSUMER_ID_KEY,
+                BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
 
-        HttpResponse response = client.request(BbvaConstants.Url.SESSION)
+        HttpResponse response =
+                client.request(BbvaConstants.Url.SESSION)
                         .type(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent)
                         .post(HttpResponse.class, body);
 
-        if (MediaType.TEXT_HTML.equalsIgnoreCase(response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE))) {
+        if (MediaType.TEXT_HTML.equalsIgnoreCase(
+                response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE))) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
         tsec = response.getHeaders().getFirst(BbvaConstants.Header.TSEC_KEY);
 
-        InitiateSessionResponse initiateSessionResponse = response.getBody(InitiateSessionResponse.class);
+        InitiateSessionResponse initiateSessionResponse =
+                response.getBody(InitiateSessionResponse.class);
 
         if (initiateSessionResponse.hasError()) {
             if (initiateSessionResponse.hasError(BbvaConstants.Error.BANK_SERVICE_UNAVAILABLE)) {
@@ -95,8 +104,8 @@ public class BbvaApiClient {
             LOG.warn(
                     String.format(
                             "Bank responded with error: %s",
-                            SerializationUtils.serializeToString(initiateSessionResponse.getResult()))
-            );
+                            SerializationUtils.serializeToString(
+                                    initiateSessionResponse.getResult())));
 
             throw new IllegalStateException("Failed to initiate session");
         }
@@ -121,18 +130,23 @@ public class BbvaApiClient {
                 .post(FetchAccountTransactionsResponse.class, request);
     }
 
-    public CreditCardTransactionsResponse fetchCreditCardTransactions(Account account, String keyIndex) {
+    public CreditCardTransactionsResponse fetchCreditCardTransactions(
+            Account account, String keyIndex) {
         return createRefererRequest(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
                 .queryParam(
                         BbvaConstants.Query.CONTRACT_ID,
                         account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID))
-                .queryParam(BbvaConstants.Query.CARD_TRANSACTION_TYPE, BbvaConstants.AccountTypes.CREDIT_CARD_SHORT_TYPE)
+                .queryParam(
+                        BbvaConstants.Query.CARD_TRANSACTION_TYPE,
+                        BbvaConstants.AccountTypes.CREDIT_CARD_SHORT_TYPE)
                 .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, keyIndex)
                 .get(CreditCardTransactionsResponse.class);
     }
 
-    public SecurityProfitabilityResponse fetchSecurityProfitability(String portfolioId, String securityCode) {
-        SecurityProfitabilityRequest request = SecurityProfitabilityRequest.create(portfolioId, securityCode);
+    public SecurityProfitabilityResponse fetchSecurityProfitability(
+            String portfolioId, String securityCode) {
+        SecurityProfitabilityRequest request =
+                SecurityProfitabilityRequest.create(portfolioId, securityCode);
 
         return createRefererRequest(BbvaConstants.Url.SECURITY_PROFITABILITY)
                 .post(SecurityProfitabilityResponse.class, request);
@@ -165,14 +179,19 @@ public class BbvaApiClient {
 
     // LOGGING methods
     public String getLoanDetails(String id) {
-        String url = new URL(BbvaConstants.Url.LOAN_DETAILS).parameter(BbvaConstants.Url.PARAM_ID, id).get();
+        String url =
+                new URL(BbvaConstants.Url.LOAN_DETAILS)
+                        .parameter(BbvaConstants.Url.PARAM_ID, id)
+                        .get();
         return createRefererRequest(url).get(String.class);
     }
 
     public String getCardTransactions(String id) {
-        String url = new URL(BbvaConstants.Url.CARD_TRANSACTIONS).parameter(BbvaConstants.Url.PARAM_ID, id).get();
-        return createRefererRequest(url)
-                .get(String.class);
+        String url =
+                new URL(BbvaConstants.Url.CARD_TRANSACTIONS)
+                        .parameter(BbvaConstants.Url.PARAM_ID, id)
+                        .get();
+        return createRefererRequest(url).get(String.class);
     }
 
     private RequestBuilder createRefererRequest(String url) {

@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditca
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.BankiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.session.BankiaSessionHandler;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -24,13 +25,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public final class BankiaAgent extends NextGenerationAgent {
 
     private final BankiaApiClient apiClient;
 
-    public BankiaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BankiaAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         apiClient = new BankiaApiClient(client, persistentStorage);
@@ -47,16 +48,17 @@ public final class BankiaAgent extends NextGenerationAgent {
             new Random().nextBytes(bytes);
 
             String base64Encoded = EncodingUtils.encodeAsBase64String(bytes);
-            String base64EncodedSafe = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+            String base64EncodedSafe =
+                    Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
 
             persistentStorage.put(BankiaConstants.StorageKey.DEVICE_ID_BASE_64, base64Encoded);
-            persistentStorage.put(BankiaConstants.StorageKey.DEVICE_ID_BASE_64_URL, base64EncodedSafe);
+            persistentStorage.put(
+                    BankiaConstants.StorageKey.DEVICE_ID_BASE_64_URL, base64EncodedSafe);
         }
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -65,8 +67,10 @@ public final class BankiaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        BankiaTransactionalAccountFetcher fetcher = new BankiaTransactionalAccountFetcher(apiClient);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        BankiaTransactionalAccountFetcher fetcher =
+                new BankiaTransactionalAccountFetcher(apiClient);
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
@@ -74,20 +78,18 @@ public final class BankiaAgent extends NextGenerationAgent {
                         fetcher,
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(fetcher)
-                        )
-                )
-        );
+                                new TransactionDatePaginationController<>(fetcher))));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         BankiaCreditCardFetcher creditCardFetcher = new BankiaCreditCardFetcher(apiClient);
-        return Optional.of(new CreditCardRefreshController(
-                metricRefreshController,
-                updateController,
-                creditCardFetcher,
-                creditCardFetcher));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        creditCardFetcher));
     }
 
     @Override
@@ -106,7 +108,8 @@ public final class BankiaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

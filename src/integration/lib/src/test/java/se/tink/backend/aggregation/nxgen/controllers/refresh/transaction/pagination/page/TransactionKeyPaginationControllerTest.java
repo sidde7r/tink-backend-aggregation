@@ -6,16 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import org.mockito.verification.VerificationMode;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 
 @SuppressWarnings("unchecked")
 public class TransactionKeyPaginationControllerTest {
+    private final Account account = Mockito.mock(Account.class);
     private TransactionKeyPaginationController paginationController;
     private TransactionKeyPaginator<Account, String> paginator;
     private TransactionKeyPaginatorResponse<String> paginatorResponse;
-
-    private final Account account = Mockito.mock(Account.class);
 
     @Before
     public void setup() {
@@ -24,9 +22,7 @@ public class TransactionKeyPaginationControllerTest {
         paginatorResponse = Mockito.mock(TransactionKeyPaginatorResponse.class);
     }
 
-    /**
-     * Instantiation test
-     */
+    /** Instantiation test */
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenTransactionKeyPaginator_isNull() {
         new TransactionKeyPaginationController<>(null);
@@ -71,6 +67,7 @@ public class TransactionKeyPaginationControllerTest {
         paginationController.fetchTransactionsFor(account);
         Mockito.verify(paginatorResponse, Mockito.never()).nextKey();
     }
+
     @Test
     public void fetchTransactionsFor_morePagesKeyProperlyReturned() {
         final String key1 = "key1";
