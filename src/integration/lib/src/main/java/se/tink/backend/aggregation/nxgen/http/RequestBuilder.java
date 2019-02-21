@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.http;
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.sun.jersey.core.header.OutBoundHeaders;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -506,10 +508,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     private void addAggregatorToHeader() {
-        if (headerAggregatorIdentifier == null) {
-            logger.error("Aggregator header identifier is null. The header should not be null.");
-            return;
-        }
+
+        Preconditions.checkArgument(Strings.isNullOrEmpty(headerAggregatorIdentifier),
+                "Aggregator header identifier is null. The header should not be null");
 
         if (!headers.containsKey("X-Aggregator")) {
             headers.add("X-Aggregator", headerAggregatorIdentifier);
