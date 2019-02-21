@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -15,6 +16,7 @@ import se.tink.backend.aggregation.agents.banks.sbab.client.AuthenticationClient
 import se.tink.backend.aggregation.agents.banks.sbab.client.BankIdSignClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.TransferClient;
 import se.tink.backend.aggregation.agents.banks.sbab.client.UserDataClient;
+import se.tink.backend.aggregation.agents.banks.sbab.configuration.SBABConfiguration;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnsupportedTransferException;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.*;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.FetchTransactionsResponse;
@@ -28,7 +30,6 @@ import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -58,7 +59,9 @@ public class SBABAgent extends AbstractAgent
     private final Credentials credentials;
     private final Catalog catalog;
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final int BANKID_MAX_ATTEMPTS = 100;
+    public static final String INTEGRATION_NAME = "sbab";
     public static final String AMORTIZATION_DOCUMENTATION = "amortization-documentation";
 
     private final AuthenticationClient authenticationClient;
@@ -107,14 +110,17 @@ public class SBABAgent extends AbstractAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        SbabConfiguration sbabConfiguration = configuration.getIntegrations().getSbab();
-
-        if (sbabConfiguration != null) {
-            authenticationClient.setConfiguration(sbabConfiguration);
-            bankIdSignClient.setConfiguration(sbabConfiguration);
-            transferClient.setConfiguration(sbabConfiguration);
-            userDataClient.setConfiguration(sbabConfiguration);
-        }
+        configuration
+                .getIntegrations()
+                .getIntegration(INTEGRATION_NAME)
+                .map(i -> OBJECT_MAPPER.convertValue(i, SBABConfiguration.class))
+                .ifPresent(
+                        cfg -> {
+                            authenticationClient.setConfiguration(cfg);
+                            bankIdSignClient.setConfiguration(cfg);
+                            transferClient.setConfiguration(cfg);
+                            userDataClient.setConfiguration(cfg);
+                        });
     }
 
     @Override
