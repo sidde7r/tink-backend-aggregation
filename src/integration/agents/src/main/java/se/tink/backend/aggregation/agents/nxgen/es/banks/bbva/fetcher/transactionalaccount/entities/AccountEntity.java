@@ -61,7 +61,8 @@ public class AccountEntity {
         Optional<AccountTypes> accountType = BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
 
         if (accountType.isPresent()) {
-            return true;
+            return accountType.get().equals(AccountTypes.CHECKING) ||
+                    accountType.get().equals(AccountTypes.SAVINGS);
         }
 
         LOGGER.infoExtraLong(SerializationUtils.serializeToString(this),
