@@ -41,7 +41,7 @@ public class CreditCardEntity {
 
     @JsonIgnore
     public boolean isCreditCard() {
-        return BbvaConstants.AccountTypes.CREDIT_CARD.equals(this.subfamilyTypeCode);
+        return BbvaConstants.AccountType.CREDIT_CARD.equals(this.subfamilyTypeCode);
     }
 
     @JsonIgnore

@@ -138,7 +138,7 @@ public class BbvaApiClient {
                         account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID))
                 .queryParam(
                         BbvaConstants.Query.CARD_TRANSACTION_TYPE,
-                        BbvaConstants.AccountTypes.CREDIT_CARD_SHORT_TYPE)
+                        BbvaConstants.AccountType.CREDIT_CARD_SHORT_TYPE)
                 .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, keyIndex)
                 .get(CreditCardTransactionsResponse.class);
     }
