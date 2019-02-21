@@ -1,36 +1,25 @@
 package se.tink.backend.aggregation.configuration;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.ICSConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.MonzoConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.NordeaConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.StarlingConfiguration;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
+import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonObject
 public class IntegrationsConfiguration {
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+    private Map<String, Map<String, Object>> integrations = new HashMap<>();
     @JsonProperty private SbabConfiguration sbab;
-
-    @JsonProperty private Map<String, MonzoConfiguration> monzo;
-
-    @JsonProperty private Map<String, StarlingConfiguration> starling;
-
     @JsonProperty private FinTsIntegrationConfiguration fints;
-
     @JsonProperty private String ukOpenBankingJson;
-
     @JsonProperty private String proxyUri;
-
-    @JsonProperty private Map<String, ICSConfiguration> icsConfiguration;
-
-    @JsonProperty private Map<String, NordeaConfiguration> nordea;
 
     public SbabConfiguration getSbab() {
         return sbab;
@@ -45,14 +34,6 @@ public class IntegrationsConfiguration {
         return Optional.ofNullable(configMap).map(m -> m.getOrDefault(clientName, null));
     }
 
-    public Optional<MonzoConfiguration> getMonzo(String clientName) {
-        return getClientConfiguration(clientName, monzo);
-    }
-
-    public Optional<StarlingConfiguration> getStarling(String clientName) {
-        return getClientConfiguration(clientName, starling);
-    }
-
     public FinTsIntegrationConfiguration getFinTsIntegrationConfiguration() {
         return fints;
     }
@@ -61,15 +42,19 @@ public class IntegrationsConfiguration {
         return ukOpenBankingJson;
     }
 
-    public Optional<NordeaConfiguration> getNordea(String clientName) {
-        return getClientConfiguration(clientName, nordea);
+    public <T extends ClientConfiguration> Optional<T> getClientConfiguration(
+            String integrationName, String clientName, Class<T> clientConfigClass) {
+        return Optional.ofNullable(integrations.get(integrationName))
+                .map(i -> i.get(clientName))
+                .map(c -> OBJECT_MAPPER.convertValue(c, clientConfigClass));
+    }
+
+    @JsonAnySetter
+    public void addIntegration(String integrationName, Map<String, Object> clientConfigMap) {
+        integrations.put(integrationName, clientConfigMap);
     }
 
     public String getProxyUri() {
         return proxyUri;
-    }
-
-    public Optional<ICSConfiguration> getIcsConfiguration(String clientName) {
-        return getClientConfiguration(clientName, icsConfiguration);
     }
 }

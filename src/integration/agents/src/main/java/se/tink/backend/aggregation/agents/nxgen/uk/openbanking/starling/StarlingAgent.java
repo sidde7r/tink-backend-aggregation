@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.configuration.integrations.StarlingConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -27,7 +27,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import java.util.Optional;
 
 public class StarlingAgent extends NextGenerationAgent {
-
     private final String clientName;
     private final StarlingApiClient apiClient;
 
@@ -48,7 +47,7 @@ public class StarlingAgent extends NextGenerationAgent {
         StarlingConfiguration starlingConfiguration =
                 configuration
                         .getIntegrations()
-                        .getStarling(clientName)
+                        .getClientConfiguration(StarlingConstants.INTEGRATION_NAME, clientName, StarlingConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(

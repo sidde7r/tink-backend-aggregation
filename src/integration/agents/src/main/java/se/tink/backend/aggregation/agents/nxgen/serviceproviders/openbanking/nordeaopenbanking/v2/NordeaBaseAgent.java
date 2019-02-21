@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.configuration.NordeaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.entities.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.sessionhandler.NordeaBaseSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.transactionalaccount.NordeaAccountParser;
@@ -10,7 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nor
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeaopenbanking.v2.transactionalaccount.NordeaTransactionParser;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.configuration.integrations.NordeaConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -29,10 +29,10 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class NordeaBaseAgent extends NextGenerationAgent {
-    private NordeaBaseApiClient apiClient;
-    private NordeaSessionStorage nordeaSessionStorage;
-    private NordeaPersistentStorage nordeaPersistentStorage;
-    private String clientName;
+    private final NordeaBaseApiClient apiClient;
+    private final NordeaSessionStorage nordeaSessionStorage;
+    private final NordeaPersistentStorage nordeaPersistentStorage;
+    private final String clientName;
 
     public NordeaBaseAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
@@ -54,10 +54,16 @@ public abstract class NordeaBaseAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        NordeaConfiguration nordeaConfiguration = configuration.getIntegrations().getNordea(clientName)
-                .orElseThrow(() -> new IllegalStateException(
-                        String.format("No Nordea client configured for name: %s", clientName)
-                ));
+        NordeaConfiguration nordeaConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(NordeaBaseConstants.INTEGRATION_NAME, clientName, NordeaConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                String.format(
+                                                        "No Nordea client configured for name: %s",
+                                                        clientName)));
 
         nordeaPersistentStorage.setClientId(nordeaConfiguration.getClientId());
         nordeaPersistentStorage.setClientSecret(nordeaConfiguration.getClientSecret());

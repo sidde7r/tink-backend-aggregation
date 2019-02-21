@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.agents.rpc.AccountTypes;
 
 public class MonzoConstants {
-
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/London");
+    public static final String INTEGRATION_NAME = "monzo";
 
     public static final AccountTypeMapper ACCOUNT_TYPE = AccountTypeMapper.builder()
             .put(AccountTypes.CHECKING, "uk_retail").build();

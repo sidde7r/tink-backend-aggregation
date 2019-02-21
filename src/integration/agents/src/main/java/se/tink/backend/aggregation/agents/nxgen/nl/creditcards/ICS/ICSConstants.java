@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 
 import com.google.common.collect.ImmutableList;
 import java.text.SimpleDateFormat;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class ICSConstants {
+  public static final String INTEGRATION_NAME = "icsConfiguration";
 
   public static final class URL {
     public static final String AUTH_BASE = "https://auth.vvwpgvhh.icscards.nl";

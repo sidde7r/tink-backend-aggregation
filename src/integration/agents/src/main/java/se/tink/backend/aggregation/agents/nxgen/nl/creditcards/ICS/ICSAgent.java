@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.authenticator.ICSOAuthAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.configuration.ICSConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.creditcards.ICS.fetchers.credit.ICSCreditCardFetcher;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.ICSConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -39,7 +39,6 @@ public class ICSAgent extends NextGenerationAgent {
     clientName = request.getProvider().getPayload().split(" ")[0];
     redirectUri = request.getProvider().getPayload().split(" ")[1];
     icsApiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
-
   }
 
   @Override
@@ -50,13 +49,17 @@ public class ICSAgent extends NextGenerationAgent {
   @Override
   public void setConfiguration(AgentsServiceConfiguration configuration) {
     super.setConfiguration(configuration);
-    ICSConfiguration icsConfiguration =
-        configuration.getIntegrations().getIcsConfiguration(clientName)
-                .orElseThrow(() -> new IllegalArgumentException("Missing ICS configuration"));
 
-    if (icsConfiguration == null || !icsConfiguration.isValid()) {
-      throw new IllegalStateException("ICS Configuration is invalid!");
-    }
+    ICSConfiguration icsConfiguration =
+            configuration
+                    .getIntegrations()
+                    .getClientConfiguration(ICSConstants.INTEGRATION_NAME, clientName, ICSConfiguration.class)
+                    .orElseThrow(
+                            () ->
+                                    new IllegalStateException(
+                                            String.format(
+                                                    "No ICS client configured for name: %s",
+                                                    clientName)));
 
     client.setSslClientCertificate(
         EncodingUtils.decodeBase64String(icsConfiguration.getClientSSLCertificate()), "");

@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class StarlingConstants {
+    static final String INTEGRATION_NAME = "starling";
 
     public static class UrlParams {
         public static final String UID = "uid";
