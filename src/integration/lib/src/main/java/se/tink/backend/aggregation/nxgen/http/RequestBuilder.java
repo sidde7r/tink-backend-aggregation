@@ -509,7 +509,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     private void addAggregatorToHeader() {
 
-        Preconditions.checkArgument(Strings.isNullOrEmpty(headerAggregatorIdentifier),
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(headerAggregatorIdentifier),
                 "Aggregator header identifier is null. The header should not be null");
 
         if (!headers.containsKey("X-Aggregator")) {
