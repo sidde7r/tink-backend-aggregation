@@ -24,9 +24,10 @@ public class TransactionKeyPaginationController<A extends Account, T>
         TransactionKeyPaginatorResponse<T> response =
                 paginator.getTransactionsFor(account, nextKey);
         Preconditions.checkState(
-
                 response.canFetchMore().isPresent(), "canFetchMore must be defined.");
-        response.canFetchMore().filter(c -> c).map(c -> nextKey = response.nextKey());
+        if (response.canFetchMore().orElseGet(() -> false)) {
+            nextKey = response.nextKey();
+        }
         return response;
     }
 }
