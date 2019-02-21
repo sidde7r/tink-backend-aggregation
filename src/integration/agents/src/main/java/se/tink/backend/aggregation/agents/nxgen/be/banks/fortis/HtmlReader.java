@@ -8,7 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
-@Consumes("text/html")
+@Consumes({"text/html", "text/html; charset=utf-8"})
 public class HtmlReader extends JacksonJsonProvider {
 
     @Override
@@ -25,6 +25,6 @@ public class HtmlReader extends JacksonJsonProvider {
             MediaType mediaType,
             MultivaluedMap<String, String> httpHeaders,
             InputStream entityStream) {
-        throw new IllegalStateException(mediaType.toString());
+        throw new IllegalStateException(String.format("Expected JSON, but MediaType:%s", mediaType.toString()));
     }
 }
