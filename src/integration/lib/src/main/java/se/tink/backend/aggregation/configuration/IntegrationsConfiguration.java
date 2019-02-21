@@ -15,8 +15,13 @@ public class IntegrationsConfiguration {
     private Map<String, Map<String, Object>> integrations = new HashMap<>();
     @JsonProperty private String proxyUri;
 
-    public Optional<Map<String, Object>> getIntegration(String integrationName) {
+    private Optional<Map<String, Object>> getIntegration(String integrationName) {
         return Optional.ofNullable(integrations.get(integrationName));
+    }
+
+    public <T> Optional<T> getIntegration(String integrationName, Class<T> integrationConfigClass) {
+        return getIntegration(integrationName)
+                .map(i -> OBJECT_MAPPER.convertValue(i, integrationConfigClass));
     }
 
     public <T extends ClientConfiguration> Optional<T> getClientConfiguration(

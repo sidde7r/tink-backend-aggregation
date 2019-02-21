@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.banks.sbab;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -59,7 +58,6 @@ public class SBABAgent extends AbstractAgent
     private final Credentials credentials;
     private final Catalog catalog;
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final int BANKID_MAX_ATTEMPTS = 100;
     public static final String INTEGRATION_NAME = "sbab";
     public static final String AMORTIZATION_DOCUMENTATION = "amortization-documentation";
@@ -112,8 +110,7 @@ public class SBABAgent extends AbstractAgent
 
         configuration
                 .getIntegrations()
-                .getIntegration(INTEGRATION_NAME)
-                .map(i -> OBJECT_MAPPER.convertValue(i, SBABConfiguration.class))
+                .getIntegration(INTEGRATION_NAME, SBABConfiguration.class)
                 .ifPresent(
                         cfg -> {
                             authenticationClient.setConfiguration(cfg);
