@@ -42,9 +42,13 @@ public class IntegrationsConfiguration {
         return ukOpenBankingJson;
     }
 
+    public Optional<Map<String, Object>> getIntegration(String integrationName) {
+        return Optional.ofNullable(integrations.get(integrationName));
+    }
+
     public <T extends ClientConfiguration> Optional<T> getClientConfiguration(
             String integrationName, String clientName, Class<T> clientConfigClass) {
-        return Optional.ofNullable(integrations.get(integrationName))
+        return getIntegration(integrationName)
                 .map(i -> i.get(clientName))
                 .map(c -> OBJECT_MAPPER.convertValue(c, clientConfigClass));
     }
