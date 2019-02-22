@@ -112,14 +112,15 @@ agentsServiceConfiguration:
     fints:
       regNumber: "dummyId"
     sbab:
-      signBaseUrl: "https://secure.sbab.se"
-      tink:
-        environment: "sandbox"
-        basicAuthUsername: "dummyUser"
-        basicAuthPassword: "dummyPass"
-        clientId: "dummyId"
-        accessToken: "sandboxToken"
-        redirectUri: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+      signBaseUrl: https://secure.sbab.se
+      clients:
+        tink:
+          environment: sandbox
+          basicAuthUsername: dummyUser
+          basicAuthPassword: dummyPass
+          clientId: "dummyId"
+          accessToken: sandboxToken
+          redirectUri: https://127.0.0.1:7357/api/v1/thirdparty/callback
     monzo:
       tink:
         clientId: "dummyId"

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public class FinTsConstants {
-    public static final String INTEGRATION_NAME = "fints";
+
     public static final String CURRENCY = "EUR";
     public static final String TINK_FINTS_REGISTERATION = "9DA0690B610D90C2CD37E262F";
 

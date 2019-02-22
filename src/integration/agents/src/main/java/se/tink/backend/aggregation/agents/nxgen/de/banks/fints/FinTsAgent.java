@@ -1,15 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking.FinTsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.authenticator.FinTsAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.configuration.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.session.FinTsSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -26,15 +24,18 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+import java.util.Optional;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+
 public class FinTsAgent extends NextGenerationAgent {
+
     private FinTsApiClient apiClient;
 
     public FinTsAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         String[] payload = request.getProvider().getPayload().split(" ");
-        FinTsConfiguration configuration =
-                new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration(
+        FinTsConfiguration configuration = new se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConfiguration(
                         payload[0],
                         payload[1],
                         request.getCredentials().getField(Field.Key.USERNAME),
@@ -44,23 +45,18 @@ public class FinTsAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    protected void configureHttpClient(TinkHttpClient client) {
+    }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
+
         super.setConfiguration(configuration);
 
         FinTsIntegrationConfiguration finTsIntegrationConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getIntegration(FinTsConstants.INTEGRATION_NAME, FinTsIntegrationConfiguration.class)
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format("FinTs integration not configured")));
+                configuration.getIntegrations().getFinTsIntegrationConfiguration();
 
-        this.persistentStorage.put(
-                FinTsConstants.Storage.REG_NUMBER, finTsIntegrationConfiguration.getRegNumber());
+        this.persistentStorage.put(FinTsConstants.Storage.REG_NUMBER, finTsIntegrationConfiguration.getRegNumber());
     }
 
     @Override

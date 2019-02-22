@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.strings.StringUtils;
 
 public abstract class UkOpenBankingConstants {
-    public static final String INTEGRATION_NAME = "ukOpenBankingJson";
 
     public static class HttpHeaders {
         public static final String X_IDEMPOTENCY_KEY = "x-idempotency-key";
