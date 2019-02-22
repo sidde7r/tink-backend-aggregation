@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractAgent extends AgentParsingUtils implements Agent, AgentEventListener {
-    public static final String AGENT_LOCK_PATTERN = "/locks/refreshCredentials/credentials/%s/%s";
     public static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
 
     protected AgentsServiceConfiguration configuration;
