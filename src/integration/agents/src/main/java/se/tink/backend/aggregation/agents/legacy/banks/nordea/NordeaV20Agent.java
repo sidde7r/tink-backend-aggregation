@@ -47,6 +47,7 @@ import org.joda.time.DateTime;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -225,8 +226,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
 
         String dateString = (String) te.getTransactionDate().get("$");
 
-        t.setDate(parseDate(dateString.substring(0, 10), true));
-        t.setAmount(parseAmount(te.getTransactionAmount().get("$").toString()));
+        t.setDate(AgentParsingUtils.parseDate(dateString.substring(0, 10), true));
+        t.setAmount(AgentParsingUtils.parseAmount(te.getTransactionAmount().get("$").toString()));
 
         if (te.getIsCoverReservationTransaction() != null && te.getIsCoverReservationTransaction().get("$") != null) {
             t.setPending((Boolean) te.getIsCoverReservationTransaction().get("$"));
@@ -663,7 +664,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
         Account account = new Account();
 
         productEntity.getBalance()
-                .ifPresent(balance -> account.setBalance(parseAmount(balance)));
+                .ifPresent(balance -> account.setBalance(AgentParsingUtils.parseAmount(balance)));
 
         if (productEntity.getNickName() != null && productEntity.getNickName().containsKey("$")) {
             account.setName(productEntity.getNickName().get("$").toString());
@@ -740,7 +741,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
             }
 
             if (cardDetails.getFundsAvailable().containsKey("$")) {
-                account.setAvailableCredit(parseAmount(cardDetails.getFundsAvailable().get("$").toString()));
+                account.setAvailableCredit(AgentParsingUtils.parseAmount(cardDetails.getFundsAvailable().get("$").toString()));
             }
         }
 
@@ -2458,7 +2459,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
                     if (productNumber.isPresent() && balance.isPresent()) {
                         custodyAccountCashValueMap.put(
                                 StringUtils.removeNonAlphaNumeric(productNumber.get()),
-                                parseAmount(balance.get()));
+                                AgentParsingUtils.parseAmount(balance.get()));
                     }
                 }
 

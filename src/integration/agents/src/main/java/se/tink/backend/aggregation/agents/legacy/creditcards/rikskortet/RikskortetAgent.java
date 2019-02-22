@@ -8,6 +8,7 @@ import javax.xml.ws.BindingProvider;
 import javax.xml.ws.handler.Handler;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.AccountDetails;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.ArrayOfTransactionDetails;
@@ -99,8 +100,8 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
             Transaction t = new Transaction();
 
             t.setDescription(td.getDescription().trim());
-            t.setAmount(parseAmount(cleanAmount(td.getAmount())));
-            t.setDate(parseDate(td.getDate(), true));
+            t.setAmount(AgentParsingUtils.parseAmount(cleanAmount(td.getAmount())));
+            t.setDate(AgentParsingUtils.parseDate(td.getDate(), true));
 
             if (t.getAmount() < 0) {
                 t.setType(TransactionTypes.CREDIT_CARD);

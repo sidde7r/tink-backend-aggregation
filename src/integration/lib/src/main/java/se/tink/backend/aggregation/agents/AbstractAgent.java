@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractAgent extends AgentParsingUtils implements Agent, AgentEventListener {
+public abstract class AbstractAgent implements Agent, AgentEventListener {
     public static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
 
     protected AgentsServiceConfiguration configuration;
@@ -139,8 +139,8 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
             int overlappingTransactionDays =
                     Math.abs(DateUtils.getNumberOfDaysBetween(t.getDate(), certainDate));
 
-            if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
-                    && overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
+            if (transactionsBeforeCertainDate >= AgentParsingUtils.SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
+                    && overlappingTransactionDays >= AgentParsingUtils.SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
                 return true;
             }
         }

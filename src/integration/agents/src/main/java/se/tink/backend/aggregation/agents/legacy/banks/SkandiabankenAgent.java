@@ -48,6 +48,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
@@ -510,7 +511,7 @@ public class SkandiabankenAgent extends AbstractAgent implements
         // There are cases when no `date` is set. In that case we fall back to settled.
         final String dateToUse = Optional.ofNullable(transactionEntity.getDate())
                 .orElse(transactionEntity.getSettled());
-        transaction.setDate(parseDate(dateToUse, true));
+        transaction.setDate(AgentParsingUtils.parseDate(dateToUse, true));
 
         String description = transactionEntity.getMerchant();
 
@@ -529,7 +530,7 @@ public class SkandiabankenAgent extends AbstractAgent implements
         }
             
         transaction.setDescription(description);
-        transaction.setAmount(parseAmount(transactionEntity.getAmount()));
+        transaction.setAmount(AgentParsingUtils.parseAmount(transactionEntity.getAmount()));
 
         return transaction;
     }

@@ -24,6 +24,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.model.AccountResponse;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.model.TransactionEntity;
@@ -274,9 +275,9 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
 
         Account account = new Account();
 
-        account.setBalance(-(parseAmount(accountResponse.getData().getPositiveBalance()) + parseAmount(accountResponse
+        account.setBalance(-(AgentParsingUtils.parseAmount(accountResponse.getData().getPositiveBalance()) + AgentParsingUtils.parseAmount(accountResponse
                 .getData().getReservedAmount())));
-        account.setAvailableCredit(parseAmount(accountResponse.getData().getApprovedCredit()));
+        account.setAvailableCredit(AgentParsingUtils.parseAmount(accountResponse.getData().getApprovedCredit()));
         account.setName(StringUtils.formatHuman(accountResponse.getData().getName()));
         account.setAccountNumber(accountResponse.getData().getAccountNumber());
         account.setBankId(accountResponse.getData().getAccountNumber());
