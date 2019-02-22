@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.invest
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -20,8 +20,12 @@ public class ContractGroupEntity {
 
     @JsonIgnore
     public Map<String, String> getProductCodeByContractNumber() {
-        return Optional.ofNullable(contracts).orElse(Collections.emptyList()).stream()
-                .collect(Collectors.toMap(ContractEntity::getContractNumber, ContractEntity::getProductCode));
+        Map<String, String> codeByNumber = new HashMap<>();
+
+        Optional.ofNullable(contracts).orElse(Collections.emptyList())
+                .forEach(contract -> codeByNumber.put(contract.getContractNumber(), contract.getProductCode()));
+        
+        return codeByNumber;
     }
 
     public String getContractGroupCode() {
