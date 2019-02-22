@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 
 @JsonObject
 public class UkOpenBankingConfiguration {
+
     private String rootCAData;
     private String rootCAPassword;
 

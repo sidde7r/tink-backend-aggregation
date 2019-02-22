@@ -1,15 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.sun.jersey.api.uri.UriTemplate;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.agents.rpc.AccountTypes;
 
 public abstract class SbabConstants {
-    public static final String INTEGRATION_NAME = "sbab";
     public static final String CURRENCY = "SEK";
-
     public static final AccountTypeMapper ACCOUNT_TYPE_MAPPER =
             AccountTypeMapper.builder()
                     .put(
@@ -33,11 +30,6 @@ public abstract class SbabConstants {
 
         public String getBaseUri() {
             return baseUri;
-        }
-
-        @JsonCreator
-        public static Environment fromString(String baseUri) {
-            return Environment.valueOf(baseUri.toUpperCase());
         }
 
         @Override
