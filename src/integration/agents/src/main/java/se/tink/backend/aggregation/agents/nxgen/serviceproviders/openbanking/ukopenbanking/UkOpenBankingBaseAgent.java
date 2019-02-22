@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking;
 
-
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.authenticator.UkOpenBankingAuthenticator;
@@ -29,7 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -77,8 +75,14 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        UkOpenBankingConfiguration ukOpenBankingConfiguration = SerializationUtils.deserializeFromString(
-                configuration.getIntegrations().getUkOpenBankingJson(), UkOpenBankingConfiguration.class);
+        UkOpenBankingConfiguration ukOpenBankingConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getIntegration(UkOpenBankingConstants.INTEGRATION_NAME, UkOpenBankingConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                String.format("UK Open Banking integration not configured")));
 
         String softwareStatementName = getSoftwareStatementName();
         String providerName = getProviderName();
