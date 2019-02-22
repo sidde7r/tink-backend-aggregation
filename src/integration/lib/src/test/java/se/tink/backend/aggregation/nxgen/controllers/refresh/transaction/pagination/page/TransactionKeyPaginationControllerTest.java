@@ -10,11 +10,10 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 
 @SuppressWarnings("unchecked")
 public class TransactionKeyPaginationControllerTest {
+    private final Account account = Mockito.mock(Account.class);
     private TransactionKeyPaginationController paginationController;
     private TransactionKeyPaginator<Account, String> paginator;
     private TransactionKeyPaginatorResponse<String> paginatorResponse;
-
-    private final Account account = Mockito.mock(Account.class);
 
     @Before
     public void setup() {
@@ -23,9 +22,7 @@ public class TransactionKeyPaginationControllerTest {
         paginatorResponse = Mockito.mock(TransactionKeyPaginatorResponse.class);
     }
 
-    /**
-     * Instantiation test
-     */
+    /** Instantiation test */
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenTransactionKeyPaginator_isNull() {
         new TransactionKeyPaginationController<>(null);
@@ -61,5 +58,23 @@ public class TransactionKeyPaginationControllerTest {
         executionOrder.verify(paginator).getTransactionsFor(account, key2);
 
         executionOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void fetchTransactionsFor_noMorePagesNoKey() {
+        Mockito.when(paginator.getTransactionsFor(account, null)).thenReturn(paginatorResponse);
+        Mockito.when(paginatorResponse.canFetchMore()).thenReturn(Optional.of(false));
+        paginationController.fetchTransactionsFor(account);
+        Mockito.verify(paginatorResponse, Mockito.never()).nextKey();
+    }
+
+    @Test
+    public void fetchTransactionsFor_morePagesKeyProperlyReturned() {
+        final String key1 = "key1";
+        Mockito.when(paginator.getTransactionsFor(account, null)).thenReturn(paginatorResponse);
+        Mockito.when(paginatorResponse.canFetchMore()).thenReturn(Optional.of(true));
+        Mockito.when(paginatorResponse.nextKey()).thenReturn(key1);
+        paginationController.fetchTransactionsFor(account);
+        Mockito.verify(paginatorResponse, Mockito.times(1)).nextKey();
     }
 }
