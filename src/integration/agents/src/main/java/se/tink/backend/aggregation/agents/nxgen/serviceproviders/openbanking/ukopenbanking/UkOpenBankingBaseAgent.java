@@ -47,6 +47,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     // authenticated flows.
     private final TinkHttpClient paymentsHttpClient;
 
+    private SignatureKeyPair callbackJWTSignatureKeyPair;
+
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
     private UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> transactionalAccountFetcher;
@@ -100,6 +102,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration,
                 OpenIdConstants.ClientMode.ACCOUNTS);
 
+        callbackJWTSignatureKeyPair = configuration.getCallbackJWTSignatureKeyPair();
+
 
         // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it will be null
         //      at that stage.
@@ -126,7 +130,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
-                apiClient
+                apiClient,
+                callbackJWTSignatureKeyPair
         );
     }
 
@@ -210,7 +215,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                                 providerConfiguration,
                                 paymentsHttpClient,
                                 getTransactionalAccountFetcher(),
-                                pis
+                                pis,
+                                callbackJWTSignatureKeyPair
                         ),
                         null,
                         null

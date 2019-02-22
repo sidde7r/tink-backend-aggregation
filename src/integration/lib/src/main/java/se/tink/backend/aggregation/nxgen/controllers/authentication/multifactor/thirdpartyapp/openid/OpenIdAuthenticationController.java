@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -44,6 +45,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
+    private SignatureKeyPair callbackJWTSignatureKeyPair;
 
     private final String state;
     private final String nonce;
@@ -52,11 +54,13 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OpenIdApiClient apiClient,
-            OpenIdAuthenticator authenticator) {
+            OpenIdAuthenticator authenticator,
+            SignatureKeyPair callbackJWTSignatureKeyPair) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
+        this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
 
         this.state = RandomUtils.generateRandomBase64UrlEncoded(32);
         this.nonce = RandomUtils.generateRandomBase64UrlEncoded(32);
