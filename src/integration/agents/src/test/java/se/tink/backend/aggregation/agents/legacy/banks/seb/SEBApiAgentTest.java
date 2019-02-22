@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks;
+package se.tink.backend.aggregation.agents.banks.seb;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

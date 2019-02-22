@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks;
+package se.tink.backend.aggregation.agents.banks.sbab;
 
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.enums.TransferType;

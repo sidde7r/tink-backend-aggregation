@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks;
+package se.tink.backend.aggregation.agents.banks.nordea;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
