@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngCreditCardAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngInvestmentAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngLoanAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.session.IngSessionHandler;
@@ -19,6 +22,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccoun
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -65,17 +70,47 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+
+        IngCreditCardAccountFetcher accountFetcher = new IngCreditCardAccountFetcher(ingApiClient, sessionStorage);
+        IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
+
+        TransactionMonthPaginationController<CreditCardAccount> paginationController = new TransactionMonthPaginationController<>(
+                transactionFetcher, IngConstants.ZONE_ID);
+
+        TransactionFetcherController<CreditCardAccount> fetcherController = new TransactionFetcherController<>(
+                transactionPaginationHelper, paginationController);
+
+        CreditCardRefreshController refreshController = new CreditCardRefreshController(
+                metricRefreshController, updateController, accountFetcher, fetcherController);
+
+        return Optional.of(refreshController);
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
+        IngInvestmentAccountFetcher accountFetcher = new IngInvestmentAccountFetcher(ingApiClient, sessionStorage);
+
+        InvestmentRefreshController refreshController = new InvestmentRefreshController(
+                metricRefreshController, updateController, accountFetcher);
+
+        return Optional.of(refreshController);
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
+        IngLoanAccountFetcher accountFetcher = new IngLoanAccountFetcher(ingApiClient, sessionStorage);
+        IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
+
+        TransactionMonthPaginationController<LoanAccount> paginationController = new TransactionMonthPaginationController<>(
+                transactionFetcher, IngConstants.ZONE_ID);
+
+        TransactionFetcherController<LoanAccount> fetcherController = new TransactionFetcherController<>(
+                transactionPaginationHelper, paginationController);
+
+        LoanRefreshController refreshController = new LoanRefreshController(
+                metricRefreshController, updateController, accountFetcher, fetcherController);
+
+        return Optional.of(refreshController);
     }
 
     @Override
