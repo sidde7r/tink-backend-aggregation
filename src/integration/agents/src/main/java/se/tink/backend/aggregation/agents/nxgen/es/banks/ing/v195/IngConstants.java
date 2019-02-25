@@ -124,6 +124,11 @@ public class IngConstants {
             "operationName", ""
     );
 
+    public static final class FetchControl {
+        // mobile app uses a page size of 30
+        public static final int PAGE_SIZE = 30;
+    }
+
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("IngDirect_unknown_account_type");
 

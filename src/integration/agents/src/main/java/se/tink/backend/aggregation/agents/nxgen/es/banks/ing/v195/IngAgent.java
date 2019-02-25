@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.session.IngSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -48,9 +49,10 @@ public class IngAgent extends NextGenerationAgent {
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
 
         IngTransactionalAccountFetcher accountFetcher = new IngTransactionalAccountFetcher(ingApiClient, sessionStorage);
+        IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
 
         TransactionMonthPaginationController<TransactionalAccount> paginationController = new TransactionMonthPaginationController<>(
-                null, IngConstants.ZONE_ID);
+                transactionFetcher, IngConstants.ZONE_ID);
 
         TransactionFetcherController<TransactionalAccount> fetcherController = new TransactionFetcherController<>(
                 transactionPaginationHelper, paginationController);

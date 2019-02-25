@@ -5,11 +5,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.CommunicationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.PutRestSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.MovementsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.entities.Product;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.responses.ClientResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 import javax.ws.rs.core.MediaType;
@@ -82,6 +84,22 @@ public class IngApiClient {
         this.sessionStorage.put(IngConstants.Tags.PRODUCT_LIST, productsResponse);
 
         return productsResponse;
+    }
+
+    // "Movements" (Transactions)
+    public MovementsResponse getApiRestProductMovements(String productUuid, LocalDate fromDate, LocalDate toDate, int offset) {
+
+        URL movementsUrl = new URL(IngConstants.Url.API_REST_PRODUCTS_MOVEMENTS)
+                .parameter("product", productUuid);
+
+        return client.request(movementsUrl)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParam(IngConstants.Query.FROM_DATE, se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngUtils.DATE_FORMATTER.format(fromDate))
+                .queryParam(IngConstants.Query.TO_DATE, se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngUtils.DATE_FORMATTER.format(toDate))
+                .queryParam(IngConstants.Query.LIMIT, Integer.toString(IngConstants.FetchControl.PAGE_SIZE))
+                .queryParam(IngConstants.Query.OFFSET, Integer.toString(offset))
+                .get(MovementsResponse.class);
     }
 
     // This request is performed by the mobile app prior to the delete session request. It's unclear whether this
