@@ -123,7 +123,6 @@ public final class SabadellConstants {
         public static final String CREDIT_CARD_CREDIT = "credit";
         public static final String CREDIT_CARD_SIN = "sin";
         public static final String CURRENCY_ACCOUNT = "CUENTA EN DIVISA";
-
         public static final String BUSINESS_EXPANSION_ACCOUNT = "CUENTA EXPANSIÓN NEGOCIOS";
     }
 }
