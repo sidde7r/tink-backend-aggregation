@@ -225,11 +225,11 @@ public class IngConstants {
         public static final String NO_ACCESS_TO_ONLINE_BANKING = "e50/01/g350-220";
         public static final String NO_LINKED_ACCOUNT = "e50/01/g353-000";
         public static final String ACCOUNT_CANCELLED = "e50/01/g322-000";
-        public static final String OUT_OF_SESSIOM = "001";
+        public static final String OUT_OF_SESSION = "001";
        }
 
        public static final class ErrorText {
-           public static final String OUT_OF_SESSIOM = "out of session";
+           public static final String OUT_OF_SESSION = "out of session";
        }
 
     public enum EndUserMessage implements LocalizableEnum {

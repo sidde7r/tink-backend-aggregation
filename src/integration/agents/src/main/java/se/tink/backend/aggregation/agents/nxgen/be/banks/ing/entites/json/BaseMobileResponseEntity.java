@@ -45,9 +45,9 @@ public class BaseMobileResponseEntity {
     private boolean isOutOfSession() {
         return IngConstants.ReturnCodes.NOK.equalsIgnoreCase(getReturnCode())
                 && (getErrorCode().isPresent()
-                        && IngConstants.ErrorCodes.OUT_OF_SESSIOM.equals(getErrorCode().get()))
+                        && IngConstants.ErrorCodes.OUT_OF_SESSION.equals(getErrorCode().get()))
                 && (getErrorText().isPresent()
-                        && IngConstants.ErrorText.OUT_OF_SESSIOM.equalsIgnoreCase(
+                        && IngConstants.ErrorText.OUT_OF_SESSION.equalsIgnoreCase(
                                 getErrorText().get()));
     }
 
