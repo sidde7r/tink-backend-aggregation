@@ -9,6 +9,8 @@ public class PendingPaymentsResponse {
     private PendingPaymentsResponseEntity mobileResponse;
 
     public PendingPaymentsResponseEntity getMobileResponse() {
-        return Preconditions.checkNotNull(mobileResponse);
+        Preconditions.checkNotNull(mobileResponse);
+        mobileResponse.validateSession();
+        return mobileResponse;
     }
 }

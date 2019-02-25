@@ -1,10 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities;
 
-import java.util.Collection;
+import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import java.util.Collection;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -25,6 +28,30 @@ public class TransactionsResponseTest {
             assertFalse(tx.getDescription().startsWith("06/02 - 12.48 pm"));
         }
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void testOutOfSessionResponses() {
+        TransactionsResponse transactionsResponse = SerializationUtils.
+                deserializeFromString(OUT_OF_SESSION_RESPONSE, TransactionsResponse.class);
+        TransactionsResponseEntity mobileResponse = transactionsResponse.getMobileResponse();
+        Assert.assertEquals("NOK", mobileResponse.getReturnCode());
+    }
+
+    private static final String OUT_OF_SESSION_RESPONSE =
+            "{\n"
+                    + " \"mobileResponse\": {\n"
+                    + " \"header\": {\n"
+                    + " \"version\": \"0.1\"\n"
+                    + " },\n"
+                    + " \"returnCode\": \"NOK\",\n"
+                    + " \"errors\": [\n"
+                    + " {\n"
+                    + " \"code\": \"001\",\n"
+                    + " \"text\": \"Out Of Session\"\n"
+                    + " }\n"
+                    + " ]\n"
+                    + " }\n"
+                    + "}";
 
     private static final String TEST_DATA = "{"
             + " \"mobileResponse\": {"
