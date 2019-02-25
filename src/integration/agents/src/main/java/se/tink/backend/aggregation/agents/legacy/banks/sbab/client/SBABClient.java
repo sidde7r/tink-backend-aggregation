@@ -13,8 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.banks.sbab.configuration.SBABConfiguration;
 
 public class SBABClient {
 
@@ -38,8 +38,8 @@ public class SBABClient {
         this.userAgent = userAgent;
     }
     
-    public void setConfiguration(SbabConfiguration configuration) {
-        this.signBaseUrl = configuration.getSignBaseUrl();
+    public void setConfiguration(SBABConfiguration sbabConfiguration) {
+        this.signBaseUrl = sbabConfiguration.getSignBaseUrl();
     }
 
     Builder createRequest(String url) {

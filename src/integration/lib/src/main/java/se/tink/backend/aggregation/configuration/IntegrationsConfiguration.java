@@ -2,56 +2,43 @@ package se.tink.backend.aggregation.configuration;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.configuration.integrations.FinTsIntegrationConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabClientConfiguration;
-import se.tink.backend.aggregation.configuration.integrations.SbabConfiguration;
 
 @JsonObject
 public class IntegrationsConfiguration {
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER =
+            new ObjectMapper()
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    private Map<String, Map<String, Object>> integrations = new HashMap<>();
-    @JsonProperty private SbabConfiguration sbab;
-    @JsonProperty private FinTsIntegrationConfiguration fints;
-    @JsonProperty private String ukOpenBankingJson;
+    private Map<String, Object> integrations = new HashMap<>();
     @JsonProperty private String proxyUri;
 
-    public SbabConfiguration getSbab() {
-        return sbab;
+    private Optional<Object> getIntegration(String integrationName) {
+        return Optional.ofNullable(integrations.get(integrationName));
     }
 
-    public Optional<SbabClientConfiguration> getSbab(String clientName) {
-        return Optional.ofNullable(sbab)
-                .flatMap(sc -> getClientConfiguration(clientName, sc.getClients()));
-    }
-
-    private <T> Optional<T> getClientConfiguration(String clientName, Map<String, T> configMap) {
-        return Optional.ofNullable(configMap).map(m -> m.getOrDefault(clientName, null));
-    }
-
-    public FinTsIntegrationConfiguration getFinTsIntegrationConfiguration() {
-        return fints;
-    }
-
-    public String getUkOpenBankingJson() {
-        return ukOpenBankingJson;
+    public <T> Optional<T> getIntegration(String integrationName, Class<T> integrationConfigClass) {
+        return getIntegration(integrationName)
+                .map(i -> OBJECT_MAPPER.convertValue(i, integrationConfigClass));
     }
 
     public <T extends ClientConfiguration> Optional<T> getClientConfiguration(
             String integrationName, String clientName, Class<T> clientConfigClass) {
-        return Optional.ofNullable(integrations.get(integrationName))
+        return getIntegration(integrationName)
+                .filter(o -> o instanceof Map)
+                .map(o -> (Map) o)
                 .map(i -> i.get(clientName))
                 .map(c -> OBJECT_MAPPER.convertValue(c, clientConfigClass));
     }
 
     @JsonAnySetter
-    public void addIntegration(String integrationName, Map<String, Object> clientConfigMap) {
-        integrations.put(integrationName, clientConfigMap);
+    private void addIntegration(String integrationName, Object integration) {
+        integrations.put(integrationName, integration);
     }
 
     public String getProxyUri() {
