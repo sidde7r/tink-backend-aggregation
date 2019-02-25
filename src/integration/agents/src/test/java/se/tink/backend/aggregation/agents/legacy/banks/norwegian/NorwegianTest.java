@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks;
+package se.tink.backend.aggregation.agents.banks.norwegian;
 
 import java.util.Optional;
 import org.junit.Assert;

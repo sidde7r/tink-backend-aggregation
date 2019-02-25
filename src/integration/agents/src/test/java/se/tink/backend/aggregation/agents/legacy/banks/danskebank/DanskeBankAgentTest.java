@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks;
+package se.tink.backend.aggregation.agents.banks.danskebank;
 
 import com.google.common.collect.ImmutableList;
 import java.security.Security;

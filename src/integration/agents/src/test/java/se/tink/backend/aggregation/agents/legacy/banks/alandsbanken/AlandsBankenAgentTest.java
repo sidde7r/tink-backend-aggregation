@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.banks;
+package se.tink.backend.aggregation.agents.banks.alandsbanken;
 
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;

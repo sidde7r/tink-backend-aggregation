@@ -67,6 +67,18 @@ public class Hash {
         return hmac("HmacSHA256", key, data);
     }
 
+    public static byte[] sha512(final byte[]... datas) {
+        return sha("SHA-512", datas);
+    }
+
+    public static byte[] sha512(final String data) {
+        return sha("SHA-512", data.getBytes());
+    }
+
+    public static byte[] hmacSha512(final byte[] key, final byte[] data) {
+        return hmac("HmacSHA512", key, data);
+    }
+
     private static byte[] sha(String algorithm, final byte[]... datas) {
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);

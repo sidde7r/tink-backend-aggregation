@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.utils.crypto;
 
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -18,11 +24,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.function.Consumer;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class RSA {
     private static final String ALGORITHM = "RSA";
@@ -31,7 +32,7 @@ public class RSA {
         return generateKeyPair((keyPairGenerator -> keyPairGenerator.initialize(keySize)));
     }
 
-    //Using algorithm defaults
+    // Using algorithm defaults
     public static KeyPair generateKeyPair() {
         return generateKeyPair((keyPairGenerator -> {}));
     }
@@ -131,6 +132,10 @@ public class RSA {
 
     public static byte[] signSha256(PrivateKey privateKey, byte[] input) {
         return sign("SHA256withRSA", privateKey, input);
+    }
+
+    public static byte[] signSha512(final PrivateKey privateKey, final byte[] input) {
+        return sign("SHA512withRSA", privateKey, input);
     }
 
     public static String pemFormatPublicKey(PublicKey publicKey) {

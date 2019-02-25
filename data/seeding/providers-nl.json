@@ -122,6 +122,21 @@
             "tutorialUrl": null,
             "fields": [],
             "payload": "abn https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        },
+        {
+            "name": "nl-rabobank-oauth2",
+            "displayName": "Rabobank",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
         }
     ]
 }
