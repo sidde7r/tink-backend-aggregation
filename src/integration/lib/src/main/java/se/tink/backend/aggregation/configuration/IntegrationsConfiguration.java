@@ -12,10 +12,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class IntegrationsConfiguration {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    private Map<String, Map<String, Object>> integrations = new HashMap<>();
+    private Map<String, Object> integrations = new HashMap<>();
     @JsonProperty private String proxyUri;
 
-    private Optional<Map<String, Object>> getIntegration(String integrationName) {
+    private Optional<Object> getIntegration(String integrationName) {
         return Optional.ofNullable(integrations.get(integrationName));
     }
 
@@ -27,13 +27,15 @@ public class IntegrationsConfiguration {
     public <T extends ClientConfiguration> Optional<T> getClientConfiguration(
             String integrationName, String clientName, Class<T> clientConfigClass) {
         return getIntegration(integrationName)
+                .filter(o -> o instanceof Map)
+                .map(o -> (Map) o)
                 .map(i -> i.get(clientName))
                 .map(c -> OBJECT_MAPPER.convertValue(c, clientConfigClass));
     }
 
     @JsonAnySetter
-    public void addIntegration(String integrationName, Map<String, Object> clientConfigMap) {
-        integrations.put(integrationName, clientConfigMap);
+    private void addIntegration(String integrationName, Object integration) {
+        integrations.put(integrationName, integration);
     }
 
     public String getProxyUri() {
