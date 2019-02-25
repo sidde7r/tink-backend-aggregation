@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankiaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
         TransactionDatePaginator<TransactionalAccount> {
@@ -42,7 +43,7 @@ public class BankiaTransactionalAccountFetcher implements AccountFetcher<Transac
                         return true;
                     }
 
-                    log.info("{} Unknown account type: {}", BankiaConstants.Logging.UNKNOWN_ACCOUNT_TYPE.toString(),
+                    log.info("{} Unknown account type: {}", SerializationUtils.serializeToString(account),
                             account.getBankiaAccountType());
                     return false;
                 })
