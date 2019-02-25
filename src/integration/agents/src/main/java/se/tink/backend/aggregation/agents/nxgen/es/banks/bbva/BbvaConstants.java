@@ -127,7 +127,9 @@ public final class BbvaConstants {
                             "0000011954",   // CUENTA NEGOCIOS - "personal" business account
                             "0CA0000079",   // CUENTA BLUE
                             "0CA0000245",   // CUENTA ON LINE
-                            "0000009340")   // CUENTA TRADER - marked as personal account by BBVA
+                            "0000009340",   // CUENTA TRADER - marked as personal account by BBVA
+                            "0CA0000299",   // CUENTO UNO
+                            "0000004272")   // CUENTA BLUE ONLINE
                     .put(AccountTypes.SAVINGS,
                             "0000011102")   // CUENTA METAS - goal account
                     .build();
