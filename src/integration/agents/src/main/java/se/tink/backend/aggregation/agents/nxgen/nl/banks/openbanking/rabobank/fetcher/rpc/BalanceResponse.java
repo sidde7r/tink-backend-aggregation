@@ -2,12 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.f
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
-import javax.annotation.Generated;
 import java.util.List;
 
-@Generated("com.robohorse.robopojogenerator")
+@JsonObject
 public class BalanceResponse {
 
     @JsonProperty("balances")
