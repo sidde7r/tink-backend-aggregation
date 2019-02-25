@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.session.IngSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -23,6 +24,7 @@ public class IngAgent extends NextGenerationAgent {
     private final IngApiClient ingApiClient;
 
     public IngAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+
         super(request, context, signatureKeyPair);
 
         this.ingApiClient = new IngApiClient(this.client, sessionStorage);
@@ -69,7 +71,7 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return null;
+        return new IngSessionHandler(ingApiClient);
     }
 
     @Override

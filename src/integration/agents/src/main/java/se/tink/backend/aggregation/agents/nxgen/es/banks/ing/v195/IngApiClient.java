@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.request.CreateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.request.PutSessionRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.CommunicationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.PutRestSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.responses.ClientResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -52,6 +54,23 @@ public class IngApiClient {
                 );
 
         return true;
+    }
+
+    public ClientResponse getApiRestClient() {
+        return client.request(IngConstants.Url.API_REST_CLIENT)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(ClientResponse.class);
+    }
+
+    // This request is performed by the mobile app prior to the delete session request. It's unclear whether this
+    // actually serves any purpose.
+    public CommunicationsResponse getApiRestCommunicationLogoutRequest() {
+        return client.request(IngConstants.Url.API_REST_COMMUNICATION)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParams(IngConstants.LOGOUT_QUERY)
+                .get(CommunicationsResponse.class);
     }
 
     public String deleteApiRestSession() {
