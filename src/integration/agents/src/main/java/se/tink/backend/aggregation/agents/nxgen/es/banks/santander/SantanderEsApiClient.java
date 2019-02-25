@@ -10,9 +10,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.credi
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.PortfolioDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.RepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.FirstPageOfTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.TransactionPaginationRequest;
@@ -95,12 +99,33 @@ public class SantanderEsApiClient {
                 .create(tokenCredential, userDataXml, card, fromDate, toDate, pagination);
 
         String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
-        SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
-        creditCardTransactionsRequest);
+                SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
+                creditCardTransactionsRequest);
 
         return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
                 SantanderEsConstants.NodeTags.METHOD_RESULT,
                 CreditCardTransactionsResponse.class);
+    }
+
+    public String fetchLoanDetails(String userDataXml, LoanEntity loanEntity) {
+        String loanDetailsRequest = LoanDetailsRequest.create(tokenCredential, userDataXml, loanEntity);
+
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_PRESTAMOS,
+                SantanderEsConstants.Urls.SCH_BAMOBI_PRESTAMOS.toString(),
+                loanDetailsRequest);
+
+        return soapResponseString;
+    }
+
+    public String fetchPortfolioDetails(String userDataXml, PortfolioEntity portfolio, boolean firstPage) {
+        String portfolioDetailsRequest = PortfolioDetailsRequest
+                .create(tokenCredential, userDataXml, portfolio, firstPage);
+
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_VALORES,
+                SantanderEsConstants.Urls.SCH_BAMOBI_VALORES.toString(),
+                portfolioDetailsRequest);
+
+        return soapResponseString;
     }
 
     private String postSoapMessage(URL url, String soapAction, String body) {
