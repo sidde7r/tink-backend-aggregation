@@ -252,6 +252,47 @@
             ]
         },
         {
+            "name": "es-ing2-password",
+            "className": "nxgen.es.banks.ing.v195.IngAgent",
+            "displayName": "ING",
+            "status": "DISABLED",
+            "credentialsType": "PASSWORD",
+            "type": "BANK",
+            "popular": true,
+            "transactional": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "NIF/NIE or passport number",
+                    "immutable": true,
+                    "pattern": "(^[0-9]{8}[a-zA-Z]$)|(^[a-zA-Z][0-9]{7}[a-zA-Z]$)|(^[a-zA-Z]{2}[0-9]{6}$)",
+                    "patternError": "Please verify that you have entered a correct NIF/NIE, or passport number."
+                },
+                {
+                    "name": "date-of-birth",
+                    "description": "Date of birth (DDMMYYYY)",
+                    "pattern": "(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[012])[1-2][9|0][0-9][0-9]",
+                    "hint": "DDMMYYYY",
+                    "numeric": true,
+                    "immutable": true,
+                    "minLength": 8,
+                    "maxLength": 8
+                },
+                {
+                    "name": "password",
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "numeric": true,
+                    "minLength": 6,
+                    "maxLength": 6,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter your 6 digit online PIN."
+                }
+            ]
+        },
+        {
             "name": "es-lacaixa-password",
             "className": "nxgen.es.banks.lacaixa.LaCaixaAgent",
             "displayName": "LaCaixa",
