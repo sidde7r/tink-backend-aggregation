@@ -85,14 +85,20 @@ public abstract class BankiaConstants {
     }
 
     public static class AccountType {
-        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP = ImmutableMap.<String, AccountTypes>builder()
-                .put("11594", AccountTypes.CHECKING)
-                .put("10300", AccountTypes.CHECKING)
-                .put("11186", AccountTypes.CHECKING)
-                .put("11239", AccountTypes.CHECKING)
-                .put("11660", AccountTypes.CHECKING)
-                .put("10450", AccountTypes.SAVINGS)
-                .build();
+        private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP =
+                ImmutableMap.<String, AccountTypes>builder()
+                        .put("11594", AccountTypes.CHECKING)
+                        .put("10300", AccountTypes.CHECKING)
+                        .put("11186", AccountTypes.CHECKING)
+                        .put("11239", AccountTypes.CHECKING)
+                        .put("11660", AccountTypes.CHECKING)
+                        .put("10450", AccountTypes.SAVINGS)
+                        .put("11590", AccountTypes.CHECKING)
+                        .put("10600", AccountTypes.OTHER)
+                        .put("11403", AccountTypes.OTHER)
+                        .put("11658", AccountTypes.OTHER)
+                        .put("11359", AccountTypes.CHECKING) // Under aged account
+                        .build();
 
         public static Optional<AccountTypes> translateType(String bankiaProductCode) {
             if (Strings.isNullOrEmpty(bankiaProductCode)) {

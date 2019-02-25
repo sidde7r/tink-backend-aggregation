@@ -11,20 +11,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.filter.ClientFilter;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
 import org.eclipse.jetty.http.HttpStatus;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -78,6 +64,21 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /** Latest verified version: iOS v2.12.0 */
 public class AvanzaV2Agent extends AbstractAgent
@@ -643,8 +644,7 @@ public class AvanzaV2Agent extends AbstractAgent
                                                                     instruments));
                                             portfolio.setInstruments(instruments);
 
-                                            account.setBalance(
-                                                    account.getBalance() + accountDetailsEntity.getBuyingPower());
+                                            account.setBalance(account.getBalance());
 
                                             accounts.put(
                                                     account, AccountFeatures.createForPortfolios(portfolio));

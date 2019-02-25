@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -50,17 +50,20 @@ public class AccountEntity {
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
-        // Temporarily log accounts so that we can re-implement account/product type matching later
-        // There is productType field but description field is used to for the mapping
-        log.warn("{}: Unknown type for: {}", SabadellConstants.Tags.UNKNOWN_ACCOUNT_TYPE, SerializationUtils.serializeToString(this));
         switch (description.toUpperCase()) {
         case SabadellConstants.AccountTypes.SALARY_ACCOUNT:
-        case SabadellConstants.AccountTypes.CUENTA_RELACION:
+        case SabadellConstants.AccountTypes.RELATIONSHIP_ACCOUNT:
+        case SabadellConstants.AccountTypes.UNDERAGED_ACCOUNT:
             return AccountTypes.CHECKING;
+        case SabadellConstants.AccountTypes.MANAGED_ACCOUNT:
         case SabadellConstants.AccountTypes.CURRENCY_ACCOUNT:
-            return AccountTypes.SAVINGS; // Seems to be a foreign currency account, guessing that's not a checking account
+        case SabadellConstants.AccountTypes.BUSINESS_EXPANSION_ACCOUNT:
+            return AccountTypes.OTHER;
         default:
-            log.warn("{}: Unknown type: {}", SabadellConstants.Tags.UNKNOWN_ACCOUNT_TYPE, description);
+                log.warn(
+                        "{}: Unknown type: {}",
+                        SabadellConstants.Tags.UNKNOWN_ACCOUNT_TYPE,
+                        SerializationUtils.serializeToString(this));
             return AccountTypes.OTHER;
         }
     }
