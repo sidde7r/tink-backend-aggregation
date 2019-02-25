@@ -66,12 +66,18 @@ public class StarlingAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new ThirdPartyAppAuthenticationController<>(
+
+        OAuth2AuthenticationController oauthController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new StarlingAuthenticator(apiClient, persistentStorage)),
-                supplementalInformationHelper);
+                        new StarlingAuthenticator(apiClient, persistentStorage));
+
+        ThirdPartyAppAuthenticationController<String> thirdPartyController =
+                new ThirdPartyAppAuthenticationController<>(
+                        oauthController, supplementalInformationHelper);
+
+        return new AutoAuthenticationController(request, context, thirdPartyController, oauthController);
     }
 
     @Override
