@@ -43,7 +43,6 @@ public class RabobankApiClient {
         return client.request(RabobankConstants.URLs.OAUTH2_TOKEN_RABOBANK)
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
-                .header("authorization", "")
                 .addBasicAuth(getClientId(), getClientSecret())
                 .post(TokenResponse.class);
     }
