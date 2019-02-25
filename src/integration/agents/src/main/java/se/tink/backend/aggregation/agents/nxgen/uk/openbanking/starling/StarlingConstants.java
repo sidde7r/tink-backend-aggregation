@@ -18,6 +18,7 @@ public class StarlingConstants {
         static final String GET_ACCOUNT_IDENTIFIERS = "/api/v2/accounts/{" + UrlParams.UID + "}/identifiers";
         static final String GET_ACCOUNT_BALANCE = "/api/v2/accounts/{" + UrlParams.UID + "}/balance";
         static final String GET_ANY_TRANSACTIONS = "/api/v1/transactions";
+        static final String GET_PAYEES = "/api/v2/payees";
     }
 
     public static class Url {
@@ -30,6 +31,7 @@ public class StarlingConstants {
         public static final URL GET_ACCOUNT_IDENTIFIERS = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_IDENTIFIERS);
         public static final URL GET_ACCOUNT_BALANCE = new URL(API_STARLING + ApiEndpoint.GET_ACCOUNT_BALANCE);
         public static final URL GET_ANY_TRANSACTIONS = new URL(API_STARLING + ApiEndpoint.GET_ANY_TRANSACTIONS);
+        public static final URL GET_PAYEES = new URL(API_STARLING + ApiEndpoint.GET_PAYEES);
     }
 
     public class RequestValue {

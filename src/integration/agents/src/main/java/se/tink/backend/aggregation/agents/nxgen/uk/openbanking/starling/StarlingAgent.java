@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.StarlingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
@@ -117,7 +118,10 @@ public class StarlingAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new TransferDestinationRefreshController(
+                        metricRefreshController,
+                        new StarlingTransferDestinationFetcher(apiClient)));
     }
 
     @Override

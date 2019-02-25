@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountIdentifiersResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc.TransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -76,6 +77,9 @@ public class StarlingApiClient {
                 .get(TransactionsResponse.class);
     }
 
+    public PayeesResponse fetchPayees() {
+        return request(StarlingConstants.Url.GET_PAYEES).get(PayeesResponse.class);
+    }
     private RequestBuilder request(URL url) {
         return client.request(url)
                 .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
