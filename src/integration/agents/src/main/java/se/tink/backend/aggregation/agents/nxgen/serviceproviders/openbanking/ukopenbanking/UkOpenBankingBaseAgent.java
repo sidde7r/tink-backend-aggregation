@@ -32,6 +32,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
 
@@ -78,11 +79,13 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         UkOpenBankingConfiguration ukOpenBankingConfiguration =
                 configuration
                         .getIntegrations()
-                        .getIntegration(UkOpenBankingConstants.INTEGRATION_NAME, UkOpenBankingConfiguration.class)
+                        .getIntegration(UkOpenBankingConstants.INTEGRATION_NAME, String.class)
+                        .map(s -> SerializationUtils.deserializeFromString(s, UkOpenBankingConfiguration.class))
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                String.format("UK Open Banking integration not configured")));
+                                                String.format(
+                                                        "UK Open Banking integration not configured")));
 
         String softwareStatementName = getSoftwareStatementName();
         String providerName = getProviderName();
