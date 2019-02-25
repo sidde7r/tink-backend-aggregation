@@ -19,6 +19,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public final class URL {
     public static final Pattern URL_PARAMETER_PATTERN = Pattern.compile("\\{[^{}]{2,}}");
+    private static final String URL_SEPARATOR = "/";
 
     private final String url;
     private final String query;
@@ -117,8 +118,12 @@ public final class URL {
         return m.getValue().stream().map(p -> toQueryString(m.getKey(), p));
     }
 
-    public URL concat(String s) {
+    public URL concat(final String s) {
         return new URL(url.concat(s), query);
+    }
+
+    public URL concatWithSeparator(final String s) {
+        return new URL(url.concat(URL_SEPARATOR).concat(s), query);
     }
 
     public String get() {
