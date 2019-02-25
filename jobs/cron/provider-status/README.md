@@ -3,12 +3,13 @@
 This cronjob runs every 30th minute, at full and half an hour (0/30).
 It calculates the rate of aggregation instances where a provider is circuit broken.
 The rate is then mapped to a `Statuspage` status;
-| Rate         | Status                 |
-| ------------ | ---------------------- |
-| 0            | `operational`          |
-| (0, 0.50]    | `degraded_performance` |
-| (0.50, 0.75] | `partial_outage`       |
-| (0.75, 1]    | `major_outage`         |
+
+| Rate           | Status                 |
+|--------------: | ---------------------- |
+| `0`            | `operational`          |
+| `(0, 0.50]`    | `degraded_performance` |
+| `(0.50, 0.75]` | `partial_outage`       |
+| `(0.75, 1]`    | `major_outage`         |
 
 
 ## Creating a `Integrations - <market code>` component group
