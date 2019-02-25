@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -19,9 +20,12 @@ import java.util.Optional;
 
 public class IngAgent extends NextGenerationAgent {
 
+    private final IngApiClient ingApiClient;
+
     public IngAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
+        this.ingApiClient = new IngApiClient(this.client, sessionStorage);
     }
 
     @Override
@@ -30,7 +34,7 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return null;
+        return new IngAuthenticator(this.ingApiClient);
     }
 
     @Override
