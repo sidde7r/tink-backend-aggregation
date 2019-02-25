@@ -9,7 +9,7 @@ pkg_tar(
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation/data",
     strip_prefix = "/data",
-    visibility = ["//deb:__pkg__"],
+    visibility = ["//docker:__pkg__"],
 )
 
 pkg_tar(
@@ -18,7 +18,7 @@ pkg_tar(
     mode = "0444",
     package_dir = "/usr/share/tink-backend-provider-configuration/data",
     strip_prefix = "/data",
-    visibility = ["//deb:__pkg__"],
+    visibility = ["//docker:__pkg__"],
 )
 
 # end data pkgs
@@ -40,7 +40,7 @@ pkg_tar(
     srcs = ["//tools:phantomjs_linux"],
     mode = "0555",
     package_dir = "/usr/share/tink-backend-aggregation/tools",
-    visibility = ["//deb:__pkg__"],
+    visibility = ["//docker:__pkg__"],
 )
 
 pkg_tar(
@@ -48,7 +48,7 @@ pkg_tar(
     srcs = ["//tools:libkbc_wbaes_linux"],
     mode = "0555",
     package_dir = "/usr/share/tink-backend-aggregation/tools",
-    visibility = ["//deb:__pkg__"],
+    visibility = ["//docker:__pkg__"],
 )
 
 pkg_tar(
@@ -56,7 +56,7 @@ pkg_tar(
     srcs = ["//src/aggregation/service:bin_deploy"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-aggregation",
-    visibility = ["//deb:__pkg__"],
+    visibility = ["//docker:__pkg__"],
 )
 
 pkg_tar(
@@ -64,7 +64,7 @@ pkg_tar(
     srcs = ["//src/provider_configuration/service:bin_deploy"],
     mode = "0444",
     package_dir = "/usr/share/tink-backend-provider-configuration",
-    visibility = ["//deb:__pkg__"],
+    visibility = ["//docker:__pkg__"],
 )
 
 # end binary files
@@ -73,7 +73,6 @@ pkg_tar(
 
 pkg_tar(
     name = "aggregation_tar",
-    visibility = ["//visibility:public"],
     deps = [
         ":aggregation_bin_tar",
         ":aggregation_data_tar",

@@ -17,7 +17,7 @@ container_image(
         "/etc/tink/aggregation-server.yml",
     ],
     workdir = "/usr/share/tink-backend-aggregation",
-    deps = [
+    tars = [
         "//deb:aggregation_bin_tar",
         "//deb:aggregation_data_tar",
         "//deb:libkbc_wbaes_bin_tar",

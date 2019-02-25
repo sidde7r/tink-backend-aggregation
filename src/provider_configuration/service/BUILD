@@ -44,4 +44,5 @@ genrule(
     outs = ["provider_configuration_service.jar"],
     cmd = "cp $(location :bin_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
+    tags = ["manual"],
 )
