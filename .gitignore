@@ -44,3 +44,6 @@ Thumbs.db
 # Misc
 .env
 .DS_Store
+
+# Virtual env
+**/.venv
