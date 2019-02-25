@@ -1,0 +1,18 @@
+package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.entities;
+
+import se.tink.backend.aggregation.annotations.JsonObject;
+
+@JsonObject
+public final class AssociatedAccount {
+
+    private String productNumber;
+    private String uuid;
+
+    public String getProductNumber() {
+        return productNumber;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+}

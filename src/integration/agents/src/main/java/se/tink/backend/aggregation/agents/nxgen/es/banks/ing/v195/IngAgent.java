@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.IngAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.IngTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.session.IngSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -10,10 +12,13 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCa
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcherController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transactionalaccount.TransactionalAccountRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDestinationRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -41,7 +46,19 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.empty();
+
+        IngTransactionalAccountFetcher accountFetcher = new IngTransactionalAccountFetcher(ingApiClient, sessionStorage);
+
+        TransactionMonthPaginationController<TransactionalAccount> paginationController = new TransactionMonthPaginationController<>(
+                null, IngConstants.ZONE_ID);
+
+        TransactionFetcherController<TransactionalAccount> fetcherController = new TransactionFetcherController<>(
+                transactionPaginationHelper, paginationController);
+
+        TransactionalAccountRefreshController refreshController = new TransactionalAccountRefreshController(
+                metricRefreshController, updateController, accountFetcher, fetcherController);
+
+        return Optional.of(refreshController);
     }
 
     @Override

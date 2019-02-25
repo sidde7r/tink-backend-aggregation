@@ -5,6 +5,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.CommunicationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.CreateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.PutRestSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.ProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.entities.Product;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.responses.ClientResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -12,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 import javax.ws.rs.core.MediaType;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 public class IngApiClient {
@@ -61,6 +64,24 @@ public class IngApiClient {
                 .type(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ClientResponse.class);
+    }
+
+    // Product list
+    public ProductsResponse getApiRestProducts() {
+        Product[] products = client.request(IngConstants.Url.API_REST_PRODUCTS)
+                .type(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(Product[].class);
+
+        List<Product> productList = Arrays.asList(products);
+
+        IngUtils.logUnknownProducts(productList);
+
+        ProductsResponse productsResponse = ProductsResponse.create(productList);
+
+        this.sessionStorage.put(IngConstants.Tags.PRODUCT_LIST, productsResponse);
+
+        return productsResponse;
     }
 
     // This request is performed by the mobile app prior to the delete session request. It's unclear whether this
