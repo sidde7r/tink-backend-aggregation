@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -49,8 +52,10 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     private final String state;
     private final String nonce;
+    private final String pseudoId;
     private OAuth2Token clientAccessToken;
 
+    private final String callbackUriId = "";
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OpenIdApiClient apiClient,
@@ -62,7 +67,8 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         this.authenticator = authenticator;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
 
-        this.state = RandomUtils.generateRandomBase64UrlEncoded(32);
+        this.pseudoId = RandomUtils.generateRandomBase64UrlEncoded(32);
+        this.state = getJwtState(pseudoId, callbackUriId);
         this.nonce = RandomUtils.generateRandomBase64UrlEncoded(32);
     }
 
@@ -162,7 +168,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
             AuthorizationException {
 
         Map<String, String> callbackData = supplementalInformationHelper.waitForSupplementalInformation(
-                formatSupplementalKey(state),
+                formatSupplementalKey(pseudoId),
                 WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES
         ).orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
@@ -192,6 +198,19 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         apiClient.attachAuthFilter(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    private String getJwtState(String pseudoId, String callbackUriId) {
+        JWTCreator.Builder jwtBuilder = JWT.create()
+                .withIssuedAt(new Date())
+                .withClaim("id", pseudoId);
+
+        if (!Strings.isNullOrEmpty(callbackUriId)) {
+            jwtBuilder.withClaim("callbackUriId", callbackUriId);
+        }
+
+        return jwtBuilder.sign(Algorithm
+                .RSA256(callbackJWTSignatureKeyPair.getPublicKey(), callbackJWTSignatureKeyPair.getPrivateKey()));
     }
 
     @Override
