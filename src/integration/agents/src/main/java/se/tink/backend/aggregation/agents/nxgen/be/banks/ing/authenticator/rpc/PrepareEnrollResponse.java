@@ -9,6 +9,8 @@ public class PrepareEnrollResponse {
     private PrepareEnrollResponseEntity mobileResponse;
 
     public PrepareEnrollResponseEntity getMobileResponse() {
-        return Preconditions.checkNotNull(mobileResponse);
+        Preconditions.checkNotNull(mobileResponse);
+        mobileResponse.validateSession();
+        return mobileResponse;
     }
 }

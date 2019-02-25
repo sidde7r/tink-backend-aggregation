@@ -9,6 +9,8 @@ public class MobileHelloResponse {
     private MobileHelloResponseEntity mobileResponse;
 
     public MobileHelloResponseEntity getMobileResponse() {
-        return Preconditions.checkNotNull(mobileResponse);
+        Preconditions.checkNotNull(mobileResponse);
+        mobileResponse.validateSession();
+        return mobileResponse;
     }
 }

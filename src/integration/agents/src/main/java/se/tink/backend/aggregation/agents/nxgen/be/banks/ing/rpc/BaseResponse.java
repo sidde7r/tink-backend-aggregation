@@ -9,6 +9,8 @@ public class BaseResponse {
     private BaseMobileResponseEntity mobileResponse;
 
     public BaseMobileResponseEntity getMobileResponse() {
-        return Preconditions.checkNotNull(mobileResponse);
+        Preconditions.checkNotNull(mobileResponse);
+        mobileResponse.validateSession();
+        return mobileResponse;
     }
 }
