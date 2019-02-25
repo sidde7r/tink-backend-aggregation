@@ -33,20 +33,24 @@ public class FundsListEntity {
     private BalanceEntity totalBalance;
 
     @JsonIgnore
-    public InvestmentAccount toTinkInvestment(LaCaixaApiClient apiClient, HolderName holderName, EngagementResponse engagements) {
+    public Optional<InvestmentAccount> toTinkInvestment(LaCaixaApiClient apiClient, HolderName holderName, EngagementResponse engagements) {
+        if (totalBalance == null) {
+            return Optional.empty();
+        }
+
         Optional<String> contractName = engagements.getContractName(accountId);
         String investmentName = contractName.orElse(accountId);
         List<Instrument> instruments = getInstruments(apiClient);
 
         Portfolio portfolio = getPortfolio(instruments);
 
-        return InvestmentAccount.builder(sanitizeUniqueIdentifier())
+        return Optional.of(InvestmentAccount.builder(sanitizeUniqueIdentifier())
                 .setAccountNumber(accountId)
                 .setHolderName(holderName)
                 .setName(investmentName)
                 .setCashBalance(Amount.valueOf(totalBalance.getCurrency(), 0, 2))
                 .setPortfolios(Lists.newArrayList(portfolio))
-                .build();
+                .build());
     }
 
     @JsonIgnore

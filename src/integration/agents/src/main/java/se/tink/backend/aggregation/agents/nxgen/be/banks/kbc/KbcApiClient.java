@@ -7,6 +7,7 @@ import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationInstanceResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.dto.ActivationLicenseRequest;
@@ -59,10 +60,10 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.pair.Pair;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
@@ -135,6 +136,7 @@ public class KbcApiClient {
     private void verifyResponseCode(HeaderDto header, final String expectedValue, String errorHeader) {
         String resultValue = getResultCodeOrThrow(header);
         if (!Objects.equals(expectedValue, resultValue)) {
+            bankServerErrors(header, resultValue);
             notEnoughFundsCancelTransfer(header, resultValue);
             throwInvalidResultCodeError(header, resultValue, errorHeader);
         }
@@ -145,6 +147,14 @@ public class KbcApiClient {
                 && matchesErrorMessage(header.getResultMessage(),
                 KbcConstants.ErrorMessage.ACCOUNT_HAS_INSUFFICIENT_FUNDS)) {
             cancelTransfer(TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get());
+        }
+    }
+
+    private void bankServerErrors(HeaderDto header, String resultValue) {
+        if (resultValue.equalsIgnoreCase(KbcConstants.ResultCode.ZERO_TWO)
+                && matchesErrorMessage(header.getResultMessage(),
+                KbcConstants.ErrorMessage.THIRD_PARTY_SERVER_ERROR)) {
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 
