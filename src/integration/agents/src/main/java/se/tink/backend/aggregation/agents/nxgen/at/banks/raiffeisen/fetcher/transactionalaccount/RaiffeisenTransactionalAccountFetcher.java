@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
@@ -56,6 +57,7 @@ public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<Tra
                     .setName(ae.getIban())
                     .setHolderName(new HolderName(ae.getUsername()))
                     .setAccountNumber(ae.getIban())
+                    .addIdentifier(new IbanIdentifier(ae.getIban()))
                     .build();
             res.add(ta);
         }
