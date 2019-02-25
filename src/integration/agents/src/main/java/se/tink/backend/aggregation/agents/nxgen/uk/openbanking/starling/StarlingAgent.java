@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.StarlingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.StarlingTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
@@ -26,11 +27,15 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+import java.security.PrivateKey;
 import java.util.Optional;
 
 public class StarlingAgent extends NextGenerationAgent {
     private final String clientName;
     private final StarlingApiClient apiClient;
+
+    private String keyUid;
+    private PrivateKey privateKey;
 
     public StarlingAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -64,6 +69,9 @@ public class StarlingAgent extends NextGenerationAgent {
                 starlingConfiguration.getClientSecret());
         persistentStorage.put(
                 StarlingConstants.StorageKey.REDIRECT_URL, starlingConfiguration.getRedirectUrl());
+
+        keyUid = starlingConfiguration.getKeyUid();
+        privateKey = starlingConfiguration.getSigningKey();
     }
 
     @Override
@@ -132,6 +140,11 @@ public class StarlingAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
+        return Optional.of(
+                new TransferController(
+                        null,
+                        new StarlingTransferExecutor(apiClient, keyUid, privateKey),
+                        null,
+                        null));
     }
 }
