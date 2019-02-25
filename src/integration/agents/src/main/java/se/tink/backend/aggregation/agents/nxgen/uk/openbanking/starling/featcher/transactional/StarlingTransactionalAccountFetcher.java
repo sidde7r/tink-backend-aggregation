@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.libraries.account.AccountIdentifier;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -39,13 +38,11 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
         AccountBalanceResponse balance = apiClient.fetchAccountBalance(accountUid);
 
         return CheckingAccount.builder()
-//                .setUniqueIdentifier(identifiers.getIban())
-                .setUniqueIdentifier(accountUid)
-//                .setAccountNumber(identifiers.getIban())
-                .setAccountNumber(accountUid)
+                .setUniqueIdentifier(identifiers.getIban())
+                .setAccountNumber(identifiers.getAccountIdentifier())
                 .setBalance(balance.getAmount())
-//                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN,  identifiers.getIban()))
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, accountUid))
+                .addAccountIdentifier(identifiers.getIbanIdentifier())
+                .addAccountIdentifier(identifiers.getSortCodeIdentifier())
                 .setApiIdentifier(accountUid)
                 .addHolderName(holderName)
                 .build();
