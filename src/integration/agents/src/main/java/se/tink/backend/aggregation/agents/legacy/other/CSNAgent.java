@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.other;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,8 +21,10 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -30,6 +33,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
+
+    private static final String CONNECT_TIMEOUT = "connect timed out";
+    private static final String READ_TIMEOUT = "read timed out";
 
     private static final File TRUST_STORE = new File("data/security/csn.truststore");
     private static final char[] TRUST_STORE_PASSWORD = "changeme".toCharArray();
@@ -137,13 +143,35 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
     }
 
     private String get(String url) {
-        return this.client.request(url).get(String.class);
+        try {
+            return this.client.request(url).get(String.class);
+        } catch (HttpClientException hce) {
+            // time out CSN is having problems
+            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
+            if (errorMessage.contains(CONNECT_TIMEOUT) ||
+                    errorMessage.contains(READ_TIMEOUT)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
+            throw hce;
+        }
     }
 
     private void post(String url, MultivaluedMap postData) {
-        this.client.request(url)
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                .post(postData);
+        try {
+            this.client.request(url)
+                    .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                    .post(postData);
+        } catch (HttpClientException hce) {
+            // time out CSN is having problems
+            String errorMessage = Strings.nullToEmpty(hce.getMessage()).toLowerCase();
+            if (errorMessage.contains(CONNECT_TIMEOUT) ||
+                    errorMessage.contains(READ_TIMEOUT)) {
+                throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            }
+
+            throw hce;
+        }
     }
 
     @Override
