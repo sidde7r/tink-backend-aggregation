@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.annotations.JsonObject;

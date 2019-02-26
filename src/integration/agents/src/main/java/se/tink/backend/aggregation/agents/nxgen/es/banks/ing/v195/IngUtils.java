@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.entities.Product;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 public abstract class IngUtils {
-
     private static final AggregationLogger LOGGER = new AggregationLogger(IngConstants.class);
 
     public static final DateTimeFormatter BIRTHDAY_INPUT = DateTimeFormatter.ofPattern("ddMMyyyy");
@@ -31,6 +30,4 @@ public abstract class IngUtils {
         ).forEach(product -> LOGGER.infoExtraLong(SerializationUtils.serializeToString(product),
                 IngConstants.Logging.UNKNOWN_ACCOUNT_TYPE));
     }
-
 }
-

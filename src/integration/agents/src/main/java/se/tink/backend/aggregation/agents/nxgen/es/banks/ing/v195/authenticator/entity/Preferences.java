@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.responses.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.entity;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 

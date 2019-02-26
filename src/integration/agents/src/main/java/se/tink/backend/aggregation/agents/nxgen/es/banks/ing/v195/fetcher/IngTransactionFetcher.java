@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.MovementsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.entities.Element;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.MovementsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Element;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionMonthPaginator;

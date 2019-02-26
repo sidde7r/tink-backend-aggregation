@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195;
 
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.request.CreateSessionRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.request.PutSessionRequest;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.CommunicationsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.CreateSessionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.response.PutRestSessionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.MovementsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.ProductsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.responses.entities.Product;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.responses.ClientResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutSessionRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CommunicationsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.CreateSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.PutRestSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.MovementsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;

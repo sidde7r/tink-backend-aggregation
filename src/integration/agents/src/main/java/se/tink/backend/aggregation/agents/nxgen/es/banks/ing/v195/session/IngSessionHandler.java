@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.session;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.rpc.responses.ClientResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.authenticator.rpc.ClientResponse;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
