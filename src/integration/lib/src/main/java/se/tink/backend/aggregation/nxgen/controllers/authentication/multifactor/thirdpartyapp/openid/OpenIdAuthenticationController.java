@@ -31,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -209,8 +210,9 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
             jwtBuilder.withClaim("callbackUriId", callbackUriId);
         }
 
-        return jwtBuilder.sign(Algorithm
-                .RSA256(callbackJWTSignatureKeyPair.getPublicKey(), callbackJWTSignatureKeyPair.getPrivateKey()));
+        return jwtBuilder.sign(Algorithm.ECDSA256(
+                    ECDSAUtils.getPublicKeyByPath(callbackJWTSignatureKeyPair.getPublicKeyPath()),
+                    ECDSAUtils.getPrivateKeyByPath(callbackJWTSignatureKeyPair.getPrivateKeyPath())));
     }
 
     @Override
