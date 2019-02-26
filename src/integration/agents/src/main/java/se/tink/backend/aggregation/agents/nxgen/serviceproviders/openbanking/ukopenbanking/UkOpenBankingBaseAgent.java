@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -47,7 +48,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     // authenticated flows.
     private final TinkHttpClient paymentsHttpClient;
 
-    private SignatureKeyPair callbackJWTSignatureKeyPair;
+    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
 
     // Lazy loaded
     private UkOpenBankingAis aisSupport;

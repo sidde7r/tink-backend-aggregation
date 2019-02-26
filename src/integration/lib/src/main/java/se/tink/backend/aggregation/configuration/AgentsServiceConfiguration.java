@@ -26,7 +26,7 @@ public class AgentsServiceConfiguration {
 
     // This key pair should only be used to create the JWT for the third party callback
     @JsonProperty
-    private SignatureKeyPair callbackJWTSignatureKeyPair = new SignatureKeyPair();
+    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair = new CallbackJwtSignatureKeyPair();
 
     @JsonProperty
     private ExcludedDebugClusters excludedDebugClusters = new ExcludedDebugClusters();
@@ -58,7 +58,7 @@ public class AgentsServiceConfiguration {
         return signatureKeyPair;
     }
 
-    public SignatureKeyPair getCallbackJWTSignatureKeyPair() {
+    public CallbackJwtSignatureKeyPair getCallbackJWTSignatureKeyPair() {
         return callbackJWTSignatureKeyPair;
     }
 

@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -49,28 +49,31 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
-    private SignatureKeyPair callbackJWTSignatureKeyPair;
+    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
 
     private final String state;
     private final String nonce;
+
     private final String pseudoId;
     private OAuth2Token clientAccessToken;
 
     private final String callbackUriId = "";
+
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OpenIdApiClient apiClient,
             OpenIdAuthenticator authenticator,
-            SignatureKeyPair callbackJWTSignatureKeyPair) {
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
 
-        this.pseudoId = RandomUtils.generateRandomBase64UrlEncoded(32);
+        this.pseudoId = RandomUtils.generateRandomBase64UrlEncoded(8);
         this.state = getJwtState(pseudoId, callbackUriId);
-        this.nonce = RandomUtils.generateRandomBase64UrlEncoded(32);
+
+        this.nonce = RandomUtils.generateRandomBase64UrlEncoded(8);
     }
 
     @Override
@@ -195,13 +198,16 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         }
 
         persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
-
         apiClient.attachAuthFilter(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
     private String getJwtState(String pseudoId, String callbackUriId) {
+
+        if (callbackJWTSignatureKeyPair.isEnabled()) {
+            return pseudoId;
+        }
         JWTCreator.Builder jwtBuilder = JWT.create()
                 .withIssuedAt(new Date())
                 .withClaim("id", pseudoId);

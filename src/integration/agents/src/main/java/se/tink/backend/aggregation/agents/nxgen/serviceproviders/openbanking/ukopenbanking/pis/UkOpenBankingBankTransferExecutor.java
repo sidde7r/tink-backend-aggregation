@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
@@ -39,7 +39,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
     private final UkOpenBankingAccountFetcher<?, ?, TransactionalAccount>
             ukOpenBankingAccountFetcher;
     private final UkOpenBankingPis ukOpenBankingPis;
-    private SignatureKeyPair callbackJWTSignatureKeyPair;
+    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
 
     public UkOpenBankingBankTransferExecutor(
             Catalog catalog,
@@ -50,7 +50,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             TinkHttpClient httpClient,
             UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> ukOpenBankingAccountFetcher,
             UkOpenBankingPis ukOpenBankingPis,
-            SignatureKeyPair callbackJWTSignatureKeyPair) {
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
         this.catalog = catalog;
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
