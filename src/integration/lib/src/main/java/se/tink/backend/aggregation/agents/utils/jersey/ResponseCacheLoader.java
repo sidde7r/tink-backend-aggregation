@@ -4,13 +4,12 @@ import com.google.common.cache.CacheLoader;
 import com.sun.jersey.api.client.ClientResponse;
 
 /**
- * User of this CacheLoader need to implement error handling if needed.
- * Jersey's ClientResponse is sent together with the deserialized entity in the EntityResponse object
- * in order for callers to verify http status
+ * User of this CacheLoader need to implement error handling if needed. Jersey's ClientResponse is
+ * sent together with the deserialized entity in the EntityResponse object in order for callers to
+ * verify http status
  *
- * The load method will throw an ExecutionException with the real exception in the cause parameter.
- * More information: https://github.com/google/guava/wiki/CachesExplained#population
- *
+ * <p>The load method will throw an ExecutionException with the real exception in the cause
+ * parameter. More information: https://github.com/google/guava/wiki/CachesExplained#population
  */
 public class ResponseCacheLoader extends CacheLoader<EntityIdentifier, EntityResponse> {
 
