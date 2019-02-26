@@ -14,12 +14,17 @@ import org.apache.http.HttpHost;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.params.ClientPNames;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgent;
@@ -80,6 +85,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private SSLContextBuilder internalSslContextBuilder;
     private String userAgent;
     private final AggregatorInfo aggregator;
+
+    private List<String> cipherSuites;
 
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
@@ -224,6 +231,22 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             addRedirectHandler(new DenyAllRedirectHandler());
         }
 
+        if (cipherSuites != null) {
+            final Registry<ConnectionSocketFactory> socketFactoryRegistry =
+                    RegistryBuilder.<ConnectionSocketFactory>create()
+                            .register(
+                                    "https",
+                                    new SSLConnectionSocketFactory(
+                                            sslContext,
+                                            null,
+                                            cipherSuites.stream().toArray(String[]::new),
+                                            null))
+                            .build();
+
+            internalHttpClientBuilder.setConnectionManager(
+                    new BasicHttpClientConnectionManager(socketFactoryRegistry));
+        }
+
         CloseableHttpClient httpClient =
                 this.internalHttpClientBuilder
                         .setDefaultRequestConfig(reguestConfig)
@@ -271,8 +294,18 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     public void addMessageReader(MessageBodyReader<?> messageBodyReader) {
         this.internalClientConfig.getSingletons().add(messageBodyReader);
     }
+
     public void addMessageWriter(MessageBodyWriter<?> messageBodyWriter) {
         this.internalClientConfig.getSingletons().add(messageBodyWriter);
+    }
+
+    /**
+     * @param cipherSuites A list of cipher suites to be presented to the server at TLS Client Hello
+     *     in order of preference, e.g. TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 etc. This might be
+     *     necessary if the choice of cipher suite causes the TLS handshake to fail.
+     */
+    public void setCipherSuites(final List<String> cipherSuites) {
+        this.cipherSuites = cipherSuites;
     }
 
     public void setUserAgent(String userAgent) {
