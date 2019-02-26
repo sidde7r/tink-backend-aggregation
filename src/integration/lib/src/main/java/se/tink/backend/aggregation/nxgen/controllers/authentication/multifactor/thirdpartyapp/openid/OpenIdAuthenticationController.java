@@ -4,12 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -41,9 +38,6 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     // This wait time is for the whole user authentication. Different banks have different cumbersome
     // authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
-
-    private static final Random random = new SecureRandom();
-    private static final Base64.Encoder encoder = Base64.getUrlEncoder();
 
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
@@ -203,6 +197,16 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
     }
 
+    /**
+     * Introduce complex/structured data on the state
+     * The state is then passed along by the bank through the callback uri.
+     * We use this complex dataset to be able to introduce more details on the user/client.
+     * We used the Elliptic Curve algorithm in order to reduce the size of the actual JWToken signature.
+     *
+     * @param pseudoId
+     * @param callbackUriId
+     * @return
+     */
     private String getJwtState(String pseudoId, String callbackUriId) {
 
         if (callbackJWTSignatureKeyPair.isEnabled()) {
