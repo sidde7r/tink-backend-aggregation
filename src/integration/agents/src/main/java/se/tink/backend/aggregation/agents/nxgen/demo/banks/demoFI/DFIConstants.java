@@ -1,0 +1,9 @@
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI;
+
+import se.tink.backend.aggregation.nxgen.http.URL;
+
+public class DFIConstants {
+    public static class Urls {
+        public static final URL AUTHENTICATE_URL = new URL(""); // TODO: Add our url here..
+    }
+}
