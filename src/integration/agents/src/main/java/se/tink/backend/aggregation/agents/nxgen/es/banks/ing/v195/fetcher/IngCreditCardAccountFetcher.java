@@ -4,12 +4,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.amount.Amount;
 
 import java.util.Collection;
@@ -20,20 +18,14 @@ import java.util.stream.Collectors;
 public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
 
     private final IngApiClient ingApiClient;
-    private final SessionStorage sessionStorage;
 
-
-    public IngCreditCardAccountFetcher(IngApiClient ingApiClient, SessionStorage sessionStorage) {
+    public IngCreditCardAccountFetcher(IngApiClient ingApiClient) {
         this.ingApiClient = ingApiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        List<Product> products = this.sessionStorage
-                .get(IngConstants.Tags.PRODUCT_LIST, ProductsResponse.class)
-                .orElseGet(this.ingApiClient::getApiRestProducts)
-                .getProducts();
+        List<Product> products = this.ingApiClient.getApiRestProducts().getProducts();
 
         List<Product> creditCards = products
                 .stream()
@@ -46,14 +38,18 @@ public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAcc
         // Credit cards do not have a currency field specified, so we need to look up the associated account and use
         // the currency from that.
         return creditCards.stream()
-                .map(creditCard -> {
-                    Optional<Product> associatedAccount = products.stream()
-                            .filter(product ->
-                                            creditCard.getAssociatedAccount() != null &&
-                                            product.getUuid().equals(creditCard.getAssociatedAccount().getUuid()))
-                            .findFirst();
-                    return mapCreditCardAccount(creditCard, associatedAccount);
-                }).collect(Collectors.toList());
+                .map(creditCard -> mapCreditCardAccount(creditCard, lookupAssociatedAccount(creditCard, products)))
+                .collect(Collectors.toList());
+    }
+
+    private Optional<Product> lookupAssociatedAccount(Product creditCard, List<Product> products) {
+        if (creditCard.getAssociatedAccount() == null) {
+            return Optional.empty();
+        }
+
+        return products.stream()
+                .filter(product -> product.getUuid().equals(creditCard.getAssociatedAccount().getUuid()))
+                .findFirst();
     }
 
     private static CreditCardAccount mapCreditCardAccount(Product product, Optional<Product> associatedAccount) {

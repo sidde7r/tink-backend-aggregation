@@ -4,7 +4,6 @@ import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountCategories;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -17,7 +16,6 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class IngTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
@@ -32,12 +30,8 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        List<Product> products = this.sessionStorage
-                .get(IngConstants.Tags.PRODUCT_LIST, ProductsResponse.class)
-                .orElseGet(this.ingApiClient::getApiRestProducts)
-                .getProducts();
-
-        return products
+        return this.ingApiClient.getApiRestProducts()
+                .getProducts()
                 .stream()
                 .filter(IngTransactionalAccountFetcher::transactionalAccountFilter)
                 .map(IngTransactionalAccountFetcher::mapTransactionalAccount)

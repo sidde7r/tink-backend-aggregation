@@ -1,40 +1,32 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
-import com.google.common.collect.Lists;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.amount.Amount;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAccount> {
 
     private final IngApiClient ingApiClient;
-    private final SessionStorage sessionStorage;
 
-    public IngInvestmentAccountFetcher(IngApiClient ingApiClient, SessionStorage sessionStorage) {
+    public IngInvestmentAccountFetcher(IngApiClient ingApiClient) {
         this.ingApiClient = ingApiClient;
-        this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        List<Product> products = this.sessionStorage
-                .get(IngConstants.Tags.PRODUCT_LIST, ProductsResponse.class)
-                .orElseGet(this.ingApiClient::getApiRestProducts)
-                .getProducts();
 
-        return products
+        return this.ingApiClient.getApiRestProducts()
+                .getProducts()
                 .stream()
                 .filter(IngInvestmentAccountFetcher::filterInvetmentAccounts)
                 .map(IngInvestmentAccountFetcher::mapProductToInvestmentAccount)
@@ -58,21 +50,32 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
         instrument.setType(Instrument.Type.FUND);
         instrument.setCurrency(product.getCurrency());
         instrument.setMarketValue(product.getBalance());
-        instrument.setAverageAcquisitionPrice(product.getInvestment() / product.getNumberOfShares());
+        if (product.getNumberOfShares() > 0) {
+            instrument.setAverageAcquisitionPrice(product.getInvestment() / product.getNumberOfShares());
+        } else {
+            instrument.setAverageAcquisitionPrice(0D);
+        }
 
         Portfolio portfolio = new Portfolio();
         portfolio.setUniqueIdentifier(product.getProductNumber());
         portfolio.setTotalProfit(product.getPerformance());
         portfolio.setCashValue(0.0);
         portfolio.setTotalValue(product.getBalance());
-        portfolio.setType(Portfolio.Type.OTHER);
 
-        portfolio.setInstruments(Lists.newArrayList(instrument));
+        if (IngConstants.AccountTypes.INVESTMENT_FUND.equals(product.getType())) {
+            portfolio.setType(Portfolio.Type.DEPOT);
+        } else if (IngConstants.AccountTypes.PENSION_PLAN.equals(product.getType())) {
+            portfolio.setType(Portfolio.Type.PENSION);
+        } else {
+            portfolio.setType(Portfolio.Type.OTHER);
+        }
+
+        portfolio.setInstruments(Collections.singletonList(instrument));
 
         return InvestmentAccount.builder(product.getProductNumber())
                 .setAccountNumber(product.getProductNumber())
                 .setCashBalance(new Amount(product.getCurrency(), 0.0))
-                .setPortfolios(Lists.newArrayList(portfolio))
+                .setPortfolios(Collections.singletonList(portfolio))
                 .setBankIdentifier(product.getUuid())
                 .setHolderName(new HolderName(product.getHolders().get(0).getAnyName()))
                 .setBankIdentifier(product.getUuid())

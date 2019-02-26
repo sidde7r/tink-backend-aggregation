@@ -38,7 +38,7 @@ public class IngAgent extends NextGenerationAgent {
 
         super(request, context, signatureKeyPair);
 
-        this.ingApiClient = new IngApiClient(this.client, sessionStorage);
+        this.ingApiClient = new IngApiClient(this.client);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class IngAgent extends NextGenerationAgent {
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
 
-        IngCreditCardAccountFetcher accountFetcher = new IngCreditCardAccountFetcher(ingApiClient, sessionStorage);
+        IngCreditCardAccountFetcher accountFetcher = new IngCreditCardAccountFetcher(ingApiClient);
         IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
 
         TransactionMonthPaginationController<CreditCardAccount> paginationController = new TransactionMonthPaginationController<>(
@@ -88,7 +88,7 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        IngInvestmentAccountFetcher accountFetcher = new IngInvestmentAccountFetcher(ingApiClient, sessionStorage);
+        IngInvestmentAccountFetcher accountFetcher = new IngInvestmentAccountFetcher(ingApiClient);
 
         InvestmentRefreshController refreshController = new InvestmentRefreshController(
                 metricRefreshController, updateController, accountFetcher);
@@ -98,7 +98,7 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        IngLoanAccountFetcher accountFetcher = new IngLoanAccountFetcher(ingApiClient, sessionStorage);
+        IngLoanAccountFetcher accountFetcher = new IngLoanAccountFetcher(ingApiClient);
         IngTransactionFetcher transactionFetcher = new IngTransactionFetcher(ingApiClient);
 
         TransactionMonthPaginationController<LoanAccount> paginationController = new TransactionMonthPaginationController<>(

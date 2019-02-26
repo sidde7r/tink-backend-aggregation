@@ -3,39 +3,30 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngUtils;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Holder;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.amount.Amount;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
 
     private final IngApiClient ingApiClient;
-    private final SessionStorage sessionStorage;
 
-    public IngLoanAccountFetcher(IngApiClient ingApiClient, SessionStorage sessionStorage) {
+    public IngLoanAccountFetcher(IngApiClient ingApiClient) {
         this.ingApiClient = ingApiClient;
-        this.sessionStorage = sessionStorage;
     }
 
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        List<Product> products = this.sessionStorage
-                .get(IngConstants.Tags.PRODUCT_LIST, ProductsResponse.class)
-                .orElseGet(this.ingApiClient::getApiRestProducts)
-                .getProducts();
-
-        return products
+        return this.ingApiClient.getApiRestProducts()
+                .getProducts()
                 .stream()
                 .filter(IngLoanAccountFetcher::loanAccountFilter)
                 .map(IngLoanAccountFetcher::mapLoanAccount)
