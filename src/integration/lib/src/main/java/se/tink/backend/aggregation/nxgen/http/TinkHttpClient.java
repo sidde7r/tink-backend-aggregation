@@ -231,7 +231,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             addRedirectHandler(new DenyAllRedirectHandler());
         }
 
-        if (cipherSuites != null) {
+        if (Objects.nonNull(cipherSuites)) {
             final Registry<ConnectionSocketFactory> socketFactoryRegistry =
                     RegistryBuilder.<ConnectionSocketFactory>create()
                             .register(
