@@ -35,6 +35,6 @@ abstract class TypeGuesserBase {
             }
         }
 
-        return AccountTypes.CHECKING;
+        return AccountTypes.OTHER;
     }
 }
