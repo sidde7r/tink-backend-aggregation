@@ -101,7 +101,7 @@ spec:
             the last 30 minutes.
         tags: <{ $labels.className }>
 
-  - alert: RefreshSuccessRateLowWithAttemptLimitBE
+  - alert: RefreshSuccessRateLowWithAttemptLimitGB
     expr: |
         # Successful attempts above 95%
         (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="GB"}[30m])) by (className)
