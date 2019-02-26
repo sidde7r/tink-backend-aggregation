@@ -10,6 +10,52 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.params.ClientPNames;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
+import org.apache.http.params.CoreConnectionPNames;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.backend.aggregation.agents.AbstractAgent;
+import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
+import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.http.filter.Filter;
+import se.tink.backend.aggregation.nxgen.http.filter.Filterable;
+import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
+import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
+import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecutor;
+import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
+import se.tink.backend.aggregation.nxgen.http.persistent.Header;
+import se.tink.backend.aggregation.nxgen.http.persistent.PersistentHeaderFilter;
+import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
+import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
+import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
+import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
+import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
+import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
+import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import javax.annotation.Nullable;
+import javax.net.ssl.SSLContext;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.ext.MessageBodyReader;
+import javax.ws.rs.ext.MessageBodyWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,47 +74,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.Nullable;
-import javax.net.ssl.SSLContext;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.ext.MessageBodyReader;
-import javax.ws.rs.ext.MessageBodyWriter;
-import org.apache.http.HttpHost;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.params.CoreConnectionPNames;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
-import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.aggregation.nxgen.http.filter.Filter;
-import se.tink.backend.aggregation.nxgen.http.filter.Filterable;
-import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4;
-import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpClient4Handler;
-import se.tink.backend.aggregation.nxgen.http.legacy.TinkApacheHttpRequestExecutor;
-import se.tink.backend.aggregation.nxgen.http.metrics.MetricFilter;
-import se.tink.backend.aggregation.nxgen.http.persistent.Header;
-import se.tink.backend.aggregation.nxgen.http.persistent.PersistentHeaderFilter;
-import se.tink.backend.aggregation.nxgen.http.redirect.ApacheHttpRedirectStrategy;
-import se.tink.backend.aggregation.nxgen.http.redirect.DenyAllRedirectHandler;
-import se.tink.backend.aggregation.nxgen.http.redirect.FixRedirectHandler;
-import se.tink.backend.aggregation.nxgen.http.redirect.RedirectHandler;
-import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustAllCertificatesStrategy;
-import se.tink.backend.aggregation.nxgen.http.truststrategy.TrustRootCaStrategy;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.libraries.metrics.MetricRegistry;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-
 
 public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private TinkApacheHttpRequestExecutor requestExecutor;
@@ -81,10 +86,13 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private String userAgent;
     private final AggregatorInfo aggregator;
 
+    private List<String> cipherSuites;
+
     private boolean followRedirects = false;
     private final ApacheHttpRedirectStrategy redirectStrategy;
 
-    private final LoggingFilter debugOutputLoggingFilter= new LoggingFilter(new PrintStream(System.out));
+    private final LoggingFilter debugOutputLoggingFilter =
+            new LoggingFilter(new PrintStream(System.out));
     private boolean debugOutput = false;
 
     private final ByteArrayOutputStream logOutputStream;
@@ -96,22 +104,22 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     private static final AggregationLogger logger = new AggregationLogger(TinkHttpClient.class);
     private String cookieSpec;
-    private static final ImmutableList<String> cookieSpecifications = ImmutableList
-            .<String>builder()
-            .add(CookieSpecs.BROWSER_COMPATIBILITY)
-            .add(CookieSpecs.NETSCAPE)
-            .add(CookieSpecs.IGNORE_COOKIES)
-            .add(CookieSpecs.STANDARD)
-            .add(CookieSpecs.BEST_MATCH)
-            .build();
+    private static final ImmutableList<String> cookieSpecifications =
+            ImmutableList.<String>builder()
+                    .add(CookieSpecs.BROWSER_COMPATIBILITY)
+                    .add(CookieSpecs.NETSCAPE)
+                    .add(CookieSpecs.IGNORE_COOKIES)
+                    .add(CookieSpecs.STANDARD)
+                    .add(CookieSpecs.BEST_MATCH)
+                    .build();
 
     private class DEFAULTS {
-        private final static String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
-        private final static int TIMEOUT_MS = 30000;
-        private final static int MAX_REDIRECTS = 10;
-        private final static boolean CHUNKED_ENCODING = false;
-        private final static boolean FOLLOW_REDIRECTS = true;
-        private final static boolean DEBUG_OUTPUT = false;
+        private static final String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
+        private static final int TIMEOUT_MS = 30000;
+        private static final int MAX_REDIRECTS = 10;
+        private static final boolean CHUNKED_ENCODING = false;
+        private static final boolean FOLLOW_REDIRECTS = true;
+        private static final boolean DEBUG_OUTPUT = false;
     }
 
     public String getUserAgent() {
@@ -127,11 +135,13 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private class SendRequestFilter extends Filter {
 
         @Override
-        public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+        public HttpResponse handle(HttpRequest httpRequest)
+                throws HttpClientException, HttpResponseException {
             // Set URI, body and headers for the real request
-            WebResource.Builder resource = getInternalClient()
-                                                        .resource(httpRequest.getURI())
-                                                        .entity(httpRequest.getBody());
+            WebResource.Builder resource =
+                    getInternalClient()
+                            .resource(httpRequest.getURI())
+                            .entity(httpRequest.getBody());
 
             MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
             if (headers != null) {
@@ -144,36 +154,43 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
             try {
                 // Make actual http request
-                ClientResponse internalResponse = resource.method(
-                                                            httpRequest.getMethod().toString(),
-                                                            ClientResponse.class);
+                ClientResponse internalResponse =
+                        resource.method(httpRequest.getMethod().toString(), ClientResponse.class);
                 // `HttpResponse` uses the `ClientResponse` object internally
                 return new HttpResponse(httpRequest, internalResponse);
-            } catch(UniformInterfaceException e) {
-                throw new HttpResponseException(e, httpRequest, new HttpResponse(httpRequest, e.getResponse()));
+            } catch (UniformInterfaceException e) {
+                throw new HttpResponseException(
+                        e, httpRequest, new HttpResponse(httpRequest, e.getResponse()));
             } catch (ClientHandlerException e) {
                 throw new HttpClientException(e, httpRequest);
             }
         }
     }
 
-    public TinkHttpClient(@Nullable AggregatorInfo aggregatorInfo, @Nullable MetricRegistry metricRegistry,
-            @Nullable ByteArrayOutputStream logOutPutStream, @Nullable SignatureKeyPair signatureKeyPair, @Nullable Provider provider) {
+    public TinkHttpClient(
+            @Nullable AggregatorInfo aggregatorInfo,
+            @Nullable MetricRegistry metricRegistry,
+            @Nullable ByteArrayOutputStream logOutPutStream,
+            @Nullable SignatureKeyPair signatureKeyPair,
+            @Nullable Provider provider) {
         this.requestExecutor = new TinkApacheHttpRequestExecutor(signatureKeyPair);
         this.internalClientConfig = new DefaultApacheHttpClient4Config();
         this.internalCookieStore = new BasicCookieStore();
         this.internalRequestConfigBuilder = RequestConfig.custom();
-        this.internalHttpClientBuilder = HttpClientBuilder.create()
-                .setRequestExecutor(requestExecutor)
-                .setDefaultCookieStore(this.internalCookieStore);
+        this.internalHttpClientBuilder =
+                HttpClientBuilder.create()
+                        .setRequestExecutor(requestExecutor)
+                        .setDefaultCookieStore(this.internalCookieStore);
 
-        this.internalSslContextBuilder = new SSLContextBuilder()
-                .useProtocol("TLSv1.2")
-                .setSecureRandom(new SecureRandom());
+        this.internalSslContextBuilder =
+                new SSLContextBuilder().useProtocol("TLSv1.2").setSecureRandom(new SecureRandom());
 
         this.redirectStrategy = new ApacheHttpRedirectStrategy();
         this.logOutputStream = logOutPutStream;
-        this.aggregator = Objects.nonNull(aggregatorInfo) ? aggregatorInfo : AggregatorInfo.getAggregatorForTesting();
+        this.aggregator =
+                Objects.nonNull(aggregatorInfo)
+                        ? aggregatorInfo
+                        : AggregatorInfo.getAggregatorForTesting();
         this.metricRegistry = metricRegistry;
         this.provider = provider;
 
@@ -203,7 +220,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             throw new IllegalStateException(e);
         }
 
-        if(!Strings.isNullOrEmpty(this.cookieSpec)) {
+        if (!Strings.isNullOrEmpty(this.cookieSpec)) {
             this.internalRequestConfigBuilder.setCookieSpec(this.cookieSpec);
         }
 
@@ -214,17 +231,38 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             addRedirectHandler(new DenyAllRedirectHandler());
         }
 
-        CloseableHttpClient httpClient = this.internalHttpClientBuilder
-                                            .setDefaultRequestConfig(reguestConfig)
-                                            .setSslcontext(sslContext)
-                                            .setRedirectStrategy(this.redirectStrategy)
-                                            .build();
+        if (Objects.nonNull(cipherSuites)) {
+            final Registry<ConnectionSocketFactory> socketFactoryRegistry =
+                    RegistryBuilder.<ConnectionSocketFactory>create()
+                            .register(
+                                    "https",
+                                    new SSLConnectionSocketFactory(
+                                            sslContext,
+                                            null,
+                                            cipherSuites.stream().toArray(String[]::new),
+                                            null))
+                            .build();
+
+            internalHttpClientBuilder.setConnectionManager(
+                    new BasicHttpClientConnectionManager(socketFactoryRegistry));
+        }
+
+        CloseableHttpClient httpClient =
+                this.internalHttpClientBuilder
+                        .setDefaultRequestConfig(reguestConfig)
+                        .setSslcontext(sslContext)
+                        .setRedirectStrategy(this.redirectStrategy)
+                        .build();
         //  NOTE:
-        //      `TinkApacheHttpClient4Handler` and `TinkApacheHttpClient4` are used because a) the version of
-        //      `ApacheHttpClient4Handler` that we use has a bug when it comes to `Transfer-Encoding: chunked`
+        //      `TinkApacheHttpClient4Handler` and `TinkApacheHttpClient4` are used because a) the
+        // version of
+        //      `ApacheHttpClient4Handler` that we use has a bug when it comes to
+        // `Transfer-Encoding: chunked`
         //      (we cannot disable it).
-        //      and b) to be able to pass along the redirected URIs on to the internal Jersey response.
-        //      Todo: Remove these two temporary classes when we upgrade to a newer ApacheHttpClient4 library.
+        //      and b) to be able to pass along the redirected URIs on to the internal Jersey
+        // response.
+        //      Todo: Remove these two temporary classes when we upgrade to a newer
+        // ApacheHttpClient4 library.
         TinkApacheHttpClient4Handler httpHandler = new TinkApacheHttpClient4Handler(httpClient);
         this.internalClient = new TinkApacheHttpClient4(httpHandler, this.internalClientConfig);
 
@@ -232,18 +270,13 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         try {
             if (this.logOutputStream != null) {
                 this.internalClient.addFilter(
-                        new LoggingFilter(
-                                new PrintStream(
-                                        logOutputStream,
-                                        true,
-                                        "UTF-8")));
+                        new LoggingFilter(new PrintStream(logOutputStream, true, "UTF-8")));
             }
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }
         if (this.metricRegistry != null && this.provider != null) {
-            addFilter(
-                    new MetricFilter(this.metricRegistry, this.provider));
+            addFilter(new MetricFilter(this.metricRegistry, this.provider));
         }
         if (this.debugOutput) {
             this.internalClient.addFilter(debugOutputLoggingFilter);
@@ -261,8 +294,18 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     public void addMessageReader(MessageBodyReader<?> messageBodyReader) {
         this.internalClientConfig.getSingletons().add(messageBodyReader);
     }
+
     public void addMessageWriter(MessageBodyWriter<?> messageBodyWriter) {
         this.internalClientConfig.getSingletons().add(messageBodyWriter);
+    }
+
+    /**
+     * @param cipherSuites A list of cipher suites to be presented to the server at TLS Client Hello
+     *     in order of preference, e.g. TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 etc. This might be
+     *     necessary if the choice of cipher suite causes the TLS handshake to fail.
+     */
+    public void setCipherSuites(final List<String> cipherSuites) {
+        this.cipherSuites = cipherSuites;
     }
 
     public void setUserAgent(String userAgent) {
@@ -287,51 +330,60 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         // Note: Timeout on an initial proxy connection does not work (bug in library)
 
         // `CoreConnectionPNames.SO_TIMEOUT` is taken from the SEB agent to fix timeout problems.
-        this.internalClientConfig.getProperties().put(CoreConnectionPNames.SO_TIMEOUT, milliseconds);
-        this.internalRequestConfigBuilder = this.internalRequestConfigBuilder
-                                            .setConnectionRequestTimeout(milliseconds)
-                                            .setConnectTimeout(milliseconds)
-                                            .setSocketTimeout(milliseconds);
+        this.internalClientConfig
+                .getProperties()
+                .put(CoreConnectionPNames.SO_TIMEOUT, milliseconds);
+        this.internalRequestConfigBuilder =
+                this.internalRequestConfigBuilder
+                        .setConnectionRequestTimeout(milliseconds)
+                        .setConnectTimeout(milliseconds)
+                        .setSocketTimeout(milliseconds);
     }
 
     public void setChunkedEncoding(boolean chunkedEncoding) {
         Preconditions.checkState(this.internalClient == null);
         // `0` == Default chunk size
         // `null` == Don't use chunked encoding
-        this.internalClientConfig.getProperties().put(
-                            ClientConfig.PROPERTY_CHUNKED_ENCODING_SIZE,
-                            chunkedEncoding ? 0 : null);
+        this.internalClientConfig
+                .getProperties()
+                .put(ClientConfig.PROPERTY_CHUNKED_ENCODING_SIZE, chunkedEncoding ? 0 : null);
     }
 
     public void setMaxRedirects(int maxRedirects) {
         Preconditions.checkState(this.internalClient == null);
-        // Note: You'll get an exception if `maxRedirects` is set to `1` if the target server redirects more than that.
-        this.internalRequestConfigBuilder = this.internalRequestConfigBuilder
-                                            .setCircularRedirectsAllowed(true)
-                                            .setMaxRedirects(maxRedirects);
+        // Note: You'll get an exception if `maxRedirects` is set to `1` if the target server
+        // redirects more than that.
+        this.internalRequestConfigBuilder =
+                this.internalRequestConfigBuilder
+                        .setCircularRedirectsAllowed(true)
+                        .setMaxRedirects(maxRedirects);
     }
 
     public void setFollowRedirects(boolean followRedirects) {
         Preconditions.checkState(this.internalClient == null);
-        // These options don't really do anything (bug), it's the redirect strategy that fixes the issue.
+        // These options don't really do anything (bug), it's the redirect strategy that fixes the
+        // issue.
         // Let's keep them for reference till the day we upgrade our libraries.
-        this.internalClientConfig.getProperties().put(ClientConfig.PROPERTY_FOLLOW_REDIRECTS, followRedirects);
-        this.internalClientConfig.getProperties().put(ClientPNames.HANDLE_REDIRECTS, followRedirects);
+        this.internalClientConfig
+                .getProperties()
+                .put(ClientConfig.PROPERTY_FOLLOW_REDIRECTS, followRedirects);
+        this.internalClientConfig
+                .getProperties()
+                .put(ClientPNames.HANDLE_REDIRECTS, followRedirects);
         this.followRedirects = followRedirects;
     }
 
     public void disableSslVerification() {
         loadTrustMaterial(null, new TrustAllCertificatesStrategy());
-        this.internalHttpClientBuilder = this.internalHttpClientBuilder.setHostnameVerifier(
-                new AllowAllHostnameVerifier());
+        this.internalHttpClientBuilder =
+                this.internalHttpClientBuilder.setHostnameVerifier(new AllowAllHostnameVerifier());
     }
 
     public void loadTrustMaterial(KeyStore truststore, TrustAllCertificatesStrategy trustStrategy) {
         Preconditions.checkState(this.internalClient == null);
         try {
-            this.internalSslContextBuilder = this.internalSslContextBuilder.loadTrustMaterial(
-                    truststore,
-                    trustStrategy);
+            this.internalSslContextBuilder =
+                    this.internalSslContextBuilder.loadTrustMaterial(truststore, trustStrategy);
         } catch (NoSuchAlgorithmException | KeyStoreException e) {
             throw new IllegalStateException(e);
         }
@@ -345,14 +397,19 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public void setSslClientCertificate(byte[] clientCertificateBytes, String password) {
         Preconditions.checkState(this.internalClient == null);
-        ByteArrayInputStream clientCertificateStream = new ByteArrayInputStream(clientCertificateBytes);
+        ByteArrayInputStream clientCertificateStream =
+                new ByteArrayInputStream(clientCertificateBytes);
         try {
             KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
             keyStore.load(clientCertificateStream, password.toCharArray());
 
             internalSslContextBuilder.loadKeyMaterial(keyStore, null);
-        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException |
-                CertificateException | UnrecoverableKeyException e) {
+        } catch (KeyStoreException
+                | NoSuchProviderException
+                | IOException
+                | NoSuchAlgorithmException
+                | CertificateException
+                | UnrecoverableKeyException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -363,9 +420,13 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
             ByteArrayInputStream jksStream = new ByteArrayInputStream(jksData);
             keyStore.load(jksStream, password.toCharArray());
 
-            TrustRootCaStrategy trustStrategy = TrustRootCaStrategy.createWithFallbackTrust(keyStore);
+            TrustRootCaStrategy trustStrategy =
+                    TrustRootCaStrategy.createWithFallbackTrust(keyStore);
             internalSslContextBuilder.loadTrustMaterial(keyStore, trustStrategy);
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
+        } catch (KeyStoreException
+                | IOException
+                | NoSuchAlgorithmException
+                | CertificateException e) {
             throw new IllegalStateException(e);
         }
     }
@@ -412,7 +473,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         return this.internalCookieStore.getCookies();
     }
 
-    public void addCookie(Cookie ...cookies) {
+    public void addCookie(Cookie... cookies) {
         this.internalCookieStore.addCookies(cookies);
     }
 
@@ -470,8 +531,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         return new RequestBuilder(this, this.finalFilter, url, getHeaderAggregatorIdentifier());
     }
 
-    public <T> T request(Class<T> c, HttpRequest request) throws HttpClientException, HttpResponseException {
-        return new RequestBuilder(this, this.finalFilter, getHeaderAggregatorIdentifier()).raw(c, request);
+    public <T> T request(Class<T> c, HttpRequest request)
+            throws HttpClientException, HttpResponseException {
+        return new RequestBuilder(this, this.finalFilter, getHeaderAggregatorIdentifier())
+                .raw(c, request);
     }
 
     public void request(HttpRequest request) throws HttpClientException, HttpResponseException {
