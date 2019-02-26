@@ -102,7 +102,14 @@ public final class JyskeConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER = TypeMapper.<AccountTypes>builder()
             .put(AccountTypes.SAVINGS, "Jyske Munnypot", "Opsparing")
-            .put(AccountTypes.CHECKING, "Budget", "Totalkonto", "Totalkonto Ung", "Lønkonto", "Budgetkonto", "Grundkonto")
+            .put(AccountTypes.CHECKING, "Budget",
+                    "Totalkonto",
+                    "Totalkonto Ung",
+                    "Lønkonto",
+                    "Budgetkonto",
+                    "Budgetkonto Ung",
+                    "Grundkonto",
+                    "Forbrug")
             .build();
 
     public static final class Log {
