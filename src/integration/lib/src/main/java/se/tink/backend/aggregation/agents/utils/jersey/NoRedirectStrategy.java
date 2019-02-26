@@ -9,14 +9,16 @@ import org.apache.http.protocol.HttpContext;
 
 public class NoRedirectStrategy implements RedirectStrategy {
     @Override
-    public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext)
+    public boolean isRedirected(
+            HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext)
             throws ProtocolException {
         // `false` == Don't redirect anything
         return false;
     }
 
     @Override
-    public HttpUriRequest getRedirect(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext)
+    public HttpUriRequest getRedirect(
+            HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext)
             throws ProtocolException {
         return null;
     }

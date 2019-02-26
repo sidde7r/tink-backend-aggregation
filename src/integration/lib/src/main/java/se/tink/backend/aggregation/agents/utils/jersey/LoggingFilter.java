@@ -8,6 +8,11 @@ import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientRequestAdapter;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.libraries.date.ThreadSafeDateFormat;
+
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -19,17 +24,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import javax.ws.rs.core.MultivaluedMap;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.StringBuilderWriter;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
- * This is a copy of the logging filter that exist in com.sun.jersey.api.client.filter
- * except that it fixes a bug with that the whole response isn't logged. Problem is that stream.read() in
+ * This is a copy of the logging filter that exist in com.sun.jersey.api.client.filter except that
+ * it fixes a bug with that the whole response isn't logged. Problem is that stream.read() in
  * logResponse() isn't guaranteed to return all bytes. A problem that this class fixes.
- * <p/>
- * The whole response is always logged.
+ *
+ * <p>The whole response is always logged.
  */
 public class LoggingFilter extends ClientFilter {
 
@@ -41,7 +42,8 @@ public class LoggingFilter extends ClientFilter {
 
     private static final String RESPONSE_PREFIX = "< ";
 
-    private static final ImmutableList<String> SENSITIVE_HEADERS = ImmutableList.of("cookie", "set-cookie", "authorization");
+    private static final ImmutableList<String> SENSITIVE_HEADERS =
+            ImmutableList.of("cookie", "set-cookie", "authorization");
 
     private final class Adapter extends AbstractClientRequestAdapter {
         private final StringBuilder b;
@@ -54,7 +56,6 @@ public class LoggingFilter extends ClientFilter {
         public OutputStream adapt(ClientRequest request, OutputStream out) throws IOException {
             return new LoggingOutputStream(getAdapter().adapt(request, out), b);
         }
-
     }
 
     private final class LoggingOutputStream extends OutputStream {
@@ -104,17 +105,15 @@ public class LoggingFilter extends ClientFilter {
     private final int maxSize = 500 * 1024;
 
     /**
-     * Create a logging filter logging the request and response to
-     * a default JDK logger, named as the fully qualified class name of this
-     * class.
+     * Create a logging filter logging the request and response to a default JDK logger, named as
+     * the fully qualified class name of this class.
      */
     public LoggingFilter() {
         this(LOGGER);
     }
 
     /**
-     * Create a logging filter logging the request and response to
-     * a JDK logger.
+     * Create a logging filter logging the request and response to a JDK logger.
      *
      * @param logger the logger to log requests and responses.
      */
@@ -123,8 +122,7 @@ public class LoggingFilter extends ClientFilter {
     }
 
     /**
-     * Create a logging filter logging the request and response to
-     * print stream.
+     * Create a logging filter logging the request and response to print stream.
      *
      * @param loggingStream the print stream to log requests and responses.
      */
@@ -190,14 +188,19 @@ public class LoggingFilter extends ClientFilter {
     private void printRequestLine(StringBuilder b, long id, ClientRequest request) {
         prefixId(b, id).append(NOTIFICATION_PREFIX).append("Client out-bound request").append("\n");
         prefixId(b, id)
-            .append(NOTIFICATION_PREFIX)
-            .append(ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()))
-            .append("\n");
-        prefixId(b, id).append(REQUEST_PREFIX).append(request.getMethod()).append(" ").
-                append(request.getURI().toASCIIString()).append("\n");
+                .append(NOTIFICATION_PREFIX)
+                .append(ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()))
+                .append("\n");
+        prefixId(b, id)
+                .append(REQUEST_PREFIX)
+                .append(request.getMethod())
+                .append(" ")
+                .append(request.getURI().toASCIIString())
+                .append("\n");
     }
 
-    private void printRequestHeaders(StringBuilder b, long id, MultivaluedMap<String, Object> headers) {
+    private void printRequestHeaders(
+            StringBuilder b, long id, MultivaluedMap<String, Object> headers) {
         for (Map.Entry<String, List<Object>> e : headers.entrySet()) {
             List<Object> val = e.getValue();
             String header = e.getKey();
@@ -264,18 +267,19 @@ public class LoggingFilter extends ClientFilter {
     }
 
     private void printResponseLine(StringBuilder b, long id, ClientResponse response) {
-        prefixId(b, id).append(NOTIFICATION_PREFIX).
-                append("Client in-bound response").append("\n");
+        prefixId(b, id).append(NOTIFICATION_PREFIX).append("Client in-bound response").append("\n");
         prefixId(b, id)
                 .append(NOTIFICATION_PREFIX)
                 .append(ThreadSafeDateFormat.FORMATTER_FILENAME_SAFE.format(new Date()))
                 .append("\n");
-        prefixId(b, id).append(RESPONSE_PREFIX).
-                append(Integer.toString(response.getStatus())).
-                append("\n");
+        prefixId(b, id)
+                .append(RESPONSE_PREFIX)
+                .append(Integer.toString(response.getStatus()))
+                .append("\n");
     }
 
-    private void printResponseHeaders(StringBuilder b, long id, MultivaluedMap<String, String> headers) {
+    private void printResponseHeaders(
+            StringBuilder b, long id, MultivaluedMap<String, String> headers) {
         for (Map.Entry<String, List<String>> e : headers.entrySet()) {
             String header = e.getKey();
             for (String value : e.getValue()) {
