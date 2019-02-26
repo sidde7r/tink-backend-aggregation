@@ -12,7 +12,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitSE
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="SE"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="SE"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="SE"}[30m])) by (action,className) > 2
@@ -49,7 +49,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitBE
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="BE"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="BE"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BE"}[30m])) by (action,className) > 2
@@ -86,7 +86,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitGB
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="GB"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="GB"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="GB"}[30m])) by (action,className) > 2
@@ -104,7 +104,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitGB
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="GB"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="GB"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="GB"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="GB"}[30m])) by (className) > 10
@@ -123,7 +123,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitAT
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="AT"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="AT"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="AT"}[30m])) by (action,className) > 2
@@ -141,7 +141,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitAT
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="AT"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="AT"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="AT"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="AT"}[30m])) by (className) > 10
@@ -160,7 +160,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitDE
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="DE"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DE"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DE"}[30m])) by (action,className) > 2
@@ -178,7 +178,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitDE
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="DE"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="DE"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="DE"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="DE"}[30m])) by (className) > 10
@@ -197,7 +197,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitDK
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="DK"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="DK"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="DK"}[30m])) by (action,className) > 2
@@ -215,7 +215,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitDK
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="DK"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="DK"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="DK"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="DK"}[30m])) by (className) > 5
@@ -234,7 +234,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitEE
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="EE"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="EE"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="EE"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="EE"}[30m])) by (action,className) > 2
@@ -252,7 +252,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitEE
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="EE"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="EE"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="EE"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="EE"}[30m])) by (className) > 1
@@ -271,7 +271,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitES
     expr: |
        # Successful/Cancelled attempts above 95%
-       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="ES"}[30m])) by (action,className)
+       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="ES"}[30m])) by (action,className)
            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[30m])) by (action,className) < 0.95)
        # At least this many attempts.
        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="ES"}[30m])) by (action,className) > 2
@@ -289,7 +289,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitES
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="ES"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="ES"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="ES"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="ES"}[30m])) by (className) > 8
@@ -308,7 +308,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitFI
     expr: |
        # Successful/Cancelled attempts above 95%
-       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="FI"}[30m])) by (action,className)
+       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FI"}[30m])) by (action,className)
            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[30m])) by (action,className) < 0.95)
        # At least this many attempts.
        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FI"}[30m])) by (action,className) > 2
@@ -326,7 +326,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitFI
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="FI"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FI"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="FI"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="FI"}[30m])) by (className) > 10
@@ -345,7 +345,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitFR
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="FR"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="FR"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="FR"}[30m])) by (action,className) > 2
@@ -363,7 +363,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitFR
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="FR"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="FR"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="FR"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="FR"}[30m])) by (className) > 1
@@ -382,7 +382,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitNL
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="NL"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NL"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NL"}[30m])) by (action,className) > 2
@@ -400,7 +400,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitNL
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="NL"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NL"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="NL"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="NL"}[30m])) by (className) > 20
@@ -419,7 +419,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitNO
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="NO"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="NO"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="NO"}[30m])) by (action,className) > 2
@@ -437,7 +437,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitNO
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="NO"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="NO"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="NO"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="NO"}[30m])) by (className) > 10
@@ -456,7 +456,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitBG
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="BG"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="BG"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BG"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="BG"}[30m])) by (action,className) > 2
@@ -474,7 +474,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitBG
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="BG"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="BG"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="BG"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="BG"}[30m])) by (className) > 1
@@ -493,7 +493,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitCA
     expr: |
        # Successful/Cancelled attempts above 95%
-       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="CA"}[30m])) by (action,className)
+       (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="CA"}[30m])) by (action,className)
            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="CA"}[30m])) by (action,className) < 0.95)
        # At least this many attempts.
        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="CA"}[30m])) by (action,className) > 2
@@ -511,7 +511,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitCA
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="CA"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="CA"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="CA"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="CA"}[30m])) by (className) > 1
@@ -530,7 +530,7 @@ spec:
   - alert: LoginSuccessRateLowWithAttemptLimitRO
     expr: |
         # Successful/Cancelled attempts above 95%
-        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled", market="RO"}[30m])) by (action,className)
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"completed|cancelled|unavailable", market="RO"}[30m])) by (action,className)
             / sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="RO"}[30m])) by (action,className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_login_total{action=~"login|is-logged-in", market="RO"}[30m])) by (action,className) > 2
@@ -548,7 +548,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitRO
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="RO"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="RO"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="RO"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="RO"}[30m])) by (className) > 1
