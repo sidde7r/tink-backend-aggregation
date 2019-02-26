@@ -563,6 +563,42 @@ spec:
             the last 30 minutes.
         tags: <{ $labels.className }>
 
+  - alert: BankServerUnavailableForLogin
+     expr: |
+        # Unavailable outcome above 10%
+        (sum(increase(tink_agent_login_total{action=~"login|is-logged-in",  outcome=~"unavailable"}[30m])) by (action,className)
+            / sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 0.05)
+        # At least this many attempts.
+        and sum(increase(tink_agent_login_total{action=~"login|is-logged-in"}[30m])) by (action,className) > 2
+     for: 5m
+     labels:
+         severity: ping
+         who: '#integration-oncall'
+     annotations:
+         description: Login unavailable rate is above 10% ( <{ $value }> ) for the last 30 minutes.
+             Investigate immediately.
+         summary: Login unavailable rate is above 10% ( <{ $value }> ) for <{ $labels.className }>
+             the last 30 minutes.
+         tags: <{ $labels.className }>
+
+  - alert: BankServerUnavailableForRefresh
+    expr: |
+        # Unavailable outcome above 10%
+        (sum(increase(tink_agent_refresh_total{outcome=~"unavailable"}[30m])) by (className)
+            / sum(increase(tink_agent_refresh_total[30m])) by (className) > 0.05)
+        # At least this many attempts.
+        and sum(increase(tink_agent_refresh_total[30m])) by (className) > 1
+    for: 5m
+    labels:
+        severity: ping
+        who: '#integration-oncall'
+    annotations:
+        description: Refresh unavailable rate is above 10% ( <{ $value }> ) for the last 30 minutes.
+            Investigate immediately.
+        summary: Refresh unavailable rate is above 10% ( <{ $value }> ) for <{ $labels.className }>
+            the last 30 minutes.
+        tags: <{ $labels.className }>
+
 ### Too many errors in general
     # Alert based on the 5m rate of log-lines from logback (used in tink-backend).
     # Threshold: old canonical threshold of 20 errors / 15 min.
