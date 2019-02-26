@@ -30,7 +30,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitSE
     expr: |
         # Successful attempts above 95%
-        (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="SE"}[30m])) by (className)
+        (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="SE"}[30m])) by (className)
             / sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className) < 0.95)
         # At least this many attempts.
         and sum(increase(tink_agent_refresh_total{market="SE"}[30m])) by (className) > 30
@@ -67,7 +67,7 @@ spec:
   - alert: RefreshSuccessRateLowWithAttemptLimitBE
     expr: |
       # Successful attempts above 95%
-      (sum(increase(tink_agent_refresh_total{outcome=~"completed", market="BE"}[30m])) by (className)
+      (sum(increase(tink_agent_refresh_total{outcome=~"completed|unavailable", market="BE"}[30m])) by (className)
           / sum(increase(tink_agent_refresh_total{market="BE"}[30m])) by (className) < 0.95)
       # At least this many attempts.
       and sum(increase(tink_agent_refresh_total{market="BE"}[30m])) by (className) > 10
