@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.accounts.checking.entities;
 
+import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.JyskeConstants;
 import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -47,7 +48,13 @@ public class AccountEntity extends AccountBriefEntity {
     }
 
     private AccountTypes getType() {
-        return TypeGuesser.DANISH.guessAccountType(name);
+        AccountTypes type = TypeGuesser.DANISH.guessAccountType(name);
+
+        if (type == AccountTypes.OTHER) {
+            type = JyskeConstants.ACCOUNT_TYPE_MAPPER.translate(name).orElse(AccountTypes.OTHER);
+        }
+
+        return type;
     }
 
     private String getAccountNumber() {
