@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.authenticator.DemoFIAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.authenticator.DemoFakeBankAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -19,14 +19,14 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 import java.util.Optional;
 
-/* This is the agent for the Demo Financial Institution which is a Tink developed test & demo bank */
+/* This is the agent for the Demo Fake Bank which is a Tink developed test & demo bank */
 
-public final class DemoFIAgent extends NextGenerationAgent {
-    private final DemoFIApiClient apiClient;
+public final class DemoFakeBankAgent extends NextGenerationAgent {
+    private final DemoFakeBankApiClient apiClient;
 
-    public DemoFIAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public DemoFakeBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new DemoFIApiClient(client);
+        apiClient = new DemoFakeBankApiClient(client);
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class DemoFIAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new DemoFIAuthenticator(apiClient)); //TODO: add authenticator here
+                new DemoFakeBankAuthenticator(apiClient)); //TODO: add authenticator here
     }
 
     @Override
