@@ -29,11 +29,11 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
                 .getProducts()
                 .stream()
                 .filter(Product::isActiveInvestmentAccount)
-                .map(IngInvestmentAccountFetcher::mapProductToInvestmentAccount)
+                .map(product -> mapProductToInvestmentAccount(product))
                 .collect(Collectors.toList());
     }
 
-    private static InvestmentAccount mapProductToInvestmentAccount(Product product) {
+    private InvestmentAccount mapProductToInvestmentAccount(Product product) {
 
         Instrument instrument = new Instrument();
         instrument.setUniqueIdentifier(product.getProductNumber());

@@ -33,12 +33,12 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
                 .getProducts()
                 .stream()
                 .filter(Product::isActiveTransactionalAccount)
-                .map(IngTransactionalAccountFetcher::mapTransactionalAccount)
+                .map(product -> mapTransactionalAccount(product))
                 .collect(Collectors.toList());
     }
 
 
-    private static TransactionalAccount mapTransactionalAccount(Product product) {
+    private TransactionalAccount mapTransactionalAccount(Product product) {
         UniqueIdentifierStep<? extends BuildStep> builder;
         if (AccountCategories.TRANSACTION_ACCOUNTS.contains(product.getType())) {
             builder = CheckingAccount.builder();
@@ -48,7 +48,8 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
             throw new IllegalStateException("Unknown account type");
         }
 
-        BuildStep buildStep = builder.setUniqueIdentifier(product.getIban())
+        BuildStep buildStep = builder
+                .setUniqueIdentifier(product.getUniqueIdentifierForTransactionAccount())
                 .setAccountNumber(product.getIban())
                 .setBalance(new Amount(product.getCurrency(), product.getBalance()))
                 .addAccountIdentifier(new IbanIdentifier(product.getBic(), product.getIbanCanonical()))

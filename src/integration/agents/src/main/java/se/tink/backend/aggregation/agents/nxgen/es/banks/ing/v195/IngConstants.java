@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class IngConstants {
-    public static final String PROVIDER_NAME = "es-ing2-password";
+    public static final String PROVIDER_NAME = "es-ing-password";
     public static final String MARKET = "es";
     public static final String CURRENCY = "EUR";
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Madrid");

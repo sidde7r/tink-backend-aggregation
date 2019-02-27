@@ -26,11 +26,11 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
     public Collection<LoanAccount> fetchAccounts() {
         return this.ingApiClient.getApiRestProducts().getProducts().stream()
                 .filter(Product::isActiveLoanAccount)
-                .map(IngLoanAccountFetcher::mapLoanAccount)
+                .map(product -> mapLoanAccount(product))
                 .collect(Collectors.toList());
     }
 
-    private static LoanAccount mapLoanAccount(Product product) {
+    private LoanAccount mapLoanAccount(Product product) {
         LoanDetails loanDetails;
         if (IngConstants.AccountTypes.MORTGAGE_ACCOUNT.equals(product.getType())) {
             loanDetails = mapLoanDetailsForMortgage(product);

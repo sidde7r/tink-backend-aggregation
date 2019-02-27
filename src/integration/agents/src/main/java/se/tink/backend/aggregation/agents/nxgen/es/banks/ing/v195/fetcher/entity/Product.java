@@ -446,6 +446,12 @@ public final class Product {
         return lastNetAssetValueDate;
     }
 
+    // This unique identifier strategy was used in the old agent, which only implemented transaction accounts.
+    @JsonIgnore
+    public String getUniqueIdentifierForTransactionAccount() {
+        return iban.replaceAll(" ", "").toLowerCase();
+    }
+
     @JsonIgnore
     public String getIbanCanonical() {
         if (iban != null) {

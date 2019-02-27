@@ -47,7 +47,7 @@ public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAcc
                 .findFirst();
     }
 
-    private static CreditCardAccount mapCreditCardAccount(Product product, Optional<Product> associatedAccount) {
+    private CreditCardAccount mapCreditCardAccount(Product product, Optional<Product> associatedAccount) {
 
         String currency = associatedAccount.isPresent() ? associatedAccount.get().getCurrency() : IngConstants.CURRENCY;
 
