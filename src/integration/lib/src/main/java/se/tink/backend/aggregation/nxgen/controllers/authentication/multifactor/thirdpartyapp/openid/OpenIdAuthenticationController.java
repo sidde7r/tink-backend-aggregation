@@ -43,7 +43,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
-    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
+    private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
 
     private final String state;
     private final String nonce;
