@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountCategories;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -33,7 +32,7 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
         return this.ingApiClient.getApiRestProducts()
                 .getProducts()
                 .stream()
-                .filter(IngTransactionalAccountFetcher::transactionalAccountFilter)
+                .filter(Product::isActiveTransactionalAccount)
                 .map(IngTransactionalAccountFetcher::mapTransactionalAccount)
                 .collect(Collectors.toList());
     }
@@ -67,11 +66,4 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
         return (TransactionalAccount) buildStep.build();
     }
 
-    private static boolean transactionalAccountFilter(Product product) {
-        boolean isTransactionalAccount = AccountCategories.TRANSACTION_ACCOUNTS.contains(product.getType());
-
-        boolean isOperative = IngConstants.AccountStatus.OPERATIVE.equals(product.getStatus().getCod());
-
-        return isTransactionalAccount && isOperative;
-    }
 }

@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountStatus;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -29,11 +27,8 @@ public class IngCreditCardAccountFetcher implements AccountFetcher<CreditCardAcc
 
         List<Product> creditCards = products
                 .stream()
-                .filter( product ->
-                        AccountTypes.CREDIT_CARD.equals(product.getType()) &&
-                                AccountStatus.ACTIVE.equals(product.getStatus().getCod())
-                ).collect(Collectors.toList());
-
+                .filter(Product::isActiveCreditCardAccount)
+                .collect(Collectors.toList());
 
         // Credit cards do not have a currency field specified, so we need to look up the associated account and use
         // the currency from that.

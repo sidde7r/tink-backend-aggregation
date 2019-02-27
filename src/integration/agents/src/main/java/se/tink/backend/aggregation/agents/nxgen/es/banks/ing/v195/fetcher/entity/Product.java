@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 import java.util.List;
@@ -469,5 +470,33 @@ public final class Product {
         }
 
         return null;
+    }
+
+    @JsonIgnore
+    public boolean isActiveTransactionalAccount() {
+        boolean isTransactionalAccount = IngConstants.AccountCategories.TRANSACTION_ACCOUNTS.contains(type);
+        boolean isOperative = IngConstants.AccountStatus.OPERATIVE.equals(status.getCod());
+        return isTransactionalAccount && isOperative;
+    }
+
+    @JsonIgnore
+    public boolean isActiveCreditCardAccount() {
+        boolean isCreditCard = IngConstants.AccountTypes.CREDIT_CARD.equals(type);
+        boolean isActive = IngConstants.AccountStatus.ACTIVE.equals(status.getCod());
+        return isCreditCard && isActive;
+    }
+
+    @JsonIgnore
+    public boolean isActiveInvestmentAccount() {
+        boolean isInvestmentAccount = IngConstants.AccountCategories.INVESTMENT.contains(type);
+        boolean isActive = IngConstants.AccountStatus.OPERATIVE.equals(status.getCod());
+        return isInvestmentAccount && isActive;
+    }
+
+    @JsonIgnore
+    public boolean isActiveLoanAccount() {
+        boolean isLoanAccount = IngConstants.AccountCategories.LOANS.contains(type);
+        boolean isActive = IngConstants.AccountStatus.OPERATIVE.equals(status.getCod());
+        return isLoanAccount && isActive;
     }
 }

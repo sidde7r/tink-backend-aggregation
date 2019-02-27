@@ -22,25 +22,12 @@ public class IngLoanAccountFetcher implements AccountFetcher<LoanAccount> {
         this.ingApiClient = ingApiClient;
     }
 
-
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        return this.ingApiClient.getApiRestProducts()
-                .getProducts()
-                .stream()
-                .filter(IngLoanAccountFetcher::loanAccountFilter)
+        return this.ingApiClient.getApiRestProducts().getProducts().stream()
+                .filter(Product::isActiveLoanAccount)
                 .map(IngLoanAccountFetcher::mapLoanAccount)
                 .collect(Collectors.toList());
-    }
-
-    private static boolean loanAccountFilter(Product product) {
-        boolean isLoanAccount =
-                IngConstants.AccountCategories.LOANS.contains(product.getType());
-
-        boolean isActive =
-                IngConstants.AccountStatus.OPERATIVE.equals(product.getStatus().getCod());
-
-        return isLoanAccount && isActive;
     }
 
     private static LoanAccount mapLoanAccount(Product product) {

@@ -28,17 +28,9 @@ public class IngInvestmentAccountFetcher implements AccountFetcher<InvestmentAcc
         return this.ingApiClient.getApiRestProducts()
                 .getProducts()
                 .stream()
-                .filter(IngInvestmentAccountFetcher::filterInvetmentAccounts)
+                .filter(Product::isActiveInvestmentAccount)
                 .map(IngInvestmentAccountFetcher::mapProductToInvestmentAccount)
                 .collect(Collectors.toList());
-    }
-
-    private static boolean filterInvetmentAccounts(Product product) {
-        boolean isInvestmentAccount = IngConstants.AccountCategories.INVESTMENT.contains(product.getType());
-
-        boolean isActive = IngConstants.AccountStatus.OPERATIVE.equals(product.getStatus().getCod());
-
-        return isInvestmentAccount && isActive;
     }
 
     private static InvestmentAccount mapProductToInvestmentAccount(Product product) {
