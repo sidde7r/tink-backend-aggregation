@@ -51,13 +51,12 @@ public class BbvaApiClient {
                 String.format(BbvaConstants.Header.BBVA_USER_AGENT_VALUE, generateRandomHex());
     }
 
-    // Non NIE usernames must be prepended with '0' (based on ambassador credentials) while NIE
+    // Non NIE/PASSPORT usernames must be prepended with '0' (based on ambassador credentials) while NIE/PASSPORT
     // usernames are passed along as-is.
     private static String formatUsername(String username) {
-        if (NIE_PATTERN.matcher(username).matches()) {
-            return username;
-        }
-        if (PASSPORT_PATTERN.matcher(username).matches() || ES_PASSPORT_PATTERN.matcher(username).matches()) {
+        if (NIE_PATTERN.matcher(username).matches() ||
+                PASSPORT_PATTERN.matcher(username).matches() ||
+                ES_PASSPORT_PATTERN.matcher(username).matches()) {
             return username;
         }
 
