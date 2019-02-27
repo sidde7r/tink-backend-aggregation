@@ -22,4 +22,4 @@ agents:
   starling:
       redirectUrl: https://main.staging.oxford.tink.se/api/v1/credentials/third-party/callback
 
-  mountCallbackJWTSignatureKeyPair: true
+  mountCallbackJwtSignaturePair: true
