@@ -59,7 +59,6 @@
   "nxgen.es.banks.ibercaja.IberCajaAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "INVESTMENTS"],
   "nxgen.es.banks.imaginbank.ImaginBankAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS"],
   "nxgen.es.banks.ing.IngAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS"],
-  "nxgen.es.banks.ing.v195.IngAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS", "LOANS", "INVESTMENTS"],
   "nxgen.es.banks.lacaixa.LaCaixaAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS"],
   "nxgen.es.banks.openbank.OpenbankAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "CREDIT_CARDS"],
   "nxgen.es.banks.popular.BancoPopularAgent": ["CHECKING_ACCOUNTS", "SAVINGS_ACCOUNTS", "INVESTMENTS", "LOANS"],
