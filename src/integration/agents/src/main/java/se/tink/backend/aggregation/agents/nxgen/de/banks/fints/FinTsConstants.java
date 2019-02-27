@@ -105,6 +105,7 @@ public class FinTsConstants {
         public static final LogTag ERROR_CODE = LogTag.from("#fints_login_error_types");
         public static final LogTag PRODUCTNAME_FOR_MISSING_ACCOUNT_TYPE = LogTag.from("#fints_missing_account_type");
         public static final LogTag ERROR_CANNOT_FETCH_ACCOUNT_BALANCE = LogTag.from("#fints_cannot_fetch_balance");
+        public static final LogTag ERROR_CANNOT_FETCH_ACCOUNT_TRANSACTIONS = LogTag.from("#fints_cannot_fetch_transactions");
     }
 
     public static class Storage {

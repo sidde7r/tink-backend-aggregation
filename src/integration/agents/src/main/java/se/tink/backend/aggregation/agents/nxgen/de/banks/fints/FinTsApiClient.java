@@ -383,7 +383,7 @@ public class FinTsApiClient {
         List<MT940Statement> transactions = new ArrayList<>(this.parseMt940Transactions(mt940));
 
         // Process with touchdowns
-        String seg;
+        String  seg = null;
         String mt940Content;
         while (touchdowns.containsKey(FinTsConstants.Segments.HKKAZ)) {
             try {
@@ -396,7 +396,14 @@ public class FinTsApiClient {
                 transactions.addAll(this.parseMt940Transactions(mt940Content));
                 touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
             } catch (Exception e) {
-                continue;
+                LONGLOGGER.warnExtraLong(
+                        String.format("Cannot fetch transactions AccountNumber: %s , AccountType: %s Seg: %s",
+                        targetAccount.getAccountNo(),
+                        targetAccount.getAccountType(),
+                                seg),
+                        FinTsConstants.LogTags.ERROR_CANNOT_FETCH_ACCOUNT_TRANSACTIONS,
+                        e);
+                touchdowns = Collections.emptyMap();
             }
         }
 
