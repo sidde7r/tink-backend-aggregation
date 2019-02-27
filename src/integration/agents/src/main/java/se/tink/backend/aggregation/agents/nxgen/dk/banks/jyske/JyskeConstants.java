@@ -4,9 +4,11 @@ import com.google.common.base.Charsets;
 import java.nio.charset.Charset;
 import java.security.interfaces.RSAPublicKey;
 import org.apache.commons.codec.binary.Base64;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.dk.banks.jyske.authenticator.JyskeSecurityHelper;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class JyskeConstants {
@@ -97,6 +99,18 @@ public final class JyskeConstants {
     public static final class ErrorCode {
         public static final int INVALID_CREDENTIAL = 112;
     }
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER = TypeMapper.<AccountTypes>builder()
+            .put(AccountTypes.SAVINGS, "Jyske Munnypot", "Opsparing")
+            .put(AccountTypes.CHECKING, "Budget",
+                    "Totalkonto",
+                    "Totalkonto Ung",
+                    "Lønkonto",
+                    "Budgetkonto",
+                    "Budgetkonto Ung",
+                    "Grundkonto",
+                    "Forbrug")
+            .build();
 
     public static final class Log {
         public static final LogTag CREDITCARD_LOGGING = LogTag.from("#dk_jyske_creditcard");

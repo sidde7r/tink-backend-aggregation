@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.fetc
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcConstants;
-import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -27,7 +26,7 @@ public class SdcAccount {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount(SdcConfiguration agentConfiguration) {
-        return TransactionalAccount.builder(convertAccountType(name, agentConfiguration.getTypeGuesser()), id,
+        return TransactionalAccount.builder(convertAccountType(), id,
                 amount.toTinkAmount())
                 .setAccountNumber(id)
                 .setName(name)
@@ -45,7 +44,7 @@ public class SdcAccount {
     }
 
     @JsonIgnore
-    private AccountTypes convertAccountType(String accountName, TypeGuesser typeGuesser) {
+    private AccountTypes convertAccountType() {
         if (isLoanAccount()) {
             return AccountTypes.LOAN;
         }
@@ -54,7 +53,7 @@ public class SdcAccount {
             return type.getTinkAccountType();
         }
         LOGGER.info("Found unknown productElementType: " + productElementType);
-        return typeGuesser.guessAccountType(accountName);
+        return AccountTypes.OTHER;
     }
 
     @JsonIgnore
@@ -73,7 +72,7 @@ public class SdcAccount {
 
     @JsonIgnore
     public boolean isTransactionalAccount(SdcConfiguration agentConfiguration) {
-        AccountTypes tinkAccountType = convertAccountType(name, agentConfiguration.getTypeGuesser());
+        AccountTypes tinkAccountType = convertAccountType();
         return TransactionalAccount.ALLOWED_ACCOUNT_TYPES.contains(tinkAccountType);
     }
 

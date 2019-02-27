@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
+import se.tink.backend.aggregation.agents.banks.danskebank.DanskeUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -100,7 +101,15 @@ public class AccountEntity {
         } else if (isLoan) {
             account.setType(AccountTypes.LOAN);
         } else {
-            account.setType(AgentParsingUtils.guessAccountType(account));
+        	AccountTypes type = AgentParsingUtils.guessAccountType(account);
+
+        	if (type == AccountTypes.OTHER) {
+        		type = DanskeUtils.ACCOUNT_TYPE_MAPPER
+						.translate(accountName)
+						.orElse(AccountTypes.OTHER);
+			}
+
+            account.setType(type);
         }
 
         if (account.getType() == AccountTypes.CHECKING) {
