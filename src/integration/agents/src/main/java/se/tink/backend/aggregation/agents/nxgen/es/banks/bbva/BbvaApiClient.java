@@ -37,6 +37,8 @@ public class BbvaApiClient {
 
     private static final int RANDOM_HEX_LENGTH = 64;
     private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
+    private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
+    private static final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
 
     private TinkHttpClient client;
     private String userAgent;
@@ -53,6 +55,9 @@ public class BbvaApiClient {
     // usernames are passed along as-is.
     private static String formatUsername(String username) {
         if (NIE_PATTERN.matcher(username).matches()) {
+            return username;
+        }
+        if (PASSPORT_PATTERN.matcher(username).matches() || ES_PASSPORT_PATTERN.matcher(username).matches()) {
             return username;
         }
 
