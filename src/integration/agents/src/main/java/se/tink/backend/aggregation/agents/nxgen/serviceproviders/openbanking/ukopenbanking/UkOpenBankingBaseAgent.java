@@ -103,7 +103,7 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration,
                 OpenIdConstants.ClientMode.ACCOUNTS);
 
-        callbackJWTSignatureKeyPair = configuration.getCallbackJWTSignatureKeyPair();
+        callbackJWTSignatureKeyPair = configuration.getCallbackJwtSignatureKeyPair();
 
 
         // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it will be null
