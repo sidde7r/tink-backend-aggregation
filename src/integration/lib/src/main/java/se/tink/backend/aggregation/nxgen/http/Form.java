@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.nxgen.http;
 
 import com.google.common.base.Preconditions;
+
+import javax.annotation.Nonnull;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 public final class Form {
     private LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
@@ -15,7 +16,9 @@ public final class Form {
     private static final String NAME_VALUE_FORMAT = "%s=%s";
 
     public String serialize() {
-        return parameters.entrySet().stream()
+        return parameters
+                .entrySet()
+                .stream()
                 .map(this::getValuePair)
                 .collect(Collectors.joining(JOINING_DELIMITER));
     }
@@ -35,11 +38,13 @@ public final class Form {
 
     private String getValuePair(Map.Entry<String, String> parameter) {
         try {
-            final String key = URLEncoder.encode(parameter.getKey(), StandardCharsets.UTF_8.toString());
+            final String key =
+                    URLEncoder.encode(parameter.getKey(), StandardCharsets.UTF_8.toString());
             if (parameter.getValue() == null) {
                 return key;
             }
-            final String value = URLEncoder.encode(parameter.getValue(), StandardCharsets.UTF_8.toString());
+            final String value =
+                    URLEncoder.encode(parameter.getValue(), StandardCharsets.UTF_8.toString());
             return String.format(NAME_VALUE_FORMAT, key, value);
         } catch (Exception e) {
             throw new IllegalStateException("Cannot create form body: " + e.getMessage());
@@ -57,9 +62,7 @@ public final class Form {
 
         private Builder() {}
 
-        /**
-         * Add key-value parameter.
-         */
+        /** Add key-value parameter. */
         public Builder put(@Nonnull String key, @Nonnull String value) {
             Preconditions.checkNotNull(key);
             Preconditions.checkNotNull(value);
@@ -67,9 +70,7 @@ public final class Form {
             return this;
         }
 
-        /**
-         * Add parameter without a value.
-         */
+        /** Add parameter without a value. */
         public Builder put(@Nonnull String key) {
             Preconditions.checkNotNull(key);
             parameters.put(key, null);
