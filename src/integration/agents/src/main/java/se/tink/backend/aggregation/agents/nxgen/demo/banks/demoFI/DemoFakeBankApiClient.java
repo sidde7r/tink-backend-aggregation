@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.authenticator.DemoFakeBankAuthenticateResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.authenticator.rpc.DemoFakeBankAuthenticationBody;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -14,9 +17,12 @@ public class DemoFakeBankApiClient {
         this.client = client;
     }
 
-    public DemoFakeBankAuthenticateResponse authenticate() {
+    public DemoFakeBankAuthenticateResponse authenticate(String username, String password) throws JsonProcessingException {
+        DemoFakeBankAuthenticationBody requestBody = new DemoFakeBankAuthenticationBody(username, password);
+        String serialized = new ObjectMapper().writeValueAsString(requestBody);
+
         return createRequest(DemoFakeBankConstants.Urls.AUTHENTICATE_URL)
-                .post(DemoFakeBankAuthenticateResponse.class);
+                .post(DemoFakeBankAuthenticateResponse.class, serialized);
     }
 
     private RequestBuilder createRequest(URL url) {

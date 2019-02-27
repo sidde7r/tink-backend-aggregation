@@ -15,29 +15,31 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transfer.TransferDe
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 import java.util.Optional;
+
 
 /* This is the agent for the Demo Fake Bank which is a Tink developed test & demo bank */
 
 public final class DemoFakeBankAgent extends NextGenerationAgent {
     private final DemoFakeBankApiClient apiClient;
+    private final SessionStorage sessionStorage;
 
     public DemoFakeBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new DemoFakeBankApiClient(client);
+        sessionStorage = new SessionStorage();
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
         return new PasswordAuthenticationController(
-                new DemoFakeBankAuthenticator(apiClient)); //TODO: add authenticator here
+                new DemoFakeBankAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
