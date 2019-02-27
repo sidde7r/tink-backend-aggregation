@@ -145,6 +145,7 @@
                 {
                     "name": "username",
                     "description": "Username",
+                    "pattern": "(^[0-9]{8}[a-zA-Z]$)|(^[a-zA-Z][0-9]{7}[a-zA-Z]$)|(^[a-zA-Z]{2}[0-9]{6}$)|(^[a-zA-Z]{4}[0-9]{6}$)",
                     "immutable": true
                 },
                 {
