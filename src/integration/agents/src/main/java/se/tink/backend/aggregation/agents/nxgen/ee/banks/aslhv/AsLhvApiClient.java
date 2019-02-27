@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv;
 
-import java.util.Date;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetAccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.ee.banks.aslhv.rpc.GetCurrenciesResponse;
@@ -13,6 +12,8 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+
+import java.util.Date;
 
 public class AsLhvApiClient {
 
@@ -27,14 +28,19 @@ public class AsLhvApiClient {
                 .header(HttpHeaders.HOST, AsLhvConstants.URLS.BASE_URL)
                 .header(HttpHeaders.ACCEPT, AsLhvConstants.Header.ACCEPT_JSON)
                 .header(HttpHeaders.ACCEPT_LANGUAGE, AsLhvConstants.Header.ACCEPT_LANGUAGE)
-                .header(HttpHeaders.CONTENT_TYPE, AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
-                .header(AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
+                .header(
+                        HttpHeaders.CONTENT_TYPE,
+                        AsLhvConstants.Header.CONTENT_TYPE_FORM_URLENCODED)
+                .header(
+                        AsLhvConstants.Header.LHV_APPLICATION_LANGUAGE_HEADER,
                         AsLhvConstants.Header.LHV_APPLICATION_LANUGAGE_US);
     }
 
     private URL getUrl() {
         return new URL(
-                String.format("https://%s%s", AsLhvConstants.URLS.BASE_URL, AsLhvConstants.URLS.SERVICE_ENDPOINT));
+                String.format(
+                        "https://%s%s",
+                        AsLhvConstants.URLS.BASE_URL, AsLhvConstants.URLS.SERVICE_ENDPOINT));
     }
 
     private URL getIsAuthenticatedUrl() {
@@ -68,35 +74,35 @@ public class AsLhvApiClient {
     }
 
     public GetUserDataResponse getUserData() {
-        return getBaseRequest(getGetUserDataUrl())
-                .post(GetUserDataResponse.class);
+        return getBaseRequest(getGetUserDataUrl()).post(GetUserDataResponse.class);
     }
 
-    public LoginResponse login(String username, String password) throws HttpResponseException, HttpClientException {
-        final Form form = Form.builder()
-                .put(AsLhvConstants.Form.USERNAME_PARAMETER, username)
-                .put(AsLhvConstants.Form.PASSWORD_PARAMETER, password)
-                .build();
+    public LoginResponse login(String username, String password)
+            throws HttpResponseException, HttpClientException {
+        final Form form =
+                Form.builder()
+                        .put(AsLhvConstants.Form.USERNAME_PARAMETER, username)
+                        .put(AsLhvConstants.Form.PASSWORD_PARAMETER, password)
+                        .build();
         String serialized = form.serialize();
-        return getBaseRequest(getLoginPasswordUrl())
-                .body(serialized)
-                .post(LoginResponse.class);
+        return getBaseRequest(getLoginPasswordUrl()).body(serialized).post(LoginResponse.class);
     }
 
     public GetCurrenciesResponse getCurrencies() {
-        return getBaseRequest(getGetCurrenciesUrl())
-                .post(GetCurrenciesResponse.class);
+        return getBaseRequest(getGetCurrenciesUrl()).post(GetCurrenciesResponse.class);
     }
 
-    public GetAccountTransactionsResponse getAccountTransactions(final String portfolioId,
-            final Date fromDate,
-            final Date toDate) {
+    public GetAccountTransactionsResponse getAccountTransactions(
+            final String portfolioId, final Date fromDate, final Date toDate) {
 
-        final Form form = Form.builder()
-                .put(AsLhvConstants.Form.FROM_DATE, AsLhvConstants.DATE_FORMAT.format(fromDate))
-                .put(AsLhvConstants.Form.TO_DATE, AsLhvConstants.DATE_FORMAT.format(toDate))
-                .put(AsLhvConstants.Form.PORTFOLIO_ID, portfolioId)
-                .build();
+        final Form form =
+                Form.builder()
+                        .put(
+                                AsLhvConstants.Form.FROM_DATE,
+                                AsLhvConstants.DATE_FORMAT.format(fromDate))
+                        .put(AsLhvConstants.Form.TO_DATE, AsLhvConstants.DATE_FORMAT.format(toDate))
+                        .put(AsLhvConstants.Form.PORTFOLIO_ID, portfolioId)
+                        .build();
 
         return getBaseRequest(getAccountTransactionsUrl())
                 .body(form.serialize())
@@ -105,6 +111,5 @@ public class AsLhvApiClient {
 
     public void logout() {
         getBaseRequest(getLogoutUrl()).post();
-
     }
 }
