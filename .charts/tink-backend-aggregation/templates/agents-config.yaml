@@ -17,6 +17,12 @@ data:
         publicKeyPath: "/etc/tink-signature-key/public_rsa_key.pem"
       {{- end }}
 
+      {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
+      callbackJwtSignatureKeyPair:
+        privateKeyPath: "/etc/tink-callback-jwt-signature-pair/private_ec_key.pem"
+        publicKeyPath: "/etc/tink-callback-jwt-signature-pair/public_ec_key.pem"
+      {{- end }}
+
       creditsafe:
         username: CREDITSAFE_USERNAME
         password: CREDITSAFE_PASSWORD
