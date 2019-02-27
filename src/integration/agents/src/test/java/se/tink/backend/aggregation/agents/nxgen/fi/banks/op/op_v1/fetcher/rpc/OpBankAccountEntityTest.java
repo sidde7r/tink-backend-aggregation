@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.op_v1.fetcher.rpc;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.entity.OpBankAccountEntity;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.user.rpc.User;
 
@@ -15,11 +15,6 @@ public class OpBankAccountEntityTest {
     @Before
     public void setUp() throws Exception {
         account = new OpBankAccountEntity().setAccountNumber("FI1234567890123456").setBankingServiceTypeCode("710001");
-    }
-
-    @Test
-    public void getNormalizedBankId() {
-        assertEquals(EXPECTED_ACCOUNT_NUMBER, account.toTransactionalAccount().getBankIdentifier());
     }
 
     @Test(expected = IllegalArgumentException.class)
