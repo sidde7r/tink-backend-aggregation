@@ -23,7 +23,7 @@ public class IngAtPasswordFormParser {
 
     public Form getForm() {
         Elements passwordForm = doc.select("form[action*=password_form");
-        Form.Builder formBuilder = new Form.Builder();
+        Form.Builder formBuilder = Form.builder();
         for (Element e : doc.select("input")) {
             if (!e.attr("type").equalsIgnoreCase("submit")) {
                 formBuilder.put(e.attr("name"), e.attr("value"));

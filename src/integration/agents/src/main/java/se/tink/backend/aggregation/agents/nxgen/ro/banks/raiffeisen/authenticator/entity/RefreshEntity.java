@@ -19,7 +19,7 @@ public class RefreshEntity {
 
 
     public String toForm() {
-        return new Form.Builder()
+        return Form.builder()
                 .put(RaiffeisenConstants.FORM.GRANT_TYPE, grantType)
                 .put(RaiffeisenConstants.FORM.REFRESH_TOKEN, refreshToken)
                 .put(RaiffeisenConstants.FORM.CLIENT_ID, clientId)
