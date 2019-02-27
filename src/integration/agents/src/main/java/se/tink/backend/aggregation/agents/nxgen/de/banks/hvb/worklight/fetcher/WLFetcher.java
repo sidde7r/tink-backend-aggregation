@@ -72,7 +72,7 @@ public final class WLFetcher {
     }
 
     private <T> T query(final String procedure, final Class<T> entityClass, final JSONObject payload) {
-        final Form request = new Form.Builder()
+        final Form request = Form.builder()
                 .put(WLConstants.Forms.ADAPTER, WLConstants.Forms.ADAPTER_FACADE)
                 .put(WLConstants.Forms.PROCEDURE, WLConstants.Forms.FETCH_CRYPT)
                 .put(WLConstants.Forms.COMPRESS_RESPONSE)

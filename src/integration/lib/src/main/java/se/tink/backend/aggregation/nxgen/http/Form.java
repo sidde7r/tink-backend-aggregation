@@ -46,9 +46,7 @@ public final class Form {
 
         private final LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
 
-        @Deprecated
-        public Builder() {
-        }
+        private Builder() {}
 
         public Builder(Form form) {
             parameters.putAll(form.parameters);

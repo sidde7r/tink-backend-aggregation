@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 
 public abstract class AbstractForm {
 
-    private final Form.Builder formBuilder = new Form.Builder();
+    private final Form.Builder formBuilder = Form.builder();
 
     public String getBodyValue() {
         return formBuilder.build().serialize();

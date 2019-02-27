@@ -73,7 +73,7 @@ public class AsLhvApiClient {
     }
 
     public LoginResponse login(String username, String password) throws HttpResponseException, HttpClientException {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put(AsLhvConstants.Form.USERNAME_PARAMETER, username)
                 .put(AsLhvConstants.Form.PASSWORD_PARAMETER, password)
                 .build();
@@ -92,7 +92,7 @@ public class AsLhvApiClient {
             final Date fromDate,
             final Date toDate) {
 
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put(AsLhvConstants.Form.FROM_DATE, AsLhvConstants.DATE_FORMAT.format(fromDate))
                 .put(AsLhvConstants.Form.TO_DATE, AsLhvConstants.DATE_FORMAT.format(toDate))
                 .put(AsLhvConstants.Form.PORTFOLIO_ID, portfolioId)

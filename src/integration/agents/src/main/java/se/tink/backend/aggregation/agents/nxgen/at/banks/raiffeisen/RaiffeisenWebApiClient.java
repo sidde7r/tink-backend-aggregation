@@ -39,7 +39,7 @@ public class RaiffeisenWebApiClient {
     }
 
     private static String getBodyRefreshRegion(Payload payload) {
-        return new Form.Builder()
+        return Form.builder()
                 .put("loginform", "loginform")
                 .put("loginform:LOGINMAND", payload.regionIndex)
                 .put("loginform:LOGINVFNR", "")
@@ -50,7 +50,7 @@ public class RaiffeisenWebApiClient {
     }
 
     private static String getBodyUser(String userName, Payload payload) {
-        return new Form.Builder()
+        return Form.builder()
                 .put("loginform", "loginform")
                 .put("loginform:LOGINMAND", payload.regionIndex)
                 .put("loginform:LOGINVFNR", userName)
@@ -61,7 +61,7 @@ public class RaiffeisenWebApiClient {
     }
 
     private static String getBodyPassword(String encryptedPassword) {
-        return new Form.Builder()
+        return Form.builder()
                 .put("loginpinform", "loginpinform")
                 .put("loginpinform:LOGINPIN", encryptedPassword)
                 .put("loginpinform:PIN", "*****")
@@ -74,7 +74,7 @@ public class RaiffeisenWebApiClient {
     }
 
     private static String getSelectForm() {
-        return new Form.Builder()
+        return Form.builder()
                 .put("auswahlseiteForm1", "auswahlseiteForm1")
                 .put("javax.faces.ViewState", "e1s3")
                 .put("auswahlseiteForm1:j_id209", "auswahlseiteForm1:j_id209")
@@ -83,7 +83,7 @@ public class RaiffeisenWebApiClient {
     }
 
     private static String getSsoQuery() {
-        return new Form.Builder()
+        return Form.builder()
                 .put("response_type", "token")
                 .put("client_id", "DRB-PFP-RBG")
                 .put("scope", "edit")

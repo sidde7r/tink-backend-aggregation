@@ -29,7 +29,7 @@ public final class WLSessionHandler {
     }
 
     public HttpResponse logout() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put(WLConstants.Forms.REALM, WLConstants.Forms.REALM_VALUE)
                 .build();
         final HttpResponse response = client.getClient().request(getApiUrl(WLConstants.Url.LOGOUT))

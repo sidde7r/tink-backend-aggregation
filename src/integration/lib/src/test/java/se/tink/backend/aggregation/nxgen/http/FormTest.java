@@ -12,23 +12,23 @@ public final class FormTest {
 
     @Test
     public void ensureEmptyForm_yieldsEmptyString() {
-        final Form form = new Form.Builder().build();
+        final Form form = Form.builder().build();
         Assert.assertEquals(form.serialize(), "");
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenKey_isNull() {
-        new Form.Builder().put(null, "hoy").build();
+        Form.builder().put(null, "hoy").build();
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenValue_isNull() {
-        new Form.Builder().put("hoylaon", null).build();
+        Form.builder().put("hoylaon", null).build();
     }
 
     @Test
     public void ensureBlankKeyAndValue() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put("", "")
                 .build();
         Assert.assertEquals(form.serialize(), "="); // Disputable
@@ -36,7 +36,7 @@ public final class FormTest {
 
     @Test
     public void ensureBlankValuelessKey() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put("")
                 .build();
         Assert.assertEquals(form.serialize(), ""); // Disputable
@@ -44,7 +44,7 @@ public final class FormTest {
 
     @Test
     public void ensureKeyValueForm() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put("coding", "fun")
                 .build();
         Assert.assertEquals(form.serialize(), "coding=fun");
@@ -52,7 +52,7 @@ public final class FormTest {
 
     @Test
     public void ensureKeyValueForm2() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put("coding", "fun")
                 .put("immutability", "good")
                 .build();
@@ -61,7 +61,7 @@ public final class FormTest {
 
     @Test
     public void ensureValuelessForm() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put("compressResponse")
                 .build();
         Assert.assertEquals(form.serialize(), "compressResponse");
@@ -69,7 +69,7 @@ public final class FormTest {
 
     @Test
     public void ensureValuelessRebuiltForm() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put("compressResponse")
                 .build();
         Assert.assertEquals(form.serialize(), new Form.Builder(form).build().serialize());
@@ -77,7 +77,7 @@ public final class FormTest {
 
     @Test
     public void ensureCombinedForm() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put("coding", "fun")
                 .put("compressResponse")
                 .put("immutability", "good")
@@ -87,7 +87,7 @@ public final class FormTest {
 
     @Test
     public void ensureRebuiltForm() {
-        final Form form = new Form.Builder()
+        final Form form = Form.builder()
                 .put("coding", "fun")
                 .put("compressResponse")
                 .put("immutability", "good")
@@ -98,7 +98,7 @@ public final class FormTest {
 
     @Test
     public void ensureRebuiltForm2() {
-        final Form form1 = new Form.Builder()
+        final Form form1 = Form.builder()
                 .put("coding", "fun")
                 .put("compressResponse")
                 .put("immutability", "good")
