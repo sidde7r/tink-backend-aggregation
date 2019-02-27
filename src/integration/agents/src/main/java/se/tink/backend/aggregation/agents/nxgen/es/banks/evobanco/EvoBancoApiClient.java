@@ -42,18 +42,6 @@ public class EvoBancoApiClient {
         }
     }
 
-    public LogoutResponse logout(SessionStorage sessionStorage) {
-        return createRequest(EvoBancoConstants.Urls.LOGOUT)
-                .queryParam(EvoBancoConstants.QueryParams.AGREEMENT_BE,
-                        sessionStorage.get(EvoBancoConstants.QueryParams.AGREEMENT_BE))
-                .queryParam(EvoBancoConstants.QueryParams.ENTITY_CODE,
-                        sessionStorage.get(EvoBancoConstants.QueryParams.ENTITY_CODE))
-                .queryParam(EvoBancoConstants.QueryParams.USER_BE,
-                        sessionStorage.get(EvoBancoConstants.QueryParams.USER_BE))
-                .delete(LogoutResponse.class);
-    }
-
-
     private RequestBuilder createRequest(URL url) {
 
         return client
@@ -65,8 +53,8 @@ public class EvoBancoApiClient {
     public boolean isAlive(SessionStorage sessionStorage) throws SessionException {
 
         try {
-            createRequest(EvoBancoConstants.Urls.KEEP_ALIVE
-                        .concat(sessionStorage.get(EvoBancoConstants.Storage.USER_ID, String.class)
+            createRequest(EvoBancoConstants.Urls.KEEP_ALIVE.parameter(EvoBancoConstants.UrlParams.UID,
+                        sessionStorage.get(EvoBancoConstants.Storage.USER_ID, String.class)
                                 .orElseThrow(SessionError.SESSION_EXPIRED::exception)))
                     .addBearerToken(sessionStorage.get(EvoBancoConstants.Storage.ACCESS_TOKEN, OAuth2Token.class)
                             .orElseThrow(SessionError.SESSION_EXPIRED::exception))

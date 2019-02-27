@@ -17,9 +17,7 @@ public class EvoBancoSessionHandler implements SessionHandler {
     }
 
     @Override
-    public void logout() {
-        apiClient.logout(sessionStorage);
-    }
+    public void logout() { }
 
     @Override
     public void keepAlive() throws SessionException {

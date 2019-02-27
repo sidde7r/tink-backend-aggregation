@@ -7,7 +7,8 @@ public class EvoBancoConstants {
     public static class ApiService {
         static final String LOGIN_INIT_PATH = "login_be";
         static final String LOGOUT_PATH = "SOA_RVIA/Empresa/PS/rest/v1/SE_RVA_Logout";
-        static final String KEEP_ALIVE_PATH = "evobanco/payment-methods/bizum/v1/api/user/validate/";
+        static final String KEEP_ALIVE_PATH =
+                "evobanco/payment-methods/bizum/v1/api/user/validate/{" + UrlParams.UID + "}";
     }
 
     public static class Urls {
@@ -32,5 +33,14 @@ public class EvoBancoConstants {
     public static class Storage {
         public static final String ACCESS_TOKEN = "access-token";
         public static final String USER_ID = "user-id";
+    }
+
+    public static class FormKey {
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+    }
+
+    public static class UrlParams {
+        public static final String UID = "uid";
     }
 }
