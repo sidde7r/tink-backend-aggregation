@@ -1,6 +1,0 @@
-{
-  "clusterid": "leeds-staging",
-  "providers": [
-    "ro-raiffeisen-oauth2"
-  ]
-}
