@@ -23,7 +23,7 @@ public class OpBankConstants {
 
     public static final String DEFAULT_CONFIGURATION_NAME = "Tink";
 
-    public static final String PARAM_NAME_ACCOUNT_NUMBER = "ACCOUNT_NUMBER";
+    public static final String PARAM_ENCRYPTED_ACCOUNT_NUMBER = "ENCRYPTED_ACCOUNT_NUMBER";
     public static final String PARAM_NAME_EXPIRY_DATE = "EXPIRY_DATE";
     public static final String PARAM_NAME_CARD_NUMBER = "CARD_NUMBER";
     public static final String QUERY_STRING_KEY_FIRST_PAGE = "firstPage";
@@ -34,7 +34,7 @@ public class OpBankConstants {
 
         private static final String BASE_URL = "https://mobile.op-palvelut.fi";
         public static final URL TRANSACTIONS_URL =
-                new URL(BASE_URL + "/mobile/accounts/{" + PARAM_NAME_ACCOUNT_NUMBER + "}/transactions");
+                new URL(BASE_URL + "/mobile/transactions/{" + PARAM_ENCRYPTED_ACCOUNT_NUMBER + "}");
         public static final URL ACCOUNTS_URI = new URL(BASE_URL + "/mobile/accounts");
         public static final URL INIT_URI = new URL(BASE_URL + "/mobile/device/mob/version");
         public static final URL LOGIN_URI = new URL(BASE_URL + "/authentication/keylist/rest/login");
@@ -78,12 +78,14 @@ public class OpBankConstants {
         public static final URL CARDS_TRANSACTIONS_URL = new URL(BASE_URL + "/mobile/cards/transactions");
     }
 
+    public static class Headers {
+        public static final String API_VERSION_KEY = "api-version";
+        public static final String API_VERSION_VALUE = "57";
+    }
+
     public static class IdTags{
         public static final String IDENTIFIER_TAG = "identifier";
         public static final String AUTH_TOKEN_TAG = "authToken";
-        public static final String FROM_DATE_TAG = "startdate";
-        public static final String TO_DATE_TAG = "timestamp";
-        public static final String APPLICATION_ID_TAG = "ApplicationId";
         public static final String REPTYPE_TAG = "REPTYPE";
         public static final String REPTYPE_PERSON_TAG = "PERSON";
     }
@@ -144,10 +146,11 @@ public class OpBankConstants {
         public static final String OVERRIDE_VALUE = "true";
         public static final String CREATE_NEW_PARAM = "createNew";
         public static final String CREATE_NEW_VALUE = "true";
-        public static final String START_DATE_PARAM = "startDate";
-        public static final String TIMESTAMP_PARAM = "timestamp";
         public static final String TYPE_PARAM = "type";
         public static final String TYPE_VALUE = "all";
+        public static final String MAX_PAST_PARAM = "maxPast";
+        public static final String MAX_PAST_VALUE = "30";
+        public static final String ENCRYPTED_TRX_ID = "encryptedTransactionId";
     }
 
     public static final class Fetcher {

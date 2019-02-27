@@ -1,23 +1,17 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.OpBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBankTransactionPaginationKey> {
+public class OpBankAccountEntity {
 
     // Account related fields
     private String type;
@@ -37,32 +31,6 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
     private String roleCode;
     private String startDateOfAuthorization;
 
-    // Transaction related fields
-    private List<OpBankTransactionEntity> transactions;
-    private String startDate;
-    private boolean hasMore;
-    private String timestampPrevious;
-
-    @Override
-    public Collection<Transaction> getTinkTransactions() {
-        return transactions
-                .stream()
-                .map(OpBankTransactionEntity::toTransaction)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Optional<Boolean> canFetchMore() {
-        return Optional.of(hasMore);
-    }
-
-    // this is a way to handle the need for two keys when paginating for OPBanken
-    // if this is a common scenario we should have a different paginator to handle this
-    @Override
-    public OpBankTransactionPaginationKey nextKey() {
-        return new OpBankTransactionPaginationKey(startDate, timestampPrevious);
-    }
-
     @JsonIgnore
     public boolean isTransactionalAccount() {
         return OpBankConstants.AccountType.ACCOUNT.equalsIgnoreCase(type);
@@ -75,7 +43,7 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
                 .setName(getAccountName())
                 .setHolderName(new HolderName(ownerName))
                 .addIdentifier(new IbanIdentifier(accountNumber))
-                .setBankIdentifier(accountNumber)
+                .setBankIdentifier(encryptedAccountNumber)
                 .build();
     }
 
@@ -171,21 +139,5 @@ public class OpBankAccountEntity implements TransactionKeyPaginatorResponse<OpBa
 
     public String getStartDateOfAuthorization() {
         return startDateOfAuthorization;
-    }
-
-    public List<OpBankTransactionEntity> getTransactions() {
-        return transactions;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public boolean isHasMore() {
-        return hasMore;
-    }
-
-    public String getTimestampPrevious() {
-        return timestampPrevious;
     }
 }
