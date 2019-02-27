@@ -40,7 +40,7 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
         final IngAtRsa rsa = new IngAtRsa(publicKeySpec);
         final Form passwordForm = new IngAtPasswordFormParser(rsaParser.getDocument()).getForm();
         final String encryptedPassword = rsa.encrypt(password);
-        return new Form.Builder(passwordForm)
+        return passwordForm.rebuilder()
                 .put("pinLoginHash", encryptedPassword)
                 .put("loginFeedBack:loginFeedBack_body:login", username)
                 .put("pin", org.apache.commons.lang3.StringUtils.repeat("X", password.length()))

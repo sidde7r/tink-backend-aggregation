@@ -24,6 +24,15 @@ public final class Form {
         return new Builder();
     }
 
+    /**
+     * @return A new builder from this form, which can be re-built after adding additional fields
+     */
+    public Builder rebuilder() {
+        Form.Builder formBuilder = Form.builder();
+        formBuilder.parameters.putAll(this.parameters);
+        return formBuilder;
+    }
+
     private String getValuePair(Map.Entry<String, String> parameter) {
         try {
             final String key = URLEncoder.encode(parameter.getKey(), StandardCharsets.UTF_8.toString());
@@ -47,10 +56,6 @@ public final class Form {
         private final LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
 
         private Builder() {}
-
-        public Builder(Form form) {
-            parameters.putAll(form.parameters);
-        }
 
         /**
          * Add key-value parameter.

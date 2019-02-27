@@ -72,7 +72,7 @@ public final class FormTest {
         final Form form = Form.builder()
                 .put("compressResponse")
                 .build();
-        Assert.assertEquals(form.serialize(), new Form.Builder(form).build().serialize());
+        Assert.assertEquals(form.serialize(), form.rebuilder().build().serialize());
     }
 
     @Test
@@ -93,7 +93,7 @@ public final class FormTest {
                 .put("immutability", "good")
                 .build();
 
-        Assert.assertEquals(form.serialize(), new Form.Builder(form).build().serialize());
+        Assert.assertEquals(form.serialize(), form.rebuilder().build().serialize());
     }
 
     @Test
@@ -104,7 +104,7 @@ public final class FormTest {
                 .put("immutability", "good")
                 .build();
 
-        final Form form2 = new Form.Builder(form1)
+        final Form form2 = form1.rebuilder()
                 .put("immutability", "better")
                 .put("compressResponse", "yes")
                 .put("coding")
