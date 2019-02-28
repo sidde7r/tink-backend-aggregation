@@ -1942,6 +1942,27 @@
             "status": "ENABLED",
             "transactional": true,
             "type": "TEST"
+        },
+        {
+            "name": "se-test-demo-fake-bank",
+            "className": "nxgen.demo.banks.demofakebank.DemoFakeBankAgent",
+            "displayDescription": "Password",
+            "credentialsType": "PASSWORD",
+            "displayName": "Test Demo Fake Bank",
+            "groupDisplayName": "Test Demo Fake Bank",
+            "fields": [
+                {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }
+            ],
+            "multiFactor": false,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "TEST"
         }
     ]
 }
