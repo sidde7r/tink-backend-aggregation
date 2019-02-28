@@ -21,7 +21,7 @@ data:
       callbackJwtSignatureKeyPair:
         privateKeyPath: "/etc/tink-callback-jwt-signature-pair/private_ec_key.pem"
         publicKeyPath: "/etc/tink-callback-jwt-signature-pair/public_ec_key.pem"
-        isEnabled: {{- $agentsConfig.callbackJwtSignatureKeyPairEnabled | default false }}
+        isEnabled: {{ $agentsConfig.callbackJwtSignatureKeyPairEnabled | default false }}
       {{- end }}
 
       creditsafe:
