@@ -213,7 +213,7 @@
         },
         {
             "name": "es-ing-password",
-            "className": "nxgen.es.banks.ing.IngAgent",
+            "className": "nxgen.es.banks.ing.v195.IngAgent",
             "displayName": "ING",
             "status": "ENABLED",
             "credentialsType": "PASSWORD",
