@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.OpAuto
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankCreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.OpBankTransactionalAccountsFetcher;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.OpBankTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.sessionhandler.OpBankSessionHandler;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;

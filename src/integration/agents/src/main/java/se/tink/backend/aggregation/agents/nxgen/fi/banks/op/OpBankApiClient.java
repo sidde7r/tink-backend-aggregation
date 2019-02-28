@@ -13,17 +13,16 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.Op
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankPostLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankRepTypeResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.rpc.OpBankAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankCardEntity;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankTransactionPaginationKey;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankPortfolioRootEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.CollateralCreditDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.CreditDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankAccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankAccountsEntity;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankPortfolioRootEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.rpc.OpBankTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -62,11 +61,11 @@ public class OpBankApiClient {
                 .get(OpBankResponseEntity.class);
     }
 
-    public OpBankAccountsEntity fetchAccounts() {
+    public OpBankAccountsResponse fetchAccounts() {
         return createRequest(OpBankConstants.Urls.ACCOUNTS_URI)
                 .queryParam(OpBankConstants.RequestParameters.FILTER_ALL_PARAM,
                         OpBankConstants.RequestParameters.FILTER_ALL_VALUE)
-                .get(OpBankAccountsEntity.class);
+                .get(OpBankAccountsResponse.class);
     }
 
     public OpBankAuthenticateResponse authenticate() {
@@ -98,18 +97,21 @@ public class OpBankApiClient {
                                 .setConfigurationName(OpBankConstants.DEFAULT_CONFIGURATION_NAME));
     }
 
-    public OpBankAccountEntity getTransactions(TransactionalAccount account) {
+    public OpBankTransactionsResponse getTransactions(TransactionalAccount account) {
         return createRequest(OpBankConstants.Urls.TRANSACTIONS_URL
-                .parameter(OpBankConstants.PARAM_NAME_ACCOUNT_NUMBER, account.getAccountNumber()))
-                .get(OpBankAccountEntity.class);
+                .parameter(OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER, account.getApiIdentifier()))
+                .queryParam(OpBankConstants.RequestParameters.MAX_PAST_PARAM,
+                        OpBankConstants.RequestParameters.MAX_PAST_VALUE)
+                .get(OpBankTransactionsResponse.class);
     }
 
-    public OpBankAccountEntity getTransactions(TransactionalAccount account, OpBankTransactionPaginationKey nextKey) {
+    public OpBankTransactionsResponse getTransactions(TransactionalAccount account, String previousTransactionId) {
         return createRequest(OpBankConstants.Urls.TRANSACTIONS_URL
-                .parameter(OpBankConstants.PARAM_NAME_ACCOUNT_NUMBER, account.getAccountNumber()))
-                .queryParam(OpBankConstants.RequestParameters.START_DATE_PARAM, nextKey.getStartDate())
-                .queryParam(OpBankConstants.RequestParameters.TIMESTAMP_PARAM, nextKey.getTimestamp())
-                .get(OpBankAccountEntity.class);
+                .parameter(OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER, account.getApiIdentifier()))
+                .queryParam(OpBankConstants.RequestParameters.ENCRYPTED_TRX_ID, previousTransactionId)
+                .queryParam(OpBankConstants.RequestParameters.MAX_PAST_PARAM,
+                        OpBankConstants.RequestParameters.MAX_PAST_VALUE)
+                .get(OpBankTransactionsResponse.class);
     }
 
     public void setRepresentationType(){
@@ -217,6 +219,7 @@ public class OpBankApiClient {
     private RequestBuilder createRequest(URL url) {
         return client
                 .request(url)
+                .header(OpBankConstants.Headers.API_VERSION_KEY, OpBankConstants.Headers.API_VERSION_VALUE)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }

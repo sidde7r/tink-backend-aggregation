@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.banks.op;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class OpBankConstants {
 
@@ -23,7 +23,7 @@ public class OpBankConstants {
 
     public static final String DEFAULT_CONFIGURATION_NAME = "Tink";
 
-    public static final String PARAM_NAME_ACCOUNT_NUMBER = "ACCOUNT_NUMBER";
+    public static final String PARAM_ENCRYPTED_ACCOUNT_NUMBER = "ENCRYPTED_ACCOUNT_NUMBER";
     public static final String PARAM_NAME_EXPIRY_DATE = "EXPIRY_DATE";
     public static final String PARAM_NAME_CARD_NUMBER = "CARD_NUMBER";
     public static final String QUERY_STRING_KEY_FIRST_PAGE = "firstPage";
@@ -34,7 +34,7 @@ public class OpBankConstants {
 
         private static final String BASE_URL = "https://mobile.op-palvelut.fi";
         public static final URL TRANSACTIONS_URL =
-                new URL(BASE_URL + "/mobile/accounts/{" + PARAM_NAME_ACCOUNT_NUMBER + "}/transactions");
+                new URL(BASE_URL + "/mobile/transactions/{" + PARAM_ENCRYPTED_ACCOUNT_NUMBER + "}");
         public static final URL ACCOUNTS_URI = new URL(BASE_URL + "/mobile/accounts");
         public static final URL INIT_URI = new URL(BASE_URL + "/mobile/device/mob/version");
         public static final URL LOGIN_URI = new URL(BASE_URL + "/authentication/keylist/rest/login");
@@ -78,12 +78,14 @@ public class OpBankConstants {
         public static final URL CARDS_TRANSACTIONS_URL = new URL(BASE_URL + "/mobile/cards/transactions");
     }
 
+    public static class Headers {
+        public static final String API_VERSION_KEY = "api-version";
+        public static final String API_VERSION_VALUE = "57";
+    }
+
     public static class IdTags{
         public static final String IDENTIFIER_TAG = "identifier";
         public static final String AUTH_TOKEN_TAG = "authToken";
-        public static final String FROM_DATE_TAG = "startdate";
-        public static final String TO_DATE_TAG = "timestamp";
-        public static final String APPLICATION_ID_TAG = "ApplicationId";
         public static final String REPTYPE_TAG = "REPTYPE";
         public static final String REPTYPE_PERSON_TAG = "PERSON";
     }
@@ -144,50 +146,11 @@ public class OpBankConstants {
         public static final String OVERRIDE_VALUE = "true";
         public static final String CREATE_NEW_PARAM = "createNew";
         public static final String CREATE_NEW_VALUE = "true";
-        public static final String START_DATE_PARAM = "startDate";
-        public static final String TIMESTAMP_PARAM = "timestamp";
         public static final String TYPE_PARAM = "type";
         public static final String TYPE_VALUE = "all";
-    }
-
-    public static class TypeCode {
-        public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_BY_TYPE_CODE =
-                ImmutableMap.<String, AccountTypes>builder()
-                        .put("710001", AccountTypes.CHECKING)
-                        .put("710002", AccountTypes.CHECKING)
-
-                        .put("710011", AccountTypes.OTHER)
-                        .put("710012", AccountTypes.OTHER)
-                        .put("710013", AccountTypes.OTHER)
-
-                        // På ett Målkonto sparar du enkelt för kommande behov.
-                        // På ett Målkonto är besparingarna tillgängliga då du behöver dem.
-                        .put("711030", AccountTypes.SAVINGS)
-
-                        .put("711037", AccountTypes.PENSION)
-
-                        // Tillväxtränta är hushållets reservkonto som ger bättre avkastning på
-                        // besparingarna. På ett Tillväxträntekonto är besparingarna tillgängliga
-                        // då du behöver dem.
-                        .put("712035", AccountTypes.SAVINGS)
-
-                        // Gruppränta är ett gruppkonto, där den ränta som betalas på insättningarna
-                        // växer i takt med de totala insättningarna - upp till maximiräntan.
-                        .put("712050", AccountTypes.OTHER)
-
-                        // För ett tidsbundet räntekonto fastställs en förfallodag,
-                        // före vilken medlen på kontot inte får lyftas
-                        .put("712007", AccountTypes.SAVINGS)
-
-                        // På ett fortlöpande räntekonto placerar du pengar utan någon
-                        // fastställd placeringstid
-                        .put("712008", AccountTypes.SAVINGS)
-                        .put("712015", AccountTypes.SAVINGS)
-
-                        .put("110001", AccountTypes.OTHER)
-                        .put("120000", AccountTypes.OTHER)
-                        .put("120001", AccountTypes.OTHER)
-                        .build();
+        public static final String MAX_PAST_PARAM = "maxPast";
+        public static final String MAX_PAST_VALUE = "30";
+        public static final String ENCRYPTED_TRX_ID = "encryptedTransactionId";
     }
 
     public static final class Fetcher {
@@ -234,5 +197,31 @@ public class OpBankConstants {
         public static boolean isHandled(String name) {
             return findLoanType(name) != OTHER_LOAN;
         }
+    }
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING,
+                            "710001",
+                            "710002")
+                    .put(AccountTypes.SAVINGS,
+                            "711030",  // Goal savings account
+                            "712035", // Growth interest rate (Tillväxtränta)
+                            "712007", // Time bound interest account
+                            "712008", // Continuous interest account
+                            "712015", // Continuous interest account
+                            "712050", // Group interest account
+                            "711037") // TODO: Pension account, should be parsed as pension account when possible
+                    .put(AccountTypes.OTHER,
+                            "710011",
+                            "710012",
+                            "710013",
+                            "110001",
+                            "120000",
+                            "120001")
+                    .build();
+
+    public static class AccountType {
+        public static final String ACCOUNT = "ACCOUNT";
     }
 }
