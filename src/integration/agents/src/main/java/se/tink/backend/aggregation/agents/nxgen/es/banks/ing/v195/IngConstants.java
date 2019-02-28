@@ -96,7 +96,12 @@ public class IngConstants {
 
         public static final ImmutableList<Integer> ALL_KNOWN_ACCOUNT_TYPES =
                 ImmutableList.copyOf(
-                        ImmutableList.of(TRANSACTION_ACCOUNTS, CREDIT_CARDS, INVESTMENT, LOANS, IGNORED_ACCOUNT_TYPES)
+                        ImmutableList.of(TRANSACTION_ACCOUNTS,
+                                SAVINGS_ACCOUNTS,
+                                CREDIT_CARDS,
+                                INVESTMENT,
+                                LOANS,
+                                IGNORED_ACCOUNT_TYPES)
                                 .stream()
                                 .flatMap(List::stream)
                                 .collect(Collectors.toList())
