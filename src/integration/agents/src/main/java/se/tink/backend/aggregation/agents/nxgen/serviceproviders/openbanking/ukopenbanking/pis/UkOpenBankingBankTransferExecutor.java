@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.UkOpenBankingPis;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.UkOpenBankingAccountFetcher;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.OpenIdConstants;
@@ -38,6 +39,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
     private final UkOpenBankingAccountFetcher<?, ?, TransactionalAccount>
             ukOpenBankingAccountFetcher;
     private final UkOpenBankingPis ukOpenBankingPis;
+    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
 
     public UkOpenBankingBankTransferExecutor(
             Catalog catalog,
@@ -47,7 +49,8 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             ProviderConfiguration providerConfiguration,
             TinkHttpClient httpClient,
             UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> ukOpenBankingAccountFetcher,
-            UkOpenBankingPis ukOpenBankingPis) {
+            UkOpenBankingPis ukOpenBankingPis,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
         this.catalog = catalog;
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -55,6 +58,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
         this.providerConfiguration = providerConfiguration;
         this.ukOpenBankingAccountFetcher = ukOpenBankingAccountFetcher;
         this.ukOpenBankingPis = ukOpenBankingPis;
+        this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
 
         this.apiClient =
                 new UkOpenBankingApiClient(
@@ -138,7 +142,8 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
                         dummyStorage,
                         supplementalInformationHelper,
                         apiClient,
-                        paymentAuthenticator);
+                        paymentAuthenticator,
+                        callbackJWTSignatureKeyPair);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(

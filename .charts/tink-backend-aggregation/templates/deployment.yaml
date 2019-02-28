@@ -276,6 +276,10 @@ spec:
         - name: signature-request-key
           mountPath: /etc/tink-signature-key
         {{- end }}
+        {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
+        - name: callback-jwt-signature-pair
+          mountPath: /etc/tink-callback-jwt-signature-pair
+        {{- end }}
 
       volumes:
       - name: config-scripts
@@ -296,6 +300,11 @@ spec:
       - name: signature-request-key
         secret:
           secretName: signature-request-key
+      {{- end }}
+      {{- if $agentsConfig.mountCallbackJwtSignaturePair }}
+      - name: callback-jwt-signature-pair
+        secret:
+          secretName: callback-jwt-signature-pair
       {{- end }}
       - name: altered-config-volume
         emptyDir: {}

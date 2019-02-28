@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.google.common.base.Strings;
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -15,6 +15,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticator;
@@ -27,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -37,29 +39,35 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     // authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
 
-    private static final Random random = new SecureRandom();
-    private static final Base64.Encoder encoder = Base64.getUrlEncoder();
-
     private final PersistentStorage persistentStorage;
     private final SupplementalInformationHelper supplementalInformationHelper;
     private final OpenIdApiClient apiClient;
     private final OpenIdAuthenticator authenticator;
+    private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
 
     private final String state;
     private final String nonce;
+
+    private final String pseudoId;
     private OAuth2Token clientAccessToken;
+
+    private final String callbackUriId = "";
 
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OpenIdApiClient apiClient,
-            OpenIdAuthenticator authenticator) {
+            OpenIdAuthenticator authenticator,
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
         this.authenticator = authenticator;
+        this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
 
-        this.state = RandomUtils.generateRandomBase64UrlEncoded(32);
-        this.nonce = RandomUtils.generateRandomBase64UrlEncoded(32);
+        this.pseudoId = RandomUtils.generateRandomBase64UrlEncoded(8);
+        this.state = getJwtState(pseudoId, callbackUriId);
+
+        this.nonce = RandomUtils.generateRandomBase64UrlEncoded(8);
     }
 
     @Override
@@ -158,7 +166,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
             AuthorizationException {
 
         Map<String, String> callbackData = supplementalInformationHelper.waitForSupplementalInformation(
-                formatSupplementalKey(state),
+                formatSupplementalKey(pseudoId),
                 WAIT_FOR_MINUTES,
                 TimeUnit.MINUTES
         ).orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
@@ -184,10 +192,37 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         }
 
         persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
-
         apiClient.attachAuthFilter(accessToken);
 
         return ThirdPartyAppResponseImpl.create(ThirdPartyAppStatus.DONE);
+    }
+
+    /**
+     * Introduce complex/structured data on the state
+     * The state is then passed along by the bank through the callback uri.
+     * We use this complex dataset to be able to introduce more details on the user/client.
+     * We used the Elliptic Curve algorithm in order to reduce the size of the actual JWToken signature.
+     *
+     * @param pseudoId
+     * @param callbackUriId
+     * @return
+     */
+    private String getJwtState(String pseudoId, String callbackUriId) {
+
+        if (callbackJWTSignatureKeyPair.isEnabled()) {
+            return pseudoId;
+        }
+        JWTCreator.Builder jwtBuilder = JWT.create()
+                .withIssuedAt(new Date())
+                .withClaim("id", pseudoId);
+
+        if (!Strings.isNullOrEmpty(callbackUriId)) {
+            jwtBuilder.withClaim("callbackUriId", callbackUriId);
+        }
+
+        return jwtBuilder.sign(Algorithm.ECDSA256(
+                    ECDSAUtils.getPublicKeyByPath(callbackJWTSignatureKeyPair.getPublicKeyPath()),
+                    ECDSAUtils.getPrivateKeyByPath(callbackJWTSignatureKeyPair.getPrivateKeyPath())));
     }
 
     @Override

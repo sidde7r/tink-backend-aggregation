@@ -1,6 +1,10 @@
 package se.tink.libraries.cryptography;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.security.InvalidKeyException;
@@ -11,6 +15,7 @@ import java.security.Security;
 import java.security.Signature;
 import java.security.interfaces.ECPrivateKey;
 import java.security.interfaces.ECPublicKey;
+import java.security.interfaces.RSAPrivateKey;
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -54,6 +59,36 @@ public class ECDSAUtils {
 
     public static ECPublicKey getPublicKey(String key) throws IOException {
         return ECDSAUtils.getPublicKey(new StringReader(key));
+    }
+
+    public static ECPrivateKey getPrivateKeyByPath(String path) {
+        try (PEMParser pemReader = new PEMParser(new InputStreamReader(new FileInputStream(path)))) {
+
+            PEMKeyPair keyPair = (PEMKeyPair) pemReader.readObject();
+
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+            return (ECPrivateKey) converter.getKeyPair(keyPair).getPrivate();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not convert key path into valid private key.", e);
+        }
+    }
+    public static ECPublicKey getPublicKeyByPath(String keyPath) {
+
+        try {
+            new InputStreamReader(new FileInputStream(keyPath));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try (PEMParser pemReader = new PEMParser(new InputStreamReader(new FileInputStream(keyPath)))) {
+
+            SubjectPublicKeyInfo publicKeyInfo = (SubjectPublicKeyInfo) pemReader.readObject();
+
+            JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+
+            return (ECPublicKey) converter.getPublicKey(publicKeyInfo);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not convert key path into valid public key.", e);
+        }
     }
 
     public static boolean isValidPublicKey(String key) {

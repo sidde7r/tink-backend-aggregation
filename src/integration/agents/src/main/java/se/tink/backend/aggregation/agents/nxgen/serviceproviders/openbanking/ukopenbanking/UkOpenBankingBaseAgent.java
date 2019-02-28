@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uko
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.pis.UkOpenBankingBankTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.session.UkOpenBankingSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -45,6 +46,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
     // Separate httpClient used for payments since PIS and AIS are two different
     // authenticated flows.
     private final TinkHttpClient paymentsHttpClient;
+
+    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
 
     // Lazy loaded
     private UkOpenBankingAis aisSupport;
@@ -107,6 +110,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
         apiClient = new UkOpenBankingApiClient(client, softwareStatement, providerConfiguration,
                 OpenIdConstants.ClientMode.ACCOUNTS);
 
+        callbackJWTSignatureKeyPair = configuration.getCallbackJwtSignatureKeyPair();
+
 
         // -    We cannot configure the paymentsHttpClient from `configureHttpClient()` because it will be null
         //      at that stage.
@@ -133,7 +138,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                 persistentStorage,
                 supplementalInformationHelper,
                 authenticator,
-                apiClient
+                apiClient,
+                callbackJWTSignatureKeyPair
         );
     }
 
@@ -217,7 +223,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                                 providerConfiguration,
                                 paymentsHttpClient,
                                 getTransactionalAccountFetcher(),
-                                pis
+                                pis,
+                                callbackJWTSignatureKeyPair
                         ),
                         null,
                         null
