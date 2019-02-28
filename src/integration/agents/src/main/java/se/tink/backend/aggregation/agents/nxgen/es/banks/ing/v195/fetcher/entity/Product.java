@@ -481,8 +481,10 @@ public final class Product {
     @JsonIgnore
     public boolean isActiveTransactionalAccount() {
         boolean isTransactionalAccount = IngConstants.AccountCategories.TRANSACTION_ACCOUNTS.contains(type);
+        boolean isSavingsAccount = IngConstants.AccountCategories.SAVINGS_ACCOUNTS.contains(type);
+
         boolean isOperative = IngConstants.AccountStatus.OPERATIVE.equals(status.getCod());
-        return isTransactionalAccount && isOperative;
+        return (isTransactionalAccount || isSavingsAccount) && isOperative;
     }
 
     @JsonIgnore
