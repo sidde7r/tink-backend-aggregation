@@ -27,7 +27,7 @@ public class SantanderEsAccountFetcher implements AccountFetcher<TransactionalAc
 
         return loginResponse.getAccountList().stream()
                     .filter(AccountEntity::isKnownAccountType)
-                    .map(accountEntity -> accountEntity.toTinkAccount(loginResponse.getUserData()))
+                    .map(accountEntity -> accountEntity.toTinkAccount(loginResponse))
                     .collect(Collectors.toList());
     }
 }

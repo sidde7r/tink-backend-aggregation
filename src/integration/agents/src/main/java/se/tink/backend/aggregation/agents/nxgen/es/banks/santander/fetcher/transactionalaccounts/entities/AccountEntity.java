@@ -10,8 +10,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.CustomerData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.GeneralInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.UserData;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -101,10 +103,13 @@ public class AccountEntity {
     }
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(UserData userData) {
+    public TransactionalAccount toTinkAccount(LoginResponse loginResponse) {
+        UserData userData = loginResponse.getUserData();
+        HolderName holderName = loginResponse.getHolderName();
         return TransactionalAccount.builder(getTinkAccountType(), getUniqueIdentifier(), balance.getTinkAmount())
                 .setAccountNumber(iban)
                 .setName(generalInfo.getAlias())
+                .setHolderName(holderName)
                 .putInTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(userData))
                 .putInTemporaryStorage(SantanderEsConstants.Storage.CONTRACT_ID_XML,
