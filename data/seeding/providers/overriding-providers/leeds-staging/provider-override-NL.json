@@ -385,6 +385,21 @@
             "fields": [],
             "payload": "abn https://api.staging.abnamro.tinkapp.nl/api/v1/credentials/third-party/callback",
             "capabilities": []
+        },
+        {
+            "name": "nl-rabobank-oauth2",
+            "displayName": "Rabobank",
+            "popular": true,
+            "type": "BANK",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "multiFactor": false,
+            "className": "nxgen.nl.banks.openbanking.rabobank.RabobankAgent",
+            "passwordHelpText": null,
+            "transactional": "true",
+            "tutorialUrl": null,
+            "fields": [],
+            "payload": "tink"
         }
     ]
 }
