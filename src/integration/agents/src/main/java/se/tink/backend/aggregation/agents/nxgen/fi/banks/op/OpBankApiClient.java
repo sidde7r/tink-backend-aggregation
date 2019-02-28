@@ -99,7 +99,7 @@ public class OpBankApiClient {
 
     public OpBankTransactionsResponse getTransactions(TransactionalAccount account) {
         return createRequest(OpBankConstants.Urls.TRANSACTIONS_URL
-                .parameter(OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER, account.getBankIdentifier()))
+                .parameter(OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER, account.getApiIdentifier()))
                 .queryParam(OpBankConstants.RequestParameters.MAX_PAST_PARAM,
                         OpBankConstants.RequestParameters.MAX_PAST_VALUE)
                 .get(OpBankTransactionsResponse.class);
@@ -107,7 +107,7 @@ public class OpBankApiClient {
 
     public OpBankTransactionsResponse getTransactions(TransactionalAccount account, String previousTransactionId) {
         return createRequest(OpBankConstants.Urls.TRANSACTIONS_URL
-                .parameter(OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER, account.getBankIdentifier()))
+                .parameter(OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER, account.getApiIdentifier()))
                 .queryParam(OpBankConstants.RequestParameters.ENCRYPTED_TRX_ID, previousTransactionId)
                 .queryParam(OpBankConstants.RequestParameters.MAX_PAST_PARAM,
                         OpBankConstants.RequestParameters.MAX_PAST_VALUE)
