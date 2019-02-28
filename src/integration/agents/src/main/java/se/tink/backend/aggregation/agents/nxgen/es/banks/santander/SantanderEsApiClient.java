@@ -12,9 +12,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.credi
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.SantanderEsCreditCardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioRepositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.StockEmissionCode;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.InstrumentDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.InstrumentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.PortfolioDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.PortfolioDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.RepositionEntity;
@@ -117,15 +122,31 @@ public class SantanderEsApiClient {
         return soapResponseString;
     }
 
-    public String fetchPortfolioDetails(String userDataXml, PortfolioEntity portfolio, boolean firstPage) {
+    public PortfolioDetailsResponse fetchPortfolioDetails(String userDataXml, PortfolioEntity portfolio,
+            boolean firstPage, PortfolioRepositionEntity paginationData) {
+
         String portfolioDetailsRequest = PortfolioDetailsRequest
-                .create(tokenCredential, userDataXml, portfolio, firstPage);
+                .create(tokenCredential, userDataXml, portfolio, firstPage, paginationData);
 
         String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_VALORES,
                 SantanderEsConstants.Urls.SCH_BAMOBI_VALORES.toString(),
                 portfolioDetailsRequest);
 
-        return soapResponseString;
+        return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
+                SantanderEsConstants.NodeTags.METHOD_RESULT,
+                PortfolioDetailsResponse.class);
+    }
+
+    public InstrumentDetailsResponse fetchInstrumentDetails(String userDataXml, StockEmissionCode emissionCode) {
+        String instrumentDetailsRequest = InstrumentDetailsRequest.create(tokenCredential, userDataXml, emissionCode);
+
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_VALORES,
+                SantanderEsConstants.Urls.SCH_BAMOBI_VALORES.toString(),
+                instrumentDetailsRequest);
+
+        return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
+                SantanderEsConstants.NodeTags.METHOD_RESULT,
+                InstrumentDetailsResponse.class);
     }
 
     private String postSoapMessage(URL url, String soapAction, String body) {

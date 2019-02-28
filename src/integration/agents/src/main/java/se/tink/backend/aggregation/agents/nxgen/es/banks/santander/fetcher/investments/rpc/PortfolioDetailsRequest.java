@@ -3,13 +3,19 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inve
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioRepositionEntity;
 
 public class PortfolioDetailsRequest {
 
     public static String create(String tokenCredential, String userDataXml, PortfolioEntity depositEntity,
-            boolean firstFetch) {
+            boolean firstFetch, PortfolioRepositionEntity reposition) {
 
-        String pagination = firstFetch ? "N" : "S";
+        String pagination = SantanderEsConstants.Indicators.NO;
+        String paginationData = "";
+        if (!firstFetch) {
+            pagination = SantanderEsConstants.Indicators.YES;
+            paginationData = createPagination(reposition);
+        }
         ContractEntity contractEntity = depositEntity.getGeneralInfo().getContractId();
 
         return String
@@ -40,6 +46,7 @@ public class PortfolioDetailsRequest {
                                 + "<indicadores>"
                                 + "<esUnaPaginacion>%s</esUnaPaginacion>"
                                 + "</indicadores>"
+                                + "%s"
                                 + "</v1:listaCarteraValoresSaldoPos_LIP>"
                                 + "</soapenv:Body>"
                                 + "</soapenv:Envelope>",
@@ -52,7 +59,18 @@ public class PortfolioDetailsRequest {
                         contractEntity.getBankOffice().getOffice(),
                         contractEntity.getProduct(),
                         contractEntity.getContractNumber(),
-                        pagination
+                        pagination,
+                        paginationData
                 );
     }
+    private static String createPagination(PortfolioRepositionEntity reposition) {
+        return String.format("<repos>"
+                + "<codigoEmisionValores>"
+                + "<CODIGO_DE_VALOR>%s</CODIGO_DE_VALOR>"
+                + "<CODIGO_DE_EMISION>%s</CODIGO_DE_EMISION>"
+                + "</codigoEmisionValores>"
+                + "</repos>", reposition.getEmissionCode().getStockCode(),
+                reposition.getEmissionCode().getEmissionCode());
+    }
+
 }

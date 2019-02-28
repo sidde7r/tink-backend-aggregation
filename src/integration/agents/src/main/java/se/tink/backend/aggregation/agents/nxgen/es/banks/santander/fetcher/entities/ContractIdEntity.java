@@ -10,19 +10,19 @@ public class ContractIdEntity {
     @JsonProperty("OFICINA")
     private Office office;
     @JsonProperty("DIGITO_DE_CONTROL")
-    private int controlDigits;
+    private String controlDigits;
     @JsonProperty("NUMERO_DE_CUENTA")
-    private long accountNumber;
+    private String accountNumber;
 
     public Office getOffice() {
         return office;
     }
 
-    public int getControlDigits() {
+    public String getControlDigits() {
         return controlDigits;
     }
 
-    public long getAccountNumber() {
+    public String getAccountNumber() {
         return accountNumber;
     }
 }
