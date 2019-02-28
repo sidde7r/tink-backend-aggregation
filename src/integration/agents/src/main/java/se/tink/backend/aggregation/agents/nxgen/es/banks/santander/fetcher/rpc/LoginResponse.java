@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inves
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 
 @JsonObject
 @XmlRootElement(name = "methodResult")
@@ -30,6 +32,13 @@ public class LoginResponse {
     private List<PortfolioEntity> portfolios;
     @JsonProperty("prestamos")
     private List<LoanEntity> loans;
+    @JsonProperty("nombreCliente")
+    private String userName;
+
+    @JsonIgnore
+    public HolderName getHolderName() {
+        return Optional.ofNullable(userName).map(HolderName::new).orElse(null);
+    }
 
     public InfoEntity getInfo() {
         return info;

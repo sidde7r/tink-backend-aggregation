@@ -1,18 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioContentEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioRepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.PortfolioDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -30,20 +35,25 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
+        List<InvestmentAccount> accounts = new ArrayList<>();
+
         LoginResponse loginResponse = getLoginResponse();
 
         String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
 
-        try {
-            Optional.ofNullable(loginResponse.getPortfolios()).orElse(Collections.emptyList())
-                    .forEach(portfolio -> fetchAndLogPortfolio(portfolio, userDataXml));
-        } catch (Exception e) {
-            LOG.info("Failed to fetch investments " + SantanderEsConstants.Tags.INVESTMENT_ACCOUNT, e);
-        }
+        // stocks
+        Optional.ofNullable(loginResponse.getPortfolios()).orElse(Collections.emptyList()).stream()
+                .map(portfolio -> parsePortfolioAccount(portfolio, userDataXml, loginResponse.getHolderName()))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(accounts::add);
 
-        return Optional.ofNullable(loginResponse.getFunds()).orElse(Collections.emptyList()).stream()
+        // funds
+        Optional.ofNullable(loginResponse.getFunds()).orElse(Collections.emptyList()).stream()
                 .map(fund -> parseFundAccount(fund, userDataXml))
-                .collect(Collectors.toList());
+                .forEach(accounts::add);
+
+        return accounts;
     }
 
     private LoginResponse getLoginResponse() {
@@ -59,12 +69,33 @@ public class SantanderEsInvestmentFetcher implements AccountFetcher<InvestmentAc
         return fundEntity.toInvestmentAccount(fundDetailsResponse);
     }
 
-    private void fetchAndLogPortfolio(PortfolioEntity portfolio, String userDataXml) {
+    private Optional<InvestmentAccount> parsePortfolioAccount(PortfolioEntity portfolio, String userDataXml,
+            HolderName holderName) {
         try {
-            String portfolioResponse = apiClient.fetchPortfolioDetails(userDataXml, portfolio, true);
-            LOG.infoExtraLong(portfolioResponse, SantanderEsConstants.Tags.INVESTMENT_ACCOUNT);
+            List<PortfolioContentEntity> portfolioContent = new ArrayList<>();
+            boolean moreData = true;
+            boolean firstPage = true;
+            PortfolioDetailsResponse portfolioResponse = null;
+            PortfolioRepositionEntity paginationData = null;
+
+            // portfolio details is paginated
+            while (moreData) {
+                portfolioResponse = apiClient.fetchPortfolioDetails(userDataXml, portfolio, firstPage, paginationData);
+                firstPage = false;
+                moreData = portfolioResponse.moreData();
+                paginationData = portfolioResponse.getPaginationData();
+                portfolioContent.addAll(portfolioResponse.getPortfolioContents());
+            }
+
+            return Optional.of(portfolioResponse
+                    .toTinkInvestment(apiClient, userDataXml, portfolio, portfolioContent, holderName));
         } catch (Exception e) {
-            LOG.info("Could not fetch investments " + SantanderEsConstants.Tags.INVESTMENT_ACCOUNT, e);
+            // if amount is zero it looks like we cannot ask for details, we get a 500
+            if (!portfolio.getTotalValue().getTinkAmount().isZero()) {
+                LOG.info("Could not fetch investments " + SantanderEsConstants.Tags.INVESTMENT_ACCOUNT, e);
+            }
         }
+
+        return Optional.empty();
     }
 }
