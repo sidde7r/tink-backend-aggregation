@@ -209,7 +209,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
      */
     private String getJwtState(String pseudoId, String callbackUriId) {
 
-        if (callbackJWTSignatureKeyPair.isEnabled()) {
+        if (!callbackJWTSignatureKeyPair.isEnabled()) {
             return pseudoId;
         }
         JWTCreator.Builder jwtBuilder = JWT.create()
