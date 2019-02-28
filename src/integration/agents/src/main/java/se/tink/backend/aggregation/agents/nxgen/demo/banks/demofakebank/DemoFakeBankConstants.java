@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 
 import se.tink.backend.aggregation.nxgen.http.URL;
 

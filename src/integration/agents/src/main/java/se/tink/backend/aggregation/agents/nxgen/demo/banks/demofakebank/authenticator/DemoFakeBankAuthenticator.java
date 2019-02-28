@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.authenticator;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator;
 
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.DemoFakeBankApiClient;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.DemoFakeBankConstants;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.authenticator.rpc.DemoFakeBankAuthenticationBody;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankApiClient;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankConstants;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.rpc.DemoFakeBankAuthenticationBody;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;

@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demoFI.authenticator.DemoFakeBankAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.DemoFakeBankAuthenticator;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
