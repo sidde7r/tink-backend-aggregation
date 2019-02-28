@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demFakeBank.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.rpc;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
 

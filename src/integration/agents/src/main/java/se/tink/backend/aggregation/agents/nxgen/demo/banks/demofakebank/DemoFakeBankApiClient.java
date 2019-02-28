@@ -1,7 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demFakeBank;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demFakeBank.authenticator.DemoFakeBankAuthenticateResponse;
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demFakeBank.authenticator.rpc.DemoFakeBankAuthenticationBody;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.DemoFakeBankAuthenticateResponse;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.rpc.DemoFakeBankAuthenticationBody;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
