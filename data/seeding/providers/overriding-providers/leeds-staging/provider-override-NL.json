@@ -389,6 +389,8 @@
         {
             "name": "nl-rabobank-oauth2",
             "displayName": "Rabobank",
+            "currency": "EUR",
+            "market": "NL",
             "popular": true,
             "type": "BANK",
             "status": "ENABLED",
