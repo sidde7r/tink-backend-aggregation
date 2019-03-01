@@ -48,12 +48,12 @@ public class RabobankAgent extends NextGenerationAgent {
     public void setConfiguration(final AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final RabobankConfiguration rabobankConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getClientConfiguration(RabobankConstants.INTEGRATION_NAME, clientName, RabobankConfiguration.class)
-                        .orElseThrow(
-                                () -> new IllegalStateException("Rabobank configuration missing."));
+        final RabobankConfiguration rabobankConfiguration = new RabobankConfiguration();
+//                configuration
+//                        .getIntegrations()
+//                        .getClientConfiguration(RabobankConstants.INTEGRATION_NAME, clientName, RabobankConfiguration.class)
+//                        .orElseThrow(
+//                                () -> new IllegalStateException("Rabobank configuration missing."));
         if (!rabobankConfiguration.isValid()) {
             throw new IllegalStateException("Rabobank configuration is invalid.");
         }
