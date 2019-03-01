@@ -1,3 +1,5 @@
+load("//tools/bzl:junit.bzl", "junit_test")
+
 java_library(
     name = "api",
     srcs = glob(["src/main/**/*.java"]),
@@ -12,5 +14,27 @@ java_library(
         "//third_party:com_fasterxml_jackson_core_jackson_annotations",
         "//third_party:com_fasterxml_jackson_core_jackson_core",
         "//third_party:com_google_guava_guava",
+    ],
+)
+
+junit_test(
+    name = "api_test",
+    srcs = glob(["src/test/**/*.java"]),
+    data = [
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//src/integration/api",
+        "//src/libraries/serialization",
+        "//third_party:com_fasterxml_jackson_core_jackson_databind",
+        "//third_party:com_google_guava_guava",
+        "//third_party:com_google_inject_guice",
+        "//third_party:com_sun_jersey_jersey_core",
+        "//third_party:io_dropwizard_dropwizard_configuration",
+        "//third_party:javax_validation_validation_api",
+        "//third_party:net_bytebuddy_byte_buddy",
+        "//third_party:org_assertj_assertj_core",
+        "//third_party:org_mockito_mockito_core",
+        "//third_party:org_objenesis_objenesis",
     ],
 )
