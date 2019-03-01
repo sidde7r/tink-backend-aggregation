@@ -68,9 +68,12 @@ public class SubPlacementEntity {
             switch (this.type.toLowerCase()) {
             case "equity":
             case "equities":
+            case "subscription_right":
                 holding.toTinkInstrument(this.type).ifPresent(instruments::add);
                 break;
             case "equityfund":
+            case "mixedfund":
+            case "interestfund":
                 String isinCode = getIsinOfFund(apiClient, holding.getFundCode());
                 holding.toTinkFundInstrument(isinCode).ifPresent(instruments::add);
                 break;
