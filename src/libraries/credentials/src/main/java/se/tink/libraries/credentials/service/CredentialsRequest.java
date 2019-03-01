@@ -28,6 +28,9 @@ public abstract class CredentialsRequest {
     // TODO: Remove with new AgentWorker
     protected boolean update;
 
+    /**
+     * @return true if and only if this request was not initiated by a cron job
+     */
     @JsonIgnore
     public abstract boolean isManual();
 
