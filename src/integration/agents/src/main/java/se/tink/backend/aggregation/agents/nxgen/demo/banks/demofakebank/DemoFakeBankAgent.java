@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.DemoFakeBankAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.sessionhandler.DemoFakeBankSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -74,7 +75,7 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return null; // TODO: add sessionHandler here
+        return new DemoFakeBankSessionHandler(apiClient);
     }
 
     @Override

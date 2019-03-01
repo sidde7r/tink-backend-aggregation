@@ -63,6 +63,7 @@
     "se-test-bankid-failing",
     "se-test-password",
     "se-test-multi-supplemental",
+    "se-test-demo-fake-bank",
     "chevrolet-v2-bankid",
     "circlek-v2-bankid",
     "eurocard-v2-bankid",
