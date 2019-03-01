@@ -3,16 +3,17 @@ package se.tink.libraries.credentials.service;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.ImmutableSortedMap;
+import org.apache.commons.codec.binary.Hex;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.user.rpc.User;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
-import org.apache.commons.codec.binary.Hex;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.user.rpc.User;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class CredentialsRequest {
