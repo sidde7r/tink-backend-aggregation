@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.TransactionRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.customerinfo.CustomerInfoFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
@@ -53,8 +54,10 @@ import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.customerinfo.CustomerInfo;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.transfer.rpc.Transfer;
+
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -261,6 +264,10 @@ public abstract class NextGenerationAgent extends AbstractAgent
     protected abstract Optional<EInvoiceRefreshController> constructEInvoiceRefreshController();
     protected abstract Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController();
 
+    protected Optional<CustomerInfoFetcher> constructCustomerInfoFetcher() {
+        return Optional.empty();
+    }
+
     protected abstract SessionHandler constructSessionHandler();
 
     // transfer and payment executors
@@ -386,5 +393,10 @@ public abstract class NextGenerationAgent extends AbstractAgent
             return new FetchEInvoicesResponse(Collections.emptyList());
         }
         return new FetchEInvoicesResponse(eInvoiceRefreshController.refreshEInvoices());
+    }
+
+    public Optional<CustomerInfo> fetchCustomerInfo() {
+        Optional<CustomerInfoFetcher> fetcher = constructCustomerInfoFetcher();
+        return fetcher.map(CustomerInfoFetcher::fetchCustomerInfo);
     }
 }
