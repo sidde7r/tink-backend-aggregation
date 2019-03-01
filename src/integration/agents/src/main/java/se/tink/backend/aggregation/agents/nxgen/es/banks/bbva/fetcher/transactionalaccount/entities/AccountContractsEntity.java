@@ -34,8 +34,6 @@ public class AccountContractsEntity {
 
     @JsonIgnore
     public Amount getAvailableBalanceAsTinkAmount() {
-        return account.getCurrentBalance()
-                .getAvailableBalance()
-                .getTinkAmount();
+        return account.getCurrentBalance().getAvailableBalance().getTinkAmount();
     }
 }

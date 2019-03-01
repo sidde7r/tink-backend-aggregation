@@ -14,7 +14,6 @@ import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 
 @JsonObject
 public class CreditCardTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
-
     private boolean moreResults;
     private String totalResults;
     private CreditCardTransactionsPaginationEntity pagination;

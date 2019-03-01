@@ -16,9 +16,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private static final AggregationLogger LOGGER = new AggregationLogger(BbvaAccountFetcher.class);
-
-    private BbvaApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private BbvaApiClient apiClient;
 
     public BbvaAccountFetcher(BbvaApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -27,9 +26,10 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        HolderName holderName = Optional.ofNullable(sessionStorage.get(BbvaConstants.Storage.HOLDER_NAME))
-                .map(holdername -> new HolderName(holdername))
-                .orElse(null);
+        HolderName holderName =
+                Optional.ofNullable(sessionStorage.get(BbvaConstants.Storage.HOLDER_NAME))
+                        .map(holdername -> new HolderName(holdername))
+                        .orElse(null);
 
         FetchProductsResponse productsResponse = apiClient.fetchProducts();
 

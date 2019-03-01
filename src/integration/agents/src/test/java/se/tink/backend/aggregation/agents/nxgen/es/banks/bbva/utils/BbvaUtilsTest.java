@@ -30,8 +30,7 @@ public class BbvaUtilsTest {
         BbvaUtils.splitUtlGetKey(URL_TO_PARSE_NO_KEY);
     }
 
-
-    //I wasn't able to find input that would trigger this one
+    // I wasn't able to find input that would trigger this one
     @Ignore
     @Test(expected = IllegalArgumentException.class)
     public void splitUtlGetKey_cannotParseThrowException() {

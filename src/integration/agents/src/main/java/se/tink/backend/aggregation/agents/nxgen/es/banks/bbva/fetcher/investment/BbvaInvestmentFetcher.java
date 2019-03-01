@@ -17,10 +17,10 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(BbvaInvestmentFetcher.class);
-
-    private BbvaApiClient apiClient;
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(BbvaInvestmentFetcher.class);
     private final SessionStorage sessionStorage;
+    private BbvaApiClient apiClient;
 
     public BbvaInvestmentFetcher(BbvaApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -34,18 +34,21 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
         String holderName = sessionStorage.get(BbvaConstants.Storage.HOLDER_NAME);
 
         // investment logging
-        logInvestment(productsResponse.getInternationalFundsPortfolios(),
+        logInvestment(
+                productsResponse.getInternationalFundsPortfolios(),
                 BbvaConstants.Logging.INVESTMENT_INTERNATIONAL_PORTFOLIO);
-        logInvestment(productsResponse.getManagedFundsPortfolios(),
+        logInvestment(
+                productsResponse.getManagedFundsPortfolios(),
                 BbvaConstants.Logging.INVESTMENT_MANAGED_FUNDS);
-        logInvestment(productsResponse.getWealthDepositaryPortfolios(),
+        logInvestment(
+                productsResponse.getWealthDepositaryPortfolios(),
                 BbvaConstants.Logging.INVESTMENT_WEALTH_DEPOSITARY);
 
         accounts.addAll(
-                Optional.ofNullable(productsResponse.getStockAccounts()).orElse(Collections.emptyList()).stream()
-                .map(stockAccount -> stockAccount.toTinkAccount(apiClient, holderName))
-                .collect(Collectors.toList())
-        );
+                Optional.ofNullable(productsResponse.getStockAccounts())
+                        .orElse(Collections.emptyList()).stream()
+                        .map(stockAccount -> stockAccount.toTinkAccount(apiClient, holderName))
+                        .collect(Collectors.toList()));
 
         return accounts;
     }

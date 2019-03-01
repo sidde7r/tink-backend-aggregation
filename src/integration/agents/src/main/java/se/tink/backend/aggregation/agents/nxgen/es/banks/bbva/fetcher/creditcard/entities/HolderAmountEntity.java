@@ -3,5 +3,4 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcar
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class HolderAmountEntity {
-}
+public class HolderAmountEntity {}

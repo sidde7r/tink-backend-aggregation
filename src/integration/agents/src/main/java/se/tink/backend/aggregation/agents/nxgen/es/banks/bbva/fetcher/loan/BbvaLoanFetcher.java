@@ -19,7 +19,6 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
     private final BbvaApiClient apiClient;
 
     public BbvaLoanFetcher(BbvaApiClient apiClient) {
-
         this.apiClient = apiClient;
     }
 
@@ -29,8 +28,12 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
 
         // loan logging
         logMortgage(productsResponse.getMultiMortgages());
-        logLoan(productsResponse.getRevolvingCredits(), BbvaConstants.Logging.LOAN_REVOLVING_CREDIT);
-        logLoan(productsResponse.getWorkingCapitalLoansLimits(), BbvaConstants.Logging.LOAN_WORKING_CAPITAL);
+        logLoan(
+                productsResponse.getRevolvingCredits(),
+                BbvaConstants.Logging.LOAN_REVOLVING_CREDIT);
+        logLoan(
+                productsResponse.getWorkingCapitalLoansLimits(),
+                BbvaConstants.Logging.LOAN_WORKING_CAPITAL);
 
         return Collections.emptyList();
     }
@@ -45,7 +48,6 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
         } catch (Exception e) {
             LOGGER.warn(logTag.toString() + " - Failed to log loan data, " + e.getMessage());
         }
-
     }
 
     private void logMortgage(List<Object> data) {
@@ -54,20 +56,26 @@ public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
         }
 
         try {
-            LOGGER.infoExtraLong(SerializationUtils.serializeToString(data), BbvaConstants.Logging.LOAN_MULTI_MORTGAGE);
+            LOGGER.infoExtraLong(
+                    SerializationUtils.serializeToString(data),
+                    BbvaConstants.Logging.LOAN_MULTI_MORTGAGE);
             data.forEach(
-                loanObject -> {
-                    String loanAsString = SerializationUtils.serializeToString(loanObject);
-                    AccountEntity account = SerializationUtils.deserializeFromString(loanAsString, AccountEntity.class);
-                    if (account != null && account.getId() != null) {
-                        String detailsReponse = apiClient.getLoanDetails(account.getId());
-                        LOGGER.infoExtraLong(detailsReponse, BbvaConstants.Logging.LOAN_MULTI_MORTGAGE);
-                    }
-                }
-            );
+                    loanObject -> {
+                        String loanAsString = SerializationUtils.serializeToString(loanObject);
+                        AccountEntity account =
+                                SerializationUtils.deserializeFromString(
+                                        loanAsString, AccountEntity.class);
+                        if (account != null && account.getId() != null) {
+                            String detailsReponse = apiClient.getLoanDetails(account.getId());
+                            LOGGER.infoExtraLong(
+                                    detailsReponse, BbvaConstants.Logging.LOAN_MULTI_MORTGAGE);
+                        }
+                    });
         } catch (Exception e) {
-            LOGGER.warn(BbvaConstants.Logging.LOAN_MULTI_MORTGAGE.toString() + " - Failed to log mortgage data, " + e.getMessage());
+            LOGGER.warn(
+                    BbvaConstants.Logging.LOAN_MULTI_MORTGAGE.toString()
+                            + " - Failed to log mortgage data, "
+                            + e.getMessage());
         }
-
     }
 }

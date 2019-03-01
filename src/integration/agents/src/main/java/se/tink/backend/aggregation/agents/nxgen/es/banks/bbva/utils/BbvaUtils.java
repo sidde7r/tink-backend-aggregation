@@ -13,18 +13,17 @@ public class BbvaUtils {
     public static Optional<String> splitUtlGetKey(String toSplit) {
         try {
             return new URIBuilder(toSplit)
-                    .getQueryParams()
-                    .stream()
-                    .filter(p -> BbvaConstants.Query.PAGINATION_OFFSET.equals(p.getName()))
-                    .map(p -> Optional.of(p.getValue()))
-                    .findAny()
-                    .orElseThrow(
-                            () -> {
-                                throw new IllegalStateException(
-                                        "Trying to get next pagination key when none exists");
-                            });
+                    .getQueryParams().stream()
+                            .filter(p -> BbvaConstants.Query.PAGINATION_OFFSET.equals(p.getName()))
+                            .map(p -> Optional.of(p.getValue()))
+                            .findAny()
+                            .orElseThrow(
+                                    () -> {
+                                        throw new IllegalStateException(
+                                                "Trying to get next pagination key when none exists");
+                                    });
         } catch (URISyntaxException e) {
-            //TODO: Seems we never should hit this one
+            // TODO: Seems we never should hit this one
             throw new IllegalArgumentException("Could not parse next page key in: " + toSplit);
         }
     }

@@ -23,8 +23,10 @@ public class SecurityEntity {
     private TypeEntity typeSecurities;
     private String name;
     private String marketName;
+
     @JsonProperty("totalTitles")
     private double quantity;
+
     private AmountEntity totalAmount;
     private double availableTitles;
     private AmountEntity availableBalance;
@@ -44,9 +46,13 @@ public class SecurityEntity {
     private CurrencyEntity currency;
 
     @JsonObject
-    public Instrument toTinkInstrument(BbvaApiClient apiClient, Instrument.Type instrumentType, String portfolioId,
+    public Instrument toTinkInstrument(
+            BbvaApiClient apiClient,
+            Instrument.Type instrumentType,
+            String portfolioId,
             String securityCode) {
-        SecurityProfitabilityResponse profitabilityResponse = apiClient.fetchSecurityProfitability(portfolioId, securityCode);
+        SecurityProfitabilityResponse profitabilityResponse =
+                apiClient.fetchSecurityProfitability(portfolioId, securityCode);
         double marketValue = totalAmount.getTinkAmount().doubleValue();
         double totalProfit = profitabilityResponse.getTotalProfit();
         double averageAcquisitionPrice = getAverageAcquisitionPrice(marketValue - totalProfit);
@@ -71,13 +77,15 @@ public class SecurityEntity {
 
     @JsonIgnore
     private Double getPrice() {
-        return new BigDecimal(totalAmount.getAmount() / quantity).setScale(2, BigDecimal.ROUND_HALF_UP)
+        return new BigDecimal(totalAmount.getAmount() / quantity)
+                .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
     }
 
     @JsonIgnore
     private Double getAverageAcquisitionPrice(double acquisitionAmount) {
-        return new BigDecimal(acquisitionAmount / quantity).setScale(2, BigDecimal.ROUND_HALF_UP)
+        return new BigDecimal(acquisitionAmount / quantity)
+                .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
     }
 

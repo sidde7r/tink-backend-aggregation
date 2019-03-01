@@ -40,9 +40,12 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount(HolderName holderName) {
-        String normalizedIban = iban.replaceAll(" ","").toLowerCase();
+        String normalizedIban = iban.replaceAll(" ", "").toLowerCase();
 
-        return TransactionalAccount.builder(getTinkAccountType(), normalizedIban, new Amount(currency, availableBalance))
+        return TransactionalAccount.builder(
+                        getTinkAccountType(),
+                        normalizedIban,
+                        new Amount(currency, availableBalance))
                 .setAccountNumber(iban)
                 .setName(name)
                 .setHolderName(holderName)
@@ -58,21 +61,24 @@ public class AccountEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        Optional<AccountTypes> accountType = BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
+        Optional<AccountTypes> accountType =
+                BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
 
         if (accountType.isPresent()) {
-            return accountType.get().equals(AccountTypes.CHECKING) ||
-                    accountType.get().equals(AccountTypes.SAVINGS);
+            return accountType.get().equals(AccountTypes.CHECKING)
+                    || accountType.get().equals(AccountTypes.SAVINGS);
         }
 
-        LOGGER.infoExtraLong(SerializationUtils.serializeToString(this),
+        LOGGER.infoExtraLong(
+                SerializationUtils.serializeToString(this),
                 BbvaConstants.Logging.UNKNOWN_ACCOUNT_TYPE);
         return false;
     }
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
-        Optional<AccountTypes> accountType = BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
+        Optional<AccountTypes> accountType =
+                BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
 
         return accountType.orElse(AccountTypes.OTHER);
     }

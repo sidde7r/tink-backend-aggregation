@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BbvaAuthenticator implements PasswordAuthenticator {
 
-    private BbvaApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private BbvaApiClient apiClient;
 
     public BbvaAuthenticator(BbvaApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -22,7 +22,8 @@ public class BbvaAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
 
         HttpResponse response = apiClient.login(username, password);
 
@@ -30,16 +31,22 @@ public class BbvaAuthenticator implements PasswordAuthenticator {
 
         if (responseString.toLowerCase().contains(BbvaConstants.Message.LOGIN_SUCCESS)) {
             InitiateSessionResponse initiateSessionResponse = apiClient.initiateSession();
-            if (!Objects.equals(initiateSessionResponse.getResult().getCode().toLowerCase(), BbvaConstants.Message.OK)) {
-                throw new IllegalStateException(String.format("Initiate session failed with code %s",
-                        initiateSessionResponse.getResult().getCode()));
+            if (!Objects.equals(
+                    initiateSessionResponse.getResult().getCode().toLowerCase(),
+                    BbvaConstants.Message.OK)) {
+                throw new IllegalStateException(
+                        String.format(
+                                "Initiate session failed with code %s",
+                                initiateSessionResponse.getResult().getCode()));
             }
-            sessionStorage.put(BbvaConstants.Storage.HOLDER_NAME, initiateSessionResponse.getName());
-        } else if (responseString.toLowerCase().contains(BbvaConstants.Message.LOGIN_WRONG_CREDENTIAL_CODE)) {
+            sessionStorage.put(
+                    BbvaConstants.Storage.HOLDER_NAME, initiateSessionResponse.getName());
+        } else if (responseString
+                .toLowerCase()
+                .contains(BbvaConstants.Message.LOGIN_WRONG_CREDENTIAL_CODE)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         } else {
             throw new IllegalStateException("Could not authenticate");
         }
-
     }
 }

@@ -11,7 +11,6 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class BbvaSessionHandler implements SessionHandler {
-
     private BbvaApiClient apiClient;
 
     public BbvaSessionHandler(BbvaApiClient apiClient) {
@@ -30,7 +29,7 @@ public class BbvaSessionHandler implements SessionHandler {
             if (!BbvaConstants.Message.OK.equalsIgnoreCase(response.getResult().getCode())) {
                 throw SessionError.SESSION_EXPIRED.exception();
             }
-        } catch (HttpClientException|HttpResponseException|BankServiceException e) {
+        } catch (HttpClientException | HttpResponseException | BankServiceException e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

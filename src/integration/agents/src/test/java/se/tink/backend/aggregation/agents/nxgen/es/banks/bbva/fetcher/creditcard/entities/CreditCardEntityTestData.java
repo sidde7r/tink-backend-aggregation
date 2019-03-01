@@ -10,7 +10,9 @@ public class CreditCardEntityTestData {
     public static String CREDIT_CARD_DATA =
             "{\n"
                     + "  \"id\": \"ES0111111100000000000000000111111111XXXXXXXXX\",\n"
-                    + "  \"name\": \"" + NAME + "\",\n"
+                    + "  \"name\": \""
+                    + NAME
+                    + "\",\n"
                     + "  \"productDescription\": \"PACK DUO BBVA - DESPUES\",\n"
                     + "  \"iban\": null,\n"
                     + "  \"productFamilyCode\": \"cards\",\n"
@@ -20,7 +22,9 @@ public class CreditCardEntityTestData {
                     + "  \"typeDescription\": null,\n"
                     + "  \"familyCode\": \"credit\",\n"
                     + "  \"currency\": \"EUR\",\n"
-                    + "  \"availableBalance\": \"" + String.valueOf(balance) + "\",\n"
+                    + "  \"availableBalance\": \""
+                    + balance
+                    + "\",\n"
                     + "  \"availableBalances\": null,\n"
                     + "  \"branch\": \"1111\",\n"
                     + "  \"accountProductId\": null,\n"

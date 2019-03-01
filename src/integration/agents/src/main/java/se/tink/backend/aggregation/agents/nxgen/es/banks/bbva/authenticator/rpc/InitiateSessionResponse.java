@@ -12,7 +12,6 @@ public class InitiateSessionResponse extends BbvaResponse {
     private String surname;
     private UserEntity user;
 
-
     public UserEntity getUser() {
         return user;
     }

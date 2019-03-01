@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class BbvaCreditCardFetcher implements AccountFetcher<CreditCardAccount> {
-
     private final BbvaApiClient apiClient;
 
     public BbvaCreditCardFetcher(BbvaApiClient apiClient) {
@@ -19,9 +18,7 @@ public class BbvaCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
     public Collection<CreditCardAccount> fetchAccounts() {
         FetchProductsResponse productsResponse = apiClient.fetchProducts();
 
-        return productsResponse
-                .getCards()
-                .stream()
+        return productsResponse.getCards().stream()
                 .filter(c -> c.isCreditCard())
                 .map(c -> c.toTinkCreditCard())
                 .collect(Collectors.toList());

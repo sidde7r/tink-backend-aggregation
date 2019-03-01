@@ -11,7 +11,7 @@ public class AmountEntity {
     private String amount;
 
     @JsonIgnore
-    public Amount toTinkAmount(){
-         return new Amount(currency.getId(), StringUtils.parseAmount(amount));
-     }
+    public Amount toTinkAmount() {
+        return new Amount(currency.getId(), StringUtils.parseAmount(amount));
+    }
 }

@@ -6,8 +6,19 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class BbvaConstants {
-
     public static final int PAGE_SIZE = 20;
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder()
+                    .put(
+                            AccountTypes.CHECKING,
+                            "0000011954", // CUENTA NEGOCIOS - "personal" business account
+                            "0CA0000079", // CUENTA BLUE
+                            "0CA0000245", // CUENTA ON LINE
+                            "0000009340", // CUENTA TRADER - marked as personal account by BBVA
+                            "0CA0000299", // CUENTO UNO
+                            "0000004272") // CUENTA BLUE ONLINE
+                    .put(AccountTypes.SAVINGS, "0000011102") // CUENTA METAS - goal account
+                    .build();
 
     public enum Error {
         BANK_SERVICE_UNAVAILABLE("ENPP0000"),
@@ -120,18 +131,4 @@ public final class BbvaConstants {
         public static final String LOGIN_SUCCESS = "login successful";
         public static final String LOGIN_WRONG_CREDENTIAL_CODE = "eai0000";
     }
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING,
-                            "0000011954",   // CUENTA NEGOCIOS - "personal" business account
-                            "0CA0000079",   // CUENTA BLUE
-                            "0CA0000245",   // CUENTA ON LINE
-                            "0000009340",   // CUENTA TRADER - marked as personal account by BBVA
-                            "0CA0000299",   // CUENTO UNO
-                            "0000004272")   // CUENTA BLUE ONLINE
-                    .put(AccountTypes.SAVINGS,
-                            "0000011102")   // CUENTA METAS - goal account
-                    .build();
 }
-

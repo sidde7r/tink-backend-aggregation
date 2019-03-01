@@ -8,17 +8,21 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProfitabilityItemEntity {
     @JsonProperty("titles")
     private double quantity;
+
     private AmountEntity dividenAmount;
     private AmountEntity quoteAmount;
+
     @JsonProperty("inbound")
     private ValueEntity acquisitionValue;
+
     @JsonProperty("outbound")
     private ValueEntity soldValue;
 
     @JsonIgnore
     public double getTotalProfit() {
-        double purchaseAmount = acquisitionValue.getFreeAmount().getAmount() +
-                (acquisitionValue.getValue().getAmount() * quantity);
+        double purchaseAmount =
+                acquisitionValue.getFreeAmount().getAmount()
+                        + (acquisitionValue.getValue().getAmount() * quantity);
 
         return quoteAmount.getAmount() - purchaseAmount;
     }

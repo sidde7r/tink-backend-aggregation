@@ -14,14 +14,17 @@ public class UrlEncodedFormBody extends LinkedHashMap<String, String> {
     // create login request body and return as url encoded formatted string
     public static String createLoginRequest(String username, String password) {
         return new UrlEncodedFormBody()
-                .add(BbvaConstants.PostParameter.ORIGEN_KEY,
+                .add(
+                        BbvaConstants.PostParameter.ORIGEN_KEY,
                         BbvaConstants.PostParameter.ORIGEN_VALUE)
-                .add(BbvaConstants.PostParameter.EAI_TIPOCP_KEY,
+                .add(
+                        BbvaConstants.PostParameter.EAI_TIPOCP_KEY,
                         BbvaConstants.PostParameter.EAI_TIPOCP_VALUE)
-                .add(BbvaConstants.PostParameter.EAI_USER_KEY,
+                .add(
+                        BbvaConstants.PostParameter.EAI_USER_KEY,
                         BbvaConstants.PostParameter.EAI_USER_VALUE_PREFIX + username)
-                .add(BbvaConstants.PostParameter.EAI_PASSWORD_KEY,
-                        password).getBodyValue();
+                .add(BbvaConstants.PostParameter.EAI_PASSWORD_KEY, password)
+                .getBodyValue();
     }
 
     public UrlEncodedFormBody add(String name, String value) {
@@ -37,9 +40,11 @@ public class UrlEncodedFormBody extends LinkedHashMap<String, String> {
 
     private String getValuePair(Map.Entry<String, String> parameter) {
         try {
-            return String.format(NAME_VALUE_FORMAT, parameter.getKey(), URLEncoder.encode(parameter.getValue(),
-                    BbvaConstants.Defaults.CHARSET));
-        } catch(Exception e) {
+            return String.format(
+                    NAME_VALUE_FORMAT,
+                    parameter.getKey(),
+                    URLEncoder.encode(parameter.getValue(), BbvaConstants.Defaults.CHARSET));
+        } catch (Exception e) {
             throw new IllegalStateException("Cannot create form body: " + e.getMessage());
         }
     }

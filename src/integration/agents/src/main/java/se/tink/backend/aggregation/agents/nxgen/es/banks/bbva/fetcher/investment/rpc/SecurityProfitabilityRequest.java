@@ -26,7 +26,8 @@ public class SecurityProfitabilityRequest {
         SecurityProfitabilityRequest request = new SecurityProfitabilityRequest();
         request.security = securityCode;
         request.securityPortfolioId = portfolioId;
-        request.startDate = ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITH_TIMEZONE.format(startDate);
+        request.startDate =
+                ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITH_TIMEZONE.format(startDate);
         request.endDate = ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITH_TIMEZONE.format(endDate);
 
         return request;

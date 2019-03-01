@@ -10,8 +10,8 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -29,6 +29,7 @@ public class StockAccountEntity {
     private List<ComertialClassificationsEntity> comertialClassifications;
     private List<SecurityEntity> securities;
     private List<ActionsEntity> actions;
+
     @JsonProperty("bocf")
     private String accountNumber;
 
@@ -74,6 +75,7 @@ public class StockAccountEntity {
     }
 
     private Instrument toTinkInstrument(BbvaApiClient apiClient, SecurityEntity securityEntity) {
-        return securityEntity.toTinkInstrument(apiClient, Instrument.Type.STOCK, id, securityEntity.getRicCode());
+        return securityEntity.toTinkInstrument(
+                apiClient, Instrument.Type.STOCK, id, securityEntity.getRicCode());
     }
 }

@@ -24,6 +24,7 @@ public class FetchProductsResponse extends BbvaResponse {
     public List<AccountEntity> getAccounts() {
         return accounts;
     }
+
     public List<CreditCardEntity> getCards() {
         return cards;
     }
