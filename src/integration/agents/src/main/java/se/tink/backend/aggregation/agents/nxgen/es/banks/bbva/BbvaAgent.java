@@ -29,7 +29,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BbvaAgent extends NextGenerationAgent {
-
     private BbvaApiClient apiClient;
 
     public BbvaAgent(
@@ -43,26 +42,22 @@ public class BbvaAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BbvaAuthenticator authenticator = new BbvaAuthenticator(apiClient, sessionStorage);
-
-        return new PasswordAuthenticationController(authenticator);
+        return new PasswordAuthenticationController(
+                new BbvaAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        BbvaAccountFetcher transactionalAccountFetcher =
-                new BbvaAccountFetcher(apiClient, sessionStorage);
-        BbvaTransactionFetcher transactionFetcher = new BbvaTransactionFetcher(apiClient);
-
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
                         updateController,
-                        transactionalAccountFetcher,
+                        new BbvaAccountFetcher(apiClient, sessionStorage),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionPagePaginationController<>(transactionFetcher, 0))));
+                                new TransactionPagePaginationController<>(
+                                        new BbvaTransactionFetcher(apiClient), 0))));
     }
 
     @Override
@@ -72,19 +67,15 @@ public class BbvaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        BbvaCreditCardFetcher creditCardFetcher = new BbvaCreditCardFetcher(apiClient);
-        BbvaCreditCardTransactionFetcher creditCardTransactionFetcher =
-                new BbvaCreditCardTransactionFetcher(apiClient);
-
         return Optional.of(
                 new CreditCardRefreshController(
                         metricRefreshController,
                         updateController,
-                        creditCardFetcher,
+                        new BbvaCreditCardFetcher(apiClient),
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(
-                                        creditCardTransactionFetcher))));
+                                        new BbvaCreditCardTransactionFetcher(apiClient)))));
     }
 
     @Override
