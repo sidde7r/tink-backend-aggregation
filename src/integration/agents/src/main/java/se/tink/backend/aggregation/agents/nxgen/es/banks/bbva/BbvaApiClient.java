@@ -3,11 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.regex.Pattern;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
@@ -25,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -35,11 +33,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class BbvaApiClient {
     private static final Logger LOG = LoggerFactory.getLogger(BbvaApiClient.class);
 
-    private static final int RANDOM_HEX_LENGTH = 64;
-    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
-    private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
-    private static final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
-
     private TinkHttpClient client;
     private String userAgent;
     private String userId;
@@ -47,26 +40,14 @@ public class BbvaApiClient {
 
     public BbvaApiClient(TinkHttpClient client) {
         this.client = client;
-        this.userAgent =
-                String.format(BbvaConstants.Header.BBVA_USER_AGENT_VALUE, generateRandomHex());
+        this.userAgent = String.format(Header.BBVA_USER_AGENT_VALUE, BbvaUtils.generateRandomHex());
     }
 
-    // Non NIE/PASSPORT usernames must be prepended with '0' (based on ambassador credentials) while
-    // NIE/PASSPORT
-    // usernames are passed along as-is.
-    private static String formatUsername(String username) {
-        if (NIE_PATTERN.matcher(username).matches()
-                || PASSPORT_PATTERN.matcher(username).matches()
-                || ES_PASSPORT_PATTERN.matcher(username).matches()) {
-            return username;
-        }
-
-        return String.format("0%s", username);
     }
 
     public HttpResponse login(String username, String password) {
         String loginBody =
-                UrlEncodedFormBody.createLoginRequest(formatUsername(username), password);
+                UrlEncodedFormBody.createLoginRequest(BbvaUtils.formatUsername(username), password);
 
         return client.request(BbvaConstants.Url.LOGIN)
                 .type(BbvaConstants.Header.CONTENT_TYPE_URLENCODED_UTF8)
@@ -207,11 +188,6 @@ public class BbvaApiClient {
                 .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent);
     }
 
-    private String generateRandomHex() {
-        Random random = new Random();
-        byte[] randBytes = new byte[RANDOM_HEX_LENGTH];
-        random.nextBytes(randBytes);
 
-        return Hex.encodeHexString(randBytes).toUpperCase();
     }
 }
