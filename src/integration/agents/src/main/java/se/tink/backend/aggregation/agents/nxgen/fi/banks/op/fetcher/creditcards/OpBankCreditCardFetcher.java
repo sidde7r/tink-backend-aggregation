@@ -42,8 +42,7 @@ public class OpBankCreditCardFetcher implements AccountFetcher<CreditCardAccount
 
     @Override
     public TransactionKeyPaginatorResponse<String> getTransactionsFor(CreditCardAccount account, String key) {
-        // This is how I believe the credit card transaction fetching will work (same as for transactional accounts,
-        // but commented it out for testing endpoints
+        // TODO: Implement credit card transaction fetching. We need credentials for that.
 
 //        if (key == null) {
 //            apiClient.fetchCreditCardTransactions(account);
@@ -51,13 +50,13 @@ public class OpBankCreditCardFetcher implements AccountFetcher<CreditCardAccount
 //            apiClient.fetchCreditCardTransactions(account, key);
 //        }
 
-        try {
-            String response = apiClient.fetchCreditCardTransactions(account);
-            LOGGER.infoExtraLong(response, OpBankConstants.Fetcher.CREDIT_CARD_TRX_LOGGING_NEW);
-        } catch (Exception e){
-            LOGGER.warn(OpBankConstants.Fetcher.CREDIT_CARD_TRX_FAILED + " new endpoint");
-            tryFetchFromOldEndpoint(account);
-        }
+//        try {
+//            String response = apiClient.fetchCreditCardTransactions(account);
+//            LOGGER.infoExtraLong(response, OpBankConstants.Fetcher.CREDIT_CARD_TRX_LOGGING_NEW);
+//        } catch (Exception e){
+//            LOGGER.warn(OpBankConstants.Fetcher.CREDIT_CARD_TRX_FAILED + " new endpoint");
+//            tryFetchFromOldEndpoint(account);
+//        }
 
         return TransactionKeyPaginatorResponseImpl.createEmpty();
     }
