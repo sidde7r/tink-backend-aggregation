@@ -11,6 +11,11 @@ alias(
 )
 
 alias(
+    name = "integration_framework",
+    actual = "//src/integration/lib:framework",
+)
+
+alias(
     name = "ukob_register",
     actual = "//src/ukob_register",
 )
