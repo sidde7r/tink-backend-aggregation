@@ -26,7 +26,7 @@ public class DemoFakeBankAuthenticator implements PasswordAuthenticator {
             DemoFakeBankAuthenticateResponse response = client.authenticate(
                     new DemoFakeBankAuthenticationBody(username, password));
 
-            if(response.getStatus().equals("SUCCESS")) {
+            if(response.getStatus().equals(DemoFakeBankConstants.Responses.SUCCESS_STRING)) {
                 sessionStorage.put(DemoFakeBankConstants.Storage.AUTH_TOKEN, response.getToken());
             }
         } catch (HttpResponseException e) {

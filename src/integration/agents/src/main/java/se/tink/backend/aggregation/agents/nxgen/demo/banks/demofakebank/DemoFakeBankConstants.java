@@ -12,4 +12,8 @@ public class DemoFakeBankConstants {
     public static class Storage {
         public static final String AUTH_TOKEN = "auth_token";
     }
+
+    public static class Responses {
+        public static final String SUCCESS_STRING = "SUCCESS";
+    }
 }
