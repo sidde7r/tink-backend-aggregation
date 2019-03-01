@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class DemoFakeBankConstants {
     public static class Urls {
+        //TODO: Do a proper solution for this before production!
         private static final URL BASE_URL = new URL("demo-financial-institute.internal.staging.aggregation.tink.network:32011");
         //private static final URL BASE_URL = new URL("localhost:8090");
         public static final URL AUTHENTICATE_URL = BASE_URL.concatWithSeparator("authenticate");
