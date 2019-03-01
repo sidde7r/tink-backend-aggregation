@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator;
 
 import com.google.common.base.Strings;
-import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -20,9 +21,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.libraries.i18n.LocalizableKey;
 
 public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
@@ -85,10 +83,12 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
                         KbcConstants.UserMessage.INCORRECT_CARD_NUMBER.getKey());
             }
 
+            if(isIncorrectLoginCodeLastAttempt(e)) {
+                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
+            }
+
             if (isIncorrectLoginCode(e)) {
-                // Using the exact message from bank since it contains info about number of remaining attempts.
-                throw LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(
-                        StringUtils.substringAfterLast(e.getMessage(), "[Message]: ")));
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
             throw e;
@@ -105,9 +105,7 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
             }
 
             if (isIncorrectSignCode(e)) {
-                // Using the exact message from bank since it contains info about number of remaining attempts.
-                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception(new LocalizableKey(
-                        StringUtils.substringAfterLast(e.getMessage(), "[Message]: ")));
+                throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
             }
 
             throw e;
@@ -176,16 +174,19 @@ public class KbcAuthenticator implements MultiFactorAuthenticator, AutoAuthentic
         return possibleUnhandledErrorCodeLogAndCheckTextMessage(e, KbcConstants.ErrorMessage.NOT_A_CUSTOMER);
     }
 
+    private boolean isIncorrectLoginCodeLastAttempt(IllegalStateException e) {
+        return matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT);
+    }
+
     private boolean isIncorrectLoginCode(IllegalStateException e) {
-        if (matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.INCORRECT_LOGIN_CODE_ONE_ATTEMPT_LEFT)
-            || matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT)) {
+        if (matchesErrorMessage(e, KbcConstants.HeaderErrorMessage.INCORRECT_LOGIN_CODE_TWO_ATTEMPT_LEFT)) {
             return true;
         }
         return possibleUnhandledErrorCodeLogAndCheckTextMessage(e, KbcConstants.ErrorMessage.INCORRECT_LOGIN_CODE);
     }
 
     private boolean isIncorrectSignCode(IllegalStateException e) {
-        return matchesErrorMessage(e, KbcConstants.ErrorMessage.INCORRECT_SIGN_CODE);
+        return possibleUnhandledErrorCodeLogAndCheckTextMessage(e, KbcConstants.ErrorMessage.INCORRECT_SIGN_CODE);
     }
 
     private boolean matchesErrorMessage(IllegalStateException e, String errorMessage) {
