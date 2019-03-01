@@ -188,10 +188,7 @@ public class DetailedHoldingEntity {
                         .map(AmountEntity::toTinkAmount)
                         .orElse(null));
         instrument.setCurrency(
-                Optional.ofNullable(numberOrAmount)
-                        .map(NumberOrAmountEntity::getNominalValue)
-                        .map(AmountEntity::getCurrencyCode)
-                        .orElse(null));
+                getInstrumentCurrency());
         instrument.setIsin(isin);
         instrument.setMarketValueFromAmount(
                 Optional.ofNullable(marketValue)
@@ -214,8 +211,26 @@ public class DetailedHoldingEntity {
         instrument.setRawType(rawType);
         instrument.setType(getTinkType(rawType));
         instrument.setUniqueIdentifier(isin + Optional.ofNullable(nameMarketPlace).orElse(EMPTY_STRING));
+        instrument.setMarketPlace(nameMarketPlace);
 
         return Optional.of(instrument);
+    }
+
+    private String getInstrumentCurrency() {
+        String numberOrAmountCurrency =
+                Optional.ofNullable(numberOrAmount)
+                .map(NumberOrAmountEntity::getNominalValue)
+                .map(AmountEntity::getCurrencyCode)
+                .orElse(null);
+
+        if (numberOrAmountCurrency != null) {
+            return numberOrAmountCurrency;
+        }
+
+        // Fallback to use acquisitionValue if the currency of numberOrAmount is not set.
+        return Optional.ofNullable(acquisitionValue)
+                .map(AmountEntity::getCurrencyCode)
+                .orElse(null);
     }
 
     private static Instrument.Type getTinkType(String rawType) {
