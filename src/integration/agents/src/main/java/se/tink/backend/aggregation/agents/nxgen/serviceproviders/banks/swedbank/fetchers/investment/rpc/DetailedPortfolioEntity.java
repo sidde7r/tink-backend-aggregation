@@ -92,7 +92,6 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
 
         List<Instrument> instruments = toTinkInstruments(apiClient);
         Optional<Portfolio> portfolio = toTinkPortfolio(instruments, defaultCurrency);
-
         if (!portfolio.isPresent()) {
             return Optional.empty();
         }
@@ -143,7 +142,7 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
 
         portfolio.setCashValue(
                 Optional.ofNullable(this.settlements).orElse(Collections.emptyList()).stream()
-                        .map(SettlementEntity::getBalance)
+                        .map(SettlementEntity::getBuyingPower)
                         .map(AmountEntity::toTinkAmount)
                         .mapToDouble(Amount::getValue).sum());
 
