@@ -30,11 +30,11 @@ public class DemoFakeBankAuthenticator implements PasswordAuthenticator {
                 sessionStorage.put(DemoFakeBankConstants.Storage.AUTH_TOKEN, response.getToken());
             }
         } catch (HttpResponseException e) {
-            HandleAuthenticationException(e);
+            handleAuthenticationException(e);
         }
     }
 
-    private void HandleAuthenticationException(HttpResponseException e) throws LoginException {
+    private void handleAuthenticationException(HttpResponseException e) throws LoginException {
         HttpResponse response = e.getResponse();
         //TODO: Handle exception!
         throw e;
