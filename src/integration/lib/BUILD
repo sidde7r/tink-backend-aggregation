@@ -154,3 +154,12 @@ junit_test(
         "//third_party:pl_pragmatists_junitparams",
     ],
 )
+
+genrule(
+    name = "framework",
+    # Implicitly built, see: https://docs.bazel.build/versions/master/be/java.html#java_binary_implicit_outputs
+    srcs = [":lib_test_deploy.jar"],
+    outs = ["tink_backend_integration_framework.jar"],
+    cmd = "cp $(location :lib_test_deploy.jar) \"$(@)\"",
+    visibility = ["//visibility:public"],
+)
