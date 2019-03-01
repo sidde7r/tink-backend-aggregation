@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entity.UserinfoEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.UserinfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

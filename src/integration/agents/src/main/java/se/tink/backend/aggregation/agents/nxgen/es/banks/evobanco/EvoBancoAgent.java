@@ -26,7 +26,7 @@ public class EvoBancoAgent extends NextGenerationAgent {
 
     public EvoBancoAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        bankClient = new EvoBancoApiClient(client);
+        bankClient = new EvoBancoApiClient(client, sessionStorage);
     }
 
     @Override
