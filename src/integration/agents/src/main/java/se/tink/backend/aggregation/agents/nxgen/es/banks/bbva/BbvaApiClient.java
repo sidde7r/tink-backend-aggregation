@@ -22,9 +22,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.FetchTransactionsRequestEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchAccountTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
@@ -120,19 +120,17 @@ public class BbvaApiClient {
         return initiateSessionResponse;
     }
 
-    public FetchProductsResponse fetchProducts() {
-
-        return createRefererRequest(BbvaConstants.Url.PRODUCTS).get(FetchProductsResponse.class);
+    public ProductsResponse fetchProducts() {
+        return createRefererRequest(BbvaConstants.Url.PRODUCTS).get(ProductsResponse.class);
     }
 
-    public FetchAccountTransactionsResponse fetchAccountTransactions(
-            Account account, int keyIndex) {
-        FetchTransactionsRequestEntity request = createAccountTransactionsQuery(account);
+    public AccountTransactionsResponse fetchAccountTransactions(Account account, int keyIndex) {
+        TransactionsRequest request = createAccountTransactionsQuery(account);
 
         return createRefererRequest(BbvaConstants.Url.ACCOUNT_TRANSACTION)
                 .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, String.valueOf(keyIndex))
                 .queryParam(BbvaConstants.Query.PAGE_SIZE, String.valueOf(BbvaConstants.PAGE_SIZE))
-                .post(FetchAccountTransactionsResponse.class, request);
+                .post(AccountTransactionsResponse.class, request);
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(
@@ -157,8 +155,8 @@ public class BbvaApiClient {
                 .post(SecurityProfitabilityResponse.class, request);
     }
 
-    private FetchTransactionsRequestEntity createAccountTransactionsQuery(Account account) {
-        FetchTransactionsRequestEntity request = new FetchTransactionsRequestEntity();
+    public TransactionsRequest createAccountTransactionsQuery(Account account) {
+        TransactionsRequest request = new TransactionsRequest();
 
         String accountId = account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID);
         ContractEntity contract = new ContractEntity().setId(accountId);

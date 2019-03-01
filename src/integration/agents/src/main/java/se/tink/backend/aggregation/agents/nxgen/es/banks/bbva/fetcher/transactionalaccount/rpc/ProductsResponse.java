@@ -8,8 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FetchProductsResponse extends BbvaResponse {
-
+public class ProductsResponse extends BbvaResponse {
     private List<AccountEntity> accounts;
     private List<CreditCardEntity> cards;
     private List<StockAccountEntity> stockAccounts;
@@ -30,7 +29,6 @@ public class FetchProductsResponse extends BbvaResponse {
     }
 
     // getters to support logging
-
     public List<Object> getInternationalFundsPortfolios() {
         return internationalFundsPortfolios;
     }

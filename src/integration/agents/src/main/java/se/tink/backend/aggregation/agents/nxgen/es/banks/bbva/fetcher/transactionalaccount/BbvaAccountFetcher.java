@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -31,7 +31,7 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
                         .map(holdername -> new HolderName(holdername))
                         .orElse(null);
 
-        FetchProductsResponse productsResponse = apiClient.fetchProducts();
+        ProductsResponse productsResponse = apiClient.fetchProducts();
 
         if (productsResponse == null || productsResponse.getAccounts() == null) {
             return Collections.emptyList();

@@ -1,11 +1,12 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc;
 
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class FetchTransactionsRequestEntity {
+public class TransactionsRequest {
     private UserEntity customer;
     private String searchType;
     private List<AccountContractsEntity> accountContracts;

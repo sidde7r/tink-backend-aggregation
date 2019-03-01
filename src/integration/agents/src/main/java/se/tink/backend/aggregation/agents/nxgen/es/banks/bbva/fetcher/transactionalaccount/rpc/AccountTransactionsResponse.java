@@ -11,8 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class FetchAccountTransactionsResponse implements PaginatorResponse {
-
+public class AccountTransactionsResponse implements PaginatorResponse {
     private List<AccountTransactionEntity> accountTransactions;
     private PaginationEntity pagination;
     private Integer totalResults;

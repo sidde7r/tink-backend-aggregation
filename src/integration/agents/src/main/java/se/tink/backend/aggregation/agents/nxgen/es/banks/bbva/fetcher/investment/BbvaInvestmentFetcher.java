@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -30,7 +30,7 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         List<InvestmentAccount> accounts = new ArrayList<>();
-        FetchProductsResponse productsResponse = apiClient.fetchProducts();
+        ProductsResponse productsResponse = apiClient.fetchProducts();
         String holderName = sessionStorage.get(BbvaConstants.Storage.HOLDER_NAME);
 
         // investment logging
