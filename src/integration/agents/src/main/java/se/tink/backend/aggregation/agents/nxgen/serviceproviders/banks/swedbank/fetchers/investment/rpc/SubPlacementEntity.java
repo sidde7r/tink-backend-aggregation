@@ -67,6 +67,7 @@ public class SubPlacementEntity {
 
             switch (this.type.toLowerCase()) {
             case "equity":
+            case "equities":
                 holding.toTinkInstrument(this.type).ifPresent(instruments::add);
                 break;
             case "equityfund":

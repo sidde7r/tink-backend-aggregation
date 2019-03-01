@@ -225,6 +225,7 @@ public class DetailedHoldingEntity {
 
         switch (rawType.toLowerCase()) {
         case "equity":
+        case "equities":
             return Instrument.Type.STOCK;
         case "equityfund":
             return Instrument.Type.FUND;
