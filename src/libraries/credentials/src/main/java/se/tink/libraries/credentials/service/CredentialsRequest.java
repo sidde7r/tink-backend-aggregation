@@ -33,6 +33,8 @@ public abstract class CredentialsRequest {
     @JsonIgnore
     public abstract CredentialsRequestType getType();
 
+    private String callbackUriId;
+
     public CredentialsRequest() {
 
     }
@@ -132,5 +134,13 @@ public abstract class CredentialsRequest {
 
     public void setUpdate(boolean update) {
         this.update = update;
+    }
+
+    public String getCallbackUriId() {
+        return callbackUriId;
+    }
+
+    public void setCallbackUriId(String callbackUriId) {
+        this.callbackUriId = callbackUriId;
     }
 }

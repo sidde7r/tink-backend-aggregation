@@ -40,6 +40,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             ukOpenBankingAccountFetcher;
     private final UkOpenBankingPis ukOpenBankingPis;
     private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
+    private String callbackUriId;
 
     public UkOpenBankingBankTransferExecutor(
             Catalog catalog,
@@ -50,7 +51,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
             TinkHttpClient httpClient,
             UkOpenBankingAccountFetcher<?, ?, TransactionalAccount> ukOpenBankingAccountFetcher,
             UkOpenBankingPis ukOpenBankingPis,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair, String callbackUriId) {
         this.catalog = catalog;
         this.credentials = credentials;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -59,6 +60,7 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
         this.ukOpenBankingAccountFetcher = ukOpenBankingAccountFetcher;
         this.ukOpenBankingPis = ukOpenBankingPis;
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
+        this.callbackUriId = callbackUriId;
 
         this.apiClient =
                 new UkOpenBankingApiClient(
@@ -143,7 +145,8 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
                         supplementalInformationHelper,
                         apiClient,
                         paymentAuthenticator,
-                        callbackJWTSignatureKeyPair);
+                        callbackJWTSignatureKeyPair,
+                        callbackUriId);
 
         ThirdPartyAppAuthenticationController<String> thirdPartyAppAuthenticationController =
                 new ThirdPartyAppAuthenticationController<>(

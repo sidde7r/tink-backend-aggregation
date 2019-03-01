@@ -51,13 +51,13 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     private final String pseudoId;
     private OAuth2Token clientAccessToken;
 
-    private final String callbackUriId = "";
+    private final String callbackUriId;
 
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OpenIdApiClient apiClient,
             OpenIdAuthenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair, String callbackUriId) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;

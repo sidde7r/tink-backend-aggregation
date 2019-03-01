@@ -20,7 +20,8 @@ public class OpenIdAuthenticationFlow {
                 supplementalInformationHelper,
                 apiClient,
                 authenticator,
-                callbackJWTSignatureKeyPair
+                callbackJWTSignatureKeyPair,
+                request.getCallbackUriId()
         );
 
         return new AutoAuthenticationController(
