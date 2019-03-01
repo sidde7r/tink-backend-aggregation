@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFake
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
 public class DemoFakeBankSessionHandler implements SessionHandler {
-    DemoFakeBankApiClient client;
+    private DemoFakeBankApiClient client;
 
     public DemoFakeBankSessionHandler(DemoFakeBankApiClient client) {
         this.client = client;
