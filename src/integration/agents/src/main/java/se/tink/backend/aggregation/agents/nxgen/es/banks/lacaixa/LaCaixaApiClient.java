@@ -18,6 +18,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investm
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.FundsListResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.PositionDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.investments.rpc.PositionValuesResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanListResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.ListAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc.UserDataRequest;
@@ -145,6 +148,19 @@ public class LaCaixaApiClient {
         return createRequest(LaCaixaConstants.Urls.FETCH_CARD_TRANSACTIONS)
                 .body(new CardTransactionsRequest(cardId, start))
                 .post(CardTransactionsResponse.class);
+    }
+
+    public LoanListResponse fetchLoansList(boolean fromBegin) {
+
+        return createRequest(LaCaixaConstants.Urls.FETCH_LOANS_LIST)
+                .queryParam(LaCaixaConstants.QueryParams.FROM_BEGIN, Boolean.toString(fromBegin))
+                .get(LoanListResponse.class);
+    }
+    public LoanDetailsResponse fetchLoanDetails(String loanId) {
+        LoanDetailsRequest loanDetailsRequest = new LoanDetailsRequest(loanId);
+
+        return createRequest(LaCaixaConstants.Urls.FETCH_LOANS_DETAILS)
+                .post(LoanDetailsResponse.class, loanDetailsRequest);
     }
 
     public boolean isAlive() {

@@ -42,6 +42,9 @@ public class LaCaixaConstants {
         static final String FUNDS_LIST_PATH = "fondos/posicionGlobalLista";
         // fund details
         static final String FUND_DETAILS_PATH = "fondos/detalleFondos";
+        // loans
+        static final String LOAN_LIST_PATH = "posGlobal/listaPrestamos";
+        static final String LOAN_DETAILS_PATH = "prestamos/prestamodetalle";
     }
 
     public static class ErrorCode {
@@ -62,6 +65,8 @@ public class LaCaixaConstants {
         public static final URL FETCH_ACCOUNT_TRANSACTION = new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.GENERIC_CARDS_PATH);
         public static final URL FETCH_CARD_TRANSACTIONS = new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
+        public static final URL FETCH_LOANS_LIST = new URL(BASE + ApiService.LOAN_LIST_PATH);
+        public static final URL FETCH_LOANS_DETAILS = new URL(BASE + ApiService.LOAN_DETAILS_PATH);
 
         public static final URL FETCH_ENGAGEMENTS = new URL(BASE + ApiService.ENGAGEMENTS_PATH);
         public static final URL FETCH_DEPOSITS_LIST = new URL(BASE + ApiService.DEPOSITS_LIST_PATH);
