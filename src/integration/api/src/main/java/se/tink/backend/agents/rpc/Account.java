@@ -3,6 +3,7 @@ package se.tink.backend.agents.rpc;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -102,7 +103,14 @@ public class Account implements Cloneable {
     }
 
     public String getName() {
-        return this.name;
+        return name;
+    }
+
+    // Forces serialization to use this getter in order to ensure account name fallback similar to that
+    // existing in nxgen account builders. This solves issues in legacy agents where name is not set.
+    @JsonProperty("name")
+    public String getNameWithFallback() {
+        return this.name != null ? this.name : getAccountNumber();
     }
 
     public double getOwnership() {
