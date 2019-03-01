@@ -13,17 +13,15 @@ import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.Op
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankMobileConfigurationsEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankPostLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.authenticator.rpc.OpBankRepTypeResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.rpc.OpBankAccountsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.creditcards.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.entities.OpBankPortfolioRootEntity;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.CollateralCreditDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.CreditDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCardsResponse;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditCardTransactionsRequest;
-import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.rpc.FetchCreditsResponse;
+import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.rpc.OpBankAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.fetcher.transactionalaccounts.rpc.OpBankTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.banks.op.rpc.OpBankResponseEntity;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
@@ -153,35 +151,35 @@ public class OpBankApiClient {
                 ).get(String.class);
     }
 
-    public FetchCardsResponse fetchCards() {
+    public CardsResponse fetchCards() {
         return createRequest(OpBankConstants.Urls.CARDS)
-                .get(FetchCardsResponse.class);
+                .get(CardsResponse.class);
     }
 
-    public String fetchCardsDetails(String cardNumber, String expiryDate) {
-        return createRequest(OpBankConstants.Urls.CARDS_DETAILS
-                .parameter(OpBankConstants.PARAM_NAME_CARD_NUMBER, cardNumber)
-                .parameter(OpBankConstants.PARAM_NAME_EXPIRY_DATE, expiryDate))
+    public String fetchCreditCardTransactions(CreditCardAccount account) {
+        return getCreditCardTransactionsRequest(account)
                 .get(String.class);
     }
 
-    public FetchCreditCardTransactionsResponse fetchCreditCardTransactions(OpBankCardEntity card, Date fromDate, Date toDate, boolean firstPage) {
-        FetchCreditCardTransactionsRequest request = new FetchCreditCardTransactionsRequest()
-                .setCardNumber(card.getCardNumber())
-                .setCreditAccountNumber(card.getCreditAccountNumber())
-                .setExpiryDate(card.getExpiryDate())
-                .setNewestTransactionId(card.getNewestTransactionId())
-                .setParallelUseCode(card.getParallelUseCode())
-                .setProductCode(card.getProductCode())
-                .setSolidarityCode(card.getSolidarityCode())
-                .setStartDate(formatDate(fromDate));
+    public String fetchCreditCardTransactions(CreditCardAccount account, String previousTransactionId) {
+        return getCreditCardTransactionsRequest(account)
+                .queryParam(OpBankConstants.RequestParameters.ENCRYPTED_TRX_ID, previousTransactionId)
+                .get(String.class);
+    }
 
-        if (toDate != null) {
-            request.setEndDate(formatDate(toDate));
-        }
-        return createRequest(OpBankConstants.Urls.CARDS_TRANSACTIONS_URL
-                        .queryParam(OpBankConstants.QUERY_STRING_KEY_FIRST_PAGE, String.valueOf(firstPage)))
-                .post(FetchCreditCardTransactionsResponse.class, request);
+    public String fetchCreditCardTransactionsOldEndpoint(CreditCardAccount account) {
+        return createRequest(OpBankConstants.Urls.LEGACY_CREDIT_CARD_TRANSACTIONS_URL
+                .parameter(OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER, account.getApiIdentifier()))
+                .queryParam(OpBankConstants.RequestParameters.MAX_PAST_PARAM,
+                        OpBankConstants.RequestParameters.MAX_PAST_VALUE)
+                .get(String.class);
+    }
+
+    private RequestBuilder getCreditCardTransactionsRequest(CreditCardAccount account) {
+        return createRequest(OpBankConstants.Urls.TRANSACTIONS_URL
+                .parameter(OpBankConstants.PARAM_ENCRYPTED_ACCOUNT_NUMBER, account.getApiIdentifier()))
+                .queryParam(OpBankConstants.RequestParameters.MAX_PAST_PARAM,
+                        OpBankConstants.RequestParameters.MAX_PAST_VALUE);
     }
 
     public FetchCreditsResponse fetchCredits() {

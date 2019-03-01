@@ -46,6 +46,9 @@ public class OpBankConstants {
         public static final URL POSTLOGIN = new URL(BASE_URL + "/mobile/postlogin");
         public static final URL AUTH_TOKEN_CONFIG = new URL(BASE_URL + "/mobile/configuration/{identifier}/adobeAnalytics");
 
+        public static final URL LEGACY_CREDIT_CARD_TRANSACTIONS_URL = new URL(
+                BASE_URL + "/mobile/cards/transactions/{" + PARAM_ENCRYPTED_ACCOUNT_NUMBER + "}");
+
         //TODO: BELOW ARE NOT TESTED!! FIND THE STRUCTURES IN LOGGING
         public static final URL TRADING_ASSETS_SUMMARY = new URL(BASE_URL + "/mobile/trading/assets/summary");
         public static final URL TRADING_ASSETS_PORTFOLIOS = new URL(BASE_URL + "/mobile/trading/assets/portfolios");
@@ -73,9 +76,6 @@ public class OpBankConstants {
 
         public static final URL CARDS_DETAILS = new URL(
                 BASE_URL + "/mobile/cards/{" + PARAM_NAME_CARD_NUMBER + "}/details/{" + PARAM_NAME_EXPIRY_DATE + "}");
-
-        //TODO FIX THIS -- Should look like "/mobile/cards/transactions?firstPage=true
-        public static final URL CARDS_TRANSACTIONS_URL = new URL(BASE_URL + "/mobile/cards/transactions");
     }
 
     public static class Headers {
@@ -160,11 +160,13 @@ public class OpBankConstants {
         public static final String SPECIAL_CREDIT = "SPECIAL_CREDIT";
 
         public static final LogTag INVESTMENT_PORTFOLIO_TYPE_LOGGING =
-                LogTag.from("#investment-portfolio-type-logging-opbank-fi");
-        public static final LogTag INVESTMENT_LOGGING = LogTag.from("#investment-logging-opbank-fi");
-        public static final LogTag LOAN_LOGGING = LogTag.from("#loan-logging-opbank-fi");
-        public static final LogTag CREDIT_LOGGING = LogTag.from("#credit-logging-opbank-fi");
-        public static final LogTag CREDITCARD_LOGGING = LogTag.from("#creditcard-logging-opbank-fi");
+                LogTag.from("#opbank_portfolio_type_logging");
+        public static final LogTag INVESTMENT_LOGGING = LogTag.from("#opbank_investment_logging");
+        public static final LogTag LOAN_LOGGING = LogTag.from("#opbank_loan_logging");
+        public static final LogTag CREDIT_LOGGING = LogTag.from("#opbank_credit_logging");
+        public static final LogTag CREDIT_CARD_TRX_LOGGING_NEW = LogTag.from("#opbank_creditcard_transactions_new");
+        public static final LogTag CREDIT_CARD_TRX_LOGGING_OLD = LogTag.from("#opbank_creditcard_transactions_old");
+        public static final String CREDIT_CARD_TRX_FAILED = "#opbank_creditcard_fetching_failed";
 
         public static final ImmutableList<String> KNOWN_PORTFOLIO_TYPES = ImmutableList.of("funds", "stocks", "bonds");
         public static final Pattern EXTRACT_INSTRUMENT_GROUP_PATTERN =
@@ -223,5 +225,6 @@ public class OpBankConstants {
 
     public static class AccountType {
         public static final String ACCOUNT = "ACCOUNT";
+        public static final String CREDIT_CARD = "Credit";
     }
 }
