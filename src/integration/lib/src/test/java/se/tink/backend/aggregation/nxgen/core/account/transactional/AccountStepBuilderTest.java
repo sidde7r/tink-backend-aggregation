@@ -17,10 +17,10 @@ public final class AccountStepBuilderTest {
 
     private static final String VALID_UNIQUE_ID = "MyUniqueId";
     private static final String VALID_ACCOUNT_NUMBER = "MyAccountNumber";
-    private static final Amount VALID_AMOUNT = Amount.inSEK(10);
-    private static final AccountIdentifier VALID_IBAN_IDENTIFIER =
+    private final Amount VALID_AMOUNT = Amount.inSEK(10);
+    private final AccountIdentifier VALID_IBAN_IDENTIFIER =
             AccountIdentifier.create(AccountIdentifier.Type.IBAN, "SE1004976016582303953969");
-    private static final AccountIdentifier VALID_TINK_IDENTIFIER =
+    private final AccountIdentifier VALID_TINK_IDENTIFIER =
             AccountIdentifier.create(
                     AccountIdentifier.Type.TINK, "2ba008c2-05a6-4cec-8792-4e8528ac0699");
 
