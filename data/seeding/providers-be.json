@@ -364,7 +364,7 @@
             ],
             "multiFactor": true,
             "name": "be-axa-cardreader",
-            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your AXA card reader to finish the authentication.",
+            "passwordHelpText": "Please authenticate yourself using the same card number you normally use in your bank's mobile banking app, including the letter N and the digit following it. You will also need your AXA card reader to finish the authentication.",
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
