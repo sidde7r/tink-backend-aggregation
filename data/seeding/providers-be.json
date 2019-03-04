@@ -337,7 +337,7 @@
                 {
                     "description": "Number of your bank card",
                     "name": "username",
-                    "numeric": true,
+                    "numeric": false,
                     "minLength": 1,
                     "sensitive": true
                 }
