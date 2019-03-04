@@ -139,6 +139,8 @@
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS"
     ],
+    "nxgen.be.banks.axa.AxaAgent": [
+    ],
     "nxgen.be.banks.belfius.BelfiusAgent": [
         "TRANSFERS",
         "CHECKING_ACCOUNTS",
