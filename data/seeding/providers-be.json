@@ -105,10 +105,19 @@
                 },
                 {
                     "description": "Start code",
-                    "helpText": "Insert you bank card into the card reader.\nPress 'Sign' twice.\nEnter the start code.\nPress 'OK' twice.\nEnter the full amount of your transfer including the digits after the decimal point.\nPress 'OK'.",
+                    "helpText": "Insert you bank card into the card reader.\nPress 'Sign' twice.\nEnter the start code.\nPress 'OK' twice.",
                     "immutable": true,
                     "masked": false,
                     "name": "signfortransferdescription",
+                    "value": null
+                },
+                {
+                    "description": "Description Code",
+                    "helpText": "Enter the full amount of your transfer including the digits after the decimal point.\nPress 'OK'.",
+                    "hint": null,
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signfortransferextradescription",
                     "value": null
                 },
                 {
