@@ -338,7 +338,9 @@
                     "description": "Number of your bank card",
                     "name": "username",
                     "numeric": false,
-                    "minLength": 1,
+                    "minLength": 19,
+                    "maxLength": 19,
+                    "pattern": "^6703[0-9]{13}N[0-9]$",
                     "sensitive": true
                 }
             ],
