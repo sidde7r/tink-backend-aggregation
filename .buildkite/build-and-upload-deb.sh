@@ -16,7 +16,7 @@ echo "--- Generate versions file"
 .buildkite/generate-version-file.sh
 
 echo "--- Build deb package"
-./bazel-wrapper build --disk_cache=/cache $TARGET
+./bazel-wrapper build --disk_cache=/cache --repository_cache=/cache/external $TARGET
 
 echo "--- Import GPG key"
 # Import secret key if it's not in the GPG keychain

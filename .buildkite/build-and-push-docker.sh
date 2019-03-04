@@ -9,4 +9,4 @@ echo "$GOOGLE_CLOUD_ACCOUNT_JSON" | base64 --decode | gcloud auth activate-servi
 yes | gcloud auth configure-docker || true
 
 echo "--- Build and push image to gcr.io"
-./bazel-wrapper run --workspace_status_command $(pwd)/stamp.sh --disk_cache=/cache $TARGET
+./bazel-wrapper run --workspace_status_command $(pwd)/stamp.sh --disk_cache=/cache --repository_cache=/cache/external $TARGET
