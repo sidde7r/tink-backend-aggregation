@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass;
 
 import org.junit.Assert;
 import org.junit.Test;
+import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.OtpChallengeResponse;
 
 public class DigipassTest {
     @Test
@@ -18,7 +19,7 @@ public class DigipassTest {
     }
 
     @Test
-    public void ensureDecryptActivationData_whenPartiallyDeserialized_doesNotThrow() {
+    public void ensureDecryptActivationData_whenSufficientlyDeserialized_doesNotThrow() {
         Digipass cryptoModule = new Digipass();
         cryptoModule.deserialize(
                 "{\"ecKeyPair\":\"{\\\"privKey\\\":\\\"308193020100301306072a8648ce3d020106082a8648ce3d030107047930770201010420524c5d3d0cc0887a27928bdd21003f3b7dded8eea11c7ccbaa06faf438dfc87da00a06082a8648ce3d030107a144034200047686f40cb052a962ecd433b3e07c1bd780e5e167861fa6619c29a4eb29ed4fd21523d8c567acc2a93cf45c4e4bd0459155872620863c0abfabdf12e71f6b5c9a\\\",\\\"alg\\\":\\\"EC\\\",\\\"pubKey\\\":\\\"3059301306072a8648ce3d020106082a8648ce3d030107034200047686f40cb052a962ecd433b3e07c1bd780e5e167861fa6619c29a4eb29ed4fd21523d8c567acc2a93cf45c4e4bd0459155872620863c0abfabdf12e71f6b5c9a\\\"}\",\"clientNonce\":\"TI3dXw==\",\"otpCounter\":\"0\",\"fingerPrint\":\"4fbad6fd6412dfd91f1748d8383e8f8820b5bb185e0a6dd1aa467d568fd443bb\",\"activationPassword\":\"pYlk51\"}");
@@ -33,5 +34,18 @@ public class DigipassTest {
 
         cryptoModule.decryptActivationData(
                 serverInitialVector, encryptedNonces, encryptedServerPublicKey, xfad, challenge);
+    }
+
+    @Test
+    public void
+            ensureGenerateResponseFromChallenge_whenSufficientlyDeserialized_returnsExpectedOtpResponse() {
+        String digiString =
+                "{\"otpKey\":\"oautgKjLSlRrbIe1gLuvTQ==\",\"ecKeyPair\":\"{\\\"privKey\\\":\\\"308193020100301306072a8648ce3d020106082a8648ce3d030107047930770201010420524c5d3d0cc0887a27928bdd21003f3b7dded8eea11c7ccbaa06faf438dfc87da00a06082a8648ce3d030107a144034200047686f40cb052a962ecd433b3e07c1bd780e5e167861fa6619c29a4eb29ed4fd21523d8c567acc2a93cf45c4e4bd0459155872620863c0abfabdf12e71f6b5c9a\\\",\\\"alg\\\":\\\"EC\\\",\\\"pubKey\\\":\\\"3059301306072a8648ce3d020106082a8648ce3d030107034200047686f40cb052a962ecd433b3e07c1bd780e5e167861fa6619c29a4eb29ed4fd21523d8c567acc2a93cf45c4e4bd0459155872620863c0abfabdf12e71f6b5c9a\\\"}\",\"otpSeedData\":\"2n5foel2Aw4=\",\"otpSeedIv\":\"ZnFpOTY=\",\"clientNonce\":\"TI3dXw==\",\"xfad\":\"OAgBUAEDRkRRAhBeRTLf2VcHg4NJcMFAx2TjAwEBBAEGBQEGBgEBBwEBCAEFCQEPCgEBCwEADAEADgEBDwEBEAEBETUSAQATAQEUAQEVDEFYQU1vYkxvZ29uIBYBARcEAIKY0RgBARkBECEBECkBECoBACsBACwBAhFHEgEAEwEBFAECFQxBWEFNb2JTaWduICAWAQEXBACCmNEYAQQZAQEaAQEbAQEcAQEhARAiARAjARAkARApARAqAQArAQAsAQIRXxIBABMBARQBAxUMQVhBU2lnbiAgICAgFgEBFwQAgpjRGAEIGQEBGgEAGwEAHAEAHQEAHgEAHwEAIAEAIQEQIgEQIwEQJAEQJQEQJgEQJwEQKAEQKQEQKgEAKwEALAECES8SAQATAQEUAQQVDEFYQVJlc3BvbnNlIBYBARcEAIDYARgBACkBECoBACsBACwBAmCJCW2n5foel2Aw7A==\",\"otpCounter\":\"0\",\"fingerPrint\":\"4fbad6fd6412dfd91f1748d8383e8f8820b5bb185e0a6dd1aa467d568fd443bb\",\"activationPassword\":\"pYlk51\",\"ecdhSharedSecret\":\"qjkpczWcZB34A/A+LpJQhQ==\"}";
+        Digipass digipass = new Digipass();
+        digipass.deserialize(digiString);
+        OtpChallengeResponse response = digipass.generateResponseFromChallenge("7777777777777777");
+        String otpResponse = response.getOtpResponse();
+
+        Assert.assertEquals(16, otpResponse.length());
     }
 }

@@ -330,6 +330,45 @@
             "type": "BANK"
         },
         {
+            "className": "nxgen.be.banks.axa.AxaAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "AXA",
+            "fields": [
+                {
+                    "description": "Number of your bank card",
+                    "name": "username",
+                    "numeric": true,
+                    "minLength": 1,
+                    "sensitive": true
+                }
+            ],
+            "supplementalFields": [
+                {
+                    "description": "Challenge",
+                    "helpText": "Insert your bank card into the card reader.\nPress 'M1'.\nEnter the challenge.\nEnter the pin code.\nPress 'OK'.",
+                    "immutable": true,
+                    "masked": false,
+                    "name": "logindescription"
+                },
+                {
+                    "description": "Response, 8 digits.",
+                    "name": "logininput",
+                    "immutable": false,
+                    "masked": false,
+                    "numeric": true,
+                    "pattern": "^[0-9]{8}$",
+                    "patternError": "Enter your 8 digit response code from your card reader."
+                }
+            ],
+            "multiFactor": true,
+            "name": "be-axa-cardreader",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your axa card reader to finish the authentication.",
+            "popular": false,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "className": "demo.DemoAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Demo",
