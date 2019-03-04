@@ -1,0 +1,30 @@
+java_binary(
+    name = "integration_service",
+    srcs = glob(["src/main/java/**/*.java"]),
+    main_class = "se.tink.backend.integration.boot.IntegrationService",
+    visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//third_party:log-runtime",
+    ],
+    resources = glob([
+        "src/main/resources/**/*",
+    ]),
+    data = [
+        "//etc/integration:development-configuration",
+    ],
+    deps = [
+        "//src/integration/grpc-server",
+        "//src/integration/ping-service:ping-service",
+
+        "//src/libraries:simple-http-server",
+        "//src/libraries:health-check-handler",
+
+        "//third_party:log",
+        "//third_party:prometheus",
+        "//third_party:org_slf4j_slf4j_api",
+
+        "@io_grpc_grpc_core//jar",
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_yaml_snakeyaml",
+    ],
+)

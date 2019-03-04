@@ -1,5 +1,10 @@
 package(default_visibility = ["//visibility:public"])
 
+filegroup(
+    name = "integration-service-pb",
+    srcs = glob(["proto/integration_service/integration_service.proto"])
+)
+
 alias(
     name = "aggregation",
     actual = "//src/aggregation/service:bin",

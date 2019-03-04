@@ -31,6 +31,12 @@ git_repository(
     commit = "1bd88709966b245373b4b71f5bca4c0d7202bf1a"
 )
 
+git_repository(
+    name = "tink_backend_shared_libraries",
+    remote = "git@github.com:tink-ab/tink-backend-shared-libraries",
+    commit = "cecd27397f7d35b188d960cbc11b737e46f5ad7d",
+)
+
 # Docker dependencies
 http_archive(
     name = "io_bazel_rules_docker",
@@ -1915,21 +1921,57 @@ maven_jar(
 # TODO: build grpc jars
 
 maven_jar(
+    name = "io_grpc_grpc_protobuf",
+    artifact = "io.grpc:grpc-protobuf:1.16.1",
+    sha1 = "1f8ac89924b5de4a94058ae26c9de28f8eff49dd",
+)
+
+maven_jar(
+    name = "io_grpc_grpc_auth",
+    artifact = "io.grpc:grpc-auth:jar:1.16.1",
+    sha1 = "e38138938a930a027f3808b3329612903f716a29",
+)
+
+maven_jar(
+    name = "io_grpc_grpc_context",
+    artifact = "io.grpc:grpc-context:jar:1.16.1",
+    sha1 = "4adb6d55045b21cb384bc4498d4a7593f6cab8d7",
+)
+
+maven_jar(
     name = "io_grpc_grpc_protobuf_lite",
-    artifact = "io.grpc:grpc-protobuf-lite:1.11.0",
-    sha1 = "f2263f20d2545c208bd5bdd6ca47c3a164df0671",
+    artifact = "io.grpc:grpc-protobuf-lite:1.16.1",
+    sha1 = "3d03ee1e5e292f2312d7ca99c00ddcf9d0544c35",
 )
 
 maven_jar(
     name = "io_grpc_grpc_protobuf_nano",
-    artifact = "io.grpc:grpc-protobuf-nano:1.11.0",
-    sha1 = "a105e447c7bec8fd36ec908256dc3e2794873f4c",
+    artifact = "io.grpc:grpc-protobuf-nano:1.16.1",
+    sha1 = "b8e812b38d69f7cae0b5b642265cb0f387c9bc75",
+)
+
+maven_jar(
+    name = "io_grpc_grpc_stub",
+    artifact = "io.grpc:grpc-stub:1.16.1",
+    sha1 = "f3c30248564608791407bf43b1d4db52a80e6c36",
 )
 
 maven_jar(
     name = "io_grpc_grpc_core",
-    artifact = "io.grpc:grpc-core:1.11.0",
-    sha1 = "d0aa483ab2189b16f06f101f6e82dd601bb4a266",
+    artifact = "io.grpc:grpc-core:1.16.1",
+    sha1 = "8a938ece0ad8d8bf77d790c502ba51ebec114aa9",
+)
+
+maven_jar(
+    name = "io_grpc_grpc_netty",
+    artifact = "io.grpc:grpc-netty:1.16.1",
+    sha1 = "225a188a0b51b60f43586edaa12a79112e03430c",
+)
+
+maven_jar(
+    name = "io_grpc_grpc_testing",
+    artifact = "io.grpc:grpc-testing:1.16.1",
+    sha1 = "89b82a1748080f120908519fe30fd9931ade2bbe"
 )
 
 maven_jar(
@@ -2001,4 +2043,64 @@ maven_jar(
     name = "com_sun_media_jai_imageio",
     artifact = "com.github.jai-imageio:jai-imageio-core:1.4.0",
     sha1 = "fb6d79b929556362a241b2f65a04e538062f0077"
+)
+
+maven_jar(
+    name = "org_apache_logging_log4j_log4j_core",
+    artifact = "org.apache.logging.log4j:log4j-core:2.11.1",
+    sha1 = "592a48674c926b01a9a747c7831bcd82a9e6d6e4",
+)
+
+maven_jar(
+    name = "org_apache_logging_log4j_log4j_api",
+    artifact = "org.apache.logging.log4j:log4j-api:2.11.1",
+    sha1 = "268f0fe4df3eefe052b57c87ec48517d64fb2a10",
+)
+
+maven_jar(
+    name = "com_google_api_grpc_proto_google_common_protos",
+    artifact = "com.google.api.grpc:proto-google-common-protos:0.1.9",
+    sha1 = "3760f6a6e13c8ab070aa629876cdd183614ee877",
+)
+
+maven_jar(
+    name = "com_google_protobuf_protobuf_java",
+    artifact = "com.google.protobuf:protobuf-java:3.5.1",
+    sha1 = "8c3492f7662fa1cbf8ca76a0f5eb1146f7725acd",
+)
+
+maven_jar(
+    name = "com_google_protobuf_protobuf_java_util",
+    artifact = "com.google.protobuf:protobuf-java-util:3.5.1",
+    sha1 = "6e40a6a3f52455bd633aa2a0dba1a416e62b4575",
+)
+
+maven_jar(
+    name = "io_prometheus_simpleclient_skeleton_version",
+    artifact = "io.prometheus:simpleclient:0.5.0",
+    sha1 = "fbbfe2300098798e3d23f93b7b14befeceacf512",
+)
+
+maven_jar(
+    name = "io_prometheus_simpleclient_hotspot_skeleton_version",
+    artifact = "io.prometheus:simpleclient_hotspot:0.5.0",
+    sha1 = "0f341cb84d6713255b1ce46c7593eee50a35d414",
+)
+
+maven_jar(
+    name = "io_prometheus_simpleclient_httpserver",
+    artifact = "io.prometheus:simpleclient_httpserver:0.5.0",
+    sha1 = "53fbb42b6501cee3c879ed2f8f86b64b105604aa",
+)
+
+maven_jar(
+    name = "io_prometheus_simpleclient_pushgateway",
+    artifact = "io.prometheus:simpleclient_pushgateway:0.5.0",
+    sha1 = "92e164e6094dea346fd8f1e1a0a96f6a91c149ff",
+)
+
+maven_jar(
+    name = "io_prometheus_simpleclient_common_skeleton_version",
+    artifact = "io.prometheus:simpleclient_common:0.5.0",
+    sha1 = "bfd93082d7cf85c0543c2ccc286b96c817d1090c",
 )

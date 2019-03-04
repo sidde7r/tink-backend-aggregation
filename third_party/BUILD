@@ -1546,3 +1546,79 @@ java_library(
         "@net_sourceforge_tess4j//jar",
     ],
 )
+
+java_library(
+    name = "log",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@org_apache_logging_log4j_log4j_core//jar",
+        "@org_apache_logging_log4j_log4j_api//jar",
+        "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
+        "@com_fasterxml_jackson_core_jackson_databind//jar",
+    ]
+)
+
+java_library(
+    name = "log-runtime",
+    visibility = ["//visibility:public"],
+    exports = [
+       "@com_fasterxml_jackson_core_jackson_core//jar",
+       "@com_fasterxml_jackson_core_jackson_annotations//jar",
+       "@org_yaml_snakeyaml//jar",
+    ]
+)
+
+java_library(
+    name = "netty",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_netty_netty_codec_http2//jar",
+        "@io_netty_netty_resolver//jar",
+        "@io_netty_netty_resolver_dns//jar",
+        "@io_netty_netty_codec_dns//jar",
+        "@io_netty_netty_handler//jar",
+        "@io_netty_netty_buffer//jar",
+        "@io_netty_netty_codec_http//jar",
+        "@io_netty_netty_codec//jar",
+        "@io_netty_netty_codec_socks//jar",
+        "@io_netty_netty_transport//jar",
+        "@io_netty_netty_common//jar",
+        "@io_netty_netty_handler_proxy//jar",
+
+        "@io_grpc_grpc_protobuf//jar",
+        "@io_grpc_grpc_auth//jar",
+        "@io_grpc_grpc_context//jar",
+        "@io_grpc_grpc_protobuf_lite//jar",
+        "@io_grpc_grpc_protobuf_nano//jar",
+        "@io_grpc_grpc_stub//jar",
+        "@io_grpc_grpc_core//jar",
+        "@io_grpc_grpc_netty//jar",
+        "@io_grpc_grpc_testing//jar",
+
+        "@com_google_guava_guava//jar",
+        "@com_google_code_gson_gson//jar",
+
+        "@com_google_api_grpc_proto_google_common_protos//jar",
+
+        "@com_google_protobuf_protobuf_java//jar",
+        "@com_google_protobuf_protobuf_java_util//jar",
+
+        "@com_google_code_findbugs_jsr305//jar",
+
+        "@io_opencensus_opencensus_api//jar",
+        "@io_opencensus_opencensus_grpc_metrics//jar",
+        "@com_google_instrumentation_instrumentation_api//jar",
+    ],
+)
+
+java_library(
+    name = "prometheus",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_prometheus_simpleclient_skeleton_version//jar",
+        "@io_prometheus_simpleclient_hotspot_skeleton_version//jar",
+        "@io_prometheus_simpleclient_httpserver//jar",
+        "@io_prometheus_simpleclient_pushgateway//jar",
+        "@io_prometheus_simpleclient_common_skeleton_version//jar",
+    ]
+)

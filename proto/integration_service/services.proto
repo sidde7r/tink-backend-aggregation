@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.backend.integration.api";
+option java_outer_classname = "Protos";
+option go_package = "proto";
+
+import "proto/integration_service/rpc.proto";
+
+service PingService {
+    rpc Ping (PingRequest) returns (PingResponse) {}
+}

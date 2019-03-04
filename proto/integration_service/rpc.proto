@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "se.tink.backend.integration.api.grpc";
+option java_outer_classname = "Protos";
+option go_package = "proto";
+
+message PingRequest {
+    string message = 1;
+}
+
+message PingResponse {
+    string message = 1;
+}
