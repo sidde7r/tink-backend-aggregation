@@ -335,7 +335,7 @@
             "displayName": "AXA",
             "fields": [
                 {
-                    "description": "Complete 19-character card number, including the letter N and the digit after it",
+                    "description": "Card number (19 characters)",
                     "name": "username",
                     "numeric": false,
                     "minLength": 19,
@@ -364,7 +364,7 @@
             ],
             "multiFactor": true,
             "name": "be-axa-cardreader",
-            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your axa card reader to finish the authentication.",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app. You will also need your AXA card reader to finish the authentication.",
             "popular": true,
             "status": "ENABLED",
             "transactional": true,
