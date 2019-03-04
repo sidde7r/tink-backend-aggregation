@@ -53,32 +53,32 @@ public class RabobankConfiguration implements ClientConfiguration {
     }
 
     public boolean isValid() {
-        if (!Strings.isNullOrEmpty(clientId)
-                && !Strings.isNullOrEmpty(clientSecret)
-                && !Strings.isNullOrEmpty(clientSSLP12)
-                && !Objects.isNull(clientSSLKeyPassword)
-                && !Strings.isNullOrEmpty(redirectUrl)) {
+        if (!Strings.isNullOrEmpty(getClientId())
+                && !Strings.isNullOrEmpty(getClientSecret())
+                && !Strings.isNullOrEmpty(getClientSSLP12())
+                && !Objects.isNull(getClientSSLKeyPassword())
+                && !Strings.isNullOrEmpty(getRedirectUrl())) {
             return true;
         } else {
             final List<String> list = new ArrayList<>();
 
-            if (Strings.isNullOrEmpty(clientId)) {
+            if (Strings.isNullOrEmpty(getClientId())) {
                 list.add("clientId");
             }
 
-            if (Strings.isNullOrEmpty(clientSecret)) {
+            if (Strings.isNullOrEmpty(getClientSecret())) {
                 list.add("clientSecret");
             }
 
-            if (Strings.isNullOrEmpty(clientSSLP12)) {
+            if (Strings.isNullOrEmpty(getClientSSLP12())) {
                 list.add("clientSSLP12");
             }
 
-            if (Objects.isNull(clientSSLKeyPassword)) {
+            if (Objects.isNull(getClientSSLKeyPassword())) {
                 list.add("clientSSLKeyPassword");
             }
 
-            if (Strings.isNullOrEmpty(redirectUrl)) {
+            if (Strings.isNullOrEmpty(getRedirectUrl())) {
                 list.add("redirectUrl");
             }
 
