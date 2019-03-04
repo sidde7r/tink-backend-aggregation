@@ -39,17 +39,6 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
 )
 
-load("@io_bazel_rules_docker//toolchains/docker:toolchain.bzl",
-    docker_toolchain_configure="toolchain_configure"
-)
-docker_toolchain_configure(
-  name = "docker_config",
-  # OPTIONAL: Path to a directory which has a custom docker client config.json.
-  # See https://docs.docker.com/engine/reference/commandline/cli/#configuration-files
-  # for more details.
-  client_config="/path/to/docker/client/config",
-)
-
 # This is NOT needed when going through the language lang_image
 # "repositories" function(s).
 load(
