@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardInfoResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.ErrorEntity;
@@ -268,15 +269,17 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     }
 
     private void updateTransactions(Account account) throws Exception {
-        String transactionMainPageContent = createClientRequest(CARD_TRANSACTION_URL).get(String.class);
-        Optional<String> accountNumber = CreditCardParsingUtils
-                .parseTransactionalAccountNumber(transactionMainPageContent);
+        CreditCardInfoResponse transactionMainPageContent =
+                createClientRequest(CARD_TRANSACTION_URL).get(CreditCardInfoResponse.class);
 
-        if (!accountNumber.isPresent()) {
+        String accountNumber = transactionMainPageContent.getAccountNo();
+
+        if (accountNumber == null) {
+            log.warn("#norwegian: Could not parse account number when updating transactions.");
             return;
         }
 
-        pageTransactions(account, accountNumber.get());
+        pageTransactions(account, accountNumber);
     }
 
     private void pageTransactions(Account account, String accountNumber)
