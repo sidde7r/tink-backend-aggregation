@@ -22,23 +22,32 @@ steps:
 
   - wait
 
-  - name: ':docker: Build and Upload'
+  - name: ':docker: tink-backend-aggregation'
     branches: 'staging'
-    command: .buildkite/build-and-push-docker.sh
+    command: .buildkite/build-and-push-docker.sh //docker:aggregation_push
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.5.1:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
-    timeout_in_minutes: 30
 
-  - name: ':debian: Build and Upload'
+  - name: ':docker: tink-backend-provider-configuration'
     branches: 'staging'
-    command: .buildkite/build-and-upload-deb.sh
+    command: .buildkite/build-and-push-docker.sh //docker:provider_configuration_push
+    timeout_in_minutes: 10
     plugins:
       docker-compose#v2.5.1:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
-    timeout_in_minutes: 30
+
+  - name: ':debian: tink-backend-aggregation'
+    branches: 'staging'
+    command: .buildkite/build-and-upload-deb.sh //deb:aggregation deb/tink-backend-aggregation tink-backend-aggregation
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v2.5.1:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
 
   - wait
 

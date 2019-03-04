@@ -65,9 +65,9 @@ load(
 
 container_pull(
     name = "openjdk_jdk8",
-    registry = "index.docker.io",
-    repository = "library/openjdk",
-    digest = "sha256:02d7b571cb61ecf32667b07ed072eedf5481fd9650ef40120e5cef832621fba3", # 8u151-jdk-slim
+    registry = "gcr.io",
+    repository = "tink-containers/openjdk-8-jre",
+    tag = "8",
 )
 
 ## External dependencies
