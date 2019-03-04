@@ -7,6 +7,7 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import java.net.SocketTimeoutException;
 import javax.net.ssl.SSLHandshakeException;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -94,6 +95,7 @@ public class InterContainerJerseyClientFactoryTest {
     }
 
     @Test
+    @Ignore
     public void testThatNoPinningValidatesTinkCA() {
         InterContainerJerseyClientFactory clientFactory = InterContainerJerseyClientFactory.withoutPinning();
         Client client = clientFactory.build();
