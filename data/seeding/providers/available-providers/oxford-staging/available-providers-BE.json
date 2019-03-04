@@ -1,18 +1,18 @@
 {
-  "clusterid" : "oxford-staging",
-  "providers" : [
-    "be-americanexpress-password",
-    "be-argenta-cardreader",
-    "be-belfius-cardreader",
-    "be-beobank-password",
-    "be-demo",
-    "be-ing-cardreader",
-    "be-kbc-cardreader",
-    "be-n26-password",
-    "be-revolut-password",
-    "be-hellobank-cardreader",
-    "be-fortis-cardreader",
-    "be-test-password",  
-    "be-test-multi-supplemental"
-  ]
+    "clusterid": "oxford-staging",
+    "providers": [
+        "be-americanexpress-password",
+        "be-argenta-cardreader",
+        "be-belfius-cardreader",
+        "be-beobank-password",
+        "be-demo",
+        "be-fortis-cardreader",
+        "be-hellobank-cardreader",
+        "be-ing-cardreader",
+        "be-kbc-cardreader",
+        "be-n26-password",
+        "be-revolut-password",
+        "be-test-multi-supplemental",
+        "be-test-password"
+    ]
 }
