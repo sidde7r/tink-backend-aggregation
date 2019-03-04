@@ -12,24 +12,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class AxaDeserializer extends JsonDeserializer<List<ErrorsEntity>> {
+public final class AxaErrorsDeserializer extends JsonDeserializer<List<ErrorsEntity>> {
     @Override
     public List<ErrorsEntity> deserialize(
             JsonParser jsonParser, DeserializationContext deserializationContext)
             throws IOException, JsonProcessingException {
         final JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
-        final List<ErrorsEntity> errors = new ArrayList<>();
+        final List<ErrorsEntity> entities = new ArrayList<>();
 
         if (node.isNull()) {
             return null;
         } else if (node.isArray()) {
-            node.forEach(child -> errors.add(nodeToEntity(child)));
+            node.forEach(child -> entities.add(nodeToEntity(child)));
         } else if (node.isObject()) {
-            errors.add(nodeToEntity(node));
+            entities.add(nodeToEntity(node));
         }
 
-        return errors;
+        return entities;
     }
 
     private static ErrorsEntity nodeToEntity(final JsonNode node) {

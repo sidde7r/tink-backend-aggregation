@@ -5,6 +5,8 @@ java_library(
     deps = [
         "//src/integration/api",
         "//src/integration/lib",
+        "//src/libraries/account_identifier",
+        "//src/libraries/amount",
         "//src/libraries/credentials:service",
         "//src/libraries/i18n",
         "//src/libraries/serialization",

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.InputEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.InputEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

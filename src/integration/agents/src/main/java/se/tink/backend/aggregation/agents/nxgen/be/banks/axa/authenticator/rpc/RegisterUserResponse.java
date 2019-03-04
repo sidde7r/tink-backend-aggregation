@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.ErrorsEntity;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.OutputEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.OutputEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 import java.util.Collection;

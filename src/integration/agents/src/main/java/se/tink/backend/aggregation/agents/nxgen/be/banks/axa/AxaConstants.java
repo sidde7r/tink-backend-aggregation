@@ -20,6 +20,8 @@ public final class AxaConstants {
         public static final String STORE_DERIVATION_CD = BASE + "AXA_BE_MOBILE_storeDerivationCd";
         public static final String PENDING_PRODUCT_REQUESTS =
                 BASE + "AXA_BE_MOBILE_getPendingProductRequests01";
+        public static final String FETCH_ACCOUNTS =
+                BASE + "AXA_BE_MOBILE_getAccounts01";
     }
 
     public enum Storage {

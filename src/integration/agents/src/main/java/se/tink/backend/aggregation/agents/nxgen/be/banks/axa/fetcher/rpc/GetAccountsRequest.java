@@ -1,13 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.InputEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public final class PendingRequestsRequest {
+public final class GetAccountsRequest {
     private InputEntity input;
 
-    private PendingRequestsRequest(final InputEntity entity) {
+    private GetAccountsRequest() {}
+
+    private GetAccountsRequest(final InputEntity entity) {
         input = entity;
     }
 
@@ -15,7 +17,7 @@ public final class PendingRequestsRequest {
         return new Builder();
     }
 
-    public static final class Builder {
+    public static class Builder {
         private String applCd;
         private int customerId;
         private String language;
@@ -35,12 +37,12 @@ public final class PendingRequestsRequest {
             return this;
         }
 
-        public PendingRequestsRequest build() {
+        public GetAccountsRequest build() {
             final InputEntity entity = new InputEntity();
             entity.setApplCd(applCd);
             entity.setCustomerId(customerId);
             entity.setLanguage(language);
-            return new PendingRequestsRequest(entity);
+            return new GetAccountsRequest(entity);
         }
     }
 }

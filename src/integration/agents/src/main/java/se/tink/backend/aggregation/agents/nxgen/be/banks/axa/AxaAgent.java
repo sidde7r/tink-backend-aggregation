@@ -63,7 +63,8 @@ public final class AxaAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        final AccountFetcher<TransactionalAccount> accountFetcher = new AxaAccountFetcher();
+        final AccountFetcher<TransactionalAccount> accountFetcher =
+                new AxaAccountFetcher(apiClient, makeStorage());
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
                 new AxaTransactionFetcher();
         return Optional.of(
