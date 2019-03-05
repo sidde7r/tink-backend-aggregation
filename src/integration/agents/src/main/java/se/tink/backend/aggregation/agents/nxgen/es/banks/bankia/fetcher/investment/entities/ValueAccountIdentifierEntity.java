@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -28,10 +28,9 @@ public class ValueAccountIdentifierEntity {
         this.accountNumber = accountNumber;
     }
 
+    @JsonIgnore
     public static ValueAccountIdentifierEntity fromInternalProductCode(String productCode) {
-        Preconditions.checkArgument(
-                BankiaUtils.INTERNAL_PRODUCT_CODE_PATTERN.matcher(productCode).matches(),
-                "Internal product code from bankia doesn't match expected format");
+        BankiaUtils.checkValidInternalProductCode(productCode);
 
         String entity = productCode.substring(0, 4);
         String center = productCode.substring(4, 8);

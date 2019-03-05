@@ -29,6 +29,8 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
     private final BankiaApiClient apiClient;
 
+    private static final int PAGE_LIMIT = 3;
+
     public BankiaInvestmentFetcher(BankiaApiClient apiClient) {
         this.apiClient = apiClient;
     }
@@ -80,7 +82,7 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
                         .map(this::mapQualificationToInstrument)
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList()));
-            } while (response.isHasMoreIndicator() && !Strings.isNullOrEmpty(resumePoint) && (pagesFetched < 5));
+            } while (response.isHasMoreIndicator() && !Strings.isNullOrEmpty(resumePoint) && (pagesFetched < PAGE_LIMIT));
         } catch (HttpResponseException hre) {
             log.error(BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(), hre);
             log.info("{} Instrument fetching error. Last successful page: {}",
@@ -92,7 +94,7 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
             }
         }
 
-        if (pagesFetched == 5) {
+        if (pagesFetched == PAGE_LIMIT) {
             log.info("{} Instrument fetching error. Too many pages. Last page: {}",
                     BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(),
                     SerializationUtils.serializeToString(response));
@@ -100,7 +102,7 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
         Portfolio portfolio = new Portfolio();
         portfolio.setInstruments(instruments);
-        portfolio.setTotalValue(account.getAvailableBalance().toDoubleValue());
+        portfolio.setTotalValue(account.getAvailableBalance().toTinkAmount().doubleValue());
         portfolio.setType(Portfolio.Type.DEPOT);
         portfolio.setUniqueIdentifier(account.getContract().getIdentifierProductContractInternal());
 
@@ -119,7 +121,7 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
         instrument.setIsin(qualification.getIsin());
         instrument.setQuantity(qualification.getQuantity());
         instrument.setMarketPlace(qualification.getIdentifierMarketplaceGroup());
-        instrument.setPrice(qualification.getValuationUnit().toDoubleValue());
+        instrument.setPrice(qualification.getValuationUnitEUR().toTinkAmount().doubleValue());
         instrument.setUniqueIdentifier(qualification.getIsin());
         instrument.setName(qualification.getTickerCode());
 

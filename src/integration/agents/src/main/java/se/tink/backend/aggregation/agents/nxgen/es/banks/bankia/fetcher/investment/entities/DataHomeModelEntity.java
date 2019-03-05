@@ -2,11 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investm
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@JsonPropertyOrder(alphabetic = true)
 public class DataHomeModelEntity {
 
     @JsonProperty("identificadorCuentaValores")

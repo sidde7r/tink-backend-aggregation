@@ -1,12 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class ValueAccountIdentifierEntityTest {
 
-    private static String TEST_ID = "01234567899876543210";
+    private static String ENTITY = "0123";
+    private static String CENTER = "4567";
+    private static String CONTROL_DIGITS = "89";
+    private static String ACCOUNT_NUMBER = "9876543210";
+
+    private static String TEST_ID = ENTITY + CENTER + CONTROL_DIGITS + ACCOUNT_NUMBER;
 
     @Test
     public void fromInternalProductCode() {
