@@ -26,7 +26,7 @@ public class TransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        // When there are no more transactions to fetch, the TransactionsResponse will be null.
+        // When there are no more transactions to fetch, HTTPClientException will be thrown.
         // This is handled in the fetcher
         return Optional.of(true);
     }
