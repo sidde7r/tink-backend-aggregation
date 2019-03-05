@@ -53,7 +53,7 @@ container_image(
     cmd = [
         "java",
         "-jar",
-        "integration-service.jar",
+        "integration_service.jar",
         "development-configuration.yaml",
         "development-sensitive-configuration.yaml"
     ],
