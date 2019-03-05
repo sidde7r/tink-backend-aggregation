@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-@Ignore
+//@Ignore
 public class EvoBancoAgentTest {
-    private final String TEST_USERNAME = "";
-    private final String TEST_PASSWORD = "";
+    private final String TEST_USERNAME = "53206180G";
+    private final String TEST_PASSWORD = "666662";
 
     private AgentIntegrationTest.Builder builder;
 

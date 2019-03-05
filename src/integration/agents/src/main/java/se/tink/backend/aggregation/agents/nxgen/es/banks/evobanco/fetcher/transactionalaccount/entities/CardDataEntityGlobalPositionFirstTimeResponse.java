@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CardDataEntity {
+public class CardDataEntityGlobalPositionFirstTimeResponse {
     @JsonProperty("limiteDiaCajeroDebito")
     private String limitDayATMDebit;
 

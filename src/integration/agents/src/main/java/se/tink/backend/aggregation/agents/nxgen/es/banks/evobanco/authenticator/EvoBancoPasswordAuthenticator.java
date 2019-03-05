@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.GlobalPositionFirstTimeResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -48,6 +47,13 @@ public class EvoBancoPasswordAuthenticator implements PasswordAuthenticator {
                         loginResponse.getAccessToken(),
                         loginResponse.getRefreshToken(),
                         loginResponse.getExpiresIn()));
+        sessionStorage.put(
+                EvoBancoConstants.Storage.HOLDER_NAME,
+                loginResponse.getUserinfo().getClientName()
+                        + " "
+                        + loginResponse.getUserinfo().getSurname1Client()
+                        + " "
+                        + loginResponse.getUserinfo().getSurname2Client());
 
         EeILoginEntity eeILoginEntity =
                 new EeILoginEntity.Builder()
@@ -68,12 +74,9 @@ public class EvoBancoPasswordAuthenticator implements PasswordAuthenticator {
                 eeLoginResponse.getEeOLogin().getAnswer().getInternalIdPe());
 
         // Workaround needed due to the fact that EvoBanco's backend expects a check of the global
-        // position (accounnts and cards)
+        // position (accounts and cards)
         // immediately after the eeLogin, keep alive requests will fail if this is not done first,
-        // also this can only be done once
-        // i.e. when refreshing accounts info we will just retrieve the info that we got here that
-        // is stored in session storage.
-        GlobalPositionFirstTimeResponse globalPositionFirstTimeResponse =
-                bankClient.globalPositionFirstTime();
+        bankClient.globalPositionFirstTime();
+
     }
 }

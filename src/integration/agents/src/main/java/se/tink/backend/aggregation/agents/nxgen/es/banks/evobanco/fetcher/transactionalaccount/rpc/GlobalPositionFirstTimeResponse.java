@@ -6,4 +6,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transa
 public class GlobalPositionFirstTimeResponse {
     @JsonProperty("EE_O_PosicionGlobalPrimeraVezBE")
     private EeOFirstTimeGlobalPositionEntity eeOFirstTimeGlobalPosition;
+
+    public EeOFirstTimeGlobalPositionEntity getEeOFirstTimeGlobalPosition() {
+        return eeOFirstTimeGlobalPosition;
+    }
 }

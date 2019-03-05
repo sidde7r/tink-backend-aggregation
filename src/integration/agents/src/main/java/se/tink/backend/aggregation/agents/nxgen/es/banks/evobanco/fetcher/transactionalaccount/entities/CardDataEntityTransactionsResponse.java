@@ -3,13 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.trans
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
-import java.util.List;
-
 @JsonObject
-public class AnswerEntity {
-    @JsonProperty("ListaAcuerdos")
-    private List<AgreementsListEntity> agreementsList;
-
-    @JsonProperty("numeroRegistros")
-    private String registersNumber;
+public class CardDataEntityTransactionsResponse {
+    @JsonProperty("acuerdoTarjeta")
+    private String agreementCard;
 }

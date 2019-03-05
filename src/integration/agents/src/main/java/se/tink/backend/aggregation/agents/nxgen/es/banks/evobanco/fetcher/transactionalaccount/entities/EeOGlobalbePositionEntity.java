@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class EeOFirstTimeGlobalPositionEntity {
+public class EeOGlobalbePositionEntity {
     @JsonProperty("Respuesta")
     private AnswerEntityGlobalPositionResponse answer;
 

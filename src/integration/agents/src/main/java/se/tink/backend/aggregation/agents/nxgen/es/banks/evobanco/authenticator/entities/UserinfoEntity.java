@@ -85,4 +85,16 @@ public class UserinfoEntity {
     public String getMobilePhone() {
         return mobilePhone;
     }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public String getSurname1Client() {
+        return surname1Client;
+    }
+
+    public String getSurname2Client() {
+        return surname2Client;
+    }
 }
