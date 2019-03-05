@@ -93,7 +93,7 @@ public class BBVAUtils {
                 calculateData(tokenHash, applicationCode, applicationCodeVersion, publicKeyHex);
 
         String aesData =
-                getAESData(
+                getAuthenticationCodePlaintext(
                         tokenHash,
                         applicationCode,
                         applicationCodeVersion,
@@ -105,7 +105,7 @@ public class BBVAUtils {
         return EncodingUtils.encodeAsBase64String(result);
     }
 
-    public static String getAESData(
+    public static String getAuthenticationCodePlaintext(
             String tokenHash,
             String applicationCode,
             String applicationCodeVersion,
