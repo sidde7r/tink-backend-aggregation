@@ -1,0 +1,6 @@
+{
+  "clusterid" : "oxford-staging",
+  "providers" : [
+    "mx-bbva-password"
+  ]
+}
