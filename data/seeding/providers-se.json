@@ -31,6 +31,27 @@
             "transactional": true,
             "type": "BANK"
         },
+      {
+            "name": "se-alandsbanken-bankid",
+            "className": "nxgen.se.banks.alandsbankenbankid.AlandsBankenSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "currency": "SEK",
+            "displayName": "Ålandsbanken",
+            "fields": [ {
+                    "description": "Username",
+                    "immutable": true,
+                    "name": "username"
+                }],
+            "market": "SE",
+            "multiFactor": true,
+            "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
+            "popular": true,
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
         {
             "name": "americanexpress",
             "className": "nxgen.se.creditcards.amex.v62.AmericanExpressV62SEAgent",

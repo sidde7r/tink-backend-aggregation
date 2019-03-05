@@ -11,6 +11,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithoutTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithoutTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankIdAutostartTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankiIdResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.ContentResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginProvidersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.creditcard.rpc.CardsRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
@@ -29,8 +33,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.sessionhandler.rpc.KeepAliveResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.sessionhandler.rpc.LogoutResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class CrossKeyApiClient {
@@ -47,6 +53,31 @@ public class CrossKeyApiClient {
                 .queryParam(CrossKeyConstants.Query.APP_ID, CrossKeyConstants.AutoAuthentication.APP_VERSION)
                 .queryParam(CrossKeyConstants.Query.LANGUAGE, CrossKeyConstants.AutoAuthentication.LANGUAGE)
                 .get(CrossKeyResponse.class);
+    }
+
+    public BankIdAutostartTokenResponse initBankId() {
+        return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKID)
+                .post(BankIdAutostartTokenResponse.class);
+    }
+
+    public LoginProvidersResponse getLoginProviders() {
+        return buildRequest(CrossKeyConstants.Url.GET_LOGIN_PROVIDERS)
+                .get(LoginProvidersResponse.class);
+    }
+
+    public ContentResponse getContent() {
+        return buildRequest(CrossKeyConstants.Url.GET_CONTENT)
+                .get(ContentResponse.class);
+    }
+
+    public BankiIdResponse collectBankId() {
+        HttpResponse post = null;
+        try {
+            post = buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID).post(HttpResponse.class);
+        } catch (HttpResponseException ex) {
+            return ex.getResponse().getBody(BankiIdResponse.class);
+        }
+        return post.getBody(BankiIdResponse.class);
     }
 
     public LoginWithoutTokenResponse loginUsernamePassword(LoginWithoutTokenRequest request) {

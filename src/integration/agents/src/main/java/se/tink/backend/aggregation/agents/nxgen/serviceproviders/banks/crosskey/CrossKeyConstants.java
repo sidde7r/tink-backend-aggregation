@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Map;
+import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
@@ -18,6 +20,10 @@ public class CrossKeyConstants {
 
         public static final String SYSTEM_STATUS_URI = "systemStatus.do";
         public static final String LOGIN_WITH_USERNAME_PASSWORD = "cam/pintanLoginStepPin.do";
+        public static final String LOGIN_WITH_BANKID = "v2/bankIdAutostartLogin.do";
+        public static final String COLLECT_BANKIID = "api/v3/bankIdAutostartCollect.do";
+        public static final String GET_CONTENT = "getContent.do?language=sv";
+        public static final String GET_LOGIN_PROVIDERS = "cam/getLoginProviders.do";
         public static final String CONFIRM_TAN_CODE = "cam/pintanLoginStepTan.do";
         public static final String LOGIN_WITH_TOKEN = "tokenLoginWithConversion.do";
         public static final String ADD_DEVICE = "v2/addDevice.do";
@@ -48,6 +54,16 @@ public class CrossKeyConstants {
         public static final int KEYCARD_PIN_LENGTH = 4;
         public static final String USER_DEVICE_NAME = "iOS / 10.2";
         public static final String DEVICE_INFO = "iPhone9,3";
+        public static final String AUTOSTART_TOKEN = "autostartToken";
+        public static final String NOT_AUTHORIZED_ERROR = "NOT_AUTHORIZED";
+        public static final ImmutableMap<String, BankIdStatus> BANKID_ERROR_MAPPING =
+                ImmutableMap.<String, BankIdStatus>builder()
+                        .put("BANK_ID_START_FAILED", BankIdStatus.NO_CLIENT)
+                        .put("INTERNAL_SERVER_ERROR", BankIdStatus.WAITING)
+                        .put("BANK_ID_USER_CANCEL", BankIdStatus.CANCELLED)
+                        .put("BANK_ID_EXPIRED_TRANSACTION", BankIdStatus.TIMEOUT)
+                        .build();
+        public static final String MOBILE_BANK_ID = "MOBILE_BANK_ID";
     }
 
     public static final class Storage {

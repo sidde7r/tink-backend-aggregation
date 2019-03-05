@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyAutoAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyKeyCardAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.CrossKeyBankIdAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyInvestmentsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.CrossKeyTransactionalAccountFetcher;
@@ -14,8 +13,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -31,9 +29,9 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public abstract class CrossKeyAgent extends NextGenerationAgent {
 
-    private final CrossKeyApiClient apiClient;
-    private final CrossKeyConfiguration agentConfiguration;
-    private final CrossKeyPersistentStorage agentPersistentStorage;
+    protected final CrossKeyApiClient apiClient;
+    protected final CrossKeyConfiguration agentConfiguration;
+    protected final CrossKeyPersistentStorage agentPersistentStorage;
 
     public CrossKeyAgent(CredentialsRequest request, AgentContext context,
             SignatureKeyPair signatureKeyPair, CrossKeyConfiguration agentConfiguration) {
@@ -46,17 +44,15 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addMessageReader(new CrossKeyMessageBodyReader(CrossKeyAgent.class.getPackage()));
+        client.setDebugOutput(true);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
 
-        return new AutoAuthenticationController(request, context,
-                new KeyCardAuthenticationController(catalog,
-                        supplementalInformationHelper,
-                        new CrossKeyKeyCardAuthenticator(apiClient, agentConfiguration, agentPersistentStorage, credentials),
-                        CrossKeyConstants.MultiFactorAuthentication.KEYCARD_PIN_LENGTH),
-                new CrossKeyAutoAuthenticator(this.apiClient, agentPersistentStorage, this.credentials));
+        return new BankIdAuthenticationController<>(
+                context,
+                new CrossKeyBankIdAuthenticator(apiClient, agentConfiguration, sessionStorage, credentials));
     }
 
     @Override

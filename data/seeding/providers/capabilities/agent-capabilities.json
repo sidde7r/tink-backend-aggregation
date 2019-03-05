@@ -54,6 +54,14 @@
         "INVESTMENTS",
         "LOANS"
     ],
+    "nxgen.se.banks.alandsbankenbankid.AlandsBankenSEAgent": [
+        "CHECKING_ACCOUNTS",
+        "SAVINGS_ACCOUNTS",
+        "CREDIT_CARDS",
+        "INVESTMENTS",
+        "LOANS"
+    ],
+
     "banks.se.collector.CollectorAgent": [
         "TRANSFERS"
     ],
