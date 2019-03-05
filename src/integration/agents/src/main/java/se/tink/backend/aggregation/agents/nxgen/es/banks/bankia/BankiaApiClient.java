@@ -27,7 +27,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.Date;
 import java.util.List;
 
-public final class BankiaApiClient {
+public class BankiaApiClient {
 
     private final TinkHttpClient client;
     private final PersistentStorage persistentStorage;
