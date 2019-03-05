@@ -70,7 +70,7 @@ public class TypeMapper<V> {
         typeKey = typeKey.toLowerCase();
         Optional<V> type = Optional.ofNullable(translator.get(typeKey));
 
-        if (!type.isPresent() && ignoredKeys.contains(typeKey)) {
+        if (!type.isPresent() && !ignoredKeys.contains(typeKey)) {
             logger.warn("Unknown account type for key: {}", typeKey);
         }
 
