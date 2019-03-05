@@ -6,5 +6,6 @@ java_library(
         "//third_party:netty",
         "//third_party:prometheus",
         "//third_party:log",
+        "//third_party:bouncycastle",
     ],
 )

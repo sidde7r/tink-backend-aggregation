@@ -1,22 +1,22 @@
 package se.tink.backend.integration.boot.configuration;
 
 public class Configuration {
-    String doX = "default value";
-    String doY;
+    private String grpcTlsCertificatePath = "/tls/tls.crt";
+    private String grpcTlsKeyPath = "/tls/tls.key";
 
-    public String getDoX() {
-        return doX;
+    public String getGrpcTlsCertificatePath() {
+        return grpcTlsCertificatePath;
     }
 
-    public void setDoX(String doX) {
-        this.doX = doX;
+    public void setGrpcTlsCertificatePath(String grpcTlsCertificatePath) {
+        this.grpcTlsCertificatePath = grpcTlsCertificatePath;
     }
 
-    public String getDoY() {
-        return doY;
+    public String getGrpcTlsKeyPath() {
+        return grpcTlsKeyPath;
     }
 
-    public void setDoY(String doY) {
-        this.doY = doY;
+    public void setGrpcTlsKeyPath(String grpcTlsKeyPath) {
+        this.grpcTlsKeyPath = grpcTlsKeyPath;
     }
 }

@@ -1622,3 +1622,12 @@ java_library(
         "@io_prometheus_simpleclient_common_skeleton_version//jar",
     ]
 )
+
+java_library(
+    name = "bouncycastle",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@org_bouncycastle_bcpkix_jdk15on//jar",
+        "@org_bouncycastle_bcprov_jdk15on//jar",
+    ],
+)

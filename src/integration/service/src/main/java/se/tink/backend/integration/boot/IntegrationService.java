@@ -1,5 +1,6 @@
 package se.tink.backend.integration.boot;
 
+import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
 import com.google.common.base.Stopwatch;
@@ -24,16 +25,23 @@ class IntegrationService {
     private static final Logger logger = LogManager.getLogger(IntegrationService.class);
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 2) {
-            logger.error("Unexpected argument count. Expected exactly two arguments. " +
-                    "The first should be the configuration file, the second should be the sensitive configuration file.");
+        if (args.length != 1) {
+            logger.error("Unexpected argument count. Expected exactly one arguments. " +
+                    "The first argument should be the path to the configuration file.");
         }
 
-        new IntegrationService(
-                ConfigurationUtils.getConfiguration(args[0], Configuration.class),
-                ConfigurationUtils.getConfiguration(args[1], SensitiveConfiguration.class)
-        );
+        try {
+            new IntegrationService(
+                    ConfigurationUtils.getConfiguration(args[0], Configuration.class),
+                    new SensitiveConfiguration()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e);
+            System.exit(1);
+        }
     }
+
 
     private final CountDownLatch keepRunningLatch;
     private SimpleHTTPServer httpServer;
@@ -45,14 +53,14 @@ class IntegrationService {
         logger.debug("Built with Java " + System.getProperty("java.version"));
 
         keepRunningLatch = new CountDownLatch(1);
-        start();
+        start(config, sensitiveConfiguration);
         Runtime.getRuntime().addShutdownHook(new Thread(keepRunningLatch::countDown));
         keepRunningLatch.await();  //released from above thread on sigterm
         logger.info("Received signal to stop. Initiating shutdown");
         stop();
     }
 
-    private void start() throws IOException, InterruptedException {
+    private void start(Configuration config, SensitiveConfiguration sensitiveConfiguration) throws IOException, InterruptedException {
         logger.info("Starting Servers");
 
         // Start HTTP health check service
@@ -77,6 +85,14 @@ class IntegrationService {
                 services,
                 new InetSocketAddress(8443)
         );
+
+        // Serve over TLS if configured
+        if (config.getGrpcTlsCertificatePath() != null) {
+            grpcServer.useTransportSecurity(
+                    new File(config.getGrpcTlsCertificatePath()),
+                    new File(config.getGrpcTlsKeyPath())
+            );
+        }
 
         grpcServer.start();
     }
