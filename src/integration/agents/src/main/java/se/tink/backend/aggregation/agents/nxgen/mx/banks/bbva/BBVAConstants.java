@@ -103,6 +103,7 @@ public class BBVAConstants {
                 "Content-Disposition: form-data;name=\"data\"";
         public static final String CONTENT_DISPOSITION_BIOMETRIC =
                 "Content-Disposition: form-data;name=\"biometricFile\"";
+        public static final String CURRENT_BALANCE = "CURRENT_BALANCE";
     }
 
     public static class STORAGE {
