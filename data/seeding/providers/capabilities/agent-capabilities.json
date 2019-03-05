@@ -531,7 +531,9 @@
         "CREDIT_CARDS"
     ],
     "nxgen.mx.banks.bbva.BBVAAgent": [
-        "CHECKING_ACCOUNTS"
+        "CHECKING_ACCOUNTS",
+        "SAVINGS_ACCOUNTS",
+        "LOANS"
     ],
     "nxgen.ro.banks.raiffeisen.RaiffeisenAgent": [
         "CHECKING_ACCOUNTS"
