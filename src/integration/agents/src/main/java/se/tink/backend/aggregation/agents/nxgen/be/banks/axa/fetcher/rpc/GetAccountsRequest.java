@@ -7,8 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public final class GetAccountsRequest {
     private InputEntity input;
 
-    private GetAccountsRequest() {}
-
     private GetAccountsRequest(final InputEntity entity) {
         input = entity;
     }
