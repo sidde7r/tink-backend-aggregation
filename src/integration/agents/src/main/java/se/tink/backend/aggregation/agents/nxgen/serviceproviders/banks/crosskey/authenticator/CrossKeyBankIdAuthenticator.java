@@ -28,6 +28,7 @@ public class CrossKeyBankIdAuthenticator
     private final CrossKeyConfiguration agentConfiguration;
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
+    private int counter = 0;
 
     public CrossKeyBankIdAuthenticator(
             CrossKeyApiClient apiClient,
