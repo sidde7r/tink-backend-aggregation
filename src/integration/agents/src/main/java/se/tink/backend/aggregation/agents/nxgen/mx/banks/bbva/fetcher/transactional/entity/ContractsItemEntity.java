@@ -64,7 +64,7 @@ public class ContractsItemEntity {
     }
 
     private String getAccountType() {
-        return product.getName();
+        return product.getId();
     }
 
     public TransactionalAccount toTransactionalAccount(String holdername) {

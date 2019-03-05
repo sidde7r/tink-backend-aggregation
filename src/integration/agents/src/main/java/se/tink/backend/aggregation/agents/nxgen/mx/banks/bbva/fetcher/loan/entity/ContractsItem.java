@@ -20,7 +20,7 @@ public class ContractsItem {
     public Optional<LoanAccount> toLoanAccount() {
         if (BBVAConstants.ACCOUNT_TYPE_MAPPER.translate(product.getName()).isPresent()
                 && BBVAConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(product.getName())
+                        .translate(product.getId())
                         .get()
                         .equals(AccountTypes.LOAN))
             try {

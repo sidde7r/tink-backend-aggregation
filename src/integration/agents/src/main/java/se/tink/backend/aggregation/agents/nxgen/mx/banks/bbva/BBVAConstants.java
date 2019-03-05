@@ -8,13 +8,13 @@ import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguratio
 
 public class BBVAConstants {
 
+    //TODO: use id's
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "Cuenta de Cheques")
-                    .put(AccountTypes.SAVINGS, "Cuenta de Ahorro")
-                    .put(
-                            AccountTypes.CREDIT_CARD,
-                            "TARJETA DE CREDITO")
+                    .put(AccountTypes.CHECKING, "CH")
+                    .put(AccountTypes.SAVINGS, "AH")
+                    .put(AccountTypes.CREDIT_CARD, "CARDS")
+                    .put(AccountTypes.LOAN, "HIPOTECARIO")
                     .build();
 
     public static final String APPLICATION_CODE = "RETAILMX";
