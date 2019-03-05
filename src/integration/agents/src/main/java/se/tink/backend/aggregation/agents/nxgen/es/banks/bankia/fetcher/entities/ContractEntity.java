@@ -12,6 +12,8 @@ public class ContractEntity {
     private String customizedProductCode;
     @JsonProperty("identificadorContratoProducto")
     private String identifierProductContract;
+    @JsonProperty("identificadorContratoProductoInterno")
+    private String identifierProductContractInternal;
     @JsonProperty("entidadDelProducto")
     private String productEntity;
     private String alias;
@@ -59,6 +61,10 @@ public class ContractEntity {
 
     public String getIdentifierProductContract() {
         return identifierProductContract;
+    }
+
+    public String getIdentifierProductContractInternal() {
+        return identifierProductContractInternal;
     }
 
     public String getProductEntity() {
