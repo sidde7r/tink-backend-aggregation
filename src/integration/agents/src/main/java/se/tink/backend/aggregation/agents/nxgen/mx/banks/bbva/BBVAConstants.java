@@ -11,10 +11,10 @@ public class BBVAConstants {
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
                     .put(AccountTypes.CHECKING, "Cuenta de Cheques")
+                    .put(AccountTypes.SAVINGS, "Cuenta de Ahorro")
                     .put(
                             AccountTypes.CREDIT_CARD,
-                            "TARJETA DE CREDITO",
-                            "TARJETA BANCOMER PLATINUM")
+                            "TARJETA DE CREDITO")
                     .build();
 
     public static final String APPLICATION_CODE = "RETAILMX";
