@@ -247,7 +247,7 @@
                 "from": "09:00",
                 "to": "01:00"
             },
-            "status": "ENABLED",
+            "status": "TEMPORARY_DISABLED",
             "transactional": true,
             "type": "CREDIT_CARD"
         },

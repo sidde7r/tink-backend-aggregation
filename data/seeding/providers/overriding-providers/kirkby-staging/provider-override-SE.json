@@ -1863,7 +1863,7 @@
             "popular": false,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 0,
-            "status": "ENABLED",
+            "status": "TEMPORARY_DISABLED",
             "transactional": true,
             "type": "CREDIT_CARD",
             "displayDescription": null,
