@@ -62,7 +62,7 @@ public class BBVAAuthenticator implements MultiFactorAuthenticator, AutoAuthenti
 
         handleLogin(phonenumber, password);
 
-        fetchClientInfoSuccessful();
+        fetchClientInfo();
 
         client.getContactToken(phonenumber);
 
@@ -73,17 +73,11 @@ public class BBVAAuthenticator implements MultiFactorAuthenticator, AutoAuthenti
         storage.put(BBVAConstants.STORAGE.PHONE_NUMBER, phonenumber);
     }
 
-    private boolean fetchClientInfoSuccessful() {
-        try {
-            CustomerInfoResponse customerInfo = client.getCustomerInfo();
-            storage.put(BBVAConstants.STORAGE.HOLDERNAME, customerInfo.getCustomerName());
-            return true;
-        } catch (Exception hce) {
-            return false;
-        }
+    private void fetchClientInfo() {
+        CustomerInfoResponse customerInfo = client.getCustomerInfo();
+        storage.put(BBVAConstants.STORAGE.HOLDERNAME, customerInfo.getCustomerName());
     }
 
-    // TODO: handle different loginErrors
     private GrantingTicketResponse handleLogin(String phoneNumber, String password)
             throws LoginException {
         try {
@@ -162,7 +156,7 @@ public class BBVAAuthenticator implements MultiFactorAuthenticator, AutoAuthenti
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
-        fetchClientInfoSuccessful();
+        fetchClientInfo();
 
         TokenAuthCodeResponse codeResponse = client.getTokenAuthCode(deviceIdentifier);
         RegisterTokenRequest registerTokenRequest =
