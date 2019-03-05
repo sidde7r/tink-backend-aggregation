@@ -7,6 +7,6 @@ spec:
   selector:
     app: integration-service
   ports:
-    - port: 443
-      targetPort: https-api
-      name: https-api
+  - port: 443
+    targetPort: grpc-api
+    name: grpc-api

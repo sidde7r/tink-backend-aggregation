@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: integration-networkpolicy
+  namespace: integration
+spec:
+  podSelector:
+    matchLabels:
+      app: integration-service
+
+  egress:
+    - {}
+
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: 9130
+      from:
+        - podSelector:
+            matchLabels:
+              app: prometheus
+        - namespaceSelector:
+            matchLabels:
+              service: monitoring-prometheus
+
+  policyTypes:
+    - Egress
+    - Ingress
