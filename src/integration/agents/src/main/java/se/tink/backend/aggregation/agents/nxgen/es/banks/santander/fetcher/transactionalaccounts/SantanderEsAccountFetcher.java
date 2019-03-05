@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.tran
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
@@ -11,6 +13,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderEsAccountFetcher implements AccountFetcher<TransactionalAccount> {
+    private final static Logger LOGGER = LoggerFactory.getLogger(SantanderEsAccountFetcher.class);
+
     private final SessionStorage sessionStorage;
 
     public SantanderEsAccountFetcher(SessionStorage sessionStorage) {
@@ -23,7 +27,10 @@ public class SantanderEsAccountFetcher implements AccountFetcher<TransactionalAc
                 .orElseThrow(() -> new IllegalStateException(
                         SantanderEsConstants.LogMessages.LOGIN_RESPONSE_NOT_FOUND));
 
+        // Temporary logging of whole response in String format to detect any unknown accounts
+        LOGGER.info("es_santander_full_logging_response", loginResponseString);
         LoginResponse loginResponse = SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
+
 
         return loginResponse.getAccountList().stream()
                     .filter(AccountEntity::isKnownAccountType)
