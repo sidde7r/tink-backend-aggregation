@@ -50,17 +50,9 @@ genrule(
 container_image(
     name = "integration_service",
     base = "@openjdk_jdk8//image",
-    cmd = [
-        "java",
-        "-jar",
-        "integration_service.jar",
-        "development-configuration.yaml",
-        "development-sensitive-configuration.yaml"
-    ],
     workdir = "/usr/share/integration_service",
     files = [
         ":integration_service.jar",
-        "//etc/integration:development-configuration"
     ],
     directory = "/usr/share/integration_service"
 )
