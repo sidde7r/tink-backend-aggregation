@@ -56,7 +56,7 @@ public class CrossKeyApiClient {
     }
 
     public BankIdAutostartTokenResponse initBankId() {
-        return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKI_ID)
+        return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKIID)
                 .post(BankIdAutostartTokenResponse.class);
     }
 
@@ -73,7 +73,7 @@ public class CrossKeyApiClient {
     public BankiIdResponse collectBankId() {
         HttpResponse post = null;
         try {
-            post = buildRequest(CrossKeyConstants.Url.COLLECT_BANKI_ID).post(HttpResponse.class);
+            post = buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID).post(HttpResponse.class);
         } catch (HttpResponseException ex) {
             return ex.getResponse().getBody(BankiIdResponse.class);
         }
