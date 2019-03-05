@@ -45,7 +45,7 @@ public class BBVAUtilTest {
                         tokenHash, applicationCode, applicationVersion, publicKeyHex);
 
         String aesDataResult =
-                BBVAUtils.getAESData(
+                BBVAUtils.getAuthenticationCodePlaintext(
                         tokenHash, applicationCode, applicationVersion, result, publicKeyHex);
 
         Assert.assertEquals(
