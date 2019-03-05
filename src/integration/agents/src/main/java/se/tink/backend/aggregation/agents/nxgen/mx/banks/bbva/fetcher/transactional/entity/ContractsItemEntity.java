@@ -55,8 +55,7 @@ public class ContractsItemEntity {
                 .setUniqueIdentifier(id)
                 .setAccountNumber(number)
                 .setBalance(detail.getCheckingBalance())
-                .addAccountIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.SORT_CODE, number))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, number))
                 .addHolderName(holdername)
                 .setAlias(product.getName())
                 .setProductName(subProductType.getName())
@@ -69,22 +68,17 @@ public class ContractsItemEntity {
     }
 
     public TransactionalAccount toTransactionalAccount(String holdername) {
-
-        if (BBVAConstants.ACCOUNT_TYPE_MAPPER
+        AccountTypes accountType =
+                BBVAConstants.ACCOUNT_TYPE_MAPPER
                         .translate(getAccountType())
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                String.format("Unknown type: %s", getAccountType())))
-                == AccountTypes.CHECKING) {
+                                                String.format(
+                                                        "Unknown type: %s", getAccountType())));
+        if (accountType == AccountTypes.CHECKING) {
             return toCheckingAccount(holdername);
-        } else if (BBVAConstants.ACCOUNT_TYPE_MAPPER
-                        .translate(getAccountType())
-                        .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                String.format("Unknown type: %s", getAccountType())))
-                == AccountTypes.SAVINGS) {
+        } else if (accountType == AccountTypes.SAVINGS) {
             return toSavingsAccount(holdername);
         }
 
