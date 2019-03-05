@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
-import java.util.Date;
-import java.util.List;
-import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
@@ -10,6 +7,11 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditca
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities.DateEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.DataHomeModelEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.InvestmentAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.ValueAccountIdentifierEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.rpc.PositionWalletRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.rpc.PositionWalletResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountIdentifierEntity;
@@ -20,6 +22,10 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+
+import javax.ws.rs.core.MediaType;
+import java.util.Date;
+import java.util.List;
 
 public final class BankiaApiClient {
 
@@ -37,6 +43,10 @@ public final class BankiaApiClient {
 
     public List<CardEntity> getCards() {
         return getServicesContracts().getCards();
+    }
+
+    public List<InvestmentAccountEntity> getInvestments() {
+        return getServicesContracts().getInvestments();
     }
 
     public CardTransactionsResponse getCardTransactions(String cardNumberUnmasked, int limit) {
@@ -84,6 +94,25 @@ public final class BankiaApiClient {
                 .body(request, MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(AcountTransactionsResponse.class);
+    }
+
+    public PositionWalletResponse getPositionsWallet(String internalProductCode, String resumePoint) {
+        ValueAccountIdentifierEntity accountIdentifier =
+                ValueAccountIdentifierEntity.fromInternalProductCode(internalProductCode);
+
+        DataHomeModelEntity dataHomeModel = new DataHomeModelEntity(accountIdentifier, resumePoint);
+
+        PositionWalletRequest request = new PositionWalletRequest(dataHomeModel);
+
+        return client.request(BankiaConstants.Url.VALUE_ACCOUNT_POSITION_WALLET)
+                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
+                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .queryParam(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.O3)
+                .body(request, MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(PositionWalletResponse.class);
+
     }
 
     public void getDisconnect() {

@@ -42,6 +42,10 @@ public class AmountEntity {
         return new Amount(coin.getShortName(), BigDecimal.valueOf(unscaledValue, scale).doubleValue());
     }
 
+    public double toDoubleValue() {
+        return BigDecimal.valueOf(unscaledValue, scale).doubleValue();
+    }
+
     @JsonProperty("numeroDecimalesImporte")
     public void setDecimalsNumberAmount(String decimalsNumberAmount) {
         this.scale = Integer.parseInt(decimalsNumberAmount);

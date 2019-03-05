@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
-import java.util.Base64;
-import java.util.Optional;
-import java.util.Random;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.BankiaCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.BankiaInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.BankiaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.BankiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.session.BankiaSessionHandler;
@@ -26,6 +24,10 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import java.util.Base64;
+import java.util.Optional;
+import java.util.Random;
 
 public final class BankiaAgent extends NextGenerationAgent {
 
@@ -96,7 +98,10 @@ public final class BankiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
+        BankiaInvestmentFetcher fetcher = new BankiaInvestmentFetcher(apiClient);
+        return Optional.of(new InvestmentRefreshController(metricRefreshController,
+                updateController,
+                fetcher));
     }
 
     @Override
