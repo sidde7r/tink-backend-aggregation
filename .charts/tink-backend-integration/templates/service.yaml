@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: integration
+  name: integration-service
   namespace: integration
 spec:
   selector:
@@ -10,21 +10,3 @@ spec:
     - port: 443
       targetPort: https-api
       name: https-api
-
-  {{- if eq "local" .Values.Cluster }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: integration-nodeport
-  namespace: integration
-spec:
-  selector:
-    app: integration-service
-  ports:
-    - port: 443
-      targetPort: https-api
-      name: https-api
-      nodePort: 31011
-  type: NodePort
-  {{ end }}
