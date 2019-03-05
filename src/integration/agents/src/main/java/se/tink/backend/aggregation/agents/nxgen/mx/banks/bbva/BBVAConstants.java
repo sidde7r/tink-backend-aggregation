@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class BBVAConstants {
 
@@ -81,16 +82,18 @@ public class BBVAConstants {
         public static final String TO_DATE = "toOperationDate";
     }
 
-    // TODO: Deviceprofileconfiguration
     public static class VALUES {
-        public static final String DEVICE_OS_NAME = "iOS";
+        public static final String DEVICE_OS_NAME = DeviceProfileConfiguration.IOS_STABLE.getOs();
         public static final String DEVICE_DPI = "2X";
-        public static final String DEVICE_OS_VERSION = "10.1.1";
+        public static final String DEVICE_OS_VERSION =
+                DeviceProfileConfiguration.IOS_STABLE.getOsVersion();
         public static final String DEVICE_APP_NAME = "BBVA";
         public static final String DEVICE_APP_VERSION = "1.0.20190129";
-        public static final String DEVICE_MODEL_NAME = "iPhone 7";
-        public static final String DEVICE_MODEL_FACTURER = "Apple";
-        public static final String DEVICE_SCREEN_SIZE = "375x667";
+        public static final String DEVICE_MODEL_NAME =
+                DeviceProfileConfiguration.IOS_STABLE.getPhoneModel();
+        public static final String DEVICE_MODEL_FACTURER =
+                DeviceProfileConfiguration.IOS_STABLE.getMake();
+        public static final String DEVICE_SCREEN_SIZE = "1334x750";
         public static final String USER_AGENT_VALUE =
                 "BBVA-Mexico-Prod/1.0.20190129 CFNetwork/808.1.4 Darwin/16.1.0";
         public static final String ACCEPT_LANGUAGE = "es";
