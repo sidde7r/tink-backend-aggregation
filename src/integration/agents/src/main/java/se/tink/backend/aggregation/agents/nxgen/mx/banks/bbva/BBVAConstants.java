@@ -71,7 +71,7 @@ public class BBVAConstants {
         public static final String AUTHENTICATION_DATA = "authenticationdata";
         public static final String AUTHENTICATION_DATA_DEVICE_ID = "deviceid=%s";
 
-        public static final String CONTENT_TYPE_MULTIPART = "multipart/form-data; boundary=";
+        public static final String CONTENT_TYPE_MULTIPART = "multipart/form-data; boundary=%s";
     }
 
     public static class QUERY {

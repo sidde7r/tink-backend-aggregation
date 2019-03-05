@@ -112,36 +112,30 @@ public class BBVAApiClient {
 
     public HttpResponse activateDevice(DeviceActivationRequest request, String boundary) {
         String boundaryWithoutDashes = boundary.substring(2, boundary.length());
-        return getGlomoRequest(
-                        BBVAConstants.URLS.DEVICE_ACTIVATION,
-                        String.format(
-                                "%s%s",
-                                BBVAConstants.HEADERS.CONTENT_TYPE_MULTIPART,
-                                boundaryWithoutDashes))
+        String contentType =
+                String.format(BBVAConstants.HEADERS.CONTENT_TYPE_MULTIPART, boundaryWithoutDashes);
+        return getGlomoRequest(BBVAConstants.URLS.DEVICE_ACTIVATION, contentType)
                 .post(HttpResponse.class, BBVAUtils.getActivationDataBoundary(request, boundary));
     }
 
     public HttpResponse digitalActivation(String customerId, DigitalActivationRequest request) {
-        return getGlomoRequest(
-                        String.format(BBVAConstants.URLS.DIGITAL_ACTIVATION, customerId),
-                        MediaType.APPLICATION_JSON)
+        String resource = String.format(BBVAConstants.URLS.DIGITAL_ACTIVATION, customerId);
+        String authenticationDataValue =
+                String.format(
+                        BBVAConstants.HEADERS.AUTHENTICATION_DATA_DEVICE_ID,
+                        storage.get(BBVAConstants.STORAGE.DEVICE_IDENTIFIER));
+        return getGlomoRequest(resource, MediaType.APPLICATION_JSON)
                 .header(
                         BBVAConstants.HEADERS.AUTHENTICATION_TYPE,
                         BBVAConstants.HEADERS.AUTHENTICATION_TYPE_VALUE)
-                .header(
-                        BBVAConstants.HEADERS.AUTHENTICATION_DATA,
-                        String.format(
-                                BBVAConstants.HEADERS.AUTHENTICATION_DATA_DEVICE_ID,
-                                storage.get(BBVAConstants.STORAGE.DEVICE_IDENTIFIER)))
+                .header(BBVAConstants.HEADERS.AUTHENTICATION_DATA, authenticationDataValue)
                 .post(HttpResponse.class, SerializationUtils.serializeToString(request));
     }
 
     public HttpResponse getContactToken(String phoneNumber) {
+        String resource = String.format(BBVAConstants.URLS.CONTACT_TOKEN, phoneNumber);
         HttpResponse res =
-                getGlomoRequest(
-                                String.format(BBVAConstants.URLS.CONTACT_TOKEN, phoneNumber),
-                                MediaType.APPLICATION_JSON)
-                        .get(HttpResponse.class);
+                getGlomoRequest(resource, MediaType.APPLICATION_JSON).get(HttpResponse.class);
         String tsec = res.getHeaders().getFirst(BBVAConstants.HEADERS.TSEC);
         this.storage.put(BBVAConstants.STORAGE.TSEC, tsec);
         return res;
@@ -159,8 +153,9 @@ public class BBVAApiClient {
 
     public TokenActivationResponse getTokenWithHash(
             String softwareTokenId, String hash, TokenActivationRequest request) {
-        String url = String.format(BBVAConstants.URLS.TOKEN_ACTIVATION_HASH, softwareTokenId, hash);
-        return getGlomoRequest(url, MediaType.APPLICATION_JSON)
+        String resource =
+                String.format(BBVAConstants.URLS.TOKEN_ACTIVATION_HASH, softwareTokenId, hash);
+        return getGlomoRequest(resource, MediaType.APPLICATION_JSON)
                 .put(TokenActivationResponse.class, SerializationUtils.serializeToString(request));
     }
 
@@ -172,9 +167,8 @@ public class BBVAApiClient {
     }
 
     public HttpResponse updateDevice(String deviceId) {
-        return getGlomoRequest(
-                        String.format(BBVAConstants.URLS.UPDATE_DEVICE, deviceId),
-                        MediaType.APPLICATION_JSON)
+        String resource = String.format(BBVAConstants.URLS.UPDATE_DEVICE, deviceId);
+        return getGlomoRequest(resource, MediaType.APPLICATION_JSON)
                 .put(
                         HttpResponse.class,
                         SerializationUtils.serializeToString(new UpdateDeviceRequest()));
@@ -182,16 +176,16 @@ public class BBVAApiClient {
 
     // AIS
     public CustomerInfoResponse getCustomerInfo() {
+        String authenticationData =
+                String.format(
+                        BBVAConstants.HEADERS.AUTHENTICATION_DATA_DEVICE_ID,
+                        storage.get(BBVAConstants.STORAGE.DEVICE_IDENTIFIER));
         HttpResponse response =
                 getGlomoRequest(BBVAConstants.URLS.CUSTOMER_INFO, MediaType.APPLICATION_JSON)
                         .header(
                                 BBVAConstants.HEADERS.AUTHENTICATION_TYPE,
                                 BBVAConstants.HEADERS.AUTHENTICATION_TYPE_VALUE)
-                        .header(
-                                BBVAConstants.HEADERS.AUTHENTICATION_DATA,
-                                String.format(
-                                        BBVAConstants.HEADERS.AUTHENTICATION_DATA_DEVICE_ID,
-                                        storage.get(BBVAConstants.STORAGE.DEVICE_IDENTIFIER)))
+                        .header(BBVAConstants.HEADERS.AUTHENTICATION_DATA, authenticationData)
                         .get(HttpResponse.class);
         String tsec = response.getHeaders().getFirst(BBVAConstants.HEADERS.TSEC);
         this.storage.put(BBVAConstants.STORAGE.TSEC, tsec);
@@ -204,9 +198,8 @@ public class BBVAApiClient {
     }
 
     public TransactionsResponse fetchTransactions(String accountId, Date fromDate, Date toDate) {
-        return getGlomoRequest(
-                        String.format(BBVAConstants.URLS.TRANSACTIONS, accountId),
-                        MediaType.APPLICATION_JSON)
+        String resource = String.format(BBVAConstants.URLS.TRANSACTIONS, accountId);
+        return getGlomoRequest(resource, MediaType.APPLICATION_JSON)
                 .queryParam(
                         BBVAConstants.QUERY.FROM_DATE,
                         BBVAConstants.DATE.DATE_FORMAT.format(fromDate))
