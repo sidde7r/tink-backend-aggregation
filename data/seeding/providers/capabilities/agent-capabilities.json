@@ -53,7 +53,7 @@
         "CREDIT_CARDS",
         "INVESTMENTS",
         "LOANS"
-    ],,
+    ],
     "nxgen.se.banks.alandsbankenbankid.AlandsBankenSEAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
