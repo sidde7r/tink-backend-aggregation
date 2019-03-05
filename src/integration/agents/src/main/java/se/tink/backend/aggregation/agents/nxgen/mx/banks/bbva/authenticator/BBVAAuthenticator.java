@@ -125,7 +125,7 @@ public class BBVAAuthenticator implements MultiFactorAuthenticator, AutoAuthenti
                         BBVAConstants.APPLICATION_CODE,
                         BBVAConstants.APPLICATION_CODE_VERSION,
                         salt,
-                        BBVAConstants.ENCRYPTION.PUBLIC_KEY_HEX);
+                        BBVAConstants.ENCRYPTION.PUBLIC_KEY_HEX_DER);
 
         TokenActivationRequest tokenActivationRequest =
                 new TokenActivationRequest(deviceIdentifier, salt, authenticationCode);
