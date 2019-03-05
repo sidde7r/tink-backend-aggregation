@@ -198,4 +198,8 @@ public final class AxaStorage {
     public Optional<String> getAccessToken() {
         return Optional.ofNullable(sessionStorage.get(AxaConstants.Storage.ACCESS_TOKEN.name()));
     }
+
+    public String serializePersistentStorage() {
+        return SerializationUtils.serializeToString(persistentStorage);
+    }
 }

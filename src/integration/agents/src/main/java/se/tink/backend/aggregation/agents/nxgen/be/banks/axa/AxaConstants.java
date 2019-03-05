@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.Form;
 
 public final class AxaConstants {
@@ -152,5 +153,13 @@ public final class AxaConstants {
 
     public static class MultiFactorAuthentication {
         public static final String CODE = "code";
+    }
+
+    public enum LogTags {
+        PERSISTENT_STORAGE;
+
+        public LogTag toTag() {
+            return LogTag.from(name());
+        }
     }
 }

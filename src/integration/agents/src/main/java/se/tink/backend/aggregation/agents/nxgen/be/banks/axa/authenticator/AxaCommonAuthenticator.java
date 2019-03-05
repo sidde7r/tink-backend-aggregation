@@ -3,19 +3,29 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateOtpChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LogonResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.Digipass;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.OtpChallengeResponse;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 import java.util.UUID;
 
 public final class AxaCommonAuthenticator {
+    private static final AggregationLogger logger =
+            new AggregationLogger(AxaCommonAuthenticator.class);
+
     public static void authenticate(final AxaApiClient apiClient, final AxaStorage storage)
             throws AuthorizationException {
+
+        logger.infoExtraLong(
+                String.format("Persistent storage: %s", storage.serializePersistentStorage()),
+                AxaConstants.LogTags.PERSISTENT_STORAGE.toTag());
+
         final String serialNo = storage.getSerialNo().orElseThrow(IllegalStateException::new);
         final UUID deviceId = storage.getDeviceId().orElseThrow(IllegalStateException::new);
         final String basicAuth = storage.getBasicAuth().orElseThrow(IllegalStateException::new);
