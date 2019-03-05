@@ -1,6 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -17,8 +20,10 @@ public class ContractsItem {
     private String productType;
     private Status status;
 
+    @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(ContractsItem.class);
+
     public Optional<LoanAccount> toLoanAccount() {
-        if (BBVAConstants.ACCOUNT_TYPE_MAPPER.translate(product.getName()).isPresent()
+        if (BBVAConstants.ACCOUNT_TYPE_MAPPER.translate(product.getId()).isPresent()
                 && BBVAConstants.ACCOUNT_TYPE_MAPPER
                         .translate(product.getId())
                         .get()
@@ -32,6 +37,7 @@ public class ContractsItem {
                                 .setBalance(detail.getBalance())
                                 .build());
             } catch (Exception e) {
+                logger.error("{} {}", BBVAConstants.LOGGING.LOAN_PARSING_ERROR, e.toString());
                 return Optional.empty();
             }
         return Optional.empty();
