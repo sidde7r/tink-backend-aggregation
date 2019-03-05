@@ -75,7 +75,7 @@ class IntegrationService {
 
         grpcServer = new GrpcServer(
                 services,
-                new InetSocketAddress("127.0.0.1", 8889)
+                new InetSocketAddress(8889)
         );
 
         grpcServer.start();
