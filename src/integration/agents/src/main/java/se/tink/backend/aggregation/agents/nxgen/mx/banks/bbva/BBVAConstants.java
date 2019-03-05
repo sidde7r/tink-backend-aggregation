@@ -52,7 +52,7 @@ public class BBVAConstants {
         public static final String CUSTOMER_INFO =
                 "/SRVS_A02/customers/v1/customers?expand=avatars";
         public static final String ACCOUNTS = String.format(FETCH, "ACCOUNTS,DEPOSITS");
-        public static final String LOANS = String.format(FETCH, "CARDS,LOANS");
+        public static final String CARDS = String.format(FETCH, "CARDS,LOANS");
         public static final String TRANSACTIONS = "/SRVS_A02/accounts/v1/accounts/%s/transactions";
     }
 
@@ -104,6 +104,7 @@ public class BBVAConstants {
         public static final String CONTENT_DISPOSITION_BIOMETRIC =
                 "Content-Disposition: form-data;name=\"biometricFile\"";
         public static final String CURRENT_BALANCE = "CURRENT_BALANCE";
+        public static final String LOAN_BALANCE = "CURRENT_CAPITAL_BALANCE";
     }
 
     public static class STORAGE {
