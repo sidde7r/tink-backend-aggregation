@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankiIdAutostartTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankIdAutostartTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankiIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginProvidersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.rpc.CrossKeyResponse;
@@ -21,7 +21,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.CrossKeyConstants.MultiFactorAuthentication.AUTOSTART_TOKEN;
 
 public class CrossKeyBankIdAuthenticator
-        implements BankIdAuthenticator<BankiIdAutostartTokenResponse> {
+        implements BankIdAuthenticator<BankIdAutostartTokenResponse> {
     public static final Logger LOGGER = LoggerFactory.getLogger(CrossKeyBankIdAuthenticator.class);
 
     private final CrossKeyApiClient apiClient;
@@ -41,7 +41,7 @@ public class CrossKeyBankIdAuthenticator
     }
 
     @Override
-    public BankiIdAutostartTokenResponse init(String ssn) throws AuthorizationException {
+    public BankIdAutostartTokenResponse init(String ssn) throws AuthorizationException {
         handleRequestFailure(apiClient.initSession());
         handleRequestFailure(apiClient.getContent());
 
@@ -55,13 +55,13 @@ public class CrossKeyBankIdAuthenticator
                             + SerializationUtils.serializeToString(loginProviders));
         }
 
-        BankiIdAutostartTokenResponse response = apiClient.initBankId();
+        BankIdAutostartTokenResponse response = apiClient.initBankId();
         sessionStorage.put(AUTOSTART_TOKEN, response.getAutoStartToken());
         return response;
     }
 
     @Override
-    public BankIdStatus collect(BankiIdAutostartTokenResponse initBankId)
+    public BankIdStatus collect(BankIdAutostartTokenResponse initBankId)
             throws AuthenticationException, AuthorizationException {
         BankiIdResponse bankiIdResponse = apiClient.collectBankId();
 

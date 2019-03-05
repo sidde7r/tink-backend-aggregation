@@ -11,7 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithoutTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginWithoutTokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankiIdAutostartTokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankIdAutostartTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.BankiIdResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.ContentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator.rpc.LoginProvidersResponse;
@@ -55,9 +55,9 @@ public class CrossKeyApiClient {
                 .get(CrossKeyResponse.class);
     }
 
-    public BankiIdAutostartTokenResponse initBankId() {
+    public BankIdAutostartTokenResponse initBankId() {
         return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKI_ID)
-                .post(BankiIdAutostartTokenResponse.class);
+                .post(BankIdAutostartTokenResponse.class);
     }
 
     public LoginProvidersResponse getLoginProviders() {

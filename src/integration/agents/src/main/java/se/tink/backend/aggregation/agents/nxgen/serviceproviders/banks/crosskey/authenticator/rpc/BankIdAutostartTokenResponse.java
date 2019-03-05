@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.rpc.CrossKeyResponse;
 
-public class BankiIdAutostartTokenResponse extends CrossKeyResponse {
+public class BankIdAutostartTokenResponse extends CrossKeyResponse {
     public String getAutoStartToken() {
         return autoStartToken;
     }
