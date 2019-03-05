@@ -20,7 +20,7 @@ public final class AccountEntity {
     private String productRoleType;
     private String sortAccount;
     private String titularName;
-    private String typeDescription;
+    private String typeDescription; // Language-dependent
 
     public String getAccountNumber() {
         return accountNumber;
