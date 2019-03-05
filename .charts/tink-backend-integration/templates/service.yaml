@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: aggregation
-  namespace: aggregation
+  name: integration
+  namespace: integration
 spec:
   selector:
-    app: aggregation-service
+    app: integration-service
   ports:
     - port: 443
       targetPort: https-api
@@ -16,11 +16,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: aggregation-nodeport
-  namespace: aggregation
+  name: integration-nodeport
+  namespace: integration
 spec:
   selector:
-    app: aggregation-service
+    app: integration-service
   ports:
     - port: 443
       targetPort: https-api
