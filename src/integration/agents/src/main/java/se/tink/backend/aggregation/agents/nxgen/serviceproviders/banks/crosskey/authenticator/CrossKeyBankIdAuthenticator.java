@@ -69,7 +69,6 @@ public class CrossKeyBankIdAuthenticator
         if (bankiIdResponse.getStatus().isSuccess()) {
             return BankIdStatus.DONE;
         }
-        handleRequestFailureForBankId(bankiIdResponse, counter);
 
         Optional<BankIdStatus> bankIdStatus =
                 bankiIdResponse
@@ -99,20 +98,6 @@ public class CrossKeyBankIdAuthenticator
     @Override
     public Optional<String> getAutostartToken() {
         return sessionStorage.get(AUTOSTART_TOKEN, String.class);
-    }
-
-    private <T extends CrossKeyResponse> void handleRequestFailureForBankId(T message, int counter)
-            throws AuthorizationException {
-
-        counter++;
-
-        // If we tried less than 3 times to collect bank ID status we assume it's timing issue and
-        // disregard error.
-        if (counter <= 3) {
-            return;
-        }
-        // In case we tried more than 3 times and we still get error, we propagate it
-        handleRequestFailure(message);
     }
 
     private <T extends CrossKeyResponse> T handleRequestFailure(T message)

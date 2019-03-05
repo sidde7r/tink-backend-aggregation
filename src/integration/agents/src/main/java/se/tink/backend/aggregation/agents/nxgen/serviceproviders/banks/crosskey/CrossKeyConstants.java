@@ -63,6 +63,7 @@ public class CrossKeyConstants {
                         .put("BANK_ID_USER_CANCEL", BankIdStatus.CANCELLED)
                         .put("BANK_ID_EXPIRED_TRANSACTION", BankIdStatus.TIMEOUT)
                         // We try to collect BankId result from server too fast what results in this error
+                        // So in BankId context we will treat this error as waiting for BankId
                         .put("NOT_AUTHORIZED", BankIdStatus.WAITING)
                         .build();
         public static final String MOBILE_BANK_ID = "MOBILE_BANK_ID";
