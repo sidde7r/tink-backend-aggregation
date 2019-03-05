@@ -56,7 +56,7 @@ public class CrossKeyApiClient {
     }
 
     public BankIdAutostartTokenResponse initBankId() {
-        return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKIID)
+        return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKID)
                 .post(BankIdAutostartTokenResponse.class);
     }
 
