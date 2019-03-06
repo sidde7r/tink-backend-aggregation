@@ -19,7 +19,7 @@ java_binary(
         "//etc/integration:development-configuration",
     ],
     deps = [
-        "//src/integration/grpc-server",
+        "//src/integration/grpc-server:grpc-server",
         "//src/integration/ping-service:ping-service",
 
         "//src/libraries:simple-http-server",
@@ -27,7 +27,6 @@ java_binary(
 
         "//third_party:log",
         "//third_party:prometheus",
-        "//third_party:org_slf4j_slf4j_api",
 
         "@io_grpc_grpc_core//jar",
         "//third_party:com_google_guava_guava",
