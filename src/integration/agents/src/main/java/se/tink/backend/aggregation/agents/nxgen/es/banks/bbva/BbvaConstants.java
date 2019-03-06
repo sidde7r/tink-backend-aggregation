@@ -29,17 +29,17 @@ public final class BbvaConstants {
         public static final String HOLDER_NAME = "holderName";
     }
 
-    public static class Defaults {
+    public static final class Defaults {
         public static final String CURRENCY = "EUR";
         public static final String CHARSET = "UTF-8";
     }
 
-    public static class AccountType {
+    public static final class AccountType {
         public static final String CREDIT_CARD = "credit";
         public static final String CREDIT_CARD_SHORT_TYPE = "C";
     }
 
-    public static class QueryKeys {
+    public static final class QueryKeys {
         public static final String PAGINATION_OFFSET = "paginationKey";
         public static final String PAGE_SIZE = "pageSize";
         public static final String CONTRACT_ID = "contractId";
@@ -47,7 +47,7 @@ public final class BbvaConstants {
         public static final String DASHBOARD_CUSTOMER_ID = "$customer.id";
     }
 
-    public static class LogTags {
+    public static final class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bbva_unknown_account_type");
         public static final LogTag INVESTMENT_INTERNATIONAL_PORTFOLIO =
                 LogTag.from("bbva_investment_international_portfolio");
@@ -62,7 +62,7 @@ public final class BbvaConstants {
         public static final LogTag LOAN_WORKING_CAPITAL = LogTag.from("bbva_loan_working_capital");
     }
 
-    public final class Url {
+    public static final class Url {
         public static final String BASE_URL = "https://servicios.bbva.es";
 
         public static final String PARAM_ID = "ID";
@@ -84,7 +84,7 @@ public final class BbvaConstants {
                 BASE_URL + "/ASO/securityActions/V01/listProfitability";
     }
 
-    public final class HeaderKeys {
+    public static final class HeaderKeys {
         public static final String CONTENT_TYPE_URLENCODED_UTF8 =
                 "application/x-www-form-urlencoded; charset=utf-8";
         public static final String CONSUMER_ID_KEY = "ConsumerID";
@@ -100,7 +100,7 @@ public final class BbvaConstants {
                 "https://movil.bbva.es/versions/woody/6.14.5/index.html";
     }
 
-    public final class PostParameter {
+    public static final class PostParameter {
         public static final String ORIGEN_KEY = "origen";
         public static final String ORIGEN_VALUE = "enpp";
         public static final String EAI_TIPOCP_KEY = "eai_tipoCP";
@@ -115,7 +115,7 @@ public final class BbvaConstants {
         public static final int START_DATE_YEAR_AGO = -30;
     }
 
-    public final class Message {
+    public static final class Message {
         public static final String OK = "ok";
         public static final String LOGIN_SUCCESS = "login successful";
         public static final String LOGIN_WRONG_CREDENTIAL_CODE = "eai0000";
