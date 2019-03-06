@@ -1,0 +1,16 @@
+piVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: grpc-certificate
+  namespace: integration
+spec:
+  secretName: grpc-certificate
+  keySize: 4096
+  issuerRef:
+    name: tink-internal-ca
+    kind: ClusterIssuer
+  commonName: integration.cluster.local
+  organization:
+  - integration
+  dnsNames:
+  - integration.integration.svc.cluster.local

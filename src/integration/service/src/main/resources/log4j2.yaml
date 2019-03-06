@@ -1,0 +1,24 @@
+Configuration:
+  status: warn
+  name: LogConfiguration
+  thresholdFilter:
+    level: debug
+  appenders:
+    Console:
+      name: ConsoleJSONAppender
+      JsonLayout:
+        complete: false
+        compact: true
+        eventEol: true
+
+  Loggers:
+    logger:
+      - name: se.tink.backend
+        level: debug
+        additivity: false
+        AppenderRef:
+          ref: ConsoleJSONAppender
+    Root:
+      level: warn
+      AppenderRef:
+        ref: ConsoleJSONAppender

@@ -1,0 +1,19 @@
+apiVersion: v1
+type: ConfigMap
+metadata:
+  name: integration-configuration
+  namespace: integration
+data:
+  config.yaml: |
+
+{{ if .Values.createDevelopmentSecrets }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: integration-secrets
+  namespace: integration
+type: Opaque
+data:
+  # tink
+{{ end }}

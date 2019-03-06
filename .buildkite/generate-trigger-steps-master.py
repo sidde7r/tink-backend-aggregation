@@ -34,7 +34,7 @@ PROJECTS = {
         'branches': {
             'aggregation-production': {'block': True},
         },
-    },
+    }
 }
 
 STEP = """
