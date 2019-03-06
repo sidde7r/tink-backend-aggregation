@@ -82,7 +82,7 @@ public class BbvaApiClient {
 
     public FinancialDashboardResponse fetchFinancialDashboard() {
         return createRequestInSession(BbvaConstants.Url.FINANCIAL_DASHBOARD)
-                .queryParam("$customer.id", getUserId())
+                .queryParam(QueryKeys.DASHBOARD_CUSTOMER_ID, getUserId())
                 .get(FinancialDashboardResponse.class);
     }
 

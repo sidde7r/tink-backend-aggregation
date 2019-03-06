@@ -44,6 +44,7 @@ public final class BbvaConstants {
         public static final String PAGE_SIZE = "pageSize";
         public static final String CONTRACT_ID = "contractId";
         public static final String CARD_TRANSACTION_TYPE = "cardTransactionType";
+        public static final String DASHBOARD_CUSTOMER_ID = "$customer.id";
     }
 
     public static class LogTags {
