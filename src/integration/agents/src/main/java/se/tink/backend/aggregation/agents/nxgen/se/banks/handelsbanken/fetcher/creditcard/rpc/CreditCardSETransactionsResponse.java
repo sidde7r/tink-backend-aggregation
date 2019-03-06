@@ -21,7 +21,20 @@ public class CreditCardSETransactionsResponse extends CreditCardTransactionsResp
     }
 
     public double findUsedCredit(HandelsbankenAmount fallback) {
-        return findInCardInvoiceInfo(CardInvoiceInfo::findUsedCredit, fallback);
+        Optional<HandelsbankenAmount> usedCredit = cardInvoiceInfo.findUsedCredit();
+
+        // Try to use the usedCredit if it contains any value
+        if (usedCredit.isPresent() && usedCredit.get().asDouble() != null) {
+            return usedCredit.get().asDouble();
+        }
+
+        // Calculate balance based on credit limit and spendable amount if these values are present
+        if (cardInvoiceInfo.hasCreditLimitLargerThanZero() && cardInvoiceInfo.hasSpendable()) {
+            return cardInvoiceInfo.getCredit().asDouble() - cardInvoiceInfo.getSpendable().asDouble();
+        }
+
+        // Return fallback amount if it contains any value, otherwise default to 0
+        return fallback != null ? fallback.asDouble() : 0;
     }
 
     private double findInCardInvoiceInfo(Function<CardInvoiceInfo, Optional<HandelsbankenAmount>> find,
