@@ -27,7 +27,7 @@ spec:
 
       containers:
         - name: tink-backend-integration-service
-          image: gcr.io/tink-containers/integration-service:{{ .Files.Get "tink-versions/integration-service.txt" | default "latest" }}
+          image: gcr.io/tink-containers/integration-service:{{ .Values.Version }}
           imagePullPolicy: IfNotPresent
           securityContext:
             readOnlyRootFilesystem: true
