@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -117,5 +118,31 @@ public class LoanEntity {
 
     public String getDigit() {
         return digit;
+    }
+
+    @JsonIgnore
+    private LoanAccount.Builder buildTinkLoanAccount() {
+        final Amount balance =
+                new Amount(pendingamount.getCurrency().getId(), pendingamount.getAmount()).negate();
+
+        return LoanAccount.builder(digit)
+                .setBalance(balance)
+                .setBankIdentifier(digit)
+                .setAccountNumber(digit)
+                .setName(product.getDescription());
+    }
+
+    @JsonIgnore
+    public LoanAccount toTinkLoanAccount() {
+        return (LoanAccount) buildTinkLoanAccount().build();
+    }
+
+    @JsonIgnore
+    public LoanAccount toTinkLoanAccount(double interestRate, LoanDetails loanDetails) {
+        return (LoanAccount)
+                buildTinkLoanAccount()
+                        .setInterestRate(interestRate)
+                        .setDetails(loanDetails)
+                        .build();
     }
 }
