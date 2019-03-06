@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey;
 
 import com.google.common.base.Strings;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.entities.CrossKeyTransaction;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.fetcher.loan.entities.LoanDetailsEntity;
@@ -38,5 +39,9 @@ public abstract class CrossKeyConfiguration {
 
     protected boolean hasContent(String s) {
         return !noContent(s);
+    }
+
+    protected Optional<String> getAppVersion(){
+        return Optional.empty();
     }
 }

@@ -19,4 +19,5 @@ public class AlandsBankenSEConstants {
         public static final LogTag INVESTMENT_INSTRUMENT_LOGGING = LogTag.from
                 ("#investment_instrument_alandsbank_se");
     }
+    public static final String APP_VERSION = "1.9.0-iOS";
 }
