@@ -359,6 +359,7 @@ icon:nordea-fi	https://cdn.tink.se/provider-images/nordea.png
 icon:nordnet	https://cdn.tink.se/provider-images/nordnet.png
 icon:norwegian	https://cdn.tink.se/provider-images/norwegianbank.png
 icon:norwegian.account.credit_card	https://cdn.tink.se/provider-images/norwegiankort.png
+icon:mx-bbva    https://cdn.tink.se/provider-images/mx/mx-bbva-password.png
 icon:okq8bank	https://cdn.tink.se/provider-images/okq8.png
 icon:opelmastercard	https://cdn.tink.se/provider-images/opel.png
 icon:plusgirot	https://cdn.tink.se/provider-images/plusgirot.png
