@@ -1,13 +1,15 @@
 package se.tink.backend.aggregation.nxgen.framework.validation;
 
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.libraries.customerinfo.CustomerInfo;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.aggregation.agents.models.Transaction;
 
 public final class AisValidator {
     private final Set<AisDataRule> aisDataRules;
@@ -48,8 +50,8 @@ public final class AisValidator {
      * @param transactions A collection of transactions to be validated
      */
     public void validate(
-            final Collection<Account> accounts, final Collection<Transaction> transactions) {
-        validate(new AisData(accounts, transactions));
+            final Collection<Account> accounts, final Collection<Transaction> transactions, final CustomerInfo customerInfo) {
+        validate(new AisData(accounts, transactions, customerInfo));
     }
 
     public void validate(final AisData aisData) {

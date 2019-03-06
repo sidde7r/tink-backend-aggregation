@@ -396,7 +396,6 @@ public abstract class NextGenerationAgent extends AbstractAgent
     }
 
     public Optional<CustomerInfo> fetchCustomerInfo() {
-        Optional<CustomerInfoFetcher> fetcher = constructCustomerInfoFetcher();
-        return fetcher.map(CustomerInfoFetcher::fetchCustomerInfo);
+        return constructCustomerInfoFetcher().map(CustomerInfoFetcher::fetchCustomerInfo);
     }
 }

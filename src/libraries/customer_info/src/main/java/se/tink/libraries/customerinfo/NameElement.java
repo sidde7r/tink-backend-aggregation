@@ -15,4 +15,12 @@ public class NameElement {
         this.type = type;
         this.value = value;
     }
+
+    public Type getType() {
+        return type;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

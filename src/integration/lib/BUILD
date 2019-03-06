@@ -110,6 +110,7 @@ junit_test(
         "//src/libraries/account_identifier",
         "//src/libraries/amount",
         "//src/libraries/credentials:service",
+        "//src/libraries/customer_info",
         "//src/libraries/document_container",
         "//src/libraries/giro_validation",
         "//src/libraries/i18n",

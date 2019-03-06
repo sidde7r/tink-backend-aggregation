@@ -2,6 +2,8 @@ package se.tink.libraries.customerinfo.countries;
 
 import se.tink.libraries.customerinfo.CustomerInfo;
 
+import java.util.Map;
+
 public class EsCustomerInfo extends CustomerInfo {
 
     private final String nieNumber;
@@ -53,6 +55,21 @@ public class EsCustomerInfo extends CustomerInfo {
         public EsCustomerInfo build() {
             return new EsCustomerInfo(this);
         }
+    }
+
+    @Override
+    public Map<String, String> toMap() {
+        Map<String, String> map = baseMap();
+        if (nieNumber != null) {
+            map.put("nieNumber", nieNumber);
+        }
+        if (nifNumber != null) {
+            map.put("nifNumber", nifNumber);
+        }
+        if (passportNumber != null) {
+            map.put("passportNumber", passportNumber);
+        }
+        return map;
     }
 
     public String getNieNumber() {

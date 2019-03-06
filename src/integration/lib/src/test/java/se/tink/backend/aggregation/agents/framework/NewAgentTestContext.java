@@ -8,6 +8,9 @@ import org.apache.curator.framework.CuratorFramework;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
@@ -16,22 +19,20 @@ import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.LoanDetails;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.documentcontainer.DocumentContainer;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.signableoperation.rpc.SignableOperation;
-import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.customerinfo.CustomerInfo;
+import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.user.rpc.User;
 
 import javax.annotation.Nonnull;
 import java.text.DateFormat;
@@ -57,6 +58,7 @@ public class NewAgentTestContext extends AgentContext {
     private final Map<String, List<Transaction>> transactionsByAccountBankId = new HashMap<>();
     private final Map<String, List<TransferDestinationPattern>> transferDestinationPatternsByAccountBankId = new HashMap<>();
     private final List<Transfer> transfers = new ArrayList<>();
+    private CustomerInfo customerInfo = null;
 
     private final User user;
     private final Credentials credential;
@@ -275,6 +277,10 @@ public class NewAgentTestContext extends AgentContext {
                 " (" + operation.getStatusMessage() + ")"));
     }
 
+    public void updateCustomerInfo(CustomerInfo customerInfo) {
+        this.customerInfo = customerInfo;
+    }
+
     @Override
     public void updateFraudDetailsContent(List<FraudDetailsContent> contents) {
         throw new NotImplementedException("Fraud cannot be tested yet.");
@@ -323,7 +329,8 @@ public class NewAgentTestContext extends AgentContext {
                 transactionsByAccountBankId
                         .values()
                         .stream()
-                        .collect(ArrayList::new, List::addAll, List::addAll));
+                        .collect(ArrayList::new, List::addAll, List::addAll),
+                customerInfo);
     }
 
     private void printLoanDetails(List<Loan> loans) {
@@ -531,6 +538,20 @@ public class NewAgentTestContext extends AgentContext {
         CliPrintUtils.printTable(0, "transfers", table);
     }
 
+    public void printCustomerInfo() {
+        if (customerInfo != null) {
+            List<Map<String, String>> table = customerInfo.toMap().entrySet().stream()
+                    .map(entry -> {
+                            Map<String, String> row = new LinkedHashMap<>();
+                            row.put("key", entry.getKey());
+                            row.put("value", entry.getValue());
+                            return row;
+                    }).collect(Collectors.toList());
+
+            CliPrintUtils.printTable(0, "custInfo", table);
+        }
+    }
+
     public void printCollectedData() {
         accountsByBankId.forEach((bankId, account) -> {
             printAccountInformation(account);
@@ -539,6 +560,7 @@ public class NewAgentTestContext extends AgentContext {
             System.out.println("");
         });
 
+        printCustomerInfo();
         printTransfers();
     }
 

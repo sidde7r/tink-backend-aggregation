@@ -1,11 +1,14 @@
 package se.tink.libraries.customerinfo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class CustomerInfo {
 
@@ -77,6 +80,23 @@ public abstract class CustomerInfo {
         }
 
         public abstract CustomerInfo build();
+    }
+
+    @JsonIgnore
+    public abstract Map<String, String> toMap();
+
+    @JsonIgnore
+    protected Map<String, String> baseMap() {
+        Map<String, String> map = new LinkedHashMap<>();
+
+        int elementCount = 1;
+        for (NameElement nameElement : nameElements) {
+            map.put("name_" + (elementCount++) + "_" + nameElement.getType(), nameElement.getValue());
+        }
+
+        map.put("dateOfBirth", dateOfBirth.toString());
+
+        return map;
     }
 
     public List<NameElement> getNameElements() {
