@@ -34,14 +34,6 @@ PROJECTS = {
         'branches': {
             'aggregation-production': {'block': True},
         },
-    },
-    'tink-backend-integration': {
-        'chart': True,
-        'salt': False,
-        'branches': {
-            'aggregation-production': {'block': True},
-            'aggregation-staging': {'black': False},
-        }
     }
 }
 
