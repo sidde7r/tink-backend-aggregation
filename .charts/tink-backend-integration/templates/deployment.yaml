@@ -104,5 +104,5 @@ spec:
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: myapp
+  name: integration
 {{ end }}
