@@ -11,6 +11,6 @@ spec:
     kind: ClusterIssuer
   commonName: integration.cluster.local
   organization:
-    - integration
+  - integration
   dnsNames:
   - integration.integration.svc.cluster.local
