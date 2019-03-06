@@ -5,6 +5,6 @@ tink:
   deployment:
     strategy: custom
     custom_strategy:
-      - group:
-          - cluster: aggregation
-            environment: staging
+    - group:
+      - cluster: aggregation
+        environment: staging
