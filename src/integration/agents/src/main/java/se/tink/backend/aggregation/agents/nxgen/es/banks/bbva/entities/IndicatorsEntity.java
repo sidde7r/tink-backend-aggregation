@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CurrencyEntity {
-    private String id;
+public class IndicatorsEntity {
+    private boolean isReloadable;
 
-    public String getId() {
-        return id;
+    public boolean isIsReloadable() {
+        return isReloadable;
     }
 }

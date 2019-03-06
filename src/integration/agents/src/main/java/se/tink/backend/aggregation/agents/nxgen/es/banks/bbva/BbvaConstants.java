@@ -84,6 +84,7 @@ public final class BbvaConstants {
                 BASE_URL + "/ENPP/enpp_mult_web_mobility_02/sessions/v1";
         public static final String PRODUCTS =
                 BASE_URL + "/ENPP/enpp_mult_web_mobility_02/products/v2";
+        public static final String FINANCIAL_DASHBOARD = BASE_URL + "/ASO/financialDashBoard/V03/";
         public static final String ACCOUNT_TRANSACTION =
                 BASE_URL + "/ASO/accountTransactions/V02/accountTransactionsAdvancedSearch";
         public static final String CREDIT_CARD_TRANSACTIONS =

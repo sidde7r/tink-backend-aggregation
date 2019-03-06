@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -74,6 +75,12 @@ public class BbvaApiClient {
         createRequest(BbvaConstants.Url.SESSION)
                 .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, getUserAgent())
                 .delete();
+    }
+
+    public FinancialDashboardResponse fetchFinancialDashboard() {
+        return createRefererRequest(BbvaConstants.Url.FINANCIAL_DASHBOARD)
+                .queryParam("$customer.id", getUserId())
+                .get(FinancialDashboardResponse.class);
     }
 
     public ProductsResponse fetchProducts() {

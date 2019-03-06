@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CurrencyEntity {
-    private String id;
+public class PaymentMethodEntity {
+    private TypeEntity type;
 
-    public String getId() {
-        return id;
+    public TypeEntity getType() {
+        return type;
     }
 }

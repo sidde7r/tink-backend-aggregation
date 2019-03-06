@@ -5,9 +5,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TypeEntity {
     private String id;
-    private Object name;
+    private String name;
 
     public String getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

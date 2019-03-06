@@ -14,16 +14,8 @@ public class AmountEntity {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
     public CurrencyEntity getCurrency() {
         return currency;
-    }
-
-    public void setCurrency(CurrencyEntity currency) {
-        this.currency = currency;
     }
 
     @JsonIgnore
