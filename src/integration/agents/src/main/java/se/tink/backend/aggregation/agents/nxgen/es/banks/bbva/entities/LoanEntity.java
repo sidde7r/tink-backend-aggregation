@@ -2,9 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaTypeMappers.LOAN_TYPE_MAPPER;
 
 @JsonObject
 public class LoanEntity {
@@ -120,6 +122,16 @@ public class LoanEntity {
     }
 
     @JsonIgnore
+    public LoanDetails.Type getTinkLoanType() {
+        return Optional.ofNullable(loanType)
+                .map(LoanTypeEntity::getId)
+                .map(LOAN_TYPE_MAPPER::translate)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .orElse(LoanDetails.Type.OTHER);
+    }
+
+    @JsonIgnore
     private LoanAccount.Builder buildTinkLoanAccount() {
         return LoanAccount.builder(digit)
                 .setBalance(pendingamount.toTinkAmount().negate())
@@ -130,7 +142,16 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
-        return (LoanAccount) buildTinkLoanAccount().build();
+        final LoanDetails loanDetails = LoanDetails.builder(getTinkLoanType())
+                .setInitialBalance(awardedAmount.toTinkAmount())
+                .setLoanNumber(digit)
+                .setMonthlyAmortization(nextFee.toTinkAmount())
+                .setAmortized(redeemedBalance.toTinkAmount())
+                .build();
+
+        return (LoanAccount) buildTinkLoanAccount()
+                .setDetails(loanDetails)
+                .build();
     }
 
     @JsonIgnore

@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
@@ -116,6 +117,15 @@ public class BbvaApiClient {
 
         return createRequestInSession(BbvaConstants.Url.SECURITY_PROFITABILITY)
                 .post(SecurityProfitabilityResponse.class, request);
+    }
+
+    public LoanDetailsResponse fetchLoanDetails(String loanId) {
+        final String url =
+                new URL(BbvaConstants.Url.LOAN_DETAILS)
+                        .parameter(BbvaConstants.Url.PARAM_ID, loanId)
+                        .get();
+
+        return createRequestInSession(url).get(LoanDetailsResponse.class);
     }
 
     public TransactionsRequest createAccountTransactionsQuery(Account account) {

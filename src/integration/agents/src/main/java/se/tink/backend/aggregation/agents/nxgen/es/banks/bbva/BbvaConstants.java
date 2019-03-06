@@ -55,6 +55,7 @@ public final class BbvaConstants {
                 LogTag.from("bbva_investment_managed_funds");
         public static final LogTag INVESTMENT_WEALTH_DEPOSITARY =
                 LogTag.from("bbva_investment_wealth_depositary");
+        public static final LogTag LOAN_DETAILS = LogTag.from("bbva_loan_details");
         public static final LogTag LOAN_MULTI_MORTGAGE = LogTag.from("bbva_loan_multi_mortgage");
         public static final LogTag LOAN_REVOLVING_CREDIT =
                 LogTag.from("bbva_loan_revolving_credit");

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 
 public final class BbvaTypeMappers {
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -14,8 +15,7 @@ public final class BbvaTypeMappers {
                             "0CA0000245", // CUENTA ON LINE
                             "0000009340", // CUENTA TRADER - marked as personal account by BBVA
                             "0CA0000299", // CUENTO UNO
-                            "0000004272", // CUENTA BLUE ONLINE
-                            "0GV0002307" // CUENTA BLUE ONLINE
+                            "0000004272" // CUENTA BLUE ONLINE
                             )
                     .put(
                             AccountTypes.SAVINGS, "0000011102" // CUENTA METAS - goal account
@@ -67,6 +67,15 @@ public final class BbvaTypeMappers {
                             )
                     .put(
                             AccountTypes.CREDIT_CARD, "00016" // TARJETAS DE CREDITO - credit card
+                            )
+                    .build();
+
+    public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
+            TypeMapper.<LoanDetails.Type>builder()
+                    .put(
+                            LoanDetails.Type.BLANCO,
+                            "00018", // RESTO CONSUMO CREDICONSUMO
+                            "00021" // PRESTAMO 5,50%
                             )
                     .build();
 }
