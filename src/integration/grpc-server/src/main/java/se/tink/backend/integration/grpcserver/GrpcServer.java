@@ -34,6 +34,7 @@ public class GrpcServer {
         serverBuilder = NettyServerBuilder
                 .forAddress(listenAddress);
 
+        // Order matters - Make sure to have the most important first, probably AccessLogInterceptor.
         List<? extends ServerInterceptor> interceptors = ImmutableList.of(
                 new AccessLogInterceptor()
         );
