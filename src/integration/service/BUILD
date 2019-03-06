@@ -53,7 +53,8 @@ container_image(
     files = [
         ":integration_service.jar",
     ],
-    directory = "/usr/share/integration_service"
+    directory = "/usr/share/integration_service",
+    tags = ["manual"],
 )
 
 container_push(
