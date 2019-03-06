@@ -9,30 +9,30 @@ spec:
       app: integration-service
 
   egress:
-    - {}
+  - {}
 
   ingress:
-    - ports:
-        - protocol: TCP
-          port: 8443
-      from:
-        - podSelector:
-            matchLabels:
-              app: aggregation
-        - namespaceSelector:
-            matchLabels:
-              service: aggregation
-    - ports:
-        - protocol: TCP
-          port: 9130
-      from:
-        - podSelector:
-            matchLabels:
-              app: prometheus
-        - namespaceSelector:
-            matchLabels:
-              service: monitoring-prometheus
+  - ports:
+    - protocol: TCP
+      port: 8443
+    from:
+    - podSelector:
+        matchLabels:
+          app: aggregation
+    - namespaceSelector:
+        matchLabels:
+          service: aggregation
+  - ports:
+    - protocol: TCP
+      port: 9130
+    from:
+    - podSelector:
+        matchLabels:
+          app: prometheus
+    - namespaceSelector:
+        matchLabels:
+          service: monitoring-prometheus
 
   policyTypes:
-    - Egress
-    - Ingress
+  - Egress
+  - Ingress
