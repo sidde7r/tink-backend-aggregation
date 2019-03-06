@@ -61,6 +61,10 @@ public class TypeMapper<V> {
         return translated.isPresent() && values.contains(translated.get());
     }
 
+    /**
+     * Returns the type associated with the key, if any. A warning is logged if the key cannot be
+     * mapped to a type, unless the key has been ignored.
+     */
     public Optional<V> translate(String typeKey) {
         if (Strings.isNullOrEmpty(typeKey)) {
             // `typeKey` comes from the bank and can be null.
@@ -93,7 +97,10 @@ public class TypeMapper<V> {
             return this;
         }
 
-        /** Known keys that should not be mapped to any specific account type. */
+        /**
+         * Known keys that should not be mapped to any specific account type. The effect is that a
+         * warning will not be printed when attempting to map these keys.
+         */
         public Builder<V> ignoreKeys(String... keys) {
             ignoredKeys.addAll(Arrays.asList(keys));
             return this;
