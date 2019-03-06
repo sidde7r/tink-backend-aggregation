@@ -45,6 +45,34 @@ public final class BbvaConstants {
                             )
                     .build();
 
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER_ALT =
+            TypeMapper.<AccountTypes>builder()
+                    .put(
+                            AccountTypes.PENSION,
+                            "00009", // PLANES DE PENSIONES - pension plan
+                            "00027" // PLANES INDIVIDUALES - (individual) pension plan
+                            )
+                    .put(
+                            AccountTypes.OTHER,
+                            "00006", // TARJETAS PREPAGO - prepaid card
+                            "00023", // RECARGA - prepaid card
+                            "00003", // SEGUROS - insurance
+                            "00020", // SEGUROS (RIESGO) - insurance
+                            "00041", // SEGUROS DE PROTECCION PAGOS CONSUMO - insurance
+                            "00005", // TARJETAS DE DEBITO - debit card
+                            "00022" // DEBITO - debit card
+                            )
+                    .put(
+                            AccountTypes.CHECKING, "00056" // CUENTAS PERSONALES - personal account
+                            )
+                    .put(
+                            AccountTypes.LOAN, "00018" // PRESTAMO - loan
+                            )
+                    .put(
+                            AccountTypes.CREDIT_CARD, "00016" // TARJETAS DE CREDITO - credit card
+                            )
+                    .build();
+
     public enum Error {
         BANK_SERVICE_UNAVAILABLE("ENPP0000"),
         UNKNOWN("");
