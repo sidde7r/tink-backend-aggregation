@@ -39,8 +39,8 @@ public class UkOpenBankingBankTransferExecutor implements BankTransferExecutor {
     private final UkOpenBankingAccountFetcher<?, ?, TransactionalAccount>
             ukOpenBankingAccountFetcher;
     private final UkOpenBankingPis ukOpenBankingPis;
-    private CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
-    private String callbackUriId;
+    private final CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair;
+    private final String callbackUriId;
 
     public UkOpenBankingBankTransferExecutor(
             Catalog catalog,
