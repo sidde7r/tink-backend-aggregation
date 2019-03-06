@@ -1,11 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.EELoginAnswerEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.KeepAliveRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse1;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse2;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.GlobalPositionFirstTimeResponse;
@@ -34,12 +37,90 @@ public class EvoBancoApiClient {
         this.sessionStorage = sessionStorage;
     }
 
+    public LinkingLoginResponse1 link1(LinkingLoginRequest linkingLoginRequest)
+            throws LoginException {
+        try {
+            HttpResponse response =
+                    createRequest(EvoBancoConstants.Urls.LINKING_LOGIN)
+                            .headers(getEEHeaders())
+                            .post(HttpResponse.class, linkingLoginRequest);
+
+            setNextCodSecIpHeader(response);
+
+            return response.getBody(LinkingLoginResponse1.class);
+        } catch (HttpResponseException e) {
+            int statusCode = e.getResponse().getStatus();
+
+            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            throw e;
+        }
+    }
+
+    public LinkingLoginResponse2 link2(LinkingLoginRequest linkingLoginRequest)
+            throws LoginException {
+        try {
+            HttpResponse response =
+                    createRequest(EvoBancoConstants.Urls.LINKING_LOGIN)
+                            .headers(getEEHeaders())
+                            .post(HttpResponse.class, linkingLoginRequest);
+
+            setNextCodSecIpHeader(response);
+
+            LinkingLoginResponse2 linkingLoginResponse2 =
+                    response.getBody(LinkingLoginResponse2.class);
+
+            if (linkingLoginResponse2
+                    .getEeOLinkingAndLogin()
+                    .getReturnCode()
+                    .equals(EvoBancoConstants.ReturnCodes.UNSUCCESSFUL_RETURN_CODE)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            processResponse(linkingLoginResponse2.getEeOLinkingAndLogin().getAnswer());
+
+            return linkingLoginResponse2;
+        } catch (HttpResponseException e) {
+            int statusCode = e.getResponse().getStatus();
+
+            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            throw e;
+        }
+    }
+
     public LoginResponse login(LoginRequest loginRequest) throws LoginException {
 
         try {
-            return createRequest(EvoBancoConstants.Urls.LOGIN)
-                    .body(loginRequest, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
-                    .post(LoginResponse.class);
+            LoginResponse loginResponse =
+                    createRequest(EvoBancoConstants.Urls.LOGIN)
+                            .body(loginRequest, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                            .post(LoginResponse.class);
+
+            // Needed for other requests
+            sessionStorage.put(
+                    EvoBancoConstants.Storage.AGREEMENT_BE,
+                    loginResponse.getUserinfo().getAgreementBE());
+            sessionStorage.put(
+                    EvoBancoConstants.Storage.ENTITY_CODE,
+                    loginResponse.getUserinfo().getEntityCode());
+            sessionStorage.put(
+                    EvoBancoConstants.Storage.USER_BE, loginResponse.getUserinfo().getUserBE());
+            sessionStorage.put(
+                    EvoBancoConstants.Storage.USER_ID,
+                    loginResponse.getUserinfo().getMobilePhone());
+            sessionStorage.put(
+                    EvoBancoConstants.Storage.HOLDER_NAME,
+                    loginResponse.getUserinfo().getClientName()
+                            + " "
+                            + loginResponse.getUserinfo().getSurname1Client()
+                            + " "
+                            + loginResponse.getUserinfo().getSurname2Client());
+
+            return loginResponse;
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
 
@@ -62,7 +143,18 @@ public class EvoBancoApiClient {
 
             setNextCodSecIpHeader(response);
 
-            return response.getBody(EELoginResponse.class);
+            EELoginResponse eeLoginResponse = response.getBody(EELoginResponse.class);
+
+            if (eeLoginResponse
+                    .getEeOLogin()
+                    .getReturnCode()
+                    .equals(EvoBancoConstants.ReturnCodes.UNSUCCESSFUL_RETURN_CODE)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            processResponse(eeLoginResponse.getEeOLogin().getAnswer());
+
+            return eeLoginResponse;
 
         } catch (HttpResponseException e) {
             int statusCode = e.getResponse().getStatus();
@@ -75,7 +167,7 @@ public class EvoBancoApiClient {
         }
     }
 
-    public boolean isAlive(KeepAliveRequest keepAliveRequest) throws SessionException {
+    public boolean isAlive(KeepAliveRequest keepAliveRequest) {
 
         try {
             HttpResponse response =
@@ -91,7 +183,7 @@ public class EvoBancoApiClient {
         return true;
     }
 
-    public GlobalPositionFirstTimeResponse globalPositionFirstTime() throws SessionException {
+    public GlobalPositionFirstTimeResponse globalPositionFirstTime() {
 
         HttpResponse response =
                 createRequest(EvoBancoConstants.Urls.GLOBAL_POSITION_FIRST_TIME)
@@ -116,21 +208,22 @@ public class EvoBancoApiClient {
     }
 
     public GlobalPositionResponse globalPosition() {
-        HttpResponse response = createRequest(EvoBancoConstants.Urls.FETCH_ACCOUNTS)
-                .headers(getEEHeaders())
-                .queryParam(
-                        EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
-                        sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE))
-                .queryParam(
-                        EvoBancoConstants.QueryParamsKeys.ENTITY_CODE,
-                        sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE))
-                .queryParam(
-                        EvoBancoConstants.QueryParamsKeys.INTERNAL_ID_PE,
-                        sessionStorage.get(EvoBancoConstants.Storage.INTERNAL_ID_PE))
-                .queryParam(
-                        EvoBancoConstants.QueryParamsKeys.USER_BE,
-                        sessionStorage.get(EvoBancoConstants.Storage.USER_BE))
-                .get(HttpResponse.class);
+        HttpResponse response =
+                createRequest(EvoBancoConstants.Urls.FETCH_ACCOUNTS)
+                        .headers(getEEHeaders())
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
+                                sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.ENTITY_CODE,
+                                sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.INTERNAL_ID_PE,
+                                sessionStorage.get(EvoBancoConstants.Storage.INTERNAL_ID_PE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.USER_BE,
+                                sessionStorage.get(EvoBancoConstants.Storage.USER_BE))
+                        .get(HttpResponse.class);
 
         setNextCodSecIpHeader(response);
 
@@ -170,14 +263,22 @@ public class EvoBancoApiClient {
 
     public void setNextCodSecIpHeader(HttpResponse response) {
         MultivaluedMap<String, String> responseHeaders = response.getHeaders();
-        sessionStorage.put(
-                EvoBancoConstants.Storage.COD_SEC_IP,
-                responseHeaders.getFirst(EvoBancoConstants.HeaderKeys.COD_SEC_IP));
+        String newCodSecIp = responseHeaders.getFirst(EvoBancoConstants.HeaderKeys.COD_SEC_IP);
+
+        if (newCodSecIp == null || newCodSecIp.isEmpty()) {
+            newCodSecIp = EvoBancoConstants.HeaderValues.COD_SEC_IP;
+        }
+
+        sessionStorage.put(EvoBancoConstants.Storage.COD_SEC_IP, newCodSecIp);
     }
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    private void processResponse(EELoginAnswerEntity answer) {
+        sessionStorage.put(EvoBancoConstants.Storage.INTERNAL_ID_PE, answer.getInternalIdPe());
     }
 }

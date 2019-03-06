@@ -1,14 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoPasswordAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoAutoAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoMultifactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.EvoBancoAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.EvoBancoTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.session.EvoBancoSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticationPasswordController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -37,20 +39,30 @@ public class EvoBancoAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugProxy("http://192.168.238.15:8888");
-        client.setDebugOutput(true);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(
-                new EvoBancoPasswordAuthenticator(bankClient, sessionStorage));
+        SmsOtpAuthenticationPasswordController smsOtpAuthenticationController =
+                new SmsOtpAuthenticationPasswordController<>(
+                        catalog,
+                        supplementalInformationHelper,
+                        new EvoBancoMultifactorAuthenticator(
+                                bankClient, persistentStorage, sessionStorage, credentials),
+                        EvoBancoConstants.Constants.OTP_VALUE_LENGTH);
+
+        return new AutoAuthenticationController(
+                request,
+                context,
+                smsOtpAuthenticationController,
+                new EvoBancoAutoAuthenticator(bankClient, credentials, persistentStorage, sessionStorage));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        EvoBancoAccountFetcher accountFetcher = new EvoBancoAccountFetcher(bankClient, sessionStorage);
+        EvoBancoAccountFetcher accountFetcher =
+                new EvoBancoAccountFetcher(bankClient, sessionStorage);
         TransactionFetcherController<TransactionalAccount> transactionFetcher =
                 new TransactionFetcherController<>(
                         transactionPaginationHelper,

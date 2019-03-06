@@ -20,6 +20,8 @@ public class EvoBancoConstants {
                 "SOA_RVIA/Empresa/PS/rest/v1/SE_RVA_ConsultaMovimientosVistaAplazada";
         static final String FETCH_ACCOUNTS_PATH =
                 "SOA_RVIA/Empresa/PS/rest/v3/SE_RVA_PosicionGlobalBE";
+        static final String LINKING_LOGIN_PATH =
+                "SOA_RVIA/Empresa/PS/rest/v3/SE_RVA_VinculacionyLogin";
     }
 
     public static class Urls {
@@ -35,7 +37,9 @@ public class EvoBancoConstants {
         public static final URL FETCH_TRANSACTIONS =
                 new URL(BASE_MOBILE_SERVICES + ApiService.FETCH_TRANSACTIONS_PATH);
         public static final URL FETCH_ACCOUNTS =
-                new URL(BASE_MOBILE_SERVICES + ApiService.FETCH_ACCOUNTS_PATH);;
+                new URL(BASE_MOBILE_SERVICES + ApiService.FETCH_ACCOUNTS_PATH);
+        public static final URL LINKING_LOGIN =
+                new URL(BASE_MOBILE_SERVICES + ApiService.LINKING_LOGIN_PATH);
     }
 
     public static class StatusCodes {
@@ -75,13 +79,16 @@ public class EvoBancoConstants {
     }
 
     // TODO: Remove this as soon as we find out how to get these values from their backend
-    public static class RequestValues {
+    public static class HardCodedValues {
         public static final String OPERATING_SYSTEM = "IOS";
         public static final String DEVICE_ID = "5E4A4188-84C9-4F27-8397-8";
         public static final String APP_ID = "1";
         public static final String APP_VERSION = "12.12.1";
         public static final String MOBILE_ACCESS = "S";
         public static final String API_VERSION = "2";
+        public static final String MODEL = "iPhone 6";
+        public static final String FIRST_LINKING_SIGNATURE = "N";
+        public static final String SECOND_LINKING_SIGNATURE = "V";
     }
 
     public static class Storage {
@@ -93,16 +100,14 @@ public class EvoBancoConstants {
         public static final String COD_SEC_IP = HeaderKeys.COD_SEC_IP;
         public static final String INTERNAL_ID_PE = "internal-id-pe";
         public static final String HOLDER_NAME = "holder-name";
-        public static final String GLOBAL_POSITION_FIRST_TIME = "global-position-first-time";
+        public static final String DEVICE_ID = "device-id";
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
     }
 
     public static class FormKey {
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
-    }
-
-    public static class UrlParams {
-        public static final String UID = "uid";
     }
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -127,5 +132,7 @@ public class EvoBancoConstants {
         public static final String FIRST_SEQUENTIAL_NUMBER = "0000001";
         public static final String MADRID_ZONE_ID = "Europe/Madrid";
         public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+        public static final int OTP_VALUE_LENGTH = 7;
+        public static final int DEVICE_ID_LENGTH = 25;
     }
 }

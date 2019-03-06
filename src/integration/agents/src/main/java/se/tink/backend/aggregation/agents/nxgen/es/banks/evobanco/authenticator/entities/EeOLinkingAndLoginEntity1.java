@@ -4,18 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class EeOLoginEntity {
+public class EeOLinkingAndLoginEntity1 {
     @JsonProperty("Respuesta")
-    private EELoginAnswerEntity answer;
+    private EELinkingLoginAnswerEntity answer;
 
     @JsonProperty("codigoRetorno")
     private String returnCode;
 
-    public EELoginAnswerEntity getAnswer() {
+    public EELinkingLoginAnswerEntity getAnswer() {
         return answer;
-    }
-
-    public String getReturnCode() {
-        return returnCode;
     }
 }

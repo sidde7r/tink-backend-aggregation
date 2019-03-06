@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import java.util.List;
 
 @JsonObject
-public class AnswerEntity {
+public class EELoginAnswerEntity {
     private String mail;
 
     @JsonProperty("fechaUltimaConexion")

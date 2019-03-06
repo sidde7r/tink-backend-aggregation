@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class EeOLoginEntity {
+public class EeOLinkingAndLoginEntity2 {
     @JsonProperty("Respuesta")
     private EELoginAnswerEntity answer;
 

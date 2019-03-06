@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 //@Ignore
 public class EvoBancoAgentTest {
-    private final String TEST_USERNAME = "53206180G";
-    private final String TEST_PASSWORD = "666662";
+    private final String TEST_USERNAME = "CCCCC";
+    private final String TEST_PASSWORD = "NNNNNN";
 
     private AgentIntegrationTest.Builder builder;
 
