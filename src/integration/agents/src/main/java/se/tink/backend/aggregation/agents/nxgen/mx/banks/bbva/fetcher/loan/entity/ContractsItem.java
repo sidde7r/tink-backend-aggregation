@@ -29,8 +29,8 @@ public class ContractsItem {
             BBVAUtils.getTypeMapper(BBVAConstants.ACCOUNT_TYPES_MAP);
 
     public Optional<LoanAccount> toLoanAccount() {
-        if (ACCOUNT_TYPE_MAPPER.translate(product.getId()).isPresent()
-                && ACCOUNT_TYPE_MAPPER.translate(product.getId()).get().equals(AccountTypes.LOAN))
+        final Optional<AccountTypes> accountType = ACCOUNT_TYPE_MAPPER.translate(product.getId());
+        if (accountType.isPresent() && accountType.get().equals(AccountTypes.LOAN))
             try {
                 return Optional.of(
                         LoanAccount.builder(id)
