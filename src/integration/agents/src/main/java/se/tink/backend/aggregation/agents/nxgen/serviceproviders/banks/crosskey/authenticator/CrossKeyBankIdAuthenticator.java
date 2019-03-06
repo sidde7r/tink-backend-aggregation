@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey.authenticator;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
@@ -28,7 +30,7 @@ public class CrossKeyBankIdAuthenticator
     private final CrossKeyConfiguration agentConfiguration;
     private final SessionStorage sessionStorage;
     private final Credentials credentials;
-    private int counter = 0;
+    private Boolean firstBankIdPooling;
 
     public CrossKeyBankIdAuthenticator(
             CrossKeyApiClient apiClient,
@@ -39,6 +41,7 @@ public class CrossKeyBankIdAuthenticator
         this.agentConfiguration = agentConfiguration;
         this.sessionStorage = sessionStorage;
         this.credentials = credentials;
+        this.firstBankIdPooling = true;
     }
 
     @Override
@@ -64,6 +67,11 @@ public class CrossKeyBankIdAuthenticator
     @Override
     public BankIdStatus collect(BankIdAutostartTokenResponse initBankId)
             throws AuthenticationException, AuthorizationException {
+
+        if (firstBankIdPooling) {
+            Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+            firstBankIdPooling = false;
+        }
         BankiIdResponse bankiIdResponse = apiClient.collectBankId();
 
         if (bankiIdResponse.getStatus().isSuccess()) {

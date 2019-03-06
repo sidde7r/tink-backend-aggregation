@@ -1,8 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.amex.v62.authenticator;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -22,6 +19,10 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.strings.StringUtils;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenticator {
 
@@ -62,8 +63,7 @@ public class AmericanExpressV62PasswordAuthenticator implements PasswordAuthenti
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_FIRST_ATTEMPT:
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_SECOND_ATTEMPT:
-                throw LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(
-                        "Incorrect login credentials. You have one more attempt before your account will be locked."));
+                throw LoginError.INCORRECT_CREDENTIALS_LAST_ATTEMPT.exception();
             case AmericanExpressV62Constants.ReportingCode.LOGON_FAIL_ACCOUNT_BLOCKED:
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             case AmericanExpressV62Constants.ReportingCode.BANKSIDE_TEMPORARY_ERROR:

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -149,4 +150,9 @@ public class AlandsBankenSEConfiguration extends CrossKeyConfiguration {
                 .setNextDayOfTermsChange(loanDetails.getNextInterestAdjustmentDate())
                 .build();
     }
+    @Override
+    protected Optional<String> getAppVersion() {
+        return Optional.of(AlandsBankenSEConstants.APP_VERSION);
+    }
+
 }

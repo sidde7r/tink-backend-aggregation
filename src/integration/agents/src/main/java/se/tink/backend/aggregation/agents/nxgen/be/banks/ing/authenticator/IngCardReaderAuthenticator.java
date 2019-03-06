@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator;
 
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.Preconditions;
-import java.util.Arrays;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -20,13 +18,14 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.entities.PrepareEnrollResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.AppCredentialsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.InitEnrollResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.rpc.LoginResponse;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json.BaseMobileResponseEntity;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.i18n.LocalizableKey;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 public class IngCardReaderAuthenticator {
     private static final AggregationLogger LOGGER = new AggregationLogger(IngCardReaderAuthenticator.class);
@@ -228,7 +227,12 @@ public class IngCardReaderAuthenticator {
         if (IngConstants.ReturnCodes.NOK.equalsIgnoreCase(returnCode)) {
             Optional<String> errorText = responseEntity.getErrorText();
             if (errorText.isPresent()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(errorText.get()));
+                LOGGER.warn(
+                        String.format("%s: errorCode:%s errorText:%s",
+                        IngConstants.LogMessage.CHALLENGE_EXCHANGE_ERROR,
+                                responseEntity.getErrorCode(),
+                                responseEntity.getErrorText()));
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
             } else {
                 throw new IllegalStateException(IngConstants.LogMessage.CHALLENGE_EXCHANGE_ERROR);
             }

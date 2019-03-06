@@ -44,7 +44,6 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
         client.addMessageReader(new CrossKeyMessageBodyReader(CrossKeyAgent.class.getPackage()));
-        client.setDebugOutput(true);
     }
 
     @Override
