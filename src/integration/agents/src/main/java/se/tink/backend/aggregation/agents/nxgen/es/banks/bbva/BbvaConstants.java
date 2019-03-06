@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class BbvaConstants {
     public static final int PAGE_SIZE = 20;

@@ -189,15 +189,15 @@ public class BbvaApiClient {
         return tsec;
     }
 
+    private void setTsec(String tsec) {
+        this.tsec = tsec;
+    }
+
     public String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    private void setTsec(String tsec) {
-        this.tsec = tsec;
     }
 }
