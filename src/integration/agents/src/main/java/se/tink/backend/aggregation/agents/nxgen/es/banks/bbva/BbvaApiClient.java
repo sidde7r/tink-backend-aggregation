@@ -174,14 +174,6 @@ public class BbvaApiClient {
         return initiateSessionResponse;
     }
 
-    public String getCardTransactions(String id) {
-        String url =
-                new URL(BbvaConstants.Url.CARD_TRANSACTIONS)
-                        .parameter(BbvaConstants.Url.PARAM_ID, id)
-                        .get();
-        return createRequestInSession(url).get(String.class);
-    }
-
     private String getUserAgent() {
         return userAgent;
     }
