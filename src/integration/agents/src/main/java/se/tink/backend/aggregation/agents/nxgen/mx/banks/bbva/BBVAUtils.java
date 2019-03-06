@@ -1,15 +1,19 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.RandomStringUtils;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.DeviceActivationRequest;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BBVAUtils {
@@ -44,6 +48,9 @@ public class BBVAUtils {
         return builder.toString();
     }
 
+    public static TypeMapper<AccountTypes> getTypeMapper(Map<AccountTypes, List<String>> map) {
+        return TypeMapper.<AccountTypes>builder().putAll(map).build();
+    }
 
     public static String generateTokenHash(String softwareTokenAuthCode) {
 

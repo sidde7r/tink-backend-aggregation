@@ -1,21 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
+import com.google.common.collect.ImmutableMap;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class BBVAConstants {
 
-    //TODO: use id's
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "CH")
-                    .put(AccountTypes.SAVINGS, "AH")
-                    .put(AccountTypes.CREDIT_CARD, "CARDS")
-                    .put(AccountTypes.LOAN, "HIPOTECARIO")
-                    .build();
+    public static final ImmutableMap<AccountTypes, List<String>> ACCOUNT_TYPES_MAP =
+            ImmutableMap.of(
+                    AccountTypes.CHECKING,
+                    Arrays.asList("CH"),
+                    AccountTypes.SAVINGS,
+                    Arrays.asList("AH"),
+                    AccountTypes.CREDIT_CARD,
+                    Arrays.asList("CARDS"),
+                    AccountTypes.LOAN,
+                    Arrays.asList("HIPOTECARIO"));
 
     public static final String APPLICATION_CODE = "RETAILMX";
     public static final String APPLICATION_CODE_VERSION = "1.0";
