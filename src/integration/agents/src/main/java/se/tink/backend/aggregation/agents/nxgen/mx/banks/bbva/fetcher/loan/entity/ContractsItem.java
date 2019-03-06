@@ -25,11 +25,11 @@ public class ContractsItem {
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(ContractsItem.class);
 
     @JsonIgnore
-    private final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+    private final TypeMapper<AccountTypes> accounTypeMapper =
             BBVAUtils.getTypeMapper(BBVAConstants.ACCOUNT_TYPES_MAP);
 
     public Optional<LoanAccount> toLoanAccount() {
-        final Optional<AccountTypes> accountType = ACCOUNT_TYPE_MAPPER.translate(product.getId());
+        final Optional<AccountTypes> accountType = accounTypeMapper.translate(product.getId());
         if (accountType.isPresent() && accountType.get().equals(AccountTypes.LOAN))
             try {
                 return Optional.of(

@@ -30,7 +30,7 @@ public class ContractsItemEntity {
     private static final Logger logger = LoggerFactory.getLogger(ContractsItemEntity.class);
 
     @JsonIgnore
-    private final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+    private final TypeMapper<AccountTypes> accountTypeMapper =
             BBVAUtils.getTypeMapper(BBVAConstants.ACCOUNT_TYPES_MAP);
 
     public boolean isValid() {
@@ -75,7 +75,7 @@ public class ContractsItemEntity {
 
     public TransactionalAccount toTransactionalAccount(String holdername) {
         AccountTypes accountType =
-                ACCOUNT_TYPE_MAPPER
+                accountTypeMapper
                         .translate(getAccountType())
                         .orElseThrow(
                                 () ->
