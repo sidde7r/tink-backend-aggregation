@@ -39,7 +39,7 @@ public final class BbvaConstants {
         public static final String CREDIT_CARD_SHORT_TYPE = "C";
     }
 
-    public static class Query {
+    public static class QueryKeys {
         public static final String PAGINATION_OFFSET = "paginationKey";
         public static final String PAGE_SIZE = "pageSize";
         public static final String CONTRACT_ID = "contractId";

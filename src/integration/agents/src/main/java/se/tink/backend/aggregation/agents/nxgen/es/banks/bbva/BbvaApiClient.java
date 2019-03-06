@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.UrlEncodedFormBody;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
@@ -93,8 +94,8 @@ public class BbvaApiClient {
         final TransactionsRequest request = createAccountTransactionsQuery(account);
 
         return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
-                .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, String.valueOf(keyIndex))
-                .queryParam(BbvaConstants.Query.PAGE_SIZE, String.valueOf(BbvaConstants.PAGE_SIZE))
+                .queryParam(QueryKeys.PAGINATION_OFFSET, String.valueOf(keyIndex))
+                .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(BbvaConstants.PAGE_SIZE))
                 .post(AccountTransactionsResponse.class, request);
     }
 
@@ -102,12 +103,12 @@ public class BbvaApiClient {
             Account account, String keyIndex) {
         return createRequestInSession(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
                 .queryParam(
-                        BbvaConstants.Query.CONTRACT_ID,
+                        QueryKeys.CONTRACT_ID,
                         account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID))
                 .queryParam(
-                        BbvaConstants.Query.CARD_TRANSACTION_TYPE,
+                        QueryKeys.CARD_TRANSACTION_TYPE,
                         BbvaConstants.AccountType.CREDIT_CARD_SHORT_TYPE)
-                .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, keyIndex)
+                .queryParam(QueryKeys.PAGINATION_OFFSET, keyIndex)
                 .get(CreditCardTransactionsResponse.class);
     }
 

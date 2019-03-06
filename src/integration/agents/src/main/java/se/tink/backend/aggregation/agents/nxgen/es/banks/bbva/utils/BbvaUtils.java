@@ -22,7 +22,7 @@ public class BbvaUtils {
         try {
             return new URIBuilder(toSplit)
                     .getQueryParams().stream()
-                            .filter(p -> BbvaConstants.Query.PAGINATION_OFFSET.equals(p.getName()))
+                            .filter(p -> BbvaConstants.QueryKeys.PAGINATION_OFFSET.equals(p.getName()))
                             .map(p -> Optional.of(p.getValue()))
                             .findAny()
                             .orElseThrow(
