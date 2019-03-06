@@ -71,7 +71,7 @@ public class AccountEntity {
 
         LOGGER.infoExtraLong(
                 SerializationUtils.serializeToString(this),
-                BbvaConstants.Logging.UNKNOWN_ACCOUNT_TYPE);
+                BbvaConstants.LogTags.UNKNOWN_ACCOUNT_TYPE);
         return false;
     }
 

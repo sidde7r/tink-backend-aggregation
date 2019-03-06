@@ -36,13 +36,13 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
         // investment logging
         logInvestment(
                 productsResponse.getInternationalFundsPortfolios(),
-                BbvaConstants.Logging.INVESTMENT_INTERNATIONAL_PORTFOLIO);
+                BbvaConstants.LogTags.INVESTMENT_INTERNATIONAL_PORTFOLIO);
         logInvestment(
                 productsResponse.getManagedFundsPortfolios(),
-                BbvaConstants.Logging.INVESTMENT_MANAGED_FUNDS);
+                BbvaConstants.LogTags.INVESTMENT_MANAGED_FUNDS);
         logInvestment(
                 productsResponse.getWealthDepositaryPortfolios(),
-                BbvaConstants.Logging.INVESTMENT_WEALTH_DEPOSITARY);
+                BbvaConstants.LogTags.INVESTMENT_WEALTH_DEPOSITARY);
 
         accounts.addAll(
                 Optional.ofNullable(productsResponse.getStockAccounts())

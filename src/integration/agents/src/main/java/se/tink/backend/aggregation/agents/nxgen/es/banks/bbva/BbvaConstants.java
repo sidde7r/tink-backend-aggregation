@@ -46,7 +46,7 @@ public final class BbvaConstants {
         public static final String CARD_TRANSACTION_TYPE = "cardTransactionType";
     }
 
-    public static class Logging {
+    public static class LogTags {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bbva_unknown_account_type");
         public static final LogTag INVESTMENT_INTERNATIONAL_PORTFOLIO =
                 LogTag.from("bbva_investment_international_portfolio");
