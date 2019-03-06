@@ -14,6 +14,16 @@ spec:
   ingress:
     - ports:
         - protocol: TCP
+          port: 8443
+      from:
+        - podSelector:
+            matchLabels:
+              app: aggregation
+        - namespaceSelector:
+            matchLabels:
+              service: aggregation
+    - ports:
+        - protocol: TCP
           port: 9130
       from:
         - podSelector:
