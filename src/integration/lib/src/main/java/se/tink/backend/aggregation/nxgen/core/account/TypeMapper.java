@@ -3,6 +3,9 @@ package se.tink.backend.aggregation.nxgen.core.account;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,8 +15,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TypeMapper<V> {
     private static final Logger logger = LoggerFactory.getLogger(TypeMapper.class);
@@ -23,10 +24,11 @@ public class TypeMapper<V> {
     private TypeMapper(TypeMapper.Builder<V> builder) {
         super();
 
-        ignoredKeys = builder.getIgnoredKeys()
-                .stream()
-                .map(String::toLowerCase)
-                .collect(Collectors.toSet());
+        ignoredKeys =
+                builder.getIgnoredKeys()
+                        .stream()
+                        .map(String::toLowerCase)
+                        .collect(Collectors.toSet());
 
         ImmutableMap.Builder<String, V> tmpTranslator = ImmutableMap.builder();
         for (Map.Entry<V, List<String>> entry : builder.getReversed().entrySet()) {
@@ -34,8 +36,12 @@ public class TypeMapper<V> {
             entry.getValue()
                     .stream()
                     .map(String::toLowerCase)
-                    .peek(key -> Preconditions.checkState(!ignoredKeys.contains(key),
-                            String.format("Key %s is both mapped and ignored.", key)))
+                    .peek(
+                            key ->
+                                    Preconditions.checkState(
+                                            !ignoredKeys.contains(key),
+                                            String.format(
+                                                    "Key %s is both mapped and ignored.", key)))
                     .forEach(key -> tmpTranslator.put(key, entry.getKey()));
         }
         translator = tmpTranslator.build();
@@ -55,6 +61,10 @@ public class TypeMapper<V> {
         return translated.isPresent() && values.contains(translated.get());
     }
 
+    /**
+     * Returns the type associated with the key, if any. A warning is logged if the key cannot be
+     * mapped to a type, unless the key has been ignored.
+     */
     public Optional<V> translate(String typeKey) {
         if (Strings.isNullOrEmpty(typeKey)) {
             // `typeKey` comes from the bank and can be null.
@@ -64,7 +74,7 @@ public class TypeMapper<V> {
         typeKey = typeKey.toLowerCase();
         Optional<V> type = Optional.ofNullable(translator.get(typeKey));
 
-        if (!type.isPresent() && ignoredKeys.contains(typeKey)) {
+        if (!type.isPresent() && !ignoredKeys.contains(typeKey)) {
             logger.warn("Unknown account type for key: {}", typeKey);
         }
 
@@ -80,9 +90,7 @@ public class TypeMapper<V> {
             return new TypeMapper<>(this);
         }
 
-        /**
-         * Known keys, and the account type they should be mapped to.
-         */
+        /** Known keys, and the account type they should be mapped to. */
         public Builder<V> put(V value, String... keys) {
 
             reversed.put(value, Arrays.asList(keys));
@@ -90,7 +98,8 @@ public class TypeMapper<V> {
         }
 
         /**
-         * Known keys that should not be mapped to any specific account type.
+         * Known keys that should not be mapped to any specific account type. The effect is that a
+         * warning will not be printed when attempting to map these keys.
          */
         public Builder<V> ignoreKeys(String... keys) {
             ignoredKeys.addAll(Arrays.asList(keys));
