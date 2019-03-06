@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.FormatsEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.RelatedContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.AmortizationScheduleEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.InstallmentsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.InterestEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.entities.ProductEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.RelatedContractEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -30,9 +31,11 @@ public class LoanResponse {
     private String amortizationDescription;
     private AmountEntity delinquencyAmount;
     private String id;
-    private List<InterestEntity> interests;
     private int pendingPayments;
     private AmountEntity pendingAmount;
+
+    @JsonProperty("interests")
+    private List<InterestEntity> interestRates;
 
     public AmountEntity getAwardedAmount() {
         return awardedAmount;
@@ -102,8 +105,8 @@ public class LoanResponse {
         return id;
     }
 
-    public List<InterestEntity> getInterests() {
-        return interests;
+    public List<InterestEntity> getInterestRates() {
+        return interestRates;
     }
 
     public int getPendingPayments() {
