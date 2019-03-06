@@ -20,8 +20,8 @@ public final class AxaConstants {
         public static final String STORE_DERIVATION_CD = BASE + "AXA_BE_MOBILE_storeDerivationCd";
         public static final String PENDING_PRODUCT_REQUESTS =
                 BASE + "AXA_BE_MOBILE_getPendingProductRequests01";
-        public static final String FETCH_ACCOUNTS =
-                BASE + "AXA_BE_MOBILE_getAccounts01";
+        public static final String FETCH_ACCOUNTS = BASE + "AXA_BE_MOBILE_getAccounts01";
+        public static final String FETCH_TRANSACTIONS = BASE + "AXA_BE_MOBILE_getAccountHistory01";
     }
 
     public enum Storage {
@@ -130,6 +130,10 @@ public final class AxaConstants {
         public static final String DEVICEID_KEY = "deviceId";
         public static final String BASIC_AUTH =
                 "NDNiNzQzMWMtZWI0Mi00ZWRjLTgxODYtNjczNzE4NDE5NDQ4OjdlMzk0NjliLTA1ZTQtNDk0OS1hZTMwLWNiOTUxOGZhYWRkYQ==";
+        public static final String DIRECTION_FLAG = "1";
+        public static final String REFERENCE_NUMBER = "";
+        public static final String TRANSACTION_CODE = "";
+        public static final String UPDATE_TIMESTAMP = "";
     }
 
     public static class Response {

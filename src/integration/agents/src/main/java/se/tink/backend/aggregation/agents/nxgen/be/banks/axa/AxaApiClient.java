@@ -12,6 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.S
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.StoreRegistrationCdResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetAccountsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetAccountsResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc.PendingRequestsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc.PendingRequestsResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
@@ -163,5 +165,26 @@ public final class AxaApiClient {
                 .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", accessToken))
                 .body(body)
                 .post(GetAccountsResponse.class);
+    }
+
+    public GetTransactionsResponse postGetTransactions(
+            final int customerId, final String accessToken, final String accountNumber) {
+        final GetTransactionsRequest body =
+                GetTransactionsRequest.builder()
+                        .setApplCd(AxaConstants.Request.APPL_CD)
+                        .setLanguage(AxaConstants.Request.LANGUAGE)
+                        .setCustomerId(customerId)
+                        .setDirectionFlag(AxaConstants.Request.DIRECTION_FLAG)
+                        .setAccountNumber(accountNumber)
+                        .setReferenceNumber(AxaConstants.Request.REFERENCE_NUMBER)
+                        .setTransactionCode(AxaConstants.Request.TRANSACTION_CODE)
+                        .setUpdateTimestamp(AxaConstants.Request.UPDATE_TIMESTAMP)
+                        .build();
+        return httpClient
+                .request(AxaConstants.Url.FETCH_TRANSACTIONS)
+                .headers(AxaConstants.HEADERS_JSON)
+                .header(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", accessToken))
+                .body(body)
+                .post(GetTransactionsResponse.class);
     }
 }

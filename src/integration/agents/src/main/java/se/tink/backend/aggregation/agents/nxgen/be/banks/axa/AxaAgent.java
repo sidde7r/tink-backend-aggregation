@@ -66,7 +66,7 @@ public final class AxaAgent extends NextGenerationAgent {
         final AccountFetcher<TransactionalAccount> accountFetcher =
                 new AxaAccountFetcher(apiClient, makeStorage());
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
-                new AxaTransactionFetcher();
+                new AxaTransactionFetcher(apiClient, makeStorage());
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,

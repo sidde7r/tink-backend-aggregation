@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaAccountTransactionsEntityDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaAccountsDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaErrorsDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.ErrorsEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.AccountTransactionsEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 import java.util.List;
@@ -30,6 +32,9 @@ public final class OutputEntity {
 
     private Boolean hasPensionsSavingsAccount;
     private Boolean hasSecuritiesAccount;
+
+    @JsonDeserialize(using = AxaAccountTransactionsEntityDeserializer.class)
+    private AccountTransactionsEntity accountTransactions;
 
     public List<ErrorsEntity> getErrors() {
         return errors;
@@ -69,5 +74,9 @@ public final class OutputEntity {
 
     public String getEncryptedServerPublicKey() {
         return encryptedServerPublicKey;
+    }
+
+    public AccountTransactionsEntity getAccountTransactions() {
+        return accountTransactions;
     }
 }
