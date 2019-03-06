@@ -1,9 +1,9 @@
 package se.tink.backend.integration.pingservice;
 
 import io.grpc.stub.StreamObserver;
-import se.tink.backend.integration.api.PingServiceGrpc;
-import se.tink.backend.integration.api.grpc.PingRequest;
-import se.tink.backend.integration.api.grpc.PingResponse;
+import se.tink.backend.integration.api.rpc.PingRequest;
+import se.tink.backend.integration.api.rpc.PingResponse;
+import se.tink.backend.integration.api.services.PingServiceGrpc;
 
 public class PingService extends PingServiceGrpc.PingServiceImplBase {
     @Override
