@@ -21,7 +21,7 @@ public class CrossKeyConstants {
         public static final String SYSTEM_STATUS_URI = "systemStatus.do";
         public static final String LOGIN_WITH_USERNAME_PASSWORD = "cam/pintanLoginStepPin.do";
         public static final String LOGIN_WITH_BANKID = "v2/bankIdAutostartLogin.do";
-        public static final String COLLECT_BANKIID = "api/v3/bankIdAutostartCollect.do";
+        public static final String COLLECT_BANKIID = "v3/bankIdAutostartCollect.do";
         public static final String GET_CONTENT = "getContent.do?language=sv";
         public static final String GET_LOGIN_PROVIDERS = "cam/getLoginProviders.do";
         public static final String CONFIRM_TAN_CODE = "cam/pintanLoginStepTan.do";
