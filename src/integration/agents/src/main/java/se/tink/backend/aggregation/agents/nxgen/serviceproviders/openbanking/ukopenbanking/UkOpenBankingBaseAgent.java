@@ -224,7 +224,8 @@ public abstract class UkOpenBankingBaseAgent extends NextGenerationAgent {
                                 paymentsHttpClient,
                                 getTransactionalAccountFetcher(),
                                 pis,
-                                callbackJWTSignatureKeyPair
+                                callbackJWTSignatureKeyPair,
+                                request.getCallbackUriId()
                         ),
                         null,
                         null

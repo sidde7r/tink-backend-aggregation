@@ -51,13 +51,13 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     private final String pseudoId;
     private OAuth2Token clientAccessToken;
 
-    private final String callbackUriId = "";
+    private final String callbackUriId;
 
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OpenIdApiClient apiClient,
             OpenIdAuthenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair, String callbackUriId) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
@@ -65,7 +65,9 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         this.callbackJWTSignatureKeyPair = callbackJWTSignatureKeyPair;
 
         this.pseudoId = RandomUtils.generateRandomBase64UrlEncoded(8);
-        this.state = getJwtState(pseudoId, callbackUriId);
+
+        this.callbackUriId = callbackUriId;
+        this.state = getJwtState(pseudoId);
 
         this.nonce = RandomUtils.generateRandomBase64UrlEncoded(8);
     }
@@ -204,10 +206,9 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
      * We used the Elliptic Curve algorithm in order to reduce the size of the actual JWToken signature.
      *
      * @param pseudoId
-     * @param callbackUriId
      * @return
      */
-    private String getJwtState(String pseudoId, String callbackUriId) {
+    private String getJwtState(String pseudoId) {
 
         if (!callbackJWTSignatureKeyPair.isEnabled()) {
             log.info("Callback JWT not enabled, using pseudoId as state.");
