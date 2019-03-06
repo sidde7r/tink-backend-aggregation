@@ -332,7 +332,16 @@
                     "value": null
                 },
                 {
-                    "helpText": "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$ Enter the amount, including the digits after the decimal sign\n6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap to confirm\n7$ Enter your PIN\n8$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n9$ Enter the sign code",
+                    "description": "Description Code",
+                    "helpText": "4$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n5$ Enter the amount, including the digits after the decimal sign",
+                    "hint": null,
+                    "immutable": true,
+                    "masked": false,
+                    "name": "signfortransferextradescription",
+                    "value": null
+                },
+                {
+                    "helpText": "6$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap to confirm\n7$ Enter your PIN\n8$ ![](https://easybanking.bnpparibasfortis.be/rsc/serv/bank/KBC/KBC_OK.png) Tap\n9$ Enter the sign code",
                     "hint": "NNNNNNN",
                     "immutable": false,
                     "masked": false,
