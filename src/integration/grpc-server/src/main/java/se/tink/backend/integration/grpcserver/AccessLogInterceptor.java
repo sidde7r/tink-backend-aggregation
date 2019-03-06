@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class AccessLogInterceptor implements ServerInterceptor {
 
     private static final Counter requests = Counter.build()
-            .namespace("tink_myapp")
+            .namespace("tink_integration")
             .subsystem("grpc")
             .name("requests_total")
             .help("Total requests.")
