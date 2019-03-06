@@ -86,15 +86,15 @@ spec:
         - name: grpc-certificate-volume
           mountPath: /tls
 
-        volumes:
-        - name: config-volume
-          configMap:
-            name: myapp-configuration
-        - name: grpc-certificate-volume
-          secret:
-            secretName: grpc-certificate
-        - name: tmp
-          emptyDir: {}
+      volumes:
+      - name: config-volume
+        configMap:
+          name: myapp-configuration
+      - name: grpc-certificate-volume
+        secret:
+          secretName: grpc-certificate
+      - name: tmp
+        emptyDir: {}
 
       imagePullSecrets:
       - name: tink-containers
