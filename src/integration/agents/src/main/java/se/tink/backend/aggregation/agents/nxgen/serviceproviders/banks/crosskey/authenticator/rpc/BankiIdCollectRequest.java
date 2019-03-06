@@ -9,8 +9,4 @@ public class BankiIdCollectRequest {
     public BankiIdCollectRequest(String appVersion) {
         this.appVersion = appVersion;
     }
-    /*
-    {"appVersion":"1.9.0-iOS"}
-     */
-
 }
