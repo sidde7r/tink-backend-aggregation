@@ -58,15 +58,15 @@ steps:
   - wait
 
   - name: "Trigger release-train for tink-backend-integration"
-      branches: 'staging'
-      trigger: "release-train"
-      async: false
-      build:
-        message: "$BUILDKITE_MESSAGE"
-        branch: "tink-backend-integration"
-        env:
-          CHART: "tink-backend-integration"
-          REPO_NAME: "tink-backend-aggregation"
-          REPO_SHA1: "$BUILDKITE_COMMIT"
-          VERSION: "$VERSION"
-          PRUNE: "True"
+    branches: 'staging'
+    trigger: "release-train"
+    async: false
+    build:
+      message: "$BUILDKITE_MESSAGE"
+      branch: "tink-backend-integration"
+      env:
+        CHART: "tink-backend-integration"
+        REPO_NAME: "tink-backend-aggregation"
+        REPO_SHA1: "$BUILDKITE_COMMIT"
+        VERSION: "$VERSION"
+        PRUNE: "True"
