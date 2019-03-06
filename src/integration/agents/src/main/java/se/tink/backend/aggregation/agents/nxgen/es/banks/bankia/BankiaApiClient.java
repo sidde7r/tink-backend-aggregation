@@ -169,4 +169,12 @@ public final class BankiaApiClient {
             throw exception;
         }
     }
+
+    public String getLoanOverview() {
+        return client.request(BankiaConstants.Url.LOANS_OVERVIEW)
+                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(String.class);
+    }
 }

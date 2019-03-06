@@ -4,8 +4,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import java.time.ZoneId;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public abstract class BankiaConstants {
 
@@ -27,6 +27,9 @@ public abstract class BankiaConstants {
                 URL_BASE_OIP + "/api/1.0/servicios/cuenta.movimiento/3.0/cuenta/movimiento";
         public static final String CREDIT_CARD_TRANSACTIONS =
                 URL_BASE_OIP + "/api/1.0/operativas/2.0/tarjetas/movimientos";
+
+        public static final String LOANS_OVERVIEW =
+                URL_BASE_M + "/es/prestamos/mis-prestamos";
     }
 
     public static class Query {
@@ -118,5 +121,6 @@ public abstract class BankiaConstants {
 
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bankia_unknown_account_type");
+        public static final LogTag LOAN = LogTag.from("bankia_loan");
     }
 }
