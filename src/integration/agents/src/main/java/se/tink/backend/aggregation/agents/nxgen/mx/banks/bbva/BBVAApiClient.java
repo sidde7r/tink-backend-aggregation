@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.UpdateDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionResponse;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.CustomerInfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.TransactionsResponse;
@@ -207,5 +208,10 @@ public class BBVAApiClient {
                 .queryParam(
                         BBVAConstants.QUERY.TO_DATE, BBVAConstants.DATE.DATE_FORMAT.format(toDate))
                 .get(TransactionsResponse.class);
+    }
+
+    public LoanResponse fetchLoans() {
+        return getGlomoRequest(BBVAConstants.URLS.CARDS, MediaType.APPLICATION_JSON)
+                .get(LoanResponse.class);
     }
 }

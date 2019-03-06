@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -97,6 +96,12 @@ public class TypeMapper<V> {
             return this;
         }
 
+        public Builder<V> putAll(Map<V, List<String>> map) {
+            reversed.putAll(map);
+            return this;
+        }
+
+        /** Known keys that should not be mapped to any specific account type. */
         /**
          * Known keys that should not be mapped to any specific account type. The effect is that a
          * warning will not be printed when attempting to map these keys.

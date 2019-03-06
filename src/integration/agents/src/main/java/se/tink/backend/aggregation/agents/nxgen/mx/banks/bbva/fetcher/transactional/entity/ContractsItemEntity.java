@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAConstants;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -26,6 +28,10 @@ public class ContractsItemEntity {
 
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(ContractsItemEntity.class);
+
+    @JsonIgnore
+    private final TypeMapper<AccountTypes> accountTypeMapper =
+            BBVAUtils.getTypeMapper(BBVAConstants.ACCOUNT_TYPES_MAP);
 
     public boolean isValid() {
         try {
@@ -64,12 +70,12 @@ public class ContractsItemEntity {
     }
 
     private String getAccountType() {
-        return product.getName();
+        return product.getId();
     }
 
     public TransactionalAccount toTransactionalAccount(String holdername) {
         AccountTypes accountType =
-                BBVAConstants.ACCOUNT_TYPE_MAPPER
+                accountTypeMapper
                         .translate(getAccountType())
                         .orElseThrow(
                                 () ->

@@ -1,21 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
+import com.google.common.collect.ImmutableMap;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
 public class BBVAConstants {
 
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder()
-                    .put(AccountTypes.CHECKING, "Cuenta de Cheques")
-                    .put(AccountTypes.SAVINGS, "Cuenta de Ahorro")
-                    .put(
-                            AccountTypes.CREDIT_CARD,
-                            "TARJETA DE CREDITO")
-                    .build();
+    public static final ImmutableMap<AccountTypes, List<String>> ACCOUNT_TYPES_MAP =
+            ImmutableMap.of(
+                    AccountTypes.CHECKING,
+                    Arrays.asList("CH"),
+                    AccountTypes.SAVINGS,
+                    Arrays.asList("AH"),
+                    AccountTypes.CREDIT_CARD,
+                    Arrays.asList("CARDS"),
+                    AccountTypes.LOAN,
+                    Arrays.asList("HIPOTECARIO"));
 
     public static final String APPLICATION_CODE = "RETAILMX";
     public static final String APPLICATION_CODE_VERSION = "1.0";
@@ -52,7 +56,7 @@ public class BBVAConstants {
         public static final String CUSTOMER_INFO =
                 "/SRVS_A02/customers/v1/customers?expand=avatars";
         public static final String ACCOUNTS = String.format(FETCH, "ACCOUNTS,DEPOSITS");
-        public static final String LOANS = String.format(FETCH, "CARDS,LOANS");
+        public static final String CARDS = String.format(FETCH, "CARDS,LOANS");
         public static final String TRANSACTIONS = "/SRVS_A02/accounts/v1/accounts/%s/transactions";
     }
 
@@ -104,6 +108,7 @@ public class BBVAConstants {
         public static final String CONTENT_DISPOSITION_BIOMETRIC =
                 "Content-Disposition: form-data;name=\"biometricFile\"";
         public static final String CURRENT_BALANCE = "CURRENT_BALANCE";
+        public static final String LOAN_BALANCE = "CURRENT_CAPITAL_BALANCE";
     }
 
     public static class STORAGE {
@@ -134,5 +139,6 @@ public class BBVAConstants {
         public static final LogTag ACCOUNT_PARSING_ERROR =
                 LogTag.from("BBVA_ACCOUNT_PARSING_ERROR");
         public static final LogTag AUTO_AUTH = LogTag.from("BBVA_AUTO_AUTH");
+        public static final LogTag LOAN_PARSING_ERROR = LogTag.from("BBVA_LOAN_PARSING_ERROR");
     }
 }
