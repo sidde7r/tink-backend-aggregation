@@ -58,7 +58,7 @@ steps:
   - wait
 
   - name: "Trigger release-train for tink-backend-integration"
-    branches: 'staging'
+    branches: 'master'
     trigger: "release-train"
     async: false
     build:
