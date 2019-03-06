@@ -10,11 +10,11 @@ public class AccountEntity {
     private FormatsEntity formats;
     private String counterPart;
     private MarketerBankEntity marketerBank;
-    private CurrentBalanceEntity currentBalance;
+    private AmountEntity currentBalance;
     private String dueDate;
-    private AvailableBalanceLocalCurrencyEntity availableBalanceLocalCurrency;
+    private AmountEntity availableBalanceLocalCurrency;
     private BranchEntity branch;
-    private AvailableBalanceEntity availableBalance;
+    private AmountEntity availableBalance;
     private BankEntity bank;
     private JoinTypeEntity joinType;
     private String sublevel;
@@ -22,7 +22,7 @@ public class AccountEntity {
     private String id;
     private UserCustomizationEntity userCustomization;
     private List<ParticipantEntity> participants;
-    private CurrentBalanceLocalCurrencyEntity currentBalanceLocalCurrency;
+    private AmountEntity currentBalanceLocalCurrency;
 
     public String getCountry() {
         return country;
@@ -44,7 +44,7 @@ public class AccountEntity {
         return marketerBank;
     }
 
-    public CurrentBalanceEntity getCurrentBalance() {
+    public AmountEntity getCurrentBalance() {
         return currentBalance;
     }
 
@@ -52,7 +52,7 @@ public class AccountEntity {
         return dueDate;
     }
 
-    public AvailableBalanceLocalCurrencyEntity getAvailableBalanceLocalCurrency() {
+    public AmountEntity getAvailableBalanceLocalCurrency() {
         return availableBalanceLocalCurrency;
     }
 
@@ -60,7 +60,7 @@ public class AccountEntity {
         return branch;
     }
 
-    public AvailableBalanceEntity getAvailableBalance() {
+    public AmountEntity getAvailableBalance() {
         return availableBalance;
     }
 
@@ -92,7 +92,7 @@ public class AccountEntity {
         return participants;
     }
 
-    public CurrentBalanceLocalCurrencyEntity getCurrentBalanceLocalCurrency() {
+    public AmountEntity getCurrentBalanceLocalCurrency() {
         return currentBalanceLocalCurrency;
     }
 }

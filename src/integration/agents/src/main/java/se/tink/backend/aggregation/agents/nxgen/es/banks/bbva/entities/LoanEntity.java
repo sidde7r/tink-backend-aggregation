@@ -5,25 +5,24 @@ import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
-import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class LoanEntity {
     private String country;
-    private AwardedAmountEntity awardedAmount;
+    private AmountEntity awardedAmount;
     private ProductEntity product;
     private String nextPaymentDate;
-    private PendingamountEntity pendingamount;
+    private AmountEntity pendingamount;
     private FormatsEntity formats;
     private LoanTypeEntity loanType;
-    private NextFeeEntity nextFee;
+    private AmountEntity nextFee;
     private String counterPart;
     private MarketerBankEntity marketerBank;
     private String dueDate;
     private BranchEntity branch;
-    private RedeemedBalanceEntity redeemedBalance;
+    private AmountEntity redeemedBalance;
     private BankEntity bank;
-    private FinalFeeEntity finalFee;
+    private AmountEntity finalFee;
     private JoinTypeEntity joinType;
     private String sublevel;
     private CurrencyEntity currency;
@@ -36,7 +35,7 @@ public class LoanEntity {
         return country;
     }
 
-    public AwardedAmountEntity getAwardedAmount() {
+    public AmountEntity getAwardedAmount() {
         return awardedAmount;
     }
 
@@ -48,7 +47,7 @@ public class LoanEntity {
         return nextPaymentDate;
     }
 
-    public PendingamountEntity getPendingamount() {
+    public AmountEntity getPendingamount() {
         return pendingamount;
     }
 
@@ -60,7 +59,7 @@ public class LoanEntity {
         return loanType;
     }
 
-    public NextFeeEntity getNextFee() {
+    public AmountEntity getNextFee() {
         return nextFee;
     }
 
@@ -80,7 +79,7 @@ public class LoanEntity {
         return branch;
     }
 
-    public RedeemedBalanceEntity getRedeemedBalance() {
+    public AmountEntity getRedeemedBalance() {
         return redeemedBalance;
     }
 
@@ -88,7 +87,7 @@ public class LoanEntity {
         return bank;
     }
 
-    public FinalFeeEntity getFinalFee() {
+    public AmountEntity getFinalFee() {
         return finalFee;
     }
 
@@ -122,11 +121,8 @@ public class LoanEntity {
 
     @JsonIgnore
     private LoanAccount.Builder buildTinkLoanAccount() {
-        final Amount balance =
-                new Amount(pendingamount.getCurrency().getId(), pendingamount.getAmount()).negate();
-
         return LoanAccount.builder(digit)
-                .setBalance(balance)
+                .setBalance(pendingamount.toTinkAmount().negate())
                 .setBankIdentifier(digit)
                 .setAccountNumber(digit)
                 .setName(product.getDescription());

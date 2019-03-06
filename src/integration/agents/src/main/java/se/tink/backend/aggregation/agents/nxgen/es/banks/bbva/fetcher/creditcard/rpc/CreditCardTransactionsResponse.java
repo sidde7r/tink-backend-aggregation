@@ -22,7 +22,7 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     @JsonIgnore
     @Override
     public Collection<CreditCardTransaction> getTinkTransactions() {
-        return items.stream().map(t -> t.toTinkTransaction()).collect(Collectors.toList());
+        return items.stream().map(CreditCardTransactionEntity::toTinkTransaction).collect(Collectors.toList());
     }
 
     @JsonIgnore

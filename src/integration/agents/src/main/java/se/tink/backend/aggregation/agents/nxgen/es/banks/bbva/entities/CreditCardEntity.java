@@ -13,9 +13,9 @@ public class CreditCardEntity {
     private String migrationType;
     private TypeEntity type;
     private BranchEntity branch;
-    private AvailableBalanceEntity availableBalance;
+    private AmountEntity availableBalance;
     private BankEntity bank;
-    private LimitEntity limit;
+    private AmountEntity limit;
     private CurrencyEntity currency;
     private String id;
     private String pan;
@@ -23,7 +23,7 @@ public class CreditCardEntity {
     private List<ParticipantEntity> participants;
     private ProductEntity product;
     private String counterPart;
-    private DisposedAmountEntity disposedAmount;
+    private AmountEntity disposedAmount;
     private IndicatorsEntity indicators;
     private JoinTypeEntity joinType;
     private String sublevel;
@@ -63,7 +63,7 @@ public class CreditCardEntity {
         return branch;
     }
 
-    public AvailableBalanceEntity getAvailableBalance() {
+    public AmountEntity getAvailableBalance() {
         return availableBalance;
     }
 
@@ -71,7 +71,7 @@ public class CreditCardEntity {
         return bank;
     }
 
-    public LimitEntity getLimit() {
+    public AmountEntity getLimit() {
         return limit;
     }
 
@@ -103,7 +103,7 @@ public class CreditCardEntity {
         return counterPart;
     }
 
-    public DisposedAmountEntity getDisposedAmount() {
+    public AmountEntity getDisposedAmount() {
         return disposedAmount;
     }
 

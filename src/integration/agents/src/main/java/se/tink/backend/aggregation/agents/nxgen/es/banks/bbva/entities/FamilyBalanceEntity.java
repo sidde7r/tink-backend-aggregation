@@ -4,10 +4,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FamilyBalanceEntity {
-    private BalanceEntity balance;
+    private AmountEntity balance;
     private String id;
 
-    public BalanceEntity getBalance() {
+    public AmountEntity getBalance() {
         return balance;
     }
 

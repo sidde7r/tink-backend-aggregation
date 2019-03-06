@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class SimpleAccountEntity {
-
     private CurrentBalanceEntity currentBalance;
 
     public CurrentBalanceEntity getCurrentBalance() {

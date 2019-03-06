@@ -5,14 +5,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class UserAccessControlEntity {
-    private List<IsVisibleItemEntity> isVisible;
-    private List<IsManagedItemEntity> isManaged;
+    private List<IsVisibleEntity> isVisible;
+    private List<IsManagedEntity> isManaged;
 
-    public List<IsVisibleItemEntity> getIsVisible() {
+    public List<IsVisibleEntity> getIsVisible() {
         return isVisible;
     }
 
-    public List<IsManagedItemEntity> getIsManaged() {
+    public List<IsManagedEntity> getIsManaged() {
         return isManaged;
     }
 }

@@ -3,6 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcar
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.text.ParseException;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BasicEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
@@ -20,7 +22,7 @@ public class CreditCardTransactionEntity {
     private String transactionTypeIndicator;
     private BasicEntity concept;
     private AmountEntity amount;
-    private HolderAmountEntity holderAmount;
+    private AmountEntity holderAmount;
     // LocalDateTime
     private String valueDate;
     private String terminalId;

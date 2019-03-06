@@ -6,6 +6,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class UserEntity {
     private String id;
 
+    public UserEntity() {}
+
     public UserEntity(String id) {
         this.id = id;
     }

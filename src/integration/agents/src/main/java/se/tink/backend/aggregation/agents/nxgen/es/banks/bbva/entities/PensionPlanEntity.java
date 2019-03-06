@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PensionPlanEntity {
-    private LiquidValueEntity liquidValue;
+    private AmountEntity liquidValue;
     private String country;
     private ProductEntity product;
     private FormatsEntity formats;
@@ -15,7 +15,7 @@ public class PensionPlanEntity {
     private BranchEntity branch;
     private double shares;
     private BankEntity bank;
-    private BalanceEntity balance;
+    private AmountEntity balance;
     private JoinTypeEntity joinType;
     private String sublevel;
     private CurrencyEntity currency;
@@ -23,7 +23,7 @@ public class PensionPlanEntity {
     private UserCustomizationEntity userCustomization;
     private List<ParticipantEntity> participants;
 
-    public LiquidValueEntity getLiquidValue() {
+    public AmountEntity getLiquidValue() {
         return liquidValue;
     }
 
@@ -63,7 +63,7 @@ public class PensionPlanEntity {
         return bank;
     }
 
-    public BalanceEntity getBalance() {
+    public AmountEntity getBalance() {
         return balance;
     }
 

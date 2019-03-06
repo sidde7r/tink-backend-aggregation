@@ -16,7 +16,7 @@ public class DebitCardEntity {
     private TypeEntity type;
     private IndicatorsEntity indicators;
     private BranchEntity branch;
-    private AvailableBalanceEntity availableBalance;
+    private AmountEntity availableBalance;
     private BankEntity bank;
     private JoinTypeEntity joinType;
     private String sublevel;
@@ -73,7 +73,7 @@ public class DebitCardEntity {
         return branch;
     }
 
-    public AvailableBalanceEntity getAvailableBalance() {
+    public AmountEntity getAvailableBalance() {
         return availableBalance;
     }
 

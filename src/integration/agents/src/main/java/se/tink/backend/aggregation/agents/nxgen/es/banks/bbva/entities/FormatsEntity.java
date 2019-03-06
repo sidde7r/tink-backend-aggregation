@@ -4,12 +4,22 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FormatsEntity {
+    private String iban;
     private String iuc;
+    private String ccc;
     private String pan;
     private String bocf;
 
+    public String getIban() {
+        return iban;
+    }
+
     public String getIuc() {
         return iuc;
+    }
+
+    public String getCcc() {
+        return ccc;
     }
 
     public String getPan() {

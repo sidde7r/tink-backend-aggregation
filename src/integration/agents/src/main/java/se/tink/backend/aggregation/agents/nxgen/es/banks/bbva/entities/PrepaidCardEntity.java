@@ -7,14 +7,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PrepaidCardEntity {
     private String country;
     private FormatsEntity formats;
-    private ConsolidatedBalanceEntity consolidatedBalance;
+    private AmountEntity consolidatedBalance;
     private LegacyProductEntity legacyProduct;
     private MarketerBankEntity marketerBank;
     private String dueDate;
     private String migrationType;
     private TypeEntity type;
     private BranchEntity branch;
-    private AvailableBalanceEntity availableBalance;
+    private AmountEntity availableBalance;
     private BankEntity bank;
     private CurrencyEntity currency;
     private String id;
@@ -24,7 +24,7 @@ public class PrepaidCardEntity {
     private ProductEntity product;
     private String counterPart;
     private IndicatorsEntity indicators;
-    private OperativeLimitEntity operativeLimit;
+    private AmountEntity operativeLimit;
     private JoinTypeEntity joinType;
     private String sublevel;
     private PaymentMethodEntity paymentMethod;
@@ -39,7 +39,7 @@ public class PrepaidCardEntity {
         return formats;
     }
 
-    public ConsolidatedBalanceEntity getConsolidatedBalance() {
+    public AmountEntity getConsolidatedBalance() {
         return consolidatedBalance;
     }
 
@@ -67,7 +67,7 @@ public class PrepaidCardEntity {
         return branch;
     }
 
-    public AvailableBalanceEntity getAvailableBalance() {
+    public AmountEntity getAvailableBalance() {
         return availableBalance;
     }
 
@@ -107,7 +107,7 @@ public class PrepaidCardEntity {
         return indicators;
     }
 
-    public OperativeLimitEntity getOperativeLimit() {
+    public AmountEntity getOperativeLimit() {
         return operativeLimit;
     }
 

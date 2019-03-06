@@ -2,10 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investmen
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ProfitabilityItemEntity {
+public class ProfitabilityEntity {
     @JsonProperty("titles")
     private double quantity;
 

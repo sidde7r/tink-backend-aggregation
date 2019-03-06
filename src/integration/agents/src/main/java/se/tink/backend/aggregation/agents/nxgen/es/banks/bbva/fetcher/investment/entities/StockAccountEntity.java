@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ComertialClassificationEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
@@ -26,7 +27,7 @@ public class StockAccountEntity {
     private double currentBalance;
     private TransactionsEntity transactions;
     private String branch;
-    private List<ComertialClassificationsEntity> comertialClassifications;
+    private List<ComertialClassificationEntity> comertialClassifications;
     private List<SecurityEntity> securities;
     private List<ActionsEntity> actions;
 

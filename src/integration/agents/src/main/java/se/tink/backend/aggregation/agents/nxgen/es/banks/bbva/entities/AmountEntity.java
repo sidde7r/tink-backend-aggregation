@@ -19,11 +19,12 @@ public class AmountEntity {
     }
 
     @JsonIgnore
-    public Amount getTinkAmount() {
-        if (currency != null && currency.getId() != null) {
-            return new Amount(currency.getId(), amount);
-        }
+    public Amount toTinkAmount() {
+        final String currency =
+                getCurrency() != null && getCurrency().getId() != null
+                        ? getCurrency().getId()
+                        : BbvaConstants.Defaults.CURRENCY;
 
-        return new Amount(BbvaConstants.Defaults.CURRENCY, amount);
+        return new Amount(currency, amount);
     }
 }

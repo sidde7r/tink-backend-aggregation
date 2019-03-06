@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc;
 
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AssetBalanceEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.FamilyBalanceEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.LiabilityBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -11,9 +10,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FinancialDashboardResponse {
     private boolean hasMoreData;
     private List<PositionEntity> positions;
-    private LiabilityBalanceEntity liabilityBalance;
+    private AmountEntity liabilityBalance;
     private boolean isEnrolled;
-    private AssetBalanceEntity assetBalance;
+    private AmountEntity assetBalance;
     private List<FamilyBalanceEntity> familyBalances;
 
     public boolean isHasMoreData() {
@@ -24,7 +23,7 @@ public class FinancialDashboardResponse {
         return positions;
     }
 
-    public LiabilityBalanceEntity getLiabilityBalance() {
+    public AmountEntity getLiabilityBalance() {
         return liabilityBalance;
     }
 
@@ -32,7 +31,7 @@ public class FinancialDashboardResponse {
         return isEnrolled;
     }
 
-    public AssetBalanceEntity getAssetBalance() {
+    public AmountEntity getAssetBalance() {
         return assetBalance;
     }
 

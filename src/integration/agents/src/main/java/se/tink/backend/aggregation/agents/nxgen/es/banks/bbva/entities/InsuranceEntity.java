@@ -16,7 +16,7 @@ public class InsuranceEntity {
     private BranchEntity branch;
     private BankEntity bank;
     private List<RelatedContractEntity> relatedContracts;
-    private PremiumEntity premium;
+    private AmountEntity premium;
     private JoinTypeEntity joinType;
     private String technicalProduct;
     private String sublevel;
@@ -71,7 +71,7 @@ public class InsuranceEntity {
         return relatedContracts;
     }
 
-    public PremiumEntity getPremium() {
+    public AmountEntity getPremium() {
         return premium;
     }
 

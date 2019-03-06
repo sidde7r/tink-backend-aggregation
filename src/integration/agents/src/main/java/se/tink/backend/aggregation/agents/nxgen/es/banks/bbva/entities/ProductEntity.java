@@ -7,7 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProductEntity {
     private String name;
     private String description;
-    private List<ComertialClassificationsItemEntity> comertialClassifications;
+    private List<ComertialClassificationEntity> comertialClassifications;
     private String id;
 
     public String getName() {
@@ -18,7 +18,7 @@ public class ProductEntity {
         return description;
     }
 
-    public List<ComertialClassificationsItemEntity> getComertialClassifications() {
+    public List<ComertialClassificationEntity> getComertialClassifications() {
         return comertialClassifications;
     }
 

@@ -31,7 +31,7 @@ public class AccountEntity {
     private String familyCode;
     private String currency;
     private Double availableBalance;
-    private List<BalancesEntity> availableBalances;
+    private List<BalanceEntity> availableBalances;
     private String branch;
     private String accountProductId;
     private String accountProductDescription;
@@ -89,7 +89,7 @@ public class AccountEntity {
         return BbvaConstants.AccountType.CREDIT_CARD.equalsIgnoreCase(subfamilyTypeCode);
     }
 
-    public List<BalancesEntity> getAvailableBalances() {
+    public List<BalanceEntity> getAvailableBalances() {
         return availableBalances;
     }
 
