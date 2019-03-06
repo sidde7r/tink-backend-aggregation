@@ -51,7 +51,7 @@ public class BbvaApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createRefererRequest(String url) {
+    private RequestBuilder createRequestInSession(String url) {
         return createRequest(url)
                 .header(Header.ORIGIN_KEY, Header.ORIGIN_VALUE)
                 .header(Header.REFERER_KEY, Header.REFERER_VALUE)
@@ -78,19 +78,19 @@ public class BbvaApiClient {
     }
 
     public FinancialDashboardResponse fetchFinancialDashboard() {
-        return createRefererRequest(BbvaConstants.Url.FINANCIAL_DASHBOARD)
+        return createRequestInSession(BbvaConstants.Url.FINANCIAL_DASHBOARD)
                 .queryParam("$customer.id", getUserId())
                 .get(FinancialDashboardResponse.class);
     }
 
     public ProductsResponse fetchProducts() {
-        return createRefererRequest(BbvaConstants.Url.PRODUCTS).get(ProductsResponse.class);
+        return createRequestInSession(BbvaConstants.Url.PRODUCTS).get(ProductsResponse.class);
     }
 
     public AccountTransactionsResponse fetchAccountTransactions(Account account, int keyIndex) {
         TransactionsRequest request = createAccountTransactionsQuery(account);
 
-        return createRefererRequest(BbvaConstants.Url.ACCOUNT_TRANSACTION)
+        return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
                 .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, String.valueOf(keyIndex))
                 .queryParam(BbvaConstants.Query.PAGE_SIZE, String.valueOf(BbvaConstants.PAGE_SIZE))
                 .post(AccountTransactionsResponse.class, request);
@@ -98,7 +98,7 @@ public class BbvaApiClient {
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(
             Account account, String keyIndex) {
-        return createRefererRequest(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
+        return createRequestInSession(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
                 .queryParam(
                         BbvaConstants.Query.CONTRACT_ID,
                         account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID))
@@ -114,7 +114,7 @@ public class BbvaApiClient {
         SecurityProfitabilityRequest request =
                 SecurityProfitabilityRequest.create(portfolioId, securityCode);
 
-        return createRefererRequest(BbvaConstants.Url.SECURITY_PROFITABILITY)
+        return createRequestInSession(BbvaConstants.Url.SECURITY_PROFITABILITY)
                 .post(SecurityProfitabilityResponse.class, request);
     }
 
@@ -174,21 +174,12 @@ public class BbvaApiClient {
         return initiateSessionResponse;
     }
 
-    // LOGGING methods
-    public String getLoanDetails(String id) {
-        String url =
-                new URL(BbvaConstants.Url.LOAN_DETAILS)
-                        .parameter(BbvaConstants.Url.PARAM_ID, id)
-                        .get();
-        return createRefererRequest(url).get(String.class);
-    }
-
     public String getCardTransactions(String id) {
         String url =
                 new URL(BbvaConstants.Url.CARD_TRANSACTIONS)
                         .parameter(BbvaConstants.Url.PARAM_ID, id)
                         .get();
-        return createRefererRequest(url).get(String.class);
+        return createRequestInSession(url).get(String.class);
     }
 
     private String getUserAgent() {
