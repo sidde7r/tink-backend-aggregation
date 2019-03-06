@@ -60,7 +60,7 @@ public class BbvaApiClient {
     }
 
     public HttpResponse login(String username, String password) {
-        String loginBody =
+        final String loginBody =
                 UrlEncodedFormBody.createLoginRequest(BbvaUtils.formatUsername(username), password);
 
         return client.request(BbvaConstants.Url.LOGIN)
@@ -88,7 +88,7 @@ public class BbvaApiClient {
     }
 
     public AccountTransactionsResponse fetchAccountTransactions(Account account, int keyIndex) {
-        TransactionsRequest request = createAccountTransactionsQuery(account);
+        final TransactionsRequest request = createAccountTransactionsQuery(account);
 
         return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
                 .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, String.valueOf(keyIndex))
@@ -111,7 +111,7 @@ public class BbvaApiClient {
 
     public SecurityProfitabilityResponse fetchSecurityProfitability(
             String portfolioId, String securityCode) {
-        SecurityProfitabilityRequest request =
+        final SecurityProfitabilityRequest request =
                 SecurityProfitabilityRequest.create(portfolioId, securityCode);
 
         return createRequestInSession(BbvaConstants.Url.SECURITY_PROFITABILITY)
@@ -119,14 +119,11 @@ public class BbvaApiClient {
     }
 
     public TransactionsRequest createAccountTransactionsQuery(Account account) {
-        TransactionsRequest request = new TransactionsRequest();
-
-        String accountId = account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID);
-        ContractEntity contract = new ContractEntity().setId(accountId);
-
+        final String accountId = account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID);
         AccountContractsEntity accountContract = new AccountContractsEntity();
-        accountContract.setContract(contract);
+        accountContract.setContract(new ContractEntity().setId(accountId));
 
+        final TransactionsRequest request = new TransactionsRequest();
         request.setCustomer(new UserEntity(getUserId()));
         request.setSearchType(BbvaConstants.PostParameter.SEARCH_TYPE);
         request.setAccountContracts(ImmutableList.of(accountContract));
