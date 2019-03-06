@@ -83,7 +83,7 @@ public final class BbvaConstants {
                 BASE_URL + "/ASO/securityActions/V01/listProfitability";
     }
 
-    public final class Header {
+    public final class HeaderKeys {
         public static final String CONTENT_TYPE_URLENCODED_UTF8 =
                 "application/x-www-form-urlencoded; charset=utf-8";
         public static final String CONSUMER_ID_KEY = "ConsumerID";
@@ -108,7 +108,7 @@ public final class BbvaConstants {
         public static final String EAI_USER_VALUE_PREFIX = "0019-";
         public static final String EAI_PASSWORD_KEY = "eai_password";
         public static final String CONSUMER_ID_KEY = "consumerID";
-        public static final String CONSUMER_ID_VALUE = Header.CONSUMER_ID_VALUE;
+        public static final String CONSUMER_ID_VALUE = HeaderKeys.CONSUMER_ID_VALUE;
         public static final String SEARCH_TYPE = "SEARCH";
 
         public static final int START_DATE_YEAR_AGO = -30;
