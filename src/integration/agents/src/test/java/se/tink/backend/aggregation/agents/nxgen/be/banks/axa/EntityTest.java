@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.OutputEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.OutputEntity;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class EntityTest {

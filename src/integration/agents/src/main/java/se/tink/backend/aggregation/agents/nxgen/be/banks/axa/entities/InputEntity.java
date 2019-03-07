@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities;
+package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.DeviceInfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -20,10 +21,16 @@ public final class InputEntity {
     private String serialNo;
     private String derivationCd;
     private Integer customerId;
+    private String directionFlag;
 
     @JsonProperty("UCRid")
     private String uCRid;
     private String encryptedServerNonce;
+
+    private String accountNumber;
+    private String referenceNumber;
+    private String transactionCode;
+    private String updateTimestamp;
 
     public String getPanNumberFull() {
         return panNumberFull;
@@ -131,5 +138,25 @@ public final class InputEntity {
 
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    public void setDirectionFlag(String directionFlag) {
+        this.directionFlag = directionFlag;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public void setReferenceNumber(String referenceNumber) {
+        this.referenceNumber = referenceNumber;
+    }
+
+    public void setTransactionCode(String transactionCode) {
+        this.transactionCode = transactionCode;
+    }
+
+    public void setUpdateTimestamp(String updateTimestamp) {
+        this.updateTimestamp = updateTimestamp;
     }
 }
