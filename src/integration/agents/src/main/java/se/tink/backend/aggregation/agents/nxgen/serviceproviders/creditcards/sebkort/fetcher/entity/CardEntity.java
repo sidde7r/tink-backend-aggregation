@@ -53,10 +53,10 @@ public class CardEntity {
             Map<String, CardAccountEntity> accountsHashMap, CardContractEntity contract) {
         final CardAccountEntity account = accountsHashMap.get(contract.getCardAccountId());
 
-        return CreditCardAccount.builder(getMaskedCardNumber())
+        return CreditCardAccount.builder(contract.getCardAccountId())
                 .setAccountNumber(getMaskedCardNumber())
                 .setName(contract.getProductName())
-                .setBankIdentifier(account.getId())
+                .setBankIdentifier(contract.getCardAccountId())
                 .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_ID, getId())
                 .setBalance(
                         new Amount(account.getCurrencyCode(), account.getCurrentBalance()).negate())
