@@ -258,7 +258,7 @@ public class AbnAmroAgent extends AbstractAgent
                 .collect(Collectors.toList());
     }
 
-    private void closeExcludeOldDuplicateICSAccounts(List<Account> importedAccounts) {
+    private void closeAndExcludeOldDuplicateICSAccounts(List<Account> importedAccounts) {
         existingAccounts.stream()
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
                 .filter(a -> a.getBankId().length() == OLD_ICS_ID_LENGTH)
@@ -299,7 +299,7 @@ public class AbnAmroAgent extends AbstractAgent
         importedAccounts.stream()
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
                 .forEach(resultAccounts::add);
-        closeExcludeOldDuplicateICSAccounts(importedAccounts);
+        closeAndExcludeOldDuplicateICSAccounts(importedAccounts);
         return new FetchAccountsResponse(resultAccounts);
     }
 
