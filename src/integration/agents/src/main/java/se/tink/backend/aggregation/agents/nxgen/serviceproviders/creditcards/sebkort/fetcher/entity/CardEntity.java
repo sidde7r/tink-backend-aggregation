@@ -59,7 +59,7 @@ public class CardEntity {
                 .setBankIdentifier(account.getId())
                 .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_ID, getId())
                 .setBalance(
-                        new Amount(account.getCurrencyCode(), account.getCurrentBalance()).stripSign())
+                        new Amount(account.getCurrencyCode(), account.getCurrentBalance()).negate())
                 .setAvailableCredit(
                         new Amount(account.getCurrencyCode(), account.getDisposableAmount()))
                 .build();
