@@ -39,7 +39,7 @@ spec:
         - "-XX:-OmitStackTraceInFastThrow"
         - "-Dnetworkaddress.cache.ttl=60"
         - "-XX:+ExitOnOutOfMemoryError"
-        - "/app/service.jar"
+        - "/tink-backend-integration/service.jar"
         - "/config/config.yaml"
 
         resources:

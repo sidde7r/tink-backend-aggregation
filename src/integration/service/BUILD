@@ -40,27 +40,26 @@ genrule(
         ":integration_deploy.jar"
     ],
     outs = [
-        "integration_service.jar"
+        "service.jar"
     ],
     cmd = "cp $(location :integration_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
 )
 
 container_image(
-    name = "integration_service",
+    name = "docker",
     base = "@openjdk_jdk8//image",
-    workdir = "/usr/share/integration_service",
     files = [
-        ":integration_service.jar",
+        ":service.jar",
     ],
-    directory = "/usr/share/integration_service",
+    workdir = "/tink-backend-integration",
     tags = ["manual"],
 )
 
 container_push(
     name = "docker_push",
     format = "Docker",
-    image = ":integration_service",
+    image = ":docker",
     registry = "gcr.io",
     repository = "tink-containers/tink-backend-integration",
     tag = "{TINK_VERSION}",
