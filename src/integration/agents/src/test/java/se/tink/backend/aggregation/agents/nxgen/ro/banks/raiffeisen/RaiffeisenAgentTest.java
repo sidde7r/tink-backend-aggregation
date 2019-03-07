@@ -5,7 +5,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 
-@Ignore
+//@Ignore
 public class RaiffeisenAgentTest {
 
     @Test
