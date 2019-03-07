@@ -26,6 +26,62 @@ Based on a criterion (a header for us), the module selects a value from the list
 We populated that list with outgoing ips bound to the machine, and then use that `$bind_ip` in the `proxy_connect` configuration to set ip.
 The selection process is based on a value (a header for us) that is hashed, the same `userid+credentialsid` will always end up having the same outgoing ip.
 
+## Installation
+
+1. Download the [nginx-1.15.5 source code](https://github.com/nginx/nginx/archive/release-1.15.5.tar.gz)
+1. Download the module [ngx_http_proxy_connect_module](https://github.com/chobits/ngx_http_proxy_connect_module/archive/master.zip)
+
+
+```bash
+$ sudo apt-get install build-essential zlibc zlib1g zlib1g-dev libpcre3 libpcre3-dev
+$ tar xzvf release-1.15.5.tar.gz
+$ unzip master.zip
+$ cd nginx-1.15.1/
+$ patch -p1 < ../ngx_http_proxy_connect_module-master/patch/proxy_connect_rewrite_101504.patch
+$ ./configure --prefix=/usr/share/nginx \
+            --sbin-path=/usr/sbin/nginx \
+            --modules-path=/usr/lib/nginx/modules \
+            --conf-path=/etc/nginx/nginx.conf \
+            --error-log-path=/var/log/nginx/error.log \
+            --http-log-path=/var/log/nginx/access.log \
+            --pid-path=/run/nginx.pid \
+            --lock-path=/var/lock/nginx.lock \
+            --user=www-data \
+            --group=www-data \
+            --build=Ubuntu \
+            --http-client-body-temp-path=/var/lib/nginx/body \
+            --http-fastcgi-temp-path=/var/lib/nginx/fastcgi \
+            --http-proxy-temp-path=/var/lib/nginx/proxy \
+            --http-scgi-temp-path=/var/lib/nginx/scgi \
+            --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
+            --add-module=../ngx_http_proxy_connect_module-master \
+            --with-cc-opt='-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2' \
+            --with-ld-opt='-Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now'
+
+$ make
+$ sudo make install
+$ sudo mkdir /var/lib/nginx
+$ sudo vim /etc/systemd/system/nginx.service
+
+[Unit]
+Description=A high performance web server and a reverse proxy server
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/run/nginx.pid
+ExecStartPre=/usr/sbin/nginx -t -q -g 'daemon on; master_process on;'
+ExecStart=/usr/sbin/nginx -g 'daemon on; master_process on;'
+ExecReload=/usr/sbin/nginx -g 'daemon on; master_process on;' -s reload
+ExecStop=-/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /run/nginx.pid
+TimeoutStopSec=5
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target
+
+$ sudo systemctl start nginx.service && sudo systemctl enable nginx.service
+```
 
 ## Configuration
 
