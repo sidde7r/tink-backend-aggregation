@@ -89,7 +89,7 @@ spec:
       volumes:
       - name: config-volume
         configMap:
-          name: myapp-configuration
+          name: integration-configuration
       - name: grpc-certificate-volume
         secret:
           secretName: grpc-certificate
