@@ -83,6 +83,6 @@ public class AktiaConstants {
 
     public static final TypeMapper<AccountTypes> TRANSACTIONAL_ACCOUNTS_TYPE_MAPPER = TypeMapper.<AccountTypes>builder()
             .put(AccountTypes.CHECKING, "CURRENT_ACCOUNT")
-            .put(AccountTypes.SAVINGS, "SAVINGS_ACCOUNT")
+            .put(AccountTypes.SAVINGS, "SAVINGS_ACCOUNT", "ASP_ACCOUNT")
             .build();
 }
