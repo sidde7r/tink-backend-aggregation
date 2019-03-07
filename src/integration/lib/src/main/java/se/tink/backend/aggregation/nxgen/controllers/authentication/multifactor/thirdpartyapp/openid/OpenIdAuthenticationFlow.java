@@ -21,7 +21,7 @@ public class OpenIdAuthenticationFlow {
                 apiClient,
                 authenticator,
                 callbackJWTSignatureKeyPair,
-                request.getCallbackUriId()
+                request.getCallbackRedirectUriId()
         );
 
         return new AutoAuthenticationController(

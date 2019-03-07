@@ -37,7 +37,7 @@ public abstract class CredentialsRequest {
     @JsonIgnore
     public abstract CredentialsRequestType getType();
 
-    private String callbackUriId;
+    private String callbackRedirectUriId;
 
     public CredentialsRequest() {
 
@@ -140,11 +140,11 @@ public abstract class CredentialsRequest {
         this.update = update;
     }
 
-    public String getCallbackUriId() {
-        return callbackUriId;
+    public String getCallbackRedirectUriId() {
+        return callbackRedirectUriId;
     }
 
-    public void setCallbackUriId(String callbackUriId) {
-        this.callbackUriId = callbackUriId;
+    public void setCallbackRedirectUriId(String callbackRedirectUriId) {
+        this.callbackRedirectUriId = callbackRedirectUriId;
     }
 }

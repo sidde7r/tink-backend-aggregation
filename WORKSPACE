@@ -2104,3 +2104,27 @@ maven_jar(
     artifact = "io.prometheus:simpleclient_common:0.5.0",
     sha1 = "bfd93082d7cf85c0543c2ccc286b96c817d1090c",
 )
+
+maven_jar(
+    name = "io_vavr_core",
+    artifact = "io.vavr:vavr:0.10.0",
+    sha1 = "c9f28385e6ca99f9c253c4eef879720663905329",
+)
+
+maven_jar(
+    name = "io_vavr_jackson",
+    artifact = "io.vavr:vavr-jackson:0.10.0",
+    sha1 = "45896adac70e6e35ec5f718a9dd9ed21e5fdbdf0",
+)
+
+maven_jar(
+    name = "io_vavr_match",
+    artifact = "io.vavr:vavr-match:0.10.0",
+    sha1 = "2088877806b1c07514a134fa10d6a7ad480cac70",
+)
+
+maven_jar(
+    name = "io_vavr_test",
+    artifact = "io.vavr:vavr-test:0.10.0",
+    sha1 = "c4ffe88bfe1f20ff9a88e7ba5771a7faab802703",
+)

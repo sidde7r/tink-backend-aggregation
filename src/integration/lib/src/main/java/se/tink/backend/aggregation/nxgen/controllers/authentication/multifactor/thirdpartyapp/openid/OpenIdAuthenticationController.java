@@ -51,7 +51,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     private final String pseudoId;
     private OAuth2Token clientAccessToken;
 
-    private final String callbackUriId;
+    private final String callbackRedirectId;
 
     public OpenIdAuthenticationController(PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
@@ -66,7 +66,7 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
         this.pseudoId = RandomUtils.generateRandomBase64UrlEncoded(8);
 
-        this.callbackUriId = callbackUriId;
+        this.callbackRedirectId = callbackUriId;
         this.state = getJwtState(pseudoId);
 
         this.nonce = RandomUtils.generateRandomBase64UrlEncoded(8);
@@ -218,8 +218,9 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 .withIssuedAt(new Date())
                 .withClaim("id", pseudoId);
 
-        if (!Strings.isNullOrEmpty(callbackUriId)) {
-            jwtBuilder.withClaim("callbackUriId", callbackUriId);
+        if (!Strings.isNullOrEmpty(callbackRedirectId)) {
+            // smaller claim to be safe on the length of the state
+            jwtBuilder.withClaim("redirectId", callbackRedirectId);
         }
 
         return jwtBuilder.sign(Algorithm.ECDSA256(
