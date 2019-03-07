@@ -1,3 +1,4 @@
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 load(
     "@io_bazel_rules_docker//container:container.bzl",
     "container_image",
@@ -35,7 +36,7 @@ java_binary(
 )
 
 genrule(
-    name = "deploy-jar",
+    name = "renamed-deploy-jar",
     srcs = [
         ":integration_deploy.jar"
     ],
@@ -46,13 +47,21 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
+pkg_tar(
+    name = "bin_tar",
+    srcs = [":renamed-deploy-jar"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-integration",
+    tags = ["manual"],
+)
+
 container_image(
     name = "docker",
     base = "@openjdk_jdk8//image",
-    files = [
-        ":service.jar",
+    tars = [
+        ":bin_tar",
     ],
-    workdir = "/tink-backend-integration",
+    workdir = "/usr/share/tink-backend-integration",
     tags = ["manual"],
 )
 
