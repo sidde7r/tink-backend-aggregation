@@ -64,7 +64,10 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
                 responseString, SantanderEsConstants.NodeTags.METHOD_RESULT);
 
         // log unknown engagements to see what more we can find
-        logUnknownEngagementNodes(loginResponseNode);
+//        logUnknownEngagementNodes(loginResponseNode);
+
+        // logging whole response
+        LOG.info("es_santander_all " + responseString);
 
         String loginResponseString = SantanderEsXmlUtils.convertToString(loginResponseNode);
 
