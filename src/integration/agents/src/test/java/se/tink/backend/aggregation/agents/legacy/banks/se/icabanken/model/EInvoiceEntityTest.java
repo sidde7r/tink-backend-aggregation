@@ -18,7 +18,7 @@ public class EInvoiceEntityTest {
     private static final String DATE = "2016-05-26";
     private static final Double AMOUNT = 1.00;
 
-    private static final Catalog CATALOG = Catalog.getCatalog("en_US");
+    private final Catalog CATALOG = Catalog.getCatalog("en_US");
 
     @Test
     public void testToTinkTransfer() {

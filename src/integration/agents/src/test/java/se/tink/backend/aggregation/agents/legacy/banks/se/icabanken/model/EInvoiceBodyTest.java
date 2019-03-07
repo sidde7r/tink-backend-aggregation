@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class EInvoiceBodyTest {
     private static final String UUID = "2016-04-26-16.20.03.177833";
 
-    private static final Catalog CATALOG = Catalog.getCatalog("sv_SE");
+    private final Catalog CATALOG = Catalog.getCatalog("sv_SE");
 
     @Test
     public void ensureToTinkTransfers_ReturnsAbsent_When_EInvoices_NotFound() {
