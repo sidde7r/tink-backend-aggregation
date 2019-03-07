@@ -1612,6 +1612,14 @@ java_library(
 )
 
 java_library(
+    name = "netty-runtime",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_netty_netty_tcnative_boringssl_static//jar",
+    ]
+)
+
+java_library(
     name = "prometheus",
     visibility = ["//visibility:public"],
     exports = [

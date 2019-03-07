@@ -12,6 +12,7 @@ java_binary(
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:log-runtime",
+        "//third_party:netty-runtime",
     ],
     resources = glob([
         "src/main/resources/**/*",
