@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
-import java.util.Date;
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import java.util.Date;
 
 public class EInvoiceEntityTest {
     private static final String UUID = "2016-04-26-16.20.03.177833";
@@ -17,13 +18,13 @@ public class EInvoiceEntityTest {
     private static final String DATE = "2016-05-26";
     private static final Double AMOUNT = 1.00;
 
-    private static final Catalog CATALOG = Catalog.getCatalog("en_US");
+    private final Catalog catalog = Catalog.getCatalog("en_US");
 
     @Test
     public void testToTinkTransfer() {
         String accountNumber = "687-5496";
         EInvoiceEntity eInvoice = createEInvoiceEntity("PaymentBg", accountNumber);
-        Transfer transfer = eInvoice.toTinkTransfer(CATALOG);
+        Transfer transfer = eInvoice.toTinkTransfer(catalog);
 
         Assert.assertEquals(transfer.getDestination(),
                 AccountIdentifier.create(AccountIdentifier.Type.SE_BG, accountNumber));
@@ -38,20 +39,20 @@ public class EInvoiceEntityTest {
     public void throwsException_WhenRecipientType_NotEqualTo_BgOrPg() {
         EInvoiceEntity eInvoice = createEInvoiceEntity("Transfer", "687-5496");
 
-        eInvoice.toTinkTransfer(CATALOG);
+        eInvoice.toTinkTransfer(catalog);
     }
 
     @Test(expected = IllegalStateException.class)
     public void throwsException_WhenAccountNumber_IsNull() {
         EInvoiceEntity eInvoice = createEInvoiceEntity("PaymentBg", null);
 
-        eInvoice.toTinkTransfer(CATALOG);
+        eInvoice.toTinkTransfer(catalog);
     }
 
     @Test(expected = IllegalStateException.class)
     public void throwsException_WhenAccountNumber_IsEmpty() {
         EInvoiceEntity eInvoice = createEInvoiceEntity("PaymentBg", "");
-        eInvoice.toTinkTransfer(CATALOG);
+        eInvoice.toTinkTransfer(catalog);
     }
 
     private EInvoiceEntity createEInvoiceEntity(String type, String accountNumber) {
@@ -83,6 +84,6 @@ public class EInvoiceEntityTest {
         // Then
         Assert.assertNotNull("Could not deserialize EInvoiceEntity.", deserialized);
         Assert.assertEquals("PaymentBg", deserialized.getType());
-        Assert.assertEquals(TransferType.EINVOICE, deserialized.toTinkTransfer(CATALOG).getType());
+        Assert.assertEquals(TransferType.EINVOICE, deserialized.toTinkTransfer(catalog).getType());
     }
 }

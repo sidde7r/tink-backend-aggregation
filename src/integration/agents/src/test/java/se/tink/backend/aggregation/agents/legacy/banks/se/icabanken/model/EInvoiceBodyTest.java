@@ -1,32 +1,33 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import com.google.api.client.util.Lists;
 import com.google.api.client.util.Strings;
-import java.util.List;
 import org.junit.Test;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.transfer.rpc.Transfer;
 
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 public class EInvoiceBodyTest {
     private static final String UUID = "2016-04-26-16.20.03.177833";
 
-    private static final Catalog CATALOG = Catalog.getCatalog("sv_SE");
+    private final Catalog catalog = Catalog.getCatalog("sv_SE");
 
     @Test
     public void ensureToTinkTransfers_ReturnsAbsent_When_EInvoices_NotFound() {
         EInvoiceBody body = new EInvoiceBody();
         body.setEInvoices(null);
-        List<Transfer> eInvoices = body.toTinkTransfers(CATALOG);
+        List<Transfer> eInvoices = body.toTinkTransfers(catalog);
 
         assertTrue(eInvoices.isEmpty());
 
         List<EInvoiceEntity> eInvoiceEntities = Lists.newArrayList();
         body.setEInvoices(eInvoiceEntities);
 
-        eInvoices = body.toTinkTransfers(CATALOG);
+        eInvoices = body.toTinkTransfers(catalog);
 
         assertTrue(eInvoices.isEmpty());
     }
@@ -50,7 +51,7 @@ public class EInvoiceBodyTest {
         EInvoiceBody body = new EInvoiceBody();
         body.setEInvoices(eInvoiceEntities);
 
-        body.toTinkTransfers(CATALOG);
+        body.toTinkTransfers(catalog);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -73,7 +74,7 @@ public class EInvoiceBodyTest {
         EInvoiceBody body = new EInvoiceBody();
         body.setEInvoices(eInvoiceEntities);
 
-        body.toTinkTransfers(CATALOG);
+        body.toTinkTransfers(catalog);
     }
 
     private boolean isValid(EInvoiceEntity entity) {
