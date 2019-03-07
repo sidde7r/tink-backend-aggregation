@@ -5,6 +5,8 @@ metadata:
   namespace: integration
 data:
   config.yaml: |
+    grpcTlsCertificatePath: "/tls/tls.crt"
+    grpcTlsKeyPath: "/tls/tls.key"
 
 {{ if .Values.createDevelopmentSecrets }}
 ---
