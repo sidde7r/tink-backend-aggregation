@@ -40,7 +40,8 @@
             "fields": [ {
                     "description": "Username",
                     "immutable": true,
-                    "name": "username"
+                    "name": "username",
+                    "numeric": true
                 }],
             "market": "SE",
             "multiFactor": true,
