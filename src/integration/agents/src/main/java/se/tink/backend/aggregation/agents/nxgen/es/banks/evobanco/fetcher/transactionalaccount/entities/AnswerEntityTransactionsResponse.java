@@ -19,7 +19,7 @@ public class AnswerEntityTransactionsResponse {
     private String extCurrencyCode;
 
     @JsonProperty("DatosTarjeta")
-    private CardDataEntityTransactionsResponse cardData;
+    private CardDataEntityAccountTransactionsResponse cardData;
 
     @JsonProperty("masDatos")
     private String moreData;

@@ -11,8 +11,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse2;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.GlobalPositionFirstTimeResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsPaginationRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -239,6 +240,29 @@ public class EvoBancoApiClient {
         setNextCodSecIpHeader(response);
 
         return response.getBody(TransactionsResponse.class);
+    }
+
+    public CardTransactionsResponse fetchCardTransactions(String cardNumber, int page) {
+        HttpResponse response =
+                createRequest(EvoBancoConstants.Urls.FETCH_CARD_TRANSACTIONS)
+                        .headers(getEEHeaders())
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
+                                sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.ENTITY_CODE,
+                                sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.PAGE_NUM, String.valueOf(page))
+                        .queryParam(EvoBancoConstants.QueryParamsKeys.CARD_NUMBER, cardNumber)
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.USER_BE,
+                                sessionStorage.get(EvoBancoConstants.Storage.USER_BE))
+                        .get(HttpResponse.class);
+
+        setNextCodSecIpHeader(response);
+
+        return response.getBody(CardTransactionsResponse.class);
     }
 
     private Map<String, Object> getEEHeaders() {

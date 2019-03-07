@@ -104,12 +104,16 @@ public class CustomerNotesListEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(AgentParsingUtils.parseAmount(amountAmount)))
+                .setAmount(Amount.inEUR(AgentParsingUtils.parseAmount(getSign() + amountAmount)))
                 .setDate(DateUtils.parseDate(dateOfTransaction))
                 .setDescription(senderText)
                 .setPending(isPending())
                 .build();
 
+    }
+
+    private String getSign() {
+        return sign.equals(EvoBancoConstants.Constants.ACCOUNT_TRANSACTION_PLUS_SIGN) ? "+" : "-";
     }
 
     private boolean isPending() {

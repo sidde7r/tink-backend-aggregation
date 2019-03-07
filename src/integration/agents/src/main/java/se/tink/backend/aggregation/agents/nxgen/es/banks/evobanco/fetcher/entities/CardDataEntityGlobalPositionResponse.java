@@ -1,10 +1,10 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class CardDataEntityGlobalPositionFirstTimeResponse {
+public class CardDataEntityGlobalPositionResponse {
     @JsonProperty("limiteDiaCajeroDebito")
     private String limitDayATMDebit;
 
@@ -66,4 +66,20 @@ public class CardDataEntityGlobalPositionFirstTimeResponse {
 
     @JsonProperty("importeVencido")
     private String amountDue;
+
+    public String getPanToken() {
+        return panToken;
+    }
+
+    public String getCreditUsed() {
+        return creditUsed;
+    }
+
+    public String getCreditAvailableBalance() {
+        return creditAvailableBalance;
+    }
+
+    public String getHolder() {
+        return holder;
+    }
 }

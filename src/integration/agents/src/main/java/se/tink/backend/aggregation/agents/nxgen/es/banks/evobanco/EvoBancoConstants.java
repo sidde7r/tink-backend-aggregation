@@ -22,6 +22,8 @@ public class EvoBancoConstants {
                 "SOA_RVIA/Empresa/PS/rest/v3/SE_RVA_PosicionGlobalBE";
         static final String LINKING_LOGIN_PATH =
                 "SOA_RVIA/Empresa/PS/rest/v3/SE_RVA_VinculacionyLogin";
+        static final String FETCH_CARD_TRANSACTIONS_PATH =
+                "SOA_RVIA/Empresa/PS/rest/v1/SE_RVA_ConsultaMovimientosTarjetaBE";
     }
 
     public static class Urls {
@@ -40,6 +42,8 @@ public class EvoBancoConstants {
                 new URL(BASE_MOBILE_SERVICES + ApiService.FETCH_ACCOUNTS_PATH);
         public static final URL LINKING_LOGIN =
                 new URL(BASE_MOBILE_SERVICES + ApiService.LINKING_LOGIN_PATH);
+        public static final URL FETCH_CARD_TRANSACTIONS =
+                new URL(BASE_MOBILE_SERVICES + ApiService.FETCH_CARD_TRANSACTIONS_PATH);
     }
 
     public static class StatusCodes {
@@ -59,6 +63,8 @@ public class EvoBancoConstants {
         public static final String USER_BE = "usuarioBE";
         public static final String ENTITY_CODE = "codigoEntidad";
         public static final String INTERNAL_ID_PE = "idInternoPe";
+        public static final String PAGE_NUM = "numeroLlamadas";
+        public static final String CARD_NUMBER = "panToken";
     }
 
     public static class HeaderKeys {
@@ -132,7 +138,11 @@ public class EvoBancoConstants {
         public static final String FIRST_SEQUENTIAL_NUMBER = "0000001";
         public static final String MADRID_ZONE_ID = "Europe/Madrid";
         public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+        public static final DateTimeFormatter DATE_TIME_FORMATTER =
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         public static final int OTP_VALUE_LENGTH = 7;
         public static final int DEVICE_ID_LENGTH = 25;
+        public static final String CREDIT_TRANSACTION_TYPE = "1";
+        public static final String ACCOUNT_TRANSACTION_PLUS_SIGN = "H";
     }
 }

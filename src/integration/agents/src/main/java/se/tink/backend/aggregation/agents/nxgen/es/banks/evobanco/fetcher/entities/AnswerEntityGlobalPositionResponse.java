@@ -1,7 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 import java.util.Collection;
@@ -25,6 +26,15 @@ public class AnswerEntityGlobalPositionResponse {
         return agreementsList.stream()
                 .filter(AgreementsListEntity::isAccount)
                 .map(agreementsListEntity -> agreementsListEntity.toTinkAccount(holderName))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    public Collection<CreditCardAccount> getCreditCardAccounts() {
+        return agreementsList.stream()
+                .filter(AgreementsListEntity::isCard)
+                .map(AgreementsListEntity::toTinkCreditCard)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
