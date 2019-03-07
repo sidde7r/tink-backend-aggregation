@@ -35,14 +35,17 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
 
     private TransactionalAccount constructAccount(final String accountUid, final String holderName) {
 
-        AccountIdentifiersResponse identifiers = apiClient.fetchAccountIdentifiers(accountUid);
+//        AccountIdentifiersResponse identifiers = apiClient.fetchAccountIdentifiers(accountUid);
         AccountBalanceResponse balance = apiClient.fetchAccountBalance(accountUid);
 
         return CheckingAccount.builder()
-                .setUniqueIdentifier(identifiers.getIban())
-                .setAccountNumber(identifiers.getIban())
+//                .setUniqueIdentifier(identifiers.getIban())
+                .setUniqueIdentifier(accountUid)
+//                .setAccountNumber(identifiers.getIban())
+                .setAccountNumber(accountUid)
                 .setBalance(balance.getAmount())
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN,  identifiers.getIban()))
+//                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN,  identifiers.getIban()))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, accountUid))
                 .setApiIdentifier(accountUid)
                 .addHolderName(holderName)
                 .build();
