@@ -24,6 +24,11 @@ spec:
         checksum/agents-config: {{ include (print $.Template.BasePath "/agents-config.yaml") . | sha256sum }}
         prometheus.io/scrape: 'true'
     spec:
+      tolerations:
+      - key: node-role.kubernetes.io/spot-worker
+        effect: NoSchedule
+        operator: Exists
+
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -31,9 +36,14 @@ spec:
               labelSelector:
                 matchLabels:
                   app: aggregation-service
-
-        {{- if .Values.nodeZones }}
         nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: node-role.kubernetes.io/spot-worker
+                operator: Exists
+        {{- if .Values.nodeZones }}
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
