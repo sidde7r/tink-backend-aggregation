@@ -236,7 +236,7 @@ public class HoldingEntity {
     private Instrument.Type getInstrumentType() {
         switch (getType().toLowerCase().trim()) {
         case "aktie":
-            return Instrument.Type.STOCK;
+            return getInstrumentTypeBasedOnFundId();
         case "borshandladfond":
             return Instrument.Type.FUND;
         case "obligation":
@@ -244,6 +244,25 @@ public class HoldingEntity {
         default:
             return Instrument.Type.OTHER;
         }
+    }
+
+    /**
+     * SEB seem to set type to "aktie" no matter if it's a fund or a stock. Looking at the pattern for the fundIds
+     * we've seen that stocks always have fundId set to 0. There are also few cases where fundId is 0 even though it's
+     * a fund. This method therefore also consider the name, if fundId is 0 but the name contains "fund" we set type
+     * to fund. This won't catch all cases but it's as good as we can do for now.
+     */
+    private Instrument.Type getInstrumentTypeBasedOnFundId() {
+        if (fundId == 0 && name.toLowerCase().contains("fund")) {
+            return Instrument.Type.FUND;
+        }
+
+        if (fundId == 0) {
+            return Instrument.Type.STOCK;
+        }
+
+        // Deafult to fund for all instruments where fundId != 0
+        return Instrument.Type.FUND;
     }
 
     public Double parseQuantity(String quantity) {
