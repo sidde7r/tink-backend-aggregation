@@ -16,9 +16,17 @@ public class AxaAgentTest {
 
     private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
+    private AgentIntegrationTest.Builder testBuilder;
+
     @Before
     public void before() {
         manager.before();
+
+        testBuilder =
+                new AgentIntegrationTest.Builder("be", "be-axa-cardreader")
+                        .addCredentialField(Field.Key.USERNAME, manager.get(Arg.CARD_NUMBER))
+                        .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                        .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }
 
     @AfterClass
@@ -28,11 +36,25 @@ public class AxaAgentTest {
 
     @Test
     public void testLoginAndRefresh() throws Exception {
-        new AgentIntegrationTest.Builder("be", "be-axa-cardreader")
-                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.CARD_NUMBER))
-                .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
-                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)))
-                .build()
-                .testRefresh();
+        testBuilder.build().testRefresh();
+    }
+
+    @Test
+    public void testLoginAndRefreshWithBelgianLocale() throws Exception {
+        testBuilder.setUserLocale("nl_BE").build().testRefresh();
+    }
+
+    @Test
+    public void testLoginAndRefreshWithGermanLocale() throws Exception {
+        testBuilder.setUserLocale("de_BE").build().testRefresh();
+    }
+
+    @Test
+    public void testLoginAndRefreshWithFrenchLocale() throws Exception {
+        testBuilder.setUserLocale("fr_BE").build().testRefresh();
+    }
+    @Test
+    public void testLoginAndRefreshWithEnglishLocale() throws Exception {
+        testBuilder.setUserLocale("en_GB").build().testRefresh();
     }
 }
