@@ -350,6 +350,11 @@
         "CREDIT_CARDS",
         "INVESTMENTS"
     ],
+    "nxgen.es.banks.evobanco.EvoBancoAgent": [
+        "CHECKING_ACCOUNTS",
+        "SAVINGS_ACCOUNTS",
+        "CREDIT_CARDS"
+    ],
     "nxgen.es.creditcards.amex.AmericanExpressESAgent": [
         "CREDIT_CARDS"
     ],
