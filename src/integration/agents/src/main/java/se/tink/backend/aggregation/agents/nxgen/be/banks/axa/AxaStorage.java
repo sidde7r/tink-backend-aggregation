@@ -131,6 +131,11 @@ public final class AxaStorage {
         persistentStorage.put(AxaConstants.Storage.BASIC_AUTH.name(), basicAuth);
     }
 
+    public void persistLanguage(@Nonnull final String language) {
+        Preconditions.checkNotNull(language);
+        persistentStorage.put(AxaConstants.Storage.LANGUAGE.name(), language);
+    }
+
     public void sessionStoreAccessToken(@Nonnull final String accessToken) {
         Preconditions.checkNotNull(accessToken);
         sessionStorage.put(AxaConstants.Storage.ACCESS_TOKEN.name(), accessToken);
@@ -197,6 +202,10 @@ public final class AxaStorage {
 
     public Optional<String> getAccessToken() {
         return Optional.ofNullable(sessionStorage.get(AxaConstants.Storage.ACCESS_TOKEN.name()));
+    }
+
+    public Optional<String> getLanguage() {
+        return Optional.ofNullable(persistentStorage.get(AxaConstants.Storage.LANGUAGE.name()));
     }
 
     public String serializePersistentStorage() {

@@ -38,6 +38,7 @@ public final class AxaConstants {
         ENCRYPTED_SERVER_NONCE,
         ENCRYPTED_SERVER_PUBLIC_KEY,
         GENERATE_OTP_CHALLENGE_RESPONSE,
+        LANGUAGE,
         LOGON_RESPONSE,
         REGISTER_CHALLENGE,
         SERIAL_NO,

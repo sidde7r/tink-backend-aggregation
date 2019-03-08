@@ -26,16 +26,21 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+import java.util.Locale;
 import java.util.Optional;
 
 public final class AxaAgent extends NextGenerationAgent {
 
     private final AxaApiClient apiClient;
+    private final AxaStorage storage;
+    private final CredentialsRequest request;
 
     public AxaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new AxaApiClient(client);
+        this.storage = makeStorage();
+        this.request = request;
     }
 
     @Override
@@ -53,20 +58,29 @@ public final class AxaAgent extends NextGenerationAgent {
 
         MultiFactorAuthenticator manualAuthenticator =
                 new AxaManualAuthenticator(
-                        catalog, apiClient, makeStorage(), supplementalInformationHelper);
-        AutoAuthenticator autoAuthenticator = new AxaAutoAuthenticator(apiClient, makeStorage());
+                        catalog, apiClient, storage, supplementalInformationHelper);
+        AutoAuthenticator autoAuthenticator = new AxaAutoAuthenticator(apiClient, storage);
 
         return new AutoAuthenticationController(
                 request, context, manualAuthenticator, autoAuthenticator);
     }
 
+    private void initRefresh() {
+        // Should be updated prior to every refresh
+        final String locale = request.getUser().getLocale().replace('_', '-');
+        final String language = Locale.forLanguageTag(locale).getLanguage();
+        storage.persistLanguage(language);
+    }
+
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
+        initRefresh();
+
         final AccountFetcher<TransactionalAccount> accountFetcher =
-                new AxaAccountFetcher(apiClient, makeStorage());
+                new AxaAccountFetcher(apiClient, storage);
         final TransactionFetcher<TransactionalAccount> transactionFetcher =
-                new AxaTransactionFetcher(apiClient, makeStorage());
+                new AxaTransactionFetcher(apiClient, storage);
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
@@ -103,7 +117,7 @@ public final class AxaAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new AxaSessionHandler(apiClient, makeStorage());
+        return new AxaSessionHandler(apiClient, storage);
     }
 
     @Override

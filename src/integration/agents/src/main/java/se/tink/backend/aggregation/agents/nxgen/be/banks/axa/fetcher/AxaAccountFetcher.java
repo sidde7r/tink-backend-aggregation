@@ -21,8 +21,10 @@ public final class AxaAccountFetcher implements AccountFetcher<TransactionalAcco
     public Collection<TransactionalAccount> fetchAccounts() {
         final int customerId = storage.getCustomerId().orElseThrow(IllegalStateException::new);
         final String accessToken = storage.getAccessToken().orElseThrow(IllegalStateException::new);
+        final String locale = storage.getLanguage().orElse(""); // Dutch is the fallback
 
-        final GetAccountsResponse response = apiClient.postGetAccounts(customerId, accessToken);
+        final GetAccountsResponse response =
+                apiClient.postGetAccounts(customerId, accessToken, locale);
 
         return response.getAccounts();
     }
