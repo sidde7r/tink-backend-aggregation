@@ -1,3 +1,6 @@
+from __future__ import print_function
+from builtins import input
+from builtins import object
 import sys
 import argparse
 import os
@@ -24,7 +27,7 @@ class SupplementalStdin(object):
                 value = field.get("value").encode("utf-8")
                 print("%s: %s" % (desc, value))
             else:
-                value = raw_input("%s: " % desc)
+                value = input("%s: " % desc)
 
             self.answers[key] = value
         print("-" * 20)
@@ -167,7 +170,7 @@ def thirdparty_callback():
 
     # turn it into a dict from a ImmutableMultiDict (we don't expect or
     # support lists)
-    parameters = {k:v for (k,v) in args.iteritems()}
+    parameters = {k:v for (k,v) in args.items()}
 
     # Put the parameters on the queue so that it can be picked up
     # when the agent asks for the supplemental information.

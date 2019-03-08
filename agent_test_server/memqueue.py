@@ -1,6 +1,9 @@
-from Queue import Queue, Empty
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
+from queue import Queue, Empty
 
-class MemoryMessageQueue:
+class MemoryMessageQueue(object):
     def __init__(self):
         self.queues = {}
 
@@ -12,7 +15,7 @@ class MemoryMessageQueue:
         queue = self.queues.setdefault(topic, Queue())
         try:
             return queue.get(block=True, timeout=timeout_seconds)
-        except Empty, e:
+        except Empty as e:
             return None
 
 
