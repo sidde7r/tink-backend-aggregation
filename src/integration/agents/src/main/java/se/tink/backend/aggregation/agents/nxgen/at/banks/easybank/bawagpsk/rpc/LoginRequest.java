@@ -25,7 +25,7 @@ public class LoginRequest {
 
     private LoginRequestEntity createRequest(final String username, final String password, final String shortName) {
         FinancialInstitute fininst = new FinancialInstitute();
-        fininst.setBankCode(BawagPskConstants.CLIENT.BANK_CODE);
+        fininst.setBankCode(BawagPskConstants.Client.BANK_CODE);
         fininst.setShortName(shortName);
 
         DisposerContext dcontext = new DisposerContext();

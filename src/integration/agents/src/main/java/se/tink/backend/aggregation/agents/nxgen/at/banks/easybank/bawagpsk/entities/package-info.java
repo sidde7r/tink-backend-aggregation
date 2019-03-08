@@ -2,7 +2,7 @@
 @XmlSchema(
         xmlns = {
                 @XmlNs(prefix = "env", namespaceURI = "http://schemas.xmlsoap.org/soap/envelope/"),
-                @XmlNs(prefix = "ns4", namespaceURI = BawagPskConstants.URLS.SOAP_NAMESPACE)
+                @XmlNs(prefix = "ns4", namespaceURI = BawagPskConstants.Urls.SOAP_NAMESPACE)
         },
         elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED
 )

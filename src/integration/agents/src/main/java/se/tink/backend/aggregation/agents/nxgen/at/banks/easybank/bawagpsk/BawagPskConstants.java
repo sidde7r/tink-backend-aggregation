@@ -2,17 +2,21 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
-public class BawagPskConstants {
+public final class BawagPskConstants {
+
+    private BawagPskConstants() {
+        throw new AssertionError();
+    }
 
     public static final int DISPOSER_NUMBER_LENGTH =
             17; // Length when account number is left-padded with zeros
 
-    public static class CLIENT {
+    public static class Client {
         // Values sent in LoginRequest messages originating from the app
         public static final String BANK_CODE = "14000";
     }
 
-    public static class SERVER {
+    public static class Server {
         // Values sent in LoginResponse messages originating from the bank
         public static final String BANK_CODE = "60000";
         public static final String BIC = "BAWAATWW";
@@ -36,17 +40,23 @@ public class BawagPskConstants {
         public static final String ACCEPT_LANGUAGE = "en-gb";
     }
 
-    public static class URLS {
+    public static class Urls {
         public static final String SERVICE_ENDPOINT = "/ebanking.mobile/SelfServiceMobileService";
         public static final String SOAP_NAMESPACE =
                 "urn:selfservicemobile.bawag.com/ws/v0100-draft03";
     }
 
-    public static class MESSAGES {
+    public static class Messages {
         public static final String STRING_TOO_SHORT = "String too short, minimum is 5";
         public static final String INPUT_NOT_17_DIGITS = "doesn't match [0-9]{17}";
         public static final String ACCOUNT_LOCKED = "ERR_DISPOSER_DEACTIVATED";
         public static final String INCORRECT_CREDENTIALS = "ERR_LOGIN";
+    }
+
+    public static class Tls {
+        public static String INTERMEDIATE_CERT_PATH =
+                "data/agents/at/bawagpsk/DigiCert_SHA2_Extended_Validation_Server_CA.jks";
+        public static String INTERMEDIATE_CERT_PASSWORD = "tinktink";
     }
 
     public enum Storage {
