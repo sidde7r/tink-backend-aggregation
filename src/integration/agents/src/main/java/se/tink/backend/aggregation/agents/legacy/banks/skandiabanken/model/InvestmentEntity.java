@@ -6,10 +6,15 @@ import org.assertj.core.util.Strings;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InvestmentEntity {
+    private static final AggregationLogger LOGGER = new AggregationLogger(InvestmentEntity.class);
+
     private String id;
     private List<PortfolioEntity> portfolios;
     private String investmentAmount;
@@ -179,6 +184,8 @@ public class InvestmentEntity {
         case "värdepappersdepå":
             return Portfolio.Type.DEPOT;
         default:
+            LOGGER.warnExtraLong(SerializationUtils.serializeToString(this),
+                    LogTag.from("#Skandiabanken_unknown_portfolio_typ"));
             return Portfolio.Type.OTHER;
         }
     }
