@@ -537,21 +537,23 @@ public class SEBApiAgent extends AbstractAgent implements
 
             List<Instrument> instruments = Lists.newArrayList();
             holdingByDepotNumber.getOrDefault(depotNumber, Collections.emptyList())
-                    .forEach(holding -> {
-                holding.toInstrument().ifPresent(instrument -> {
-                    Double estimatedAverageAcquisitionPrice = instrument.getMarketValue() / instrument.getQuantity();
-                    if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice()) > 1) {
-                        log.warn("Possibly faulty value parsing: " + SerializationUtils.serializeToString(holding));
-                    }
-                    instruments.add(instrument);
-                });
-            });
+                    .forEach(holding -> holding.toInstrument().ifPresent(instrument -> {
+                        checkPossibleFaultyParsing(holding, instrument);
+                        instruments.add(instrument);
+                    }));
             portfolio.setInstruments(instruments);
             portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
             depotAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
         });
         return depotAccounts;
+    }
+
+    private void checkPossibleFaultyParsing(HoldingEntity holding, Instrument instrument) {
+        Double estimatedAverageAcquisitionPrice = instrument.getMarketValue() / instrument.getQuantity();
+        if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice()) > 1) {
+            log.warn("Possibly faulty value parsing: " + SerializationUtils.serializeToString(holding));
+        }
     }
 
     private static void attachCreditCardsToAccount(Account account, List<SebCreditCard> creditCards) {
