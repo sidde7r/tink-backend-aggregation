@@ -27,10 +27,10 @@ public class GetAccountStatementItemsRequest {
         context.setDeviceIdentifier(BawagPskConstants.DEVICE_IDENTIFIER);
 
         FinancialInstitute institute = new FinancialInstitute();
-        institute.setBankCode(BawagPskConstants.SERVER.BANK_CODE);
-        institute.setBIC(BawagPskConstants.SERVER.BIC);
-        institute.setCode(BawagPskConstants.SERVER.CODE);
-        institute.setShortName(BawagPskConstants.SERVER.SHORT_NAME);
+        institute.setBankCode(BawagPskConstants.Server.BANK_CODE);
+        institute.setBIC(BawagPskConstants.Server.BIC);
+        institute.setCode(BawagPskConstants.Server.CODE);
+        institute.setShortName(BawagPskConstants.Server.SHORT_NAME);
 
         StatementSearchCriteria criteria = new StatementSearchCriteria();
         criteria.setMinDatePosted(fromDateTime);

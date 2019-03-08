@@ -60,7 +60,7 @@ public class BawagPskApiClient {
     private URL getUrl() {
         return new URL(
                 String.format(
-                        "https://%s%s", this.baseUrl, BawagPskConstants.URLS.SERVICE_ENDPOINT));
+                        "https://%s%s", this.baseUrl, BawagPskConstants.Urls.SERVICE_ENDPOINT));
     }
 
     public String getBankName() {

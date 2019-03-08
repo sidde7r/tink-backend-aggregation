@@ -32,9 +32,9 @@ public class Envelope {
     }
 
     private static boolean errorMessageIndicatesIncorrectCredentials(final String message) {
-        return message.equalsIgnoreCase(BawagPskConstants.MESSAGES.STRING_TOO_SHORT)
+        return message.equalsIgnoreCase(BawagPskConstants.Messages.STRING_TOO_SHORT)
                 || StringUtils.containsIgnoreCase(
-                        message, BawagPskConstants.MESSAGES.INPUT_NOT_17_DIGITS);
+                        message, BawagPskConstants.Messages.INPUT_NOT_17_DIGITS);
     }
 
     public boolean credentialsAreIncorrect() {

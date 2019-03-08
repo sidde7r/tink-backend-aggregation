@@ -43,7 +43,7 @@ public final class LoginResponse {
         if (!list.isEmpty()) {
             return list.get(0)
                     .trim()
-                    .equalsIgnoreCase(BawagPskConstants.MESSAGES.INCORRECT_CREDENTIALS);
+                    .equalsIgnoreCase(BawagPskConstants.Messages.INCORRECT_CREDENTIALS);
         }
 
         return false;
@@ -61,7 +61,7 @@ public final class LoginResponse {
         if (!list.isEmpty()) {
             return list.get(0) // TODO assert one and only one element
                     .trim()
-                    .equalsIgnoreCase(BawagPskConstants.MESSAGES.ACCOUNT_LOCKED);
+                    .equalsIgnoreCase(BawagPskConstants.Messages.ACCOUNT_LOCKED);
         }
 
         return false;
