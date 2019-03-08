@@ -66,7 +66,7 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
         for (final String arg : arguments) {
             final String propertyName = argPrefix + arg;
             if (System.getProperty(propertyName) == null) {
-                missingArguments.add(propertyName);
+                missingArguments.add(arg);
             }
         }
         if (!missingArguments.isEmpty()) {
@@ -81,10 +81,14 @@ public final class ArgumentManager<ArgumentEnum extends Enum<ArgumentEnum>> {
      */
     public static void afterClass() {
         if (skippedTestsCount > 0) {
+            final List<String> missingArgs =
+                    missingArguments.stream()
+                            .map(arg -> argPrefix + arg)
+                            .collect(Collectors.toList());
             final String header =
                     String.format(
                             "Skipped %d test(s) because arguments were not supplied: %s",
-                            skippedTestsCount, missingArguments);
+                            skippedTestsCount, missingArgs);
             final String explanation = "Please supply the arguments as Bazel flags like so:";
             final Function<String, String> argToFlag =
                     arg ->
