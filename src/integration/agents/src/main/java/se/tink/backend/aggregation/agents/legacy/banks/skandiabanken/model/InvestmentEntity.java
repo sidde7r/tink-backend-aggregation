@@ -172,6 +172,7 @@ public class InvestmentEntity {
         case "investeringssparkonto":
             return Portfolio.Type.ISK;
         case "kapitalförsäkring - internet":
+        case "kapitalförsäkring":
             return Portfolio.Type.KF;
         case "tjänstepension":
             return Portfolio.Type.PENSION;
