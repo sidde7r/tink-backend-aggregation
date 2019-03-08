@@ -152,11 +152,12 @@ public final class AxaApiClient {
                 .post(PendingRequestsResponse.class);
     }
 
-    public GetAccountsResponse postGetAccounts(final int customerId, final String accessToken) {
+    public GetAccountsResponse postGetAccounts(
+            final int customerId, final String accessToken, final String locale) {
         final GetAccountsRequest body =
                 GetAccountsRequest.builder()
                         .setApplCd(AxaConstants.Request.APPL_CD)
-                        .setLanguage(AxaConstants.Request.LANGUAGE)
+                        .setLanguage(locale)
                         .setCustomerId(customerId)
                         .build();
         return httpClient
@@ -168,11 +169,14 @@ public final class AxaApiClient {
     }
 
     public GetTransactionsResponse postGetTransactions(
-            final int customerId, final String accessToken, final String accountNumber) {
+            final int customerId,
+            final String accessToken,
+            final String accountNumber,
+            final String locale) {
         final GetTransactionsRequest body =
                 GetTransactionsRequest.builder()
                         .setApplCd(AxaConstants.Request.APPL_CD)
-                        .setLanguage(AxaConstants.Request.LANGUAGE)
+                        .setLanguage(locale)
                         .setCustomerId(customerId)
                         .setDirectionFlag(AxaConstants.Request.DIRECTION_FLAG)
                         .setAccountNumber(accountNumber)

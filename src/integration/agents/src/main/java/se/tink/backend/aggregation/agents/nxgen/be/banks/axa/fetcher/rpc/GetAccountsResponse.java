@@ -48,7 +48,7 @@ public final class GetAccountsResponse {
                                 .setBalance(new Amount(accountEntity.getCurrency(), balance))
                                 .addAccountIdentifier(new IbanIdentifier(iban))
                                 .addHolderName(accountEntity.getTitularName())
-                                .setAlias(displayIban)
+                                .setAlias(accountEntity.getTypeDescription())
                                 .build();
 
         final Supplier<TransactionalAccount> savingsAccount =
@@ -59,7 +59,7 @@ public final class GetAccountsResponse {
                                 .setBalance(new Amount(accountEntity.getCurrency(), balance))
                                 .addAccountIdentifier(new IbanIdentifier(iban))
                                 .addHolderName(accountEntity.getTitularName())
-                                .setAlias(displayIban)
+                                .setAlias(accountEntity.getTypeDescription())
                                 .build();
 
         final TypeMapper<Supplier<TransactionalAccount>> accountTypeMapper =

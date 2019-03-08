@@ -22,9 +22,11 @@ public final class AxaTransactionFetcher implements TransactionFetcher<Transacti
     public List<AggregationTransaction> fetchTransactionsFor(final TransactionalAccount account) {
         final int customerId = storage.getCustomerId().orElseThrow(IllegalStateException::new);
         final String accessToken = storage.getAccessToken().orElseThrow(IllegalStateException::new);
+        final String locale = storage.getLanguage().orElse(""); // Dutch is the fallback
 
         final GetTransactionsResponse response =
-                apiClient.postGetTransactions(customerId, accessToken, account.getAccountNumber());
+                apiClient.postGetTransactions(
+                        customerId, accessToken, account.getAccountNumber(), locale);
 
         return response.getTransactions();
     }
