@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
 
 import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -64,7 +66,10 @@ public class SantanderEsConstants {
 
     public static final class LogMessages {
         public static final String LOGIN_RESPONSE_NOT_FOUND = "Login response not found in session storage";
-        public static final Set<String> KNOWN_NODES = Sets.newHashSet(
+        // We have problems with parsing some data that we used to consider KNOWN_NODES
+        // So we temporary want to log all the data
+        public static final Set<String> KNOWN_NODES = Collections.emptySet();
+                /*Sets.newHashSet(
                 "info",
                 "datosUsuario",
                 "cuentas",
@@ -82,7 +87,7 @@ public class SantanderEsConstants {
                 "nombrePersonaSinApellidos",
                 "apellidoUno",
                 "apellidoDos",
-                "estados");
+                "estados");*/
 
     }
 

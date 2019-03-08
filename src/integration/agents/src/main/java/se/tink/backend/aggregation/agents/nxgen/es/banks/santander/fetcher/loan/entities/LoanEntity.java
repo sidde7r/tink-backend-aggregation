@@ -8,21 +8,27 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-@XmlRootElement
+@XmlRootElement(name = "prestamo")
 public class LoanEntity {
 
     @JsonProperty("comunes")
     private GeneralInfoEntity generalInfo;
+
     @JsonProperty("titular")
     private CustomerData customerData;
+
     @JsonProperty("descSituacionContrato")
     private String contractDescription;
+
     @JsonProperty("impSaldoDispuesto")
     private AmountEntity balance;
+
     @JsonProperty("impDisponible")
     private AmountEntity availableAmount;
+
     @JsonProperty("impDisponibleContravalor")
     private AmountEntity availableAmountCounterValue;
+
     @JsonProperty("importeSalDisptoContravalor")
     private AmountEntity balanceCounterValue;
 
