@@ -126,7 +126,7 @@ public final class AxaStorage {
         persistentStorage.put(AxaConstants.Storage.DEVICE_ID.name(), deviceId.toString());
     }
 
-    public void persistBasicAuth(String basicAuth) {
+    public void persistBasicAuth(@Nonnull String basicAuth) {
         Preconditions.checkNotNull(basicAuth);
         persistentStorage.put(AxaConstants.Storage.BASIC_AUTH.name(), basicAuth);
     }
