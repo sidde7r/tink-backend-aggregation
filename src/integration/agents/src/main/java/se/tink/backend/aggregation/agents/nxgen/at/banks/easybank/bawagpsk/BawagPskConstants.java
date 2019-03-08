@@ -4,6 +4,10 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
 public final class BawagPskConstants {
 
+    private BawagPskConstants() {
+        throw new AssertionError();
+    }
+
     public static final int DISPOSER_NUMBER_LENGTH =
             17; // Length when account number is left-padded with zeros
 
