@@ -124,6 +124,7 @@ public class SwedbankBaseConstants {
         SAVINGSACCOUNT("SAVINGSACCOUNT"),
         ISK("ISK"),
         FUNDACCOUNT("FUNDACCOUNT"),
+        ENDOWMENT("ENDOWMENT"),
         UNKNOWN("");
 
         private String accountType;
