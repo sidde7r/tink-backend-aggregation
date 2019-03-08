@@ -181,6 +181,8 @@ public class DetailedPortfolioEntity extends AbstractInvestmentAccountEntity {
         case FUNDACCOUNT:
         case EQUITY_TRADER:
             return Portfolio.Type.DEPOT;
+        case ENDOWMENT:
+            return Portfolio.Type.KF;
         case SAVINGSACCOUNT:
             log.error("Normalized savings account to portfolio. This should not happen, but not failing refresh.");
             // Intentional fall trough
