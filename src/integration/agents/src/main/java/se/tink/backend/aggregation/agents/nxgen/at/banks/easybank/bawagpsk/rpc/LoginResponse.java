@@ -1,11 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Disposer;
@@ -18,6 +12,12 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Products;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ResponseMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 public final class LoginResponse {
     private Envelope envelope;
 
@@ -28,21 +28,22 @@ public final class LoginResponse {
     public boolean requestWasSuccessful() {
         return Optional.ofNullable(envelope.getBody())
                 .map(Body::getLoginResponseEntity)
-                .map(LoginResponseEntity::getOk).isPresent();
+                .map(LoginResponseEntity::getOk)
+                .isPresent();
     }
 
     public boolean incorrectCredentials() {
-        List<String> list = Optional.ofNullable(envelope.getBody())
-                .map(Body::getLoginResponseEntity)
-                .map(LoginResponseEntity::getFailure)
-                .map(Failure::getResponseMessageList).orElse(new ArrayList<>())
-                .stream()
-                .map(ResponseMessage::getCode)
-                .collect(Collectors.toList());
+        List<String> list =
+                Optional.ofNullable(envelope.getBody()).map(Body::getLoginResponseEntity)
+                        .map(LoginResponseEntity::getFailure).map(Failure::getResponseMessageList)
+                        .orElse(new ArrayList<>()).stream()
+                        .map(ResponseMessage::getCode)
+                        .collect(Collectors.toList());
 
         if (!list.isEmpty()) {
             return list.get(0)
-                    .trim().equalsIgnoreCase(BawagPskConstants.MESSAGES.INCORRECT_CREDENTIALS);
+                    .trim()
+                    .equalsIgnoreCase(BawagPskConstants.MESSAGES.INCORRECT_CREDENTIALS);
         }
 
         return false;
@@ -50,17 +51,17 @@ public final class LoginResponse {
 
     public boolean accountIsLocked() {
 
-        List<String> list = Optional.ofNullable(envelope.getBody())
-                .map(Body::getLoginResponseEntity)
-                .map(LoginResponseEntity::getFailure)
-                .map(Failure::getResponseMessageList).orElse(new ArrayList<>())
-                .stream()
-                .map(ResponseMessage::getCode)
-                .collect(Collectors.toList());
+        List<String> list =
+                Optional.ofNullable(envelope.getBody()).map(Body::getLoginResponseEntity)
+                        .map(LoginResponseEntity::getFailure).map(Failure::getResponseMessageList)
+                        .orElse(new ArrayList<>()).stream()
+                        .map(ResponseMessage::getCode)
+                        .collect(Collectors.toList());
 
         if (!list.isEmpty()) {
             return list.get(0) // TODO assert one and only one element
-                    .trim().equalsIgnoreCase(BawagPskConstants.MESSAGES.ACCOUNT_LOCKED);
+                    .trim()
+                    .equalsIgnoreCase(BawagPskConstants.MESSAGES.ACCOUNT_LOCKED);
         }
 
         return false;
@@ -75,9 +76,7 @@ public final class LoginResponse {
     }
 
     public ProductID getProductId(final String accountNumber) {
-        return envelope.getBody().getLoginResponseEntity().getOk()
-                .getDisposer()
-                .getProducts()
+        return envelope.getBody().getLoginResponseEntity().getOk().getDisposer().getProducts()
                 .getProductList().stream()
                 .filter(product -> product.getAccountNumber().equals(accountNumber))
                 .map(Product::getProductID)
@@ -94,29 +93,29 @@ public final class LoginResponse {
                 .map(Disposer::getProducts);
     }
 
-    /**
-     * @return A map from the set of account numbers to the set of product codes
-     */
+    /** @return A map from the set of account numbers to the set of product codes */
     public Map<String, String> getProductCodes() {
         final Products products = getProducts().orElseThrow(IllegalStateException::new);
-        final List<ProductID> productIDs = products.getProductList().stream()
-                .map(Product::getProductID)
-                .filter(productID -> productID.getAccountNumber() != null)
-                .filter(productID -> productID.getProductCode() != null)
-                .collect(Collectors.toList());
-        return productIDs.stream().collect(Collectors.toMap(ProductID::getAccountNumber, ProductID::getProductCode));
+        final List<ProductID> productIDs =
+                products.getProductList().stream()
+                        .map(Product::getProductID)
+                        .filter(productID -> productID.getAccountNumber() != null)
+                        .filter(productID -> productID.getProductCode() != null)
+                        .collect(Collectors.toList());
+        return productIDs.stream()
+                .collect(Collectors.toMap(ProductID::getAccountNumber, ProductID::getProductCode));
     }
 
-    /**
-     * @return A map from the set of account numbers to the set of product types
-     */
+    /** @return A map from the set of account numbers to the set of product types */
     public Map<String, String> getProductTypes() {
         final Products products = getProducts().orElseThrow(IllegalStateException::new);
-        final List<ProductID> productIDs = products.getProductList().stream()
-                .map(Product::getProductID)
-                .filter(productID -> productID.getAccountNumber() != null)
-                .filter(productID -> productID.getProductType() != null)
-                .collect(Collectors.toList());
-        return productIDs.stream().collect(Collectors.toMap(ProductID::getAccountNumber, ProductID::getProductType));
+        final List<ProductID> productIDs =
+                products.getProductList().stream()
+                        .map(Product::getProductID)
+                        .filter(productID -> productID.getAccountNumber() != null)
+                        .filter(productID -> productID.getProductType() != null)
+                        .collect(Collectors.toList());
+        return productIDs.stream()
+                .collect(Collectors.toMap(ProductID::getAccountNumber, ProductID::getProductType));
     }
 }
