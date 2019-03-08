@@ -53,6 +53,12 @@ public final class BawagPskConstants {
         public static final String INCORRECT_CREDENTIALS = "ERR_LOGIN";
     }
 
+    public static class Tls {
+        public static String INTERMEDIATE_CERT_PATH =
+                "data/agents/at/bawagpsk/DigiCert_SHA2_Extended_Validation_Server_CA.jks";
+        public static String INTERMEDIATE_CERT_PASSWORD = "tinktink";
+    }
+
     public enum Storage {
         SERVER_SESSION_ID,
         QID,
