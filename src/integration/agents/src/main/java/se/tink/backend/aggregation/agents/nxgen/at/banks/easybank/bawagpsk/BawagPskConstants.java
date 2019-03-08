@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 
-public class BawagPskConstants {
+public final class BawagPskConstants {
 
     public static final int DISPOSER_NUMBER_LENGTH =
             17; // Length when account number is left-padded with zeros
