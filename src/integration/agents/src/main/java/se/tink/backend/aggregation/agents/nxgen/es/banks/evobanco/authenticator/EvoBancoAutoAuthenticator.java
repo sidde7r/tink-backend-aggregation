@@ -6,13 +6,15 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.EeILoginEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -50,9 +52,7 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
                             .withOperatingSystem(EvoBancoConstants.HardCodedValues.OPERATING_SYSTEM)
                             .withPassword(password)
                             .withDeviceId(
-                                    persistentStorage
-                                            .get(EvoBancoConstants.Storage.DEVICE_ID, String.class)
-                                            .orElse(EvoBancoConstants.HardCodedValues.DEVICE_ID))
+                                    persistentStorage.get(EvoBancoConstants.Storage.DEVICE_ID))
                             .withAppId(EvoBancoConstants.HardCodedValues.APP_ID)
                             .withVersionApp(EvoBancoConstants.HardCodedValues.APP_VERSION)
                             .withMobileAccess(EvoBancoConstants.HardCodedValues.MOBILE_ACCESS)
@@ -60,14 +60,38 @@ public class EvoBancoAutoAuthenticator implements AutoAuthenticator {
                             .withEntityCode(
                                     sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE))
                             .build();
-            bankClient.eeLogin(new EELoginRequest(eeILoginEntity));
+
+            EELoginResponse eeLoginResponse =
+                    bankClient.eeLogin(new EELoginRequest(eeILoginEntity));
+
+            sessionStorage.put(
+                    EvoBancoConstants.Storage.INTERNAL_ID_PE,
+                    eeLoginResponse.getEeOLogin().getAnswer().getInternalIdPe());
+
+        } catch (HttpResponseException e) {
+            int statusCode = e.getResponse().getStatus();
+
+            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
+
+                // We should be able to throw a Login Exception from autoAuthenticate method, this
+                // is a workaround due to the fact that we don't support it at the moment
+                try {
+                    e.getResponse().getBody(EELoginResponse.class).handleReturnCode();
+                } catch (LoginException e1) {
+                    throw AuthorizationError.NO_VALID_PROFILE.exception(e1.getUserMessage());
+                }
+            } else {
+                throw e;
+            }
         } catch (LoginException e) {
-            throw SessionError.SESSION_EXPIRED.exception(e.getUserMessage());
+            throw AuthorizationError.NO_VALID_PROFILE.exception(e.getUserMessage());
         }
 
-        // Workaround needed due to the fact that EvoBanco's backend expects a check of the global
+        // Workaround needed due to the fact that EvoBanco's backend expects a check of the
+        // global
         // position (accounts and cards)
-        // immediately after the eeLogin, keep alive requests will fail if this is not done first,
-        bankClient.globalPositionFirstTime();
+        // immediately after the eeLogin, keep alive requests will fail if this is not done
+        // first.
+        bankClient.globalPositionFirstTime().handleReturnCode();
     }
 }

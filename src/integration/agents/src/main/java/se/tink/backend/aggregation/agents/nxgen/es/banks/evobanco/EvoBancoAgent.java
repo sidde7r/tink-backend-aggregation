@@ -40,10 +40,7 @@ public class EvoBancoAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugProxy("http://192.168.238.15:8888");
-        client.setDebugOutput(true);
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -59,7 +56,8 @@ public class EvoBancoAgent extends NextGenerationAgent {
                 request,
                 context,
                 smsOtpAuthenticationController,
-                new EvoBancoAutoAuthenticator(bankClient, credentials, persistentStorage, sessionStorage));
+                new EvoBancoAutoAuthenticator(
+                        bankClient, credentials, persistentStorage, sessionStorage));
     }
 
     @Override
@@ -84,9 +82,14 @@ public class EvoBancoAgent extends NextGenerationAgent {
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         EvoBancoCreditCardFetcher creditCardFetcher = new EvoBancoCreditCardFetcher(bankClient);
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
-                creditCardFetcher, new TransactionFetcherController<>(this.transactionPaginationHelper,
-                new TransactionPagePaginationController<>(creditCardFetcher, 0))));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(creditCardFetcher, 0))));
     }
 
     @Override

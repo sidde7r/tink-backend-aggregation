@@ -13,8 +13,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.entities.AccountEntity.LOGGER;
-
 public class EvoBancoTransactionFetcher
         implements TransactionKeyPaginator<TransactionalAccount, RepositioningEntity> {
 
@@ -53,25 +51,12 @@ public class EvoBancoTransactionFetcher
 
                 bankClient.setNextCodSecIpHeader(e.getResponse());
 
-                if (errorResponse
-                                .getEeOConsultationMovementsPostponedView()
-                                .getReturnCode()
-                                .equals(EvoBancoConstants.ReturnCodes.UNSUCCESSFUL_RETURN_CODE)
-                        && errorResponse
-                                .getEeOConsultationMovementsPostponedView()
-                                .getErrors()
-                                .getShowCode()
-                                .equals(EvoBancoConstants.ErrorCodes.NO_TRANSACTIONS_FOUND)) {
+                errorResponse.handleReturnCode();
 
-                    LOGGER.infoExtraLong(
-                            this.getClass().getCanonicalName(),
-                            EvoBancoConstants.LogTags.NO_TRANSACTIONS_FOUND);
-
-                    return TransactionKeyPaginatorResponseImpl.createEmpty();
-                }
+                return TransactionKeyPaginatorResponseImpl.createEmpty();
+            } else {
+                throw e;
             }
-
-            throw e;
         }
     }
 }

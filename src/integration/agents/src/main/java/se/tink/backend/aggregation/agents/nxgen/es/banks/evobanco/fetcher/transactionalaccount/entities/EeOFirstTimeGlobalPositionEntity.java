@@ -2,15 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.trans
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities.AnswerEntityGlobalPositionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities.EeOBaseEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class EeOFirstTimeGlobalPositionEntity {
+public class EeOFirstTimeGlobalPositionEntity extends EeOBaseEntity {
     @JsonProperty("Respuesta")
     private AnswerEntityGlobalPositionResponse answer;
-
-    @JsonProperty("codigoRetorno")
-    private String returnCode;
 
     public AnswerEntityGlobalPositionResponse getAnswer() {
         return answer;

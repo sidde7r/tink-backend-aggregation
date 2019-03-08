@@ -10,13 +10,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.entities.SignatureDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse1;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginResponse2;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.smsotp.SmsOtpAuthenticatorPassword;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPassword<String> {
@@ -46,33 +46,43 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
                         .substring(0, EvoBancoConstants.Constants.DEVICE_ID_LENGTH);
         persistentStorage.put(EvoBancoConstants.Storage.DEVICE_ID, deviceId);
 
-        Map<String, String> initValues = new HashMap<>();
-        // Construct login request from username and hashed password
-        bankClient.login(new LoginRequest(username, password));
+        try {
+            // Construct login request from username and hashed password
+            bankClient.login(new LoginRequest(username, password));
 
-        SignatureDataEntity signatureDataEntity =
-                new SignatureDataEntity.Builder()
-                        .withReferenceOtp("")
-                        .withOtp("")
-                        .withSignature(EvoBancoConstants.HardCodedValues.FIRST_LINKING_SIGNATURE)
-                        .build();
+            SignatureDataEntity signatureDataEntity =
+                    new SignatureDataEntity.Builder()
+                            .withReferenceOtp("")
+                            .withOtp("")
+                            .withSignature(
+                                    EvoBancoConstants.HardCodedValues.FIRST_LINKING_SIGNATURE)
+                            .build();
 
-        EeILinkingAndLoginEntity eeILinkingAndLoginEntity =
-                getEeILinkingAndLoginEntity(signatureDataEntity);
+            EeILinkingAndLoginEntity eeILinkingAndLoginEntity =
+                    getEeILinkingAndLoginEntity(signatureDataEntity);
 
-        LinkingLoginResponse1 linkingLoginResponse1 =
-                bankClient.link1(new LinkingLoginRequest(eeILinkingAndLoginEntity));
+            LinkingLoginResponse1 linkingLoginResponse1 =
+                    bankClient.link1(new LinkingLoginRequest(eeILinkingAndLoginEntity));
 
-        return linkingLoginResponse1.getEeOLinkingAndLogin().getAnswer().getReferenceotp();
+            return linkingLoginResponse1.getEeOLinkingAndLogin().getAnswer().getReferenceotp();
+        } catch (HttpResponseException e) {
+            int statusCode = e.getResponse().getStatus();
+
+            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
+                e.getResponse().getBody(LinkingLoginResponse1.class).handleReturnCode();
+            }
+
+            throw e;
+        }
     }
 
     @Override
-    public void authenticate(String otp, String initValues)
+    public void authenticate(String otp, String referenceOtp)
             throws AuthenticationException, AuthorizationException {
 
         SignatureDataEntity signatureDataEntity =
                 new SignatureDataEntity.Builder()
-                        .withReferenceOtp(initValues)
+                        .withReferenceOtp(referenceOtp)
                         .withOtp(otp)
                         .withSignature(EvoBancoConstants.HardCodedValues.SECOND_LINKING_SIGNATURE)
                         .build();
@@ -80,12 +90,29 @@ public class EvoBancoMultifactorAuthenticator implements SmsOtpAuthenticatorPass
         EeILinkingAndLoginEntity eeILinkingAndLoginEntity =
                 getEeILinkingAndLoginEntity(signatureDataEntity);
 
-        bankClient.link2(new LinkingLoginRequest(eeILinkingAndLoginEntity));
+        try {
+            LinkingLoginResponse2 linkingLoginResponse2 =
+                    bankClient.link2(new LinkingLoginRequest(eeILinkingAndLoginEntity));
 
-        // Workaround needed due to the fact that EvoBanco's backend expects a check of the global
-        // position (accounts and cards)
-        // immediately after the eeLogin, keep alive requests will fail if this is not done first,
-        bankClient.globalPositionFirstTime();
+            sessionStorage.put(
+                    EvoBancoConstants.Storage.INTERNAL_ID_PE,
+                    linkingLoginResponse2.getEeOLinkingAndLogin().getAnswer().getInternalIdPe());
+
+            // Workaround needed due to the fact that EvoBanco's backend expects a check of the
+            // global
+            // position (accounts and cards)
+            // immediately after the eeLogin, keep alive requests will fail if this is not done
+            // first,
+            bankClient.globalPositionFirstTime().handleReturnCode();
+        } catch (HttpResponseException e) {
+            int statusCode = e.getResponse().getStatus();
+
+            if (statusCode == EvoBancoConstants.StatusCodes.BAD_REQUEST_STATUS_CODE) {
+                e.getResponse().getBody(LinkingLoginResponse2.class).handleReturnCode();
+            }
+
+            throw e;
+        }
     }
 
     private EeILinkingAndLoginEntity getEeILinkingAndLoginEntity(

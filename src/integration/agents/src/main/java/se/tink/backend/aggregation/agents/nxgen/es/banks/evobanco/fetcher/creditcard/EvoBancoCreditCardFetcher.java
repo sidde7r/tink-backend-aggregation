@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoApiClient;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entities.AnswerEntityGlobalPositionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -24,8 +25,11 @@ public class EvoBancoCreditCardFetcher
     public Collection<CreditCardAccount> fetchAccounts() {
         GlobalPositionResponse globalPositionResponse = bankClient.globalPosition();
 
+        globalPositionResponse.handleReturnCode();
+
         if (globalPositionResponse != null) {
-            AnswerEntityGlobalPositionResponse answer = globalPositionResponse.getEeOGlobalbePosition().getAnswer();
+            AnswerEntityGlobalPositionResponse answer =
+                    globalPositionResponse.getEeOGlobalbePosition().getAnswer();
 
             if (answer.getAgreementsList() == null || answer.getAgreementsList().isEmpty()) {
                 return Collections.emptyList();
@@ -39,6 +43,11 @@ public class EvoBancoCreditCardFetcher
 
     @Override
     public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-        return bankClient.fetchCardTransactions(account.getBankIdentifier(), page);
+        CardTransactionsResponse cardTransactionsResponse =
+                bankClient.fetchCardTransactions(account.getBankIdentifier(), page);
+
+        cardTransactionsResponse.handleReturnCode();
+
+        return cardTransactionsResponse;
     }
 }

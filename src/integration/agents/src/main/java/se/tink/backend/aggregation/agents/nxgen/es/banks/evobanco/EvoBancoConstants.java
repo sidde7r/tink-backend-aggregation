@@ -56,6 +56,7 @@ public class EvoBancoConstants {
 
     public static class ErrorCodes {
         public static final String NO_TRANSACTIONS_FOUND = "00350";
+        public static final String AUTHENTICATION_ERROR = "1500";
     }
 
     public static class QueryParamsKeys {
@@ -87,7 +88,6 @@ public class EvoBancoConstants {
     // TODO: Remove this as soon as we find out how to get these values from their backend
     public static class HardCodedValues {
         public static final String OPERATING_SYSTEM = "IOS";
-        public static final String DEVICE_ID = "5E4A4188-84C9-4F27-8397-8";
         public static final String APP_ID = "1";
         public static final String APP_VERSION = "12.12.1";
         public static final String MOBILE_ACCESS = "S";

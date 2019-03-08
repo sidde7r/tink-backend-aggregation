@@ -104,24 +104,36 @@ public class CustomerNotesListEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-                .setAmount(Amount.inEUR(AgentParsingUtils.parseAmount(getSign() + amountAmount)))
+                .setAmount(getAmount())
                 .setDate(DateUtils.parseDate(dateOfTransaction))
                 .setDescription(senderText)
                 .setPending(isPending())
                 .build();
-
     }
 
-    private String getSign() {
-        return sign.equals(EvoBancoConstants.Constants.ACCOUNT_TRANSACTION_PLUS_SIGN) ? "+" : "-";
+    private Amount getAmount() {
+        String amountSign =
+                sign.equals(EvoBancoConstants.Constants.ACCOUNT_TRANSACTION_PLUS_SIGN) ? "+" : "-";
+
+        // It appears in some cases that the actual amount has a negative sign and information about
+        // the sign, in those cases (double checked in the app), the amount should appear as
+        // positive
+        if (amountAmount.startsWith("-") && "-".equals(amountSign)) {
+            return Amount.inEUR(AgentParsingUtils.parseAmount(amountAmount.substring(1)));
+        }
+        return Amount.inEUR(AgentParsingUtils.parseAmount(amountSign + amountAmount));
     }
 
     private boolean isPending() {
-        LocalDate valueDateParsed = LocalDate.parse(valueDate, EvoBancoConstants.Constants.DATE_FORMATTER);
-        LocalDate dateOfTransactionParsed = LocalDate.parse(dateOfTransaction, EvoBancoConstants.Constants.DATE_FORMATTER);
+        LocalDate valueDateParsed =
+                LocalDate.parse(valueDate, EvoBancoConstants.Constants.DATE_FORMATTER);
+        LocalDate dateOfTransactionParsed =
+                LocalDate.parse(dateOfTransaction, EvoBancoConstants.Constants.DATE_FORMATTER);
         LocalDate nowDate = LocalDate.now(ZoneId.of(EvoBancoConstants.Constants.MADRID_ZONE_ID));
 
-        //pending if valueDate is before the dateOfTransaction and today is before dateOfTransaction
-        return valueDateParsed.isBefore(dateOfTransactionParsed) && nowDate.isBefore(dateOfTransactionParsed);
+        // pending if valueDate is before the dateOfTransaction and today is before
+        // dateOfTransaction
+        return valueDateParsed.isBefore(dateOfTransactionParsed)
+                && nowDate.isBefore(dateOfTransactionParsed);
     }
 }

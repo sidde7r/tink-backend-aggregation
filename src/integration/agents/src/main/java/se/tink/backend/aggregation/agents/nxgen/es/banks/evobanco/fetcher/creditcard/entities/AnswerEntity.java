@@ -22,8 +22,8 @@ public class AnswerEntity {
     @JsonProperty("ListaMovimientosTarjeta")
     private List<ListMovementsCardEntity> listMovementsCard;
 
-    public String getMoreData() {
-        return moreData;
+    public boolean getMoreData() {
+        return "1".equals(moreData);
     }
 
     public List<ListMovementsCardEntity> getListMovementsCard() {

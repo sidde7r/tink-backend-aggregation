@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.entit
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
@@ -80,12 +81,7 @@ public class AgreementsListEntity {
 
         Optional<TransactionalAccount> tinkAccount;
 
-        Amount balance =
-                new Amount(
-                        EvoBancoConstants.CURRENCY_TYPE_MAPPER
-                                .translate(currencyCode)
-                                .orElse("EUR"),
-                        Double.parseDouble(unspentBalance));
+        Amount balance = Amount.inEUR(AgentParsingUtils.parseAmount(unspentBalance));
 
         switch (type) {
             case CHECKING:
@@ -140,19 +136,10 @@ public class AgreementsListEntity {
     }
 
     public Optional<CreditCardAccount> toTinkCreditCard() {
-        Amount balance =
-                new Amount(
-                        EvoBancoConstants.CURRENCY_TYPE_MAPPER
-                                .translate(currencyCode)
-                                .orElse("EUR"),
-                        Double.parseDouble(cardData.getCreditUsed()));
+        Amount balance = Amount.inEUR(AgentParsingUtils.parseAmount(cardData.getCreditUsed()));
 
         Amount availableCredit =
-                new Amount(
-                        EvoBancoConstants.CURRENCY_TYPE_MAPPER
-                                .translate(currencyCode)
-                                .orElse("EUR"),
-                        Double.parseDouble(cardData.getCreditAvailableBalance()));
+                Amount.inEUR(AgentParsingUtils.parseAmount(cardData.getCreditAvailableBalance()));
 
         return Optional.of(
                 CreditCardAccount.builderFromFullNumber(cardData.getPanToken(), aliasbe)

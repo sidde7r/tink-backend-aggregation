@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.credi
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.EvoBancoConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.entities.ErrorsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.entities.EeOConsultationMovementsTarjetabeEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.entities.ListMovementsCardEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.rpc.EERpcResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
@@ -14,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @JsonObject
-public class CardTransactionsResponse implements PaginatorResponse {
+public class CardTransactionsResponse implements PaginatorResponse, EERpcResponse {
     @JsonProperty("EE_O_ConsultaMovimientosTarjetaBE")
     private EeOConsultationMovementsTarjetabeEntity eeOConsultationMovementsTarjetabe;
 
@@ -40,6 +42,16 @@ public class CardTransactionsResponse implements PaginatorResponse {
             return Optional.of(false);
         }
 
-        return Optional.of("1".equals(eeOConsultationMovementsTarjetabe.getAnswer().getMoreData()));
+        return Optional.of(eeOConsultationMovementsTarjetabe.getAnswer().getMoreData());
+    }
+
+    @Override
+    public boolean isUnsuccessfulReturnCode() {
+        return eeOConsultationMovementsTarjetabe.isUnsuccessfulReturnCode();
+    }
+
+    @Override
+    public Optional<ErrorsEntity> getErrors() {
+        return eeOConsultationMovementsTarjetabe.getErrors();
     }
 }

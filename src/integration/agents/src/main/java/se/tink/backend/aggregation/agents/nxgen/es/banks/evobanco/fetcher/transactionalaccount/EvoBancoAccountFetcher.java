@@ -25,6 +25,8 @@ public class EvoBancoAccountFetcher implements AccountFetcher<TransactionalAccou
     public Collection<TransactionalAccount> fetchAccounts() {
         GlobalPositionResponse globalPositionResponse = bankClient.globalPosition();
 
+        globalPositionResponse.handleReturnCode();
+
         if (globalPositionResponse != null) {
             AnswerEntityGlobalPositionResponse answer = globalPositionResponse.getEeOGlobalbePosition().getAnswer();
 

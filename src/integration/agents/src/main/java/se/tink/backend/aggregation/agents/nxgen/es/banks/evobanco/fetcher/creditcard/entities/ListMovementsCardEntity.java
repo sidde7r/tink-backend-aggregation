@@ -124,15 +124,14 @@ public class ListMovementsCardEntity {
     public CreditCardTransaction toTinkTransaction() {
         return new CreditCardTransaction.Builder()
                 .setAmount(
-                        Amount.inEUR(AgentParsingUtils.parseAmount(getSign() + operationAmount)))
+                        Amount.inEUR(AgentParsingUtils.parseAmount(getTransactionAmount())))
                 .setDateTime(getZonedDateTime())
                 .setDescription(getDescription())
                 .build();
     }
 
-    private String getSign() {
-        //must invert the sign we get from their API to be consistent
-        return "+".equals(amountSign) ? "-" : "+";
+    private String getTransactionAmount() {
+        return ("+".equals(amountSign) ? "-" : "+") + operationAmount;
     }
 
     private String getDescription() {
