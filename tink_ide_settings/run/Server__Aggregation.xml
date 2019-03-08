@@ -1,7 +1,7 @@
 <configuration default="false" name="Server: Aggregation" type="BlazeCommandRunConfigurationType"
                factoryName="Bazel Command" singleton="true" keep-in-sync="true"
                handler-id="BlazeCommandGenericRunConfigurationHandlerProvider" blaze-command="run">
-    <blaze-target>//src/aggregation/service:aggregation</blaze-target>
+    <blaze-target>//src/aggregation/service:bin</blaze-target>
     <blaze-user-exe-flag>server</blaze-user-exe-flag>
     <blaze-user-exe-flag>etc/development-aggregation-server.yml</blaze-user-exe-flag>
 </configuration>
