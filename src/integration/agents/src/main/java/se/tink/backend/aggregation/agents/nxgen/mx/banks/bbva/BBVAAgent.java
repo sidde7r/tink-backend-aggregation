@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.BBVAAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.BBVACreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan.BBVALoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.BBVATransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -64,7 +65,18 @@ public class BBVAAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        BBVACreditCardFetcher creditCardFetcher = new BBVACreditCardFetcher(bbvaApiClient);
+
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        creditCardFetcher))));
+
     }
 
     @Override

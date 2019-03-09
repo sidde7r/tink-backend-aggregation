@@ -18,6 +18,8 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.UpdateDeviceRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionResponse;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.rpc.CreditResponse;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.rpc.CreditTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.CustomerInfoResponse;
@@ -210,8 +212,25 @@ public class BBVAApiClient {
                 .get(TransactionsResponse.class);
     }
 
+    public CreditTransactionsResponse fetchCreditTransactions(String accountId, Date fromDate, Date toDate) {
+        String resource = String.format(BBVAConstants.URLS.CREDIT_TRANSACTIONS, accountId);
+        return getGlomoRequest(resource, MediaType.APPLICATION_JSON)
+                .queryParam(
+                        BBVAConstants.QUERY.FROM_DATE,
+                        BBVAConstants.DATE.DATE_FORMAT.format(fromDate))
+                .queryParam(BBVAConstants.QUERY.PAGE_SIZE, BBVAConstants.QUERY.PAGE_SIZE_VALUE)
+                .queryParam(
+                        BBVAConstants.QUERY.TO_DATE, BBVAConstants.DATE.DATE_FORMAT.format(toDate))
+                .get(CreditTransactionsResponse.class);
+    }
+
+    public CreditResponse fetchCredit() {
+        return getGlomoRequest(BBVAConstants.URLS.CREDIT, MediaType.APPLICATION_JSON)
+                .get(CreditResponse.class);
+    }
+
     public LoanResponse fetchLoans() {
-        return getGlomoRequest(BBVAConstants.URLS.CARDS, MediaType.APPLICATION_JSON)
+        return getGlomoRequest(BBVAConstants.URLS.LOANS, MediaType.APPLICATION_JSON)
                 .get(LoanResponse.class);
     }
 }

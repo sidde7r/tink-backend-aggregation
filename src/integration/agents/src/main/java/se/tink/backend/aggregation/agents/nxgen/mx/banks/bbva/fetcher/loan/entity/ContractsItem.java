@@ -24,6 +24,8 @@ public class ContractsItem {
 
     @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(ContractsItem.class);
 
+    // TODO: filter out deactivated accounts
+
     @JsonIgnore
     private final TypeMapper<AccountTypes> accounTypeMapper =
             BBVAUtils.getTypeMapper(BBVAConstants.ACCOUNT_TYPES_MAP);

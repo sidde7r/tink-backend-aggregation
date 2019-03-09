@@ -10,6 +10,6 @@ public class LoanResponse {
     private LoanDataEntity data;
 
     public Collection<LoanAccount> getLoanAccounts() {
-    	return data.getLoanAccounts();
-	}
+        return data.getLoanAccounts();
+    }
 }
