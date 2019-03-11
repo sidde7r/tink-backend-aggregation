@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import java.text.ParseException;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+
+import java.text.ParseException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
@@ -113,6 +114,7 @@ public class TransactionEntity {
 
     public Transaction toTransaction() {
         Transaction t = new Transaction();
+        t.setId(String.valueOf(externalId));
         t.setAmount(getAmount());
         try {
             t.setDate(DateUtils
