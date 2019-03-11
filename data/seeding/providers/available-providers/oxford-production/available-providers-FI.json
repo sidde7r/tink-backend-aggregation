@@ -18,6 +18,8 @@
     "fi-saastopankki",
     "fi-saastopankki-codecard",
     "fi-spankki-codecard",
-    "nordea-fi"
+    "nordea-fi",
+    "fi-test-password",
+    "fi-test-multi-supplemental"
   ]
 }
