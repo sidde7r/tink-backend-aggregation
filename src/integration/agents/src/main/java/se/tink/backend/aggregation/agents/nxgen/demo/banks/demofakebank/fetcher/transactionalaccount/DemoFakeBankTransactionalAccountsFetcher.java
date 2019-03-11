@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount;
 
-import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.rpc.DemoFakeBankAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.entities.FakeAccount;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.rpc.DemoFakeBankAccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginator;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
@@ -12,7 +12,6 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class DemoFakeBankTransactionalAccountsFetcher implements AccountFetcher<TransactionalAccount>,
@@ -34,10 +33,8 @@ public class DemoFakeBankTransactionalAccountsFetcher implements AccountFetcher<
         DemoFakeBankAccountsResponse demoFakeBankAccountsResponse = apiClient.fetchAccounts(
                 sessionStorage.get(DemoFakeBankConstants.Storage.USERNAME),
                 sessionStorage.get(DemoFakeBankConstants.Storage.AUTH_TOKEN));
-        List<FakeAccount> fakeAccounts = demoFakeBankAccountsResponse
-                .getAccounts();
         // map bank internal account model to tink account & return
-        return fakeAccounts.stream()
+        return demoFakeBankAccountsResponse.getAccounts().stream()
                 .map(FakeAccount::toTinkCheckingAccount)
                 .collect(Collectors.toList());
     }
