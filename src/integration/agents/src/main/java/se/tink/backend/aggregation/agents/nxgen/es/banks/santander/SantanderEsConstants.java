@@ -62,6 +62,7 @@ public class SantanderEsConstants {
         public static final LogTag LOAN_ACCOUNT = LogTag.from("es_santander_loan");
         public static final LogTag INVESTMENT_ACCOUNT = LogTag.from("es_santander_investment");
         public static final LogTag CREDIT_CARD_TRANSACTION = LogTag.from("es_santander_credit_card_transaction");
+        public static final LogTag ES_SANTANDER_ALL = LogTag.from("es_santander_all");
     }
 
     public static final class LogMessages {

@@ -11,12 +11,15 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderEsAuthenticator implements PasswordAuthenticator {
     private static final Logger LOG = LoggerFactory.getLogger(SantanderEsAuthenticator.class);
+    private static final AggregationLogger AGGREGATION_LOGGER = new AggregationLogger(SantanderEsAuthenticator.class);
 
     private final SantanderEsApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -67,7 +70,8 @@ public class SantanderEsAuthenticator implements PasswordAuthenticator {
 //        logUnknownEngagementNodes(loginResponseNode);
 
         // logging whole response
-        LOG.info("es_santander_all " + responseString);
+//        LOG.info("es_santander_all " + responseString);
+        AGGREGATION_LOGGER.infoExtraLong(responseString, SantanderEsConstants.Tags.ES_SANTANDER_ALL);
 
         String loginResponseString = SantanderEsXmlUtils.convertToString(loginResponseNode);
 
