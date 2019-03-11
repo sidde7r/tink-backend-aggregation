@@ -32,6 +32,5 @@ public class DemoFakeBankApiClient {
     public DemoFakeBankAccountsResponse fetchAccounts(String username, String token) {
         return createRequest(DemoFakeBankConstants.Urls.ACCOUNTS_URL)
                 .post(DemoFakeBankAccountsResponse.class, new DemoFakeBankAccountBody(username, token));
-
     }
 }
