@@ -309,6 +309,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         } catch (ClientHandlerException e) {
             // If pending transactions are unavailable Norwegian sends a HTML response.
             // This is a try/catch will skip pending transactions if this happens.
+            log.warn("Skipping pending since response was in unexpected format.");
         }
 
         // Get billed transactions
