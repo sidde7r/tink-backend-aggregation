@@ -1,7 +1,6 @@
 {
     "clusterid": "farnham-production",
     "providers": [
-        "be-axa-cardreader",
         "be-belfius-cardreader",
         "be-bnppf-jwt",
         "be-ing-cardreader",
