@@ -39,15 +39,17 @@ import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.util.HashSet;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,8 +64,20 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
     private static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount";
     private static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
-    private static final String TRANSACTIONS_URL =
-            BASE_URL + "MyPage2/Transaction/GetTransactions?accountNo=%s&year=%d&month=%d";
+
+
+    private static final int PAGINATION_MONTH_STEP = 3;
+    private static final Date PAGINATION_LIMIT = new GregorianCalendar(2012, 1, 1).getTime();
+    private static final String TRANSACTIONS_PAGINATION_URL =
+            BASE_URL
+                    + "MyPage2/Transaction/GetTransactionsFromTo"
+                    + "?accountNo=%s"
+                    + "&dateFrom=%s"
+                    + "&dateTo=%s"
+                    + "&getLastDays=false"
+                    + "&fromLastEOC=false"
+                    + "&coreDown=false";
+
     private static final String LOGIN_URL = "https://id.banknorwegian.se/std/method/"
             + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
             + "2fLogin%2fSignicatCallback%3fipid%3d22%26returnUrl%3d%252FMinSida";
@@ -290,69 +304,50 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         pageTransactions(account, accountNumber);
     }
 
+
     private void pageTransactions(Account account, String accountNumber)
             throws ParseException, UnsupportedEncodingException {
+
+        final String encodedAccountNumber = URLEncoder.encode(accountNumber, "UTF-8");
+
+        // We will paginate from the current date towards the past.
+        Date toDate = DateTime.now().toDate();
+        Date fromDate = DateUtils.addMonths(toDate, -PAGINATION_MONTH_STEP);
+
+
         List<Transaction> transactions = Lists.newArrayList();
-        Set<Long> isIncludedTransaction = new HashSet<>();
-
-        int month = DateTime.now().monthOfYear().get();
-        int year = DateTime.now().year().get();
-
-        String encodedAccountNumber = URLEncoder.encode(accountNumber, "UTF-8");
-
-        try {
-            // Add reserved (not booked) transactions and recent payments which are not yet billed to the user.
-            TransactionListResponse pendingTransactions = createClientRequest(
-                    String.format(TRANSACTIONS_URL, encodedAccountNumber, 0, 0)).get(TransactionListResponse.class);
-
-            // List<TransactionEntity> filteredPendingTransactions =
-            pendingTransactions.stream()
-                    .filter(this::isReservedPurchaseOrNotBilledPayment)
-                    .peek(transactionEntity -> isIncludedTransaction
-                            .add(transactionEntity.getExternalId())) // Add transaction external ID as included
-                    .map(TransactionEntity::toTransaction)
-                    .forEach(transactions::add);
-        } catch (ClientHandlerException e) {
-            // If pending transactions are unavailable Norwegian sends a HTML response.
-            // This is a try/catch will skip pending transactions if this happens.
-            log.warn("Skipping pending since response was in unexpected format.");
-        }
-
-        // Get billed transactions
         do {
-            TransactionListResponse transactionListResponse = createClientRequest(
-                    String.format(TRANSACTIONS_URL, encodedAccountNumber, year, month))
-                    .get(TransactionListResponse.class);
-
-            transactionListResponse.stream()
-                    .filter(transactionEntity -> !isIncludedTransaction.contains(transactionEntity.getExternalId()))
+            createClientRequest(
+                    getFormattedPaginationUrl(encodedAccountNumber,
+                            fromDate,
+                            toDate))
+                    .get(TransactionListResponse.class)
+                    .stream()
                     .map(TransactionEntity::toTransaction)
                     .forEach(transactions::add);
 
-            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);
+            toDate = fromDate;
+            fromDate = DateUtils.addMonths(fromDate, -PAGINATION_MONTH_STEP);
 
-            month--;
-            if (month == 0) {
-                month = 12;
-                year--;
-            }
-
-            if (year == 2012) {
+            // A hard limit on pagination to stop us from fetching transactions before the birth of christ in
+            // the case where 'certainDate' is not set.
+            if (fromDate.before(PAGINATION_LIMIT)) {
                 break;
             }
+
         } while (!isContentWithRefresh(account, transactions));
 
         financialDataCacher.updateTransactions(account, transactions);
     }
 
-    private boolean isReservedPurchaseOrNotBilledPayment(TransactionEntity transactionEntity) {
-
-        if (transactionEntity.isNotBilledPayment()) {
-            return true;
-        }
-
-        return !transactionEntity.isBooked();
+    private String getFormattedPaginationUrl(final String accountNo, final Date from, final Date to) {
+        return String.format(TRANSACTIONS_PAGINATION_URL, accountNo, toFormattedDate(from), toFormattedDate(to));
     }
+
+    private static String toFormattedDate(final Date date) {
+        return ThreadSafeDateFormat.FORMATTER_DAILY.format(date);
+    }
+
 
     private WebResource.Builder createClientRequest(String url) {
         return client.resource(url).header("User-Agent", DEFAULT_USER_AGENT).accept(MediaType.APPLICATION_JSON);
