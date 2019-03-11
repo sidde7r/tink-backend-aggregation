@@ -32,7 +32,7 @@ public class DemoFakeBankTransactionalAccountsFetcher implements AccountFetcher<
     public Collection<TransactionalAccount> fetchAccounts() {
         // fetch accounts from bank
         DemoFakeBankAccountsResponse demoFakeBankAccountsResponse = apiClient.fetchAccounts(
-                "user@user.com",
+                sessionStorage.get(DemoFakeBankConstants.Storage.USERNAME),
                 sessionStorage.get(DemoFakeBankConstants.Storage.AUTH_TOKEN));
         List<FakeAccount> fakeAccounts = demoFakeBankAccountsResponse
                 .getAccounts();
