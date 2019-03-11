@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAConstants;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
@@ -30,9 +30,9 @@ public class DataItemEntity {
 
     private Date getDate() {
         try {
-            return BBVAConstants.DATE.TRANSACTION_DATE_FORAMT.parse(operationDate.substring(0, 23));
+            return BbvaMxConstants.DATE.TRANSACTION_DATE_FORAMT.parse(operationDate.substring(0, 23));
         } catch (ParseException e) {
-            logger.error("{} {}", BBVAConstants.LOGGING.DATE_PARSING_ERROR, e.toString());
+            logger.error("{} {}", BbvaMxConstants.LOGGING.DATE_PARSING_ERROR, e.toString());
             throw new IllegalStateException("Date is invalid");
         }
     }
@@ -62,7 +62,7 @@ public class DataItemEntity {
                             .setDescription(getDescription())
                             .build());
         } catch (Exception e) {
-            logger.error("{} {}", BBVAConstants.LOGGING.TRANSACTION_PARSING_ERROR, e.toString());
+            logger.error("{} {}", BbvaMxConstants.LOGGING.TRANSACTION_PARSING_ERROR, e.toString());
             return Optional.empty();
         }
     }

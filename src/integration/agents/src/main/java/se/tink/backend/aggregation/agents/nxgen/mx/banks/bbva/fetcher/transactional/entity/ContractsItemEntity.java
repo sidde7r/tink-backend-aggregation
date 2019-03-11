@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAConstants;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAUtils;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -31,14 +31,14 @@ public class ContractsItemEntity {
 
     @JsonIgnore
     private final TypeMapper<AccountTypes> accountTypeMapper =
-            BBVAUtils.getTypeMapper(BBVAConstants.ACCOUNT_TYPES_MAP);
+            BbvaMxUtils.getTypeMapper(BbvaMxConstants.ACCOUNT_TYPES_MAP);
 
     public boolean isValid() {
         try {
             toTransactionalAccount("");
             return true;
         } catch (Exception e) {
-            logger.error("{} {}", BBVAConstants.LOGGING.ACCOUNT_PARSING_ERROR, e.toString());
+            logger.error("{} {}", BbvaMxConstants.LOGGING.ACCOUNT_PARSING_ERROR, e.toString());
             return false;
         }
     }
@@ -52,7 +52,7 @@ public class ContractsItemEntity {
                 .addHolderName(holdername)
                 .setAlias(alias)
                 .setProductName(subProductType.getName())
-                .putInTemporaryStorage(BBVAConstants.STORAGE.ACCOUNT_ID, id)
+                .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
                 .build();
     }
 
@@ -65,7 +65,7 @@ public class ContractsItemEntity {
                 .addHolderName(holdername)
                 .setAlias(alias)
                 .setProductName(subProductType.getName())
-                .putInTemporaryStorage(BBVAConstants.STORAGE.ACCOUNT_ID, id)
+                .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
                 .build();
     }
 

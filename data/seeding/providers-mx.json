@@ -4,7 +4,7 @@
   "providers": [
     {
       "name": "mx-bbva-password",
-      "className": "nxgen.mx.banks.bbva.BBVAAgent",
+      "className": "nxgen.mx.banks.bbva.BbvaMxAgent",
       "credentialsType": "PASSWORD",
       "currency": "MXN",
       "displayName": "BBVA Bancomer",

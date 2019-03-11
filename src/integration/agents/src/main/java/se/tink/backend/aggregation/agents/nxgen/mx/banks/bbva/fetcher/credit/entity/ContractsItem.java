@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAConstants;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
@@ -32,10 +32,10 @@ public class ContractsItem {
                             .setName(
                                     alias) // TODO: check if all Loan/Checking should have the alias
                             // name?
-                            .putInTemporaryStorage(BBVAConstants.STORAGE.ACCOUNT_ID, id)
+                            .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
                             .build());
         } catch (Exception e) {
-            logger.error("{} {}", BBVAConstants.LOGGING.CREDIT_PARSING_ERROR, e.toString());
+            logger.error("{} {}", BbvaMxConstants.LOGGING.CREDIT_PARSING_ERROR, e.toString());
             return Optional.empty();
         }
     }

@@ -2,10 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.BBVAAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.BBVACreditCardFetcher;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan.BBVALoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.BBVATransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.BbvaMxAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit.BbvaMxCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan.BbvaMxLoanFetcher;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.BbvaMxTransactionalAccountFetcher;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -23,14 +23,14 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class BBVAAgent extends NextGenerationAgent {
+public class BbvaMxAgent extends NextGenerationAgent {
 
-    private final BBVAApiClient bbvaApiClient;
+    private final BbvaMxApiClient bbvaApiClient;
 
-    public BBVAAgent(
+    public BbvaMxAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.bbvaApiClient = new BBVAApiClient(client, persistentStorage);
+        this.bbvaApiClient = new BbvaMxApiClient(client, persistentStorage);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class BBVAAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BBVAAuthenticator bbvaAuthenticator =
-                new BBVAAuthenticator(bbvaApiClient, persistentStorage);
+        BbvaMxAuthenticator bbvaAuthenticator =
+                new BbvaMxAuthenticator(bbvaApiClient, persistentStorage);
         return new AutoAuthenticationController(
                 request, context, bbvaAuthenticator, bbvaAuthenticator);
     }
@@ -48,8 +48,8 @@ public class BBVAAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        BBVATransactionalAccountFetcher transactionalAccountFetcher =
-                new BBVATransactionalAccountFetcher(bbvaApiClient, persistentStorage);
+        BbvaMxTransactionalAccountFetcher transactionalAccountFetcher =
+                new BbvaMxTransactionalAccountFetcher(bbvaApiClient, persistentStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
@@ -65,7 +65,7 @@ public class BBVAAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        BBVACreditCardFetcher creditCardFetcher = new BBVACreditCardFetcher(bbvaApiClient);
+        BbvaMxCreditCardFetcher creditCardFetcher = new BbvaMxCreditCardFetcher(bbvaApiClient);
 
         return Optional.of(
                 new CreditCardRefreshController(
@@ -90,7 +90,7 @@ public class BBVAAgent extends NextGenerationAgent {
                 new LoanRefreshController(
                         metricRefreshController,
                         updateController,
-                        new BBVALoanFetcher(bbvaApiClient)));
+                        new BbvaMxLoanFetcher(bbvaApiClient)));
     }
 
     @Override
@@ -106,7 +106,7 @@ public class BBVAAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BBVASessionHandler(bbvaApiClient);
+        return new BbvaMxSessionHandler(bbvaApiClient);
     }
 
     @Override

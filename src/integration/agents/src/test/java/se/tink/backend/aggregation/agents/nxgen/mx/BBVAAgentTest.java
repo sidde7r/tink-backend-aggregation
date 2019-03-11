@@ -7,7 +7,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAConstants;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 
 @Ignore
 public class BBVAAgentTest {
@@ -30,7 +30,7 @@ public class BBVAAgentTest {
         new AgentIntegrationTest.Builder("mx", "mx-bbva-password")
                 .addCredentialField(Field.Key.USERNAME, helper.get("phoneNumber"))
                 .addCredentialField(Field.Key.PASSWORD, helper.get("password"))
-                .addCredentialField(BBVAConstants.FIELDS.CARD_NUMBER, helper.get("cardNumber"))
+                .addCredentialField(BbvaMxConstants.FIELDS.CARD_NUMBER, helper.get("cardNumber"))
                 .loadCredentialsBefore(false)
                 .saveCredentialsAfter(false)
                 .build()

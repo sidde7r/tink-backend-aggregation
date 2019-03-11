@@ -16,14 +16,14 @@ import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class BBVAUtils {
+public class BbvaMxUtils {
 
     public static String generateDeviceId() {
         return RandomStringUtils.randomAlphanumeric(32).toUpperCase();
     }
 
     public static String getUseragent() {
-        return BBVAConstants.VALUES.USER_AGENT_VALUE;
+        return BbvaMxConstants.VALUES.USER_AGENT_VALUE;
     }
 
     public static String generateBoundary() {
@@ -33,18 +33,18 @@ public class BBVAUtils {
     public static String getActivationDataBoundary(
             DeviceActivationRequest request, String boundary) {
         StringBuilder builder = new StringBuilder();
-        builder.append(boundary).append(BBVAConstants.NEW_LINE);
-        builder.append(BBVAConstants.VALUES.CONTENT_DISPOSITION_DATA)
-                .append(BBVAConstants.NEW_LINE)
-                .append(BBVAConstants.NEW_LINE);
+        builder.append(boundary).append(BbvaMxConstants.NEW_LINE);
+        builder.append(BbvaMxConstants.VALUES.CONTENT_DISPOSITION_DATA)
+                .append(BbvaMxConstants.NEW_LINE)
+                .append(BbvaMxConstants.NEW_LINE);
         builder.append(SerializationUtils.serializeToString(request))
-                .append(BBVAConstants.NEW_LINE);
-        builder.append(boundary).append(BBVAConstants.NEW_LINE);
-        builder.append(BBVAConstants.VALUES.CONTENT_DISPOSITION_BIOMETRIC)
-                .append(BBVAConstants.NEW_LINE)
-                .append(BBVAConstants.NEW_LINE)
-                .append(BBVAConstants.NEW_LINE);
-        builder.append(boundary).append(BBVAConstants.DELIMITER);
+                .append(BbvaMxConstants.NEW_LINE);
+        builder.append(boundary).append(BbvaMxConstants.NEW_LINE);
+        builder.append(BbvaMxConstants.VALUES.CONTENT_DISPOSITION_BIOMETRIC)
+                .append(BbvaMxConstants.NEW_LINE)
+                .append(BbvaMxConstants.NEW_LINE)
+                .append(BbvaMxConstants.NEW_LINE);
+        builder.append(boundary).append(BbvaMxConstants.DELIMITER);
         return builder.toString();
     }
 
