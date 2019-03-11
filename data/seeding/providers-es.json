@@ -159,6 +159,35 @@
             ]
         },
         {
+            "name": "es-evobanco-password",
+            "className": "nxgen.es.banks.evobanco.EvoBancoAgent",
+            "displayName": "EvoBanco",
+            "status": "ENABLED",
+            "credentialsType": "PASSWORD",
+            "type": "BANK",
+            "popular": true,
+            "transactional": true,
+            "passwordHelpText": "Use the same username and password as you would in the bank's mobile app.",
+            "fields": [
+                {
+                    "name": "username",
+                    "description": "Username",
+                    "immutable": true
+                },
+                {
+                    "name": "password",
+                    "description": "Password",
+                    "numeric": true,
+                    "masked": true,
+                    "sensitive": true,
+                    "pattern": "([0-9]{6})",
+                    "patternError": "Please enter your 6 digit online PIN.",
+                    "minLength": 6,
+                    "maxLength": 6
+                }
+            ]
+        },
+        {
             "name": "es-ibercaja-password",
             "className": "nxgen.es.banks.ibercaja.IberCajaAgent",
             "displayName": "IberCaja",
