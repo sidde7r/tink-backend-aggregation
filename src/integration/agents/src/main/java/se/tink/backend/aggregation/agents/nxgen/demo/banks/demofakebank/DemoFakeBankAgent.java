@@ -47,7 +47,7 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
         DemoFakeBankTransactionalAccountsFetcher transactionalAccountsFetcher =
-                new DemoFakeBankTransactionalAccountsFetcher(apiClient);
+                new DemoFakeBankTransactionalAccountsFetcher(apiClient, sessionStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(

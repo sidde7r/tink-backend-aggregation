@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
@@ -10,18 +10,24 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class FakeAccount {
 
-    //TODO: Align this with how the account looks in the Demo Fake Bank
-    @JsonProperty
-    private String accountType;
-    @JsonProperty
-    private double balance;
-    @JsonProperty
+    @JsonProperty("accountType")
+    private AccountType accountType;
+    @JsonProperty("accountNumber")
     private String accountNumber;
+    @JsonProperty("balance")
+    private double balance;
+    @JsonProperty("currency")
+    private String currency;
 
-    public FakeAccount(String accountType, double balance, String accountNumber) {
+    public FakeAccount() {
+    }
+
+    @JsonIgnore
+    public FakeAccount(AccountType accountType, String accountNumber, double balance, String currency) {
         this.accountType = accountType;
-        this.balance = balance;
         this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.currency = currency;
     }
 
     @JsonIgnore
@@ -42,5 +48,21 @@ public class FakeAccount {
 
     public double getBalance() {
         return balance;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

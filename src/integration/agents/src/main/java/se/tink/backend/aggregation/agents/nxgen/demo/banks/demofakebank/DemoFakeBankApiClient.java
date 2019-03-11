@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 import javax.ws.rs.core.MediaType;
-import java.util.Collections;
 
 public class DemoFakeBankApiClient {
     private final TinkHttpClient client;
@@ -28,9 +27,9 @@ public class DemoFakeBankApiClient {
                 .accept(MediaType.APPLICATION_JSON_TYPE);
     }
 
-    public FakeAccounts fetchAccounts() {
-        return new FakeAccounts(Collections.singletonList(
-                new FakeAccount("TransactionalAccount", 200, "15629906")));
-        //TODO: get real accounts from bank
+    public DemoFakeBankAccountsResponse fetchAccounts(String username, String token) {
+        return createRequest(DemoFakeBankConstants.Urls.ACCOUNTS_URL)
+                .post(DemoFakeBankAccountsResponse.class, new DemoFakeBankAccountBody(username, token));
+
     }
 }
