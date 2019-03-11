@@ -3,7 +3,7 @@
   "currency": "GBP",
   "providers": [
       {
-        "name": "uk-test-password",
+        "name": "gb-test-password",
         "className": "nxgen.demo.banks.password.PasswordDemoAgent",
         "displayDescription": "Password",
         "credentialsType": "PASSWORD",
@@ -30,7 +30,7 @@
         "type": "TEST"
     },
     {
-        "name": "uk-test-multi-supplemental",
+        "name": "gb-test-multi-supplemental",
         "className": "nxgen.demo.banks.multisupplemental.MultiSupplementalDemoAgent",
         "displayDescription": "Password",
         "credentialsType": "PASSWORD",
