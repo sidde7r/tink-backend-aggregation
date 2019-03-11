@@ -28,4 +28,11 @@ public class LaCaixaErrorResponse {
                 .toUpperCase()
                 .equalsIgnoreCase(LaCaixaConstants.ErrorCode.NO_SECURITIES);
     }
+
+    @JsonIgnore
+    public boolean isUserHasNoLoans() {
+        return Strings.nullToEmpty(message)
+                .trim()
+                .equalsIgnoreCase(LaCaixaConstants.ErrorMessage.NO_ASSOCIATED_ACCOUNT);
+    }
 }
