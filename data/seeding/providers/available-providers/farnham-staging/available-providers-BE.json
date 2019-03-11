@@ -1,12 +1,13 @@
 {
-  "clusterid" : "farnham-staging",
-  "providers" : [
-    "be-belfius-cardreader",
-    "be-bnppf-jwt",
-    "be-demo",
-    "be-ing-cardreader",
-    "be-kbc-cardreader",
-    "be-test-password",
-    "be-test-multi-supplemental"
-  ]
+    "clusterid": "farnham-staging",
+    "providers": [
+        "be-axa-cardreader",
+        "be-belfius-cardreader",
+        "be-bnppf-jwt",
+        "be-demo",
+        "be-ing-cardreader",
+        "be-kbc-cardreader",
+        "be-test-multi-supplemental",
+        "be-test-password"
+    ]
 }
