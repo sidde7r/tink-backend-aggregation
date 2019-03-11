@@ -100,6 +100,8 @@
     "no-vekselbanken",
     "no-vestre-slidre-sparebank",
     "no-vik-sparebank",
-    "no-ya-bank"
+    "no-ya-bank",
+    "no-test-password",
+    "no-test-multi-supplemental"
   ]
 }

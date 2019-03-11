@@ -3,6 +3,8 @@
   "providers" : [
     "gb-americanexpress",
     "gb-citibank",
-    "gb-danskebank"
+    "gb-danskebank",
+    "gb-test-password",
+    "gb-test-multi-supplemental"
   ]
 }
