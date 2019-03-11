@@ -4,8 +4,6 @@ import com.google.common.base.Strings;
 import java.util.Date;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.DeviceActivationRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.DigitalActivationRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.GrantingTicketRequest;
@@ -27,7 +25,6 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -88,17 +85,10 @@ public class BBVAApiClient {
     }
 
     // AUTH
-    public GrantingTicketResponse grantTicket(GrantingTicketRequest request) throws LoginException {
-        HttpResponse res = null;
-        try {
-            res =
-                    getGlomoRequest(BBVAConstants.URLS.GRANT_TICKET, MediaType.APPLICATION_JSON)
-                            .post(
-                                    HttpResponse.class,
-                                    SerializationUtils.serializeToString(request));
-        } catch (HttpClientException hce) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        }
+    public GrantingTicketResponse grantTicket(GrantingTicketRequest request) {
+        HttpResponse res =
+                getGlomoRequest(BBVAConstants.URLS.GRANT_TICKET, MediaType.APPLICATION_JSON)
+                        .post(HttpResponse.class, SerializationUtils.serializeToString(request));
 
         String tsec = res.getHeaders().getFirst(BBVAConstants.HEADERS.TSEC);
         this.storage.put(BBVAConstants.STORAGE.TSEC, tsec);
@@ -212,7 +202,8 @@ public class BBVAApiClient {
                 .get(TransactionsResponse.class);
     }
 
-    public CreditTransactionsResponse fetchCreditTransactions(String accountId, Date fromDate, Date toDate) {
+    public CreditTransactionsResponse fetchCreditTransactions(
+            String accountId, Date fromDate, Date toDate) {
         String resource = String.format(BBVAConstants.URLS.CREDIT_TRANSACTIONS, accountId);
         return getGlomoRequest(resource, MediaType.APPLICATION_JSON)
                 .queryParam(

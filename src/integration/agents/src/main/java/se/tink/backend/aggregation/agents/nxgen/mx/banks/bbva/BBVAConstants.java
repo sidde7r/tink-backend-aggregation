@@ -32,6 +32,11 @@ public class BBVAConstants {
                 new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     }
 
+    public static class ERROR {
+        public static final String NO_ACCOUNT_FOUND_CODE = "160";
+        public static final String INCORRECT_CREDENTIALS_CODE = "161";
+    }
+
     public static class URLS {
         public static final String HOST_GLOMO = "https://glomo.bancomermovil.com";
         public static final String GRANT_TICKET =
@@ -144,6 +149,8 @@ public class BBVAConstants {
         public static final LogTag AUTO_AUTH = LogTag.from("BBVA_AUTO_AUTH");
         public static final LogTag LOAN_PARSING_ERROR = LogTag.from("BBVA_LOAN_PARSING_ERROR");
         public static final LogTag CREDIT_PARSING_ERROR = LogTag.from("BBVA_CREDIT_PARSING_ERROR");
-        public static final LogTag CREDIT_TRANSACTION_PARSING_ERROR = LogTag.from("BBVA_CREDIT_TRANSACTION_PARSING_ERROR");
+        public static final LogTag CREDIT_TRANSACTION_PARSING_ERROR =
+                LogTag.from("BBVA_CREDIT_TRANSACTION_PARSING_ERROR");
+        public static final LogTag UNKNOWN_LOGIN_ERROR = LogTag.from("BBVA_UNKNOWN_LOGIN_ERROR");
     }
 }

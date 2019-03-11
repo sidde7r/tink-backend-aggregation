@@ -27,7 +27,11 @@ public class BBVACreditCardFetcher
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return client.fetchCredit().getCreditCardAccounts();
+        try {
+            return client.fetchCredit().getCreditCardAccounts();
+        } catch (HttpResponseException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override

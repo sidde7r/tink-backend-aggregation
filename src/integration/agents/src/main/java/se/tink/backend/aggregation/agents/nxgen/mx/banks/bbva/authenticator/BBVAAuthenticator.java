@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.DigitalActivationRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.GrantingTicketRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.GrantingTicketResponse;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.LoginErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.RegisterTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.TokenActivationRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.TokenActivationResponse;
@@ -27,7 +28,7 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.CustomerInfoResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BBVAAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
@@ -82,7 +83,17 @@ public class BBVAAuthenticator implements MultiFactorAuthenticator, AutoAuthenti
             throws LoginException {
         try {
             return client.grantTicket(new GrantingTicketRequest(phoneNumber, password));
-        } catch (HttpClientException e) {
+        } catch (HttpResponseException e) {
+            LoginErrorResponse err = e.getResponse().getBody(LoginErrorResponse.class);
+
+            if (BBVAConstants.ERROR.NO_ACCOUNT_FOUND_CODE.equalsIgnoreCase(err.getErrorCode())
+                    || BBVAConstants.ERROR.INCORRECT_CREDENTIALS_CODE.equalsIgnoreCase(
+                            err.getErrorCode())) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            logger.error(
+                    "{} LoginError: {}", BBVAConstants.LOGGING.UNKNOWN_LOGIN_ERROR, e.toString());
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
     }
@@ -152,7 +163,7 @@ public class BBVAAuthenticator implements MultiFactorAuthenticator, AutoAuthenti
 
         try {
             client.grantTicket(new GrantingTicketRequest(phonenumber, password));
-        } catch (LoginException e) {
+        } catch (HttpResponseException e) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
