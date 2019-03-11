@@ -23,14 +23,6 @@ public class FakeAccount {
     }
 
     @JsonIgnore
-    public FakeAccount(AccountType accountType, String accountNumber, double balance, String currency) {
-        this.accountType = accountType;
-        this.accountNumber = accountNumber;
-        this.balance = balance;
-        this.currency = currency;
-    }
-
-    @JsonIgnore
     public CheckingAccount toTinkCheckingAccount() {
         return CheckingAccount.builder()
                 .setUniqueIdentifier(getAccountNumber())
