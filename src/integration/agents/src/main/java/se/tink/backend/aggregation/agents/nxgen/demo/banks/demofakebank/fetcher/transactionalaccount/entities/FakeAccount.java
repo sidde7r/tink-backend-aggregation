@@ -27,7 +27,7 @@ public class FakeAccount {
         return CheckingAccount.builder()
                 .setUniqueIdentifier(getAccountNumber())
                 .setAccountNumber(getAccountNumber())
-                .setBalance(Amount.inSEK(getBalance())) // TODO: What is the currency?
+                .setBalance(new Amount(currency, balance))
                 .addAccountIdentifier(
                         new SwedishIdentifier(
                                 getAccountNumber())) // TODO: What should the identifier be? clearing etc?
