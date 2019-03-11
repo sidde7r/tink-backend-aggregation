@@ -3,6 +3,7 @@
     "providers": [
         "be-americanexpress-password",
         "be-argenta-cardreader",
+        "be-axa-cardreader",
         "be-belfius-cardreader",
         "be-demo",
         "be-fortis-cardreader",
