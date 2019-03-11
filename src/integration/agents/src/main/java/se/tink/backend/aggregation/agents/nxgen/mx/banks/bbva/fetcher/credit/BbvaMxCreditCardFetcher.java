@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class BbvaMxCreditCardFetcher
         implements AccountFetcher<CreditCardAccount>,
@@ -20,15 +21,17 @@ public class BbvaMxCreditCardFetcher
                 UpcomingTransactionFetcher<CreditCardAccount> {
 
     private final BbvaMxApiClient client;
+    private final PersistentStorage storage;
 
-    public BbvaMxCreditCardFetcher(BbvaMxApiClient client) {
+    public BbvaMxCreditCardFetcher(BbvaMxApiClient client, PersistentStorage storage) {
         this.client = client;
+        this.storage = storage;
     }
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         try {
-            return client.fetchCredit().getCreditCardAccounts();
+            return client.fetchCredit().getCreditCardAccounts(storage.get(BbvaMxConstants.STORAGE.HOLDERNAME));
         } catch (HttpResponseException e) {
             return Collections.emptyList();
         }

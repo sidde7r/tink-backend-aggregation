@@ -65,7 +65,7 @@ public class BbvaMxAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        BbvaMxCreditCardFetcher creditCardFetcher = new BbvaMxCreditCardFetcher(bbvaApiClient);
+        BbvaMxCreditCardFetcher creditCardFetcher = new BbvaMxCreditCardFetcher(bbvaApiClient, persistentStorage);
 
         return Optional.of(
                 new CreditCardRefreshController(

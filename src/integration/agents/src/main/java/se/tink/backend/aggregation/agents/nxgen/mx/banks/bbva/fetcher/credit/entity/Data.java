@@ -11,10 +11,10 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 public class Data {
     private List<ContractsItem> contracts;
 
-    public Collection<CreditCardAccount> getCreditCardAccounts() {
+    public Collection<CreditCardAccount> getCreditCardAccounts(String holdername) {
         return contracts
                 .stream()
-                .map(x -> x.toCreditCardAccount())
+                .map(x -> x.toCreditCardAccount(holdername))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

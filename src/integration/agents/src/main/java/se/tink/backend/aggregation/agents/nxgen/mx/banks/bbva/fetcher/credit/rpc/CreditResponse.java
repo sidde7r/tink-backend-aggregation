@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 public class CreditResponse {
     private Data data;
 
-    public Collection<CreditCardAccount> getCreditCardAccounts() {
-        return data.getCreditCardAccounts();
+    public Collection<CreditCardAccount> getCreditCardAccounts(String holdername) {
+        return data.getCreditCardAccounts(holdername);
     }
 }
