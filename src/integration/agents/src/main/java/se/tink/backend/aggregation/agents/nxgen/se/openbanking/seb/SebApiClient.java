@@ -86,7 +86,7 @@ public final class SebApiClient {
             persistenceStorage.get(SebConstants.StorageKeys.CLIENT_SECRET),
             persistenceStorage.get(SebConstants.StorageKeys.REDIRECT_URI),
             code,
-            SebConstants.QueryValues.GRAND_TYPE,
+            SebConstants.QueryValues.GRANT_TYPE,
             SebConstants.QueryValues.SCOPE);
 
     return client

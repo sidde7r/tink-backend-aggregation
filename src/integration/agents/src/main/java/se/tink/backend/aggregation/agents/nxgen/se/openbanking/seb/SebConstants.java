@@ -30,7 +30,7 @@ public abstract class SebConstants {
     public static class QueryValues {
         public static final String RESPONSE_TYPE_TOKEN = "code";
         public static final String SCOPE = "psd2_accounts";
-        public static final String GRAND_TYPE = "authorization_code";
+        public static final String GRANT_TYPE = "authorization_code";
         public static final String BOOKED_TRANSACTIONS = "booked";
         public static final String WITH_BALANCE = "true";
     }
