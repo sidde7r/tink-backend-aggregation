@@ -38,6 +38,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
@@ -68,15 +69,24 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
     private static final int PAGINATION_MONTH_STEP = 3;
     private static final Date PAGINATION_LIMIT = new GregorianCalendar(2012, 1, 1).getTime();
-    private static final String TRANSACTIONS_PAGINATION_URL =
-            BASE_URL
-                    + "MyPage2/Transaction/GetTransactionsFromTo"
-                    + "?accountNo=%s"
-                    + "&dateFrom=%s"
-                    + "&dateTo=%s"
-                    + "&getLastDays=false"
-                    + "&fromLastEOC=false"
-                    + "&coreDown=false";
+
+    private static class QueryKeys {
+        private static final String ACCOUNT_NUMBER = "accountNo";
+        private static final String DATE_FROM = "dateFrom";
+        private static final String DATE_TO = "dateTo";
+        private static final String GET_LAST_DAYS = "getLastDays";
+        private static final String FROM_LAST_EOC = "fromLastEOC";
+        private static final String CORE_DOWN = "coreDown";
+    }
+
+    private static class QueryValues {
+        private static final String GET_LAST_DAYS = "false";
+        private static final String FROM_LAST_EOC = "false";
+        private static final String CORE_DOWN = "false";
+    }
+
+    private static final URL TRANSACTIONS_PAGINATION_URL = new URL(BASE_URL +
+            "MyPage2/Transaction/GetTransactionsFromTo");
 
     private static final String LOGIN_URL = "https://id.banknorwegian.se/std/method/"
             + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
@@ -343,7 +353,13 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     }
 
     private String getFormattedPaginationUrl(final String accountNo, final Date from, final Date to) {
-        return String.format(TRANSACTIONS_PAGINATION_URL, accountNo, toFormattedDate(from), toFormattedDate(to));
+        return TRANSACTIONS_PAGINATION_URL.queryParam(QueryKeys.ACCOUNT_NUMBER, accountNo)
+                .queryParam(QueryKeys.DATE_FROM, toFormattedDate(from))
+                .queryParam(QueryKeys.DATE_TO, toFormattedDate(to))
+                .queryParam(QueryKeys.CORE_DOWN, QueryValues.CORE_DOWN)
+                .queryParam(QueryKeys.GET_LAST_DAYS, QueryValues.GET_LAST_DAYS)
+                .queryParam(QueryKeys.FROM_LAST_EOC, QueryValues.FROM_LAST_EOC)
+                .toString();
     }
 
     private static String toFormattedDate(final Date date) {
