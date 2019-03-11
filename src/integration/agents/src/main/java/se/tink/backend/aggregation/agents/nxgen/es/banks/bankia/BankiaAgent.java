@@ -6,6 +6,7 @@ import java.util.Random;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.BankiaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.creditcard.BankiaCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.BankiaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.BankiaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.session.BankiaSessionHandler;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
@@ -58,7 +59,8 @@ public final class BankiaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {}
+    protected void configureHttpClient(TinkHttpClient client) {
+    }
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -68,7 +70,7 @@ public final class BankiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-            constructTransactionalAccountRefreshController() {
+    constructTransactionalAccountRefreshController() {
         BankiaTransactionalAccountFetcher fetcher =
                 new BankiaTransactionalAccountFetcher(apiClient);
         return Optional.of(
@@ -99,7 +101,8 @@ public final class BankiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
+        return Optional.of(new LoanRefreshController(metricRefreshController, updateController,
+                new BankiaLoanFetcher(apiClient)));
     }
 
     @Override
@@ -109,7 +112,7 @@ public final class BankiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-            constructTransferDestinationRefreshController() {
+    constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
