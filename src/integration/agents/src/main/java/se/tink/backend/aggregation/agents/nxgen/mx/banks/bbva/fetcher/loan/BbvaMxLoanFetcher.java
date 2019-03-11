@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan;
 
 import java.util.Collection;
 import java.util.Collections;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -20,7 +21,10 @@ public class BbvaMxLoanFetcher implements AccountFetcher<LoanAccount> {
         try {
             return client.fetchLoans().getLoanAccounts();
         } catch (HttpResponseException e) {
-            return Collections.EMPTY_LIST;
+            if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT) {
+                return Collections.emptyList();
+            }
+            throw e;
         }
     }
 }

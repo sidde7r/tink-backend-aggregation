@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transacti
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxApiClient;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -30,8 +31,15 @@ public class BbvaMxTransactionalAccountFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return client.fetchAccounts()
-                .toTransactionalAccounts(storage.get(BbvaMxConstants.STORAGE.HOLDERNAME));
+        try {
+            return client.fetchAccounts()
+                    .toTransactionalAccounts(storage.get(BbvaMxConstants.STORAGE.HOLDERNAME));
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT) {
+                return Collections.emptyList();
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -47,7 +55,10 @@ public class BbvaMxTransactionalAccountFetcher
         try {
             return client.fetchTransactions(accountId, fromDate, toDate);
         } catch (HttpResponseException e) {
-            return PaginatorResponseImpl.createEmpty(false);
+            if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT) {
+                return PaginatorResponseImpl.createEmpty(false);
+            }
+            throw e;
         }
     }
 }

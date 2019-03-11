@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.credit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxApiClient;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -31,9 +32,13 @@ public class BbvaMxCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         try {
-            return client.fetchCredit().getCreditCardAccounts(storage.get(BbvaMxConstants.STORAGE.HOLDERNAME));
+            return client.fetchCredit()
+                    .getCreditCardAccounts(storage.get(BbvaMxConstants.STORAGE.HOLDERNAME));
         } catch (HttpResponseException e) {
-            return Collections.emptyList();
+            if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT) {
+                return Collections.emptyList();
+            }
+            throw e;
         }
     }
 
@@ -44,7 +49,10 @@ public class BbvaMxCreditCardFetcher
         try {
             return client.fetchCreditTransactions(accountId, fromDate, toDate);
         } catch (HttpResponseException e) {
-            return PaginatorResponseImpl.createEmpty(false);
+            if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT) {
+                return PaginatorResponseImpl.createEmpty(false);
+            }
+            throw e;
         }
     }
 
