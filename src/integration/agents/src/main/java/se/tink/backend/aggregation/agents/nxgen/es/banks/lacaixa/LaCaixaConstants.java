@@ -52,6 +52,10 @@ public class LaCaixaConstants {
         public static String NO_SECURITIES = "131";
     }
 
+    public static class ErrorMessage {
+        public static final String NO_ASSOCIATED_ACCOUNT = "WITHOUT ASSOCIATED CONTRACTS/ACCOUNTS";
+    }
+
     public static class Urls {
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
