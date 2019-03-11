@@ -6,7 +6,7 @@
     "be-demo",
     "be-ing-cardreader",
     "be-kbc-cardreader",
-    "be-test-password",
-    "be-test-multi-supplemental"
+    "be-test-multi-supplemental",
+    "be-test-password"
   ]
 }
