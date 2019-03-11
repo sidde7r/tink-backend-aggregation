@@ -1,6 +1,7 @@
-package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
+package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.entities.FakeAccount;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 import java.util.List;
