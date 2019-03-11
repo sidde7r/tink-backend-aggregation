@@ -99,6 +99,20 @@ spec:
       imagePullSecrets:
       - name: tink-containers
 
+      tolerations:
+      - key: node-role.kubernetes.io/spot-worker
+        effect: NoSchedule
+        operator: Exists
+
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: node-role.kubernetes.io/spot-worker
+                operator: Exists
+
 {{- if eq "local" .Values.Cluster }}
 ---
 apiVersion: v1
