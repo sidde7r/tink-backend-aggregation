@@ -1,17 +1,17 @@
 {
-  "clusterid" : "oxford-production",
-  "providers" : [
-    "be-americanexpress-password",
-    "be-argenta-cardreader",
-    "be-belfius-cardreader",
-    "be-demo",
-    "be-fortis-cardreader",
-    "be-hellobank-cardreader",
-    "be-ing-cardreader",
-    "be-kbc-cardreader",
-    "be-n26-password",
-    "be-revolut-password",
-    "be-test-multi-supplemental",
-    "be-test-password"
-  ]
+    "clusterid": "oxford-production",
+    "providers": [
+        "be-americanexpress-password",
+        "be-argenta-cardreader",
+        "be-belfius-cardreader",
+        "be-demo",
+        "be-fortis-cardreader",
+        "be-hellobank-cardreader",
+        "be-ing-cardreader",
+        "be-kbc-cardreader",
+        "be-n26-password",
+        "be-revolut-password",
+        "be-test-multi-supplemental",
+        "be-test-password"
+    ]
 }
