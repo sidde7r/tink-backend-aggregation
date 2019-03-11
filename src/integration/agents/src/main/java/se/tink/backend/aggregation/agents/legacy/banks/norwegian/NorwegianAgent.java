@@ -3,10 +3,9 @@ package se.tink.backend.aggregation.agents.banks.norwegian;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
-import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -69,12 +68,19 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
             + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
             + "2fLogin%2fSignicatCallback%3fipid%3d22%26returnUrl%3d%252FMinSida";
 
-    private final ApacheHttpClient4 client;
+    private final Client client;
     private boolean hasRefreshed = false;
 
     public NorwegianAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
+//        DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
+//        config.getProperties().put(
+//                ApacheHttpClient4Config.PROPERTY_PROXY_URI,
+//                "http://127.0.0.1:8888"
+//        );
+//        client = clientFactory.createProxyClient(context.getLogOutputStream(), config);
+        
         client = clientFactory.createCookieClient(context.getLogOutputStream());
     }
 
