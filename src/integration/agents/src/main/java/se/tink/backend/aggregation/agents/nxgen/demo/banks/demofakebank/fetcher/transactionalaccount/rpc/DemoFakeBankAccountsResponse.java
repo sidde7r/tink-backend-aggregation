@@ -15,8 +15,7 @@ public class DemoFakeBankAccountsResponse {
     @JsonProperty
     private List<FakeAccount> accounts;
 
-    public DemoFakeBankAccountsResponse() {
-    }
+    public DemoFakeBankAccountsResponse() {}
 
     public List<FakeAccount> getAccounts() {
         return accounts;

@@ -9,14 +9,16 @@ import java.util.Date;
 
 public class DemoFakeBankTransactionFetcher {
 
-    public DemoFakeBankTransactionFetcher() {
-    }
+    public DemoFakeBankTransactionFetcher() {}
 
-    public TransactionKeyPaginatorResponse<Date> fetchTransactionsFor(TransactionalAccount account, Date date) {
+    public TransactionKeyPaginatorResponse<Date> fetchTransactionsFor(
+            TransactionalAccount account, Date date) {
 
-        TransactionKeyPaginatorResponseImpl<Date> response = new TransactionKeyPaginatorResponseImpl<>();
+        TransactionKeyPaginatorResponseImpl<Date> response =
+                new TransactionKeyPaginatorResponseImpl<>();
 
-        response.setTransactions(Collections.emptyList()); // TODO: get real transactions from bank via apiClient.fetchTransactions()
+        // TODO: get real transactions from bank via apiClient.fetchTransactions()
+        response.setTransactions(Collections.emptyList());
 
         return response;
     }

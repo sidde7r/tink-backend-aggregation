@@ -19,8 +19,7 @@ public class FakeAccount {
     @JsonProperty
     private String currency;
 
-    public FakeAccount() {
-    }
+    public FakeAccount() {}
 
     @JsonIgnore
     public CheckingAccount toTinkCheckingAccount() {
@@ -30,7 +29,8 @@ public class FakeAccount {
                 .setBalance(new Amount(currency, balance))
                 .addAccountIdentifier(
                         new SwedishIdentifier(
-                                getAccountNumber())) // TODO: What should the identifier be? clearing etc?
+                                getAccountNumber())) // TODO: What should the identifier be?
+                                                     // clearing etc?
                 .build();
     }
 
@@ -61,5 +61,4 @@ public class FakeAccount {
     public boolean isTransactionalAccount() {
         return this.accountType.equals(AccountType.TRANSACTIONAL);
     }
-
 }

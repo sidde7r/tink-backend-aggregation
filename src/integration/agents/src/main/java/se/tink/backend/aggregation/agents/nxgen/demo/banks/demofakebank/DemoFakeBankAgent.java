@@ -30,7 +30,8 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     private final DemoFakeBankApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public DemoFakeBankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public DemoFakeBankAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new DemoFakeBankApiClient(client);
         sessionStorage = new SessionStorage();
@@ -46,7 +47,8 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         DemoFakeBankTransactionalAccountsFetcher transactionalAccountsFetcher =
                 new DemoFakeBankTransactionalAccountsFetcher(apiClient, sessionStorage);
 
@@ -57,10 +59,8 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
                         transactionalAccountsFetcher,
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionKeyPaginationController<>(transactionalAccountsFetcher)
-                        )
-                )
-        );
+                                new TransactionKeyPaginationController<>(
+                                        transactionalAccountsFetcher))));
     }
 
     @Override
@@ -84,7 +84,8 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

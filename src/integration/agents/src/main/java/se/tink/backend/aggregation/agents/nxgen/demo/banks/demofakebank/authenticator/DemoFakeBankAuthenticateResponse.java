@@ -7,8 +7,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DemoFakeBankAuthenticateResponse {
     @JsonProperty("token")
     private String token;
+
     private String status;
 
-    public String getToken() { return token; }
-    public String getStatus() { return status; }
+    public String getToken() {
+        return token;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

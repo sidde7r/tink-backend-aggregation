@@ -21,12 +21,15 @@ public class DemoFakeBankAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         try {
-            DemoFakeBankAuthenticateResponse response = client.authenticate(
-                    new DemoFakeBankAuthenticationBody(username, password));
+            DemoFakeBankAuthenticateResponse response =
+                    client.authenticate(new DemoFakeBankAuthenticationBody(username, password));
 
-            if(response.getStatus() != null && response.getStatus().equals(DemoFakeBankConstants.Responses.SUCCESS_STRING)) {
+            if (response.getStatus() != null
+                    && response.getStatus()
+                            .equals(DemoFakeBankConstants.Responses.SUCCESS_STRING)) {
                 sessionStorage.put(DemoFakeBankConstants.Storage.AUTH_TOKEN, response.getToken());
                 sessionStorage.put(DemoFakeBankConstants.Storage.USERNAME, username);
             }
@@ -37,7 +40,7 @@ public class DemoFakeBankAuthenticator implements PasswordAuthenticator {
 
     private void handleAuthenticationException(HttpResponseException e) throws LoginException {
         HttpResponse response = e.getResponse();
-        //TODO: Handle exception!
+        // TODO: Handle exception!
         throw e;
     }
 }

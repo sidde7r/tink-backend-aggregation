@@ -14,14 +14,16 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-public class DemoFakeBankTransactionalAccountsFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, Date> {
+public class DemoFakeBankTransactionalAccountsFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, Date> {
 
     private final DemoFakeBankApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final DemoFakeBankTransactionFetcher demoFakeBankTransactionFetcher;
 
-    public DemoFakeBankTransactionalAccountsFetcher(DemoFakeBankApiClient apiClient, SessionStorage sessionStorage) {
+    public DemoFakeBankTransactionalAccountsFetcher(
+            DemoFakeBankApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
         this.demoFakeBankTransactionFetcher = new DemoFakeBankTransactionFetcher();
@@ -29,17 +31,20 @@ public class DemoFakeBankTransactionalAccountsFetcher implements AccountFetcher<
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        DemoFakeBankAccountsResponse demoFakeBankAccountsResponse = apiClient.fetchAccounts(
-                sessionStorage.get(DemoFakeBankConstants.Storage.USERNAME),
-                sessionStorage.get(DemoFakeBankConstants.Storage.AUTH_TOKEN));
+        DemoFakeBankAccountsResponse demoFakeBankAccountsResponse =
+                apiClient.fetchAccounts(
+                        sessionStorage.get(DemoFakeBankConstants.Storage.USERNAME),
+                        sessionStorage.get(DemoFakeBankConstants.Storage.AUTH_TOKEN));
 
-        return demoFakeBankAccountsResponse.getAccounts().stream().filter(FakeAccount::isTransactionalAccount)
+        return demoFakeBankAccountsResponse.getAccounts().stream()
+                .filter(FakeAccount::isTransactionalAccount)
                 .map(FakeAccount::toTinkCheckingAccount)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<Date> getTransactionsFor(TransactionalAccount account, Date key) {
+    public TransactionKeyPaginatorResponse<Date> getTransactionsFor(
+            TransactionalAccount account, Date key) {
         return demoFakeBankTransactionFetcher.fetchTransactionsFor(account, key);
     }
 }
