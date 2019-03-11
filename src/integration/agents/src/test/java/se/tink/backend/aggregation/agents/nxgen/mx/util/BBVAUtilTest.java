@@ -2,20 +2,20 @@ package se.tink.backend.aggregation.agents.nxgen.mx.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAUtils;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxUtils;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.DeviceActivationRequest;
 
 public class BBVAUtilTest {
 
     @Test
     public void verifyGenerateTokenHash() {
-        String result = BBVAUtils.generateTokenHash("0119763213");
+        String result = BbvaMxUtils.generateTokenHash("0119763213");
         Assert.assertEquals("VE_LHUNk51PnRmwbeSrp245u-cDlTB6fQHw0IhMhUVU=", result);
     }
 
     @Test
     public void verifyCalculateSoftwareAuthCodeHash() {
-        String result = BBVAUtils.calculateSoftwareAuthCodeHash("0119763213");
+        String result = BbvaMxUtils.calculateSoftwareAuthCodeHash("0119763213");
         Assert.assertEquals(
                 "544fcb1d4364e753e7466c1b792ae9db8e6ef9c0e54c1e9f407c342213215155", result);
     }
@@ -23,7 +23,7 @@ public class BBVAUtilTest {
     @Test
     public void verifyCalculateData() {
         String result =
-                BBVAUtils.calculateData(
+                BbvaMxUtils.calculateData(
                         "544fcb1d4364e753e7466c1b792ae9db8e6ef9c0e54c1e9f407c342213215155",
                         "RETAILMX",
                         "1.0",
@@ -41,11 +41,11 @@ public class BBVAUtilTest {
                 "30820122300d06092a864886f70d01010105000382010f003082010a0282010100d8ccfa19a1e665ae13c0892b2a29bccaae5793f06d7604eb9f72857ca4743341e592c677500119cd279b0daaa2b1ef917b44ef05afa98177f6c0f7397d665b8ea8a5d5e413e6944087b5fd543f9400bc78396679896c1a04c328d1e8c9302057b4a51aa1044609fc4e00125dceb8609ffd8e5acbf7fe2f14e443933188c64931f696bcf16c939a47ba5899d674eee384c65540aeaa23c38ed72b309250a90b410eb503d82b01c77521158b31bd679a962e78ead1f383fab7d49db3161e4269ece4433e286fa2eeaf887c3b06af7535e30ccee5901ffd35803d87aed90bc8a340d0123b1c34763e7fa24d50b6844f89b4aca6f1a6157ad8b204453da2c600d6130203010001";
 
         String result =
-                BBVAUtils.calculateData(
+                BbvaMxUtils.calculateData(
                         tokenHash, applicationCode, applicationVersion, publicKeyHex);
 
         String aesDataResult =
-                BBVAUtils.getAuthenticationCodePlaintext(
+                BbvaMxUtils.getAuthenticationCodePlaintext(
                         tokenHash, applicationCode, applicationVersion, result, publicKeyHex);
 
         Assert.assertEquals(
@@ -64,7 +64,7 @@ public class BBVAUtilTest {
                 "30820122300d06092a864886f70d01010105000382010f003082010a0282010100d8ccfa19a1e665ae13c0892b2a29bccaae5793f06d7604eb9f72857ca4743341e592c677500119cd279b0daaa2b1ef917b44ef05afa98177f6c0f7397d665b8ea8a5d5e413e6944087b5fd543f9400bc78396679896c1a04c328d1e8c9302057b4a51aa1044609fc4e00125dceb8609ffd8e5acbf7fe2f14e443933188c64931f696bcf16c939a47ba5899d674eee384c65540aeaa23c38ed72b309250a90b410eb503d82b01c77521158b31bd679a962e78ead1f383fab7d49db3161e4269ece4433e286fa2eeaf887c3b06af7535e30ccee5901ffd35803d87aed90bc8a340d0123b1c34763e7fa24d50b6844f89b4aca6f1a6157ad8b204453da2c600d6130203010001";
 
         String result =
-                BBVAUtils.generateAuthenticationCode(
+                BbvaMxUtils.generateAuthenticationCode(
                         softwareTokenAuthCode,
                         tokenHash,
                         applicationCode,
@@ -94,7 +94,7 @@ public class BBVAUtilTest {
         DeviceActivationRequest req =
                 new DeviceActivationRequest(
                         boundary, "PhoneNumber", "deviceIdentifier", "cardNumber");
-        String result = BBVAUtils.getActivationDataBoundary(req, boundary);
+        String result = BbvaMxUtils.getActivationDataBoundary(req, boundary);
 
         Assert.assertEquals(expected, result);
     }

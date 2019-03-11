@@ -8,7 +8,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.utils.deviceprofile.DeviceProfileConfiguration;
 
-public class BBVAConstants {
+public class BbvaMxConstants {
 
     public static final ImmutableMap<AccountTypes, List<String>> ACCOUNT_TYPES_MAP =
             ImmutableMap.of(
@@ -17,7 +17,7 @@ public class BBVAConstants {
                     AccountTypes.SAVINGS,
                     Arrays.asList("AH"),
                     AccountTypes.CREDIT_CARD,
-                    Arrays.asList("CARDS"),
+                    Arrays.asList("AC", "AV", "CARDS"),
                     AccountTypes.LOAN,
                     Arrays.asList("HIPOTECARIO"));
 
@@ -30,6 +30,11 @@ public class BBVAConstants {
         public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
         public static final SimpleDateFormat TRANSACTION_DATE_FORAMT =
                 new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    }
+
+    public static class ERROR {
+        public static final String NO_ACCOUNT_FOUND_CODE = "160";
+        public static final String INCORRECT_CREDENTIALS_CODE = "161";
     }
 
     public static class URLS {
@@ -56,8 +61,10 @@ public class BBVAConstants {
         public static final String CUSTOMER_INFO =
                 "/SRVS_A02/customers/v1/customers?expand=avatars";
         public static final String ACCOUNTS = String.format(FETCH, "ACCOUNTS,DEPOSITS");
-        public static final String CARDS = String.format(FETCH, "CARDS,LOANS");
+        public static final String LOANS = String.format(FETCH, "LOANS");
+        public static final String CREDIT = String.format(FETCH, "CARDS");
         public static final String TRANSACTIONS = "/SRVS_A02/accounts/v1/accounts/%s/transactions";
+        public static final String CREDIT_TRANSACTIONS = "/SRVS_A02/cards/v0/cards/%s/transactions";
     }
 
     public static class HEADERS {
@@ -109,6 +116,7 @@ public class BBVAConstants {
                 "Content-Disposition: form-data;name=\"biometricFile\"";
         public static final String CURRENT_BALANCE = "CURRENT_BALANCE";
         public static final String LOAN_BALANCE = "CURRENT_CAPITAL_BALANCE";
+        public static final String AVAILABLE_BALANCE = "AVAILABLE_BALANCE";
     }
 
     public static class STORAGE {
@@ -140,5 +148,9 @@ public class BBVAConstants {
                 LogTag.from("BBVA_ACCOUNT_PARSING_ERROR");
         public static final LogTag AUTO_AUTH = LogTag.from("BBVA_AUTO_AUTH");
         public static final LogTag LOAN_PARSING_ERROR = LogTag.from("BBVA_LOAN_PARSING_ERROR");
+        public static final LogTag CREDIT_PARSING_ERROR = LogTag.from("BBVA_CREDIT_PARSING_ERROR");
+        public static final LogTag CREDIT_TRANSACTION_PARSING_ERROR =
+                LogTag.from("BBVA_CREDIT_TRANSACTION_PARSING_ERROR");
+        public static final LogTag UNKNOWN_LOGIN_ERROR = LogTag.from("BBVA_UNKNOWN_LOGIN_ERROR");
     }
 }

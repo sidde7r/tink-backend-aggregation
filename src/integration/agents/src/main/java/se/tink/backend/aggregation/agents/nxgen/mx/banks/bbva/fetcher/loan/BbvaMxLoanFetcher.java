@@ -2,16 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.loan;
 
 import java.util.Collection;
 import java.util.Collections;
-import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BBVAApiClient;
+import org.apache.http.HttpStatus;
+import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
-public class BBVALoanFetcher implements AccountFetcher<LoanAccount> {
+public class BbvaMxLoanFetcher implements AccountFetcher<LoanAccount> {
 
-    private final BBVAApiClient client;
+    private final BbvaMxApiClient client;
 
-    public BBVALoanFetcher(BBVAApiClient client) {
+    public BbvaMxLoanFetcher(BbvaMxApiClient client) {
         this.client = client;
     }
 
@@ -20,7 +21,10 @@ public class BBVALoanFetcher implements AccountFetcher<LoanAccount> {
         try {
             return client.fetchLoans().getLoanAccounts();
         } catch (HttpResponseException e) {
-            return Collections.EMPTY_LIST;
+            if (e.getResponse().getStatus() == HttpStatus.SC_NO_CONTENT) {
+                return Collections.emptyList();
+            }
+            throw e;
         }
     }
 }

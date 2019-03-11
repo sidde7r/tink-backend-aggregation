@@ -4,11 +4,11 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 
-public class BBVASessionHandler implements SessionHandler {
+public class BbvaMxSessionHandler implements SessionHandler {
 
-    private final BBVAApiClient client;
+    private final BbvaMxApiClient client;
 
-    public BBVASessionHandler(BBVAApiClient client) {
+    public BbvaMxSessionHandler(BbvaMxApiClient client) {
         this.client = client;
     }
 
