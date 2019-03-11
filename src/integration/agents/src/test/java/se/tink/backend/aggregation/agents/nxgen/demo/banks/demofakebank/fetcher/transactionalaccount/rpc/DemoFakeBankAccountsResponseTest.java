@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.rpc;
 
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.entities.FakeAccount;
-
-import java.util.List;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;

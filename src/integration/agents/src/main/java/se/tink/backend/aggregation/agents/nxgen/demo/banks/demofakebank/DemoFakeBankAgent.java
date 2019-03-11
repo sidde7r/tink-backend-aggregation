@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.DemoFakeBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.DemoFakeBankTransactionalAccountsFetcher;
@@ -21,8 +22,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Optional;
 
 /* This is the agent for the Demo Fake Bank which is a Tink developed test & demo bank */
 

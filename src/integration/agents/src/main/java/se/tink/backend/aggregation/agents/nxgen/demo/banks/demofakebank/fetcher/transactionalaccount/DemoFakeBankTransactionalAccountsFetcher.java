@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.DemoFakeBankConstants;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.entities.FakeAccount;
@@ -9,10 +12,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.stream.Collectors;
 
 public class DemoFakeBankTransactionalAccountsFetcher
         implements AccountFetcher<TransactionalAccount>,
