@@ -2,6 +2,7 @@
   "clusterid" : "oxford-production",
   "providers" : [
     "alandsbanken",
+    "se-alandsbanken-bankid",
     "americanexpress",
     "avanza",
     "avanza-bankid",
