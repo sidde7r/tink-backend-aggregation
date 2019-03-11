@@ -29,12 +29,11 @@ public class DemoFakeBankTransactionalAccountsFetcher implements AccountFetcher<
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        // fetch accounts from bank
         DemoFakeBankAccountsResponse demoFakeBankAccountsResponse = apiClient.fetchAccounts(
                 sessionStorage.get(DemoFakeBankConstants.Storage.USERNAME),
                 sessionStorage.get(DemoFakeBankConstants.Storage.AUTH_TOKEN));
-        // map bank internal account model to tink account & return
-        return demoFakeBankAccountsResponse.getAccounts().stream()
+
+        return demoFakeBankAccountsResponse.getAccounts().stream().filter(FakeAccount::isTransactionalAccount)
                 .map(FakeAccount::toTinkCheckingAccount)
                 .collect(Collectors.toList());
     }

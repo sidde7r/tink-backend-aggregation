@@ -57,4 +57,9 @@ public class FakeAccount {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+    public boolean isTransactionalAccount() {
+        return this.accountType.equals(AccountType.TRANSACTIONAL);
+    }
+
 }
