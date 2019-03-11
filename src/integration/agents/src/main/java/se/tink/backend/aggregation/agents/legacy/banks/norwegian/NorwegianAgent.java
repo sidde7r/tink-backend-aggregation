@@ -132,7 +132,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setSubject(credentials.getField(Field.Key.USERNAME));
 
-        OrderBankIdResponse orderBankIdResponse = client.resource(bankIdUrl + "/order")
+        OrderBankIdResponse orderBankIdResponse = client.resource(bankIdUrl + "order")
                 .type(MediaType.APPLICATION_JSON)
                 .post(OrderBankIdResponse.class, loginRequest);
 
@@ -196,7 +196,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         // Poll BankID status periodically until the process is complete.
 
         for (int i = 0; i < AUTHENTICATION_BANK_ID_RETRIES; i++) {
-            collectResponse = createClientRequest(bankIdUrl + "/collect").type(MediaType.APPLICATION_JSON)
+            collectResponse = createClientRequest(bankIdUrl + "collect").type(MediaType.APPLICATION_JSON)
                     .post(CollectBankIdResponse.class, collectBankIdRequest);
 
             ErrorEntity error = collectResponse.getError();
