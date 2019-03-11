@@ -10,7 +10,9 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.params.ClientPNames;
@@ -21,11 +23,13 @@ import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
@@ -72,6 +76,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -120,6 +125,11 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         private static final boolean CHUNKED_ENCODING = false;
         private static final boolean FOLLOW_REDIRECTS = true;
         private static final boolean DEBUG_OUTPUT = false;
+    }
+
+    private class CONSTANTS {
+        private static final String UTF_8_ENCODING = "utf-8";
+        private static final String IDENTITY_ENCODING = "identity";
     }
 
     public String getUserAgent() {
@@ -247,8 +257,35 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
                     new BasicHttpClientConnectionManager(socketFactoryRegistry));
         }
 
+        HttpResponseInterceptor contentEncodingFixerInterceptor =
+                (response, context) -> {
+                    org.apache.http.Header contentEncodingHeader =
+                            response.getFirstHeader(HTTP.CONTENT_ENCODING);
+                    if (contentEncodingHeader != null
+                            && contentEncodingHeader
+                                    .getValue()
+                                    .equalsIgnoreCase(CONSTANTS.UTF_8_ENCODING)) {
+                        response.removeHeaders(HTTP.CONTENT_ENCODING);
+                        response.addHeader(HTTP.CONTENT_ENCODING, CONSTANTS.IDENTITY_ENCODING);
+
+                        final HttpEntity entity = response.getEntity();
+                        org.apache.http.Header ceheader = entity.getContentEncoding();
+                        if (CONSTANTS.UTF_8_ENCODING.equals(
+                                ceheader.getValue().toLowerCase(Locale.ENGLISH))) {
+                            BasicHttpEntity newEntity = new BasicHttpEntity();
+                            newEntity.setContent(entity.getContent());
+                            newEntity.setContentEncoding(CONSTANTS.IDENTITY_ENCODING);
+                            newEntity.setChunked(entity.isChunked());
+                            newEntity.setContentLength(entity.getContentLength());
+                            newEntity.setContentType(entity.getContentType());
+                            response.setEntity(newEntity);
+                        }
+                    }
+                };
+
         CloseableHttpClient httpClient =
                 this.internalHttpClientBuilder
+                        .addInterceptorFirst(contentEncodingFixerInterceptor)
                         .setDefaultRequestConfig(reguestConfig)
                         .setSslcontext(sslContext)
                         .setRedirectStrategy(this.redirectStrategy)
