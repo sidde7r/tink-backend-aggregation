@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.tran
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.assertj.core.util.Strings;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SEBConstants;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -12,97 +12,80 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountsEntity {
-    @JsonProperty
-    private String resourceId;
+  private String resourceId;
 
-    @JsonProperty
-    private String iban;
+  private String iban;
 
-    @JsonProperty
-    private String bban;
+  private String bban;
 
-    @JsonProperty
-    private String currency;
+  private String currency;
 
-    @JsonProperty
-    private OwnerNameEntity owner;
+  private OwnerNameEntity owner;
 
-    @JsonProperty
-    private String ownerName;
+  private String ownerName;
 
-    @JsonProperty
-    private List<BalancesEntity> balances;
+  private List<BalancesEntity> balances;
 
-    @JsonProperty
-    private String creditLine;
+  private String creditLine;
 
-    @JsonProperty
-    private String product;
+  private String product;
 
-    @JsonProperty
-    private String name;
+  private String name;
 
-    @JsonProperty
-    private String status;
+  private String status;
 
-    @JsonProperty
-    private String statusDate;
+  private String statusDate;
 
-    @JsonProperty
-    private String bic;
+  private String bic;
 
-    @JsonProperty
-    private String bicAddress;
+  private String bicAddress;
 
-    @JsonProperty
-    private String accountInterest;
+  private String accountInterest;
 
-    @JsonProperty
-    private boolean cardLinkedToTheAccount;
+  private boolean cardLinkedToTheAccount;
 
-    @JsonProperty
-    private boolean paymentService;
+  private boolean paymentService;
 
-    @JsonProperty
-    private String bankgiroNumber;
+  private String bankgiroNumber;
 
-    @JsonProperty
-    private OwnerNameEntity accountOwners;
+  private OwnerNameEntity accountOwners;
 
-    @JsonProperty("_links")
-    private LinksEntity links;
+  @JsonProperty("_links")
+  private LinksEntity links;
 
-    public TransactionalAccount toTinkAccount() {
-        return CheckingAccount.builder()
-                .setUniqueIdentifier(iban)
-                .setAccountNumber(bban)
-                .setBalance(getAvailableBalance())
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .addHolderName(getOwnerName())
-                .setAlias(getName())
-                .setApiIdentifier(bban)
-                .putInTemporaryStorage(SEBConstants.STORAGE.ACCOUNT_ID, resourceId)
-                .build();
-    }
+  public TransactionalAccount toTinkAccount() {
+    return CheckingAccount.builder()
+        .setUniqueIdentifier(iban)
+        .setAccountNumber(bban)
+        .setBalance(getAvailableBalance())
+        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
+        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+        .addHolderName(getOwnerName())
+        .setAlias(getName())
+        .setApiIdentifier(bban)
+        .putInTemporaryStorage(SebConstants.StorageKeys.ACCOUNT_ID, resourceId)
+        .build();
+  }
 
-    public boolean isEnabled() {
-        return status.equalsIgnoreCase(SEBConstants.ACCOUNTS.STATUS_ENABLED);
-    }
+  public boolean isEnabled() {
+    return status.equalsIgnoreCase(SebConstants.Accounts.STATUS_ENABLED);
+  }
 
-    private String getOwnerName() {
-        return Strings.isNullOrEmpty(ownerName) ? owner.getName() : ownerName;
-    }
+  private String getOwnerName() {
+    return Strings.isNullOrEmpty(ownerName) ? owner.getName() : ownerName;
+  }
 
-    private Amount getAvailableBalance() {
-        return balances != null ? balances.stream()
-                .filter(BalancesEntity::isAvailableBalance)
-                .findFirst()
-                .orElse(new BalancesEntity())
-                .toAmount() : BalancesEntity.Default;
-    }
+  private Amount getAvailableBalance() {
+    return balances != null
+        ? balances.stream()
+            .filter(BalancesEntity::isAvailableBalance)
+            .findFirst()
+            .orElse(new BalancesEntity())
+            .toAmount()
+        : BalancesEntity.Default;
+  }
 
-    private String getName() {
-        return Strings.isNullOrEmpty(name) ? bban : name;
-    }
+  private String getName() {
+    return Strings.isNullOrEmpty(name) ? bban : name;
+  }
 }

@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SEBConstants;
+import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksDetailsEntity {
-    @JsonProperty
-    private String href;
+  private String href;
 
-    public boolean hasMore() {
-        return !Strings.isNullOrEmpty(href) && href.contains(SEBConstants.QueryKeys.TRANSACTION_SEQUENCE_NUMBER);
-    }
+  public boolean hasMore() {
+    return !Strings.isNullOrEmpty(href)
+        && StringUtils.containsIgnoreCase(href, SebConstants.QueryKeys.TRANSACTION_SEQUENCE_NUMBER);
+  }
 }

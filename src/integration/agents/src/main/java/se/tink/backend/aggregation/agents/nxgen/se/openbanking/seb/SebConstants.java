@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
-public abstract class SEBConstants {
+public abstract class SebConstants {
 
     public static class Urls {
-        public static final String BASE_AUTH = "https://sandbox.sebgroup.com/authentication/v2";
-        public static final String OAUTH = "/oauth2/authorize";
-        public static final String BASE_AIS = "https://sandbox.sebgroup.com/ais/v3";
-        public static final String ACCOUNTS = "/accounts";
-        public static final String TRANSACTIONS = "/accounts/{accountId}/transactions";
-        public static final String TOKEN = "/oauth2/token";
+        private static final String BASE_AUTH = "/authentication/v2";
+        private static final String BASE_AIS = "/ais/v3";
+
+        public static final String OAUTH = BASE_AUTH + "/oauth2/authorize";
+        public static final String TOKEN = BASE_AUTH + "/oauth2/token";
+        public static final String ACCOUNTS = BASE_AIS + "/accounts";
+        public static final String TRANSACTIONS = BASE_AIS + "/accounts/{accountId}/transactions";
     }
 
     public static class QueryKeys {
@@ -38,15 +39,16 @@ public abstract class SEBConstants {
         public static final String X_REQUEST_ID = "X-Request-ID";
     }
 
-    public static class STORAGE {
-        public static final String TOKEN = "TOKEN";
-        public static final String ACCOUNT_ID = "ACCOUNT_ID";
+    public static class StorageKeys {
+        public static final String BASE_URL = "BASE_URL";
         public static final String CLIENT_ID = "CLIENT_ID";
         public static final String CLIENT_SECRET = "CLIENT_SECRET";
         public static final String REDIRECT_URI = "REDIRECT_URI";
+        public static final String TOKEN = "TOKEN";
+        public static final String ACCOUNT_ID = "ACCOUNT_ID";
     }
 
-    public static class ACCOUNTS {
+    public static class Accounts {
         public static final String AVAILABLE_BALANCE = "interimAvailable";
         public static final String STATUS_ENABLED = "enabled";
     }
@@ -55,7 +57,7 @@ public abstract class SEBConstants {
         public static final String ACCOUNT_ID = "accountId";
     }
 
-    public static class FETCHER {
+    public static class Fetcher {
         public static final int START_PAGE = 1;
     }
 
