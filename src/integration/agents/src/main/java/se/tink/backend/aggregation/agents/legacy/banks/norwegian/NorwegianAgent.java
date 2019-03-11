@@ -3,30 +3,26 @@ package se.tink.backend.aggregation.agents.banks.norwegian;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.ParseException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import javax.ws.rs.core.MediaType;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.AccountEntity;
-import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardInfoResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.CollectBankIdResponse;
+import se.tink.backend.aggregation.agents.banks.norwegian.model.CreditCardInfoResponse;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.LoginRequest;
 import se.tink.backend.aggregation.agents.banks.norwegian.model.OrderBankIdResponse;
@@ -39,15 +35,21 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.agents.models.Transaction;
+
+import javax.ws.rs.core.MediaType;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Agent will import data from Bank Norwegian. It is only possible to have one credit-card per person at Norwegian
@@ -292,17 +294,23 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
         String encodedAccountNumber = URLEncoder.encode(accountNumber, "UTF-8");
 
-        // Add reserved (not booked) transactions and recent payments which are not yet billed to the user.
-        TransactionListResponse pendingTransactions = createClientRequest(
-                String.format(TRANSACTIONS_URL, encodedAccountNumber, 0, 0)).get(TransactionListResponse.class);
+        try {
+            // Add reserved (not booked) transactions and recent payments which are not yet billed to the user.
+            TransactionListResponse pendingTransactions = createClientRequest(
+                    String.format(TRANSACTIONS_URL, encodedAccountNumber, 0, 0)).get(TransactionListResponse.class);
 
-        // List<TransactionEntity> filteredPendingTransactions =
-        pendingTransactions.stream()
-                .filter(this::isReservedPurchaseOrNotBilledPayment)
-                .peek(transactionEntity -> isIncludedTransaction
-                        .add(transactionEntity.getExternalId())) // Add transaction external ID as included
-                .map(TransactionEntity::toTransaction)
-                .forEach(transactions::add);
+            // List<TransactionEntity> filteredPendingTransactions =
+            pendingTransactions.stream()
+                    .filter(this::isReservedPurchaseOrNotBilledPayment)
+                    .peek(transactionEntity -> isIncludedTransaction
+                            .add(transactionEntity.getExternalId())) // Add transaction external ID as included
+                    .map(TransactionEntity::toTransaction)
+                    .forEach(transactions::add);
+        } catch (ClientHandlerException e) {
+            // If pending transactions are unavailable Norwegian sends a HTML response.
+            // This is a try/catch will skip pending transactions if this happens.
+            log.warn("Skipping pending since response was in unexpected format.");
+        }
 
         // Get billed transactions
         do {
