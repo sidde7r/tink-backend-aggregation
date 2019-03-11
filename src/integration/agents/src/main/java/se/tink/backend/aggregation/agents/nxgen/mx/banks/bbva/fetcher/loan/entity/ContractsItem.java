@@ -38,7 +38,7 @@ public class ContractsItem {
                         LoanAccount.builder(id)
                                 .setAccountNumber(number)
                                 .setBankIdentifier(id)
-                                .setName(product.getName())
+                                .setName(alias)
                                 .setBalance(detail.getBalance())
                                 .build());
             } catch (Exception e) {

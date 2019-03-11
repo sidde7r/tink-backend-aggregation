@@ -50,7 +50,7 @@ public class ContractsItemEntity {
                 .setBalance(detail.getCheckingBalance())
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, number))
                 .addHolderName(holdername)
-                .setAlias(product.getName())
+                .setAlias(alias)
                 .setProductName(subProductType.getName())
                 .putInTemporaryStorage(BBVAConstants.STORAGE.ACCOUNT_ID, id)
                 .build();
@@ -63,7 +63,7 @@ public class ContractsItemEntity {
                 .setBalance(detail.getCheckingBalance())
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, number))
                 .addHolderName(holdername)
-                .setAlias(product.getName())
+                .setAlias(alias)
                 .setProductName(subProductType.getName())
                 .putInTemporaryStorage(BBVAConstants.STORAGE.ACCOUNT_ID, id)
                 .build();
