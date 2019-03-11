@@ -44,16 +44,16 @@ public class SantanderEsApiClient {
     public String authenticateCredentials(String username, String password) {
         String requestBody = AuthenticateCredentialsRequest.create(username, password);
 
-        return postSoapMessage(SantanderEsConstants.Urls.SANMOV,
-                SantanderEsConstants.Urls.SANMOV.toString(),
+        return postSoapMessage(SantanderEsConstants.Urls.AUTHENTICATION_ENDPOINT,
+                SantanderEsConstants.Urls.AUTHENTICATION_ENDPOINT.toString(),
                 requestBody);
     }
 
     public String login() {
         String requestBody = LoginRequest.create(tokenCredential);
 
-        return postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
-                SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
+        return postSoapMessage(SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT,
+                SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT.toString(),
                 requestBody);
     }
 
@@ -63,8 +63,8 @@ public class SantanderEsApiClient {
         String requestBody = getTransactionsRequestBody(userDataXmlString, contractIdXmlString,
                 balanceXmlString, repositionEntity);
 
-        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
-                SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT,
+                SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT.toString(),
                 requestBody);
 
         return SerializationUtils.serializeToString(
@@ -77,8 +77,8 @@ public class SantanderEsApiClient {
         String creditCardDetailsRequest =
                 SantanderEsCreditCardDetailsRequest.create(tokenCredential, userDataXml, cardNumber);
 
-        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
-                SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT,
+                SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT.toString(),
                 creditCardDetailsRequest);
 
         return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
@@ -89,8 +89,8 @@ public class SantanderEsApiClient {
     public FundDetailsResponse fetchFundDetails(String userDataXml, FundEntity fundEntity) {
         String fundDetailsRequest = FundDetailsRequest.create(tokenCredential, userDataXml, fundEntity);
 
-        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_FONDOS,
-                SantanderEsConstants.Urls.SCH_BAMOBI_FONDOS.toString(),
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.FUNDS_ENDPOINT,
+                SantanderEsConstants.Urls.FUNDS_ENDPOINT.toString(),
                 fundDetailsRequest);
 
         return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
@@ -103,8 +103,8 @@ public class SantanderEsApiClient {
         String creditCardTransactionsRequest = SantanderEsCreditCardTransactionsRequest
                 .create(tokenCredential, userDataXml, card, fromDate, toDate, pagination);
 
-        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI,
-                SantanderEsConstants.Urls.SCH_BAMOBI.toString(),
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT,
+                SantanderEsConstants.Urls.WEB_SERVICE_ENDPOINT.toString(),
                 creditCardTransactionsRequest);
 
         return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
@@ -115,8 +115,8 @@ public class SantanderEsApiClient {
     public String fetchLoanDetails(String userDataXml, LoanEntity loanEntity) {
         String loanDetailsRequest = LoanDetailsRequest.create(tokenCredential, userDataXml, loanEntity);
 
-        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_PRESTAMOS,
-                SantanderEsConstants.Urls.SCH_BAMOBI_PRESTAMOS.toString(),
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.LOANS_ENDPOINT,
+                SantanderEsConstants.Urls.LOANS_ENDPOINT.toString(),
                 loanDetailsRequest);
 
         return soapResponseString;
@@ -128,8 +128,8 @@ public class SantanderEsApiClient {
         String portfolioDetailsRequest = PortfolioDetailsRequest
                 .create(tokenCredential, userDataXml, portfolio, firstPage, paginationData);
 
-        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_VALORES,
-                SantanderEsConstants.Urls.SCH_BAMOBI_VALORES.toString(),
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.STOCKS_ENDPOINT,
+                SantanderEsConstants.Urls.STOCKS_ENDPOINT.toString(),
                 portfolioDetailsRequest);
 
         return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
@@ -140,8 +140,8 @@ public class SantanderEsApiClient {
     public InstrumentDetailsResponse fetchInstrumentDetails(String userDataXml, StockEmissionCode emissionCode) {
         String instrumentDetailsRequest = InstrumentDetailsRequest.create(tokenCredential, userDataXml, emissionCode);
 
-        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.SCH_BAMOBI_VALORES,
-                SantanderEsConstants.Urls.SCH_BAMOBI_VALORES.toString(),
+        String soapResponseString = postSoapMessage(SantanderEsConstants.Urls.STOCKS_ENDPOINT,
+                SantanderEsConstants.Urls.STOCKS_ENDPOINT.toString(),
                 instrumentDetailsRequest);
 
         return SantanderEsXmlUtils.deserializeFromSoapString(soapResponseString,
