@@ -10,13 +10,13 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class FakeAccount {
 
-    @JsonProperty("accountType")
+    @JsonProperty
     private AccountType accountType;
-    @JsonProperty("accountNumber")
+    @JsonProperty
     private String accountNumber;
-    @JsonProperty("balance")
+    @JsonProperty
     private double balance;
-    @JsonProperty("currency")
+    @JsonProperty
     private String currency;
 
     public FakeAccount() {

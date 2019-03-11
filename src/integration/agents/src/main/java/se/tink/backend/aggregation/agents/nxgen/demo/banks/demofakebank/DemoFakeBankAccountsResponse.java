@@ -7,11 +7,11 @@ import java.util.List;
 
 @JsonObject
 public class DemoFakeBankAccountsResponse {
-    @JsonProperty("status")
+    @JsonProperty
     private String status;
-    @JsonProperty("message")
+    @JsonProperty
     private String message;
-    @JsonProperty("accounts")
+    @JsonProperty
     private List<FakeAccount> accounts;
 
     public DemoFakeBankAccountsResponse() {
