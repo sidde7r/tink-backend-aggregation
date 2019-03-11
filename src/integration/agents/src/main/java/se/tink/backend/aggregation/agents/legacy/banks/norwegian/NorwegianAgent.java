@@ -81,6 +81,8 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private static final String LOGIN_URL = "https://id.banknorwegian.se/std/method/"
             + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
             + "2fLogin%2fSignicatCallback%3fipid%3d22%26returnUrl%3d%252FMinSida";
+    private static final String COLLECT = "collect";
+    private static final String ORDER = "order";
 
     private final Client client;
     private boolean hasRefreshed = false;
@@ -94,7 +96,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 //                "http://127.0.0.1:8888"
 //        );
 //        client = clientFactory.createProxyClient(context.getLogOutputStream(), config);
-        
+
         client = clientFactory.createCookieClient(context.getLogOutputStream());
     }
 
@@ -146,7 +148,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setSubject(credentials.getField(Field.Key.USERNAME));
 
-        OrderBankIdResponse orderBankIdResponse = client.resource(bankIdUrl + "order")
+        OrderBankIdResponse orderBankIdResponse = client.resource(bankIdUrl + ORDER)
                 .type(MediaType.APPLICATION_JSON)
                 .post(OrderBankIdResponse.class, loginRequest);
 
@@ -210,7 +212,7 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         // Poll BankID status periodically until the process is complete.
 
         for (int i = 0; i < AUTHENTICATION_BANK_ID_RETRIES; i++) {
-            collectResponse = createClientRequest(bankIdUrl + "collect").type(MediaType.APPLICATION_JSON)
+            collectResponse = createClientRequest(bankIdUrl + COLLECT).type(MediaType.APPLICATION_JSON)
                     .post(CollectBankIdResponse.class, collectBankIdRequest);
 
             ErrorEntity error = collectResponse.getError();
