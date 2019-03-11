@@ -530,10 +530,11 @@
     "nxgen.nl.creditcards.ICS.ICSAgent": [
         "CREDIT_CARDS"
     ],
-    "nxgen.mx.banks.bbva.BBVAAgent": [
+    "nxgen.mx.banks.bbva.BbvaMxAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
-        "LOANS"
+        "LOANS",
+        "CREDIT_CARDS"
     ],
     "nxgen.ro.banks.raiffeisen.RaiffeisenAgent": [
         "CHECKING_ACCOUNTS"
