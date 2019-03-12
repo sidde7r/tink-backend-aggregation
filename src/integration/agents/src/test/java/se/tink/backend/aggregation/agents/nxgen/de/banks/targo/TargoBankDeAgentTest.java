@@ -6,7 +6,7 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore
-public class TargoBankDEAgentNewTest {
+public class TargoBankDeAgentTest {
 
     public static final String USERNAME = "<username>";
     public static final String PASSWORD = "<password>";
