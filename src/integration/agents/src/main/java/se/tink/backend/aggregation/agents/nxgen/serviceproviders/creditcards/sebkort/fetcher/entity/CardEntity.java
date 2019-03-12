@@ -1,10 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.entity;
 
-import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.libraries.amount.Amount;
+
+import java.util.Map;
 
 @JsonObject
 public class CardEntity {
@@ -56,10 +58,11 @@ public class CardEntity {
         return CreditCardAccount.builder(getMaskedCardNumber())
                 .setAccountNumber(getMaskedCardNumber())
                 .setName(contract.getProductName())
-                .setBankIdentifier(account.getId())
+                .setHolderName(new HolderName(getNameOnCard()))
+                .setBankIdentifier(contract.getCardAccountId())
                 .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_ID, getId())
                 .setBalance(
-                        new Amount(account.getCurrencyCode(), account.getCurrentBalance()).stripSign())
+                        new Amount(account.getCurrencyCode(), account.getCurrentBalance()).negate())
                 .setAvailableCredit(
                         new Amount(account.getCurrencyCode(), account.getDisposableAmount()))
                 .build();
