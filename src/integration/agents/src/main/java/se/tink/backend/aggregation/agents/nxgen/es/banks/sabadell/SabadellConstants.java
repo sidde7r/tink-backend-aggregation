@@ -14,6 +14,10 @@ public final class SabadellConstants {
                         + "br2kR1wyJybVgg12VJmhE0yvy5McZEzm3T8wIDAQAB";
     }
 
+    public static class UrlParams {
+        public static final String MARKET = "market";
+    }
+
     public static final class Urls {
         public static final String BASE_URL = "https://www.bancsabadell.mobi/bsmobil/api";
 
@@ -30,6 +34,10 @@ public final class SabadellConstants {
                 new URL(BASE_URL + "/servicingfunds/contracts");
         public static final URL FETCH_PENSION_PLANS = new URL(BASE_URL + "/pensionplans");
         public static final URL FETCH_SAVINGS = new URL(BASE_URL + "/savings");
+        public static final URL FETCH_PRODUCTS = new URL(BASE_URL + "/products");
+        public static final URL FETCH_STOCKS =
+                new URL(BASE_URL + "/securities/markets/{" + UrlParams.MARKET + "}/stocks");
+        public static final URL FETCH_MARKETS = new URL(BASE_URL + "/securities/markets");
         public static final URL FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS =
                 new URL(BASE_URL + "/servicingfunds/refunds");
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE_URL + "/loans");
@@ -136,5 +144,9 @@ public final class SabadellConstants {
         public static final String CREDIT_CARD_SIN = "sin";
         public static final String CURRENCY_ACCOUNT = "CUENTA EN DIVISA";
         public static final String BUSINESS_EXPANSION_ACCOUNT = "CUENTA EXPANSIÓN NEGOCIOS";
+    }
+
+    public static final class Constants {
+        public static final String NOT_AVAILABLE_ABBREVIATION = "N.D.";
     }
 }

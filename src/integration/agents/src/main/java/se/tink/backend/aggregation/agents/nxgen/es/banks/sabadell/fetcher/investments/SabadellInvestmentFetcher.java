@@ -1,8 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments;
 
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.MarketsEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.StocksEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.DepositsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.MarketsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.PensionPlansResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.SavingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsAccountDetailsRequest;
@@ -13,7 +19,10 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final AggregationLogger log = new AggregationLogger(SabadellInvestmentFetcher.class);
@@ -30,7 +39,35 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
         logPensionPlans();
         logSavings();
 
-        return Collections.emptyList();
+        return apiClient.fetchProducts().getInvestmentProduct().getSecurities().getAccounts()
+                .stream()
+                .map(aggregateInvestmentAccount())
+                .collect(Collectors.toList());
+    }
+
+    private Function<AccountEntity, InvestmentAccount> aggregateInvestmentAccount() {
+        return accountEntity -> {
+            List<Instrument> instruments =
+                    apiClient.fetchMarkets(new MarketsRequest(accountEntity)).getMarkets().stream()
+                            .flatMap(getInstruments(accountEntity))
+                            .collect(Collectors.toList());
+
+            List<Portfolio> portfolios = accountEntity.toTinkPortfolios(instruments);
+
+            return accountEntity.toTinkInvestmentAccount(portfolios);
+        };
+    }
+
+    private Function<MarketsEntity, Stream<? extends Instrument>> getInstruments(
+            AccountEntity accountEntity) {
+
+        return marketsEntity ->
+                apiClient
+                        .fetchStocks(
+                                marketsEntity.getName().toLowerCase(),
+                                accountEntity.getMappedAttributes())
+                        .getStocks().stream()
+                        .map(StocksEntity::toTinkInstrument);
     }
 
     private void logDeposits() {

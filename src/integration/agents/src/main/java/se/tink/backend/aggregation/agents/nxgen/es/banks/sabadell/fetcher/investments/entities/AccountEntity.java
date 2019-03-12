@@ -42,12 +42,12 @@ public class AccountEntity {
 
     @JsonIgnore
     public InvestmentAccount toTinkInvestmentAccount(List<Portfolio> portfolios) {
-        return InvestmentAccount.builder(getIban())
-                .setAccountNumber(getContractNumberFormatted())
-                .setName(getAlias())
-                .setHolderName(new HolderName(getOwner()))
+        return InvestmentAccount.builder(iban)
+                .setAccountNumber(contractNumberFormatted)
+                .setName(alias)
+                .setHolderName(new HolderName(owner))
                 .setCashBalance(Amount.inEUR(0.0))
-                .setBankIdentifier(getNumber())
+                .setBankIdentifier(number)
                 .setPortfolios(portfolios)
                 .build();
     }
@@ -55,9 +55,9 @@ public class AccountEntity {
     @JsonIgnore
     public List<Portfolio> toTinkPortfolios(List<Instrument> instruments) {
         Portfolio portfolio = new Portfolio();
-        portfolio.setUniqueIdentifier(getIban());
+        portfolio.setUniqueIdentifier(iban);
         portfolio.setInstruments(instruments);
-        portfolio.setTotalValue(AgentParsingUtils.parseAmount(getAmount().getValue()));
+        portfolio.setTotalValue(AgentParsingUtils.parseAmount(amount.getValue()));
         portfolio.setType(Portfolio.Type.DEPOT);
         portfolio.setCashValue(0.0);
 

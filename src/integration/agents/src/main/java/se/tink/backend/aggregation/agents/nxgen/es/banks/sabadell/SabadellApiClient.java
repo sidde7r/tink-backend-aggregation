@@ -6,10 +6,14 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.credit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.FetchCreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.DepositsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.MarketsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.MarketsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.PensionPlansResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.SavingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsAccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.StocksResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
@@ -22,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 public class SabadellApiClient {
     private final TinkHttpClient client;
@@ -127,6 +132,27 @@ public class SabadellApiClient {
 
     public void logout() {
         createRequest(SabadellConstants.Urls.INITIATE_SESSION).delete();
+    }
+
+    public ProductsResponse fetchProducts() {
+        return createRequest(SabadellConstants.Urls.FETCH_PRODUCTS)
+                .queryParam(
+                        SabadellConstants.QueryParamPairs.NO_ERROR.getKey(),
+                        SabadellConstants.QueryParamPairs.NO_ERROR.getValue())
+                .get(ProductsResponse.class);
+    }
+
+    public MarketsResponse fetchMarkets(MarketsRequest request) {
+        return createRequest(SabadellConstants.Urls.FETCH_MARKETS)
+                .post(MarketsResponse.class, request);
+    }
+
+    public StocksResponse fetchStocks(String market, Map<String, String> headers) {
+        return createRequest(
+                        SabadellConstants.Urls.FETCH_STOCKS.parameter(
+                                SabadellConstants.UrlParams.MARKET, market))
+                .queryParams(headers)
+                .get(StocksResponse.class);
     }
 
     public String fetchServicingFundsAccountDetails(ServicingFundsAccountDetailsRequest request) {

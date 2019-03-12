@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.AccountListEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.AccountListEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
