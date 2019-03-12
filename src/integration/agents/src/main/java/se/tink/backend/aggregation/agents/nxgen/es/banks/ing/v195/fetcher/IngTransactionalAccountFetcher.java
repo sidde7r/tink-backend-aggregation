@@ -23,21 +23,19 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
     private final IngApiClient ingApiClient;
     private final SessionStorage sessionStorage;
 
-    public IngTransactionalAccountFetcher(IngApiClient ingApiClient, SessionStorage sessionStorage) {
+    public IngTransactionalAccountFetcher(
+            IngApiClient ingApiClient, SessionStorage sessionStorage) {
         this.ingApiClient = ingApiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return this.ingApiClient.getApiRestProducts()
-                .getProducts()
-                .stream()
+        return this.ingApiClient.getApiRestProducts().getProducts().stream()
                 .filter(Product::isActiveTransactionalAccount)
                 .map(product -> mapTransactionalAccount(product))
                 .collect(Collectors.toList());
     }
-
 
     private TransactionalAccount mapTransactionalAccount(Product product) {
         UniqueIdentifierStep<? extends BuildStep> builder;
@@ -54,20 +52,22 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
                         .filter(StringUtils::isNotEmpty)
                         .orElse(product.getIban());
 
-        BuildStep buildStep = builder
-                .setUniqueIdentifier(product.getUniqueIdentifierForTransactionAccount())
-                .setAccountNumber(product.getIban())
-                .setBalance(new Amount(product.getCurrency(), product.getBalance()))
-                .setAlias(alias)
-                .addAccountIdentifier(new IbanIdentifier(product.getBic(), product.getIbanCanonical()))
-                .setApiIdentifier(product.getUuid())
-                .setProductName(product.getName());
+        BuildStep buildStep =
+                builder.setUniqueIdentifier(product.getUniqueIdentifierForTransactionAccount())
+                        .setAccountNumber(product.getIban())
+                        .setBalance(new Amount(product.getCurrency(), product.getBalance()))
+                        .setAlias(alias)
+                        .addAccountIdentifier(
+                                new IbanIdentifier(product.getBic(), product.getIbanCanonical()))
+                        .setApiIdentifier(product.getUuid())
+                        .setProductName(product.getName());
 
-        product.getHolders().forEach(holder -> {
-            buildStep.addHolderName(holder.getAnyName());
-        });
+        product.getHolders()
+                .forEach(
+                        holder -> {
+                            buildStep.addHolderName(holder.getAnyName());
+                        });
 
         return (TransactionalAccount) buildStep.build();
     }
-
 }
