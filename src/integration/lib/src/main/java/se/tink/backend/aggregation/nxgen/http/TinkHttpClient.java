@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.http;
 
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -10,6 +13,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import io.vavr.jackson.datatype.VavrModule;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponseInterceptor;
@@ -216,6 +220,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
+
+        registerJacksonModule(new VavrModule());
     }
 
     public TinkHttpClient() {
@@ -334,6 +340,16 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public void addMessageWriter(MessageBodyWriter<?> messageBodyWriter) {
         this.internalClientConfig.getSingletons().add(messageBodyWriter);
+    }
+
+    public void registerJacksonModule(Module module) {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(module);
+
+        final JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
+        jacksonProvider.setMapper(objectMapper);
+
+        this.internalClientConfig.getSingletons().add(jacksonProvider);
     }
 
     /**
