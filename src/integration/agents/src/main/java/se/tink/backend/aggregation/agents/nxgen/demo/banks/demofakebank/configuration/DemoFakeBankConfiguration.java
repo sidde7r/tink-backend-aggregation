@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class DemoFakeBankConfiguration  implements ClientConfiguration {
+public class DemoFakeBankConfiguration implements ClientConfiguration {
     @JsonProperty
     private String baseUrl;
 

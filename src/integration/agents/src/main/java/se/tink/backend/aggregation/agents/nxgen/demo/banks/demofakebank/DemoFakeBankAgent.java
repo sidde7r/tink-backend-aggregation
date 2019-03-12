@@ -45,7 +45,9 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
         Optional<DemoFakeBankConfiguration> demoFakeBankConfiguration =
                 configuration
                         .getIntegrations()
-                        .getIntegration(DemoFakeBankConstants.INTEGRATION_NAME, DemoFakeBankConfiguration.class);
+                        .getIntegration(
+                                DemoFakeBankConstants.INTEGRATION_NAME,
+                                DemoFakeBankConfiguration.class);
 
         String baseUrl =
                 demoFakeBankConfiguration.isPresent()
