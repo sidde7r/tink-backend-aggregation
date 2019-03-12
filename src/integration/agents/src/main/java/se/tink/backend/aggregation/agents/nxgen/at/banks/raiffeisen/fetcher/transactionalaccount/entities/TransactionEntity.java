@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.tra
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransactionEntity {
@@ -17,8 +18,8 @@ public class TransactionEntity {
     }
 
     @JsonProperty("betrag")
-    public BalanceEntity getBalance() {
-        return balance;
+    public Amount getBalance() {
+        return balance.getAmount();
     }
 
     @JsonProperty("buchungstag")
