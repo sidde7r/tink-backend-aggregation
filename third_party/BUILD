@@ -599,6 +599,15 @@ java_library( # is it necessary ?
 )
 
 java_library(
+    name = "opencensus",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@io_opencensus_opencensus_api//jar",
+        "@io_opencensus_opencensus_grpc_metrics//jar",
+    ]
+)
+
+java_library(
     name = "io_netty_netty_codec",
     visibility = ["//visibility:public"],
     exports = [
