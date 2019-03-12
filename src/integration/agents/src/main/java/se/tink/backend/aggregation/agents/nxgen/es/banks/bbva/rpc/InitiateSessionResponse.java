@@ -1,9 +1,8 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
