@@ -1,27 +1,43 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.targo;
 
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
+import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
-public class TargoBankDeAgentTest {
+public final class TargoBankDeAgentTest {
+    private enum Arg {
+        LOAD_BEFORE,
+        PASSWORD,
+        SAVE_AFTER,
+        USERNAME,
+    }
 
-    public static final String USERNAME = "<username>";
-    public static final String PASSWORD = "<password>";
+    private final ArgumentManager<Arg> manager = new ArgumentManager<>(Arg.values());
 
-    private static AgentIntegrationTest.Builder builder() {
+    @Before
+    public void before() {
+        manager.before();
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        ArgumentManager.afterClass();
+    }
+
+    private AgentIntegrationTest.Builder builder() {
         return new AgentIntegrationTest.Builder("de", "de-targobank-password")
-                .loadCredentialsBefore(false)
-                .saveCredentialsAfter(false);
+                .loadCredentialsBefore(Boolean.parseBoolean(manager.get(Arg.LOAD_BEFORE)))
+                .saveCredentialsAfter(Boolean.parseBoolean(manager.get(Arg.SAVE_AFTER)));
     }
 
     @Test
-    public void testTargoBankDe() throws Exception {
+    public void testRefresh() throws Exception {
         builder()
-                .addCredentialField(Field.Key.USERNAME, USERNAME)
-                .addCredentialField(Field.Key.PASSWORD, PASSWORD)
+                .addCredentialField(Field.Key.USERNAME, manager.get(Arg.USERNAME))
+                .addCredentialField(Field.Key.PASSWORD, manager.get(Arg.PASSWORD))
                 .build()
                 .testRefresh();
     }
