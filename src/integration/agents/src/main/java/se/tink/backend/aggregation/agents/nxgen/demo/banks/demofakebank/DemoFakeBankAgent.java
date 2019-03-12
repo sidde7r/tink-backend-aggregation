@@ -3,8 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.authenticator.DemoFakeBankAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.configuration.DemoFakeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.transactionalaccount.DemoFakeBankTransactionalAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.sessionhandler.DemoFakeBankSessionHandler;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -32,8 +34,25 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     public DemoFakeBankAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new DemoFakeBankApiClient(client);
+        apiClient = new DemoFakeBankApiClient(client, persistentStorage);
         sessionStorage = new SessionStorage();
+    }
+
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
+
+        Optional<DemoFakeBankConfiguration> demoFakeBankConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getIntegration(DemoFakeBankConstants.INTEGRATION_NAME, DemoFakeBankConfiguration.class);
+
+        String baseUrl =
+                demoFakeBankConfiguration.isPresent()
+                        ? demoFakeBankConfiguration.get().getBaseUrl()
+                        : DemoFakeBankConstants.Urls.DEFAULT_BASE_URL;
+
+        persistentStorage.put(DemoFakeBankConstants.Storage.BASE_URL, baseUrl);
     }
 
     @Override

@@ -8,18 +8,25 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.demofakebank.fetcher.
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class DemoFakeBankApiClient {
     private final TinkHttpClient client;
+    private PersistentStorage persistentStorage;
 
-    public DemoFakeBankApiClient(TinkHttpClient client) {
+    public DemoFakeBankApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
         this.client = client;
+        this.persistentStorage = persistentStorage;
     }
 
     public DemoFakeBankAuthenticateResponse authenticate(
             DemoFakeBankAuthenticationBody authenticationBody) {
-        return createRequest(DemoFakeBankConstants.Urls.AUTHENTICATE_URL)
+        return createRequest(createBaseUrl().concat(DemoFakeBankConstants.Urls.AUTHENTICATE))
                 .post(DemoFakeBankAuthenticateResponse.class, authenticationBody);
+    }
+
+    private URL createBaseUrl() {
+        return new URL(persistentStorage.get(DemoFakeBankConstants.Storage.BASE_URL));
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -29,7 +36,7 @@ public class DemoFakeBankApiClient {
     }
 
     public DemoFakeBankAccountsResponse fetchAccounts(String username, String token) {
-        return createRequest(DemoFakeBankConstants.Urls.ACCOUNTS_URL)
+        return createRequest(createBaseUrl().concat(DemoFakeBankConstants.Urls.ACCOUNTS))
                 .post(
                         DemoFakeBankAccountsResponse.class,
                         new DemoFakeBankAccountBody(username, token));
