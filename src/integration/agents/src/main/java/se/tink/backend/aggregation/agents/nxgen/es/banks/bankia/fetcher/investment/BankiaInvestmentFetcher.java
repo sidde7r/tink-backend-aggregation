@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
@@ -37,68 +38,30 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        List<InvestmentAccountEntity> investments = apiClient.getInvestments();
-        if (investments != null) {
-            return investments.stream()
-                    .filter(
-                            account -> {
-                                if (account.isAccountTypeInvestment()) {
-                                    return true;
-                                }
+        return Optional.ofNullable(apiClient.getInvestments()).orElse(Collections.emptyList())
+                .stream()
+                .filter(
+                        account -> {
+                            if (account.isAccountTypeInvestment()) {
+                                return true;
+                            }
 
-                                log.info(
-                                        "{} Unknown account type or missing fields: {}",
-                                        BankiaConstants.Logging.UNKNOWN_ACCOUNT_TYPE.toString(),
-                                        account.getContract().getProductCode(),
-                                        SerializationUtils.serializeToString(account));
+                            log.info(
+                                    "{} Unknown account type or missing fields: {}",
+                                    BankiaConstants.Logging.UNKNOWN_ACCOUNT_TYPE.toString(),
+                                    account.getContract().getProductCode(),
+                                    SerializationUtils.serializeToString(account));
 
-                                return false;
-                            })
-                    .map(this::fetchInvestmentAccount)
-                    .collect(Collectors.toList());
-        }
-
-        return Collections.emptyList();
+                            return false;
+                        })
+                .map(this::fetchInvestmentAccount)
+                .collect(Collectors.toList());
     }
 
     InvestmentAccount fetchInvestmentAccount(InvestmentAccountEntity account) {
         ContractEntity contract = account.getContract();
 
-        List<Instrument> instruments = new ArrayList<>();
-
-        // We don't have an ambassador with more than one page of stocks, so this pagination implementation is
-        // speculative based on the available fields in the entities
-        PositionWalletResponse response = null;
-        String resumePoint = BankiaConstants.Default.EMPTY_RESUME_POINT;
-        int pagesFetched = 0;
-
-        try {
-            do {
-                response = apiClient.getPositionsWallet(contract.getIdentifierProductContractInternal(), resumePoint);
-                resumePoint = response.getDataRedialExit();
-                pagesFetched++;
-
-                instruments.addAll(response.getQualificationList().stream()
-                        .map(this::mapQualificationToInstrument)
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList()));
-            } while (response.isHasMoreIndicator() && !Strings.isNullOrEmpty(resumePoint) && (pagesFetched < PAGE_LIMIT));
-        } catch (HttpResponseException hre) {
-            log.error(BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(), hre);
-            log.info("{} Instrument fetching error. Last successful page: {}",
-                    BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(),
-                    SerializationUtils.serializeToString(response));
-            if (pagesFetched == 0) {
-                //no instruments were fetched successfully, rethrow the error
-                throw hre;
-            }
-        }
-
-        if (pagesFetched == PAGE_LIMIT) {
-            log.info("{} Instrument fetching error. Too many pages. Last page: {}",
-                    BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(),
-                    SerializationUtils.serializeToString(response));
-        }
+        List<Instrument> instruments = fetchInstrumentsForContract(contract);
 
         Portfolio portfolio = new Portfolio();
         portfolio.setInstruments(instruments);
@@ -113,6 +76,58 @@ public class BankiaInvestmentFetcher implements AccountFetcher<InvestmentAccount
                 .setBankIdentifier(contract.getIdentifierProductContractInternal())
                 .setCashBalance(Amount.inEUR(0.0))
                 .build();
+    }
+
+    private List<Instrument> fetchInstrumentsForContract(ContractEntity contract) {
+        List<Instrument> instruments = new ArrayList<>();
+
+        // We don't have an ambassador with more than one page of stocks, so this pagination
+        // implementation is
+        // speculative based on the available fields in the entities
+        PositionWalletResponse response = null;
+        String resumePoint = BankiaConstants.Default.EMPTY_RESUME_POINT;
+        int pagesFetched = 0;
+
+        try {
+            do {
+                response =
+                        apiClient.getPositionsWallet(
+                                contract.getIdentifierProductContractInternal(), resumePoint);
+                resumePoint = response.getDataRedialExit();
+                pagesFetched++;
+
+                instruments.addAll(
+                        response.getQualificationList().stream()
+                                .map(this::mapQualificationToInstrument)
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.toList()));
+            } while (response.isHasMoreIndicator()
+                    && !Strings.isNullOrEmpty(resumePoint)
+                    && (pagesFetched < PAGE_LIMIT));
+        } catch (HttpResponseException hre) {
+            handleInvestmentFetchingError(response, pagesFetched, hre);
+        }
+
+        if (pagesFetched == PAGE_LIMIT) {
+            log.info(
+                    "{} Instrument fetching error. Too many pages. Last page: {}",
+                    BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(),
+                    SerializationUtils.serializeToString(response));
+        }
+        return instruments;
+    }
+
+    private void handleInvestmentFetchingError(
+            PositionWalletResponse response, int pagesFetched, HttpResponseException hre) {
+        log.error(BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(), hre);
+        log.info(
+                "{} Instrument fetching error. Last successful page: {}",
+                BankiaConstants.Logging.INSTRUMENT_FETCHING_ERROR.toString(),
+                SerializationUtils.serializeToString(response));
+        if (pagesFetched == 0) {
+            // no instruments were fetched successfully, rethrow the error
+            throw hre;
+        }
     }
 
     private Instrument mapQualificationToInstrument(QualificationEntity qualification) {
