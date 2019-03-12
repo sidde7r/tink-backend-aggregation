@@ -18,7 +18,13 @@ STATUS_ENUMS = {
 
 GROUP_IDS = {
     "se": "c20kyrkjrgks",
-    "be": "lw36806hwvfm"
+    "be": "lw36806hwvfm",
+    "at": "n8p3fc6ltzfw",
+    "es": "zxf8mcfwz08q",
+    "fi": "rkknf5992fpg",
+    "uk": "cbvwtp1bxzhm",
+    "dk": "f1bctj61c0bv",
+    "no": "t99h0j1xfrj0"
 }
 
 # PROMETHEUS
