@@ -33,7 +33,7 @@ public class CreditCardEntity {
                 // Using as number the ID created in previous step as that's how it's shown in the
                 // app
                 .setAccountNumber(uniqueId)
-                .putInTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
+                .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, id)
                 .setBalance(new Amount(currency, StringUtils.parseAmount(availableBalance)))
                 .setName(name)
                 .build();

@@ -104,7 +104,7 @@ public class BbvaApiClient {
         return createRequestInSession(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
                 .queryParam(
                         QueryKeys.CONTRACT_ID,
-                        account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID))
+                        account.getFromTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID))
                 .queryParam(
                         QueryKeys.CARD_TRANSACTION_TYPE,
                         BbvaConstants.AccountType.CREDIT_CARD_SHORT_TYPE)
@@ -131,7 +131,7 @@ public class BbvaApiClient {
     }
 
     public TransactionsRequest createAccountTransactionsQuery(Account account) {
-        final String accountId = account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID);
+        final String accountId = account.getFromTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID);
         AccountContractsEntity accountContract = new AccountContractsEntity();
         accountContract.setContract(new ContractEntity().setId(accountId));
 

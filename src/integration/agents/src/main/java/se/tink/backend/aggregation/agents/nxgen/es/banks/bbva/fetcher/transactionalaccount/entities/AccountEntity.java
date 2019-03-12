@@ -50,7 +50,7 @@ public class AccountEntity {
                 .setAccountNumber(iban)
                 .setName(name)
                 .setHolderName(holderName)
-                .putInTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
+                .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, id)
                 .addIdentifier(AccountIdentifier.create(IBAN, normalizedIban))
                 .build();
     }

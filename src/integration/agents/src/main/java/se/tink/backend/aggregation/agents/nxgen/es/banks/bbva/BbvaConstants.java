@@ -24,9 +24,11 @@ public final class BbvaConstants {
         }
     }
 
-    public static final class Storage {
+    public static final class StorageKeys {
         public static final String ACCOUNT_ID = "accountId";
         public static final String HOLDER_NAME = "holderName";
+        public static final String USER_ID = "userId";
+        public static final String TSEC = "tsec";
     }
 
     public static final class Defaults {

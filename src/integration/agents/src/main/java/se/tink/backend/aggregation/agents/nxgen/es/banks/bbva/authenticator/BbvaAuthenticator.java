@@ -40,7 +40,7 @@ public class BbvaAuthenticator implements PasswordAuthenticator {
                                 initiateSessionResponse.getResult().getCode()));
             }
             sessionStorage.put(
-                    BbvaConstants.Storage.HOLDER_NAME, initiateSessionResponse.getName());
+                    BbvaConstants.StorageKeys.HOLDER_NAME, initiateSessionResponse.getName());
         } else if (responseString
                 .toLowerCase()
                 .contains(BbvaConstants.Message.LOGIN_WRONG_CREDENTIAL_CODE)) {

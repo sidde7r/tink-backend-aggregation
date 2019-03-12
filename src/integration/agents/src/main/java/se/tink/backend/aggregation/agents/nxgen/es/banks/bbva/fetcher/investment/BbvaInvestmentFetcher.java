@@ -31,7 +31,7 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
     public Collection<InvestmentAccount> fetchAccounts() {
         List<InvestmentAccount> accounts = new ArrayList<>();
         ProductsResponse productsResponse = apiClient.fetchProducts();
-        String holderName = sessionStorage.get(BbvaConstants.Storage.HOLDER_NAME);
+        String holderName = sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME);
 
         // investment logging
         logInvestment(

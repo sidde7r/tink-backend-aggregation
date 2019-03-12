@@ -27,7 +27,7 @@ public class BbvaAccountFetcher implements AccountFetcher<TransactionalAccount> 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         HolderName holderName =
-                Optional.ofNullable(sessionStorage.get(BbvaConstants.Storage.HOLDER_NAME))
+                Optional.ofNullable(sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME))
                         .map(holdername -> new HolderName(holdername))
                         .orElse(null);
 
