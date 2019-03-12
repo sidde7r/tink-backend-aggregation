@@ -1,7 +1,6 @@
 {
   "clusterid" : "farnham-production",
   "providers" : [
-    "alandsbanken",
     "americanexpress",
     "avanza",
     "avanza-bankid",
