@@ -18,6 +18,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -35,17 +36,23 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         logDeposits();
-        logServicingFunds();
         logPensionPlans();
         logSavings();
+        logServicingFunds();
 
-        return apiClient.fetchProducts().getInvestmentProduct().getSecurities().getAccounts()
-                .stream()
-                .map(aggregateInvestmentAccount())
-                .collect(Collectors.toList());
+        List<InvestmentAccount> allInvestmentAccounts = new ArrayList<>();
+
+        List<InvestmentAccount> stockInvestmentAccounts =
+                apiClient.fetchProducts().getInvestmentProduct().getSecurities().getAccounts()
+                        .stream()
+                        .map(aggregateStockInvestmentAccount())
+                        .collect(Collectors.toList());
+
+        allInvestmentAccounts.addAll(stockInvestmentAccounts);
+        return allInvestmentAccounts;
     }
 
-    private Function<AccountEntity, InvestmentAccount> aggregateInvestmentAccount() {
+    private Function<AccountEntity, InvestmentAccount> aggregateStockInvestmentAccount() {
         return accountEntity -> {
             List<Instrument> instruments =
                     apiClient.fetchMarkets(new MarketsRequest(accountEntity)).getMarkets().stream()

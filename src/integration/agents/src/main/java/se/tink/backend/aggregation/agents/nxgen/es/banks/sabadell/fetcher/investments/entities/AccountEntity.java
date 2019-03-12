@@ -85,6 +85,7 @@ public class AccountEntity {
         return mappedAttributes;
     }
 
+    @JsonIgnore
     private String composeKey(String firstKey, String... otherKeys) {
         final String firstKeyPrefix = "account[";
         final String otherKeyPrefix = "[";
