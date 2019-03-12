@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -16,9 +15,11 @@ public class BbvaCreditCardFetcher implements AccountFetcher<CreditCardAccount> 
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return apiClient.fetchProducts().getCards().stream()
+        return apiClient
+                .fetchProducts()
+                .getCards()
                 .filter(CreditCardEntity::isCreditCard)
                 .map(CreditCardEntity::toTinkCreditCard)
-                .collect(Collectors.toList());
+                .toJavaList();
     }
 }

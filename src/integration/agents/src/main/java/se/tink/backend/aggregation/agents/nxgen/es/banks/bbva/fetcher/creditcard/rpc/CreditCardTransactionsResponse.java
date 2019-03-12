@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.vavr.collection.List;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.CreditCardTransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.CreditCardTransactionsPaginationEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
@@ -22,15 +21,13 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     @JsonIgnore
     @Override
     public Collection<CreditCardTransaction> getTinkTransactions() {
-        return items.stream()
-                .map(CreditCardTransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        return items.map(CreditCardTransactionEntity::toTinkTransaction).toJavaList();
     }
 
     @JsonIgnore
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.ofNullable(moreResults);
+        return Optional.of(moreResults);
     }
 
     @JsonIgnore
@@ -38,7 +35,7 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     public String nextKey() {
         if (moreResults) {
             String nextPageLink = this.pagination.getNextPage();
-            return BbvaUtils.splitUtlGetKey(nextPageLink).orElseGet(() -> "");
+            return BbvaUtils.splitUtlGetKey(nextPageLink).orElse("");
         }
         throw new IllegalStateException("Trying to paginate when no more pages.");
     }
