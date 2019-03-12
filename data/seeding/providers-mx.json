@@ -36,8 +36,8 @@
       "market": "MX",
       "multiFactor": false,
       "passwordHelpText": "Use the same credentials as when you log in to BBVA",
-      "refreshFrequency": 1,
-      "refreshFrequencyFactor": 1,
+      "refreshFrequency": 0,
+      "refreshFrequencyFactor": 0,
       "status": "ENABLED",
       "transactional": true,
       "type": "BANK"
