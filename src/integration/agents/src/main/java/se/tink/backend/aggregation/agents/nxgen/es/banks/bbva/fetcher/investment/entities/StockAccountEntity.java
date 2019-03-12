@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,16 +34,13 @@ public class StockAccountEntity {
     private String accountNumber;
 
     @JsonObject
-    public InvestmentAccount toTinkAccount(BbvaApiClient apiClient, String holderName) {
-        HolderName holder = null;
-        if (!Strings.isNullOrEmpty(holderName)) {
-            holder = new HolderName(holderName);
-        }
+    public InvestmentAccount toTinkAccount(BbvaApiClient apiClient, String holder) {
+        final HolderName holderName = Optional.ofNullable(holder).map(HolderName::new).orElse(null);
 
         return InvestmentAccount.builder(id)
                 .setName(name)
                 .setAccountNumber(accountNumber)
-                .setHolderName(holder)
+                .setHolderName(holderName)
                 .setCashBalance(new Amount(currency, 0.0))
                 .setPortfolios(getPortfolio(apiClient))
                 .build();

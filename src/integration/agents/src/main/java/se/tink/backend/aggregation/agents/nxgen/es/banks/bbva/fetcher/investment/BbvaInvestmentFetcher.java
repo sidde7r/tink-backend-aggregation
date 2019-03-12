@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment;
 
-import java.util.ArrayList;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
@@ -15,6 +13,9 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_INTERNATIONAL_PORTFOLIO;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_MANAGED_FUNDS;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_WEALTH_DEPOSITARY;
 
 public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger LOGGER =
@@ -29,39 +30,24 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
 
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
-        List<InvestmentAccount> accounts = new ArrayList<>();
-        ProductsResponse productsResponse = apiClient.fetchProducts();
-        String holderName = sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME);
+        final String holderName = sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME);
 
-        // investment logging
-        logInvestment(
-                productsResponse.getInternationalFundsPortfolios(),
-                BbvaConstants.LogTags.INVESTMENT_INTERNATIONAL_PORTFOLIO);
-        logInvestment(
-                productsResponse.getManagedFundsPortfolios(),
-                BbvaConstants.LogTags.INVESTMENT_MANAGED_FUNDS);
-        logInvestment(
-                productsResponse.getWealthDepositaryPortfolios(),
-                BbvaConstants.LogTags.INVESTMENT_WEALTH_DEPOSITARY);
-
-        accounts.addAll(
-                Optional.ofNullable(productsResponse.getStockAccounts())
-                        .orElse(Collections.emptyList()).stream()
-                        .map(stockAccount -> stockAccount.toTinkAccount(apiClient, holderName))
-                        .collect(Collectors.toList()));
-
-        return accounts;
+        return Try.of(() -> apiClient.fetchProducts())
+                .peek(r -> log(r.getInternationalFundsPortfolios(), INVESTMENT_INTERNATIONAL_PORTFOLIO))
+                .peek(r -> log(r.getManagedFundsPortfolios(), INVESTMENT_MANAGED_FUNDS))
+                .peek(r -> log(r.getWealthDepositaryPortfolios(), INVESTMENT_WEALTH_DEPOSITARY))
+                .map(ProductsResponse::getStockAccounts)
+                .filter(l -> !l.isEmpty())
+                .getOrElse(List.empty())
+                .map(stockAccount -> stockAccount.toTinkAccount(apiClient, holderName))
+                .toJavaList();
     }
 
-    private void logInvestment(List<Object> data, LogTag logTag) {
-        if (data == null || data.isEmpty()) {
-            return;
-        }
-
-        try {
-            LOGGER.infoExtraLong(SerializationUtils.serializeToString(data), logTag);
-        } catch (Exception e) {
-            LOGGER.warn(logTag.toString() + " - Failed to log investment data, " + e.getMessage());
-        }
+    private void log(List<Object> data, LogTag logTag) {
+        Option.of(data)
+                .filter(d -> !d.isEmpty())
+                .toTry()
+                .onSuccess(d -> LOGGER.infoExtraLong(SerializationUtils.serializeToString(d), logTag))
+                .onFailure(e -> LOGGER.warn(logTag.toString() + " - Failed to log investment data, " + e.getMessage()));
     }
 }
