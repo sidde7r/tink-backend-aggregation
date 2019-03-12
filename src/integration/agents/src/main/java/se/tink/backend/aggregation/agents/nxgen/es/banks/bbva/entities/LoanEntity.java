@@ -142,16 +142,15 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
-        final LoanDetails loanDetails = LoanDetails.builder(getTinkLoanType())
-                .setInitialBalance(awardedAmount.toTinkAmount())
-                .setLoanNumber(digit)
-                .setMonthlyAmortization(nextFee.toTinkAmount())
-                .setAmortized(redeemedBalance.toTinkAmount())
-                .build();
+        final LoanDetails loanDetails =
+                LoanDetails.builder(getTinkLoanType())
+                        .setInitialBalance(awardedAmount.toTinkAmount())
+                        .setLoanNumber(digit)
+                        .setMonthlyAmortization(nextFee.toTinkAmount())
+                        .setAmortized(redeemedBalance.toTinkAmount())
+                        .build();
 
-        return (LoanAccount) buildTinkLoanAccount()
-                .setDetails(loanDetails)
-                .build();
+        return (LoanAccount) buildTinkLoanAccount().setDetails(loanDetails).build();
     }
 
     @JsonIgnore

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
-import java.util.Optional;
+import io.vavr.control.Option;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -13,31 +13,31 @@ public class ContractEntity {
     private LoanEntity loan;
     private AccountEntity account;
 
-    public Optional<CreditCardEntity> getCreditCard() {
-        return Optional.ofNullable(creditCard);
+    public Option<CreditCardEntity> getCreditCard() {
+        return Option.of(creditCard);
     }
 
-    public Optional<PensionPlanEntity> getPensionPlan() {
-        return Optional.ofNullable(pensionPlan);
+    public Option<PensionPlanEntity> getPensionPlan() {
+        return Option.of(pensionPlan);
     }
 
-    public Optional<DebitCardEntity> getDebitCard() {
-        return Optional.ofNullable(debitCard);
+    public Option<DebitCardEntity> getDebitCard() {
+        return Option.of(debitCard);
     }
 
-    public Optional<InsuranceEntity> getInsurance() {
-        return Optional.ofNullable(insurance);
+    public Option<InsuranceEntity> getInsurance() {
+        return Option.of(insurance);
     }
 
-    public Optional<PrepaidCardEntity> getPrepaidCard() {
-        return Optional.ofNullable(prepaidCard);
+    public Option<PrepaidCardEntity> getPrepaidCard() {
+        return Option.of(prepaidCard);
     }
 
-    public Optional<LoanEntity> getLoan() {
-        return Optional.ofNullable(loan);
+    public Option<LoanEntity> getLoan() {
+        return Option.of(loan);
     }
 
-    public Optional<AccountEntity> getAccount() {
-        return Optional.ofNullable(account);
+    public Option<AccountEntity> getAccount() {
+        return Option.of(account);
     }
 }

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc;
 
-import java.util.List;
+import io.vavr.collection.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.FamilyBalanceEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
