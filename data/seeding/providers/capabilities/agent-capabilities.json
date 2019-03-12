@@ -289,7 +289,8 @@
     "nxgen.es.banks.bankia.BankiaAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
-        "CREDIT_CARDS"
+        "CREDIT_CARDS",
+        "INVESTMENTS"
     ],
     "nxgen.es.banks.bbva.BbvaAgent": [
         "CHECKING_ACCOUNTS",

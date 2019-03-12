@@ -27,6 +27,8 @@ public abstract class BankiaConstants {
                 URL_BASE_OIP + "/api/1.0/servicios/cuenta.movimiento/3.0/cuenta/movimiento";
         public static final String CREDIT_CARD_TRANSACTIONS =
                 URL_BASE_OIP + "/api/1.0/operativas/2.0/tarjetas/movimientos";
+        public static final String VALUE_ACCOUNT_POSITION_WALLET =
+                URL_BASE_OIP + "/api/microservicios/1.0/valores/posicionCartera";
 
         public static final String LOANS_OVERVIEW =
                 URL_BASE_M + "/es/prestamos/mis-prestamos";
@@ -77,6 +79,7 @@ public abstract class BankiaConstants {
         public static final String OMP = "omp";
         public static final String O3 = "o3";
         public static final String _1 = "1";
+        public static final String EMPTY_RESUME_POINT = "";
     }
 
     public static class StorageKey {
@@ -101,6 +104,7 @@ public abstract class BankiaConstants {
                         .put("11403", AccountTypes.OTHER)
                         .put("11658", AccountTypes.OTHER)
                         .put("11359", AccountTypes.CHECKING) // Under aged account
+                        .put("31000", AccountTypes.INVESTMENT)
                         .build();
 
         public static Optional<AccountTypes> translateType(String bankiaProductCode) {
@@ -115,6 +119,10 @@ public abstract class BankiaConstants {
         public static final String CREDIT_CARD = "C";
     }
 
+    public static class InstrumentTypes {
+        public static final String STOCK = "01"; // Type description (in Spanish): ACCIONES
+    }
+
     public static class Regex {
         public static final String CARD_NUMBER_UNMASKED = "[0-9]{16}";
     }
@@ -122,5 +130,7 @@ public abstract class BankiaConstants {
     public static class Logging {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bankia_unknown_account_type");
         public static final LogTag LOAN = LogTag.from("bankia_loan");
+        public static final LogTag UNKNOWN_INSTRUMENT_TYPE = LogTag.from("bankia_unknown_instrument_type");
+        public static final LogTag INSTRUMENT_FETCHING_ERROR = LogTag.from("bankia_error_instrument_fetch");
     }
 }

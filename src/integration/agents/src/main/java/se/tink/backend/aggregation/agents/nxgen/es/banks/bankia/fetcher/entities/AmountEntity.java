@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
-import java.util.Objects;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
+
+import java.math.BigDecimal;
+import java.util.Objects;
 
 @JsonObject
 public class AmountEntity {
