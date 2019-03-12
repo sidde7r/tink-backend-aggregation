@@ -10,14 +10,10 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class FakeAccount {
 
-    @JsonProperty
-    private AccountType accountType;
-    @JsonProperty
-    private String accountNumber;
-    @JsonProperty
-    private double balance;
-    @JsonProperty
-    private String currency;
+    @JsonProperty private AccountType accountType;
+    @JsonProperty private String accountNumber;
+    @JsonProperty private double balance;
+    @JsonProperty private String currency;
 
     public FakeAccount() {}
 
@@ -31,7 +27,7 @@ public class FakeAccount {
                 .addAccountIdentifier(
                         new SwedishIdentifier(
                                 getAccountNumber())) // TODO: What should the identifier be?
-                                                     // clearing etc?
+                // clearing etc?
                 .build();
     }
 
