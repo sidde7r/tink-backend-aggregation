@@ -1,7 +1,6 @@
 {
   "clusterid" : "farnham-staging",
   "providers" : [
-    "alandsbanken",
     "americanexpress",
     "avanza",
     "avanza-bankid",
