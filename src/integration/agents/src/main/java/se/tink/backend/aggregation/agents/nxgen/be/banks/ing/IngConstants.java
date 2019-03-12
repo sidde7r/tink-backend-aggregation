@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 public class IngConstants {
 
+    public static final String APP_VERSION = "8.11";
+
     public static final class Urls {
         static final String HOST = "https://mobilebanking.ing.be";
 
@@ -20,7 +22,8 @@ public class IngConstants {
 
     public static final class Headers {
         public static final String USER_AGENT = "Mozilla/5.0 (iPhone8,1; U; CPU OS 10.3.1 like Mac OS X; en-us) "
-                + "AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10; MyING.be/8.4";
+                + "AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10; MyING.be/"
+                + APP_VERSION;
 
         public static final String LOCATION = "location";
         public static final String TAM_ERROR = "tam_op=error";
@@ -103,7 +106,7 @@ public class IngConstants {
             USER_LANG_CODE("userLanguageCode", "EN"),
             LANG_AT_AUTH("langatauth", "/EN/"),
             LANG("lang", "/EN/"),
-            APP_IDENTIFICATION("applicationIdentification", "8.7"),
+            APP_IDENTIFICATION("applicationIdentification", APP_VERSION),
             USER_PROFILE("userProfile", "M_iOS"),
             CHANNEL_CODE("channelCode", "4"),
             APP_NAME("AppName", "1"),
