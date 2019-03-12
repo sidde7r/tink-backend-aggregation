@@ -7,6 +7,8 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
@@ -24,8 +26,10 @@ public class BbvaAuthenticator implements PasswordAuthenticator {
     @Override
     public void authenticate(String username, String password)
             throws AuthenticationException, AuthorizationException {
+        final LoginRequest loginRequest =
+                new LoginRequest(BbvaUtils.formatUsername(username), password);
 
-        HttpResponse response = apiClient.login(username, password);
+        HttpResponse response = apiClient.login(loginRequest);
 
         String responseString = response.getBody(String.class);
 

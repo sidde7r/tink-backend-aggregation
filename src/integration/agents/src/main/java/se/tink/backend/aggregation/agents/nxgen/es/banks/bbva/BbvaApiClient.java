@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.UrlEncodedFormBody;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityRequest;
@@ -63,16 +63,13 @@ public class BbvaApiClient {
                 .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent());
     }
 
-    public HttpResponse login(String username, String password) {
-        final String loginBody =
-                UrlEncodedFormBody.createLoginRequest(BbvaUtils.formatUsername(username), password);
-
+    public HttpResponse login(LoginRequest loginRequest) {
         return client.request(BbvaConstants.Url.LOGIN)
                 .type(HeaderKeys.CONTENT_TYPE_URLENCODED_UTF8)
                 .accept(MediaType.WILDCARD)
                 .header(HeaderKeys.CONSUMER_ID_KEY, HeaderKeys.CONSUMER_ID_VALUE)
                 .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent())
-                .post(HttpResponse.class, loginBody);
+                .post(HttpResponse.class, loginRequest);
     }
 
     public void logout() {
