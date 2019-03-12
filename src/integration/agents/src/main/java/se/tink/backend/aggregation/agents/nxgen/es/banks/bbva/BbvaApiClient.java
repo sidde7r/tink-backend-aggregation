@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import com.google.common.collect.ImmutableList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
@@ -25,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -142,15 +141,13 @@ public class BbvaApiClient {
     }
 
     public InitiateSessionResponse initiateSession() throws SessionException, BankServiceException {
-        Map<String, String> body = new HashMap<>();
-        body.put(
-                BbvaConstants.PostParameter.CONSUMER_ID_KEY,
-                BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
+        final InitiateSessionRequest request =
+                new InitiateSessionRequest(BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
 
         HttpResponse response =
                 createRequest(BbvaConstants.Url.SESSION)
                         .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent())
-                        .post(HttpResponse.class, body);
+                        .post(HttpResponse.class, request);
 
         if (MediaType.TEXT_HTML.equalsIgnoreCase(
                 response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE))) {
