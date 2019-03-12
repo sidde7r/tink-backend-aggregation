@@ -32,18 +32,19 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BbvaApiClient {
     private static final Logger LOG = LoggerFactory.getLogger(BbvaApiClient.class);
 
-    private TinkHttpClient client;
-    private String userAgent;
-    private String userId;
-    private String tsec;
+    private final TinkHttpClient client;
+    private final SessionStorage sessionStorage;
+    private final String userAgent;
 
-    public BbvaApiClient(TinkHttpClient client) {
+    public BbvaApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
+        this.sessionStorage = sessionStorage;
         this.userAgent =
                 String.format(HeaderKeys.BBVA_USER_AGENT_VALUE, BbvaUtils.generateRandomHex());
     }
@@ -188,18 +189,18 @@ public class BbvaApiClient {
     }
 
     public String getTsec() {
-        return tsec;
+        return sessionStorage.get(BbvaConstants.StorageKeys.TSEC);
     }
 
     private void setTsec(String tsec) {
-        this.tsec = tsec;
+        sessionStorage.put(BbvaConstants.StorageKeys.TSEC, tsec);
     }
 
     public String getUserId() {
-        return userId;
+        return sessionStorage.get(BbvaConstants.StorageKeys.USER_ID);
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        sessionStorage.put(BbvaConstants.StorageKeys.USER_ID, userId);
     }
 }
