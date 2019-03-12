@@ -193,6 +193,16 @@ public final class AccountStepBuilderTest {
                 .setBalance(null);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void ensureAlias_null_ThrowsException() {
+
+        SavingsAccount.builder()
+                .setUniqueIdentifier(VALID_UNIQUE_ID)
+                .setAccountNumber(VALID_ACCOUNT_NUMBER)
+                .setBalance(VALID_AMOUNT)
+                .setAlias(null);
+    }
+
     @Test
     public void ensureIdentifiers_two_isOk() {
 
