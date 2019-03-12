@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 
 @Ignore
-public class BBVAAgentTest {
+public class BbvaMxAgentTest {
 
     private final ArgumentHelper helper =
             new ArgumentHelper("tink.username", "tink.password", "tink.market", "tink.provider");

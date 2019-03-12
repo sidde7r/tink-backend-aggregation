@@ -5,7 +5,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxUtils;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.DeviceActivationRequest;
 
-public class BBVAUtilTest {
+public class BbvaMxUtilTest {
 
     @Test
     public void verifyGenerateTokenHash() {
