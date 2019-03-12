@@ -94,6 +94,9 @@
     "creditcards.sebkort.SEBKortAgent": [
         "CREDIT_CARDS"
     ],
+    "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent": [
+        "CREDIT_CARDS"
+    ],
     "creditcards.supremecard.v2.SupremeCardAgent": [
         "CREDIT_CARDS"
     ],
