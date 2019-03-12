@@ -129,6 +129,10 @@ public abstract class Account {
             this.balance = balance;
         }
 
+        protected final void applyAlias(@Nonnull String alias) {
+            this.alias = alias;
+        }
+
         @Override
         public final B addAccountIdentifier(@Nonnull AccountIdentifier identifier) {
             Preconditions.checkNotNull(identifier, "AccountIdentifier must not be null.");
@@ -145,12 +149,6 @@ public abstract class Account {
         @Override
         public final B setApiIdentifier(@Nonnull String identifier) {
             this.apiIdentifier = identifier;
-            return buildStep();
-        }
-
-        @Override
-        public final B setAlias(@Nonnull String alias) {
-            this.alias = alias;
             return buildStep();
         }
 

@@ -72,6 +72,7 @@ public class AccountsItem {
                 .setUniqueIdentifier(getIban())
                 .setAccountNumber(getIban())
                 .setBalance(balanceResponse.toAmount())
+                .setAlias(getIban())
                 .addAccountIdentifier(new IbanIdentifier(getIban()))
                 .putInTemporaryStorage(RabobankConstants.StorageKey.RESOURCE_ID, getResourceId())
                 .build();

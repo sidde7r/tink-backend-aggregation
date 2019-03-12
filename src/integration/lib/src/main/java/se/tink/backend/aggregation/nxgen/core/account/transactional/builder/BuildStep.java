@@ -17,13 +17,6 @@ public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
     B setApiIdentifier(@Nonnull String identifier);
 
     /**
-     * Sets the name of the account to the given value. Alias should be recognizable for the account holder.
-     * @param alias The name/alias of the account.
-     * @return The next step of the builder.
-     */
-    B setAlias(@Nonnull String alias);
-
-    /**
      * Sets the product name of the account. This is typically what the bank calls this type of account but can be
      * more specific than the account type.
      * e.g. "Corporate Loan Account", "Investment Holdings Depot".

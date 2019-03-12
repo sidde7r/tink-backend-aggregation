@@ -16,8 +16,7 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
 
     private final StarlingApiClient apiClient;
 
-    public StarlingTransactionalAccountFetcher(
-            StarlingApiClient apiClient) {
+    public StarlingTransactionalAccountFetcher(StarlingApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
@@ -32,7 +31,8 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
                 .collect(Collectors.toList());
     }
 
-    private TransactionalAccount constructAccount(final String accountUid, final String holderName) {
+    private TransactionalAccount constructAccount(
+            final String accountUid, final String holderName) {
 
         AccountIdentifiersResponse identifiers = apiClient.fetchAccountIdentifiers(accountUid);
         AccountBalanceResponse balance = apiClient.fetchAccountBalance(accountUid);
@@ -41,6 +41,7 @@ public class StarlingTransactionalAccountFetcher implements AccountFetcher<Trans
                 .setUniqueIdentifier(identifiers.getIban())
                 .setAccountNumber(identifiers.getAccountIdentifier())
                 .setBalance(balance.getAmount())
+                .setAlias(identifiers.getAccountIdentifier())
                 .addAccountIdentifier(identifiers.getIbanIdentifier())
                 .addAccountIdentifier(identifiers.getSortCodeIdentifier())
                 .setApiIdentifier(accountUid)

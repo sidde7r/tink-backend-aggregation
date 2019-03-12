@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountIdentifierStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountNumberStep;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AliasStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BalanceStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.SavingsBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
@@ -55,6 +56,7 @@ public class SavingsAccount extends TransactionalAccount {
             implements UniqueIdentifierStep<SavingsBuildStep>,
             AccountNumberStep<SavingsBuildStep>,
             BalanceStep<SavingsBuildStep>,
+            AliasStep<SavingsBuildStep>,
             AccountIdentifierStep<SavingsBuildStep>,
             SavingsBuildStep {
 
@@ -74,8 +76,14 @@ public class SavingsAccount extends TransactionalAccount {
         }
 
         @Override
-        public AccountIdentifierStep<SavingsBuildStep> setBalance(@Nonnull Amount balance) {
+        public AliasStep<SavingsBuildStep> setBalance(@Nonnull Amount balance) {
             applyBalance(balance);
+            return this;
+        }
+
+        @Override
+        public AccountIdentifierStep<SavingsBuildStep> setAlias(@Nonnull String alias) {
+            applyAlias(alias);
             return this;
         }
 

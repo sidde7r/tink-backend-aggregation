@@ -27,6 +27,7 @@ public class FakeAccount {
                 .setUniqueIdentifier(getAccountNumber())
                 .setAccountNumber(getAccountNumber())
                 .setBalance(new Amount(currency, balance))
+                .setAlias(getAccountNumber())
                 .addAccountIdentifier(
                         new SwedishIdentifier(
                                 getAccountNumber())) // TODO: What should the identifier be?

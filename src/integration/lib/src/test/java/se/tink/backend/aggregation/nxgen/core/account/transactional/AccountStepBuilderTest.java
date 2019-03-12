@@ -36,6 +36,7 @@ public final class AccountStepBuilderTest {
                 .setUniqueIdentifier(VALID_UNIQUE_ID)
                 .setAccountNumber(VALID_ACCOUNT_NUMBER)
                 .setBalance(VALID_AMOUNT)
+                .setAlias(VALID_ALIAS)
                 .addAccountIdentifier(VALID_IBAN_IDENTIFIER);
     }
 
@@ -45,6 +46,7 @@ public final class AccountStepBuilderTest {
                 .setUniqueIdentifier(VALID_UNIQUE_ID)
                 .setAccountNumber(VALID_ACCOUNT_NUMBER)
                 .setBalance(VALID_AMOUNT)
+                .setAlias(VALID_ALIAS)
                 .addAccountIdentifier(VALID_IBAN_IDENTIFIER);
     }
 
@@ -76,7 +78,6 @@ public final class AccountStepBuilderTest {
     public void ensureSet_optionalFields_CheckingAccount() {
         CheckingAccount account =
                 getRequiredCheckingBuilder()
-                        .setAlias(VALID_ALIAS)
                         .setApiIdentifier(VALID_API_IDENTIFIER)
                         .setProductName(VALID_PRODUCT_NAME)
                         .addHolderName(VALID_HOLDER_NAME)
@@ -92,7 +93,6 @@ public final class AccountStepBuilderTest {
     public void ensureSet_optionalFields_SavingsAccount() {
         SavingsAccount account =
                 getRequiredSavingsBuilder()
-                        .setAlias(VALID_ALIAS)
                         .setApiIdentifier(VALID_API_IDENTIFIER)
                         .setProductName(VALID_PRODUCT_NAME)
                         .addHolderName(VALID_HOLDER_NAME)
@@ -146,6 +146,7 @@ public final class AccountStepBuilderTest {
                         .setUniqueIdentifier(formattedId)
                         .setAccountNumber(VALID_ACCOUNT_NUMBER)
                         .setBalance(VALID_AMOUNT)
+                        .setAlias(VALID_ALIAS)
                         .addAccountIdentifier(VALID_IBAN_IDENTIFIER)
                         .build();
 
@@ -200,6 +201,7 @@ public final class AccountStepBuilderTest {
                         .setUniqueIdentifier(VALID_UNIQUE_ID)
                         .setAccountNumber(VALID_ACCOUNT_NUMBER)
                         .setBalance(VALID_AMOUNT)
+                        .setAlias(VALID_ALIAS)
                         .addAccountIdentifier(VALID_IBAN_IDENTIFIER)
                         .addAccountIdentifier(VALID_TINK_IDENTIFIER)
                         .build();
@@ -216,6 +218,7 @@ public final class AccountStepBuilderTest {
                 .setUniqueIdentifier(VALID_UNIQUE_ID)
                 .setAccountNumber(VALID_ACCOUNT_NUMBER)
                 .setBalance(VALID_AMOUNT)
+                .setAlias(VALID_ALIAS)
                 .addAccountIdentifier(VALID_IBAN_IDENTIFIER)
                 .addAccountIdentifier(VALID_IBAN_IDENTIFIER)
                 .build();

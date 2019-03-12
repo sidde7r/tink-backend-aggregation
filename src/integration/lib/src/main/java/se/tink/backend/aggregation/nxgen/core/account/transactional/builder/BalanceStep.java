@@ -11,5 +11,5 @@ public interface BalanceStep<S> {
      * @param balance The balance to be set
      * @return The next step of the builder
      */
-    AccountIdentifierStep<S> setBalance(@Nonnull Amount balance);
+    AliasStep<S> setBalance(@Nonnull Amount balance);
 }

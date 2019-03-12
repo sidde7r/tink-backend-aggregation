@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher;
 
-import com.google.common.base.Strings;
+import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.IngConstants.AccountCategories;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.ing.v195.fetcher.entity.Product;
@@ -15,6 +15,7 @@ import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class IngTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
@@ -48,17 +49,19 @@ public class IngTransactionalAccountFetcher implements AccountFetcher<Transactio
             throw new IllegalStateException("Unknown account type");
         }
 
+        String alias =
+                Optional.ofNullable(product.getAlias())
+                        .filter(StringUtils::isNotEmpty)
+                        .orElse(product.getIban());
+
         BuildStep buildStep = builder
                 .setUniqueIdentifier(product.getUniqueIdentifierForTransactionAccount())
                 .setAccountNumber(product.getIban())
                 .setBalance(new Amount(product.getCurrency(), product.getBalance()))
+                .setAlias(alias)
                 .addAccountIdentifier(new IbanIdentifier(product.getBic(), product.getIbanCanonical()))
                 .setApiIdentifier(product.getUuid())
                 .setProductName(product.getName());
-
-        if (!Strings.isNullOrEmpty(product.getAlias())) {
-            buildStep.setAlias(product.getAlias());
-        }
 
         product.getHolders().forEach(holder -> {
             buildStep.addHolderName(holder.getAnyName());
