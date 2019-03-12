@@ -40,8 +40,9 @@ public class AccountEntity {
     private double actualBalance;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(HolderName holderName) {
-        String normalizedIban = iban.replaceAll(" ", "").toLowerCase();
+    public TransactionalAccount toTinkAccount(String holder) {
+        final String normalizedIban = iban.replaceAll(" ", "").toLowerCase();
+        final HolderName holderName = Optional.ofNullable(holder).map(HolderName::new).orElse(null);
 
         return TransactionalAccount.builder(
                         getTinkAccountType(),
