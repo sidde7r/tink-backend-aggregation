@@ -284,8 +284,10 @@ public abstract class Account {
         return this.uniqueIdentifier.equals(sanitizeUniqueIdentifier(otherUniqueIdentifier));
     }
 
-    /** @deprecated Use getApiIdentifier() instead.
-     * @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId */
+    /**
+     * @deprecated Use getApiIdentifier() instead.
+     * @return Unique identifier on the bank side, not to be confused with rpc Account.getBankId
+     */
     @Deprecated
     public String getBankIdentifier() {
         return this.apiIdentifier;
@@ -319,9 +321,8 @@ public abstract class Account {
         account.setHolderName(HolderName.toString(this.holderName));
         account.setFlags(this.accountFlags);
         account.setPayload(createPayload(user));
-        account.setAvailableCredit(Optional.ofNullable(this.availableCredit)
-                .map(Amount::getValue)
-                .orElse(0.0));
+        account.setAvailableCredit(
+                Optional.ofNullable(this.availableCredit).map(Amount::getValue).orElse(0.0));
 
         return account;
     }

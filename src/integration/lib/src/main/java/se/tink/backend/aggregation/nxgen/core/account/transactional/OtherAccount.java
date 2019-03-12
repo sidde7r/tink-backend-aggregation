@@ -27,28 +27,25 @@ public class OtherAccount extends TransactionalAccount {
         LOG.info("Unknown_account_type " + this.getName());
     }
 
-
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultOtherAccountBuilder(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier)
-                .setBalance(balance);
+        return builder(uniqueIdentifier).setBalance(balance);
     }
 
     public static UniqueIdentifierStep<OtherBuildStep> builder() {
         return new OtherAccountBuilder();
     }
 
-    private static class OtherAccountBuilder
-            extends StepBuilder<OtherAccount, OtherBuildStep>
+    private static class OtherAccountBuilder extends StepBuilder<OtherAccount, OtherBuildStep>
             implements UniqueIdentifierStep<OtherBuildStep>,
-            AccountNumberStep<OtherBuildStep>,
-            BalanceStep<OtherBuildStep>,
-            AliasStep<OtherBuildStep>,
-            AccountIdentifierStep<OtherBuildStep>,
-            OtherBuildStep {
+                    AccountNumberStep<OtherBuildStep>,
+                    BalanceStep<OtherBuildStep>,
+                    AliasStep<OtherBuildStep>,
+                    AccountIdentifierStep<OtherBuildStep>,
+                    OtherBuildStep {
 
         @Override
         public AccountNumberStep<OtherBuildStep> setUniqueIdentifier(
@@ -93,7 +90,8 @@ public class OtherAccount extends TransactionalAccount {
 
     /** @deprecated Use OtherAccountBuilder instead */
     @Deprecated
-    public abstract static class Builder<A extends OtherAccount, T extends OtherAccount.Builder<A, T>>
+    public abstract static class Builder<
+                    A extends OtherAccount, T extends OtherAccount.Builder<A, T>>
             extends TransactionalAccount.Builder<OtherAccount, Builder<A, T>> {
 
         public Builder(String uniqueIdentifier) {

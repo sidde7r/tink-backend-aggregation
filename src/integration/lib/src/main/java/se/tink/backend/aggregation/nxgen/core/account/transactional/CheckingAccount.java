@@ -23,14 +23,12 @@ public class CheckingAccount extends TransactionalAccount {
         super(builder);
     }
 
-
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultCheckingAccountBuilder(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier)
-                .setBalance(balance);
+        return builder(uniqueIdentifier).setBalance(balance);
     }
 
     public static UniqueIdentifierStep<CheckingBuildStep> builder() {
@@ -40,11 +38,11 @@ public class CheckingAccount extends TransactionalAccount {
     private static class CheckingAccountBuilder
             extends Account.StepBuilder<CheckingAccount, CheckingBuildStep>
             implements UniqueIdentifierStep<CheckingBuildStep>,
-            AccountNumberStep<CheckingBuildStep>,
-            BalanceStep<CheckingBuildStep>,
-            AliasStep<CheckingBuildStep>,
-            AccountIdentifierStep<CheckingBuildStep>,
-            CheckingBuildStep {
+                    AccountNumberStep<CheckingBuildStep>,
+                    BalanceStep<CheckingBuildStep>,
+                    AliasStep<CheckingBuildStep>,
+                    AccountIdentifierStep<CheckingBuildStep>,
+                    CheckingBuildStep {
 
         @Override
         public AccountNumberStep<CheckingBuildStep> setUniqueIdentifier(
@@ -89,7 +87,8 @@ public class CheckingAccount extends TransactionalAccount {
 
     /** @deprecated Use CheckingAccountBuilder instead */
     @Deprecated
-    public abstract static class Builder<A extends CheckingAccount, T extends CheckingAccount.Builder<A, T>>
+    public abstract static class Builder<
+                    A extends CheckingAccount, T extends CheckingAccount.Builder<A, T>>
             extends TransactionalAccount.Builder<CheckingAccount, Builder<A, T>> {
 
         public Builder(String uniqueIdentifier) {

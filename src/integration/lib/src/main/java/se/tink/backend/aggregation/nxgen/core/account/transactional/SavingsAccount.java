@@ -54,11 +54,11 @@ public class SavingsAccount extends TransactionalAccount {
     private static class SavingsAccountBuilder
             extends Account.StepBuilder<SavingsAccount, SavingsBuildStep>
             implements UniqueIdentifierStep<SavingsBuildStep>,
-            AccountNumberStep<SavingsBuildStep>,
-            BalanceStep<SavingsBuildStep>,
-            AliasStep<SavingsBuildStep>,
-            AccountIdentifierStep<SavingsBuildStep>,
-            SavingsBuildStep {
+                    AccountNumberStep<SavingsBuildStep>,
+                    BalanceStep<SavingsBuildStep>,
+                    AliasStep<SavingsBuildStep>,
+                    AccountIdentifierStep<SavingsBuildStep>,
+                    SavingsBuildStep {
 
         private Double interestRate;
 
@@ -111,7 +111,7 @@ public class SavingsAccount extends TransactionalAccount {
     /** @deprecated Use SavingsAccountBuilder instead */
     @Deprecated
     public abstract static class Builder<
-            A extends SavingsAccount, T extends SavingsAccount.Builder<A, T>>
+                    A extends SavingsAccount, T extends SavingsAccount.Builder<A, T>>
             extends TransactionalAccount.Builder<SavingsAccount, Builder<A, T>> {
         private Double interestRate;
 
