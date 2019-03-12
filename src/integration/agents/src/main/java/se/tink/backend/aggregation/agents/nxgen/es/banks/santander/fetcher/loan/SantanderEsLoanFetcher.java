@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
     private static final AggregationLogger LOG = new AggregationLogger(SantanderEsLoanFetcher.class);
@@ -50,6 +51,7 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private void logLoanDetails(LoanEntity loanEntity, String userDataXml) {
         try {
+            LOG.infoExtraLong(SerializationUtils.serializeToString(loanEntity), SantanderEsConstants.Tags.LOAN_ACCOUNT);
             String loanDetailsResponse = apiClient.fetchLoanDetails(userDataXml, loanEntity);
             LOG.infoExtraLong(loanDetailsResponse, SantanderEsConstants.Tags.LOAN_ACCOUNT);
         } catch (Exception e) {
