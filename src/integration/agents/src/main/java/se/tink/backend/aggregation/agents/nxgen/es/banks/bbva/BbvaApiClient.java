@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import com.google.common.collect.ImmutableList;
-import javax.ws.rs.core.HttpHeaders;
+import io.vavr.CheckedFunction1;
+import io.vavr.control.Try;
+import java.util.function.Supplier;
 import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionResponse;
@@ -128,7 +129,8 @@ public class BbvaApiClient {
     }
 
     public TransactionsRequest createAccountTransactionsQuery(Account account) {
-        final String accountId = account.getFromTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID);
+        final String accountId =
+                account.getFromTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID);
         AccountContractsEntity accountContract = new AccountContractsEntity();
         accountContract.setContract(new ContractEntity().setId(accountId));
 
@@ -140,42 +142,26 @@ public class BbvaApiClient {
         return request;
     }
 
-    public InitiateSessionResponse initiateSession() throws SessionException, BankServiceException {
+    public Try<InitiateSessionResponse> initiateSession() {
         final InitiateSessionRequest request =
                 new InitiateSessionRequest(BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
 
-        HttpResponse response =
+        final RequestBuilder requestBuilder =
                 createRequest(BbvaConstants.Url.SESSION)
-                        .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent())
-                        .post(HttpResponse.class, request);
+                        .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent());
 
-        if (MediaType.TEXT_HTML.equalsIgnoreCase(
-                response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE))) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        setTsec(response.getHeaders().getFirst(HeaderKeys.TSEC_KEY));
-
-        InitiateSessionResponse initiateSessionResponse =
-                response.getBody(InitiateSessionResponse.class);
-
-        if (initiateSessionResponse.hasError()) {
-            if (initiateSessionResponse.hasError(BbvaConstants.Error.BANK_SERVICE_UNAVAILABLE)) {
-                throw BankServiceError.NO_BANK_SERVICE.exception();
-            }
-
-            LOG.warn(
-                    String.format(
-                            "Bank responded with error: %s",
-                            SerializationUtils.serializeToString(
-                                    initiateSessionResponse.getResult())));
-
-            throw new IllegalStateException("Failed to initiate session");
-        }
-
-        setUserId(initiateSessionResponse.getUser().getId());
-
-        return initiateSessionResponse;
+        return Try.of(() -> requestBuilder.post(HttpResponse.class, request))
+                .filterTry(
+                        BbvaPredicates.IS_HTML_MEDIA_TYPE.negate(),
+                        (Supplier<Throwable>) SessionError.SESSION_EXPIRED::exception)
+                .peek(response -> setTsec(response.getHeaders().getFirst(HeaderKeys.TSEC_KEY)))
+                .map(response -> response.getBody(InitiateSessionResponse.class))
+                .filterTry(
+                        BbvaPredicates.IS_BANK_SERVICE_UNAVAILABLE.negate(),
+                        (Supplier<Throwable>) BankServiceError.NO_BANK_SERVICE::exception)
+                .filterTry(BbvaPredicates.RESPONSE_HAS_ERROR.negate(), logAndThrow())
+                .filterTry(BbvaPredicates.IS_RESPONSE_OK, logAndThrow())
+                .peek(response -> setUserId(response.getUser().getId()));
     }
 
     private String getUserAgent() {
@@ -196,5 +182,16 @@ public class BbvaApiClient {
 
     public void setUserId(String userId) {
         sessionStorage.put(BbvaConstants.StorageKeys.USER_ID, userId);
+    }
+
+    private CheckedFunction1<BbvaResponse, Throwable> logAndThrow() {
+        return response -> {
+            LOG.warn(
+                    String.format(
+                            "Bank responded with error: %s",
+                            SerializationUtils.serializeToString(response.getResult())));
+
+            return new IllegalStateException("Failed to initiate session");
+        };
     }
 }
