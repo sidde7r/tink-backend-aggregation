@@ -1,59 +1,85 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils;
 
+import io.vavr.collection.List;
+import io.vavr.control.Option;
+import io.vavr.control.Try;
 import java.net.URISyntaxException;
-import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Pattern;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.UTILS_SPLIT_GET_PAGINATION_KEY;
 
 public class BbvaUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(BbvaUtils.class);
 
-    private static final int RANDOM_HEX_LENGTH = 64;
-    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
-    private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
-    private static final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
-
-    public static Optional<String> splitUtlGetKey(String toSplit) {
-        try {
-            return new URIBuilder(toSplit)
-                    .getQueryParams().stream()
-                            .filter(p -> BbvaConstants.QueryKeys.PAGINATION_OFFSET.equals(p.getName()))
-                            .map(p -> Optional.of(p.getValue()))
-                            .findAny()
-                            .orElseThrow(
-                                    () -> {
-                                        throw new IllegalStateException(
-                                                "Trying to get next pagination key when none exists");
-                                    });
-        } catch (URISyntaxException e) {
-            // TODO: Seems we never should hit this one
-            throw new IllegalArgumentException("Could not parse next page key in: " + toSplit);
-        }
+    /**
+     * Splits a URI string and gets the pagination key
+     *
+     * @param uriToSplit
+     * @return
+     */
+    public static Option<String> splitGetPaginationKey(String uriToSplit) {
+        return Try.of(() -> new URIBuilder(uriToSplit))
+                .onFailure(
+                        URISyntaxException.class,
+                        e ->
+                                LOGGER.error(
+                                        "{}: Could not parse next page key in: {}",
+                                        UTILS_SPLIT_GET_PAGINATION_KEY,
+                                        uriToSplit))
+                .map(URIBuilder::getQueryParams)
+                .map(List::ofAll)
+                .getOrElse(List::empty)
+                .filter(p -> QueryKeys.PAGINATION_OFFSET.equals(p.getName()))
+                .flatMap(p -> Option.of(p.getValue()))
+                .headOption()
+                .onEmpty(
+                        () ->
+                                LOGGER.warn(
+                                        "{}: Trying to get next pagination key when none exists",
+                                        UTILS_SPLIT_GET_PAGINATION_KEY));
     }
 
+    /**
+     * Returns a randomly generated hex string
+     *
+     * @return
+     */
     public static String generateRandomHex() {
-        Random random = new Random();
-        byte[] randBytes = new byte[RANDOM_HEX_LENGTH];
+        final int RANDOM_HEX_LENGTH = 64;
+        final Random random = new Random();
+        final byte[] randBytes = new byte[RANDOM_HEX_LENGTH];
         random.nextBytes(randBytes);
 
         return Hex.encodeHexString(randBytes).toUpperCase();
     }
 
-    // Non NIE/PASSPORT usernames must be prepended with '0' (based on ambassador credentials) while
-    // NIE/PASSPORT
-    // usernames are passed along as-is.
+    /**
+     * Returns a BBVA formatted username
+     *
+     * <p>Non NIE/PASSPORT usernames must be prepended with '0' (based on ambassador credentials)
+     * while NIE/PASSPORT usernames are passed along as-is.
+     *
+     * @param username The username to be formatted
+     * @return
+     */
     public static String formatUsername(String username) {
-        if (NIE_PATTERN.matcher(username).matches()
-                || PASSPORT_PATTERN.matcher(username).matches()
-                || ES_PASSPORT_PATTERN.matcher(username).matches()) {
-            return username;
-        }
+        final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
+        final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
+        final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
 
-        return String.format("0%s", username);
+        return Match(username)
+                .of(
+                        Case($(NIE_PATTERN.asPredicate()), username),
+                        Case($(PASSPORT_PATTERN.asPredicate()), username),
+                        Case($(ES_PASSPORT_PATTERN.asPredicate()), username),
+                        Case($(), String.format("0%s", username)));
     }
 }

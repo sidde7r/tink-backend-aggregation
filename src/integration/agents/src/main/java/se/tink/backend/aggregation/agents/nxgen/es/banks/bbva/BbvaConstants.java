@@ -62,6 +62,7 @@ public final class BbvaConstants {
         public static final LogTag LOAN_REVOLVING_CREDIT =
                 LogTag.from("bbva_loan_revolving_credit");
         public static final LogTag LOAN_WORKING_CAPITAL = LogTag.from("bbva_loan_working_capital");
+        public static final LogTag UTILS_SPLIT_GET_PAGINATION_KEY = LogTag.from("bbva_utils_split_get_pagination_key");
     }
 
     public static final class Url {

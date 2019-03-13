@@ -35,7 +35,7 @@ public class CreditCardTransactionsResponse implements TransactionKeyPaginatorRe
     public String nextKey() {
         if (moreResults) {
             String nextPageLink = this.pagination.getNextPage();
-            return BbvaUtils.splitUtlGetKey(nextPageLink).orElse("");
+            return BbvaUtils.splitGetPaginationKey(nextPageLink).getOrElse("");
         }
         throw new IllegalStateException("Trying to paginate when no more pages.");
     }
