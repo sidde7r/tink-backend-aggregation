@@ -123,17 +123,29 @@ spec:
               name: aggregation-secrets
               key: monzo-client-secret
               optional: true
-        - name: STARLING_CLIENT_ID
+        - name: STARLING_AIS_CLIENT_ID
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: starling-client-id
+              key: starling-ais-client-id
               optional: true
-        - name: STARLING_CLIENT_SECRET
+        - name: STARLING_AIS_CLIENT_SECRET
           valueFrom:
             secretKeyRef:
               name: aggregation-secrets
-              key: starling-client-secret
+              key: starling-ais-client-secret
+              optional: true
+        - name: STARLING_PIS_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: starling-pis-client-id
+              optional: true
+        - name: STARLING_PIS_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: starling-pis-client-secret
               optional: true
         - name: FINTS_REG_NUMBER
           valueFrom:

@@ -1,8 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer;
 
 import com.google.common.base.Preconditions;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.StarlingApiClient;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.StarlingAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.entity.PaymentRecipient;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.entity.TransferStatusEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.rpc.ExecutePaymentRequest;
@@ -12,7 +17,14 @@ import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.entity.PayeeEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.rpc.PayeesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2Constants;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SortCodeIdentifier;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
@@ -28,14 +40,25 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
     public static final String INDIVIDUAL = "INDIVIDUAL";
 
     private final StarlingApiClient apiClient;
+    private final ClientConfigurationEntity pisConfiguration;
     private final String keyUid;
     private final PrivateKey privateKey;
+    private final SupplementalInformationHelper supplementalInformationHelper;
+    private final Credentials credentials;
 
     public StarlingTransferExecutor(
-            StarlingApiClient apiClient, String keyUid, PrivateKey privateKey) {
+            StarlingApiClient apiClient,
+            ClientConfigurationEntity pisConfiguration,
+            String keyUid,
+            PrivateKey privateKey,
+            Credentials credentials,
+            SupplementalInformationHelper supplementalInformationHelper) {
         this.apiClient = apiClient;
+        this.pisConfiguration = pisConfiguration;
         this.keyUid = keyUid;
         this.privateKey = privateKey;
+        this.credentials = credentials;
+        this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
@@ -49,7 +72,6 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
 
         Preconditions.checkNotNull(transfer.getSource(), "Transfer source must not be null");
         Preconditions.checkNotNull(transfer.getDestination(), "Transfer source must not be null");
-
 
         final AccountEntity sourceAccount =
                 getSourceAccount(transfer.getSource())
@@ -75,7 +97,8 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                         paymentRequest,
                         PaymentSignature.builder(keyUid, privateKey),
                         sourceAccount.getAccountUid(),
-                        sourceAccount.getDefaultCategory());
+                        sourceAccount.getDefaultCategory(),
+                        getPaymentApprovalToken());
 
         final TransferStatusEntity status =
                 apiClient.checkTransferStatus(paymentResponse.getPaymentOrderUid());
@@ -87,6 +110,36 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
         }
 
         return Optional.of(paymentResponse.getPaymentOrderUid());
+    }
+
+    private OAuth2Token getPaymentApprovalToken() {
+
+        // Do not use the real PersistentStorage because we don't want to overwrite the AIS auth
+        // token.
+        PersistentStorage dummyStorage = new PersistentStorage();
+
+        Authenticator authenticator =
+                new ThirdPartyAppAuthenticationController<>(
+                        new OAuth2AuthenticationController(
+                                dummyStorage,
+                                supplementalInformationHelper,
+                                new StarlingAuthenticator(apiClient, pisConfiguration)),
+                        supplementalInformationHelper);
+
+        try {
+            authenticator.authenticate(credentials);
+        } catch (AuthenticationException | AuthorizationException e) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setMessage("Authentication error.")
+                    .build();
+        }
+
+        return dummyStorage
+                .get(OAuth2Constants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Could not retrieve payment token even though signing succeeded"));
     }
 
     private PaymentRecipient constructRecipient(AccountIdentifier destination) {

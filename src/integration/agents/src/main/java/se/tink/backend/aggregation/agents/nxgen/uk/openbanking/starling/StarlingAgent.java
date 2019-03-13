@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.StarlingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.StarlingTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
@@ -34,8 +35,10 @@ public class StarlingAgent extends NextGenerationAgent {
     private final String clientName;
     private final StarlingApiClient apiClient;
 
-    private String keyUid;
-    private PrivateKey privateKey;
+    private ClientConfigurationEntity aisConfiguration;
+    private ClientConfigurationEntity pisConfiguration;
+    private String signingKeyUid;
+    private PrivateKey signingKey;
 
     public StarlingAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -54,7 +57,10 @@ public class StarlingAgent extends NextGenerationAgent {
         StarlingConfiguration starlingConfiguration =
                 configuration
                         .getIntegrations()
-                        .getClientConfiguration(StarlingConstants.INTEGRATION_NAME, clientName, StarlingConfiguration.class)
+                        .getClientConfiguration(
+                                StarlingConstants.INTEGRATION_NAME,
+                                clientName,
+                                StarlingConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -62,16 +68,10 @@ public class StarlingAgent extends NextGenerationAgent {
                                                         "No Starling client configured for name: %s",
                                                         clientName)));
 
-        persistentStorage.put(
-                StarlingConstants.StorageKey.CLIENT_ID, starlingConfiguration.getClientId());
-        persistentStorage.put(
-                StarlingConstants.StorageKey.CLIENT_SECRET,
-                starlingConfiguration.getClientSecret());
-        persistentStorage.put(
-                StarlingConstants.StorageKey.REDIRECT_URL, starlingConfiguration.getRedirectUrl());
-
-        keyUid = starlingConfiguration.getKeyUid();
-        privateKey = starlingConfiguration.getSigningKey();
+        aisConfiguration = starlingConfiguration.getAisConfiguration();
+        pisConfiguration = starlingConfiguration.getPisConfiguration();
+        signingKeyUid = starlingConfiguration.getKeyUid();
+        signingKey = starlingConfiguration.getSigningKey();
     }
 
     @Override
@@ -81,13 +81,14 @@ public class StarlingAgent extends NextGenerationAgent {
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new StarlingAuthenticator(apiClient, persistentStorage));
+                        new StarlingAuthenticator(apiClient, aisConfiguration));
 
         ThirdPartyAppAuthenticationController<String> thirdPartyController =
                 new ThirdPartyAppAuthenticationController<>(
                         oauthController, supplementalInformationHelper);
 
-        return new AutoAuthenticationController(request, context, thirdPartyController, oauthController);
+        return new AutoAuthenticationController(
+                request, context, thirdPartyController, oauthController);
     }
 
     @Override
@@ -143,7 +144,13 @@ public class StarlingAgent extends NextGenerationAgent {
         return Optional.of(
                 new TransferController(
                         null,
-                        new StarlingTransferExecutor(apiClient, keyUid, privateKey),
+                        new StarlingTransferExecutor(
+                                apiClient,
+                                pisConfiguration,
+                                signingKeyUid,
+                                signingKey,
+                                credentials,
+                                supplementalInformationHelper),
                         null,
                         null));
     }

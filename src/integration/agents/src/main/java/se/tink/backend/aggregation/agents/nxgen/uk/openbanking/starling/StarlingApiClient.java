@@ -95,18 +95,17 @@ public class StarlingApiClient {
             ExecutePaymentRequest paymentRequest,
             PaymentSignature.Builder signatureBuilder,
             String accountUid,
-            String categoryUid) {
+            String categoryUid,
+            OAuth2Token paymentToken) {
 
         URL targetURL =
                 StarlingConstants.Url.PUT_PAYMENT
                         .parameter(StarlingConstants.UrlParams.ACCOUNT_UID, accountUid)
                         .parameter(StarlingConstants.UrlParams.CATEGORY_UID, categoryUid);
 
-        OAuth2Token token = getOAuthToken();
-
         PaymentSignature signature =
                 signatureBuilder
-                        .withAccessToken(token.getAccessToken())
+                        .withAccessToken(paymentToken.getAccessToken())
                         .withRequestTarget(HttpMethod.PUT, targetURL.toUri())
                         .withPayload(SerializationUtils.serializeToString(paymentRequest))
                         .build();

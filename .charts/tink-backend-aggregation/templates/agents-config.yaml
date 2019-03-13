@@ -55,9 +55,14 @@ data:
         {{- if $agentsConfig.starling }}
         starling:
           tink:
-            clientId: "STARLING_CLIENT_ID"
-            clientSecret: "STARLING_CLIENT_SECRET"
-            redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
+            aisClientConfiguration:
+              clientId: "STARLING_AIS_CLIENT_ID"
+              clientSecret: "STARLING_AIS_CLIENT_SECRET"
+              redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
+            aisClientConfiguration:
+              clientId: "STARLING_PIS_CLIENT_ID"
+              clientSecret: "STARLING_PIS_CLIENT_SECRET"
+              redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
             keyUid: "STARLING_SIGNING_KEY_UID"
             signingKey: "STARLING_SIGNING_KEY"
         {{- end }}
