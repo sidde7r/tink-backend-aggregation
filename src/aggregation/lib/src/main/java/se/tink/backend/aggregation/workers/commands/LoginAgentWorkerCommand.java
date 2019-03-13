@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.workers.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.PersistentLogin;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
@@ -13,21 +12,23 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
-import se.tink.libraries.user.rpc.User;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
-import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
+import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationMetricType;
 import se.tink.backend.aggregation.workers.commands.state.LoginAgentWorkerCommandState;
 import se.tink.backend.aggregation.workers.metrics.AgentWorkerCommandMetricState;
 import se.tink.backend.aggregation.workers.metrics.MetricAction;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.Timer.Context;
+import se.tink.libraries.user.rpc.User;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class LoginAgentWorkerCommand extends AgentWorkerCommand implements MetricsCommand {
     private static final AggregationLogger log = new AggregationLogger(LoginAgentWorkerCommand.class);
@@ -193,8 +194,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
             action.cancelled();
             return AgentWorkerCommandResult.ABORT;
         } catch(BankServiceException e) {
-            // The way frontend works now the message will not be displayed to the user.
-            statusUpdater.updateStatus(CredentialsStatus.UNCHANGED, context.getCatalog().getString(e.getUserMessage()));
+            statusUpdater.updateStatus(CredentialsStatus.TEMPORARY_ERROR, context.getCatalog().getString(e.getUserMessage()));
             action.unavailable();
             return AgentWorkerCommandResult.ABORT;
         } catch (AuthenticationException | AuthorizationException e) {
