@@ -1,46 +1,46 @@
 {
-  "market": "MX",
-  "currency": "MXN",
-  "providers": [
-    {
-      "name": "mx-bbva-password",
-      "className": "nxgen.mx.banks.bbva.BbvaMxAgent",
-      "credentialsType": "PASSWORD",
-      "currency": "MXN",
-      "displayName": "BBVA Bancomer",
-      "popular": true,
-      "fields": [
+    "market": "MX",
+    "currency": "MXN",
+    "providers": [
         {
-          "description": "Phone number",
-          "immutable": true,
-          "name": "username",
-          "sensitive": true
-        },
-        {
-          "description": "Password",
-          "masked": true,
-          "sensitive": true,
-          "name": "password",
-          "sensitive": true,
-          "masked": true
-        },
-        {
-          "description": "Card Number",
-          "masked": true,
-          "sensitive": true,
-          "name": "cardNumber",
-          "sensitive": true
+            "name": "mx-bbva-password",
+            "className": "nxgen.mx.banks.bbva.BbvaMxAgent",
+            "credentialsType": "PASSWORD",
+            "currency": "MXN",
+            "displayName": "BBVA Bancomer",
+            "popular": true,
+            "fields": [
+                {
+                    "description": "Phone number",
+                    "immutable": true,
+                    "name": "username",
+                    "sensitive": true
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password",
+                    "sensitive": true,
+                    "masked": true
+                },
+                {
+                    "description": "Card Number",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "cardNumber",
+                    "sensitive": true
+                }
+            ],
+            "supplementalFields": [],
+            "market": "MX",
+            "multiFactor": false,
+            "passwordHelpText": "Use the same credentials as when you log in to BBVA",
+            "refreshFrequency": 0,
+            "refreshFrequencyFactor": 0,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
         }
-      ],
-      "supplementalFields": [],
-      "market": "MX",
-      "multiFactor": false,
-      "passwordHelpText": "Use the same credentials as when you log in to BBVA",
-      "refreshFrequency": 0,
-      "refreshFrequencyFactor": 0,
-      "status": "ENABLED",
-      "transactional": true,
-      "type": "BANK"
-    }
-  ]
+    ]
 }
