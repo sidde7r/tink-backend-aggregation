@@ -49,8 +49,8 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
     private static List<PayeeAccountEntity.PayeeGeneralAccount> getDestinationAccounts(Collection<PayeeEntity> payeeEntities) {
         return payeeEntities.stream()
                 .map(PayeeEntity::streamAccounts)
-                .map(StarlingTransferDestinationFetcher::getDestinationAccounts)
-                .collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
+                .map(StarlingTransferDestinationFetcher::getDestinationAccounts) // gets stream<list<>>
+                .collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);  // flatten to list<>
     }
 
     private static List<PayeeAccountEntity.PayeeGeneralAccount> getDestinationAccounts(Stream<PayeeAccountEntity> payeeAccounts) {
