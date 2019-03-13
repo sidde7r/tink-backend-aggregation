@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.rpc;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.libraries.account.AccountIdentifier;
 
 @JsonObject
 public class AccountIdentifiersResponse {
@@ -24,5 +25,18 @@ public class AccountIdentifiersResponse {
 
     public String getBic() {
         return bic;
+    }
+
+    public AccountIdentifier getIbanIdentifier() {
+        return AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban);
+    }
+
+    public AccountIdentifier getSortCodeIdentifier() {
+        return AccountIdentifier.create(
+                AccountIdentifier.Type.SORT_CODE, bankIdentifier + accountIdentifier);
+    }
+
+    public boolean hasIdentifier(AccountIdentifier identifier) {
+        return identifier.equals(getIbanIdentifier()) || identifier.equals(getSortCodeIdentifier());
     }
 }

@@ -13,4 +13,16 @@ public class AccountEntity {
     public String getAccountUid() {
         return accountUid;
     }
+
+    public String getDefaultCategory() {
+        return defaultCategory;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
 }

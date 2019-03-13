@@ -2,13 +2,17 @@ package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.StarlingAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.entity.ClientConfigurationEntity;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.executor.transfer.StarlingTransferExecutor;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transactional.StarlingTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer.StarlingTransferDestinationFetcher;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2.OAuth2AuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
@@ -24,11 +28,17 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+import java.security.PrivateKey;
 import java.util.Optional;
 
 public class StarlingAgent extends NextGenerationAgent {
     private final String clientName;
     private final StarlingApiClient apiClient;
+
+    private ClientConfigurationEntity aisConfiguration;
+    private ClientConfigurationEntity pisConfiguration;
+    private String signingKeyUid;
+    private PrivateKey signingKey;
 
     public StarlingAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
@@ -47,7 +57,10 @@ public class StarlingAgent extends NextGenerationAgent {
         StarlingConfiguration starlingConfiguration =
                 configuration
                         .getIntegrations()
-                        .getClientConfiguration(StarlingConstants.INTEGRATION_NAME, clientName, StarlingConfiguration.class)
+                        .getClientConfiguration(
+                                StarlingConstants.INTEGRATION_NAME,
+                                clientName,
+                                StarlingConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
@@ -55,23 +68,27 @@ public class StarlingAgent extends NextGenerationAgent {
                                                         "No Starling client configured for name: %s",
                                                         clientName)));
 
-        persistentStorage.put(
-                StarlingConstants.StorageKey.CLIENT_ID, starlingConfiguration.getClientId());
-        persistentStorage.put(
-                StarlingConstants.StorageKey.CLIENT_SECRET,
-                starlingConfiguration.getClientSecret());
-        persistentStorage.put(
-                StarlingConstants.StorageKey.REDIRECT_URL, starlingConfiguration.getRedirectUrl());
+        aisConfiguration = starlingConfiguration.getAisConfiguration();
+        pisConfiguration = starlingConfiguration.getPisConfiguration();
+        signingKeyUid = starlingConfiguration.getKeyUid();
+        signingKey = starlingConfiguration.getSigningKey();
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new ThirdPartyAppAuthenticationController<>(
+
+        OAuth2AuthenticationController oauthController =
                 new OAuth2AuthenticationController(
                         persistentStorage,
                         supplementalInformationHelper,
-                        new StarlingAuthenticator(apiClient, persistentStorage)),
-                supplementalInformationHelper);
+                        new StarlingAuthenticator(apiClient, aisConfiguration));
+
+        ThirdPartyAppAuthenticationController<String> thirdPartyController =
+                new ThirdPartyAppAuthenticationController<>(
+                        oauthController, supplementalInformationHelper);
+
+        return new AutoAuthenticationController(
+                request, context, thirdPartyController, oauthController);
     }
 
     @Override
@@ -111,7 +128,10 @@ public class StarlingAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new TransferDestinationRefreshController(
+                        metricRefreshController,
+                        new StarlingTransferDestinationFetcher(apiClient)));
     }
 
     @Override
@@ -121,6 +141,17 @@ public class StarlingAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
+        return Optional.of(
+                new TransferController(
+                        null,
+                        new StarlingTransferExecutor(
+                                apiClient,
+                                pisConfiguration,
+                                signingKeyUid,
+                                signingKey,
+                                credentials,
+                                supplementalInformationHelper),
+                        null,
+                        null));
     }
 }
