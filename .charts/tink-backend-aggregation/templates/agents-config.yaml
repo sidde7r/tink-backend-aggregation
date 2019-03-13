@@ -82,52 +82,52 @@ data:
             rootCAPassword: "ICS_ROOT_CA_PASSWORD"
         {{- end }}
 
-        {{- if $agentsConfig.abnAmro }}
-        {{- range $name, $env := dict "abnAmroProduction" "production" "abnAmroStaging" "staging" }}
-        {{- $envConfig := index $agentsConfig.abnAmro $env }}
-        {{ $name }}:
+      {{- if $agentsConfig.abnAmro }}
+      {{- range $name, $env := dict "abnAmroProduction" "production" "abnAmroStaging" "staging" }}
+      {{- $envConfig := index $agentsConfig.abnAmro $env }}
+      {{ $name }}:
 
-          {{- if kindIs "bool" $envConfig.ignoreCreditCardErrors }}
-          ignoreCreditCardErrors: {{ $envConfig.ignoreCreditCardErrors}}
-          {{- else }}
-          ignoreCreditCardErrors: true
-          {{- end }}
-
-          {{- if kindIs "bool" $envConfig.cleanBankId }}
-          cleanBankId: {{ $envConfig.cleanBankId}}
-          {{- else }}
-          cleanBankId: false
-          {{- end }}
-
-          trustStore:
-            path: data/security/abnamro.truststore
-            password: changeme
-
-          internetBanking:
-            host: ABN_{{ $env | upper }}_BANKING_HOST
-            authorizationToken: ABN_{{ $env | upper }}_BANKING_AUTH_TOKEN
-
-            products:
-              creditCards:
-              groups:
-              - CREDIT_CARDS_PRIVATE_AND_RETAIL
-              - PAYMENT_SERVICES
-              ids:
-              - 129
-            payments:
-              groups:
-              - PAYMENT_ACCOUNTS
-              ids:
-              - 13
-              - 25
-            savings:
-              groups:
-              - SAVINGS_ACCOUNTS
-              ids:
-              - 5
-              - 8
-          enrollment:
-            url: ABN_{{ $env | upper }}_ENROLLMENT_URL
-            apiKey: ABN_{{ $env | upper }}_ENROLLMENT_API_KEY
+        {{- if kindIs "bool" $envConfig.ignoreCreditCardErrors }}
+        ignoreCreditCardErrors: {{ $envConfig.ignoreCreditCardErrors}}
+        {{- else }}
+        ignoreCreditCardErrors: true
         {{- end }}
+
+        {{- if kindIs "bool" $envConfig.cleanBankId }}
+        cleanBankId: {{ $envConfig.cleanBankId}}
+        {{- else }}
+        cleanBankId: false
         {{- end }}
+
+        trustStore:
+          path: data/security/abnamro.truststore
+          password: changeme
+
+        internetBanking:
+          host: ABN_{{ $env | upper }}_BANKING_HOST
+          authorizationToken: ABN_{{ $env | upper }}_BANKING_AUTH_TOKEN
+
+          products:
+            creditCards:
+            groups:
+            - CREDIT_CARDS_PRIVATE_AND_RETAIL
+            - PAYMENT_SERVICES
+            ids:
+            - 129
+          payments:
+            groups:
+            - PAYMENT_ACCOUNTS
+            ids:
+            - 13
+            - 25
+          savings:
+            groups:
+            - SAVINGS_ACCOUNTS
+            ids:
+            - 5
+            - 8
+        enrollment:
+          url: ABN_{{ $env | upper }}_ENROLLMENT_URL
+          apiKey: ABN_{{ $env | upper }}_ENROLLMENT_API_KEY
+      {{- end }}
+      {{- end }}
