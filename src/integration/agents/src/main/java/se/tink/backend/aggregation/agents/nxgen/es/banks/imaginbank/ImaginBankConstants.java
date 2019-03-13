@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -82,6 +83,8 @@ public class ImaginBankConstants {
         public static final String PREPAID = "P";
         public static final String CREDIT = "C";
         public static final String FRACTIONAL_LIST_FILTER = "S";
+
+        public static LocalDate START_DATE = LocalDate.of(2013, 01, 01);
     }
 
     public static class LogTags {
