@@ -128,7 +128,7 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
 
         return apiClient.fetchAccounts().stream()
                 .filter(account -> matchIdentifier(account.getAccountUid(), accountIdentifier))
-                .findFirst();
+                .findAny();
     }
 
     private boolean matchIdentifier(
