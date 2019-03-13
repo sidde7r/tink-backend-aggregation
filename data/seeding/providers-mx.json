@@ -20,16 +20,13 @@
                     "description": "Password",
                     "masked": true,
                     "sensitive": true,
-                    "name": "password",
-                    "sensitive": true,
-                    "masked": true
+                    "name": "password"
                 },
                 {
                     "description": "Card Number",
                     "masked": true,
                     "sensitive": true,
-                    "name": "cardNumber",
-                    "sensitive": true
+                    "name": "cardNumber"
                 }
             ],
             "supplementalFields": [],
