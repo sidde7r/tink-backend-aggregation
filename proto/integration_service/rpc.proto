@@ -14,3 +14,20 @@ message PingRequest {
 message PingResponse {
     string message = 1;
 }
+
+message IntegrationRequest {
+    string operation_id = 1;
+    AgentInfo agent_info = 2;
+    IntegrationCredentials credentials = 3;
+    AggregatorInfo aggregator_info = 4;
+}
+
+message IntegrationResponse {
+    string operation_id = 1;
+    AgentState state = 2;
+}
+
+message CheckingAccountsResponse {
+    IntegrationResponse integration_info = 1;
+    repeated IntegrationAccounts accounts = 2;
+}
