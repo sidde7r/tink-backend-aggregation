@@ -39,7 +39,6 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -111,7 +110,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
-    private static final AggregationLogger logger = new AggregationLogger(TinkHttpClient.class);
     private String cookieSpec;
     private static final ImmutableList<String> cookieSpecifications =
             ImmutableList.<String>builder()
