@@ -1,22 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator;
 
 import com.google.common.base.Strings;
-import java.util.Optional;
-import org.apache.http.HttpStatus;
+import io.vavr.control.Try;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.Storage;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.libraries.i18n.LocalizableKey;
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.HAS_INCORRECT_CREDENTIALS;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.HAS_INVALID_LOGIN_USERNAME_TYPE;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankPredicates.IS_OPENBANK_ERROR_RESPONSE;
 
 public class OpenbankAuthenticator implements Authenticator {
     private final OpenbankApiClient apiClient;
@@ -30,15 +37,15 @@ public class OpenbankAuthenticator implements Authenticator {
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {
-        String username = credentials.getField(Field.Key.USERNAME);
-        String usernameType = credentials.getField(OpenbankConstants.USERNAME_TYPE);
-        String password = credentials.getField(Field.Key.PASSWORD);
+        final String username = credentials.getField(Field.Key.USERNAME);
+        final String usernameType = credentials.getField(OpenbankConstants.USERNAME_TYPE);
+        final String password = credentials.getField(Field.Key.PASSWORD);
 
         if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        LoginRequest request =
+        final LoginRequest request =
                 new LoginRequest.Builder()
                         .withUsername(username)
                         .withUsernameType(usernameType)
@@ -46,43 +53,33 @@ public class OpenbankAuthenticator implements Authenticator {
                         .withForce(1)
                         .build();
 
-        try {
-            LoginResponse loginResponse = apiClient.login(request);
+        Try.of(() -> apiClient.login(request))
+                .filterTry(
+                        LoginResponse::hasTokenCredential,
+                        e -> LoginError.INCORRECT_CREDENTIALS.exception())
+                .onSuccess(this::putAuthTokenInSessionStorage)
+                .getOrElseThrow(this::handleExceptions);
+    }
 
-            if (!loginResponse.hasTokenCredential()) {
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
+    private LoginException handleExceptions(Throwable e) {
+        return Match(e).of(Case($(IS_OPENBANK_ERROR_RESPONSE), this::handleOpenbankErrors));
+    }
 
-            putAuthTokenInSessionStorage(loginResponse);
-        } catch (HttpResponseException hre) {
-            HttpResponse response = hre.getResponse();
-
-            if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
-                ErrorResponse errorResponse = response.getBody(ErrorResponse.class);
-
-                if (errorResponse.hasErrorCode(
-                        OpenbankConstants.ErrorCodes.INCORRECT_CREDENTIALS)) {
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                }
-
-                if (errorResponse.hasErrorCode(
-                        OpenbankConstants.ErrorCodes.INVALID_LOGIN_USERNAME_TYPE)) {
-                    throw new IllegalStateException(
-                            String.format(
-                                    "Invalid username type: %s",
-                                    Optional.of(errorResponse.getErrorDescription()).orElse(null)));
-                }
-                // Fall through and re-throw original exception.
-            }
-
-            // Re-throw the exception.
-            throw hre;
-        }
+    private LoginException handleOpenbankErrors(HttpResponseException hre) {
+        return Match(hre.getResponse().getBody(ErrorResponse.class))
+                .of(
+                        Case(
+                                $(HAS_INCORRECT_CREDENTIALS),
+                                LoginError.INCORRECT_CREDENTIALS.exception()),
+                        Case(
+                                $(HAS_INVALID_LOGIN_USERNAME_TYPE),
+                                LoginError.INCORRECT_CREDENTIALS.exception(
+                                        LocalizableKey.of("Invalid username type"))));
     }
 
     private void putAuthTokenInSessionStorage(LoginResponse loginResponse) {
         loginResponse
                 .getTokenCredential()
-                .peek(authToken -> sessionStorage.put(OpenbankConstants.Storage.AUTH_TOKEN, authToken));
+                .peek(authToken -> sessionStorage.put(Storage.AUTH_TOKEN, authToken));
     }
 }
