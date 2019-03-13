@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
-import java.util.Optional;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -123,12 +123,11 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanDetails.Type getTinkLoanType() {
-        return Optional.ofNullable(loanType)
+        return Option.of(loanType)
                 .map(LoanTypeEntity::getId)
                 .map(LOAN_TYPE_MAPPER::translate)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .orElse(LoanDetails.Type.OTHER);
+                .flatMap(Option::ofOptional)
+                .getOrElse(LoanDetails.Type.OTHER);
     }
 
     @JsonIgnore

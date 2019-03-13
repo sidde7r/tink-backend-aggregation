@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.ProfitabilityEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -13,8 +12,6 @@ public class SecurityProfitabilityResponse {
 
     @JsonIgnore
     public double getTotalProfit() {
-        return Optional.ofNullable(items).orElse(Collections.emptyList()).stream()
-                .mapToDouble(ProfitabilityEntity::getTotalProfit)
-                .sum();
+        return Option.of(items).getOrElse(List::empty).sum().doubleValue();
     }
 }

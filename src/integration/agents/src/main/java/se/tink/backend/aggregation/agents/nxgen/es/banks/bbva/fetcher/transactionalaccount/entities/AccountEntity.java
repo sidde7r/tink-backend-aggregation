@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import java.util.Objects;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaPredicates.IS_CHECKING_OR_SAVINGS_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaTypeMappers.ACCOUNT_TYPE_MAPPER;
 import static se.tink.libraries.account.AccountIdentifier.Type.IBAN;
 
@@ -42,7 +43,7 @@ public class AccountEntity {
     @JsonIgnore
     public TransactionalAccount toTinkAccount(String holder) {
         final String normalizedIban = iban.replaceAll(" ", "").toLowerCase();
-        final HolderName holderName = Optional.ofNullable(holder).map(HolderName::new).orElse(null);
+        final HolderName holderName = Option.of(holder).map(HolderName::new).getOrNull();
 
         return TransactionalAccount.builder(
                         getTinkAccountType(),
@@ -63,24 +64,20 @@ public class AccountEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        Optional<AccountTypes> accountType = ACCOUNT_TYPE_MAPPER.translate(accountProductId);
-
-        if (accountType.isPresent()) {
-            return accountType.get().equals(AccountTypes.CHECKING)
-                    || accountType.get().equals(AccountTypes.SAVINGS);
-        }
-
-        LOGGER.infoExtraLong(
-                SerializationUtils.serializeToString(this),
-                BbvaConstants.LogTags.UNKNOWN_ACCOUNT_TYPE);
-        return false;
+        return Option.ofOptional(ACCOUNT_TYPE_MAPPER.translate(accountProductId))
+                .filter(IS_CHECKING_OR_SAVINGS_ACCOUNT)
+                .onEmpty(
+                        () ->
+                                LOGGER.infoExtraLong(
+                                        SerializationUtils.serializeToString(this),
+                                        BbvaConstants.LogTags.UNKNOWN_ACCOUNT_TYPE))
+                .isDefined();
     }
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
-        Optional<AccountTypes> accountType = ACCOUNT_TYPE_MAPPER.translate(accountProductId);
-
-        return accountType.orElse(AccountTypes.OTHER);
+        return Option.ofOptional(ACCOUNT_TYPE_MAPPER.translate(accountProductId))
+                .getOrElse(AccountTypes.OTHER);
     }
 
     @JsonIgnore

@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
@@ -35,7 +34,7 @@ public class StockAccountEntity {
 
     @JsonObject
     public InvestmentAccount toTinkAccount(BbvaApiClient apiClient, String holder) {
-        final HolderName holderName = Optional.ofNullable(holder).map(HolderName::new).orElse(null);
+        final HolderName holderName = Option.of(holder).map(HolderName::new).getOrNull();
 
         return InvestmentAccount.builder(id)
                 .setName(name)
@@ -46,7 +45,7 @@ public class StockAccountEntity {
                 .build();
     }
 
-    private List<Portfolio> getPortfolio(BbvaApiClient apiClient) {
+    private java.util.List<Portfolio> getPortfolio(BbvaApiClient apiClient) {
         Portfolio portfolio = new Portfolio();
         List<Instrument> instruments = getInstruments(apiClient);
 
@@ -54,21 +53,23 @@ public class StockAccountEntity {
         portfolio.setType(Portfolio.Type.DEPOT);
         portfolio.setTotalValue(currentBalance);
         portfolio.setTotalProfit(getTotalProfit(instruments));
-        portfolio.setInstruments(instruments);
+        portfolio.setInstruments(instruments.toJavaList());
 
         return Collections.singletonList(portfolio);
     }
 
     private Double getTotalProfit(List<Instrument> instruments) {
-        return Optional.ofNullable(instruments).orElse(Collections.emptyList()).stream()
-                .mapToDouble(Instrument::getProfit)
-                .sum();
+        return Option.of(instruments)
+                .getOrElse(List.empty())
+                .map(Instrument::getProfit)
+                .sum()
+                .doubleValue();
     }
 
     private List<Instrument> getInstruments(BbvaApiClient apiClient) {
-        return Optional.ofNullable(securities).orElse(Collections.emptyList()).stream()
-                .map(securityEntity -> toTinkInstrument(apiClient, securityEntity))
-                .collect(Collectors.toList());
+        return Option.of(securities)
+                .getOrElse(List.empty())
+                .map(securityEntity -> toTinkInstrument(apiClient, securityEntity));
     }
 
     private Instrument toTinkInstrument(BbvaApiClient apiClient, SecurityEntity securityEntity) {

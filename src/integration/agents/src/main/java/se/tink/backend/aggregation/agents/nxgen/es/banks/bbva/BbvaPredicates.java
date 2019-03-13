@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import io.vavr.CheckedPredicate;
+import java.util.function.Predicate;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
@@ -25,4 +27,9 @@ public final class BbvaPredicates {
 
     public static final CheckedPredicate<String> IS_LOGIN_WRONG_CREDENTIALS =
             response -> response.contains(BbvaConstants.Message.LOGIN_WRONG_CREDENTIAL_CODE);
+
+    public static final Predicate<AccountTypes> IS_CHECKING_OR_SAVINGS_ACCOUNT =
+            accountType ->
+                    accountType.equals(AccountTypes.CHECKING)
+                            || accountType.equals(AccountTypes.SAVINGS);
 }

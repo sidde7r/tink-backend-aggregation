@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BankEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.FormatsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.LoanEntity;
@@ -118,10 +118,8 @@ public class LoanDetailsResponse {
     }
 
     @JsonIgnore
-    public Optional<InterestEntity> getFirstInterestRate() {
-        return Optional.ofNullable(interestRates)
-                .filter(list -> list.size() > 0)
-                .map(list -> list.get(0));
+    public Option<InterestEntity> getFirstInterestRate() {
+        return interestRates.headOption();
     }
 
     public int getPendingPayments() {
@@ -134,13 +132,13 @@ public class LoanDetailsResponse {
 
     public LoanAccount toTinkLoanAccount(LoanEntity loan) {
         final double interestRate =
-                getFirstInterestRate().map(InterestEntity::getPercentage).orElse((double) 0);
+                getFirstInterestRate().map(InterestEntity::getPercentage).getOrElse((double) 0);
 
         final Date reviewDate =
                 getFirstInterestRate()
                         .map(InterestEntity::getReviewDate)
                         .map(DateUtils::parseDate)
-                        .orElse(null);
+                        .getOrNull();
 
         final Date initialDate = DateUtils.parseDate(validityDate);
         final Amount initialBalance = initialAmount.toTinkAmount().negate();
