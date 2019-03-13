@@ -174,7 +174,7 @@
             "supplementalFields": [
                 {
                     "description": "s Identity Verification code",
-                    "helpText": "You will soon receive a message on your s Identity App.\nOpen s Identity and sign.\nThen open Tink and press Submit",
+                    "helpText": "You will soon receive a message on your s Identity App.\nOpen s Identity and sign.\nThen return and press Submit",
                     "immutable": true,
                     "masked": false,
                     "name": "logindescription"
