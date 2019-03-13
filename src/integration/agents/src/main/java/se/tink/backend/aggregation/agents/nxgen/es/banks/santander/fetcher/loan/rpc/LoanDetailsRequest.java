@@ -36,8 +36,8 @@ public class LoanDetailsRequest {
                         + "</soapenv:Body>"
                         + "</soapenv:Envelope>",
                 tokenCredential,
-                contractEntity.getBankOffice().getOffice(),
                 contractEntity.getBankOffice().getCompany(),
+                contractEntity.getBankOffice().getOffice(),
                 contractEntity.getProduct(),
                 contractEntity.getContractNumber(),
                 userDataXml,
