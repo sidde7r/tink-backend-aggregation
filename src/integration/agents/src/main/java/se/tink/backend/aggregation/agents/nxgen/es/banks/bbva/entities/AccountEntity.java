@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -11,7 +13,10 @@ public class AccountEntity {
     private String counterPart;
     private MarketerBankEntity marketerBank;
     private AmountEntity currentBalance;
-    private String dueDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date dueDate;
+
     private AmountEntity availableBalanceLocalCurrency;
     private BranchEntity branch;
     private AmountEntity availableBalance;
@@ -48,7 +53,7 @@ public class AccountEntity {
         return currentBalance;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 

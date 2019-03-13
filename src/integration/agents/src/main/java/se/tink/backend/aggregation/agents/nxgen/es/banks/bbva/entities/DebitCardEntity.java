@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -11,7 +13,10 @@ public class DebitCardEntity {
     private String counterPart;
     private LegacyProductEntity legacyProduct;
     private MarketerBankEntity marketerBank;
-    private String dueDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date dueDate;
+
     private String migrationType;
     private TypeEntity type;
     private IndicatorsEntity indicators;
@@ -25,7 +30,10 @@ public class DebitCardEntity {
     private String id;
     private UserCustomizationEntity userCustomization;
     private String pan;
-    private String stampDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date stampDate;
+
     private List<ParticipantEntity> participants;
     private StatusEntity status;
 
@@ -53,7 +61,7 @@ public class DebitCardEntity {
         return marketerBank;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
@@ -109,7 +117,7 @@ public class DebitCardEntity {
         return pan;
     }
 
-    public String getStampDate() {
+    public Date getStampDate() {
         return stampDate;
     }
 

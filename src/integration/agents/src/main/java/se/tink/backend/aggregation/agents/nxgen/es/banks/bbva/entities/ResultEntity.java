@@ -20,7 +20,8 @@ public class ResultEntity {
 
     @JsonIgnore
     public boolean hasError(BbvaConstants.Error errorToFind) {
-        return !Option.of(errors).getOrElse(List.empty())
+        return !Option.of(errors)
+                .getOrElse(List.empty())
                 .filter(e -> e.getError() == errorToFind)
                 .isEmpty();
     }

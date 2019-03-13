@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BranchEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.date.DateUtils;
 
 @JsonObject
 public class AccountTransactionEntity {
@@ -15,8 +16,13 @@ public class AccountTransactionEntity {
     private BranchEntity branch;
     private String extendedName;
     private OriginEntity origin;
-    private String transactionDate;
-    private String valueDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date transactionDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date valueDate;
+
     private AmountEntity amount;
     private ExtendedDateEntity extendedDate;
     private CategoryEntity humanCategory;
@@ -30,7 +36,7 @@ public class AccountTransactionEntity {
     public Transaction toTransaction() {
         return Transaction.builder()
                 .setAmount(amount.toTinkAmount())
-                .setDate(DateUtils.parseDate(transactionDate))
+                .setDate(transactionDate)
                 .setDescription(humanConceptName)
                 .build();
     }
@@ -51,11 +57,11 @@ public class AccountTransactionEntity {
         return extendedName;
     }
 
-    public String getTransactionDate() {
+    public Date getTransactionDate() {
         return transactionDate;
     }
 
-    public String getValueDate() {
+    public Date getValueDate() {
         return valueDate;
     }
 

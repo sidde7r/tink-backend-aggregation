@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
@@ -30,7 +32,8 @@ public class SecurityEntity {
     private AmountEntity totalAmount;
     private double availableTitles;
     private AmountEntity availableBalance;
-    private String evaluateDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date evaluateDate;
     private String evaluateHourTime;
     private TypeEntity evaluateType;
     private String batch;

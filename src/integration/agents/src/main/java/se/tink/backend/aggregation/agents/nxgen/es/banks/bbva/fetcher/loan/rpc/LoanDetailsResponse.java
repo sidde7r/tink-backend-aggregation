@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vavr.collection.List;
@@ -18,22 +19,30 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.DateUtils;
 
 @JsonObject
 public class LoanDetailsResponse {
     private AmountEntity awardedAmount;
     private ProductEntity product;
-    private String nextPaymentDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date nextPaymentDate;
+
     private FormatsEntity formats;
     private AmountEntity redeemedAmount;
     private String counterPart;
-    private String dueDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date dueDate;
+
     private List<AmortizationScheduleEntity> amortizationSchedule;
     private BankEntity bank;
     private List<RelatedContractEntity> relatedContracts;
     private InstallmentsEntity installments;
-    private String validityDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date validityDate;
+
     private int installmentTotalCount;
     private AmountEntity initialAmount;
     private String amortizationDescription;
@@ -53,7 +62,7 @@ public class LoanDetailsResponse {
         return product;
     }
 
-    public String getNextPaymentDate() {
+    public Date getNextPaymentDate() {
         return nextPaymentDate;
     }
 
@@ -69,7 +78,7 @@ public class LoanDetailsResponse {
         return counterPart;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
@@ -89,7 +98,7 @@ public class LoanDetailsResponse {
         return installments;
     }
 
-    public String getValidityDate() {
+    public Date getValidityDate() {
         return validityDate;
     }
 
@@ -118,7 +127,7 @@ public class LoanDetailsResponse {
     }
 
     @JsonIgnore
-    public Option<InterestEntity> getFirstInterestRate() {
+    public Option<InterestEntity> getFirstInterestEntity() {
         return interestRates.headOption();
     }
 
@@ -132,23 +141,19 @@ public class LoanDetailsResponse {
 
     public LoanAccount toTinkLoanAccount(LoanEntity loan) {
         final double interestRate =
-                getFirstInterestRate().map(InterestEntity::getPercentage).getOrElse((double) 0);
+                getFirstInterestEntity().map(InterestEntity::getPercentage).getOrElse(0.0);
 
-        final Date reviewDate =
-                getFirstInterestRate()
-                        .map(InterestEntity::getReviewDate)
-                        .map(DateUtils::parseDate)
-                        .getOrNull();
+        final Date interestReviewDate =
+                getFirstInterestEntity().map(InterestEntity::getReviewDate).getOrNull();
 
-        final Date initialDate = DateUtils.parseDate(validityDate);
         final Amount initialBalance = initialAmount.toTinkAmount().negate();
 
         final LoanDetails loanDetails =
                 LoanDetails.builder(loan.getTinkLoanType())
-                        .setInitialDate(initialDate)
+                        .setInitialDate(validityDate)
                         .setInitialBalance(initialBalance)
                         .setLoanNumber(loan.getDigit())
-                        .setNextDayOfTermsChange(reviewDate)
+                        .setNextDayOfTermsChange(interestReviewDate)
                         .setNumMonthsBound(installmentTotalCount)
                         .setAmortized(redeemedAmount.toTinkAmount())
                         // .setApplicants()
