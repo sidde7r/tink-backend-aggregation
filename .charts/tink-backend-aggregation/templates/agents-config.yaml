@@ -58,7 +58,7 @@ data:
             clientId: "STARLING_CLIENT_ID"
             clientSecret: "STARLING_CLIENT_SECRET"
             redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
-            keyUid: "STARLING_KEY_UID"
+            keyUid: "STARLING_SIGNING_KEY_UID"
             signingKey: "STARLING_SIGNING_KEY"
         {{- end }}
 
