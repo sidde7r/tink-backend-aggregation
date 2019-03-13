@@ -5,6 +5,8 @@ option java_package = "se.tink.backend.integration.api.rpc";
 option java_outer_classname = "Protos";
 option go_package = "proto";
 
+import "proto/integration_service/models.proto";
+
 message PingRequest {
     string message = 1;
 }
