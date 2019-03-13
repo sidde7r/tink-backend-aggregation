@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents;
 
 import com.google.common.base.Strings;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
+import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.strings.StringUtils;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
-import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.date.DateUtils;
-import se.tink.libraries.strings.StringUtils;
 
 public class AgentParsingUtils {
 
@@ -17,18 +18,18 @@ public class AgentParsingUtils {
 
     public static String cleanDescription(String text) {
         StringBuilder result = new StringBuilder();
-    
+
         for (char c : text.toCharArray()) {
             if (Character.getType(c) == Character.CONTROL) {
                 continue;
             }
-    
+
             result.append(c);
         }
-    
+
         return result.toString();
     }
-    
+
     public static Integer parseNumMonthsBound(String periodDescription) {
         if (periodDescription != null && periodDescription.indexOf(' ') != -1) {
             String[] parts = periodDescription.split(" ");
@@ -59,7 +60,7 @@ public class AgentParsingUtils {
 
         return interest.doubleValue();
     }
-    
+
     public static double parseAmountTrimCurrency(String text) {
         text = text.toLowerCase();
         text = text.replace("kr", "");
@@ -67,7 +68,7 @@ public class AgentParsingUtils {
         text = text.replace("eur", "");
         return parseAmount(text);
     }
-    
+
     public static double parseAmount(String text) {
         // Remove `Â`, if we received incorrect encoded amount:
         // https://stackoverflow.com/questions/1461907/html-encoding-issues-%C3%82-character-showing-up-instead-of-nbsp
@@ -88,5 +89,4 @@ public class AgentParsingUtils {
     public AgentParsingUtils() {
         super();
     }
-
 }
