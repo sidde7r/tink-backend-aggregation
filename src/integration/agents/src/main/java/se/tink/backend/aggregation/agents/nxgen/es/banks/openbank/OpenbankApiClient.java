@@ -57,8 +57,8 @@ public final class OpenbankApiClient {
         return createRequest(OpenbankConstants.Urls.LOGIN).post(LoginResponse.class, loginRequest);
     }
 
-    public void keepAlive() {
-        createRequestInSession(OpenbankConstants.Urls.KEEP_ALIVE).get(String.class);
+    public String keepAlive() {
+        return createRequestInSession(OpenbankConstants.Urls.KEEP_ALIVE).get(String.class);
     }
 
     public LogoutResponse logout() {
