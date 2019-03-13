@@ -13,8 +13,8 @@ import java.util.Date;
 
 public final class AgentParsingUtils {
 
-    protected static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
-    protected static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
+    static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
+    static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
 
     public static String cleanDescription(String text) {
         StringBuilder result = new StringBuilder();
