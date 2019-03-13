@@ -34,7 +34,7 @@ public class OpenbankTransactionalAccountFetcher
     @Override
     public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
             TransactionalAccount account, URL nextUrl) {
-        AccountTransactionsRequestQueryParams queryParams =
+        final AccountTransactionsRequestQueryParams queryParams =
                 new AccountTransactionsRequestQueryParams.Builder()
                         .withProductCode(
                                 account.getFromTemporaryStorage(

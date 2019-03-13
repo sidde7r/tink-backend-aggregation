@@ -147,7 +147,7 @@ public class CardEntity {
     }
 
     public CreditCardAccount toTinkAccount() {
-        String accountNumber = contract.getProductCode() + contract.getContractNumber();
+        final String accountNumber = contract.getProductCode() + contract.getContractNumber();
 
         return CreditCardAccount.builderFromFullNumber(cardNumber, description)
                 .setAccountNumber(accountNumber)

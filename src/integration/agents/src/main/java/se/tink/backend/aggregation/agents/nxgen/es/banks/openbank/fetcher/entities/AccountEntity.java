@@ -91,7 +91,7 @@ public class AccountEntity {
     }
 
     private String getAccountName() {
-        String contractNumber = getAccountInfoOldFormat().getContractNumber();
+        final String contractNumber = getAccountInfoOldFormat().getContractNumber();
 
         // The bank app shows the account name as: "[DESCRIPTION]
         // ...[LAST_FOUR_DIGITS_OF_IBAN/CONTRACT_NUMBER]"
@@ -102,8 +102,8 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         // Openbank account number is the last 10 digits of the IBAN
-        AccountInfoEntity accountInfoOldFormat = getAccountInfoOldFormat();
-        String accountNumber =
+        final AccountInfoEntity accountInfoOldFormat = getAccountInfoOldFormat();
+        final String accountNumber =
                 accountInfoOldFormat.getProductCode() + accountInfoOldFormat.getContractNumber();
 
         return TransactionalAccount.builder(getTinkAccountType(), accountNumber.toLowerCase())
