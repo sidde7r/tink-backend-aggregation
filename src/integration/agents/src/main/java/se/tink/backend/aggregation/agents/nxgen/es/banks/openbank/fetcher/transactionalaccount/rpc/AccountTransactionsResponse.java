@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.vavr.collection.List;
 import io.vavr.control.Option;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.IbanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.PaginationEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.RepaginationEntity;
@@ -65,10 +64,7 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions
-                .stream()
-                .map(TransactionEntity::toTinkTransaction)
-                .collect(Collectors.toList());
+        return transactions.map(TransactionEntity::toTinkTransaction).toJavaList();
     }
 
     @Override

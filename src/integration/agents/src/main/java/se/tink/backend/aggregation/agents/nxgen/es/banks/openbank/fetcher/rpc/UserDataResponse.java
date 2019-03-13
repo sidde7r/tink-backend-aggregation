@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
+import io.vavr.collection.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities.IbanEntity;
