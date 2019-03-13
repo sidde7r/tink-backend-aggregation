@@ -75,8 +75,12 @@ public abstract class Account {
         this.temporaryStorage = builder.getTemporaryStorage();
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.productName = builder.getProductName();
-        this.name = builder.getAlias();
 
+        // Use account number as alias if no explicit alias is set.
+        this.name =
+                Strings.isNullOrEmpty(builder.getAlias())
+                        ? builder.getAccountNumber()
+                        : builder.getAlias();
         // Only use one holder name for now
         this.holderName =
                 new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
@@ -125,9 +129,7 @@ public abstract class Account {
             this.balance = balance;
         }
 
-        protected final void applyAlias(@Nonnull String alias) {
-            Preconditions.checkNotNull(alias, "Alias must not be null.");
-
+        protected final void applyAlias(String alias) {
             this.alias = alias;
         }
 

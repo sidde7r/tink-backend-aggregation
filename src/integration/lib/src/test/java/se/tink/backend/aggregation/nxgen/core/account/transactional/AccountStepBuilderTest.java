@@ -154,6 +154,20 @@ public final class AccountStepBuilderTest {
                 account.hashCode(), StringUtils.removeNonAlphaNumeric(formattedId).hashCode());
     }
 
+    @Test
+    public void ensureAlias_null_FallsBackToAccountNumber() {
+
+        SavingsAccount account =
+                SavingsAccount.builder()
+                        .setUniqueIdentifier(VALID_UNIQUE_ID)
+                        .setAccountNumber(VALID_ACCOUNT_NUMBER)
+                        .setBalance(VALID_AMOUNT)
+                        .setAlias(null)
+                        .addAccountIdentifier(VALID_TINK_IDENTIFIER)
+                        .build();
+        Assert.assertEquals(VALID_ACCOUNT_NUMBER, account.getName());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void ensureUniqueId_null_ThrowsException() {
 
@@ -191,16 +205,6 @@ public final class AccountStepBuilderTest {
                 .setUniqueIdentifier(VALID_UNIQUE_ID)
                 .setAccountNumber(VALID_ACCOUNT_NUMBER)
                 .setBalance(null);
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void ensureAlias_null_ThrowsException() {
-
-        SavingsAccount.builder()
-                .setUniqueIdentifier(VALID_UNIQUE_ID)
-                .setAccountNumber(VALID_ACCOUNT_NUMBER)
-                .setBalance(VALID_AMOUNT)
-                .setAlias(null);
     }
 
     @Test

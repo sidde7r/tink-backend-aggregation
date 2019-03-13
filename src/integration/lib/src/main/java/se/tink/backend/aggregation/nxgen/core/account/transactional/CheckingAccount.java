@@ -64,7 +64,7 @@ public class CheckingAccount extends TransactionalAccount {
         }
 
         @Override
-        public AccountIdentifierStep<CheckingBuildStep> setAlias(@Nonnull String alias) {
+        public AccountIdentifierStep<CheckingBuildStep> setAlias(String alias) {
             applyAlias(alias);
             return this;
         }
