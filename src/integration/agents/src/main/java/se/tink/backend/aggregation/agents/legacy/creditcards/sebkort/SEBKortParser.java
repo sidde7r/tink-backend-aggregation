@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class SEBKortParser extends AgentParsingUtils {
+public class SEBKortParser {
     private static final Ordering<Transaction> TRANSACTION_ORDERING = new Ordering<Transaction>() {
         @Override
         public int compare(Transaction left, Transaction right) {
@@ -371,7 +371,7 @@ public class SEBKortParser extends AgentParsingUtils {
     }
 
     private double parseSebAmount(String amount) {
-        return parseAmount(CharMatcher.WHITESPACE.removeFrom(amount.replace("kr", "")));
+        return AgentParsingUtils.parseAmount(CharMatcher.WHITESPACE.removeFrom(amount.replace("kr", "")));
     }
 
     /**
