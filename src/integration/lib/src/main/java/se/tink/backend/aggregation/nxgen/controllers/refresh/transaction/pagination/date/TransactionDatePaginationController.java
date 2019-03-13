@@ -13,7 +13,7 @@ import se.tink.libraries.date.DateUtils;
 
 public class TransactionDatePaginationController<A extends Account> implements TransactionPaginator<A> {
     private static final AggregationLogger log = new AggregationLogger(TransactionDatePaginationController.class);
-    static final int MAX_CONSECUTIVE_EMPTY_PAGES = 2;
+    static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
     private static final int MONTHS_TO_FETCH = 3;
 
     private final TransactionDatePaginator<A> paginator;
