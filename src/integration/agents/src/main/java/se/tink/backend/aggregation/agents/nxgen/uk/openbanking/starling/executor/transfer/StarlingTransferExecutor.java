@@ -50,18 +50,9 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
         Preconditions.checkNotNull(transfer.getSource(), "Transfer source must not be null");
         Preconditions.checkNotNull(transfer.getDestination(), "Transfer source must not be null");
 
-        final AccountIdentifier sourceIdentifier = transfer.getSource();
-        final SortCodeIdentifier destinationIdentifier =
-                toSortCodeIdentifier(transfer.getDestination())
-                        .orElseThrow(
-                                () ->
-                                        getTransferException(
-                                                "Destination must SortCodeIdentifier.",
-                                                TransferExecutionException.EndUserMessage
-                                                        .INVALID_DESTINATION));
 
         final AccountEntity sourceAccount =
-                getSourceAccount(sourceIdentifier)
+                getSourceAccount(transfer.getSource())
                         .orElseThrow(
                                 () ->
                                         getTransferException(
@@ -69,22 +60,7 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                                                 TransferExecutionException.EndUserMessage
                                                         .SOURCE_NOT_FOUND));
 
-        final PayeeEntity payee =
-                getPayeeForAccount(destinationIdentifier)
-                        .orElseThrow(
-                                () ->
-                                        getTransferException(
-                                                "Could not find payee with the specified account.",
-                                                TransferExecutionException.EndUserMessage
-                                                        .INVALID_DESTINATION));
-
-        final PaymentRecipient recipient =
-                PaymentRecipient.builder()
-                        .setDestinationAccount(destinationIdentifier)
-                        .setPayeeName(payee.getPayeeName())
-                        .setCountryCode(COUNTRY_CODE)
-                        .setPayeeType(INDIVIDUAL)
-                        .build();
+        final PaymentRecipient recipient = constructRecipient(transfer.getDestination());
 
         final ExecutePaymentRequest paymentRequest =
                 ExecutePaymentRequest.builder()
@@ -94,14 +70,14 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                         .setAmount(transfer.getAmount())
                         .build();
 
-        ExecutePaymentResponse paymentResponse =
+        final ExecutePaymentResponse paymentResponse =
                 apiClient.executeTransfer(
                         paymentRequest,
                         PaymentSignature.builder(keyUid, privateKey),
                         sourceAccount.getAccountUid(),
                         sourceAccount.getDefaultCategory());
 
-        TransferStatusEntity status =
+        final TransferStatusEntity status =
                 apiClient.checkTransferStatus(paymentResponse.getPaymentOrderUid());
 
         if (!status.isOk()) {
@@ -113,7 +89,33 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
         return Optional.of(paymentResponse.getPaymentOrderUid());
     }
 
+    private PaymentRecipient constructRecipient(AccountIdentifier destination) {
 
+        final SortCodeIdentifier destinationIdentifier =
+                toSortCodeIdentifier(destination)
+                        .orElseThrow(
+                                () ->
+                                        getTransferException(
+                                                "Destination must SortCodeIdentifier.",
+                                                TransferExecutionException.EndUserMessage
+                                                        .INVALID_DESTINATION));
+
+        final PayeeEntity payee =
+                getPayeeForAccount(destinationIdentifier)
+                        .orElseThrow(
+                                () ->
+                                        getTransferException(
+                                                "Could not find payee with the specified account.",
+                                                TransferExecutionException.EndUserMessage
+                                                        .INVALID_DESTINATION));
+
+        return PaymentRecipient.builder()
+                .setDestinationAccount(destinationIdentifier)
+                .setPayeeName(payee.getPayeeName())
+                .setCountryCode(COUNTRY_CODE)
+                .setPayeeType(INDIVIDUAL)
+                .build();
+    }
 
     private Optional<PayeeEntity> getPayeeForAccount(final SortCodeIdentifier accountIdentifier) {
 
@@ -137,7 +139,8 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
         return apiClient.fetchAccountIdentifiers(accountUid).hasIdentifier(accountIdentifier);
     }
 
-    private static Optional<SortCodeIdentifier> toSortCodeIdentifier(final AccountIdentifier identifier) {
+    private static Optional<SortCodeIdentifier> toSortCodeIdentifier(
+            final AccountIdentifier identifier) {
 
         if (identifier.getType() == AccountIdentifier.Type.SORT_CODE) {
             return Optional.of((SortCodeIdentifier) identifier);
