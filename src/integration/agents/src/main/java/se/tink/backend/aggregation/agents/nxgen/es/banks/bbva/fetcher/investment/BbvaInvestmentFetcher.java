@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import static io.vavr.Predicates.not;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_INTERNATIONAL_PORTFOLIO;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_MANAGED_FUNDS;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_WEALTH_DEPOSITARY;
@@ -37,7 +38,7 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
                 .peek(r -> log(r.getManagedFundsPortfolios(), INVESTMENT_MANAGED_FUNDS))
                 .peek(r -> log(r.getWealthDepositaryPortfolios(), INVESTMENT_WEALTH_DEPOSITARY))
                 .map(ProductsResponse::getStockAccounts)
-                .filter(l -> !l.isEmpty())
+                .filter(not(List::isEmpty))
                 .getOrElse(List.empty())
                 .map(stockAccount -> stockAccount.toTinkAccount(apiClient, holderName))
                 .toJavaList();
@@ -45,7 +46,7 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
 
     private void log(List<Object> data, LogTag logTag) {
         Option.of(data)
-                .filter(d -> !d.isEmpty())
+                .filter(not(List::isEmpty))
                 .toTry()
                 .onSuccess(d -> LOGGER.infoExtraLong(SerializationUtils.serializeToString(d), logTag))
                 .onFailure(e -> LOGGER.warn(logTag.toString() + " - Failed to log investment data, " + e.getMessage()));
