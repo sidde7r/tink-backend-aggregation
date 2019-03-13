@@ -1,7 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
+import io.vavr.control.Option;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Defaults;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.amount.Amount;
 
@@ -14,24 +15,15 @@ public class AmountEntity {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
-    public CurrencyEntity getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(CurrencyEntity currency) {
-        this.currency = currency;
+    public Option<CurrencyEntity> getCurrency() {
+        return Option.of(currency);
     }
 
     @JsonIgnore
-    public Amount getTinkAmount() {
-        if (currency != null && currency.getId() != null) {
-            return new Amount(currency.getId(), amount);
-        }
+    public Amount toTinkAmount() {
+        final String currency =
+                getCurrency().map(CurrencyEntity::getId).getOrElse(Defaults.CURRENCY);
 
-        return new Amount(BbvaConstants.Defaults.CURRENCY, amount);
+        return new Amount(currency, amount);
     }
 }

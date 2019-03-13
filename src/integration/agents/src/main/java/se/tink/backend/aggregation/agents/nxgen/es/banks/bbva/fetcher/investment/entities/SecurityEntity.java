@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
+import java.util.Date;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
@@ -23,12 +25,15 @@ public class SecurityEntity {
     private TypeEntity typeSecurities;
     private String name;
     private String marketName;
+
     @JsonProperty("totalTitles")
     private double quantity;
+
     private AmountEntity totalAmount;
     private double availableTitles;
     private AmountEntity availableBalance;
-    private String evaluateDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date evaluateDate;
     private String evaluateHourTime;
     private TypeEntity evaluateType;
     private String batch;
@@ -44,10 +49,14 @@ public class SecurityEntity {
     private CurrencyEntity currency;
 
     @JsonObject
-    public Instrument toTinkInstrument(BbvaApiClient apiClient, Instrument.Type instrumentType, String portfolioId,
+    public Instrument toTinkInstrument(
+            BbvaApiClient apiClient,
+            Instrument.Type instrumentType,
+            String portfolioId,
             String securityCode) {
-        SecurityProfitabilityResponse profitabilityResponse = apiClient.fetchSecurityProfitability(portfolioId, securityCode);
-        double marketValue = totalAmount.getTinkAmount().doubleValue();
+        SecurityProfitabilityResponse profitabilityResponse =
+                apiClient.fetchSecurityProfitability(portfolioId, securityCode);
+        double marketValue = totalAmount.toTinkAmount().doubleValue();
         double totalProfit = profitabilityResponse.getTotalProfit();
         double averageAcquisitionPrice = getAverageAcquisitionPrice(marketValue - totalProfit);
 
@@ -71,13 +80,15 @@ public class SecurityEntity {
 
     @JsonIgnore
     private Double getPrice() {
-        return new BigDecimal(totalAmount.getAmount() / quantity).setScale(2, BigDecimal.ROUND_HALF_UP)
+        return new BigDecimal(totalAmount.getAmount() / quantity)
+                .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
     }
 
     @JsonIgnore
     private Double getAverageAcquisitionPrice(double acquisitionAmount) {
-        return new BigDecimal(acquisitionAmount / quantity).setScale(2, BigDecimal.ROUND_HALF_UP)
+        return new BigDecimal(acquisitionAmount / quantity)
+                .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .doubleValue();
     }
 

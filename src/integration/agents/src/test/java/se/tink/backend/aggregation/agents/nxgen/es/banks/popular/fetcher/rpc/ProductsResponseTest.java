@@ -5,7 +5,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import static org.junit.Assert.assertNotNull;
 
-public class FetchProductsResponseTest {
+public class ProductsResponseTest {
     @Test
     public void toTinkAccounts() throws Exception {
         FetchAccountsResponse response = FetchAccountsResponseTestData.getTestData();

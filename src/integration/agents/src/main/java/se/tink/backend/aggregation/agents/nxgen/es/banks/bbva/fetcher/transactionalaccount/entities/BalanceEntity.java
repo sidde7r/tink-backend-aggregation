@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transacti
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BalancesEntity {
+public class BalanceEntity {
     private double amount;
     private String currency;
     private boolean isMainCurrency;

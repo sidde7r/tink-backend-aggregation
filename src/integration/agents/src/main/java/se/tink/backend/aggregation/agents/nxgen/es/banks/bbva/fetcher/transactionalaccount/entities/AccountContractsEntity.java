@@ -7,7 +7,6 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountContractsEntity {
-
     private ContractEntity contract;
     private SimpleAccountEntity account;
 
@@ -34,8 +33,6 @@ public class AccountContractsEntity {
 
     @JsonIgnore
     public Amount getAvailableBalanceAsTinkAmount() {
-        return account.getCurrentBalance()
-                .getAvailableBalance()
-                .getTinkAmount();
+        return account.getCurrentBalance().getAvailableBalance().toTinkAmount();
     }
 }

@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -16,13 +15,15 @@ public class ResultEntity {
 
     @JsonIgnore
     public boolean hasError() {
-        return !Optional.ofNullable(errors).orElse(Collections.emptyList()).isEmpty();
+        return !Option.of(errors).getOrElse(List.empty()).isEmpty();
     }
 
     @JsonIgnore
     public boolean hasError(BbvaConstants.Error errorToFind) {
-        return Optional.ofNullable(errors).orElse(Collections.emptyList()).stream()
-                .anyMatch(e -> e.getError() == errorToFind);
+        return !Option.of(errors)
+                .getOrElse(List.empty())
+                .filter(e -> e.getError() == errorToFind)
+                .isEmpty();
     }
 
     public String getCode() {

@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.nxgen.http;
 
+import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -10,6 +13,7 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import io.vavr.jackson.datatype.VavrModule;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponseInterceptor;
@@ -35,7 +39,6 @@ import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -107,7 +110,6 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private final Filter finalFilter = new SendRequestFilter();
     private final PersistentHeaderFilter persistentHeaderFilter = new PersistentHeaderFilter();
 
-    private static final AggregationLogger logger = new AggregationLogger(TinkHttpClient.class);
     private String cookieSpec;
     private static final ImmutableList<String> cookieSpecifications =
             ImmutableList.<String>builder()
@@ -117,6 +119,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
                     .add(CookieSpecs.STANDARD)
                     .add(CookieSpecs.BEST_MATCH)
                     .build();
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
@@ -216,6 +220,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
         setFollowRedirects(DEFAULTS.FOLLOW_REDIRECTS);
         setDebugOutput(DEFAULTS.DEBUG_OUTPUT);
         setUserAgent(DEFAULTS.DEFAULT_USER_AGENT);
+
+        registerJacksonModule(new VavrModule());
     }
 
     public TinkHttpClient() {
@@ -334,6 +340,15 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
 
     public void addMessageWriter(MessageBodyWriter<?> messageBodyWriter) {
         this.internalClientConfig.getSingletons().add(messageBodyWriter);
+    }
+
+    public void registerJacksonModule(Module module) {
+        OBJECT_MAPPER.registerModule(module);
+
+        final JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
+        jacksonProvider.setMapper(OBJECT_MAPPER);
+
+        this.internalClientConfig.getSingletons().add(jacksonProvider);
     }
 
     /**

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils;
 
-import java.util.Optional;
-import org.junit.Ignore;
+import io.vavr.control.Option;
 import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -20,21 +19,8 @@ public class BbvaUtilsTest {
 
     @Test
     public void splitUtlGetKey_properNextKey() {
-        Optional<String> nextKeyString = BbvaUtils.splitUtlGetKey(URL_TO_PARSE);
-        assertTrue(nextKeyString.isPresent());
+        Option<String> nextKeyString = BbvaUtils.splitGetPaginationKey(URL_TO_PARSE);
+        assertTrue(nextKeyString.isDefined());
         assertEquals(NEXT_KEY, nextKeyString.get());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void splitUtlGetKey_NoKeyThrowException() {
-        BbvaUtils.splitUtlGetKey(URL_TO_PARSE_NO_KEY);
-    }
-
-
-    //I wasn't able to find input that would trigger this one
-    @Ignore
-    @Test(expected = IllegalArgumentException.class)
-    public void splitUtlGetKey_cannotParseThrowException() {
-        BbvaUtils.splitUtlGetKey("");
     }
 }

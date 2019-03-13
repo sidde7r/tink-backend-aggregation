@@ -1,18 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Calendar;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.SecurityCodeEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 public class SecurityProfitabilityRequest {
     private String securityPortfolioId;
-    private String startDate;
-    private String endDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date startDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date endDate;
+
     private SecurityCodeEntity security;
 
     @JsonIgnore
@@ -26,8 +31,8 @@ public class SecurityProfitabilityRequest {
         SecurityProfitabilityRequest request = new SecurityProfitabilityRequest();
         request.security = securityCode;
         request.securityPortfolioId = portfolioId;
-        request.startDate = ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITH_TIMEZONE.format(startDate);
-        request.endDate = ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITH_TIMEZONE.format(endDate);
+        request.startDate = startDate;
+        request.endDate = endDate;
 
         return request;
     }

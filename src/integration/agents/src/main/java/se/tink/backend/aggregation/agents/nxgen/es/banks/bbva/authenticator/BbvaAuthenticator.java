@@ -1,20 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator;
 
-import java.util.Objects;
+import io.vavr.control.Try;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaPredicates;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BbvaAuthenticator implements PasswordAuthenticator {
-
-    private BbvaApiClient apiClient;
     private final SessionStorage sessionStorage;
+    private BbvaApiClient apiClient;
 
     public BbvaAuthenticator(BbvaApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
@@ -22,24 +25,25 @@ public class BbvaAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        final LoginRequest loginRequest =
+                new LoginRequest(BbvaUtils.formatUsername(username), password);
 
-        HttpResponse response = apiClient.login(username, password);
+        Try.of(() -> apiClient.login(loginRequest).getBody(String.class))
+                .map(String::toLowerCase)
+                .filterTry(
+                        BbvaPredicates.IS_LOGIN_WRONG_CREDENTIALS.negate(),
+                        (Supplier<Throwable>) LoginError.INCORRECT_CREDENTIALS::exception)
+                .filterTry(
+                        BbvaPredicates.IS_LOGIN_SUCCESS,
+                        () -> new IllegalStateException("Could not authenticate"))
+                .transform(s -> apiClient.initiateSession())
+                .onSuccess(putHolderNameInSessionStorage());
+    }
 
-        String responseString = response.getBody(String.class);
-
-        if (responseString.toLowerCase().contains(BbvaConstants.Message.LOGIN_SUCCESS)) {
-            InitiateSessionResponse initiateSessionResponse = apiClient.initiateSession();
-            if (!Objects.equals(initiateSessionResponse.getResult().getCode().toLowerCase(), BbvaConstants.Message.OK)) {
-                throw new IllegalStateException(String.format("Initiate session failed with code %s",
-                        initiateSessionResponse.getResult().getCode()));
-            }
-            sessionStorage.put(BbvaConstants.Storage.HOLDER_NAME, initiateSessionResponse.getName());
-        } else if (responseString.toLowerCase().contains(BbvaConstants.Message.LOGIN_WRONG_CREDENTIAL_CODE)) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        } else {
-            throw new IllegalStateException("Could not authenticate");
-        }
-
+    private Consumer<InitiateSessionResponse> putHolderNameInSessionStorage() {
+        return response ->
+                sessionStorage.put(BbvaConstants.StorageKeys.HOLDER_NAME, response.getName());
     }
 }

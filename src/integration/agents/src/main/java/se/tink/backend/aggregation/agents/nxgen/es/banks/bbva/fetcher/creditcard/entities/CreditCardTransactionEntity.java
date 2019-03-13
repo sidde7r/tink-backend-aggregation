@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.text.ParseException;
 import java.util.Date;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BasicEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonObject
 public class CreditCardTransactionEntity {
@@ -14,15 +15,17 @@ public class CreditCardTransactionEntity {
     private String operationKey;
     private ContractEntity contract;
 
-    // LocalDateTime
-    private String transactionDate;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date transactionDate;
 
     private String transactionTypeIndicator;
     private BasicEntity concept;
     private AmountEntity amount;
-    private HolderAmountEntity holderAmount;
-    // LocalDateTime
-    private String valueDate;
+    private AmountEntity holderAmount;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date valueDate;
+
     private String terminalId;
 
     private AmountEntity maximumFeeAmount;
@@ -38,8 +41,10 @@ public class CreditCardTransactionEntity {
     private PurchaserEntity purchaser;
     private AmountEntity commission;
     private ShopEntity shop;
-    // LocalDateTime
-    private String cardTransactionDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    private Date cardTransactionDate;
+
     private BasicEntity paymentMethod;
     private BasicEntity humanCategory;
     private BasicEntity humanSubcategory;
@@ -59,17 +64,8 @@ public class CreditCardTransactionEntity {
         // TODO: Add info if transaction is pending as we did not see such yet
         return CreditCardTransaction.builder()
                 .setAmount(amount.toTinkAmount())
-                .setDate(getBeginDateParsed())
+                .setDate(transactionDate)
                 .setDescription(shop.getName())
                 .build();
-    }
-
-    @JsonIgnore
-    public Date getBeginDateParsed() {
-        try {
-            return ThreadSafeDateFormat.FORMATTER_MILLISECONDS_WITH_TIMEZONE.parse(transactionDate);
-        } catch (ParseException pe) {
-            throw new RuntimeException("Failed to parse begin date", pe);
-        }
     }
 }

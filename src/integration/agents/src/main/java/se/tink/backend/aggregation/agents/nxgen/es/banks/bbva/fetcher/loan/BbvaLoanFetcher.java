@@ -1,73 +1,69 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan;
 
+import io.vavr.control.Try;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.function.Consumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchProductsResponse;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.ContractEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.LoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.PositionEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaErrorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
-import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.backend.aggregation.nxgen.http.HttpResponse;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+import static io.vavr.API.Match;
+import static io.vavr.control.Try.run;
 
 public class BbvaLoanFetcher implements AccountFetcher<LoanAccount> {
-    private static final AggregationLogger LOGGER = new AggregationLogger(BbvaLoanFetcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(BbvaLoanFetcher.class);
 
     private final BbvaApiClient apiClient;
 
     public BbvaLoanFetcher(BbvaApiClient apiClient) {
-
         this.apiClient = apiClient;
     }
 
     @Override
     public Collection<LoanAccount> fetchAccounts() {
-        FetchProductsResponse productsResponse = apiClient.fetchProducts();
-
-        // loan logging
-        logMortgage(productsResponse.getMultiMortgages());
-        logLoan(productsResponse.getRevolvingCredits(), BbvaConstants.Logging.LOAN_REVOLVING_CREDIT);
-        logLoan(productsResponse.getWorkingCapitalLoansLimits(), BbvaConstants.Logging.LOAN_WORKING_CAPITAL);
-
-        return Collections.emptyList();
+        return apiClient
+                .fetchFinancialDashboard()
+                .getPositions()
+                .map(PositionEntity::getContract)
+                .flatMap(ContractEntity::getLoan)
+                .map(this::enrichLoanAccountWithDetails)
+                .toJavaList();
     }
 
-    private void logLoan(List<Object> data, LogTag logTag) {
-        if (data == null || data.isEmpty()) {
-            return;
-        }
-
-        try {
-            LOGGER.infoExtraLong(SerializationUtils.serializeToString(data), logTag);
-        } catch (Exception e) {
-            LOGGER.warn(logTag.toString() + " - Failed to log loan data, " + e.getMessage());
-        }
-
+    private LoanAccount enrichLoanAccountWithDetails(LoanEntity loan) {
+        return Try.of(() -> apiClient.fetchLoanDetails(loan.getId()))
+                .onFailure(HttpResponseException.class, handleFetchLoanDetailsException(loan))
+                .fold(
+                        error -> loan.toTinkLoanAccount(),
+                        loanDetails -> loanDetails.toTinkLoanAccount(loan));
     }
 
-    private void logMortgage(List<Object> data) {
-        if (data == null || data.isEmpty()) {
-            return;
-        }
+    private Consumer<HttpResponseException> handleFetchLoanDetailsException(LoanEntity loan) {
+        return e -> {
+            final HttpResponse res = e.getResponse();
+            Match(res.getStatus()).of(Case($(409), run(() -> logLoanDetailsError(res, loan))));
+        };
+    }
 
-        try {
-            LOGGER.infoExtraLong(SerializationUtils.serializeToString(data), BbvaConstants.Logging.LOAN_MULTI_MORTGAGE);
-            data.forEach(
-                loanObject -> {
-                    String loanAsString = SerializationUtils.serializeToString(loanObject);
-                    AccountEntity account = SerializationUtils.deserializeFromString(loanAsString, AccountEntity.class);
-                    if (account != null && account.getId() != null) {
-                        String detailsReponse = apiClient.getLoanDetails(account.getId());
-                        LOGGER.infoExtraLong(detailsReponse, BbvaConstants.Logging.LOAN_MULTI_MORTGAGE);
-                    }
-                }
-            );
-        } catch (Exception e) {
-            LOGGER.warn(BbvaConstants.Logging.LOAN_MULTI_MORTGAGE.toString() + " - Failed to log mortgage data, " + e.getMessage());
-        }
+    private void logLoanDetailsError(HttpResponse res, LoanEntity loan) {
+        final BbvaErrorResponse errorResponse = res.getBody(BbvaErrorResponse.class);
 
+        LOGGER.warn(
+                String.format(
+                        "%s: Couldn't fetching loan details for loan %s; Error Code: %s; Message: %s",
+                        BbvaConstants.LogTags.LOAN_DETAILS,
+                        loan.getId(),
+                        errorResponse.getErrorCode(),
+                        errorResponse.getErrorMessage()));
     }
 }

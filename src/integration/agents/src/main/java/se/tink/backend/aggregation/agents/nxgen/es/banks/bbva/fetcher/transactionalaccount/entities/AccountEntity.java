@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import java.util.Objects;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -13,6 +13,8 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaPredicates.IS_TRANSACTIONAL_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaTypeMappers.ACCOUNT_TYPE_MAPPER;
 import static se.tink.libraries.account.AccountIdentifier.Type.IBAN;
 
 @JsonObject
@@ -31,7 +33,7 @@ public class AccountEntity {
     private String familyCode;
     private String currency;
     private Double availableBalance;
-    private List<BalancesEntity> availableBalances;
+    private List<BalanceEntity> availableBalances;
     private String branch;
     private String accountProductId;
     private String accountProductDescription;
@@ -39,14 +41,18 @@ public class AccountEntity {
     private double actualBalance;
 
     @JsonIgnore
-    public TransactionalAccount toTinkAccount(HolderName holderName) {
-        String normalizedIban = iban.replaceAll(" ","").toLowerCase();
+    public TransactionalAccount toTinkAccount(String holder) {
+        final String normalizedIban = iban.replaceAll(" ", "").toUpperCase();
+        final HolderName holderName = Option.of(holder).map(HolderName::new).getOrNull();
 
-        return TransactionalAccount.builder(getTinkAccountType(), normalizedIban, new Amount(currency, availableBalance))
+        return TransactionalAccount.builder(
+                        getTinkAccountType(),
+                        normalizedIban,
+                        new Amount(currency, availableBalance))
                 .setAccountNumber(iban)
                 .setName(name)
                 .setHolderName(holderName)
-                .putInTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID, id)
+                .putInTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID, id)
                 .addIdentifier(AccountIdentifier.create(IBAN, normalizedIban))
                 .build();
     }
@@ -58,23 +64,20 @@ public class AccountEntity {
 
     @JsonIgnore
     public boolean isTransactionalAccount() {
-        Optional<AccountTypes> accountType = BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
-
-        if (accountType.isPresent()) {
-            return accountType.get().equals(AccountTypes.CHECKING) ||
-                    accountType.get().equals(AccountTypes.SAVINGS);
-        }
-
-        LOGGER.infoExtraLong(SerializationUtils.serializeToString(this),
-                BbvaConstants.Logging.UNKNOWN_ACCOUNT_TYPE);
-        return false;
+        return Option.ofOptional(ACCOUNT_TYPE_MAPPER.translate(accountProductId))
+                .filter(IS_TRANSACTIONAL_ACCOUNT)
+                .onEmpty(
+                        () ->
+                                LOGGER.infoExtraLong(
+                                        SerializationUtils.serializeToString(this),
+                                        BbvaConstants.LogTags.UNKNOWN_ACCOUNT_TYPE))
+                .isDefined();
     }
 
     @JsonIgnore
     private AccountTypes getTinkAccountType() {
-        Optional<AccountTypes> accountType = BbvaConstants.ACCOUNT_TYPE_MAPPER.translate(accountProductId);
-
-        return accountType.orElse(AccountTypes.OTHER);
+        return Option.ofOptional(ACCOUNT_TYPE_MAPPER.translate(accountProductId))
+                .getOrElse(AccountTypes.OTHER);
     }
 
     @JsonIgnore
@@ -83,7 +86,7 @@ public class AccountEntity {
         return BbvaConstants.AccountType.CREDIT_CARD.equalsIgnoreCase(subfamilyTypeCode);
     }
 
-    public List<BalancesEntity> getAvailableBalances() {
+    public List<BalanceEntity> getAvailableBalances() {
         return availableBalances;
     }
 

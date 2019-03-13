@@ -29,36 +29,37 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BbvaAgent extends NextGenerationAgent {
-
     private BbvaApiClient apiClient;
 
-    public BbvaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BbvaAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.apiClient = new BbvaApiClient(client);
+        this.apiClient = new BbvaApiClient(client, sessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BbvaAuthenticator authenticator = new BbvaAuthenticator(apiClient, sessionStorage);
-
-        return new PasswordAuthenticationController(authenticator);
+        return new PasswordAuthenticationController(
+                new BbvaAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        BbvaAccountFetcher transactionalAccountFetcher = new BbvaAccountFetcher(apiClient, sessionStorage);
-        BbvaTransactionFetcher transactionFetcher = new BbvaTransactionFetcher(apiClient);
-
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController,
-                updateController, transactionalAccountFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(transactionFetcher, 0))
-                ));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BbvaAccountFetcher(apiClient, sessionStorage),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new BbvaTransactionFetcher(apiClient), 0))));
     }
+
     @Override
     protected SessionHandler constructSessionHandler() {
         return new BbvaSessionHandler(apiClient);
@@ -66,25 +67,31 @@ public class BbvaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        BbvaCreditCardFetcher creditCardFetcher = new BbvaCreditCardFetcher(apiClient);
-        BbvaCreditCardTransactionFetcher creditCardTransactionFetcher = new BbvaCreditCardTransactionFetcher(apiClient);
-
-        return Optional.of(new CreditCardRefreshController(metricRefreshController, updateController,
-                creditCardFetcher, new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(creditCardTransactionFetcher))
-                ));
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BbvaCreditCardFetcher(apiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        new BbvaCreditCardTransactionFetcher(apiClient)))));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(new InvestmentRefreshController(metricRefreshController, updateController,
-                new BbvaInvestmentFetcher(apiClient, sessionStorage)));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new BbvaInvestmentFetcher(apiClient, sessionStorage)));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(new LoanRefreshController(metricRefreshController, updateController,
-                new BbvaLoanFetcher(apiClient)));
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController, updateController, new BbvaLoanFetcher(apiClient)));
     }
 
     @Override
@@ -93,7 +100,8 @@ public class BbvaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

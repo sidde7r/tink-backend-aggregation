@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class BbvaTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
-
     private BbvaApiClient apiClient;
 
     public BbvaTransactionFetcher(BbvaApiClient apiClient) {
@@ -16,7 +15,6 @@ public class BbvaTransactionFetcher implements TransactionPagePaginator<Transact
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        return apiClient.fetchAccountTransactions(account,
-                page * BbvaConstants.PAGE_SIZE);
+        return apiClient.fetchAccountTransactions(account, page * BbvaConstants.PAGE_SIZE);
     }
 }

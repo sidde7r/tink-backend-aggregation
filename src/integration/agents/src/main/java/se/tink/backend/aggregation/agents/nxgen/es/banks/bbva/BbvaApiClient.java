@@ -1,218 +1,198 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import com.google.common.collect.ImmutableList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.regex.Pattern;
-import javax.ws.rs.core.HttpHeaders;
+import io.vavr.CheckedFunction1;
+import io.vavr.control.Try;
+import java.util.function.Supplier;
 import javax.ws.rs.core.MediaType;
-import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.InitiateSessionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.UrlEncodedFormBody;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Headers;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.UserEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.rpc.SecurityProfitabilityResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountContractsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.ContractEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.FetchTransactionsRequestEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchAccountTransactionsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.FetchProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.AccountTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.ProductsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.rpc.TransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.FinancialDashboardResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.InitiateSessionResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.utils.BbvaUtils;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BbvaApiClient {
     private static final Logger LOG = LoggerFactory.getLogger(BbvaApiClient.class);
 
-    private static final int RANDOM_HEX_LENGTH = 64;
-    private static final Pattern NIE_PATTERN = Pattern.compile("(?i)^[XY].+[A-Z]$");
-    private static final Pattern PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{2}[0-9]{6}$");
-    private static final Pattern ES_PASSPORT_PATTERN = Pattern.compile("^[a-zA-Z]{4}[0-9]{6}$");
+    private final TinkHttpClient client;
+    private final SessionStorage sessionStorage;
+    private final String userAgent;
 
-    private TinkHttpClient client;
-    private String userAgent;
-    private String userId;
-    private String tsec;
-
-    public BbvaApiClient(TinkHttpClient client) {
+    public BbvaApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
+        this.sessionStorage = sessionStorage;
         this.userAgent =
-                String.format(BbvaConstants.Header.BBVA_USER_AGENT_VALUE, generateRandomHex());
+                String.format(Headers.BBVA_USER_AGENT.getValue(), BbvaUtils.generateRandomHex());
     }
 
-    // Non NIE/PASSPORT usernames must be prepended with '0' (based on ambassador credentials) while NIE/PASSPORT
-    // usernames are passed along as-is.
-    private static String formatUsername(String username) {
-        if (NIE_PATTERN.matcher(username).matches() ||
-                PASSPORT_PATTERN.matcher(username).matches() ||
-                ES_PASSPORT_PATTERN.matcher(username).matches()) {
-            return username;
-        }
-
-        return String.format("0%s", username);
+    private RequestBuilder createRequest(String url) {
+        return client.request(url)
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
     }
 
-    public HttpResponse login(String username, String password) {
-        String loginBody =
-                UrlEncodedFormBody.createLoginRequest(formatUsername(username), password);
+    private RequestBuilder createRequestInSession(String url) {
+        return createRequest(url)
+                .header(Headers.ORIGIN)
+                .header(Headers.REFERER)
+                .header(HeaderKeys.TSEC_KEY, getTsec())
+                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
+    }
 
+    public HttpResponse login(LoginRequest loginRequest) {
         return client.request(BbvaConstants.Url.LOGIN)
-                .type(BbvaConstants.Header.CONTENT_TYPE_URLENCODED_UTF8)
+                .type(HeaderKeys.CONTENT_TYPE_URLENCODED_UTF8)
                 .accept(MediaType.WILDCARD)
-                .header(
-                        BbvaConstants.Header.CONSUMER_ID_KEY,
-                        BbvaConstants.Header.CONSUMER_ID_VALUE)
-                .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent)
-                .post(HttpResponse.class, loginBody);
+                .header(Headers.CONSUMER_ID)
+                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
+                .post(HttpResponse.class, loginRequest);
     }
 
-    public InitiateSessionResponse initiateSession() throws SessionException, BankServiceException {
-        Map<String, String> body = new HashMap<>();
-        body.put(
-                BbvaConstants.PostParameter.CONSUMER_ID_KEY,
-                BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
-
-        HttpResponse response =
-                client.request(BbvaConstants.Url.SESSION)
-                        .type(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent)
-                        .post(HttpResponse.class, body);
-
-        if (MediaType.TEXT_HTML.equalsIgnoreCase(
-                response.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE))) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        tsec = response.getHeaders().getFirst(BbvaConstants.Header.TSEC_KEY);
-
-        InitiateSessionResponse initiateSessionResponse =
-                response.getBody(InitiateSessionResponse.class);
-
-        if (initiateSessionResponse.hasError()) {
-            if (initiateSessionResponse.hasError(BbvaConstants.Error.BANK_SERVICE_UNAVAILABLE)) {
-                throw BankServiceError.NO_BANK_SERVICE.exception();
-            }
-
-            LOG.warn(
-                    String.format(
-                            "Bank responded with error: %s",
-                            SerializationUtils.serializeToString(
-                                    initiateSessionResponse.getResult())));
-
-            throw new IllegalStateException("Failed to initiate session");
-        }
-
-        userId = initiateSessionResponse.getUser().getId();
-
-        return initiateSessionResponse;
+    public void logout() {
+        createRequest(BbvaConstants.Url.SESSION)
+                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
+                .delete();
     }
 
-    public FetchProductsResponse fetchProducts() {
-
-        return createRefererRequest(BbvaConstants.Url.PRODUCTS).get(FetchProductsResponse.class);
+    public FinancialDashboardResponse fetchFinancialDashboard() {
+        return createRequestInSession(BbvaConstants.Url.FINANCIAL_DASHBOARD)
+                .queryParam(QueryKeys.DASHBOARD_CUSTOMER_ID, getUserId())
+                .get(FinancialDashboardResponse.class);
     }
 
-    public FetchAccountTransactionsResponse fetchAccountTransactions(
-            Account account, int keyIndex) {
-        FetchTransactionsRequestEntity request = createAccountTransactionsQuery(account);
+    public ProductsResponse fetchProducts() {
+        return createRequestInSession(BbvaConstants.Url.PRODUCTS).get(ProductsResponse.class);
+    }
 
-        return createRefererRequest(BbvaConstants.Url.ACCOUNT_TRANSACTION)
-                .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, String.valueOf(keyIndex))
-                .queryParam(BbvaConstants.Query.PAGE_SIZE, String.valueOf(BbvaConstants.PAGE_SIZE))
-                .post(FetchAccountTransactionsResponse.class, request);
+    public AccountTransactionsResponse fetchAccountTransactions(Account account, int keyIndex) {
+        final TransactionsRequest request = createAccountTransactionsQuery(account);
+
+        return createRequestInSession(BbvaConstants.Url.ACCOUNT_TRANSACTION)
+                .queryParam(QueryKeys.PAGINATION_OFFSET, String.valueOf(keyIndex))
+                .queryParam(QueryKeys.PAGE_SIZE, String.valueOf(BbvaConstants.PAGE_SIZE))
+                .post(AccountTransactionsResponse.class, request);
     }
 
     public CreditCardTransactionsResponse fetchCreditCardTransactions(
             Account account, String keyIndex) {
-        return createRefererRequest(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
+        return createRequestInSession(BbvaConstants.Url.CREDIT_CARD_TRANSACTIONS)
                 .queryParam(
-                        BbvaConstants.Query.CONTRACT_ID,
-                        account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID))
+                        QueryKeys.CONTRACT_ID,
+                        account.getFromTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID))
                 .queryParam(
-                        BbvaConstants.Query.CARD_TRANSACTION_TYPE,
+                        QueryKeys.CARD_TRANSACTION_TYPE,
                         BbvaConstants.AccountType.CREDIT_CARD_SHORT_TYPE)
-                .queryParam(BbvaConstants.Query.PAGINATION_OFFSET, keyIndex)
+                .queryParam(QueryKeys.PAGINATION_OFFSET, keyIndex)
                 .get(CreditCardTransactionsResponse.class);
     }
 
     public SecurityProfitabilityResponse fetchSecurityProfitability(
             String portfolioId, String securityCode) {
-        SecurityProfitabilityRequest request =
+        final SecurityProfitabilityRequest request =
                 SecurityProfitabilityRequest.create(portfolioId, securityCode);
 
-        return createRefererRequest(BbvaConstants.Url.SECURITY_PROFITABILITY)
+        return createRequestInSession(BbvaConstants.Url.SECURITY_PROFITABILITY)
                 .post(SecurityProfitabilityResponse.class, request);
     }
 
-    private FetchTransactionsRequestEntity createAccountTransactionsQuery(Account account) {
-        FetchTransactionsRequestEntity request = new FetchTransactionsRequestEntity();
+    public LoanDetailsResponse fetchLoanDetails(String loanId) {
+        final String url =
+                new URL(BbvaConstants.Url.LOAN_DETAILS)
+                        .parameter(BbvaConstants.Url.PARAM_ID, loanId)
+                        .get();
 
-        String accountId = account.getFromTemporaryStorage(BbvaConstants.Storage.ACCOUNT_ID);
-        ContractEntity contract = new ContractEntity().setId(accountId);
+        return createRequestInSession(url).get(LoanDetailsResponse.class);
+    }
 
+    public TransactionsRequest createAccountTransactionsQuery(Account account) {
+        final String accountId =
+                account.getFromTemporaryStorage(BbvaConstants.StorageKeys.ACCOUNT_ID);
         AccountContractsEntity accountContract = new AccountContractsEntity();
-        accountContract.setContract(contract);
+        accountContract.setContract(new ContractEntity().setId(accountId));
 
-        request.setCustomer(new UserEntity(userId));
+        final TransactionsRequest request = new TransactionsRequest();
+        request.setCustomer(new UserEntity(getUserId()));
         request.setSearchType(BbvaConstants.PostParameter.SEARCH_TYPE);
         request.setAccountContracts(ImmutableList.of(accountContract));
 
         return request;
     }
 
-    public void logout() {
+    public Try<InitiateSessionResponse> initiateSession() {
+        final InitiateSessionRequest request =
+                new InitiateSessionRequest(BbvaConstants.PostParameter.CONSUMER_ID_VALUE);
 
-        client.request(BbvaConstants.Url.SESSION)
-                .type(MediaType.APPLICATION_JSON)
-                .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent)
-                .accept(MediaType.APPLICATION_JSON)
-                .delete();
+        final RequestBuilder requestBuilder =
+                createRequest(BbvaConstants.Url.SESSION)
+                        .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
+
+        return Try.of(() -> requestBuilder.post(HttpResponse.class, request))
+                .filterTry(
+                        BbvaPredicates.IS_HTML_MEDIA_TYPE.negate(),
+                        (Supplier<Throwable>) SessionError.SESSION_EXPIRED::exception)
+                .peek(response -> setTsec(response.getHeaders().getFirst(HeaderKeys.TSEC_KEY)))
+                .map(response -> response.getBody(InitiateSessionResponse.class))
+                .filterTry(
+                        BbvaPredicates.IS_BANK_SERVICE_UNAVAILABLE.negate(),
+                        (Supplier<Throwable>) BankServiceError.NO_BANK_SERVICE::exception)
+                .filterTry(BbvaPredicates.RESPONSE_HAS_ERROR.negate(), logAndThrow())
+                .filterTry(BbvaPredicates.IS_RESPONSE_OK, logAndThrow())
+                .peek(response -> setUserId(response.getUser().getId()));
     }
 
-    // LOGGING methods
-    public String getLoanDetails(String id) {
-        String url =
-                new URL(BbvaConstants.Url.LOAN_DETAILS)
-                        .parameter(BbvaConstants.Url.PARAM_ID, id)
-                        .get();
-        return createRefererRequest(url).get(String.class);
+    private String getUserAgent() {
+        return userAgent;
     }
 
-    public String getCardTransactions(String id) {
-        String url =
-                new URL(BbvaConstants.Url.CARD_TRANSACTIONS)
-                        .parameter(BbvaConstants.Url.PARAM_ID, id)
-                        .get();
-        return createRefererRequest(url).get(String.class);
+    public String getTsec() {
+        return sessionStorage.get(BbvaConstants.StorageKeys.TSEC);
     }
 
-    private RequestBuilder createRefererRequest(String url) {
-        return client.request(url)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .header(BbvaConstants.Header.ORIGIN_KEY, BbvaConstants.Header.ORIGIN_VALUE)
-                .header(BbvaConstants.Header.REFERER_KEY, BbvaConstants.Header.REFERER_VALUE)
-                .header(BbvaConstants.Header.TSEC_KEY, tsec)
-                .header(BbvaConstants.Header.BBVA_USER_AGENT_KEY, userAgent);
+    private void setTsec(String tsec) {
+        sessionStorage.put(BbvaConstants.StorageKeys.TSEC, tsec);
     }
 
-    private String generateRandomHex() {
-        Random random = new Random();
-        byte[] randBytes = new byte[RANDOM_HEX_LENGTH];
-        random.nextBytes(randBytes);
+    public String getUserId() {
+        return sessionStorage.get(BbvaConstants.StorageKeys.USER_ID);
+    }
 
-        return Hex.encodeHexString(randBytes).toUpperCase();
+    public void setUserId(String userId) {
+        sessionStorage.put(BbvaConstants.StorageKeys.USER_ID, userId);
+    }
+
+    private CheckedFunction1<BbvaResponse, Throwable> logAndThrow() {
+        return response -> {
+            LOG.warn(
+                    String.format(
+                            "Bank responded with error: %s",
+                            SerializationUtils.serializeToString(response.getResult())));
+
+            return new IllegalStateException("Failed to initiate session");
+        };
     }
 }
