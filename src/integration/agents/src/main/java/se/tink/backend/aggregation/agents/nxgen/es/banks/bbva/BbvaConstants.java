@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva;
 
 import java.util.Arrays;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 
 public final class BbvaConstants {
     public static final int PAGE_SIZE = 20;
@@ -87,20 +88,33 @@ public final class BbvaConstants {
                 BASE_URL + "/ASO/securityActions/V01/listProfitability";
     }
 
+    public enum Headers implements HeaderEnum {
+        CONSUMER_ID("ConsumerID", "00000013"),
+        BBVA_USER_AGENT("BBVA-User-Agent", "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi"),
+        ORIGIN("Origin", "https://movil.bbva.es"),
+        REFERER("Referer", "https://movil.bbva.es/versions/woody/6.14.5/index.html");
+
+        private final String key;
+        private final String value;
+
+        Headers(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     public static final class HeaderKeys {
         public static final String CONTENT_TYPE_URLENCODED_UTF8 =
                 "application/x-www-form-urlencoded; charset=utf-8";
-        public static final String CONSUMER_ID_KEY = "ConsumerID";
-        public static final String CONSUMER_ID_VALUE = "00000013";
-        public static final String BBVA_USER_AGENT_KEY = "BBVA-User-Agent";
-        public static final String BBVA_USER_AGENT_VALUE =
-                "%s;iPhone;Apple;iPhone9,3;750x1334;iOS;10.1.1;WOODY;6.14.1;xhdpi";
-        public static final String ORIGIN_KEY = "Origin";
-        public static final String ORIGIN_VALUE = "https://movil.bbva.es";
-        public static final String REFERER_KEY = "Referer";
-        public static final String TSEC_KEY = "tsec";
-        public static final String REFERER_VALUE =
-                "https://movil.bbva.es/versions/woody/6.14.5/index.html";
+        public static final String TSEC_KEY = "tsec";;
     }
 
     public static final class PostParameter {
@@ -112,7 +126,7 @@ public final class BbvaConstants {
         public static final String EAI_USER_VALUE_PREFIX = "0019-";
         public static final String EAI_PASSWORD_KEY = "eai_password";
         public static final String CONSUMER_ID_KEY = "consumerID";
-        public static final String CONSUMER_ID_VALUE = HeaderKeys.CONSUMER_ID_VALUE;
+        public static final String CONSUMER_ID_VALUE = Headers.CONSUMER_ID.value;
         public static final String SEARCH_TYPE = "SEARCH";
 
         public static final int START_DATE_YEAR_AGO = -30;

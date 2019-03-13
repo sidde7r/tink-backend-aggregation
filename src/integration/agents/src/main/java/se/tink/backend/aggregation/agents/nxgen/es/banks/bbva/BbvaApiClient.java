@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.Headers;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.authenticator.rpc.LoginRequest;
@@ -46,7 +47,7 @@ public class BbvaApiClient {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.userAgent =
-                String.format(HeaderKeys.BBVA_USER_AGENT_VALUE, BbvaUtils.generateRandomHex());
+                String.format(Headers.BBVA_USER_AGENT.getValue(), BbvaUtils.generateRandomHex());
     }
 
     private RequestBuilder createRequest(String url) {
@@ -57,24 +58,24 @@ public class BbvaApiClient {
 
     private RequestBuilder createRequestInSession(String url) {
         return createRequest(url)
-                .header(HeaderKeys.ORIGIN_KEY, HeaderKeys.ORIGIN_VALUE)
-                .header(HeaderKeys.REFERER_KEY, HeaderKeys.REFERER_VALUE)
+                .header(Headers.ORIGIN)
+                .header(Headers.REFERER)
                 .header(HeaderKeys.TSEC_KEY, getTsec())
-                .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent());
+                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
     }
 
     public HttpResponse login(LoginRequest loginRequest) {
         return client.request(BbvaConstants.Url.LOGIN)
                 .type(HeaderKeys.CONTENT_TYPE_URLENCODED_UTF8)
                 .accept(MediaType.WILDCARD)
-                .header(HeaderKeys.CONSUMER_ID_KEY, HeaderKeys.CONSUMER_ID_VALUE)
-                .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent())
+                .header(Headers.CONSUMER_ID)
+                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
                 .post(HttpResponse.class, loginRequest);
     }
 
     public void logout() {
         createRequest(BbvaConstants.Url.SESSION)
-                .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent())
+                .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent())
                 .delete();
     }
 
@@ -148,7 +149,7 @@ public class BbvaApiClient {
 
         final RequestBuilder requestBuilder =
                 createRequest(BbvaConstants.Url.SESSION)
-                        .header(HeaderKeys.BBVA_USER_AGENT_KEY, getUserAgent());
+                        .header(Headers.BBVA_USER_AGENT.getKey(), getUserAgent());
 
         return Try.of(() -> requestBuilder.post(HttpResponse.class, request))
                 .filterTry(
