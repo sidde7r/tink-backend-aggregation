@@ -42,7 +42,7 @@ public class AccountEntity {
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount(String holder) {
-        final String normalizedIban = iban.replaceAll(" ", "").toLowerCase();
+        final String normalizedIban = iban.replaceAll(" ", "").toUpperCase();
         final HolderName holderName = Option.of(holder).map(HolderName::new).getOrNull();
 
         return TransactionalAccount.builder(
