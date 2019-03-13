@@ -86,7 +86,7 @@ public final class AgentParsingUtils {
         }
     }
 
-    public AgentParsingUtils() {
-        super();
+    private AgentParsingUtils() {
+        throw new AssertionError();
     }
 }
