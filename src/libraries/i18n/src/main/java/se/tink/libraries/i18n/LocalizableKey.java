@@ -25,4 +25,8 @@ public class LocalizableKey {
     public String get() {
         return key;
     }
+
+    public static LocalizableKey of(String key) {
+        return new LocalizableKey(key);
+    }
 }
