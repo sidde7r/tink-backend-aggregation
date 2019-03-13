@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaPredicates.IS_CHECKING_OR_SAVINGS_ACCOUNT;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaPredicates.IS_TRANSACTIONAL_ACCOUNT;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaTypeMappers.ACCOUNT_TYPE_MAPPER;
 import static se.tink.libraries.account.AccountIdentifier.Type.IBAN;
 
@@ -65,7 +65,7 @@ public class AccountEntity {
     @JsonIgnore
     public boolean isTransactionalAccount() {
         return Option.ofOptional(ACCOUNT_TYPE_MAPPER.translate(accountProductId))
-                .filter(IS_CHECKING_OR_SAVINGS_ACCOUNT)
+                .filter(IS_TRANSACTIONAL_ACCOUNT)
                 .onEmpty(
                         () ->
                                 LOGGER.infoExtraLong(

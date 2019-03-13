@@ -28,7 +28,7 @@ public final class BbvaPredicates {
     public static final CheckedPredicate<String> IS_LOGIN_WRONG_CREDENTIALS =
             response -> response.contains(BbvaConstants.Message.LOGIN_WRONG_CREDENTIAL_CODE);
 
-    public static final Predicate<AccountTypes> IS_CHECKING_OR_SAVINGS_ACCOUNT =
+    public static final Predicate<AccountTypes> IS_TRANSACTIONAL_ACCOUNT =
             accountType ->
                     accountType.equals(AccountTypes.CHECKING)
                             || accountType.equals(AccountTypes.SAVINGS);
