@@ -31,10 +31,6 @@ public class CardTransactionsResponse {
     @JsonProperty("nombreTitular")
     private String accountHolder;
 
-    public static CardTransactionsResponse empty() {
-        return new CardTransactionsResponse();
-    }
-
     public List<CardTransactionEntity> getCardTransactions() {
         return cardTransactionsList.cardTransactions;
     }

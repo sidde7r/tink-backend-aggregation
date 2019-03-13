@@ -34,10 +34,6 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
     @JsonProperty("masMovimientos")
     private boolean hasMoreTransactions;
 
-    public static AccountTransactionsResponse empty() {
-        return new AccountTransactionsResponse();
-    }
-
     public PaginationEntity getPagination() {
         return pagination;
     }

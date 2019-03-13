@@ -13,10 +13,6 @@ public class AccountTransactionDetailsResponse {
     @JsonProperty("listaDetalle")
     private DetailsList detailsList;
 
-    public static AccountTransactionDetailsResponse empty() {
-        return new AccountTransactionDetailsResponse();
-    }
-
     public PaginationEntity getPagination() {
         return pagination;
     }

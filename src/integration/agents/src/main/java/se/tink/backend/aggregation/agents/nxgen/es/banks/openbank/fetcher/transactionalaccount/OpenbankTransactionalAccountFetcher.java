@@ -48,6 +48,6 @@ public class OpenbankTransactionalAccountFetcher
             return apiClient.getTransactions(queryParams);
         }
 
-        return apiClient.getTransactionsForNextUrl(queryParams, nextUrl);
+        return apiClient.getTransactionsForNextUrl(nextUrl);
     }
 }

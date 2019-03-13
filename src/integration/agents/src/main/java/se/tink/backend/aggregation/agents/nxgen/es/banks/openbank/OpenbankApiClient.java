@@ -79,8 +79,7 @@ public final class OpenbankApiClient {
                 .get(AccountTransactionsResponse.class);
     }
 
-    public AccountTransactionsResponse getTransactionsForNextUrl(
-            AccountTransactionsRequestQueryParams queryParams, URL nextUrl) {
+    public AccountTransactionsResponse getTransactionsForNextUrl(URL nextUrl) {
         return createRequestInSession(nextUrl).get(AccountTransactionsResponse.class);
     }
 

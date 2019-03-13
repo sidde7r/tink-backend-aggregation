@@ -22,10 +22,6 @@ public class UserDataResponse {
     @JsonProperty("datosSalidaCuentas")
     private AccountsList accountsList;
 
-    public static UserDataResponse empty() {
-        return new UserDataResponse();
-    }
-
     public List<ValueEntity> getValues() {
         return valuesList.values;
     }

@@ -9,10 +9,6 @@ public class LoginResponse {
     private String application;
     private String tokenCredential;
 
-    public static LoginResponse empty() {
-        return new LoginResponse();
-    }
-
     public String getApplication() {
         return application;
     }
