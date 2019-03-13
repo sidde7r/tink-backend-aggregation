@@ -122,6 +122,8 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
                     .add(CookieSpecs.BEST_MATCH)
                     .build();
 
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private class DEFAULTS {
         private static final String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
         private static final int TIMEOUT_MS = 30000;
@@ -343,11 +345,10 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     }
 
     public void registerJacksonModule(Module module) {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(module);
+        OBJECT_MAPPER.registerModule(module);
 
         final JacksonJaxbJsonProvider jacksonProvider = new JacksonJaxbJsonProvider();
-        jacksonProvider.setMapper(objectMapper);
+        jacksonProvider.setMapper(OBJECT_MAPPER);
 
         this.internalClientConfig.getSingletons().add(jacksonProvider);
     }
