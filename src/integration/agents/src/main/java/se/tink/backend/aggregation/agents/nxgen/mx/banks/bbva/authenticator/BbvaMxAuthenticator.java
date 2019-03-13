@@ -3,14 +3,10 @@ package se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
-import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxApiClient;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxUtils;
@@ -26,12 +22,11 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionRequest;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.authenticator.rpc.ValidateSubscriptionResponse;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactional.rpc.CustomerInfoResponse;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
-public class BbvaMxAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
+public class BbvaMxAuthenticator implements Authenticator {
 
     private final BbvaMxApiClient client;
     private final PersistentStorage storage;
@@ -40,11 +35,6 @@ public class BbvaMxAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     public BbvaMxAuthenticator(BbvaMxApiClient client, PersistentStorage storage) {
         this.client = client;
         this.storage = storage;
-    }
-
-    @Override
-    public CredentialsTypes getType() {
-        return CredentialsTypes.PASSWORD;
     }
 
     @Override
@@ -145,36 +135,6 @@ public class BbvaMxAuthenticator implements MultiFactorAuthenticator, AutoAuthen
 
         client.registerToken(registerTokenRequest);
 
-        client.updateDevice(deviceIdentifier);
-    }
-
-    @Override
-    public void autoAuthenticate()
-            throws SessionException, BankServiceException, AuthorizationException {
-
-        // Sessions seem to be active for a long time. Not sure if we need autoAuthenticate
-        // Adding logging for now
-        logger.info("{}", BbvaMxConstants.LOGGING.AUTO_AUTH);
-
-        String phonenumber = storage.get(BbvaMxConstants.STORAGE.PHONE_NUMBER);
-        String password = storage.get(BbvaMxConstants.STORAGE.PASSWORD);
-        String deviceIdentifier = storage.get(BbvaMxConstants.STORAGE.DEVICE_IDENTIFIER);
-        String phoneNumber = storage.get(BbvaMxConstants.STORAGE.PHONE_NUMBER);
-
-        try {
-            client.grantTicket(new GrantingTicketRequest(phonenumber, password));
-        } catch (HttpResponseException e) {
-            throw SessionError.SESSION_EXPIRED.exception();
-        }
-
-        fetchClientInfo();
-
-        TokenAuthCodeResponse codeResponse = client.getTokenAuthCode(deviceIdentifier);
-        RegisterTokenRequest registerTokenRequest =
-                new RegisterTokenRequest(
-                        phoneNumber, deviceIdentifier, codeResponse.getData().getId());
-
-        client.registerToken(registerTokenRequest);
         client.updateDevice(deviceIdentifier);
     }
 }

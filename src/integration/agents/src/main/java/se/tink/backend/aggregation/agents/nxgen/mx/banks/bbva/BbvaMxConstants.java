@@ -146,7 +146,6 @@ public class BbvaMxConstants {
                 LogTag.from("BBVA_TRANSACTION_PARSING_ERROR");
         public static final LogTag ACCOUNT_PARSING_ERROR =
                 LogTag.from("BBVA_ACCOUNT_PARSING_ERROR");
-        public static final LogTag AUTO_AUTH = LogTag.from("BBVA_AUTO_AUTH");
         public static final LogTag LOAN_PARSING_ERROR = LogTag.from("BBVA_LOAN_PARSING_ERROR");
         public static final LogTag CREDIT_PARSING_ERROR = LogTag.from("BBVA_CREDIT_PARSING_ERROR");
         public static final LogTag CREDIT_TRANSACTION_PARSING_ERROR =

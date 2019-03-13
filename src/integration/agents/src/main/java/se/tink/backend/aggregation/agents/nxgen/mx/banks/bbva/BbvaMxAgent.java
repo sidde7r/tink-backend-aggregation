@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.fetcher.transactio
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.einvoice.EInvoiceRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.investment.InvestmentRefreshController;
@@ -23,6 +22,7 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
+
 public class BbvaMxAgent extends NextGenerationAgent {
 
     private final BbvaMxApiClient bbvaApiClient;
@@ -34,15 +34,11 @@ public class BbvaMxAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BbvaMxAuthenticator bbvaAuthenticator =
-                new BbvaMxAuthenticator(bbvaApiClient, persistentStorage);
-        return new AutoAuthenticationController(
-                request, context, bbvaAuthenticator, bbvaAuthenticator);
+        return new BbvaMxAuthenticator(bbvaApiClient, persistentStorage);
     }
 
     @Override
@@ -65,7 +61,8 @@ public class BbvaMxAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        BbvaMxCreditCardFetcher creditCardFetcher = new BbvaMxCreditCardFetcher(bbvaApiClient, persistentStorage);
+        BbvaMxCreditCardFetcher creditCardFetcher =
+                new BbvaMxCreditCardFetcher(bbvaApiClient, persistentStorage);
 
         return Optional.of(
                 new CreditCardRefreshController(
@@ -74,9 +71,7 @@ public class BbvaMxAgent extends NextGenerationAgent {
                         creditCardFetcher,
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(
-                                        creditCardFetcher))));
-
+                                new TransactionDatePaginationController<>(creditCardFetcher))));
     }
 
     @Override
