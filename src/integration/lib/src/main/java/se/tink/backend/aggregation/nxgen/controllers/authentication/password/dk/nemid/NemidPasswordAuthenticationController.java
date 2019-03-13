@@ -7,6 +7,10 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 public class NemidPasswordAuthenticationController extends NemidAuthenticationController implements
         PasswordAuthenticator {
 
+    public NemidPasswordAuthenticationController(NemIdAuthenticator authenticator, int version) {
+        super(authenticator, version);
+    }
+
     public NemidPasswordAuthenticationController(NemIdAuthenticator authenticator) {
         super(authenticator);
     }

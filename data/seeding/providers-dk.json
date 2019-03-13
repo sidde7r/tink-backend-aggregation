@@ -93,6 +93,32 @@
             "type": "BANK"
         },
         {
+            "className": "nxgen.dk.banks.nordea.NordeaDkAgentV2",
+            "credentialsType": "PASSWORD",
+            "displayDescription": "NemID Login V2",
+            "displayName": "Nordea V2",
+            "fields": [
+                {
+                    "description": "User-ID",
+                    "hint": "CPR or NemID number.",
+                    "name": "username"
+                },
+                {
+                    "description": "Password",
+                    "masked": true,
+                    "sensitive": true,
+                    "name": "password"
+                }
+            ],
+            "multiFactor": false,
+            "name": "dk-nordea-v2-nemid",
+            "passwordHelpText": "Please authenticate yourself using the same credentials you normally use in your bank's mobile banking app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
             "className": "nxgen.dk.banks.bankdatadk.BankdataDkAgent",
             "credentialsType": "PASSWORD",
             "displayName": "Ringkjøbing Landbobank",

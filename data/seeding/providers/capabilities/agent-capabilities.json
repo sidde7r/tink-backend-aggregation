@@ -277,6 +277,13 @@
         "INVESTMENTS",
         "LOANS"
     ],
+    "nxgen.dk.banks.nordea.NordeaDkAgentV2": [
+        "CHECKING_ACCOUNTS",
+        "SAVINGS_ACCOUNTS",
+        "CREDIT_CARDS",
+        "INVESTMENTS",
+        "LOANS"
+    ],
     "nxgen.dk.banks.sdcdk.SdcDkAgent": [
         "CHECKING_ACCOUNTS",
         "SAVINGS_ACCOUNTS",
