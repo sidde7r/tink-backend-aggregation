@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 
-public class AgentParsingUtils {
+public final class AgentParsingUtils {
 
     protected static final int SAFETY_THRESHOLD_NUMBER_OF_DAYS = 10;
     protected static final int SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS = 10;
