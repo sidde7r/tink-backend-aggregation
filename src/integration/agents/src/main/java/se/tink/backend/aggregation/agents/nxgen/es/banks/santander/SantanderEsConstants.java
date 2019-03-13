@@ -12,11 +12,11 @@ public class SantanderEsConstants {
     public static final class Urls {
         public static final String HOST = "https://www.bsan.mobi";
 
-        public static final URL SANMOV = new URL(HOST + "/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener");
-        public static final URL SCH_BAMOBI = new URL(HOST + "/SCH_BAMOBI_WS_ENS/ws/BAMOBI_WS_Def_Listener");
-        public static final URL SCH_BAMOBI_FONDOS = new URL(HOST + "/SCH_BAMOBI_FONDOS_ENS/ws/BAMOBI_WS_Def_Listener");
-        public static final URL SCH_BAMOBI_VALORES = new URL(HOST + "/SCH_BAMOBI_VALORES_ENS/ws/BAMOBI_WS_Def_Listener");
-        public static final URL SCH_BAMOBI_PRESTAMOS = new URL(HOST + "/SCH_BAMOBI_PRESTAMOS_ENS/ws/BAMOBI_WS_Def_Listener");
+        public static final URL AUTHENTICATION_ENDPOINT = new URL(HOST + "/SANMOV_IPAD_NSeg_ENS/ws/SANMOV_Def_Listener");
+        public static final URL WEB_SERVICE_ENDPOINT = new URL(HOST + "/SCH_BAMOBI_WS_ENS/ws/BAMOBI_WS_Def_Listener");
+        public static final URL FUNDS_ENDPOINT = new URL(HOST + "/SCH_BAMOBI_FONDOS_ENS/ws/BAMOBI_WS_Def_Listener");
+        public static final URL STOCKS_ENDPOINT = new URL(HOST + "/SCH_BAMOBI_VALORES_ENS/ws/BAMOBI_WS_Def_Listener");
+        public static final URL LOANS_ENDPOINT = new URL(HOST + "/SCH_BAMOBI_PRESTAMOS_ENS/ws/BAMOBI_WS_Def_Listener");
     }
 
     public static final class Headers {

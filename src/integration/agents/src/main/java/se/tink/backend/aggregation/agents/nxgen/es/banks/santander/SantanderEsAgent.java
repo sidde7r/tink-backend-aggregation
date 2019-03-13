@@ -5,6 +5,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.authenticator.SantanderEsAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.CreditCardFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.SantanderEsInvestmentFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.SantanderEsLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.SantanderEsTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.session.SantanderEsSessionHandler;
@@ -75,7 +76,11 @@ public class SantanderEsAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SantanderEsLoanFetcher(apiClient, sessionStorage)));
     }
 
     @Override
