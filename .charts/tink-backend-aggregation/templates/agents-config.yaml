@@ -59,7 +59,7 @@ data:
               clientId: "STARLING_AIS_CLIENT_ID"
               clientSecret: "STARLING_AIS_CLIENT_SECRET"
               redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
-            aisClientConfiguration:
+            pisClientConfiguration:
               clientId: "STARLING_PIS_CLIENT_ID"
               clientSecret: "STARLING_PIS_CLIENT_SECRET"
               redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
