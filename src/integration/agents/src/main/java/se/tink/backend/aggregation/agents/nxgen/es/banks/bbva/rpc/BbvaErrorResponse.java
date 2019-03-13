@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BbvaErrorResponse {
-    @JsonProperty("severity")
     private String severity;
 
     @JsonProperty("system-error-cause")
@@ -29,7 +28,6 @@ public class BbvaErrorResponse {
     @JsonProperty("error-code")
     private String errorCode;
 
-    @JsonProperty("version")
     private int version;
 
     public String getSeverity() {
