@@ -3,7 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
 import java.util.Objects;
-import java.util.Optional;
+import io.vavr.control.Option;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -29,19 +29,11 @@ public class ErrorResponse {
         return Objects.nonNull(error) && !Strings.isNullOrEmpty(error);
     }
 
-    public Optional<String> getError() {
-        if (!hasError()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(error);
+    public Option<String> getError() {
+        return Option.of(error);
     }
 
-    public Optional<String> getErrorDescription() {
-        if (!hasErrorDescription()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(errorDescription);
+    public Option<String> getErrorDescription() {
+        return Option.of(errorDescription);
     }
 }

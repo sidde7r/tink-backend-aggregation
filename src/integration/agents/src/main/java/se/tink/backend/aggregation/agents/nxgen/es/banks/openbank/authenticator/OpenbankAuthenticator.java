@@ -53,8 +53,7 @@ public class OpenbankAuthenticator implements Authenticator {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            sessionStorage.put(
-                    OpenbankConstants.Storage.AUTH_TOKEN, loginResponse.getTokenCredential());
+            putAuthTokenInSessionStorage(loginResponse);
         } catch (HttpResponseException hre) {
             HttpResponse response = hre.getResponse();
 
@@ -79,5 +78,11 @@ public class OpenbankAuthenticator implements Authenticator {
             // Re-throw the exception.
             throw hre;
         }
+    }
+
+    private void putAuthTokenInSessionStorage(LoginResponse loginResponse) {
+        loginResponse
+                .getTokenCredential()
+                .peek(authToken -> sessionStorage.put(OpenbankConstants.Storage.AUTH_TOKEN, authToken));
     }
 }

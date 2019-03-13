@@ -3,11 +3,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entit
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.OpenbankConstants.ACCOUNT_TYPE_MAPPER;
 
 @JsonObject
 public class AccountEntity {
@@ -76,15 +76,14 @@ public class AccountEntity {
     private boolean isRoboAccount;
 
     public boolean isTransactionalAccount() {
-        return OpenbankConstants.ACCOUNT_TYPE_MAPPER.isTransactionalAccount(
+        return ACCOUNT_TYPE_MAPPER.isTransactionalAccount(
                 getAccountInfoNewFormat().getProductCode());
     }
 
     private AccountTypes getTinkAccountType() {
-        Optional<AccountTypes> accountType =
-                OpenbankConstants.ACCOUNT_TYPE_MAPPER.translate(
-                        getAccountInfoNewFormat().getProductCode());
-        return accountType.orElse(AccountTypes.OTHER);
+        return ACCOUNT_TYPE_MAPPER
+                .translate(getAccountInfoNewFormat().getProductCode())
+                .orElse(AccountTypes.OTHER);
     }
 
     private String getIban() {

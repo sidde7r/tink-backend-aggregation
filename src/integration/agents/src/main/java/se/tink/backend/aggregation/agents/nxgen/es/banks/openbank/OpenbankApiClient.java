@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank;
 
-import java.util.Collections;
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.authenticator.rpc.LoginResponse;
@@ -71,7 +70,7 @@ public final class OpenbankApiClient {
     }
 
     public List<AccountEntity> getAccounts() {
-        return Optional.ofNullable(getUserData().getAccounts()).orElse(Collections.emptyList());
+        return Option.of(getUserData()).map(UserDataResponse::getAccounts).getOrElse(List::empty);
     }
 
     public AccountTransactionsResponse getTransactions(
@@ -129,7 +128,7 @@ public final class OpenbankApiClient {
     }
 
     public List<CardEntity> getCards() {
-        return Optional.ofNullable(getUserData().getCards()).orElse(Collections.emptyList());
+        return Option.of(getUserData()).map(UserDataResponse::getCards).getOrElse(List::empty);
     }
 
     public CardTransactionsResponse getCardTransactions(CardTransactionsRequest request) {

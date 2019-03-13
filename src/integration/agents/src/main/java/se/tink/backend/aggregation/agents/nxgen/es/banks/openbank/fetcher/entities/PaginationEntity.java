@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
-import java.util.Objects;
+import io.vavr.control.Option;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -13,35 +12,21 @@ public class PaginationEntity {
     @JsonProperty("self")
     private Self self;
 
-    public NextPage getNextPage() {
-        return nextPage;
+    public Option<String> getNextPage() {
+        return Option.of(nextPage).flatMap(n -> Option.of(n.href));
     }
 
-    public Self getSelf() {
-        return self;
+    public Option<String> getSelfPage() {
+        return Option.of(nextPage).flatMap(n -> Option.of(n.href));
     }
 
-    public boolean hasNextPage() {
-        return Objects.nonNull(nextPage) && !Strings.isNullOrEmpty(nextPage.href);
-    }
-
-    public static class NextPage {
-
+    private static class NextPage {
         @JsonProperty("href")
         private String href;
-
-        public String getHref() {
-            return href;
-        }
     }
 
-    public static class Self {
-
+    private static class Self {
         @JsonProperty("href")
         private String href;
-
-        public String getHref() {
-            return href;
-        }
     }
 }

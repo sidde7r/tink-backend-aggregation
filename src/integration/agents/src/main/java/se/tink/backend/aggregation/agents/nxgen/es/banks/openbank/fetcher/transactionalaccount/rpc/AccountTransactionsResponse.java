@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.openbank.fetcher.transactionalaccount.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.vavr.control.Option;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +78,9 @@ public class AccountTransactionsResponse implements TransactionKeyPaginatorRespo
 
     @Override
     public URL nextKey() {
-        String url = pagination.hasNextPage() ? pagination.getNextPage().getHref() : null;
-        return Optional.ofNullable(url).map(URL::new).orElse(null);
+        return Option.of(pagination)
+                .flatMap(PaginationEntity::getNextPage)
+                .map(URL::new)
+                .getOrNull();
     }
 }
