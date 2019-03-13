@@ -156,7 +156,6 @@ public class LoanDetailsResponse {
                         .setNextDayOfTermsChange(interestReviewDate)
                         .setNumMonthsBound(installmentTotalCount)
                         .setAmortized(redeemedAmount.toTinkAmount())
-                        // .setApplicants()
                         .build();
 
         return loan.toTinkLoanAccount(interestRate, loanDetails);
