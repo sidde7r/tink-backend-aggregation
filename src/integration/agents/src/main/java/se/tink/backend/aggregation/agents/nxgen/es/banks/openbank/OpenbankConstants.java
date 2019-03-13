@@ -38,7 +38,7 @@ public abstract class OpenbankConstants {
     public static class ApiService {
         static final String LOGIN_PATH = "/authenticationcomposite/login";
         static final String LOGOUT_PATH = "/authenticationcomposite/logout";
-        static final String KEEP_ALIVE_PATH = "/agregador/global-position";
+        static final String KEEP_ALIVE_PATH = "/claves/cmc";
 
         static final String USER_DATA_PATH = "/posicion-global-total";
         static final String ACCOUNT_TRANSACTIONS_PATH = "/my-money/cuentas/movimientos";
