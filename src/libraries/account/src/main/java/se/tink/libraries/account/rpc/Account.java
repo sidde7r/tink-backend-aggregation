@@ -34,6 +34,7 @@ public class Account implements Cloneable {
     private String accountNumber;
     private double availableCredit;
     private double balance;
+    private String currencyCode;
     private String bankId;
     private Date certainDate;
     private String credentialsId;
@@ -401,4 +402,12 @@ public class Account implements Cloneable {
 
         return false;
     };
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
 }

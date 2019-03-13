@@ -37,6 +37,7 @@ public class Account implements Cloneable {
     private AccountExclusion accountExclusion;
     private double availableCredit;
     private double balance;
+    private String currencyCode;
     private String bankId;
     private Date certainDate;
     private String credentialsId;
@@ -465,5 +466,13 @@ public class Account implements Cloneable {
 
     public void setAccountExclusion(AccountExclusion accountExclusion) {
         this.accountExclusion = accountExclusion;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 }
