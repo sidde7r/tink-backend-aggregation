@@ -51,7 +51,7 @@ steps:
 
   - name: ':docker: tink-backend-statuspage-providers-cronjob'
     branches: 'staging'
-    command: .buildkite/build-and-push-docker.sh //jobs/cron/provider-status:docker_push
+    command: .buildkite/build-and-push-python-docker.sh
     timeout_in_minutes: 10
     plugins:
       docker-compose#v2.5.1:
