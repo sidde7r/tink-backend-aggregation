@@ -49,6 +49,15 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
 
+  - name: ':docker: tink-backend-statuspage-providers-cronjob'
+    branches: 'staging'
+    command: .buildkite/build-and-push-python-docker.sh
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v2.5.1:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
+
   - name: ':debian: tink-backend-aggregation'
     branches: 'staging'
     command: .buildkite/build-and-upload-deb.sh //deb:aggregation deb/tink-backend-aggregation tink-backend-aggregation
