@@ -22,6 +22,7 @@ container_image(
         "//deb:aggregation_data_tar",
         "//deb:libkbc_wbaes_bin_tar",
         "//deb:phantomjs_bin_tar",
+        "//deb:phantomjs_v2_bin_tar",
     ],
 )
 
