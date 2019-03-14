@@ -50,13 +50,13 @@ steps:
         config: "docker/docker-compose.bazel.yml"
 
   - name: ':docker: tink-backend-statuspage-providers-cronjob'
-      branches: 'staging'
-      command: .buildkite/build-and-push-docker.sh //jobs/cron/provider-status:docker_push
-      timeout_in_minutes: 10
-      plugins:
-        docker-compose#v2.5.1:
-          run: "app"
-          config: "docker/docker-compose.bazel.yml"
+    branches: 'staging'
+    command: .buildkite/build-and-push-docker.sh //jobs/cron/provider-status:docker_push
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v2.5.1:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
 
   - name: ':debian: tink-backend-aggregation'
     branches: 'staging'
