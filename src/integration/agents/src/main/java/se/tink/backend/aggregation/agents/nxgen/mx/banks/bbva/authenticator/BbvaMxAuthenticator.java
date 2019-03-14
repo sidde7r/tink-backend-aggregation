@@ -6,6 +6,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
+import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxApiClient;
 import se.tink.backend.aggregation.agents.nxgen.mx.banks.bbva.BbvaMxConstants;
@@ -70,7 +71,7 @@ public class BbvaMxAuthenticator implements Authenticator {
     }
 
     private GrantingTicketResponse handleLogin(String phoneNumber, String password)
-            throws LoginException {
+            throws LoginException, AuthorizationException {
         try {
             return client.grantTicket(new GrantingTicketRequest(phoneNumber, password));
         } catch (HttpResponseException e) {
@@ -80,6 +81,11 @@ public class BbvaMxAuthenticator implements Authenticator {
                     || BbvaMxConstants.ERROR.INCORRECT_CREDENTIALS_CODE.equalsIgnoreCase(
                             err.getErrorCode())) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+
+            if (BbvaMxConstants.ERROR.USER_BLOCKED.equalsIgnoreCase(
+                    err.getErrorCode())) {
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             }
 
             logger.error(
