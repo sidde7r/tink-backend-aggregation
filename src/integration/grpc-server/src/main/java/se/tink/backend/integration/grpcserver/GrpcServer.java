@@ -2,11 +2,14 @@ package se.tink.backend.integration.gprcserver;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import io.grpc.BindableService;
 import io.grpc.Server;
 import io.grpc.ServerInterceptor;
 import io.grpc.ServerInterceptors;
 import io.grpc.netty.NettyServerBuilder;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
@@ -30,7 +33,10 @@ public class GrpcServer {
     private NettyServerBuilder serverBuilder;
     private static final Logger logger = LogManager.getLogger(GrpcServer.class);
 
-    public GrpcServer(List<? extends BindableService> services, SocketAddress listenAddress) {
+    @Inject
+    GrpcServer(
+            @Named("grpcServices") Set<BindableService> services,
+            @Named("grpcSocket") SocketAddress listenAddress) {
         serverBuilder = NettyServerBuilder
                 .forAddress(listenAddress);
 

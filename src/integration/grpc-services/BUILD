@@ -1,5 +1,5 @@
 java_library(
-    name = "ping-service",
+    name = "grpc-services",
     srcs = glob(["src/main/java/**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
