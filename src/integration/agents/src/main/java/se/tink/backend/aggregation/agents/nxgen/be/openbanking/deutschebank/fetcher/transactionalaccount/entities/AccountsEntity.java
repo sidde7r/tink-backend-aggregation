@@ -14,8 +14,6 @@ public class AccountsEntity {
 
   private String currencyCode;
 
-  private String bic;
-
   private String accountType;
 
   private Number currentBalance;
@@ -25,18 +23,18 @@ public class AccountsEntity {
   public TransactionalAccount toTinkAccount(String owner) {
     return CheckingAccount.builder()
         .setUniqueIdentifier(iban)
-        .setAccountNumber(bic)
+        .setAccountNumber(iban)
         .setBalance(new Amount(currencyCode, currentBalance))
-        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, bic))
+        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, iban))
         .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
         .addHolderName(getName(owner))
         .setAlias(getName(owner))
-        .setApiIdentifier(bic)
+        .setApiIdentifier(iban)
         .putInTemporaryStorage(DeutscheBankConstants.StorageKeys.ACCOUNT_ID, iban)
         .build();
   }
 
   private String getName(String owner) {
-    return Strings.isNullOrEmpty(owner) ? bic : owner;
+    return Strings.isNullOrEmpty(owner) ? iban : owner;
   }
 }

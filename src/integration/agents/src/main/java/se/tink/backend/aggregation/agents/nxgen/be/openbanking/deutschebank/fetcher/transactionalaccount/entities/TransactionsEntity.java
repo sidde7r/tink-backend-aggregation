@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fet
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
+import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
@@ -19,7 +20,9 @@ public class TransactionsEntity {
 
   private String transactionCode;
 
-  private String paymentIdentification;
+  private String counterPartyName;
+
+  private String paymentReference;
 
   @JsonFormat(pattern = "yyyy-MM-dd")
   private Date valueDate;
@@ -28,12 +31,20 @@ public class TransactionsEntity {
     return Transaction.builder()
         .setAmount(getAmount())
         .setDate(bookingDate)
-        .setDescription(paymentIdentification)
+        .setDescription(getDescription())
         .setPending(false)
         .build();
   }
 
   private Amount getAmount() {
     return new Amount(currencyCode, amount);
+  }
+
+  private String getDescription() {
+    return Strings.isNullOrEmpty(counterPartyName)
+        ? Strings.isNullOrEmpty(paymentReference) ? "" : paymentReference
+        : Strings.isNullOrEmpty(paymentReference)
+            ? counterPartyName
+            : counterPartyName + " " + paymentReference;
   }
 }
