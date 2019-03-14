@@ -55,11 +55,11 @@ data:
         {{- if $agentsConfig.starling }}
         starling:
           tink:
-            aisClientConfiguration:
+            aisConfiguration:
               clientId: "STARLING_AIS_CLIENT_ID"
               clientSecret: "STARLING_AIS_CLIENT_SECRET"
               redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
-            pisClientConfiguration:
+            pisConfiguration:
               clientId: "STARLING_PIS_CLIENT_ID"
               clientSecret: "STARLING_PIS_CLIENT_SECRET"
               redirectUrl: "{{ $agentsConfig.starling.redirectUrl }}"
