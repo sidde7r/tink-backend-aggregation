@@ -25,7 +25,7 @@ public class OpenbankCreditCardFetcher
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
         return apiClient
-                .getCards()
+                .fetchCards()
                 .filter(CardEntity::isCreditCardAccount)
                 .map(CardEntity::toTinkAccount)
                 .toJavaList();
@@ -46,7 +46,7 @@ public class OpenbankCreditCardFetcher
 
         final Collection<? extends Transaction> transactions =
                 apiClient
-                        .getCardTransactions(request)
+                        .fetchCardTransactions(request)
                         .getCardTransactions()
                         .map(CardTransactionEntity::toTinkTransaction)
                         .toJavaList();

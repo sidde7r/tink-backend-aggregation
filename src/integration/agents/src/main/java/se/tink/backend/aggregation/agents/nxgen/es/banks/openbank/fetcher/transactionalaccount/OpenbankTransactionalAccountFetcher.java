@@ -25,7 +25,7 @@ public class OpenbankTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient
-                .getAccounts()
+                .fetchAccounts()
                 .filter(AccountEntity::isTransactionalAccount)
                 .map(AccountEntity::toTinkAccount)
                 .toJavaList();
@@ -45,9 +45,9 @@ public class OpenbankTransactionalAccountFetcher
                         .build();
 
         if (nextUrl == null) {
-            return apiClient.getTransactions(queryParams);
+            return apiClient.fetchTransactions(queryParams);
         }
 
-        return apiClient.getTransactionsForNextUrl(nextUrl);
+        return apiClient.fetchTransactionsForNextUrl(nextUrl);
     }
 }

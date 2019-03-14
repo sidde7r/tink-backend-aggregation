@@ -65,25 +65,25 @@ public final class OpenbankApiClient {
         return createRequestInSession(OpenbankConstants.Urls.LOGOUT).post(LogoutResponse.class);
     }
 
-    public UserDataResponse getUserData() {
+    public UserDataResponse fetchUserData() {
         return createRequestInSession(OpenbankConstants.Urls.USER_DATA).get(UserDataResponse.class);
     }
 
-    public List<AccountEntity> getAccounts() {
-        return Option.of(getUserData()).map(UserDataResponse::getAccounts).getOrElse(List::empty);
+    public List<AccountEntity> fetchAccounts() {
+        return Option.of(fetchUserData()).map(UserDataResponse::getAccounts).getOrElse(List::empty);
     }
 
-    public AccountTransactionsResponse getTransactions(
+    public AccountTransactionsResponse fetchTransactions(
             AccountTransactionsRequestQueryParams queryParams) {
         return createTransactionsRequestInSession(queryParams)
                 .get(AccountTransactionsResponse.class);
     }
 
-    public AccountTransactionsResponse getTransactionsForNextUrl(URL nextUrl) {
+    public AccountTransactionsResponse fetchTransactionsForNextUrl(URL nextUrl) {
         return createRequestInSession(nextUrl).get(AccountTransactionsResponse.class);
     }
 
-    public AccountTransactionsResponse getTransactionsFor(
+    public AccountTransactionsResponse fetchTransactionsFor(
             AccountTransactionsRequestQueryParams queryParams, Date fromDate, Date toDate) {
         return createTransactionsRequestInSession(queryParams)
                 .queryParam(
@@ -95,7 +95,7 @@ public final class OpenbankApiClient {
                 .get(AccountTransactionsResponse.class);
     }
 
-    public AccountTransactionsResponse getTransactionDetails(
+    public AccountTransactionsResponse fetchTransactionDetails(
             AccountTransactionDetailsRequestQueryParams queryParams) {
         return client.request(OpenbankConstants.Urls.ACCOUNT_TRANSACTIONS)
                 .queryParam(
@@ -126,11 +126,11 @@ public final class OpenbankApiClient {
                 .get(AccountTransactionsResponse.class);
     }
 
-    public List<CardEntity> getCards() {
-        return Option.of(getUserData()).map(UserDataResponse::getCards).getOrElse(List::empty);
+    public List<CardEntity> fetchCards() {
+        return Option.of(fetchUserData()).map(UserDataResponse::getCards).getOrElse(List::empty);
     }
 
-    public CardTransactionsResponse getCardTransactions(CardTransactionsRequest request) {
+    public CardTransactionsResponse fetchCardTransactions(CardTransactionsRequest request) {
         return createRequestInSession(OpenbankConstants.Urls.CARD_TRANSACTIONS)
                 .body(request)
                 .post(CardTransactionsResponse.class);
