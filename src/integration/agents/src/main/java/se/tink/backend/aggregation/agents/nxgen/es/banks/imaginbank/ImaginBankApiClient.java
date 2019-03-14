@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticato
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.SessionRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.authenticator.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardTransactionsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountTransactionResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
@@ -92,7 +94,7 @@ public class ImaginBankApiClient {
         LOGGER.info("Initiated card fetching " + initCardsResponse);
     }
 
-    public String fetchCards() {
+    public CardsResponse fetchCards() {
         return createRequest(
                 ImaginBankConstants.Urls.FETCH_CARDS
                         .queryParam(ImaginBankConstants.QueryParams.INITIALIZED_BOXES,
@@ -103,17 +105,17 @@ public class ImaginBankApiClient {
                                 ImaginBankConstants.QueryParams.MORE_DATA_VALUE)
                         .queryParam(ImaginBankConstants.QueryParams.PROFILE,
                                 ImaginBankConstants.QueryParams.PROFILE_VALUE))
-                .get(String.class);
+                .get(CardsResponse.class);
     }
 
-    public String fetchCardTransactions(String cardKey, LocalDate fromDate,
+    public CardTransactionsResponse fetchCardTransactions(String cardKey, LocalDate fromDate,
             LocalDate toDate, boolean moreData) {
         CardTransactionsRequest request =
                 CardTransactionsRequest.createCardTransactionsRequest(moreData,
                         cardKey, fromDate, toDate);
 
         return createRequest(ImaginBankConstants.Urls.FETCH_CARD_TRANSACTIONS)
-                .post(String.class, request);
+                .post(CardTransactionsResponse.class, request);
     }
 
     public void logout() {
