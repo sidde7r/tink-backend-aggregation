@@ -3,8 +3,7 @@
   "providers" : [
     "dk-danskebank-servicecode",
     "dk-nordea-nemid",
-    "dk-nordea-v2-nemid",
-    "dk-test-password", 
+    "dk-test-password",
     "dk-test-multi-supplemental"
   ]
 }
