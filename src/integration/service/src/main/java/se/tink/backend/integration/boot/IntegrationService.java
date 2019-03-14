@@ -1,5 +1,7 @@
 package se.tink.backend.integration.boot;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
@@ -16,10 +18,10 @@ import org.apache.logging.log4j.Logger;
 import se.tink.backend.integration.boot.configuration.Configuration;
 import se.tink.backend.integration.boot.configuration.ConfigurationUtils;
 import se.tink.backend.integration.boot.configuration.SensitiveConfiguration;
+import se.tink.backend.integration.gprcserver.configuration.GrpcServerModule;
 import se.tink.backend.libraries.healthcheckhandler.HealthCheckHandler;
 import se.tink.backend.libraries.httpserver.SimpleHTTPServer;
 import se.tink.backend.integration.gprcserver.GrpcServer;
-import se.tink.backend.integration.pingservice.PingService;
 
 class IntegrationService {
     private static final Logger logger = LogManager.getLogger(IntegrationService.class);
@@ -47,8 +49,10 @@ class IntegrationService {
     private SimpleHTTPServer httpServer;
     private GrpcServer grpcServer;
     private io.prometheus.client.exporter.HTTPServer prometheusServer;
+    private Injector injector;
 
     IntegrationService(Configuration config, SensitiveConfiguration sensitiveConfiguration) throws InterruptedException, IOException {
+        injector = Guice.createInjector(ImmutableList.of(new GrpcServerModule()));
         logger.debug("Starting Integration Service");
         logger.debug("Built with Java " + System.getProperty("java.version"));
 
@@ -76,15 +80,7 @@ class IntegrationService {
         DefaultExports.initialize();
         prometheusServer = new io.prometheus.client.exporter.HTTPServer(9130);
 
-        // Start the gRPC Server
-        List<? extends BindableService> services = ImmutableList.of(
-                new PingService()
-        );
-
-        grpcServer = new GrpcServer(
-                services,
-                new InetSocketAddress(8443)
-        );
+        grpcServer = injector.getInstance(GrpcServer.class);
 
         // Serve over TLS if configured
         if (config.getGrpcTlsCertificatePath() != null) {

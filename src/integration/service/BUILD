@@ -22,13 +22,14 @@ java_binary(
     ],
     deps = [
         "//src/integration/grpc-server:grpc-server",
-        "//src/integration/ping-service:ping-service",
+        "//src/integration/grpc-services:grpc-services",
 
         "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
 
         "//third_party:log",
         "//third_party:prometheus",
+        "//third_party:com_google_inject_guice",
 
         "@io_grpc_grpc_core//jar",
         "//third_party:com_google_guava_guava",
