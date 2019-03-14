@@ -82,6 +82,11 @@ data:
             rootCAPassword: "ICS_ROOT_CA_PASSWORD"
         {{- end }}
 
+        {{- if $agentsConfig.demofakebank }}
+        demofakebank:
+          baseUrl: "demo-financial-institute.internal.staging.aggregation.tink.network"
+        {{- end }}
+
       abnAmro:
 
       {{- if $agentsConfig.abnAmro }}

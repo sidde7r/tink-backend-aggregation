@@ -12,3 +12,6 @@ sqsQueueConfiguration:
 
 s3StorageConfiguration:
   enabled: false
+
+agents:
+  demofakebank: true

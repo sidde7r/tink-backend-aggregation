@@ -4,7 +4,6 @@ public class DemoFakeBankConstants {
     public static final String INTEGRATION_NAME = "demofakebank";
 
     public static class Urls {
-        public static final String DEFAULT_BASE_URL = "demo-financial-institute.internal.staging.aggregation.tink.network";
         public static final String AUTHENTICATE = "/authenticate";
         public static final String ACCOUNTS = "/accounts";
     }

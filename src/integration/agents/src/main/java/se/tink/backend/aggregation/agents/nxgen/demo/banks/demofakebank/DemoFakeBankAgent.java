@@ -42,19 +42,16 @@ public final class DemoFakeBankAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        Optional<DemoFakeBankConfiguration> demoFakeBankConfiguration =
-                configuration
-                        .getIntegrations()
-                        .getIntegration(
-                                DemoFakeBankConstants.INTEGRATION_NAME,
-                                DemoFakeBankConfiguration.class);
+        DemoFakeBankConfiguration demoFakeBankConfiguration = configuration
+                .getIntegrations()
+                .getIntegration(
+                        DemoFakeBankConstants.INTEGRATION_NAME, DemoFakeBankConfiguration.class)
+                .orElseThrow(() ->
+                        new IllegalStateException(
+                                String.format(
+                                        "Demo fake bank integration not configured")));
 
-        String baseUrl =
-                demoFakeBankConfiguration.isPresent()
-                        ? demoFakeBankConfiguration.get().getBaseUrl()
-                        : DemoFakeBankConstants.Urls.DEFAULT_BASE_URL;
-
-        persistentStorage.put(DemoFakeBankConstants.Storage.BASE_URL, baseUrl);
+        persistentStorage.put(DemoFakeBankConstants.Storage.BASE_URL, demoFakeBankConfiguration.getBaseUrl());
     }
 
     @Override
