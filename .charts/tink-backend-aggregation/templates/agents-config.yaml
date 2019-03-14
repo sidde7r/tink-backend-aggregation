@@ -82,6 +82,8 @@ data:
             rootCAPassword: "ICS_ROOT_CA_PASSWORD"
         {{- end }}
 
+      abnAmro:
+
       {{- if $agentsConfig.abnAmro }}
       {{- range $name, $env := dict "abnAmroProduction" "production" "abnAmroStaging" "staging" }}
       {{- $envConfig := index $agentsConfig.abnAmro $env }}
