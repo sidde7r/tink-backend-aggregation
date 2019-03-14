@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.accounts.checking;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -24,10 +23,6 @@ public class FinTsTransactionFetcher implements TransactionDatePaginator<Transac
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
 
-        if (shouldStopFetching(toDate)) {
-            return PaginatorResponseImpl.createEmpty(false);
-        }
-
         Collection<? extends Transaction> transactions =
                 apiClient
                         .getTransactions(account.getAccountNumber(), fromDate, toDate)
@@ -36,12 +31,5 @@ public class FinTsTransactionFetcher implements TransactionDatePaginator<Transac
                         .collect(Collectors.toList());
 
         return PaginatorResponseImpl.create(transactions);
-    }
-
-    private boolean shouldStopFetching(Date toDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.YEAR, 2);
-        return calendar.getTime().before(toDate);
     }
 }
