@@ -4,6 +4,25 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.agents.AbstractAgent;
+import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
+import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
+import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
+import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
+import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
+import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -14,23 +33,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import se.tink.backend.aggregation.agents.AbstractAgent;
-import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
-import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
-import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
-import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
-import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
-import se.tink.backend.aggregation.nxgen.http.readers.CharacterEncodedMessageBodyReader;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
@@ -101,7 +103,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
         do {
             String description = (matcher.group(2)).trim();
             String id = matcher.group(1).trim();
-            double balance = -parseAmount(matcher.group(3).replace(",", ""));
+            double balance = -AgentParsingUtils.parseAmount(matcher.group(3).replace(",", ""));
 
             Account account = new Account();
 

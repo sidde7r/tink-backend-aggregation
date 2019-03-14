@@ -58,6 +58,7 @@ import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -1213,13 +1214,13 @@ public class SEBApiAgent extends AbstractAgent implements
     private Account toTinkAccount(AccountEntity accountEntity) {
         Account account = new Account();
 
-        account.setBalance(parseAmount(accountEntity.BOKF_SALDO));
-        account.setAvailableCredit(parseAmount(accountEntity.DISP_BEL));
+        account.setBalance(AgentParsingUtils.parseAmount(accountEntity.BOKF_SALDO));
+        account.setAvailableCredit(AgentParsingUtils.parseAmount(accountEntity.DISP_BEL));
 
         // if there is a credit on this account
 
         if (!Strings.isNullOrEmpty(accountEntity.KREDBEL)) {
-            double credit = parseAmount(accountEntity.KREDBEL);
+            double credit = AgentParsingUtils.parseAmount(accountEntity.KREDBEL);
             account.setBalance(account.getAvailableCredit() - credit);
         }
 

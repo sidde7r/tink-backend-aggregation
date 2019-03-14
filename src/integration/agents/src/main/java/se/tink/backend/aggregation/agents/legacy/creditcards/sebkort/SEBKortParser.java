@@ -10,13 +10,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.CardGroupEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.ContractEntity;
@@ -25,16 +21,21 @@ import se.tink.backend.aggregation.agents.creditcards.sebkort.model.InvoiceDetai
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.SummaryTransactionsEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionEntity;
 import se.tink.backend.aggregation.agents.creditcards.sebkort.model.TransactionGroupEntity;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.date.DateUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-public class SEBKortParser extends AgentParsingUtils {
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class SEBKortParser {
     private static final Ordering<Transaction> TRANSACTION_ORDERING = new Ordering<Transaction>() {
         @Override
         public int compare(Transaction left, Transaction right) {
@@ -370,7 +371,7 @@ public class SEBKortParser extends AgentParsingUtils {
     }
 
     private double parseSebAmount(String amount) {
-        return parseAmount(CharMatcher.WHITESPACE.removeFrom(amount.replace("kr", "")));
+        return AgentParsingUtils.parseAmount(CharMatcher.WHITESPACE.removeFrom(amount.replace("kr", "")));
     }
 
     /**

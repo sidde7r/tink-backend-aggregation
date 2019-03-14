@@ -9,21 +9,17 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.representation.Form;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import javax.ws.rs.core.MediaType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.model.AccountResponse;
 import se.tink.backend.aggregation.agents.creditcards.supremecard.model.TransactionEntity;
@@ -37,17 +33,23 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
-import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.strings.StringUtils;
+
+import javax.ws.rs.core.MediaType;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private static final AggregationLogger log = new AggregationLogger(SupremeCardAgent.class);
@@ -274,9 +276,9 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
 
         Account account = new Account();
 
-        account.setBalance(-(parseAmount(accountResponse.getData().getPositiveBalance()) + parseAmount(accountResponse
+        account.setBalance(-(AgentParsingUtils.parseAmount(accountResponse.getData().getPositiveBalance()) + AgentParsingUtils.parseAmount(accountResponse
                 .getData().getReservedAmount())));
-        account.setAvailableCredit(parseAmount(accountResponse.getData().getApprovedCredit()));
+        account.setAvailableCredit(AgentParsingUtils.parseAmount(accountResponse.getData().getApprovedCredit()));
         account.setName(StringUtils.formatHuman(accountResponse.getData().getName()));
         account.setAccountNumber(accountResponse.getData().getAccountNumber());
         account.setBankId(accountResponse.getData().getAccountNumber());

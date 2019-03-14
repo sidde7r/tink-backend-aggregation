@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.agents.creditcards.rikskortet;
 
 import com.google.common.collect.Lists;
-import java.io.File;
-import java.util.List;
-import javax.xml.ws.Binding;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.handler.Handler;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.AccountDetails;
 import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.ArrayOfTransactionDetails;
@@ -17,15 +16,18 @@ import se.tink.backend.aggregation.agents.creditcards.rikskortet.soap.Transactio
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
-import se.tink.backend.aggregation.agents.utils.soap.SOAPUserAgentHandler;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
+import se.tink.backend.aggregation.agents.utils.soap.SOAPUserAgentHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import javax.xml.ws.Binding;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.handler.Handler;
+import java.io.File;
+import java.util.List;
 
 public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private static final File WSDL_FILE = new File("data/agents/rikskortet.wsdl");
@@ -99,8 +101,8 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
             Transaction t = new Transaction();
 
             t.setDescription(td.getDescription().trim());
-            t.setAmount(parseAmount(cleanAmount(td.getAmount())));
-            t.setDate(parseDate(td.getDate(), true));
+            t.setAmount(AgentParsingUtils.parseAmount(cleanAmount(td.getAmount())));
+            t.setDate(AgentParsingUtils.parseDate(td.getDate(), true));
 
             if (t.getAmount() < 0) {
                 t.setType(TransactionTypes.CREDIT_CARD);

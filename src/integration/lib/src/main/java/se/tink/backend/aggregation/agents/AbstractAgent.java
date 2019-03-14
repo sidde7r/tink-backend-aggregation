@@ -1,34 +1,34 @@
 package se.tink.backend.aggregation.agents;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.utils.CookieContainer;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public abstract class AbstractAgent extends AgentParsingUtils implements Agent, AgentEventListener {
-    public static final String AGENT_LOCK_PATTERN = "/locks/refreshCredentials/credentials/%s/%s";
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+public abstract class AbstractAgent implements Agent, AgentEventListener {
     public static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
-    
+
     protected AgentsServiceConfiguration configuration;
     protected final JerseyClientFactory clientFactory;
     protected final AgentContext context;
@@ -62,16 +62,19 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
         return getClass();
     }
 
-    /**
-     * Returns the certain date for this account (that is from when we know we have all data)
-     */
+    /** Returns the certain date for this account (that is from when we know we have all data) */
     protected Date getContentWithRefreshDate(Account account) {
-        if (this.request.getAccounts() == null || this.request.getCredentials().getUpdated() == null) {
+        if (this.request.getAccounts() == null
+                || this.request.getCredentials().getUpdated() == null) {
             return null;
         }
 
-        Optional<Account> existingAccount = this.request.getAccounts().stream().filter(
-                a -> (a.getBankId().equals(account.getBankId()))).findFirst();
+        Optional<Account> existingAccount =
+                this.request
+                        .getAccounts()
+                        .stream()
+                        .filter(a -> (a.getBankId().equals(account.getBankId())))
+                        .findFirst();
 
         if (!existingAccount.isPresent()) {
             return null;
@@ -81,17 +84,17 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     }
 
     /**
-     * Determine if we're content with the data that we've got from this run based on what we already have in storage.
-     * Assumes the transaction list is in order as it comes from provider.
+     * Determine if we're content with the data that we've got from this run based on what we
+     * already have in storage. Assumes the transaction list is in order as it comes from provider.
      */
-    protected boolean isContentWithRefresh(Account account,
-            List<Transaction> transactions) {
+    protected boolean isContentWithRefresh(Account account, List<Transaction> transactions) {
 
         if (transactions.size() == 0) {
             return false;
         }
 
-        if (this.request.getAccounts() == null || this.request.getCredentials().getUpdated() == null) {
+        if (this.request.getAccounts() == null
+                || this.request.getCredentials().getUpdated() == null) {
             return false;
         }
 
@@ -133,10 +136,11 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
                 }
             }
 
-            int overlappingTransactionDays = Math.abs(DateUtils.getNumberOfDaysBetween(t.getDate(), certainDate));
+            int overlappingTransactionDays =
+                    Math.abs(DateUtils.getNumberOfDaysBetween(t.getDate(), certainDate));
 
-            if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS &&
-                    overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
+            if (transactionsBeforeCertainDate >= AgentParsingUtils.SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
+                    && overlappingTransactionDays >= AgentParsingUtils.SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
                 return true;
             }
         }
@@ -144,7 +148,8 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
     }
 
     /**
-     * Default is to do nothing here, updated timestamp is set in updateService if status goes to UPDATED.
+     * Default is to do nothing here, updated timestamp is set in updateService if status goes to
+     * UPDATED.
      */
     @Override
     public void onUpdateCredentialsStatus() {
@@ -156,10 +161,9 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
         this.configuration = configuration;
     }
 
-    /**
-     * Takes the cookies from the provided cookie container and add them to the client
-     */
-    protected void addSessionCookiesToClient(TinkApacheHttpClient4 client, CookieContainer cookieContainer) {
+    /** Takes the cookies from the provided cookie container and add them to the client */
+    protected void addSessionCookiesToClient(
+            TinkApacheHttpClient4 client, CookieContainer cookieContainer) {
         if (client == null) {
             this.log.error("Client is null");
             return;
@@ -190,7 +194,8 @@ public abstract class AbstractAgent extends AgentParsingUtils implements Agent, 
 
     @Override
     public void close() {
-        // Deliberately left empty. Feel free to override for agents that need proper cleanup of resources.
+        // Deliberately left empty. Feel free to override for agents that need proper cleanup of
+        // resources.
     }
 
     protected void openBankID(String autostartToken) {

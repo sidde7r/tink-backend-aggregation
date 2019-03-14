@@ -26,27 +26,17 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import javax.annotation.Nullable;
-import javax.ws.rs.core.MediaType;
 import org.apache.lucene.util.ThreadInterruptedException;
 import org.joda.time.DateTime;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchEInvoicesResponse;
 import se.tink.backend.aggregation.agents.FetchInvestmentAccountsResponse;
@@ -119,23 +109,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.CredentialsRequestType;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Loan;
@@ -143,18 +116,47 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.Doubles;
+import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
+import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
+import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.CredentialsRequestType;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.strings.StringUtils;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
+
+import javax.annotation.Nullable;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExecutor, RefreshTransferDestinationExecutor,
         RefreshCheckingAccountsExecutor, RefreshSavingsAccountsExecutor, RefreshLoanAccountsExecutor,
@@ -225,8 +227,8 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
 
         String dateString = (String) te.getTransactionDate().get("$");
 
-        t.setDate(parseDate(dateString.substring(0, 10), true));
-        t.setAmount(parseAmount(te.getTransactionAmount().get("$").toString()));
+        t.setDate(AgentParsingUtils.parseDate(dateString.substring(0, 10), true));
+        t.setAmount(AgentParsingUtils.parseAmount(te.getTransactionAmount().get("$").toString()));
 
         if (te.getIsCoverReservationTransaction() != null && te.getIsCoverReservationTransaction().get("$") != null) {
             t.setPending((Boolean) te.getIsCoverReservationTransaction().get("$"));
@@ -663,7 +665,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
         Account account = new Account();
 
         productEntity.getBalance()
-                .ifPresent(balance -> account.setBalance(parseAmount(balance)));
+                .ifPresent(balance -> account.setBalance(AgentParsingUtils.parseAmount(balance)));
 
         if (productEntity.getNickName() != null && productEntity.getNickName().containsKey("$")) {
             account.setName(productEntity.getNickName().get("$").toString());
@@ -740,7 +742,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
             }
 
             if (cardDetails.getFundsAvailable().containsKey("$")) {
-                account.setAvailableCredit(parseAmount(cardDetails.getFundsAvailable().get("$").toString()));
+                account.setAvailableCredit(AgentParsingUtils.parseAmount(cardDetails.getFundsAvailable().get("$").toString()));
             }
         }
 
@@ -2458,7 +2460,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
                     if (productNumber.isPresent() && balance.isPresent()) {
                         custodyAccountCashValueMap.put(
                                 StringUtils.removeNonAlphaNumeric(productNumber.get()),
-                                parseAmount(balance.get()));
+                                AgentParsingUtils.parseAmount(balance.get()));
                     }
                 }
 
