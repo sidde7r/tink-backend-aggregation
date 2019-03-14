@@ -12,6 +12,10 @@ public class SecurityProfitabilityResponse {
 
     @JsonIgnore
     public double getTotalProfit() {
-        return Option.of(items).getOrElse(List::empty).sum().doubleValue();
+        return Option.of(items)
+                .getOrElse(List::empty)
+                .map(ProfitabilityEntity::getTotalProfit)
+                .sum()
+                .doubleValue();
     }
 }
