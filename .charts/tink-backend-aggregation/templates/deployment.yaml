@@ -147,6 +147,18 @@ spec:
               name: aggregation-secrets
               key: starling-pis-client-secret
               optional: true
+        - name: STARLING_SIGNING_KEY_UID
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: starling-signing-key-uid
+              optional: true
+        - name: STARLING_SIGNING_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aggregation-secrets
+              key: starling-signing-key
+              optional: true
         - name: FINTS_REG_NUMBER
           valueFrom:
             secretKeyRef:
