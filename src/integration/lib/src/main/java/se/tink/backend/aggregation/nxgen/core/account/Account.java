@@ -7,6 +7,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
@@ -34,6 +36,8 @@ import java.util.Optional;
 import java.util.Set;
 
 public abstract class Account {
+    private static final Logger logger = LoggerFactory.getLogger(Account.class);
+
     private static final String BANK_IDENTIFIER_KEY = "bankIdentifier";
     private String name;
     private String productName;
@@ -76,11 +80,16 @@ public abstract class Account {
         this.accountFlags = ImmutableSet.copyOf(builder.getAccountFlags());
         this.productName = builder.getProductName();
 
-        // Use account number as alias if no explicit alias is set.
-        this.name =
-                Strings.isNullOrEmpty(builder.getAlias())
-                        ? builder.getAccountNumber()
-                        : builder.getAlias();
+        if (Strings.isNullOrEmpty(builder.getAlias())) {
+            // Fallback in case the received alias happened to be null at run-time.
+            // Indicates a programming fault because the agent should be implemented in a way such
+            // that it always sets the alias to the displayed name of the account.
+            logger.error("Supplied alias was null -- falling back to account number");
+            this.name = builder.getAccountNumber();
+        } else {
+            this.name = builder.getAlias();
+        }
+
         // Only use one holder name for now
         this.holderName =
                 new HolderName(builder.getHolderNames().stream().findFirst().orElse(null));
