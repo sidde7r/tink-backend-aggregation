@@ -65,13 +65,6 @@ container_pull(
     tag = "8",
 )
 
-container_pull(
-    name = "python-3_6-alpine",
-    registry = "gcr.io",
-    repository = "tink-containers/python",
-    tag = "3.6-alpine",
-)
-
 ## External dependencies
 # External repositories that are not under Tink control. These should *always*
 # be locked to something stable (a commit, not a branch for example) and have
