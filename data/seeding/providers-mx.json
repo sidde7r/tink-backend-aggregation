@@ -35,7 +35,7 @@
             "passwordHelpText": "Use the same credentials as when you log in to BBVA",
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 0,
-            "status": "ENABLED",
+            "status": "DISABLED",
             "transactional": true,
             "type": "BANK"
         }
