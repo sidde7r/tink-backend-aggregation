@@ -35,6 +35,7 @@ public class BbvaMxConstants {
     public static class ERROR {
         public static final String NO_ACCOUNT_FOUND_CODE = "160";
         public static final String INCORRECT_CREDENTIALS_CODE = "161";
+        public static final String USER_BLOCKED = "162";
     }
 
     public static class URLS {
