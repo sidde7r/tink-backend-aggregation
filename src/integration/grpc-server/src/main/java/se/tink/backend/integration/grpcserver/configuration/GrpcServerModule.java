@@ -12,9 +12,9 @@ import io.grpc.ServerInterceptor;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;
-import se.tink.backend.integration.gprcserver.AccessLogInterceptor;
+import se.tink.backend.integration.gprcserver.interceptors.AccessLogInterceptor;
 import se.tink.backend.integration.gprcserver.GrpcServer;
-import se.tink.backend.integration.gprcserver.interceptors.metrics.MonitoringInterceptor;
+import se.tink.backend.integration.gprcserver.interceptors.MonitoringInterceptor;
 import se.tink.backend.integration.pingservice.PingService;
 
 public class GrpcServerModule extends AbstractModule {
