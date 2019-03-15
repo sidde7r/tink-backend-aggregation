@@ -14,5 +14,5 @@ s3StorageConfiguration:
   enabled: false
 
 agents:
-  demofakebank:
+  demoFakeBank:
     baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271
