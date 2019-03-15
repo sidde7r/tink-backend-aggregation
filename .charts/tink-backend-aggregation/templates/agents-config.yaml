@@ -86,6 +86,7 @@ data:
         demofakebank:
           baseUrl: "{{ $agentsConfig.demofakebank.baseUrl }}"
         {{- end }}
+
       abnAmro:
 
       {{- if $agentsConfig.abnAmro }}
