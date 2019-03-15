@@ -45,6 +45,7 @@ public class GrpcServerModule extends AbstractModule {
                 ImmutableList.of(
                         // Monitoring interceptor is first called since we want to measure the time
                         // of the whole request.
+                        MonitoringInterceptor.class,
                         // Access logging interceptor is called before exception interceptor since
                         // we always want to log status
                         // of the response.
