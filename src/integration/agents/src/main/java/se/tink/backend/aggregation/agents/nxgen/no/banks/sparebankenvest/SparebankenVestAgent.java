@@ -58,7 +58,7 @@ public class SparebankenVestAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(request, context,
+        return new AutoAuthenticationController(request, systemUpdater,
                 new OneTimeActivationCodeAuthenticationController(
                         SparebankenVestOneTimeActivationCodeAuthenticator.create(apiClient, encapClient)),
                 SparebankenVestAutoAuthenticator.create(apiClient, encapClient));

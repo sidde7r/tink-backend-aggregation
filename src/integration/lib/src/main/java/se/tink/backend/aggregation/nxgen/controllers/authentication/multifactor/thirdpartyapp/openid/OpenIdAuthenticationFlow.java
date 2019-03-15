@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.configuration.CallbackJwtSignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -10,7 +10,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OpenIdAuthenticationFlow {
-    public static Authenticator create(CredentialsRequest request, AgentContext context,
+    public static Authenticator create(CredentialsRequest request, SystemUpdater systemUpdater,
             PersistentStorage persistentStorage, SupplementalInformationHelper supplementalInformationHelper,
             OpenIdAuthenticator authenticator, OpenIdApiClient apiClient,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
@@ -26,7 +26,7 @@ public class OpenIdAuthenticationFlow {
 
         return new AutoAuthenticationController(
                 request,
-                context,
+                systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
                         openIdAuthenticationController,
                         supplementalInformationHelper

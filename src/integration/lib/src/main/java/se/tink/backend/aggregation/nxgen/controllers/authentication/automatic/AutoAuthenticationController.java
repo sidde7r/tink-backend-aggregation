@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
 
 import com.google.common.base.Preconditions;
 import java.util.Objects;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -21,10 +20,10 @@ public class AutoAuthenticationController implements TypedAuthenticator {
     private final MultiFactorAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
 
-    public AutoAuthenticationController(CredentialsRequest request, AgentContext context,
+    public AutoAuthenticationController(CredentialsRequest request, SystemUpdater systemUpdater,
             MultiFactorAuthenticator manualAuthenticator, AutoAuthenticator autoAuthenticator) {
         this.request = Preconditions.checkNotNull(request);
-        this.systemUpdater = Preconditions.checkNotNull(context);
+        this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
         this.autoAuthenticator = Preconditions.checkNotNull(autoAuthenticator);
     }

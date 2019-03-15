@@ -54,7 +54,7 @@ public class KbcAgent extends NextGenerationAgent {
                 persistentStorage,
                 apiClient,
                 supplementalInformationHelper);
-        return new AutoAuthenticationController(request, context, authenticator, authenticator);
+        return new AutoAuthenticationController(request, systemUpdater, authenticator, authenticator);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class AktiaAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
         return new AutoAuthenticationController(
                 request,
-                context,
+                systemUpdater,
                 new KeyCardAuthenticationController(
                         catalog,
                         supplementalInformationHelper,

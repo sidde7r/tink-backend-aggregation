@@ -62,7 +62,7 @@ public final class AxaAgent extends NextGenerationAgent {
         AutoAuthenticator autoAuthenticator = new AxaAutoAuthenticator(apiClient, storage);
 
         return new AutoAuthenticationController(
-                request, context, manualAuthenticator, autoAuthenticator);
+                request, systemUpdater, manualAuthenticator, autoAuthenticator);
     }
 
     private void initRefresh() {

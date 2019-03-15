@@ -73,7 +73,7 @@ public abstract class HandelsbankenAgent<API extends HandelsbankenApiClient, Con
     protected AutoAuthenticationController constructAutoAuthenticationController(
             MultiFactorAuthenticator cardDeviceAuthenticator,
             HandelsbankenAutoAuthenticator autoAuthenticator) {
-        return new AutoAuthenticationController(this.request, this.context,
+        return new AutoAuthenticationController(this.request, this.systemUpdater,
                 cardDeviceAuthenticator, autoAuthenticator);
     }
 

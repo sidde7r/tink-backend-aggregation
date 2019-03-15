@@ -56,7 +56,7 @@ public class ArgentaAgent extends NextGenerationAgent {
                         supplementalInformationHelper);
 
         return new AutoAuthenticationController(
-                request, context, argentaAuthenticator, argentaAuthenticator);
+                request, systemUpdater, argentaAuthenticator, argentaAuthenticator);
     }
 
     @Override

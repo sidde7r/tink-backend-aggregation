@@ -48,7 +48,7 @@ public class OpBankAgent extends NextGenerationAgent {
 
     @Override
     public Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(request, context,
+        return new AutoAuthenticationController(request, systemUpdater,
                 new KeyCardAuthenticationController(catalog,
                         supplementalInformationHelper,
                         new OpAuthenticator(bankClient, opBankPersistentStorage, credentials),

@@ -48,7 +48,7 @@ public class SdcDkAgent extends SdcAgent {
         SmsOtpAuthenticationPasswordController smsOtpController = new SmsOtpAuthenticationPasswordController(catalog,
                 supplementalInformationHelper, dkSmsOtpAuthenticator);
 
-        return new AutoAuthenticationController(request, context, smsOtpController,
+        return new AutoAuthenticationController(request, systemUpdater, smsOtpController,
                 dkAutoAuthenticator);
     }
 

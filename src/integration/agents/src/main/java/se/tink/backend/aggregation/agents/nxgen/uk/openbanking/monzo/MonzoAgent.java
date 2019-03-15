@@ -71,7 +71,7 @@ public class MonzoAgent extends NextGenerationAgent {
                 controller,
                 supplementalInformationHelper);
 
-        return new AutoAuthenticationController(request, context, thirdParty, controller);
+        return new AutoAuthenticationController(request, systemUpdater, thirdParty, controller);
     }
 
     @Override

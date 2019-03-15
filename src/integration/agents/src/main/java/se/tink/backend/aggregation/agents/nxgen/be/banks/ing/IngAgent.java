@@ -54,7 +54,7 @@ public class IngAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(request, context,
+        return new AutoAuthenticationController(request, systemUpdater,
                 new IngCardReaderAuthenticationController(
                         new IngCardReaderAuthenticator(apiClient, persistentStorage, ingHelper),
                         supplementalInformationHelper),

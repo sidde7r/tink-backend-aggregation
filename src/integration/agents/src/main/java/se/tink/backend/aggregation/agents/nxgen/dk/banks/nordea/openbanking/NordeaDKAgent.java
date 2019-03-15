@@ -29,7 +29,7 @@ public class NordeaDKAgent extends NordeaBaseAgent {
                 new NordeaSessionStorage(sessionStorage),
                 getNordeaPersistentStorage());
 
-        return OAuth2AuthenticationFlow.create(request, context,
+        return OAuth2AuthenticationFlow.create(request, systemUpdater,
                 persistentStorage, supplementalInformationHelper,
                 oauthAuthenticator);
     }

@@ -20,7 +20,7 @@ public class AlandsBankenSEAgent extends CrossKeyAgent {
     @Override
     protected Authenticator constructAuthenticator() {
 
-        return new AutoAuthenticationController(request, context,
+        return new AutoAuthenticationController(request, systemUpdater,
                 new KeyCardAuthenticationController(catalog,
                         supplementalInformationHelper,
                         new CrossKeyKeyCardAuthenticator(apiClient, agentConfiguration, agentPersistentStorage, credentials),
