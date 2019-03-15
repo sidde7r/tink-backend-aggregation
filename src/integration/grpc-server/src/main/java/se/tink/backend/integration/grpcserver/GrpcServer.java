@@ -10,6 +10,9 @@ import io.grpc.ServerInterceptor;
 import io.grpc.ServerInterceptors;
 import io.grpc.netty.NettyServerBuilder;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
@@ -45,6 +48,7 @@ public class GrpcServer {
                 new AccessLogInterceptor()
         );
 
+        serverBuilder.executor(createExecutor());
         services.stream().map(s -> ServerInterceptors.intercept(s, Lists.newArrayList(interceptors)))
                 .forEach(serverBuilder::addService);
     }
@@ -122,5 +126,9 @@ public class GrpcServer {
         };
 
         shutdownThread.run();
+    }
+
+    private Executor createExecutor() {
+        return (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
     }
 }
