@@ -27,13 +27,11 @@ public class BankIdAuthenticationControllerNO implements MultiFactorAuthenticato
 
     private static final AggregationLogger log = new AggregationLogger(BankIdAuthenticationControllerNO.class);
     private final BankIdAuthenticatorNO authenticator;
-    private final AgentContext context;
     private final SupplementalRequester supplementalRequester;
 
-    public BankIdAuthenticationControllerNO(AgentContext context, BankIdAuthenticatorNO authenticator) {
+    public BankIdAuthenticationControllerNO(SupplementalRequester supplementalRequester, BankIdAuthenticatorNO authenticator) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
-        this.context = Preconditions.checkNotNull(context);
-        this.supplementalRequester = Preconditions.checkNotNull(context);
+        this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
     }
 
     @Override

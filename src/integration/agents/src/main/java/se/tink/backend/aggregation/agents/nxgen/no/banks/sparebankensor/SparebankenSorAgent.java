@@ -73,7 +73,7 @@ public class SparebankenSorAgent extends NextGenerationAgent {
                 apiClient, encapClient, sessionStorage);
 
         return new AutoAuthenticationController(request, systemUpdater,
-                new BankIdAuthenticationControllerNO(context, multiFactorAuthenticator),
+                new BankIdAuthenticationControllerNO(supplementalRequester, multiFactorAuthenticator),
                 autoAuthenticator);
     }
 

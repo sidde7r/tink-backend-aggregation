@@ -53,7 +53,7 @@ public class HandelsbankenNOAgent extends NextGenerationAgent {
                 encapClient, sessionStorage);
 
         return new AutoAuthenticationController(request, systemUpdater,
-                new BankIdAuthenticationControllerNO(context, multiFactorAuthenticator), autoAuthenticator);
+                new BankIdAuthenticationControllerNO(supplementalRequester, multiFactorAuthenticator), autoAuthenticator);
 
     }
 
