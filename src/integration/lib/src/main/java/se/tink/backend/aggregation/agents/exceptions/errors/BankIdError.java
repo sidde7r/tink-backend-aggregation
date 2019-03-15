@@ -5,7 +5,9 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public enum BankIdError implements AgentError {
     CANCELLED(new LocalizableKey("You cancelled the BankID process. Please try again.")),
-    TIMEOUT(new LocalizableKey("No response from Mobile BankID. Have you opened the app?")),
+    /** Indicates that the BankID app was opened but the user did not sign within the time window */
+    TIMEOUT(new LocalizableKey("Authenticating with Mobile BankID timed out. Have you opened the app?")),
+    /** Indicates that the BankID app was never opened */
     NO_CLIENT(new LocalizableKey("No response from Mobile BankID. Have you opened the app?")),
     ALREADY_IN_PROGRESS(new LocalizableKey("You have another BankID session in progress. Please try again.")),
     INTERRUPTED(new LocalizableKey("Another BankId authentication was initiated while authenticating. Please try again.")),
