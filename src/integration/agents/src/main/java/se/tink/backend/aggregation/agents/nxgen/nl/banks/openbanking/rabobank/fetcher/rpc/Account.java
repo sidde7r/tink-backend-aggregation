@@ -30,6 +30,6 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" + "iban = '" + iban + '\'' + ",currency = '" + currency + '\'' + "}";
+        return "account{" + "iban = '" + iban + '\'' + ",currency = '" + currency + '\'' + "}";
     }
 }

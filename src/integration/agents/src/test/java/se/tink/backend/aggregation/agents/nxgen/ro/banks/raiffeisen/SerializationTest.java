@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen;
 
-import java.util.Collection;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.ro.banks.raiffeisen.fetcher.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+
+import java.util.Collection;
 
 public class SerializationTest {
 
@@ -18,7 +19,7 @@ public class SerializationTest {
                 + "      \"resourceId\": \"EX09999999\",\n"
                 + "      \"iban\": \"AT611904300234573201\",\n"
                 + "      \"currency\": \"EUR\",\n"
-                + "      \"name\": \"Main Account\",\n"
+                + "      \"name\": \"Main account\",\n"
                 + "      \"product\": \"Main Product\",\n"
                 + "      \"cashAccountType\": \"CurrentAccount\",\n"
                 + "      \"bic\": \"DABAIE2D\",\n"
