@@ -20,9 +20,9 @@ import se.tink.backend.integration.pingservice.PingService;
 public class GrpcServerModule extends AbstractModule {
     @Override
     protected void configure() {
-        Binder b = binder();
-        bindServices(b);
-        bindInterceptors(b);
+        Binder binder = binder();
+        bindServices(binder);
+        bindInterceptors(binder);
         bind(GrpcServer.class).in(Scopes.SINGLETON);
         bind(SocketAddress.class)
                 .annotatedWith(Names.named("grpcSocket"))
@@ -31,12 +31,12 @@ public class GrpcServerModule extends AbstractModule {
         // TODO: move tls here
     }
 
-    private void bindServices(Binder b) {
+    private void bindServices(Binder binder) {
         List<Class<? extends BindableService>> services = Lists.newArrayList(
                 PingService.class
         );
 
-        bindSet(b, "grpcServices", BindableService.class, services);
+        bindSet(binder, "grpcServices", BindableService.class, services);
     }
 
     // Order matters - Make sure to have the most important first, probably AccessLogInterceptor.
