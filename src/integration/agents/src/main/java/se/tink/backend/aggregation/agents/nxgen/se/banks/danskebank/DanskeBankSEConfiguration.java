@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank;
 
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
+import se.tink.backend.aggregation.agents.models.Loan;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 
 public class DanskeBankSEConfiguration implements DanskeBankConfiguration {
     // == START Standard configuration ==

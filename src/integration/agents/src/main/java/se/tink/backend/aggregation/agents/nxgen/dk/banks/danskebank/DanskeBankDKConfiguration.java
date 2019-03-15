@@ -2,11 +2,12 @@ package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import java.util.List;
-import java.util.Map;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankConstants;
+
+import java.util.List;
+import java.util.Map;
 
 public class DanskeBankDKConfiguration implements DanskeBankConfiguration {
     private static final String APP_CULTURE = "en-GB";

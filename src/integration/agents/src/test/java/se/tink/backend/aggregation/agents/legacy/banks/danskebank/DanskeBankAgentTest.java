@@ -2,27 +2,29 @@ package se.tink.backend.aggregation.agents.banks.danskebank;
 
 import com.google.common.collect.ImmutableList;
 import java.security.Security;
-import java.util.Date;
-import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.agents.AbstractAgentTest;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.DanskeBankV2Agent;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.utils.transfer.TransferMessageException;
-import se.tink.libraries.transfer.mocks.TransferMock;
-import se.tink.libraries.account.identifiers.TestAccount;
-import se.tink.libraries.social.security.TestSSN;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.enums.FeatureFlags;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.TestAccount;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.enums.FeatureFlags;
+import se.tink.libraries.social.security.TestSSN;
+import se.tink.libraries.transfer.enums.TransferType;
+import se.tink.libraries.transfer.mocks.TransferMock;
+import se.tink.libraries.transfer.rpc.Transfer;
+
+import java.util.Date;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DanskeBankAgentTest extends AbstractAgentTest<DanskeBankV2Agent> {

@@ -1,15 +1,16 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer;
 
 import com.google.common.base.Preconditions;
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
-import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferExecutorNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferControllerNxgen;
+import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferExecutorNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.validators.StructuredMessageValidator;
-import se.tink.libraries.transfer.enums.MessageType;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.MessageType;
+import se.tink.libraries.transfer.rpc.Transfer;
+
+import java.util.Optional;
 
 public class TransferController {
     private final PaymentExecutor paymentExecutor;

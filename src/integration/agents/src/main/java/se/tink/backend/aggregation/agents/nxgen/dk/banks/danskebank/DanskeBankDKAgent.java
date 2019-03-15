@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.banks.danskebank;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankAgent;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.DanskeBankApiClient;
@@ -14,6 +13,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.refresh.loan.LoanRefreshController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import java.util.Optional;
 
 public class DanskeBankDKAgent extends DanskeBankAgent {
     public DanskeBankDKAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {

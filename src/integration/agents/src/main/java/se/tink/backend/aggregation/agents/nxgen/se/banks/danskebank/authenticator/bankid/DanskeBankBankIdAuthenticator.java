@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.danskebank.authenticat
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Optional;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -27,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.agents.rpc.Credentials;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class DanskeBankBankIdAuthenticator extends DanskeBankAbstractAuthenticator implements BankIdAuthenticator<String> {
     private static final AggregationLogger log = new AggregationLogger(DanskeBankBankIdAuthenticator.class);
