@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankiaApiClient {
 
@@ -202,11 +203,13 @@ public class BankiaApiClient {
     }
 
     public LoanOverviewResponse getLoanOverview() {
-        return client.request(BankiaConstants.Url.LOANS_OVERVIEW)
+        String response = client.request(BankiaConstants.Url.LOANS_OVERVIEW)
                 .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
                 .accept(MediaType.APPLICATION_JSON)
-                .get(LoanOverviewResponse.class);
+                .get(String.class);
+
+        return SerializationUtils.deserializeFromString(response, LoanOverviewResponse.class);
     }
 
     public String getLoanDetailsPosition(LoanOverviewEntity loan) {
