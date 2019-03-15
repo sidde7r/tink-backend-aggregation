@@ -6,7 +6,7 @@ import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
-//@Ignore
+@Ignore
 public class NordnetAgentTest {
     private final String TEST_USERNAME = "puramuru";
     private final String TEST_PASSWORD = "qweqwe1*";
