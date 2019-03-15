@@ -1,4 +1,4 @@
-package se.tink.backend.integration.gprcserver;
+package se.tink.backend.integration.gprcserver.interceptors;
 
 import com.google.common.base.Stopwatch;
 import io.grpc.*;
@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.integration.gprcserver.GrpcServer;
 
 public class AccessLogInterceptor implements ServerInterceptor {
 

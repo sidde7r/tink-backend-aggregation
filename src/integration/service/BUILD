@@ -26,6 +26,7 @@ java_binary(
 
         "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
+        "//src/libraries/metrics:metrics",
 
         "//third_party:log",
         "//third_party:prometheus",

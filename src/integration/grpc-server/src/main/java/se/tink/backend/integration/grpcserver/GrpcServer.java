@@ -1,6 +1,5 @@
 package se.tink.backend.integration.gprcserver;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -10,6 +9,9 @@ import io.grpc.ServerInterceptor;
 import io.grpc.ServerInterceptors;
 import io.grpc.netty.NettyServerBuilder;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
@@ -24,7 +26,6 @@ import org.bouncycastle.util.io.pem.PemWriter;
 import java.io.*;
 import java.net.SocketAddress;
 import java.security.PrivateKey;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -36,15 +37,12 @@ public class GrpcServer {
     @Inject
     GrpcServer(
             @Named("grpcServices") Set<BindableService> services,
+            @Named("grpcInterceptors") Set<ServerInterceptor> interceptors,
             @Named("grpcSocket") SocketAddress listenAddress) {
         serverBuilder = NettyServerBuilder
                 .forAddress(listenAddress);
 
-        // Order matters - Make sure to have the most important first, probably AccessLogInterceptor.
-        List<? extends ServerInterceptor> interceptors = ImmutableList.of(
-                new AccessLogInterceptor()
-        );
-
+        serverBuilder.executor(createExecutor());
         services.stream().map(s -> ServerInterceptors.intercept(s, Lists.newArrayList(interceptors)))
                 .forEach(serverBuilder::addService);
     }
@@ -122,5 +120,9 @@ public class GrpcServer {
         };
 
         shutdownThread.run();
+    }
+
+    private Executor createExecutor() {
+        return (ThreadPoolExecutor) Executors.newFixedThreadPool(8);
     }
 }

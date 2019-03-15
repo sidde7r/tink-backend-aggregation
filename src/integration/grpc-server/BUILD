@@ -9,5 +9,7 @@ java_library(
         "//third_party:bouncycastle",
         "//src/integration/grpc-services:grpc-services",
         "//third_party:com_google_inject_extensions_guice_multibindings",
+        "//src/libraries/api_annotations:api_annotations",
+        "//src/libraries/metrics:metrics"
     ],
 )
