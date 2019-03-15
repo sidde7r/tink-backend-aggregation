@@ -1,0 +1,36 @@
+package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.rpc;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.GroupHeaderEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.fetcher.transactionalaccount.entities.TransactionsResponseEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
+
+@JsonObject
+public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
+
+    @JsonProperty("group_header")
+    private GroupHeaderEntity groupHeader;
+
+    private TransactionsResponseEntity response;
+
+    @Override
+    public Collection<? extends Transaction> getTinkTransactions() {
+        return response != null ? response.toTinkTransactions() : Collections.emptyList();
+    }
+
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(nextKey() != null);
+    }
+
+    @Override
+    public String nextKey() {
+        return response != null ? response.nextKey() : null;
+    }
+}
