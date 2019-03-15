@@ -59,7 +59,7 @@ public abstract class SwedbankAbstractAgentPaymentsRevamp extends NextGeneration
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(context, new SwedbankDefaultBankIdAuthenticator(
+        return new BankIdAuthenticationController<>(supplementalRequester, new SwedbankDefaultBankIdAuthenticator(
                 apiClient));
     }
 

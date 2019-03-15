@@ -33,7 +33,7 @@ public class DanskeBankSEAgent extends DanskeBankAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new TypedAuthenticationController(
-                new BankIdAuthenticationController<>(context,
+                new BankIdAuthenticationController<>(supplementalRequester,
                         new DanskeBankBankIdAuthenticator((DanskeBankSEApiClient) apiClient, deviceId, configuration)),
                 new PasswordAuthenticationController(
                         new DanskeBankPasswordAuthenticator(apiClient, deviceId, configuration)));

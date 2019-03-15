@@ -6,7 +6,6 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
@@ -24,19 +23,17 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
 
     private static final AggregationLogger log = new AggregationLogger(BankIdAuthenticationController.class);
     private final BankIdAuthenticator<T> authenticator;
-    private final AgentContext context;
     private final SupplementalRequester supplementalRequester;
     private final boolean waitOnBankId;
 
-    public BankIdAuthenticationController(AgentContext context, BankIdAuthenticator<T> authenticator) {
-        this(context, authenticator, false);
+    public BankIdAuthenticationController(SupplementalRequester supplementalRequester, BankIdAuthenticator<T> authenticator) {
+        this(supplementalRequester, authenticator, false);
     }
 
-    public BankIdAuthenticationController(AgentContext context, BankIdAuthenticator<T> authenticator,
+    public BankIdAuthenticationController(SupplementalRequester supplementalRequester, BankIdAuthenticator<T> authenticator,
             boolean waitOnBankId) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
-        this.context = Preconditions.checkNotNull(context);
-        this.supplementalRequester = Preconditions.checkNotNull(context);
+        this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
         this.waitOnBankId = waitOnBankId;
     }
 

@@ -74,7 +74,7 @@ public class HandelsbankenSEAgent
                             autoAuthenticator),
                     autoAuthenticator),
             new BankIdAuthenticationController<>(
-                    context,
+                    supplementalRequester,
                     new HandelsbankenBankIdAuthenticator(
                             bankClient,
                             credentials,

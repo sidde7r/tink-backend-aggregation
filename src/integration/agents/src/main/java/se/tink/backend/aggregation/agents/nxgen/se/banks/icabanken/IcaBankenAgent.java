@@ -52,7 +52,7 @@ public class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(context,
+        return new BankIdAuthenticationController<>(supplementalRequester,
                 new IcaBankenBankIdAuthenticator(apiClient, icaBankenSessionStorage, icaBankenPersistentStorage));
     }
 
