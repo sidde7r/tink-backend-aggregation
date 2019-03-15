@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import java.text.MessageFormat;
 
 public final class DanskeBankConstants {
-    public class Url {
+    public static class Url {
         private static final String HOST = "https://apiebank.danskebank.com";
         private static final String BASE = HOST + "/ebanking/ext";
         private static final String E4_BASE = BASE + "/e4";
@@ -68,7 +68,7 @@ public final class DanskeBankConstants {
         public static final int INSTRUMENT_TYPE_STRUCTURED_PRODUCT = 5;
     }
 
-    public class SecuritySystem {
+    public static class SecuritySystem {
         public static final String SERVICE_CODE_SC = "SC";
         public static final String SERVICE_CODE_JS = "JS";
         public static final String CHALLENGE_INVALID = "INVALID";
@@ -103,11 +103,11 @@ public final class DanskeBankConstants {
         }
     }
 
-    public class Session {
+    public static class Session {
         public static final String FRIENDLY_NAME = "Tink";
     }
 
-    public class Persist {
+    public static class Persist {
         public static final String DEVICE_SECRET = "DeviceSecret";
         public static final String DEVICE_SERIAL_NUMBER = "DeviceSerialNumber";
     }
