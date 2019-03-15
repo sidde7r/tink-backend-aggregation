@@ -25,11 +25,6 @@ public class IntegrationServiceModule extends AbstractModule {
         bind(MetricCollector.class).in(Scopes.SINGLETON);
         bind(MetricRegistry.class).in(Scopes.SINGLETON);
         bind(PrometheusExportServer.class).in(Scopes.SINGLETON);
-        bind(PrometheusConfiguration.class).toInstance(new PrometheusConfiguration() {
-            @Override
-            public int getPort() {
-                return 9130;
-            }
-        });
+        bind(PrometheusConfiguration.class).toInstance(() -> 9130);
     }
 }
