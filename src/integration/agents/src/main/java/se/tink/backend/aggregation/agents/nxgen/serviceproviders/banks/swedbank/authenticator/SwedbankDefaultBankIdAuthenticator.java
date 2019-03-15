@@ -38,7 +38,7 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
 
         LinkEntity linkEntity = initBankIdResponse.getLinks().getNextOrThrow();
         Preconditions.checkState(linkEntity.isValid(),
-                "Login failed - Cannot proceed without valid link entity - Method:[%s], Uri:[%s]",
+                "Login failed - Cannot proceed without valid link entity - Method:{}, Uri:{}",
                 linkEntity.getMethod(), linkEntity.getUri());
 
         if (initBankIdResponse.getBankIdStatus() == SwedbankBaseConstants.BankIdResponseStatus.ALREADY_IN_PROGRESS) {
@@ -62,13 +62,15 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
                 return BankIdStatus.WAITING;
             case CANCELLED:
                 return BankIdStatus.CANCELLED;
+            case INTERRUPTED:
+                return BankIdStatus.INTERRUPTED;
             case COMPLETE:
                 completeBankIdLogin(collectBankIdResponse);
                 return BankIdStatus.DONE;
             case TIMEOUT:
                 return BankIdStatus.TIMEOUT;
             default:
-                log.warn("Login failed - Not implemented case - BankIdResponseStatus:[%s] from [%s]", bankIdResponseStatus,
+                log.warn("Login failed - Not implemented case - BankIdResponseStatus:{} from {}", bankIdResponseStatus,
                         collectBankIdResponse.getStatus());
                 throw new IllegalStateException("Login failed - Cannot proceed with unknown bankId status");
             }
