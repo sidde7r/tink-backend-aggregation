@@ -7,6 +7,7 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
+import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
@@ -36,6 +37,7 @@ public abstract class AbstractAgent implements Agent, AgentEventListener {
     protected final StatusUpdater statusUpdater;
     protected final SupplementalRequester supplementalRequester;
     protected final SystemUpdater systemUpdater;
+    protected final MetricContext metricContext;
     protected final CredentialsRequest request;
     protected final AggregationLogger log;
     protected final FinancialDataCacher financialDataCacher;
@@ -48,6 +50,7 @@ public abstract class AbstractAgent implements Agent, AgentEventListener {
         this.financialDataCacher = context;
         this.supplementalRequester = context;
         this.systemUpdater = context;
+        this.metricContext = context;
         this.clientFactory = new JerseyClientFactory();
 
         this.log = new AggregationLogger(getAgentClass());

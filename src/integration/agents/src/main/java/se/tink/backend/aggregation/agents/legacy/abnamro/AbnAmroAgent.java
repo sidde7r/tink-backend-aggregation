@@ -84,12 +84,12 @@ public class AbnAmroAgent extends AbstractAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         this.abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
 
-        this.subscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, context.getMetricRegistry());
+        this.subscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, metricContext.getMetricRegistry());
 
         this.enrollmentService = new EnrollmentClient(
                 clientFactory.createBasicClient(context.getLogOutputStream()),
                 abnAmroConfiguration.getEnrollmentConfiguration(),
-                context.getMetricRegistry());
+                metricContext.getMetricRegistry());
     }
 
     private AbnAmroConfiguration getValidAbnAmroConfiguration(AgentsServiceConfiguration configuration) {

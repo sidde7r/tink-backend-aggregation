@@ -36,7 +36,7 @@ public class CoopV2Agent extends AbstractAgent implements RefreshCreditCardAccou
         new CoopApiClient(
             clientFactory.createBasicClient(context.getLogOutputStream()),
             request.getCredentials(),
-            context.getMetricRegistry());
+            metricContext.getMetricRegistry());
   }
 
   /**

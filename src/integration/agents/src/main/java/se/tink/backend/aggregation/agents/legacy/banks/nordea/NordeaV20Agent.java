@@ -215,7 +215,7 @@ public class NordeaV20Agent extends AbstractAgent implements RefreshEInvoiceExec
         this.availableAccountIds = Sets.newHashSet();
         this.transferMessageFormatter = new TransferMessageFormatter(this.catalog,
                 TRANSFER_MESSAGE_LENGTH_CONFIG, new StringNormalizerSwedish(".,?'-/:()+"));
-        this.register = context.getMetricRegistry();
+        this.register = metricContext.getMetricRegistry();
         custodyAccountCashValueMap = new HashMap<>();
     }
 
