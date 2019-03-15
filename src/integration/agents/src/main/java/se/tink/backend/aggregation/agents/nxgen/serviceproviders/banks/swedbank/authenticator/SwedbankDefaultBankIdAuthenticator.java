@@ -62,6 +62,8 @@ public class SwedbankDefaultBankIdAuthenticator implements BankIdAuthenticator<A
                 return BankIdStatus.WAITING;
             case CANCELLED:
                 return BankIdStatus.CANCELLED;
+            case INTERRUPTED:
+                return BankIdStatus.INTERRUPTED;
             case COMPLETE:
                 completeBankIdLogin(collectBankIdResponse);
                 return BankIdStatus.DONE;

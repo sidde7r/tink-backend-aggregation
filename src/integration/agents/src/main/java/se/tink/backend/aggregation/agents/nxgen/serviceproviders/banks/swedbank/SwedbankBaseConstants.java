@@ -150,6 +150,7 @@ public class SwedbankBaseConstants {
         CANCELLED("CANCELLED"),
         TIMEOUT("TIMEOUT"),
         ALREADY_IN_PROGRESS("OUTSTANDING_TRANSACTION"),
+        INTERRUPTED("CANCELLED_BY_NEW_INIT_AUTHENTICATION"),
         UNKNOWN("");
 
         private String statusCode;
