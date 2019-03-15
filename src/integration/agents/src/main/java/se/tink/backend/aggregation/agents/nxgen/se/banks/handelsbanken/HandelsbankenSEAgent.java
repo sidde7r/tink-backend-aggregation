@@ -69,7 +69,7 @@ public class HandelsbankenSEAgent
                     new HandelsbankenSECardDeviceAuthenticator(
                             bankClient,
                             handelsbankenPersistentStorage,
-                            new SupplementalInformationController(context, credentials),
+                            new SupplementalInformationController(supplementalRequester, credentials),
                             handelsbankenConfiguration,
                             autoAuthenticator),
                     autoAuthenticator),

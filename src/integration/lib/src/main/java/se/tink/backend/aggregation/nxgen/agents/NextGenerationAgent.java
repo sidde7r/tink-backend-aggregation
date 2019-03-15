@@ -113,7 +113,7 @@ public abstract class NextGenerationAgent extends AbstractAgent
         this.client = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
                 context.getLogOutputStream(), signatureKeyPair, request.getProvider());
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
-        this.supplementalInformationController = new SupplementalInformationController(context, credentials);
+        this.supplementalInformationController = new SupplementalInformationController(supplementalRequester, credentials);
         this.metricRefreshController = new MetricRefreshController(
                 context.getMetricRegistry(),
                 request.getProvider(),

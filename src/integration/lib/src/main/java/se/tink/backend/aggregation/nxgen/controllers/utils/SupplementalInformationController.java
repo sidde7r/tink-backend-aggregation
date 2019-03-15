@@ -19,18 +19,16 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SupplementalInformationController {
 
-    private final AgentContext context;
     private  final SupplementalRequester supplementalRequester;
     private final Credentials credentials;
 
-    public SupplementalInformationController(AgentContext context, Credentials credentials) {
-        this.context = context;
-        this.supplementalRequester = context;
+    public SupplementalInformationController(SupplementalRequester supplementalRequester, Credentials credentials) {
+        this.supplementalRequester = supplementalRequester;
         this.credentials = credentials;
     }
 
     public Optional<Map<String, String>> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
-        Optional<String> supplementalInformation = context.waitForSupplementalInformation(key, waitFor, unit);
+        Optional<String> supplementalInformation = supplementalRequester.waitForSupplementalInformation(key, waitFor, unit);
         if (!supplementalInformation.isPresent()) {
             return Optional.empty();
         }

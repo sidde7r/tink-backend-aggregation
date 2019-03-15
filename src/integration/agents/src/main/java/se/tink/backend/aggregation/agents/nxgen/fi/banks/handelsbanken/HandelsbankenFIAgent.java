@@ -48,7 +48,7 @@ public class HandelsbankenFIAgent
                 constructAutoAuthenticationController(
                         new HandelsbankenFICardDeviceAuthenticator(bankClient,
                                 handelsbankenPersistentStorage,
-                                new SupplementalInformationController(this.context,
+                                new SupplementalInformationController(this.supplementalRequester,
                                         this.credentials),
                                 handelsbankenConfiguration,
                                 new HandelsbankenAutoAuthenticator(bankClient,
