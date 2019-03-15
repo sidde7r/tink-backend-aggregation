@@ -32,7 +32,18 @@ public abstract class BankiaConstants {
 
         public static final String LOANS_OVERVIEW =
                 URL_BASE_M + "/es/prestamos/mis-prestamos";
+
+        public static final String LOAN_DETAILS_POSITION =
+                URL_BASE_M + "/es/prestamos/mis-prestamos/{" + Parameter.ALIAS + "}/posicion";
+
+        public static final String LOAN_DETAILS_AVAL =
+                URL_BASE_M + "/es/prestamos/mis-prestamos/{" + Parameter.ALIAS + "}/datosAval";
     }
+
+    public static class Parameter {
+        public static final String ALIAS = "ALIAS";
+    }
+
 
     public static class Query {
         public static final String CM_FORCED_DEVICE_TYPE = "cm-forced-device-type";
