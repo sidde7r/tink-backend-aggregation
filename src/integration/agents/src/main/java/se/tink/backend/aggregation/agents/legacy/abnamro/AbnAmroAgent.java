@@ -268,7 +268,7 @@ public class AbnAmroAgent extends AbstractAgent
                     a.setExcluded(true);
                     a.setClosed(true);
                     financialDataCacher.cacheAccount(a);
-                    context.sendAccountToUpdateService(a.getBankId());
+                    systemUpdater.sendAccountToUpdateService(a.getBankId());
                 });
     }
 
@@ -311,7 +311,7 @@ public class AbnAmroAgent extends AbstractAgent
             List<Account> accounts = fetchCreditCardAccounts().getAccounts();
             for (Account account : accounts) {
                 account.setBalance(getCreditCardBalance(account));
-                context.sendAccountToUpdateService(account.getBankId());
+                systemUpdater.sendAccountToUpdateService(account.getBankId());
                 Long accountNumber = getCreditCardContractNumber(account);
                 List<Transaction> transactions = getCreditCardTransactions(accountNumber);
                 transactionsMap.put(account, transactions);

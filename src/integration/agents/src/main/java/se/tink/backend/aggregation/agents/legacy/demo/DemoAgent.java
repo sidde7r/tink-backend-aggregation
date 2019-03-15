@@ -282,7 +282,7 @@ public class DemoAgent extends AbstractAgent
             statusUpdater.updateStatus(CredentialsStatus.UPDATING);
             financialDataCacher.updateTransactions(
                     findAccountForIdentifier(transfer.getSource()), transactions);
-            context.processTransactions();
+            systemUpdater.processTransactions();
         }
     }
 
