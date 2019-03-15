@@ -8,9 +8,7 @@ public class BalanceEntity {
     private String currency;
     private Double value;
 
-    public BalanceEntity() {
-
-    }
+    public BalanceEntity() {}
 
     public Amount getAmount() {
         return new Amount(currency, value);
