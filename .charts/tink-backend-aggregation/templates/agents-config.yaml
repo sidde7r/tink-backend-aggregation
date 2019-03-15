@@ -84,9 +84,8 @@ data:
 
         {{- if $agentsConfig.demofakebank }}
         demofakebank:
-          baseUrl: "demo-financial-institute.internal.staging.aggregation.tink.network"
+          baseUrl: "{{ $agentsConfig.demofakebank.baseUrl }}"
         {{- end }}
-
       abnAmro:
 
       {{- if $agentsConfig.abnAmro }}
