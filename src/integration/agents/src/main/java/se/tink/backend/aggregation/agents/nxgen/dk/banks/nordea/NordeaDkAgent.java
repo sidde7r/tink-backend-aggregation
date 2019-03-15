@@ -47,7 +47,7 @@ public class NordeaDkAgent  extends NordeaV20Agent {
 
         return new TypedAuthenticationController(
                 new PasswordAuthenticationController(
-                        new NemidPasswordAuthenticationController(nemIdAuthenticator, 2)
+                        new NemidPasswordAuthenticationController(nemIdAuthenticator)
                 )
         );
     }

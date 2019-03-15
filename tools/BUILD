@@ -1,11 +1,5 @@
 filegroup(
     name = "phantomjs_linux",
-    srcs = ["phantomjs-tink-linux-x86_64-1.9.8"],
-    visibility = ["//visibility:public"],
-)
-
-filegroup(
-    name = "phantomjs_v2_linux",
     srcs = ["phantomjs-tink-linux-x86_64-2.1.1"],
     visibility = ["//visibility:public"],
 )
