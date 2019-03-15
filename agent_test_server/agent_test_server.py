@@ -5,7 +5,6 @@ import sys
 import argparse
 import os
 from flask import Flask, jsonify, request, abort, Response, redirect
-from functools import wraps
 import webbrowser
 
 from memqueue import MemoryMessageQueue
