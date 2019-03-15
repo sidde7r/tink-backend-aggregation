@@ -76,7 +76,7 @@ def save_credential(provider, credentialId):
     with open(filename, "wb") as f:
         f.write(request.get_data())
 
-    return ("", 204)
+    return "", 204
 
 
 @app.route("/api/v1/credential/<provider>/<credentialId>", methods=("GET",))
@@ -103,7 +103,7 @@ def request_supplemental(key):
     # when the agent asks for the supplemental information.
     queue.put(key, answers)
 
-    return ("", 204)
+    return "", 204
 
 
 @app.route("/api/v1/supplemental/<key>/<timeout_seconds>", methods=("GET",))
@@ -125,11 +125,11 @@ def thirdparty_open():
 
     url = get_ios_url(payload)
     if not url:
-        return ("invalid payload", 500)
+        return "invalid payload", 500
 
     webbrowser.open_new_tab(url)
 
-    return ("", 204)
+    return "", 204
 
 
 # This endpoint will be accessed/opened by the web browser as a result
