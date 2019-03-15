@@ -16,7 +16,6 @@ public final class DanskeBankConstants {
 
         // == START Authentication ==
         public static final String BANKID_INIT_LOGON = BASE + "/swedinitlogon";
-        public static final String BANKID_POLL = BASE + "/swedpoll";
 
         public static final String DEVICE_BIND_CHECK = BASE + "/devicebind/check";
         public static final String DEVICE_BIND_BIND = BASE + "/devicebind/bind";
@@ -24,6 +23,10 @@ public final class DanskeBankConstants {
 
         public static final String FINALIZE_AUTHENTICATION = BASE + "/logon";
         // == END Authentication ==
+
+        // == START BankID polling ==
+        public static final String BANKID_POLL = BASE + "/swedpoll";
+        // == END Polling ==
 
         // == START Accounts ==
         public static final String LIST_ACCOUNTS = E4_BASE + "/account/list";
