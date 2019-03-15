@@ -121,9 +121,9 @@ def thirdparty_open():
     if not request.json:
         return None
 
-    payload = request.get_json()
+    json_payload = request.get_json()
 
-    url = get_ios_url(payload)
+    url = get_ios_url(json_payload)
     if not url:
         return "invalid payload", 500
 
