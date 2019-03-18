@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan;
 import com.google.common.base.Strings;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.BankiaApiClient;
@@ -30,15 +31,22 @@ public class BankiaLoanFetcher implements AccountFetcher<LoanAccount> {
 
     private void fetchAndLogLoanData() {
         try {
-            String response = apiClient.getLoanOverview();
-            if (Strings.isNullOrEmpty(response)) {
+            LoanOverviewResponse loanOverview = apiClient.getLoanOverview();
+            if (loanOverview == null) {
                 return;
             }
-            boolean shouldBeLogged = SerializationUtils.deserializeFromString(response, LoanOverviewResponse.class)
-                    .hasProducts();
-            if (shouldBeLogged) {
-                LOG.info(String.format("%s - %s", BankiaConstants.Logging.LOAN, response));
+
+            if (!loanOverview.isResultOk()) {
+                return;
             }
+
+            Optional.ofNullable(loanOverview.getProducts()).orElse(Collections.emptyList()).stream()
+                    .forEach(loan -> {
+                        String loanData = apiClient.getLoanDetailsPosition(loan);
+                        LOG.info(BankiaConstants.Logging.LOAN.toString() + " - " + loanData);
+                        loanData = apiClient.getLoanDetailsAval(loan);
+                        LOG.info(BankiaConstants.Logging.LOAN.toString() + " - " + loanData);
+                    });
         } catch (Exception e) {
             LOG.info("Failed to fetch loan data " + e.getMessage());
         }

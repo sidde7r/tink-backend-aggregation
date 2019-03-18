@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bankia;
 
+import java.util.Date;
+import java.util.List;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.authenticator.rpc.RsaKeyResponse;
@@ -12,6 +15,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investme
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.entities.ValueAccountIdentifierEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.rpc.PositionWalletRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.investment.rpc.PositionWalletResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.entities.LoanOverviewEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.rpc.LoanOverviewResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.entities.AccountIdentifierEntity;
@@ -20,12 +25,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transact
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.transactional.rpc.AcountTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-
-import javax.ws.rs.core.MediaType;
-import java.util.Date;
-import java.util.List;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class BankiaApiClient {
 
@@ -199,8 +202,30 @@ public class BankiaApiClient {
         }
     }
 
-    public String getLoanOverview() {
-        return client.request(BankiaConstants.Url.LOANS_OVERVIEW)
+    public LoanOverviewResponse getLoanOverview() {
+        String response = client.request(BankiaConstants.Url.LOANS_OVERVIEW)
+                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(String.class);
+
+        return SerializationUtils.deserializeFromString(response, LoanOverviewResponse.class);
+    }
+
+    public String getLoanDetailsPosition(LoanOverviewEntity loan) {
+        URL url = new URL(BankiaConstants.Url.LOAN_DETAILS_POSITION)
+                .parameter(BankiaConstants.Parameter.ALIAS, loan.getAlias());
+        return client.request(url)
+                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
+                .accept(MediaType.APPLICATION_JSON)
+                .get(String.class);
+    }
+
+    public String getLoanDetailsAval(LoanOverviewEntity loan) {
+        URL url = new URL(BankiaConstants.Url.LOAN_DETAILS_AVAL)
+                .parameter(BankiaConstants.Parameter.ALIAS, loan.getAlias());
+        return client.request(url)
                 .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
                 .accept(MediaType.APPLICATION_JSON)
