@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.cred
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
@@ -37,10 +38,15 @@ public class ImaginBankCreditCardFetcher
         LocalDate fromDate = ImaginBankConstants.CreditCard.START_DATE;
         LocalDate toDate = LocalDate.now();
 
-        CardTransactionsResponse cardTransactionsResponse = apiClient
-                .fetchCardTransactions(account.getApiIdentifier(), fromDate,
-                        toDate, page > 0);
+        try {
+            CardTransactionsResponse cardTransactionsResponse = apiClient
+                    .fetchCardTransactions(account.getApiIdentifier(), fromDate,
+                            toDate, page > 0);
 
-        return cardTransactionsResponse.toPaginatorResponse();
+            return cardTransactionsResponse.toPaginatorResponse();
+        } catch (Exception e) {
+            LOGGER.warn("Failed to fetch credit card transactions ", e);
+            return PaginatorResponseImpl.createEmpty(false);
+        }
     }
 }
