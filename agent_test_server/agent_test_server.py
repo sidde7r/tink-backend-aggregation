@@ -1,6 +1,5 @@
-from __future__ import print_function
-from builtins import input
-from builtins import object
+from __future__ import print_function, unicode_literals
+from six.moves import input
 import sys
 import argparse
 import os
@@ -24,7 +23,7 @@ class SupplementalStdin(object):
             key = field.get("name")
             desc = self.get_description(field)
             if field.get("value"):
-                value = field.get("value").encode("utf-8")
+                value = field.get("value")
                 print("%s: %s" % (desc, value))
             else:
                 value = input("%s: " % desc)
@@ -39,9 +38,9 @@ class SupplementalStdin(object):
     def get_description(field):
         desc = ''
         if field.get("description"):
-            desc += field.get("description").encode("utf-8")
+            desc += field.get("description")
         if field.get("helpText"):
-            desc += " (%s)" % field.get("helpText").encode("utf-8")
+            desc += " (%s)" % field.get("helpText")
 
         return desc
 
