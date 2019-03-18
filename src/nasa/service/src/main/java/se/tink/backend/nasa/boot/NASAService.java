@@ -71,6 +71,16 @@ class NASAService {
         // Start the Prometheus Exporter Server
         DefaultExports.initialize();
 
+        Spark.secure(
+                config.getKeyStorePath(),
+                config.getKeyStorePassword(),
+                config.getCertAlias(),
+                config.getTrustStorePath(),
+                config.getTrustStorePassword(),
+                config.isValidateCerts());
+
+
+
         Spark.get("/ping", (req, res) -> "pong");
     }
 
@@ -79,9 +89,6 @@ class NASAService {
         TimeUnit unit = TimeUnit.SECONDS;
 
         Stopwatch sw = Stopwatch.createStarted();
-
-        // stop prometheus
-
 
         final CountDownLatch shutdownLatch = new CountDownLatch(2); // same numbers as components to close
         httpServer.stop(shutdownLatch, duration, unit);

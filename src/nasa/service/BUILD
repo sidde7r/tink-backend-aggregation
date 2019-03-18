@@ -19,6 +19,7 @@ java_binary(
     ]),
     data = [
         "//etc/nasa:development-configuration",
+        "//data:security",
     ],
     deps = [
         "//src/libraries:simple-http-server",

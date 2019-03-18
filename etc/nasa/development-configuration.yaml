@@ -1,1 +1,7 @@
 port: 8443
+keyStorePath: data/security/developer.keystore
+keyStorePassword: changeme
+certAlias: developer.internal.tink.se
+trustStorePath: data/security/TinkCA.truststore
+trustStorePassword: changeme
+validateCerts: false
