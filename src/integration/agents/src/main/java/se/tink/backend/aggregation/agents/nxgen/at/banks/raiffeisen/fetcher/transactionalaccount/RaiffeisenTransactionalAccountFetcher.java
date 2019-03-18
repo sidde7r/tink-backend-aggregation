@@ -10,9 +10,13 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenWe
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount.rpc.AccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
 
 public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
@@ -50,13 +54,26 @@ public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<Tra
                 logger.warn("Unrecognized account type found: \"{}\".", ae.getAccountTypeCode());
                 continue;
             }
-            TransactionalAccount ta = TransactionalAccount
-                    .builder(at.get(), ae.getIban(),
-                            new Amount(ae.getBalance().getCurrency(), ae.getBalance().getAmount()))
-                    .setName(ae.getIban())
-                    .setHolderName(new HolderName(ae.getUsername()))
-                    .setAccountNumber(ae.getIban())
-                    .build();
+            TransactionalAccount ta = null;
+            if (at.get().name().equals(AccountTypes.CHECKING.toString())) {
+                ta = CheckingAccount.builder()
+                        .setUniqueIdentifier(ae.getIban())
+                        .setAccountNumber(ae.getIban())
+                        .setBalance(ae.getBalance())
+                        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN,  ae.getIban()))
+                        .addHolderName(ae.getUsername())
+                        .setProductName(ae.getIban())
+                        .build();
+            } else {
+                ta = SavingsAccount.builder()
+                        .setUniqueIdentifier(ae.getIban())
+                        .setAccountNumber(ae.getIban())
+                        .setBalance(ae.getBalance())
+                        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN,  ae.getIban()))
+                        .addHolderName(ae.getUsername())
+                        .setProductName(ae.getIban())
+                        .build();
+            }
             res.add(ta);
         }
         return res;
