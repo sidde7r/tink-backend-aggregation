@@ -79,7 +79,6 @@ pkg_tar(
         ":aggregation_system_tar",
         ":libkbc_wbaes_bin_tar",
         ":phantomjs_bin_tar",
-        ":phantomjs_v2_bin_tar",
     ],
 )
 
