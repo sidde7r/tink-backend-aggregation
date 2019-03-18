@@ -71,6 +71,8 @@ class NASAService {
         // Start the Prometheus Exporter Server
         DefaultExports.initialize();
 
+        Spark.port(config.getPort());
+
         Spark.secure(
                 config.getKeyStorePath(),
                 config.getKeyStorePassword(),
