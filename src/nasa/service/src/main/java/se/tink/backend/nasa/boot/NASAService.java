@@ -71,6 +71,7 @@ class NASAService {
         // Start the Prometheus Exporter Server
         DefaultExports.initialize();
 
+        // Setup spark HTTPS server
         Spark.port(config.getPort());
 
         Spark.secure(
@@ -91,6 +92,11 @@ class NASAService {
         Stopwatch sw = Stopwatch.createStarted();
 
         final CountDownLatch shutdownLatch = new CountDownLatch(2); // same numbers as components to close
+
+        // Stop Spark HTTPS server
+        Spark.stop();
+
+        // Stop simple http server for health checks
         httpServer.stop(shutdownLatch, duration, unit);
 
         shutdownLatch.await(duration + 1, unit);
