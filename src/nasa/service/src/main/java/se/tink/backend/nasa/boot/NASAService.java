@@ -79,8 +79,6 @@ class NASAService {
                 config.getTrustStorePassword(),
                 config.isValidateCerts());
 
-
-
         Spark.get("/ping", (req, res) -> "pong");
     }
 
