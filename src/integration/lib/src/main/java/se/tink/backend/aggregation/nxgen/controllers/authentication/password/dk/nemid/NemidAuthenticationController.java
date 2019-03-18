@@ -43,30 +43,22 @@ public abstract class NemidAuthenticationController {
     private static final By IFRAME = By.tagName("iframe");
 
     private static File phantomJsFile;
-    private static File phantomJsFile2;
 
     static {
         boolean mac = System.getProperty("os.name").toLowerCase().contains("mac");
 
         if (mac) {
             phantomJsFile = new File("tools/phantomjs-tink-mac64-2.1.1");
-            phantomJsFile2 = new File("tools/phantomjs-tink-mac64-2.1.1");
         } else {
-            phantomJsFile = new File("tools/phantomjs-tink-linux-x86_64-1.9.8");
-            phantomJsFile2 = new File("tools/phantomjs-tink-linux-x86_64-2.1.1");
+            phantomJsFile = new File("tools/phantomjs-tink-linux-x86_64-2.1.1");
         }
     }
 
     private final NemIdAuthenticator authenticator;
-    private final int version;
     private WebDriver driver;
 
     public NemidAuthenticationController(NemIdAuthenticator authenticator) {
-        this(authenticator, 1);
-    }
-    public NemidAuthenticationController(NemIdAuthenticator authenticator, int version) {
         this.authenticator = authenticator;
-        this.version = version;
     }
 
     abstract void clickLogin();
@@ -177,13 +169,8 @@ public abstract class NemidAuthenticationController {
 
     private WebDriver constructWebDriver() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        if (version == 2) {
-            capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-                    phantomJsFile2.getAbsolutePath());
-        } else {
-            capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-                    phantomJsFile.getAbsolutePath());
-        }
+        capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
+                phantomJsFile.getAbsolutePath());
 
         capabilities.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
         capabilities.setCapability(CapabilityType.SUPPORTS_ALERTS, false);

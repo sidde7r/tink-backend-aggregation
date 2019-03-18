@@ -44,14 +44,6 @@ pkg_tar(
 )
 
 pkg_tar(
-    name = "phantomjs_v2_bin_tar",
-    srcs = ["//tools:phantomjs_v2_linux"],
-    mode = "0555",
-    package_dir = "/usr/share/tink-backend-aggregation/tools",
-    visibility = ["//docker:__pkg__"],
-)
-
-pkg_tar(
     name = "libkbc_wbaes_bin_tar",
     srcs = ["//tools:libkbc_wbaes_linux"],
     mode = "0555",
@@ -87,7 +79,6 @@ pkg_tar(
         ":aggregation_system_tar",
         ":libkbc_wbaes_bin_tar",
         ":phantomjs_bin_tar",
-        ":phantomjs_v2_bin_tar",
     ],
 )
 

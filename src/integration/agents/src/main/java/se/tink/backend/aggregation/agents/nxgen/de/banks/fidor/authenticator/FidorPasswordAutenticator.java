@@ -37,7 +37,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
         if (mac) {
             phantomJsFile = new File("tools/phantomjs-tink-mac64-2.1.1");
         } else {
-            phantomJsFile = new File("tools/phantomjs-tink-linux-x86_64-1.9.8");
+            phantomJsFile = new File("tools/phantomjs-tink-linux-x86_64-2.1.1");
         }
     }
 

@@ -9,7 +9,6 @@ java_library(
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
         "//tools:phantomjs_linux",
-        "//tools:phantomjs_v2_linux",
         "//tools:phantomjs_mac",
     ],
     resources = glob(["src/main/resources/**"]),
@@ -105,7 +104,6 @@ junit_test(
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",
         "//tools:phantomjs_linux",
-        "//tools:phantomjs_v2_linux",
         "//tools:phantomjs_mac",
     ],
     runtime_deps = [
