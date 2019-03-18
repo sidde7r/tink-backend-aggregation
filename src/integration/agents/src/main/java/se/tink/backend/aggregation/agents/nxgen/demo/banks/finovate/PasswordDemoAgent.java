@@ -47,7 +47,7 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
     protected Authenticator constructAuthenticator() {
         return new AutoAuthenticationController(
                 request,
-                context,
+                systemUpdater,
                 new PasswordAuthenticator(),
                 new PasswordAutoAuthenticator()
         );

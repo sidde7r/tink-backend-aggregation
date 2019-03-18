@@ -52,7 +52,7 @@ public class RevolutAgent extends NextGenerationAgent {
 
         return new AutoAuthenticationController(
                 request,
-                context,
+                systemUpdater,
                 smsOtpAuthenticationController,
                 new RevolutAutoAuthenticator(apiClient));
     }

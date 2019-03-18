@@ -88,7 +88,7 @@ public class StarlingAgent extends NextGenerationAgent {
                         oauthController, supplementalInformationHelper);
 
         return new AutoAuthenticationController(
-                request, context, thirdPartyController, oauthController);
+                request, systemUpdater, thirdPartyController, oauthController);
     }
 
     @Override

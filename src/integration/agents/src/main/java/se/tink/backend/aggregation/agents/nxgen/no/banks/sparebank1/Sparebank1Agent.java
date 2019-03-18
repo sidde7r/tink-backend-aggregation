@@ -66,8 +66,8 @@ public class Sparebank1Agent extends NextGenerationAgent {
         Sparebank1Authenticator authenticator = new Sparebank1Authenticator(apiClient, credentials,
                 persistentStorage, restRootResponse);
 
-        return new AutoAuthenticationController(request, context,
-                new BankIdAuthenticationControllerNO(context, authenticator), authenticator);
+        return new AutoAuthenticationController(request, systemUpdater,
+                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator), authenticator);
     }
 
     @Override

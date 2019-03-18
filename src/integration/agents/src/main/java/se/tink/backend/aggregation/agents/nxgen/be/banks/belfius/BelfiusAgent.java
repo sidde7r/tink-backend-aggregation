@@ -55,7 +55,7 @@ public class BelfiusAgent extends NextGenerationAgent {
 
         return new AutoAuthenticationController(
                 request,
-                context,
+                systemUpdater,
                 new OneTimeActivationCodeAuthenticationController(authenticator),
                 authenticator);
     }

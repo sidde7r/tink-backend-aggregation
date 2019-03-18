@@ -59,7 +59,7 @@ public class CSNAgent extends AbstractAgent implements DeprecatedRefreshExecutor
         super(request, context);
 
         this.credentials = request.getCredentials();
-        this.client = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
+        this.client = new TinkHttpClient(context.getAggregatorInfo(), metricContext.getMetricRegistry(),
                 context.getLogOutputStream(), signatureKeyPair, request.getProvider());
         //When Java trusted certificates are updated this is probably no longer necessary:
         this.client.loadTrustMaterial(loadCustomTrustStore(), null);

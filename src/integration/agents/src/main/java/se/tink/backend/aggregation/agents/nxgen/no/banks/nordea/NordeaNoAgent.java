@@ -42,7 +42,7 @@ public class NordeaNoAgent extends NordeaV17Agent {
     protected Authenticator constructAuthenticator() {
         NordeaNoAuthenticator authenticator = new NordeaNoAuthenticator(nordeaClient);
         return new TypedAuthenticationController(
-                new BankIdAuthenticationControllerNO(context, authenticator),
+                new BankIdAuthenticationControllerNO(supplementalRequester, authenticator),
                 new PasswordAuthenticationController(authenticator));
     }
 

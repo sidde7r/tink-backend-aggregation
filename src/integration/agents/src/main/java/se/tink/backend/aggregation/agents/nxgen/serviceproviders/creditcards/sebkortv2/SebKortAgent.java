@@ -41,7 +41,7 @@ public class SebKortAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context, new SebKortAuthenticator(apiClient, sessionStorage, config));
+                supplementalRequester, new SebKortAuthenticator(apiClient, sessionStorage, config));
     }
 
     @Override

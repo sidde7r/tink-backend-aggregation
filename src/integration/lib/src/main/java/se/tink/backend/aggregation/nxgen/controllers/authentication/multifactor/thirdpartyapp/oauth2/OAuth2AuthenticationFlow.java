@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.oauth2;
 
-import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppAuthenticationController;
@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OAuth2AuthenticationFlow {
-    public static Authenticator create(CredentialsRequest request, AgentContext context,
+    public static Authenticator create(CredentialsRequest request, SystemUpdater systemUpdater,
             PersistentStorage persistentStorage, SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator) {
 
@@ -21,7 +21,7 @@ public class OAuth2AuthenticationFlow {
 
         return new AutoAuthenticationController(
                 request,
-                context,
+                systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
                         oAuth2AuthenticationController,
                         supplementalInformationHelper

@@ -50,7 +50,7 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
     protected Authenticator constructAuthenticator() {
 
         return new BankIdAuthenticationController<>(
-                context,
+                supplementalRequester,
                 new CrossKeyBankIdAuthenticator(apiClient, agentConfiguration, sessionStorage, credentials));
     }
 

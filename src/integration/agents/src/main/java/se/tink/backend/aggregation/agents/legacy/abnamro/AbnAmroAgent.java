@@ -84,12 +84,12 @@ public class AbnAmroAgent extends AbstractAgent
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         this.abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
 
-        this.subscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, context.getMetricRegistry());
+        this.subscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, metricContext.getMetricRegistry());
 
         this.enrollmentService = new EnrollmentClient(
                 clientFactory.createBasicClient(context.getLogOutputStream()),
                 abnAmroConfiguration.getEnrollmentConfiguration(),
-                context.getMetricRegistry());
+                metricContext.getMetricRegistry());
     }
 
     private AbnAmroConfiguration getValidAbnAmroConfiguration(AgentsServiceConfiguration configuration) {
@@ -268,7 +268,7 @@ public class AbnAmroAgent extends AbstractAgent
                     a.setExcluded(true);
                     a.setClosed(true);
                     financialDataCacher.cacheAccount(a);
-                    context.sendAccountToUpdateService(a.getBankId());
+                    systemUpdater.sendAccountToUpdateService(a.getBankId());
                 });
     }
 
@@ -311,7 +311,7 @@ public class AbnAmroAgent extends AbstractAgent
             List<Account> accounts = fetchCreditCardAccounts().getAccounts();
             for (Account account : accounts) {
                 account.setBalance(getCreditCardBalance(account));
-                context.sendAccountToUpdateService(account.getBankId());
+                systemUpdater.sendAccountToUpdateService(account.getBankId());
                 Long accountNumber = getCreditCardContractNumber(account);
                 List<Transaction> transactions = getCreditCardTransactions(accountNumber);
                 transactionsMap.put(account, transactions);

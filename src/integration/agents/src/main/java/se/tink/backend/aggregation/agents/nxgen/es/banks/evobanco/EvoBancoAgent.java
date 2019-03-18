@@ -54,7 +54,7 @@ public class EvoBancoAgent extends NextGenerationAgent {
 
         return new AutoAuthenticationController(
                 request,
-                context,
+                systemUpdater,
                 smsOtpAuthenticationController,
                 new EvoBancoAutoAuthenticator(
                         bankClient, credentials, persistentStorage, sessionStorage));

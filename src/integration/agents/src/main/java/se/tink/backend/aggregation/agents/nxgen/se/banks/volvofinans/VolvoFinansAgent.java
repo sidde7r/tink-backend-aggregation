@@ -39,7 +39,7 @@ public class VolvoFinansAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
         return new BankIdAuthenticationController<>(
-                context, new VolvoFinansBankIdAutenticator(apiClient, sessionStorage));
+                supplementalRequester, new VolvoFinansBankIdAutenticator(apiClient, sessionStorage));
     }
 
     @Override

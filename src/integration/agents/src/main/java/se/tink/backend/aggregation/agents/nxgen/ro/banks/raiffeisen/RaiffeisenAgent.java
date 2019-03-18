@@ -54,7 +54,7 @@ public class RaiffeisenAgent extends NextGenerationAgent {
                         persistentStorage, supplementalInformationHelper, authenticator);
         return new AutoAuthenticationController(
                 request,
-                context,
+                systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
                         oAuth2AuthenticationController, supplementalInformationHelper),
                 oAuth2AuthenticationController);

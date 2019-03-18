@@ -29,7 +29,7 @@ public class SdcSeAgent extends SdcAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new BankIdAuthenticationController<>(context,
+        return new BankIdAuthenticationController<>(supplementalRequester,
                 new SdcBankIdAuthenticator(bankClient, sdcSessionStorage, credentials), true);
     }
 

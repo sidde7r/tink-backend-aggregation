@@ -32,7 +32,7 @@ public class DanskeBankFIAgent extends DanskeBankAgent {
         DanskeBankChallengeAuthenticator danskeBankChallengeAuthenticator = new DanskeBankChallengeAuthenticator(
                 (DanskeBankFIApiClient) apiClient, persistentStorage, credentials, deviceId, configuration);
 
-        return new AutoAuthenticationController(request, context,
+        return new AutoAuthenticationController(request, systemUpdater,
                 new KeyCardAuthenticationController(
                         catalog, supplementalInformationHelper, danskeBankChallengeAuthenticator),
                 danskeBankChallengeAuthenticator);

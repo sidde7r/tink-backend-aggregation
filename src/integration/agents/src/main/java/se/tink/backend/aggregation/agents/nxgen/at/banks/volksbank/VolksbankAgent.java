@@ -42,7 +42,7 @@ public class VolksbankAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(request, context, new VolksbankPasswordAuthenticator(apiClient),
+        return new AutoAuthenticationController(request, systemUpdater, new VolksbankPasswordAuthenticator(apiClient),
                 new VolksbankAutoAuthenticator(apiClient, persistentStorage, credentials));
     }
 

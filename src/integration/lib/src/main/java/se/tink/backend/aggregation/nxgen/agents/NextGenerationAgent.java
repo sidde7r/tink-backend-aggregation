@@ -113,12 +113,12 @@ public abstract class NextGenerationAgent extends AbstractAgent
                 // TODO: Remove when provider uses MarketCode
                 MarketCode.valueOf(request.getProvider().getMarket()),
                 request.getProvider().getCurrency(), request.getUser());
-        this.client = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
+        this.client = new TinkHttpClient(context.getAggregatorInfo(), metricContext.getMetricRegistry(),
                 context.getLogOutputStream(), signatureKeyPair, request.getProvider());
         this.transactionPaginationHelper = new TransactionPaginationHelper(request);
-        this.supplementalInformationController = new SupplementalInformationController(context, credentials);
+        this.supplementalInformationController = new SupplementalInformationController(supplementalRequester, credentials);
         this.metricRefreshController = new MetricRefreshController(
-                context.getMetricRegistry(),
+                metricContext.getMetricRegistry(),
                 request.getProvider(),
                 credentials,
                 request.isManual(),
