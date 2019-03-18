@@ -1,13 +1,14 @@
 package se.tink.backend.aggregation.nxgen.framework.validation;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 // TODO Move to one of the test jars
 public final class ValidatorTest {
@@ -24,7 +25,7 @@ public final class ValidatorTest {
         AisValidator.builder()
                 .setExecutor(executor)
                 .build()
-                .validate(new AisData(Collections.emptySet(), Collections.emptySet()));
+                .validate(new AisData(Collections.emptySet(), Collections.emptySet(), null));
 
         Assert.assertTrue(executor.getResult().getSubResults().isEmpty());
     }
@@ -35,7 +36,7 @@ public final class ValidatorTest {
                 .setExecutor(executor)
                 .ruleAccount("Hoy", a -> a.getAccountNumber() != null, a -> "failmsg")
                 .build()
-                .validate(new AisData(Collections.emptySet(), Collections.emptySet()));
+                .validate(new AisData(Collections.emptySet(), Collections.emptySet(), null));
 
         Assert.assertEquals(executor.getResult().getSubResults().size(), 1);
         Assert.assertEquals(executor.getResult().getSubResults().keySet().iterator().next(), "Hoy");
@@ -105,7 +106,7 @@ public final class ValidatorTest {
         account.setBalance(999999999.0);
         account.setHolderName("Test Testsson");
 
-        AisData aisData = new AisData(Collections.singleton(account), Collections.emptySet());
+        AisData aisData = new AisData(Collections.singleton(account), Collections.emptySet(), null);
 
         // Act
         validator.validate(aisData);
