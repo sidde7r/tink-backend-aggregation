@@ -75,7 +75,7 @@ agentsServiceConfiguration:
   integrations:
     sbab:
       signBaseUrl: https://secure.sbab.se
-    demofakebank:
+    demoFakeBank:
       baseUrl: http://localhost:9271
   creditsafe:
     username: TINKTESTIN

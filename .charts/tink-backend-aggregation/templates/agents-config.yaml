@@ -83,8 +83,8 @@ data:
         {{- end }}
 
         {{- if $agentsConfig.demoFakeBank }}
-        demofakebank:
-          baseUrl: "{{ $agentsConfig.demofakebank.baseUrl }}"
+        demoFakeBank:
+          baseUrl: "{{ $agentsConfig.demoFakeBank.baseUrl }}"
         {{- end }}
 
       abnAmro:
