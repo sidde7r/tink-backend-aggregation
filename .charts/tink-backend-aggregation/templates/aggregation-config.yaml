@@ -81,12 +81,6 @@ data:
         disableRequestCompression: false
         aggregatorIdentifier: "Tink (+https://www.tink.se/; noc@tink.se)"
 
-      clusterCryptoConfiguration:
-        cryptoId:
-          clusterId: local-development
-          keyId: 1
-        base64EncodedKey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
-
       clusterConfiguration:
         clusterId: local-development
         host: http://192.168.99.1:5000
