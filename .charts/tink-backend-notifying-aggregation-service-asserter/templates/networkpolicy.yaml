@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nasa-networkpolicy
+  namespace: notifying-aggregation-service-asserter
+spec:
+  podSelector:
+    matchLabels:
+      app: nasa-service
+
+  egress:
+  - {}
+
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 8443
+    from:
+    - podSelector:
+        matchLabels:
+          app: aggregation
+    - namespaceSelector:
+        matchLabels:
+          service: aggregation
+  - ports:
+    - protocol: TCP
+      port: 9130
+    from:
+    - podSelector:
+        matchLabels:
+          app: prometheus
+    - namespaceSelector:
+        matchLabels:
+          service: monitoring-prometheus
+
+  policyTypes:
+  - Egress
+  - Ingress

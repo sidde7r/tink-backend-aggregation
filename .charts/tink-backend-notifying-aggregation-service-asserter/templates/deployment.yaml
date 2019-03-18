@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notifying-aggregation-service-asserter
+  namespace: notifying-aggregation-service-asserter
+  labels:
+    app: nasa-service
+spec:
+  replicas: {{ default "2" .Values.replicas }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: nasa-service
+  template:
+    metadata:
+      labels:
+        app: nasa-service
+      annotations:
+        # Force rollout of new pods if the config has changed
+        checksum/config: {{ include (print $.Template.BasePath "/config.yaml") . | sha256sum }}
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+
+      containers:
+      - name: tink-backend-nasa-service
+        image: gcr.io/tink-containers/tink-backend-notifying-aggregation-service-asserter:{{ .Values.Version | default "latest" }}
+        imagePullPolicy: Never
+        securityContext:
+          readOnlyRootFilesystem: true
+
+        command:
+        - "java"
+        - "-jar"
+        - "-Xmx{{ default "256m" .Values.heapSize }}"
+        - "-XX:-OmitStackTraceInFastThrow"
+        - "-Dnetworkaddress.cache.ttl=60"
+        - "-XX:+ExitOnOutOfMemoryError"
+        - "/usr/share/tink-backend-notifying-aggregation-service-asserter/service.jar"
+        - "/config/config.yaml"
+
+        resources:
+          requests:
+            memory: {{ default "300Mi" .Values.podMemoryRequest }}
+            cpu: {{ default "100m" .Values.podCpuRequest }}
+          limits:
+            memory: {{ default "500Mi" .Values.podMemoryLimit }}
+            cpu: {{ default "200m" .Values.podCpuLimit }}
+
+        ports:
+        - name: https-api
+          containerPort: 8443
+        - name: metrics
+          containerPort: 9130
+
+        # The pod will be killed if the livenessProbe is failing
+        livenessProbe:
+          httpGet:
+            path: /alive
+            port: 8080
+          periodSeconds: 10
+          failureThreshold: 10
+          timeoutSeconds: 1
+          initialDelaySeconds: 300
+
+        # The pod will only receive traffic if the readinessProbe is succeeding,
+        # it's also used when rolling out a new version, to know if the new version
+        # is working or not
+        readinessProbe:
+          httpGet:
+            path: /healthy
+            port: 8080
+          periodSeconds: 3
+          failureThreshold: 3
+          timeoutSeconds: 1
+          initialDelaySeconds: 60
+
+        volumeMounts:
+        - name: config-volume
+          mountPath: /config
+        - name: tmp
+          mountPath: /tmp
+        - name: https-certificate-volume
+          mountPath: /tls
+
+      volumes:
+      - name: config-volume
+        configMap:
+          name: nasa-configuration
+      - name: https-certificate-volume
+        secret:
+          secretName: https-certificate
+      - name: tmp
+        emptyDir: {}
+
+      imagePullSecrets:
+      - name: tink-containers
+
+      tolerations:
+      - key: node-role.kubernetes.io/spot-worker
+        effect: NoSchedule
+        operator: Exists
+
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 1
+            preference:
+              matchExpressions:
+              - key: node-role.kubernetes.io/spot-worker
+                operator: Exists
+
+{{- if eq "local" .Values.Cluster }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: notifying-aggregation-service-asserter
+{{ end }}

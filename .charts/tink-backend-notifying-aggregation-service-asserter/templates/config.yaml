@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nasa-configuration
+  namespace: notifying-aggregation-service-asserter
+data:
+  config.yaml: |
+    placeHolder: ""
+
+{{ if .Values.createDevelopmentSecrets }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nasa-secrets
+  namespace: notifying-aggregation-service-asserter
+type: Opaque
+data:
+  # tink
+{{ end }}
