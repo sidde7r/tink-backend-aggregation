@@ -1,15 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.imaginbank.fetcher.creditcard.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import java.time.LocalDate;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionFilterEntity {
     private static final java.time.format.DateTimeFormatter JAVA_LOCAL_DATE_IMAGINBANK_FORMATTER =
-            java.time.format.DateTimeFormatter.ofPattern("dd\\/MM\\/yyyy");
+            java.time.format.DateTimeFormatter.ofPattern("\"dd\\/MM\\/yyyy\"");
 
     @JsonProperty("filtro_fecha_inicio")
+    @JsonRawValue
     private String filterStartDate;
     @JsonProperty("filtro_importe_minimo")
     private String filtroImporteMinimo = "";
@@ -26,6 +28,7 @@ public class TransactionFilterEntity {
     @JsonProperty("filtro_tarjetas")
     private String filterCards;
     @JsonProperty("filtro_fecha_fin")
+    @JsonRawValue
     private String filterEndDate;
 
     public static final TransactionFilterEntity createTransactionFilter(String filterCards,
