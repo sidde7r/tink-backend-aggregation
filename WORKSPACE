@@ -2128,3 +2128,102 @@ maven_jar(
     artifact = "io.vavr:vavr-test:0.10.0",
     sha1 = "c4ffe88bfe1f20ff9a88e7ba5771a7faab802703",
 )
+
+### === START === Java Spark dependencies
+maven_jar(
+    artifact = "com.sparkjava:spark-core:2.8.0",
+    sha1 = "784ff9ba2ff8b45ef44b4cbe7a8b3e34a839a69b",
+    name = "com_sparkjava_spark_core",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty.websocket:websocket-api:9.4.12.v20180830",
+    sha1 = "97d6376f70ae6c01112325c5254e566af118bc75",
+    name = "org_eclipse_jetty_websocket_websocket_api_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty.websocket:websocket-client:9.4.12.v20180830",
+    sha1 = "75880b6a90a6eda83fdbfc20a42f23eade4b975d",
+    name = "org_eclipse_jetty_websocket_websocket_client_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty.websocket:websocket-common:9.4.12.v20180830",
+    sha1 = "33997cdafbabb3ffd6947a5c33057f967e10535b",
+    name = "org_eclipse_jetty_websocket_websocket_common_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty.websocket:websocket-server:9.4.12.v20180830",
+    sha1 = "fadf609aec6026cb25f25b6bc0b979821f849fd7",
+    name = "org_eclipse_jetty_websocket_websocket_server_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty.websocket:websocket-servlet:9.4.12.v20180830",
+    sha1 = "8d212616b6ea21b96152ff202c2f53fdca8b8b53",
+    name = "org_eclipse_jetty_websocket_websocket_servlet_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-client:9.4.12.v20180830",
+    sha1 = "1d329d68f31dce13135243c06013aaf6f708f7e7",
+    name = "org_eclipse_jetty_jetty_client_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-http:9.4.12.v20180830",
+    sha1 = "1341796dde4e16df69bca83f3e87688ba2e7d703",
+    name = "org_eclipse_jetty_jetty_http_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-io:9.4.12.v20180830",
+    sha1 = "e93f5adaa35a9a6a85ba130f589c5305c6ecc9e3",
+    name = "org_eclipse_jetty_jetty_io_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-security:9.4.12.v20180830",
+    sha1 = "299e0602a9c0b753ba232cc1c1dda72ddd9addcf",
+    name = "org_eclipse_jetty_jetty_security_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-server:9.4.12.v20180830",
+    sha1 = "b0f25df0d32a445fd07d5f16fff1411c16b888fa",
+    name = "org_eclipse_jetty_jetty_server_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-servlet:9.4.12.v20180830",
+    sha1 = "4c1149328eda9fa39a274262042420f66d9ffd5f",
+    name = "org_eclipse_jetty_jetty_servlet_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-util:9.4.12.v20180830",
+    sha1 = "cb4ccec9bd1fe4b10a04a0fb25d7053c1050188a",
+    name = "org_eclipse_jetty_jetty_util_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-webapp:9.4.12.v20180830",
+    sha1 = "a3e119df2da04fcf5aa290c8c35c5b310ce2dcd1",
+    name = "org_eclipse_jetty_jetty_webapp_spark_dep",
+)
+
+maven_jar(
+    artifact = "org.eclipse.jetty:jetty-xml:9.4.12.v20180830",
+    sha1 = "e9f1874e9b5edd498f2fe7cd0904405da07cc300",
+    name = "org_eclipse_jetty_jetty_xml_spark_dep",
+)
+
+maven_jar(
+    artifact = "javax.servlet:javax.servlet-api:3.1.0",
+    sha1 = "3cd63d075497751784b2fa84be59432f4905bf7c",
+    name = "javax_servlet_javax_servlet_api_spark_dep",
+)
+
+### === END === Java Spark dependencies
