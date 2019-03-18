@@ -4,4 +4,10 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities.BasicEnti
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class ConceptEntity extends BasicEntity {}
+public class ConceptEntity extends BasicEntity {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+}

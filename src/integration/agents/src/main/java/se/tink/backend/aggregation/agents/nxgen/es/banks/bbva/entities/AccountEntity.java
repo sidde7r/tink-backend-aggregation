@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.vavr.collection.List;
 import java.util.Date;
-import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

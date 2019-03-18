@@ -56,8 +56,8 @@ public final class BbvaTypeMappers {
                             "00003", // SEGUROS - insurance
                             "00020", // SEGUROS (RIESGO) - insurance
                             "00041", // SEGUROS DE PROTECCION PAGOS CONSUMO - insurance
-                            "00005", // TARJETAS DE DEBITO - debit card
-                            "00022" // DEBITO - debit card
+                            "00005" // TARJETAS DE DEBITO - debit card
+                            //"00022" // DEBITO - debit card
                             )
                     .put(
                             AccountTypes.CHECKING, "00056" // CUENTAS PERSONALES - personal account

@@ -12,6 +12,7 @@ public class ContractEntity {
     private PrepaidCardEntity prepaidCard;
     private LoanEntity loan;
     private AccountEntity account;
+    private SecuritiesPortfolioEntity securitiesPortfolio;
 
     public Option<CreditCardEntity> getCreditCard() {
         return Option.of(creditCard);
@@ -39,5 +40,9 @@ public class ContractEntity {
 
     public Option<AccountEntity> getAccount() {
         return Option.of(account);
+    }
+
+    public Option<SecuritiesPortfolioEntity> getSecuritiesPortfolio() {
+        return Option.of(securitiesPortfolio);
     }
 }
