@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ContractIdEntity {
     @JsonProperty("OFICINA")
     private Office office;
+
     @JsonProperty("DIGITO_DE_CONTROL")
     private String controlDigits;
+
     @JsonProperty("NUMERO_DE_CUENTA")
     private String accountNumber;
 

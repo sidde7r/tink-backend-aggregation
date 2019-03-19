@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CustomerData {
     @JsonProperty("TIPO_DE_PERSONA")
     private String personType;
+
     @JsonProperty("CODIGO_DE_PERSONA")
     private String personCode;
 

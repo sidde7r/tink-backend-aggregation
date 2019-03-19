@@ -15,24 +15,33 @@ public class TransactionEntity {
     @JsonProperty("fechaOperacion")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date transactionDate;
+
     @JsonProperty("fechaValor")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
+
     @JsonProperty("importe")
     private AmountEntity amount;
+
     @JsonProperty("tipoMovimiento")
     private String transactionType;
+
     @JsonProperty("importeSaldo")
     private AmountEntity balance;
+
     @JsonProperty("diaMovimiento")
     private String transactionDay; // This value is weird, it's always 99999
+
     @JsonProperty("fechaAnotacion")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date annotationDate;
+
     @JsonProperty("numeroDGO")
     private DgoNumberEntity dgoNumberEntity;
+
     @JsonProperty("descripcion")
     private String description;
+
     @JsonProperty("numeroMovimiento")
     private String transactionNumber;
 
@@ -81,6 +90,7 @@ public class TransactionEntity {
         return Transaction.builder()
                 .setAmount(amount.getTinkAmount())
                 .setDate(transactionDate)
-                .setDescription(description).build();
+                .setDescription(description)
+                .build();
     }
 }

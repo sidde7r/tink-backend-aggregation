@@ -14,25 +14,35 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @XmlRootElement(name = "methodResult")
 public class InstrumentDetailsResponse {
     @JsonIgnore
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private InfoEntity info;
+
     @JsonProperty("datosBasicos")
     private InstrumentDataEntity basicData;
+
     @JsonProperty("fechaCotizacion")
     private String quoteDate;
+
     @JsonProperty("horaCotizacion")
     private String quoteTime;
+
     @JsonProperty("cotizacionApertura")
     private QuoteEntity openingQuote;
+
     @JsonProperty("cotizacionCierre")
     private QuoteEntity closingQuote;
+
     @JsonProperty("valorMaximo")
     private QuoteEntity maxQuote;
+
     @JsonProperty("valorMinimo")
     private QuoteEntity minQuote;
+
     @JsonProperty("volumenNegociado")
     private String volume;
+
     @JsonProperty("clausula")
     private InstrumentClauseEntity clause;
 

@@ -13,6 +13,7 @@ import se.tink.libraries.strings.StringUtils;
 public class PreciseAmountEntity {
     @JsonProperty("NUMERO_IMPORTE_PRECISO")
     private String amount;
+
     @JsonProperty("DIVISA")
     private String currency;
 

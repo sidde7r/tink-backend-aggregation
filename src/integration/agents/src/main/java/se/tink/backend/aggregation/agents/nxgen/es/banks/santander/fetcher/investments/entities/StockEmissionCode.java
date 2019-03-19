@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class StockEmissionCode {
     @JsonProperty("CODIGO_DE_VALOR")
     private String stockCode;
+
     @JsonProperty("CODIGO_DE_EMISION")
     private String emissionCode;
 

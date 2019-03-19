@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class SubProductTypeEntity {
     @JsonProperty("TIPO_DE_PRODUCTO")
     private ProductTypeEntity productType;
+
     @JsonProperty("SUBTIPO_DE_PRODUCTO")
     private int subProductNumber;
 

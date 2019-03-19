@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class BankOffice {
     @JsonProperty("EMPRESA")
     private String company;
+
     @JsonProperty("CENTRO")
     private String office;
 

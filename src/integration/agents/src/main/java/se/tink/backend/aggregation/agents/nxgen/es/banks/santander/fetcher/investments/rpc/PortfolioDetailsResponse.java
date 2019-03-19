@@ -26,21 +26,30 @@ import se.tink.libraries.amount.Amount;
 @XmlRootElement(name = "methodResult")
 public class PortfolioDetailsResponse {
     @JsonIgnore
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private InfoEntity info;
+
     @JsonProperty("finLista")
     private String endOfList;
+
     @JsonProperty("posicionContratoValores")
     private AmountEntity totalMarketValue;
+
     @JsonProperty("repos")
     private PortfolioRepositionEntity paginationData;
+
     @JsonProperty("lista")
     private List<PortfolioContentEntity> portfolioContents;
 
     @JsonIgnore
-    public InvestmentAccount toTinkInvestment(SantanderEsApiClient apiClient, String userDataXml,
-            PortfolioEntity portfolio, List<PortfolioContentEntity> portfolioContent, HolderName holderName) {
+    public InvestmentAccount toTinkInvestment(
+            SantanderEsApiClient apiClient,
+            String userDataXml,
+            PortfolioEntity portfolio,
+            List<PortfolioContentEntity> portfolioContent,
+            HolderName holderName) {
         List<Instrument> instruments = getInstruments(apiClient, userDataXml, portfolioContent);
         List<Portfolio> portfolios = toTinkPortfolio(portfolio, instruments);
 
@@ -54,15 +63,20 @@ public class PortfolioDetailsResponse {
     }
 
     @JsonIgnore
-    private List<Instrument> getInstruments(SantanderEsApiClient apiClient, String userDataXml,
+    private List<Instrument> getInstruments(
+            SantanderEsApiClient apiClient,
+            String userDataXml,
             List<PortfolioContentEntity> portfolioContent) {
-        return Optional.ofNullable(portfolioContent).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(portfolioContent)
+                .orElse(Collections.emptyList())
+                .stream()
                 .map(item -> item.toInstrument(apiClient, userDataXml))
                 .collect(Collectors.toList());
     }
 
     @JsonIgnore
-    private List<Portfolio> toTinkPortfolio(PortfolioEntity portfolio, List<Instrument> instruments) {
+    private List<Portfolio> toTinkPortfolio(
+            PortfolioEntity portfolio, List<Instrument> instruments) {
         Portfolio tinkPortfolio = new Portfolio();
         tinkPortfolio.setUniqueIdentifier(portfolio.getContractId().getAccountNumber());
         tinkPortfolio.setInstruments(instruments);

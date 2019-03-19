@@ -13,7 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SantanderEsAccountFetcher implements AccountFetcher<TransactionalAccount> {
-    private final static Logger LOGGER = LoggerFactory.getLogger(SantanderEsAccountFetcher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SantanderEsAccountFetcher.class);
 
     private final SessionStorage sessionStorage;
 
@@ -23,18 +23,25 @@ public class SantanderEsAccountFetcher implements AccountFetcher<TransactionalAc
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        String loginResponseString = sessionStorage.get(SantanderEsConstants.Storage.LOGIN_RESPONSE, String.class)
-                .orElseThrow(() -> new IllegalStateException(
-                        SantanderEsConstants.LogMessages.LOGIN_RESPONSE_NOT_FOUND));
+        String loginResponseString =
+                sessionStorage
+                        .get(SantanderEsConstants.Storage.LOGIN_RESPONSE, String.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                SantanderEsConstants.LogMessages
+                                                        .LOGIN_RESPONSE_NOT_FOUND));
 
         // Temporary logging of whole response in String format to detect any unknown accounts
         LOGGER.info("es_santander_full_logging_response", loginResponseString);
-        LoginResponse loginResponse = SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
+        LoginResponse loginResponse =
+                SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
 
-
-        return loginResponse.getAccountList().stream()
-                    .filter(AccountEntity::isKnownAccountType)
-                    .map(accountEntity -> accountEntity.toTinkAccount(loginResponse))
-                    .collect(Collectors.toList());
+        return loginResponse
+                .getAccountList()
+                .stream()
+                .filter(AccountEntity::isKnownAccountType)
+                .map(accountEntity -> accountEntity.toTinkAccount(loginResponse))
+                .collect(Collectors.toList());
     }
 }

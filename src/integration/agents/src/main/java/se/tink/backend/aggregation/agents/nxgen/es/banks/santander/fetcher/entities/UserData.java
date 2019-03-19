@@ -9,10 +9,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class UserData {
     @JsonProperty("empresa")
     private String company;
+
     @JsonProperty("cliente")
     private CustomerData customer;
+
     @JsonProperty("canalMarco")
     private String channelFrame;
+
     @JsonProperty("contratoMulticanal")
     private ContractEntity multiChannelContract;
 

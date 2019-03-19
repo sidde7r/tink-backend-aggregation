@@ -12,12 +12,16 @@ public class RepositionEntity {
     @JsonProperty("fechaRepos")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateReposition;
+
     @JsonProperty("tipoMovimiento")
     private String transactionType;
+
     @JsonProperty("numeroDGO")
     private DgoNumberEntity dgoNumberEntity;
+
     @JsonProperty("numeroMovimiento")
     private int transactionNumber;
+
     @JsonProperty("diaMovimiento")
     private int transactionDay;
 

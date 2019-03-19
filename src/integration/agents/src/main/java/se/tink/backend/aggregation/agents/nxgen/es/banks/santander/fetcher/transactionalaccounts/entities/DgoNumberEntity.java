@@ -10,8 +10,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DgoNumberEntity {
     @JsonProperty("CENTRO")
     private BankOffice bankOffice;
+
     @JsonProperty("CODIGO_TERMINAL_DGO")
     private String dgoTerminalCode;
+
     @JsonProperty("NUMERO_DGO")
     private String dgoNumber;
 

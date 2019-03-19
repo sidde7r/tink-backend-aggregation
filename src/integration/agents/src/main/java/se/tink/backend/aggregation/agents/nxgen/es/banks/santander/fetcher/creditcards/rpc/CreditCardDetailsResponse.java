@@ -18,31 +18,44 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 @XmlRootElement(name = "methodResult")
 public class CreditCardDetailsResponse {
     private InfoEntity info;
+
     @JsonProperty("titularContr")
     private String contractHolder;
+
     @JsonProperty("beneficiarioTarjeta")
     private String cardHolder;
+
     @JsonProperty("fechaCaducidad")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date validUntil;
+
     @JsonProperty("cuentaCargo")
     private ContractEntity creditAccount;
+
     @JsonProperty("limiteCredito")
     private AmountEntity creditLimit;
+
     @JsonProperty("importeSalDispto")
     private AmountEntity balance;
+
     @JsonProperty("importeSalDisponible")
     private AmountEntity availableBalance;
+
     @JsonProperty("limiteCompra")
     private AmountEntity purchaseLimit;
+
     @JsonProperty("descTipoTarjeta")
     private String cardType;
+
     @JsonProperty("descCuentaCargo")
     private String formattedCreditAccount;
+
     @JsonProperty("limiteOffLine")
     private AmountEntity offLineLimit;
+
     @JsonProperty("limiteOnLine")
     private AmountEntity onLineLimit;
+
     @JsonProperty("tipoSituacion")
     private String situationType;
 

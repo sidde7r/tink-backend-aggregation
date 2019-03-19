@@ -13,12 +13,16 @@ public class PortfolioEntity {
 
     @JsonProperty("comunes")
     private GeneralInfoEntity generalInfo;
+
     @JsonProperty("contratoID")
     private ContractIdEntity contractId;
+
     @JsonProperty("impValoracion")
     private AmountEntity totalValue;
+
     @JsonProperty("impValoracionContravalor")
     private AmountEntity counterTotalValue;
+
     @JsonProperty("codReferencia")
     private String referenceCode;
 
