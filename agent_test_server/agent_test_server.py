@@ -1,5 +1,6 @@
 from __future__ import print_function, unicode_literals
-from six.moves import input
+from builtins import input
+from builtins import object
 import sys
 import argparse
 import os
@@ -166,7 +167,7 @@ def thirdparty_callback():
 
     # turn it into a dict from a ImmutableMultiDict (we don't expect or
     # support lists)
-    parameters = {k: v for (k, v) in args.items()}
+    parameters = {k: v for (k, v) in list(args.items())}
 
     # Put the parameters on the queue so that it can be picked up
     # when the agent asks for the supplemental information.
