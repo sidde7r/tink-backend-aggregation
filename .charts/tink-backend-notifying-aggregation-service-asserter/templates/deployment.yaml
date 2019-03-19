@@ -42,6 +42,18 @@ spec:
         - "/usr/share/tink-backend-notifying-aggregation-service-asserter/service.jar"
         - "/config/config.yaml"
 
+        env:
+        - name: KEYSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nasa-secrets
+              key: keystore-password
+        - name: TRUSTSTORE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nasa-secrets
+              key: truststore-password
+
         resources:
           requests:
             memory: {{ default "300Mi" .Values.podMemoryRequest }}
@@ -83,16 +95,11 @@ spec:
           mountPath: /config
         - name: tmp
           mountPath: /tmp
-        - name: https-certificate-volume
-          mountPath: /tls
 
       volumes:
       - name: config-volume
         configMap:
           name: nasa-configuration
-      - name: https-certificate-volume
-        secret:
-          secretName: https-certificate
       - name: tmp
         emptyDir: {}
 

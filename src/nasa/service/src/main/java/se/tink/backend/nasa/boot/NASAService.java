@@ -76,10 +76,10 @@ class NASAService {
 
         Spark.secure(
                 config.getKeyStorePath(),
-                config.getKeyStorePassword(),
+                sensitiveConfiguration.getKeyStorePassword(),
                 config.getCertAlias(),
                 config.getTrustStorePath(),
-                config.getTrustStorePassword(),
+                sensitiveConfiguration.getTrustStorePassword(),
                 config.isValidateCerts());
 
         Spark.get("/ping", (req, res) -> "pong");

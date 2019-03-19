@@ -9,12 +9,7 @@ data:
     keyStorePath: data/security/developer.keystore
     trustStorePath: data/security/TinkCA.truststore
     certAlias: developer.internal.tink.se
-
-    {{- if eq "local" .Values.Cluster }}
-    keyStorePassword: changeme
-    trustStorePassword: changeme
-    validateCerts: false
-    {{ end }}
+    validateCerts: {{ default "false" .Values.validateCerts }}
 
 {{ if .Values.createDevelopmentSecrets }}
 ---
