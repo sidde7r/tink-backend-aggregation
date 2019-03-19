@@ -113,6 +113,5 @@ public class SantanderEsConstants {
                 "no dispone de los permisos necesarios para realizar esta operación";
         public static final String PROVIDE_VALID_INITIAL_DATE =
                 "por favor, introduzca una fecha inicial válida";
-
     }
 }

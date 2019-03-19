@@ -22,6 +22,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inves
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.PortfolioDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.rpc.LoanDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.rpc.LoanMovementsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.RepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.FirstPageOfTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.rpc.TransactionPaginationRequest;
@@ -138,6 +139,19 @@ public class SantanderEsApiClient {
     public String fetchLoanDetails(String userDataXml, LoanEntity loanEntity) {
         String loanDetailsRequest =
                 LoanDetailsRequest.create(tokenCredential, userDataXml, loanEntity);
+
+        String soapResponseString =
+                postSoapMessage(
+                        SantanderEsConstants.Urls.LOANS_ENDPOINT,
+                        SantanderEsConstants.Urls.LOANS_ENDPOINT.toString(),
+                        loanDetailsRequest);
+
+        return soapResponseString;
+    }
+
+    public String fetchLoanMovements(String userDataXml, LoanEntity loanEntity) {
+        String loanDetailsRequest =
+                LoanMovementsRequest.create(tokenCredential, userDataXml, loanEntity);
 
         String soapResponseString =
                 postSoapMessage(
