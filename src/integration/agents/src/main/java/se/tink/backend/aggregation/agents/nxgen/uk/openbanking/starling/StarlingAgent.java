@@ -31,6 +31,7 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import java.security.PrivateKey;
 import java.util.Optional;
 
+/** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
 public class StarlingAgent extends NextGenerationAgent {
     private final String clientName;
     private final StarlingApiClient apiClient;
