@@ -19,12 +19,16 @@ public class LoanEntity {
 
     @JsonProperty("descSituacionContrato")
     private String contractDescription;
+
     @JsonProperty("impSaldoDispuesto")
     private AmountEntity balance;
+
     @JsonProperty("impDisponible")
     private AmountEntity availableAmount;
+
     @JsonProperty("impDisponibleContravalor")
     private AmountEntity availableAmountCounterValue;
+
     @JsonProperty("importeSalDisptoContravalor")
     private AmountEntity balanceCounterValue;
 

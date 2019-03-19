@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.InfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.UserData;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.FundEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.entities.PortfolioEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -20,18 +20,25 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 @XmlRootElement(name = "methodResult")
 public class LoginResponse {
     private InfoEntity info;
+
     @JsonProperty("datosUsuario")
     private UserData userData;
+
     @JsonProperty("cuentas")
     private List<AccountEntity> accountList;
+
     @JsonProperty("tarjetas")
     private List<CardEntity> cards;
+
     @JsonProperty("fondos")
     private List<FundEntity> funds;
+
     @JsonProperty("valores")
     private List<PortfolioEntity> portfolios;
+
     @JsonProperty("prestamos")
     private List<LoanEntity> loans;
+
     @JsonProperty("nombreCliente")
     private String userName;
 
