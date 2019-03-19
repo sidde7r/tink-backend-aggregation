@@ -55,11 +55,21 @@ pkg_tar(
     tags = ["manual"],
 )
 
+pkg_tar(
+    name = "data_tar",
+    srcs = ["//data:security"],
+    mode = "0444",
+    package_dir = "/usr/share/tink-backend-notifying-aggregation-service-asserter/data",
+    strip_prefix = "/data",
+    tags = ["manual"],
+)
+
 container_image(
     name = "docker",
     base = "@openjdk_jdk8//image",
     tars = [
         ":bin_tar",
+        ":data_tar",
     ],
     workdir = "/usr/share/tink-backend-notifying-aggregation-service-asserter",
     tags = ["manual"],
