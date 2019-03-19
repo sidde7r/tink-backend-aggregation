@@ -32,6 +32,10 @@ public class LoanEntity {
     @JsonProperty("importeSalDisptoContravalor")
     private AmountEntity balanceCounterValue;
 
+    public AmountEntity getBalance() {
+        return balance;
+    }
+
     public GeneralInfoEntity getGeneralInfo() {
         return generalInfo;
     }
