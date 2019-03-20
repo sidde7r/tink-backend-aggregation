@@ -61,7 +61,6 @@
         "INVESTMENTS",
         "LOANS"
     ],
-
     "banks.se.collector.CollectorAgent": [
         "TRANSFERS"
     ],
