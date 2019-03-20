@@ -21,6 +21,8 @@ agents:
   icsConfiguration: true
   starling:
       redirectUrl: tink://thirdparty/callback
+  demoFakeBank:
+    baseUrl: http://demo-financial-institute.internal.staging.aggregation.tink.network
 
   mountCallbackJwtSignaturePair: true
   callbackJwtSignatureKeyPairEnabled: true

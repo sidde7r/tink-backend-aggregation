@@ -12,3 +12,7 @@ sqsQueueConfiguration:
 
 s3StorageConfiguration:
   enabled: false
+
+agents:
+  demoFakeBank:
+    baseUrl: http://myapp.demo-financial-institute.svc.cluster.local:9271

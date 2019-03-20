@@ -82,6 +82,11 @@ data:
             rootCAPassword: "ICS_ROOT_CA_PASSWORD"
         {{- end }}
 
+        {{- if $agentsConfig.demoFakeBank }}
+        demoFakeBank:
+          baseUrl: "{{ $agentsConfig.demoFakeBank.baseUrl }}"
+        {{- end }}
+
       abnAmro:
 
       {{- if $agentsConfig.abnAmro }}
