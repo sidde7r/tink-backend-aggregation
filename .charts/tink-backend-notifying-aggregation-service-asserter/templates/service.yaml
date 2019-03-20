@@ -25,6 +25,6 @@ spec:
   - port: 8443
     targetPort: https-api
     name: https-api
-    nodePort: 33011
+    nodePort: 32023
   type: NodePort
 {{ end }}
