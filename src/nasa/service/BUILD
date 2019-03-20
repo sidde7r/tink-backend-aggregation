@@ -30,6 +30,8 @@ java_binary(
         "//third_party:com_google_inject_guice",
         "//third_party:java_spark",
 
+        "@org_slf4j_slf4j_simple//jar",
+
         "//third_party:com_google_guava_guava",
         "//third_party:org_yaml_snakeyaml",
     ],

@@ -496,6 +496,12 @@ maven_jar(
 )
 
 maven_jar(
+    name = "org_slf4j_slf4j_simple",
+    artifact = "org.slf4j:slf4j-simple:jar:1.7.21",
+    sha1 = "be4b3c560a37e69b6c58278116740db28832232c",
+)
+
+maven_jar(
     name = "com_thoughtworks_xstream_xstream",
     artifact = "com.thoughtworks.xstream:xstream:1.4.4",
     sha1 = "488e9e4a47afc81d2b2dec3c3eb3a4d0f10fe105",
