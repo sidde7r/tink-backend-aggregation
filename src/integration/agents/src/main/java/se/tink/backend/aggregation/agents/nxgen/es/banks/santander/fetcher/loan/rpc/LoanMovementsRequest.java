@@ -15,6 +15,7 @@ public class LoanMovementsRequest {
         ContractEntity contractEntity = generalInfo.getContractId();
         AmountEntity balance = loanEntity.getBalance();
         LocalDate now = LocalDate.now();
+        LocalDate yearAgo = LocalDate.now().minusYears(1);
 
         return String.format(
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
@@ -60,9 +61,9 @@ public class LoanMovementsRequest {
                 contractEntity.getContractNumber(),
                 // TODO: Part including dates should be created as separate class and formatted
                 // there when there is time to do so
-                now.getDayOfMonth(),
-                now.getMonthValue(),
-                now.getYear(),
+                yearAgo.getDayOfMonth(),
+                yearAgo.getMonthValue(),
+                yearAgo.getYear(),
                 now.getDayOfMonth(),
                 now.getMonthValue(),
                 now.getYear(),
