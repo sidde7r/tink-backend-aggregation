@@ -1,20 +1,26 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
 
 import com.google.common.base.Preconditions;
-import java.util.Objects;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 
-public class AutoAuthenticationController implements TypedAuthenticator {
+import java.util.Objects;
+
+
+public class AutoAuthenticationController implements TypedAuthenticator, ProgressiveAuthenticator {
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
     private final MultiFactorAuthenticator manualAuthenticator;
@@ -29,11 +35,29 @@ public class AutoAuthenticationController implements TypedAuthenticator {
     }
 
     @Override
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws AuthenticationException, AuthorizationException {
+        try {
+            if (!forceAutoAuthentication() && (Objects.equals(manualAuthenticator.getType(), authenticationRequest.getCredentials().getType()) ||
+                    (request.isUpdate() && !Objects.equals(request.getType(), CredentialsRequestType.TRANSFER)))) {
+                return manualProgressive(authenticationRequest);
+            } else {
+                Preconditions.checkState(!Objects.equals(request.getType(), CredentialsRequestType.CREATE));
+                auto(authenticationRequest.getCredentials());
+                return new AuthenticationResponse(AuthenticationStepConstants.STEP_FINALIZE, null);
+            }
+        } finally {
+            // TODO auth: move it up layer
+            systemUpdater.updateCredentialsExcludingSensitiveInformation(authenticationRequest.getCredentials(), false);
+        }
+    }
+
+    @Override
     // TODO: Change to new MultiFactor credential type when available.
     public CredentialsTypes getType() {
         return CredentialsTypes.PASSWORD;
     }
 
+    // TODO auth: remove the legacy authenticate and extension.
     @Override
     public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
         try {
@@ -53,6 +77,24 @@ public class AutoAuthenticationController implements TypedAuthenticator {
     private boolean forceAutoAuthentication() {
         return Objects.equals(manualAuthenticator.getType(), CredentialsTypes.PASSWORD) &&
                 !request.isUpdate() && !request.isCreate();
+    }
+
+    private AuthenticationResponse manualProgressive(AuthenticationRequest authenticationRequest)
+            throws AuthenticationException, AuthorizationException {
+        if (!request.isManual()) {
+            throw SessionError.SESSION_EXPIRED.exception();
+        }
+
+        if (!Objects.equals(
+                manualAuthenticator.getType(), authenticationRequest.getCredentials().getType())) {
+            authenticationRequest.getCredentials().setType(manualAuthenticator.getType());
+        }
+        try {
+            // TODO auth: remove the cast
+            return ((ProgressiveAuthenticator)manualAuthenticator).authenticate(authenticationRequest);
+        } finally {
+            authenticationRequest.getCredentials().setType(CredentialsTypes.PASSWORD);
+        }
     }
 
     private void manual(Credentials credentials) throws AuthenticationException, AuthorizationException {
