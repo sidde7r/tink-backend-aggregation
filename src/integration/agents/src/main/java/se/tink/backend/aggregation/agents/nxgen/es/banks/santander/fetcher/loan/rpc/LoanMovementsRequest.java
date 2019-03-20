@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.GeneralInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.DateEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.FromDateEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.LocalDateToXml;
 
