@@ -6,9 +6,14 @@ metadata:
 data:
   config.yaml: |
     port: 8443
+    {{- if eq "local" .Values.Cluster }}
     keyStorePath: data/security/developer.keystore
-    trustStorePath: data/security/TinkCA.truststore
     certAlias: developer.internal.tink.se
+    {{- else }}
+    keyStorePath: data/security/production.keystore
+    certAlias: container.internal.tink.se
+    {{- end }}
+    trustStorePath: data/security/TinkCA.truststore
     validateCerts: {{ default "false" .Values.validateCerts }}
 
 {{ if .Values.createDevelopmentSecrets }}
