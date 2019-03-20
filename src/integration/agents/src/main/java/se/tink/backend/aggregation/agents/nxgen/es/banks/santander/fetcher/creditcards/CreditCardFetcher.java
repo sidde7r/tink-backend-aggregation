@@ -33,7 +33,7 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CreditCardFetcher
         implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
-    private final static AggregationLogger log = new AggregationLogger(CreditCardFetcher.class);
+    private static final AggregationLogger log = new AggregationLogger(CreditCardFetcher.class);
 
     private final SantanderEsApiClient apiClient;
     private final SessionStorage sessionStorage;
@@ -48,43 +48,56 @@ public class CreditCardFetcher
         LoginResponse loginResponse = getLoginResponse();
         String userDataXml = SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
 
-        return Optional.ofNullable(loginResponse.getCards()).orElse(Collections.emptyList())
+        return Optional.ofNullable(loginResponse.getCards())
+                .orElse(Collections.emptyList())
                 .stream()
-                .filter(cardEntity -> !SantanderEsConstants.AccountTypes.DEBIT_CARD_TYPE.equalsIgnoreCase(
-                        cardEntity.getCardType()))
-                .map(card -> {
-                    CreditCardDetailsResponse detailsResponse =
-                            apiClient.fetchCreditCardDetails(userDataXml, card.getCardNumber());
+                .filter(
+                        cardEntity ->
+                                !SantanderEsConstants.AccountTypes.DEBIT_CARD_TYPE.equalsIgnoreCase(
+                                        cardEntity.getCardType()))
+                .map(
+                        card -> {
+                            CreditCardDetailsResponse detailsResponse =
+                                    apiClient.fetchCreditCardDetails(
+                                            userDataXml, card.getCardNumber());
 
-                    return detailsResponse.toTinkCreditCard(userDataXml, card);
-                })
+                            return detailsResponse.toTinkCreditCard(userDataXml, card);
+                        })
                 .collect(Collectors.toList());
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
         LocalDate startDate = DateUtils.toJavaTimeLocalDate(fromDate);
         LocalDate endDate = DateUtils.toJavaTimeLocalDate(toDate);
 
-        String userDataXml = account.getFromTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML);
-        CardEntity card = account.getFromTemporaryStorage(SantanderEsConstants.Storage.CARD_ENTITY, CardEntity.class)
-                .orElseThrow(() -> new IllegalStateException("No card entity found"));
+        String userDataXml =
+                account.getFromTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML);
+        CardEntity card =
+                account.getFromTemporaryStorage(
+                                SantanderEsConstants.Storage.CARD_ENTITY, CardEntity.class)
+                        .orElseThrow(() -> new IllegalStateException("No card entity found"));
 
         return PaginatorResponseImpl.create(
-                fetchAllTransactionsBetweenDates(userDataXml, card, startDate, endDate)
-        );
+                fetchAllTransactionsBetweenDates(userDataXml, card, startDate, endDate));
     }
 
     private LoginResponse getLoginResponse() {
-        String loginResponseString = sessionStorage.get(SantanderEsConstants.Storage.LOGIN_RESPONSE, String.class)
-                .orElseThrow(() -> new IllegalStateException(
-                        SantanderEsConstants.LogMessages.LOGIN_RESPONSE_NOT_FOUND));
+        String loginResponseString =
+                sessionStorage
+                        .get(SantanderEsConstants.Storage.LOGIN_RESPONSE, String.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                SantanderEsConstants.LogMessages
+                                                        .LOGIN_RESPONSE_NOT_FOUND));
 
         return SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
     }
 
-    private List<CreditCardTransaction> fetchAllTransactionsBetweenDates(String userDataXml, CardEntity card,
-            LocalDate startDate, LocalDate endDate) {
+    private List<CreditCardTransaction> fetchAllTransactionsBetweenDates(
+            String userDataXml, CardEntity card, LocalDate startDate, LocalDate endDate) {
         boolean fetchMore = true;
         CreditCardRepositionEntity repositionEntity = null;
         List<CreditCardTransaction> transactions = new ArrayList<>();
@@ -92,7 +105,8 @@ public class CreditCardFetcher
         try {
             while (fetchMore) {
                 CreditCardTransactionsResponse creditCardTransactionsResponse =
-                        apiClient.fetchCreditCardTransactions(userDataXml, card, startDate,endDate, repositionEntity);
+                        apiClient.fetchCreditCardTransactions(
+                                userDataXml, card, startDate, endDate, repositionEntity);
 
                 transactions.addAll(creditCardTransactionsResponse.getTinkTransactions());
                 fetchMore = creditCardTransactionsResponse.canFetchMore().orElse(false);
@@ -103,16 +117,22 @@ public class CreditCardFetcher
             HttpResponse response = hre.getResponse();
             if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                 String soapErrorMessage = response.getBody(String.class);
-                Optional<SoapFaultErrorEntity> soapFaultError = SoapFaultErrorEntity.parseFaultErrorFromSoapError(soapErrorMessage);
-                if (soapFaultError.isPresent() &&
-                        soapFaultError.get()
-                                .matchesErrorMessage(SantanderEsConstants.SoapErrorMessages.NO_MORE_TRANSACTIONS)) {
+                Optional<SoapFaultErrorEntity> soapFaultError =
+                        SoapFaultErrorEntity.parseFaultErrorFromSoapError(soapErrorMessage);
+                if (soapFaultError.isPresent()
+                        && soapFaultError
+                                .get()
+                                .matchesErrorMessage(
+                                        SantanderEsConstants.SoapErrorMessages
+                                                .NO_MORE_TRANSACTIONS)) {
                     // OK, this is a no more transactions for this query
                     return transactions;
                 }
-                // log error if we get other error than 'no more transactions' since this is string matching
+                // log error if we get other error than 'no more transactions' since this is string
+                // matching
                 if (soapFaultError.isPresent()) {
-                    log.warn("ERROR: " + SerializationUtils.serializeToString(soapFaultError.get()));
+                    log.warn(
+                            "ERROR: " + SerializationUtils.serializeToString(soapFaultError.get()));
                 } else {
                     log.warn("Fetch transactions returned error");
                 }

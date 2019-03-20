@@ -6,10 +6,11 @@ public class SantanderEsFetcherUtils {
         return isPagination ? "S" : "N";
     }
 
-    public static String formatRequestForTransactionFetching(String userDataXmlString, String contractIdXmlString,
-            String balancaXmlString) {
+    public static String formatRequestForTransactionFetching(
+            String userDataXmlString, String contractIdXmlString, String balancaXmlString) {
 
-        return String.format("<datosConexion>%s</datosConexion>"
+        return String.format(
+                "<datosConexion>%s</datosConexion>"
                         + "<contratoID>%s</contratoID>"
                         + "<importeCta>%s</importeCta>",
                 userDataXmlString, contractIdXmlString, balancaXmlString);

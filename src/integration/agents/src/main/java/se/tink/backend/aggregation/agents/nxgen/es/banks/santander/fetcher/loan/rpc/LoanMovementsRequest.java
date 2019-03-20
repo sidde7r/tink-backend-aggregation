@@ -1,18 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.rpc;
 
+import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.GeneralInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 
-public class LoanDetailsRequest {
+public class LoanMovementsRequest {
 
     public static String create(String tokenCredential, String userDataXml, LoanEntity loanEntity) {
 
         GeneralInfoEntity generalInfo = loanEntity.getGeneralInfo();
         ContractEntity contractEntity = generalInfo.getContractId();
         AmountEntity balance = loanEntity.getBalance();
+        LocalDate now = LocalDate.now();
 
         return String.format(
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
@@ -23,13 +25,24 @@ public class LoanDetailsRequest {
                         + "</wsse:Security>"
                         + "</soapenv:Header>"
                         + "<soapenv:Body>"
-                        + "<v1:detallePrestamo_LA facade=\"ACBAMOBIPRE\">"
+                        + "<v1:listaMovimientosPrestamo_LA facade=\"ACBAMOBIPRE\">"
                         + "<entrada>"
                         + "<contrato>"
                         + "<CENTRO><EMPRESA>%s</EMPRESA><CENTRO>%s</CENTRO></CENTRO>"
                         + "<PRODUCTO>%s</PRODUCTO>"
                         + "<NUMERO_DE_CONTRATO>%s</NUMERO_DE_CONTRATO>"
                         + "</contrato>"
+                        + "<fechaDesde>"
+                        + "<dia>%s</dia>"
+                        + "<mes>%s</mes>"
+                        + "<anyo>%s</anyo>"
+                        + "</fechaDesde>"
+                        + "<fechaHasta>"
+                        + "<dia>%s</dia>"
+                        + "<mes>%s</mes>"
+                        + "<anyo>%s</anyo>"
+                        + "</fechaHasta>"
+                        + "<divisa>%s</divisa>"
                         + "</entrada>"
                         + "<datosConexion>%s</datosConexion>"
                         + "<datosCabecera>"
@@ -37,7 +50,7 @@ public class LoanDetailsRequest {
                         + "<terminalID>%s</terminalID>"
                         + "<idioma>%s</idioma>"
                         + "</datosCabecera>"
-                        + "</v1:detallePrestamo_LA>"
+                        + "</v1:listaMovimientosPrestamo_LA>"
                         + "</soapenv:Body>"
                         + "</soapenv:Envelope>",
                 tokenCredential,
@@ -45,6 +58,15 @@ public class LoanDetailsRequest {
                 contractEntity.getBankOffice().getOffice(),
                 contractEntity.getProduct(),
                 contractEntity.getContractNumber(),
+                // TODO: Part including dates should be created as separate class and formatted
+                // there when there is time to do so
+                now.getDayOfMonth(),
+                now.getMonthValue(),
+                now.getYear(),
+                now.getDayOfMonth(),
+                now.getMonthValue(),
+                now.getYear(),
+                balance.getCurrency(),
                 userDataXml,
                 SantanderEsConstants.DataHeader.VERSION,
                 SantanderEsConstants.DataHeader.TERMINAL_ID,

@@ -9,10 +9,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InstrumentDataEntity {
     @JsonProperty("tickerValor")
     private String tickerValue;
+
     @JsonProperty("nombreValor")
     private String name;
+
     @JsonProperty("cotizacionValor")
     private QuoteEntity marketPrice;
+
     @JsonProperty("codigoEmisionValores")
     private StockEmissionCode emissionCode;
 

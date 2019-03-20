@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.cred
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 
 public class SantanderEsCreditCardDetailsRequest {
-    public static String create(String tokenCredential, String userDataXmlString,
-            String creditCardNumber) {
+    public static String create(
+            String tokenCredential, String userDataXmlString, String creditCardNumber) {
 
         return String.format(
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.isban.es/webservices/BAMOBI/Tarjetas/F_bamobi_tarjetas_lip/internet/BAMOBITAJ/v1\">"
@@ -32,7 +32,6 @@ public class SantanderEsCreditCardDetailsRequest {
                 SantanderEsConstants.DataHeader.VERSION,
                 SantanderEsConstants.DataHeader.TERMINAL_ID,
                 SantanderEsConstants.DataHeader.IDIOMA,
-                creditCardNumber
-        );
+                creditCardNumber);
     }
 }

@@ -18,12 +18,13 @@ public class AuthenticateCredentialsRequest {
                         + "<userAddress i:type=\"d:string\">127.0.0.1</userAddress>"
                         + "</n0:authenticateCredential>"
                         + "</v:Body>"
-                        + "</v:Envelope>", username, getIdNumberType(username), password);
+                        + "</v:Envelope>",
+                username, getIdNumberType(username), password);
     }
 
     /**
-     * Return "N" for NIF ID numbers and "C" for NIE ID numbers. NIF numbers start with a digit while NIE numbers
-     * start with a letter.
+     * Return "N" for NIF ID numbers and "C" for NIE ID numbers. NIF numbers start with a digit
+     * while NIE numbers start with a letter.
      */
     private static String getIdNumberType(String username) {
         return startsWithDigit(username) ? "N" : "C";

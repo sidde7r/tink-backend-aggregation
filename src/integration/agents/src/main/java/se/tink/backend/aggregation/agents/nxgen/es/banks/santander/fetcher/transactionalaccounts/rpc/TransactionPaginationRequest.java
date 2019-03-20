@@ -5,8 +5,13 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.trans
 
 public class TransactionPaginationRequest {
 
-    public static String create(String tokenCredential, String userDataXmlString, String contractIdXmlString,
-            String balancaXmlString, boolean isPagination, String repositionXmlString) {
+    public static String create(
+            String tokenCredential,
+            String userDataXmlString,
+            String contractIdXmlString,
+            String balancaXmlString,
+            boolean isPagination,
+            String repositionXmlString) {
         return String.format(
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.isban.es/webservices/BAMOBI/Cuentas/F_bamobi_cuentas_lip/internet/BAMOBICTA/v1\">"
                         + " <soapenv:Header>"
@@ -35,6 +40,7 @@ public class TransactionPaginationRequest {
                 SantanderEsConstants.DataHeader.IDIOMA,
                 SantanderEsFetcherUtils.formatRequestForTransactionFetching(
                         userDataXmlString, contractIdXmlString, balancaXmlString),
-                SantanderEsFetcherUtils.getIsPaginationString(isPagination), repositionXmlString);
+                SantanderEsFetcherUtils.getIsPaginationString(isPagination),
+                repositionXmlString);
     }
 }

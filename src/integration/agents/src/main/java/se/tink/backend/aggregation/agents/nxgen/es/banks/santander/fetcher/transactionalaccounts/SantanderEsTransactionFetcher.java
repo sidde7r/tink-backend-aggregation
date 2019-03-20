@@ -10,7 +10,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class SantanderEsTransactionFetcher implements TransactionKeyPaginator<TransactionalAccount, RepositionEntity> {
+public class SantanderEsTransactionFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, RepositionEntity> {
     private final SantanderEsApiClient apiClient;
 
     public SantanderEsTransactionFetcher(SantanderEsApiClient apiClient) {
@@ -20,17 +21,20 @@ public class SantanderEsTransactionFetcher implements TransactionKeyPaginator<Tr
     @Override
     public TransactionKeyPaginatorResponse<RepositionEntity> getTransactionsFor(
             TransactionalAccount account, RepositionEntity key) {
-        String userDataXmlString = account.getFromTemporaryStorage(
-                SantanderEsConstants.Storage.USER_DATA_XML);
-        String contractIdXmlString = account.getFromTemporaryStorage(
-                SantanderEsConstants.Storage.CONTRACT_ID_XML);
-        String balanceXmlString = account.getFromTemporaryStorage(
-                SantanderEsConstants.Storage.BALANCE_XML);
+        String userDataXmlString =
+                account.getFromTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML);
+        String contractIdXmlString =
+                account.getFromTemporaryStorage(SantanderEsConstants.Storage.CONTRACT_ID_XML);
+        String balanceXmlString =
+                account.getFromTemporaryStorage(SantanderEsConstants.Storage.BALANCE_XML);
 
-        String xmlResponseString = SerializationUtils.deserializeFromString(
-                apiClient.fetchTransactions(userDataXmlString, contractIdXmlString, balanceXmlString, key),
-                String.class);
+        String xmlResponseString =
+                SerializationUtils.deserializeFromString(
+                        apiClient.fetchTransactions(
+                                userDataXmlString, contractIdXmlString, balanceXmlString, key),
+                        String.class);
 
-        return SantanderEsXmlUtils.parseXmlStringToJson(xmlResponseString, TransactionsResponse.class);
+        return SantanderEsXmlUtils.parseXmlStringToJson(
+                xmlResponseString, TransactionsResponse.class);
     }
 }

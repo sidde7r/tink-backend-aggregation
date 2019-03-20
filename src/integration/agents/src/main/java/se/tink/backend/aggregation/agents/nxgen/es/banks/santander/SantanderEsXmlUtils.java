@@ -12,18 +12,20 @@ import se.tink.backend.aggregation.agents.utils.soap.SoapParser;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SantanderEsXmlUtils {
-    private final static XmlMapper MAPPER = new XmlMapper();
+    private static final XmlMapper MAPPER = new XmlMapper();
 
     public static <T> T deserializeFromSoapString(String data, String tagName, Class<T> cls) {
         Node node = getTagNodeFromSoapString(data, tagName);
-        String serializedObject = SerializationUtils.deserializeFromString(SerializationUtils.serializeToString(node), String.class);
+        String serializedObject =
+                SerializationUtils.deserializeFromString(
+                        SerializationUtils.serializeToString(node), String.class);
         return parseXmlStringToJson(serializedObject, cls);
     }
 
     public static Node getTagNodeFromSoapString(String responseString, String tagName) {
         Node node = SoapParser.getSoapBody(responseString);
-        Preconditions.checkState(node instanceof Element,
-                "Could not parse SOAP body from server response.");
+        Preconditions.checkState(
+                node instanceof Element, "Could not parse SOAP body from server response.");
 
         Element element = (Element) node;
         return element.getElementsByTagName(tagName).item(0);
@@ -36,7 +38,6 @@ public class SantanderEsXmlUtils {
         } catch (JSONException e) {
             throw new IllegalStateException("Could not parse JSON object to XML string.");
         }
-
     }
 
     public static <T> T parseXmlStringToJson(String xmlString, Class<T> returnType) {
@@ -48,9 +49,9 @@ public class SantanderEsXmlUtils {
     }
 
     /**
-     * It's necessary to serialize an XML node to a String and then deserialize it into a String if we want to save
-     * it to the session storage. Otherwise we get a "String in a String" (i.e. double quotes) when we fetch it
-     * from the session storage as a String.
+     * It's necessary to serialize an XML node to a String and then deserialize it into a String if
+     * we want to save it to the session storage. Otherwise we get a "String in a String" (i.e.
+     * double quotes) when we fetch it from the session storage as a String.
      */
     public static String convertToString(Node node) {
         String serializedNode = SerializationUtils.serializeToString(node);

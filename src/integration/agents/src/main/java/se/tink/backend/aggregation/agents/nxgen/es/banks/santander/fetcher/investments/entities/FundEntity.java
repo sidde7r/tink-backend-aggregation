@@ -12,11 +12,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.CustomerData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.GeneralInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.FundDetailsResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -25,14 +23,19 @@ public class FundEntity {
 
     @JsonProperty("comunes")
     private GeneralInfoEntity generalInfo;
+
     @JsonProperty("titular")
     private CustomerData customerData;
+
     @JsonProperty("descSituacionContrato")
     private String contractDescription;
+
     @JsonProperty("impValoracion")
     private AmountEntity totalValue;
+
     @JsonProperty("impValoracionContravalor")
     private AmountEntity counterTotalValue;
+
     @JsonProperty("numParticipac")
     private double quantity;
 

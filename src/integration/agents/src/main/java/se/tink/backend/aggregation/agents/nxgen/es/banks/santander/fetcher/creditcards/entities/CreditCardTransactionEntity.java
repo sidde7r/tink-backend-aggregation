@@ -15,17 +15,23 @@ public class CreditCardTransactionEntity {
     @JsonProperty("fechaOpera")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date transactionDate;
+
     @JsonProperty("codigoSaldo")
     private String balanceCode;
+
     @JsonProperty("fechaAnota")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
+
     @JsonProperty("movimDia")
     private String dateTransactionNumber;
+
     @JsonProperty("importeMovto")
     private AmountEntity amount;
+
     @JsonProperty("descMovimiento")
     private String description;
+
     @JsonProperty("codMoneda")
     private String currencyCode;
 
@@ -34,6 +40,7 @@ public class CreditCardTransactionEntity {
         return CreditCardTransaction.builder()
                 .setAmount(amount.getTinkAmount())
                 .setDate(transactionDate)
-                .setDescription(description).build();
+                .setDescription(description)
+                .build();
     }
 }

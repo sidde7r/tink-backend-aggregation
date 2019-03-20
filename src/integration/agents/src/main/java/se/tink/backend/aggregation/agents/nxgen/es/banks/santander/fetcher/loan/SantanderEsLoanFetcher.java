@@ -61,6 +61,9 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
             LOG.infoExtraLong(
                     SerializationUtils.serializeToString(loanEntity),
                     SantanderEsConstants.Tags.LOAN_ACCOUNT);
+
+            String loanMovementsResponse = apiClient.fetchLoanMovements(userDataXml, loanEntity);
+            LOG.infoExtraLong(loanMovementsResponse, SantanderEsConstants.Tags.LOAN_ACCOUNT);
             String loanDetailsResponse = apiClient.fetchLoanDetails(userDataXml, loanEntity);
             LOG.infoExtraLong(loanDetailsResponse, SantanderEsConstants.Tags.LOAN_ACCOUNT);
         } catch (Exception e) {

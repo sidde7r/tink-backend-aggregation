@@ -9,12 +9,18 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entit
 
 public class SantanderEsCreditCardTransactionsRequest {
 
-    public static String create(String tokenCredential, String userDataXmlString, CardEntity card,
-            LocalDate fromDate, LocalDate toDate, CreditCardRepositionEntity repositionEntity) {
+    public static String create(
+            String tokenCredential,
+            String userDataXmlString,
+            CardEntity card,
+            LocalDate fromDate,
+            LocalDate toDate,
+            CreditCardRepositionEntity repositionEntity) {
 
         ContractEntity contractEntity = card.getGeneralInfo().getContractId();
         String creditCardNumber = card.getCardNumber();
-        String contractBankOffice = SantanderEsXmlUtils.parseJsonToXmlString(contractEntity.getBankOffice());
+        String contractBankOffice =
+                SantanderEsXmlUtils.parseJsonToXmlString(contractEntity.getBankOffice());
 
         return String.format(
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:v1=\"http://www.isban.es/webservices/BAMOBI/Tarjetas/F_bamobi_tarjetas_lip/internet/BAMOBITAJ/v1\">"
@@ -25,7 +31,6 @@ public class SantanderEsCreditCardTransactionsRequest {
                         + "</soapenv:Header>"
                         + "<soapenv:Body>"
                         + "<v1:listaMovTarjetasFechas_LIP facade=\"BAMOBITAJ\">"
-
                         + "<entrada>"
                         + "<datosConexion>%s</datosConexion>"
                         + "<datosCabecera>"
@@ -53,29 +58,33 @@ public class SantanderEsCreditCardTransactionsRequest {
                 contractEntity.getContractNumber(),
                 contractBankOffice,
                 creditCardNumber,
-                formatPaginationData(fromDate, toDate, repositionEntity)
-        );
+                formatPaginationData(fromDate, toDate, repositionEntity));
     }
 
-    private static String formatPaginationData(LocalDate fromDate, LocalDate toDate, CreditCardRepositionEntity repositionEntity) {
+    private static String formatPaginationData(
+            LocalDate fromDate, LocalDate toDate, CreditCardRepositionEntity repositionEntity) {
         boolean isPaginationRequest = repositionEntity != null;
         String repositionData = "";
         if (isPaginationRequest) {
-            repositionData = String.format("<repos>%s</repos>", SantanderEsXmlUtils.parseJsonToXmlString(repositionEntity));
+            repositionData =
+                    String.format(
+                            "<repos>%s</repos>",
+                            SantanderEsXmlUtils.parseJsonToXmlString(repositionEntity));
         }
 
-        return String.format("<fechaDesde>"
-                + "<anyo>%d</anyo>"
-                + "<mes>%d</mes>"
-                + "<dia>%d</dia>"
-                + "</fechaDesde>"
-                + "<fechaHasta>"
-                + "<anyo>%d</anyo>"
-                + "<mes>%d</mes>"
-                + "<dia>%d</dia>"
-                + "</fechaHasta>"
-                + "<esUnaPaginacion>%s</esUnaPaginacion>"
-                + "%s",
+        return String.format(
+                "<fechaDesde>"
+                        + "<anyo>%d</anyo>"
+                        + "<mes>%d</mes>"
+                        + "<dia>%d</dia>"
+                        + "</fechaDesde>"
+                        + "<fechaHasta>"
+                        + "<anyo>%d</anyo>"
+                        + "<mes>%d</mes>"
+                        + "<dia>%d</dia>"
+                        + "</fechaHasta>"
+                        + "<esUnaPaginacion>%s</esUnaPaginacion>"
+                        + "%s",
                 fromDate.getYear(),
                 fromDate.getMonthValue(),
                 fromDate.getDayOfMonth(),
@@ -83,7 +92,6 @@ public class SantanderEsCreditCardTransactionsRequest {
                 toDate.getMonthValue(),
                 toDate.getDayOfMonth(),
                 (isPaginationRequest ? "S" : "N"),
-                repositionData
-                );
+                repositionData);
     }
 }

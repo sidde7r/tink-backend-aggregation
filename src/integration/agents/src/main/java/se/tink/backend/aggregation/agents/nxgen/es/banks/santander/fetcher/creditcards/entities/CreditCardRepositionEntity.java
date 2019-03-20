@@ -9,14 +9,19 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreditCardRepositionEntity {
     @JsonProperty("codigoSaldo")
     private String balanceCode;
+
     @JsonProperty("codigoMoneda")
     private String currencyCode;
+
     @JsonProperty("fechaAnota")
     private String bookingDate;
+
     @JsonProperty("movimDia")
     private int dateTransactionNumber;
+
     @JsonProperty("fechaOpera")
     private String transactionDate;
+
     @JsonProperty("cursorRepos")
     private int repositionCursor;
 }

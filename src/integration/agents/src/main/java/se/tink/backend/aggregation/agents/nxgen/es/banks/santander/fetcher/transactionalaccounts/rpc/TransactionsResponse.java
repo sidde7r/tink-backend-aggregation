@@ -19,23 +19,33 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @XmlRootElement(name = "methodResult")
 public class TransactionsResponse implements TransactionKeyPaginatorResponse<RepositionEntity> {
     private InfoEntity info;
+
     @JsonProperty("contador")
     private String counter;
+
     @JsonProperty("nombreProducto")
     private String productName;
+
     @JsonProperty("importeSaldo")
     private AmountEntity balance;
+
     @JsonProperty("importeDisponible")
     private AmountEntity disposible;
+
     private AmountEntity importeCta;
+
     @JsonProperty("finLista")
     private String endOfList;
+
     @JsonProperty("contratoNuevo")
     private ContractEntity newContract;
+
     @JsonProperty("codProducto")
     private String productCode;
+
     @JsonProperty("listadoMovimientos")
     private List<TransactionEntity> transactionList;
+
     @JsonProperty("repo")
     private RepositionEntity reposition;
 
@@ -85,7 +95,8 @@ public class TransactionsResponse implements TransactionKeyPaginatorResponse<Rep
 
     @Override
     public Collection<Transaction> getTinkTransactions() {
-        return transactionList.stream()
+        return transactionList
+                .stream()
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

@@ -9,12 +9,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InstrumentClauseEntity {
     @JsonProperty("linkMifid")
     private String mifidLinkText;
+
     @JsonProperty("periodoValidez")
     private String validityPeriod;
+
     @JsonProperty("targetMifid")
     private String mifidTarget;
+
     @JsonProperty("textoMifid")
     private String mifidText;
+
     @JsonProperty("tituloMifid")
     private String mifidHeading;
 }

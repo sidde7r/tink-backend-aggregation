@@ -18,21 +18,29 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @XmlRootElement(name = "methodResult")
 public class FundDetailsResponse {
     @JsonIgnore
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private InfoEntity info;
+
     @JsonProperty("titular")
     private String holder;
+
     @JsonProperty("descFondo")
     private String name;
+
     @JsonProperty("valorLiquidativoParticipac")
     private PreciseAmountEntity marketPrice;
+
     @JsonProperty("valorTotal")
     private AmountEntity marketValue;
+
     @JsonProperty("fechaValor")
     private String valueDate;
+
     @JsonProperty("numParticipac")
     private double quantity;
+
     @JsonProperty("descCuentaAsociada")
     private String associatedAccount;
 

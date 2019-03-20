@@ -23,12 +23,16 @@ public class CreditCardTransactionsResponse {
 
     @JsonProperty("limiteCredito")
     private AmountEntity creditLimit;
+
     @JsonProperty("importeSalDispto")
     private AmountEntity balance;
+
     @JsonProperty("finLista")
     private String endOfList;
+
     @JsonProperty("repos")
     private CreditCardRepositionEntity reposition;
+
     @JsonProperty("lista")
     private List<CreditCardTransactionEntity> transactionList;
 
@@ -54,7 +58,9 @@ public class CreditCardTransactionsResponse {
 
     @JsonIgnore
     public Collection<CreditCardTransaction> getTinkTransactions() {
-        return Optional.ofNullable(transactionList).orElse(Collections.emptyList()).stream()
+        return Optional.ofNullable(transactionList)
+                .orElse(Collections.emptyList())
+                .stream()
                 .map(CreditCardTransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

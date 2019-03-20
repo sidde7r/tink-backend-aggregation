@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.tran
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.bind.annotation.XmlRootElement;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.AmountEntity;
@@ -15,38 +16,49 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
 @XmlRootElement
 public class AccountEntity {
-    private final static AggregationLogger log = new AggregationLogger(AccountEntity.class);
+    private static final AggregationLogger log = new AggregationLogger(AccountEntity.class);
 
     @JsonProperty("comunes")
     private GeneralInfoEntity generalInfo;
+
     @JsonProperty("impSaldoActual")
     private AmountEntity balance;
+
     @JsonProperty("importeDispAut")
     private AmountEntity disposible;
+
     @JsonProperty("importeDispSinAut")
     private AmountEntity disposibleExclAut;
+
     @JsonProperty("importeLimite")
     private AmountEntity amountLimit;
+
     @JsonProperty("IBAN")
     private String iban;
+
     @JsonProperty("contratoIDViejo")
     private ContractEntity originalContractId;
+
     @JsonProperty("titular")
     private CustomerData customerData;
+
     @JsonProperty("tipoSituacionCto")
     private String creditTypeSituation;
+
     @JsonProperty("impSaldoActualContravalor")
     private AmountEntity balanceCountervalue;
+
     @JsonProperty("importeDispAutContravalor")
     private AmountEntity disposibleCountervalue;
+
     @JsonProperty("importeDispSinAutContravalor")
     private AmountEntity disposibleExclAutCountervalue;
+
     @JsonProperty("importeLimiteContravalor")
     private AmountEntity amountLimitCountervalue;
 
@@ -106,15 +118,19 @@ public class AccountEntity {
     public TransactionalAccount toTinkAccount(LoginResponse loginResponse) {
         UserData userData = loginResponse.getUserData();
         HolderName holderName = loginResponse.getHolderName();
-        return TransactionalAccount.builder(getTinkAccountType(), getUniqueIdentifier(), balance.getTinkAmount())
+        return TransactionalAccount.builder(
+                        getTinkAccountType(), getUniqueIdentifier(), balance.getTinkAmount())
                 .setAccountNumber(iban)
                 .setName(generalInfo.getAlias())
                 .setHolderName(holderName)
-                .putInTemporaryStorage(SantanderEsConstants.Storage.USER_DATA_XML,
+                .putInTemporaryStorage(
+                        SantanderEsConstants.Storage.USER_DATA_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(userData))
-                .putInTemporaryStorage(SantanderEsConstants.Storage.CONTRACT_ID_XML,
+                .putInTemporaryStorage(
+                        SantanderEsConstants.Storage.CONTRACT_ID_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(originalContractId))
-                .putInTemporaryStorage(SantanderEsConstants.Storage.BALANCE_XML,
+                .putInTemporaryStorage(
+                        SantanderEsConstants.Storage.BALANCE_XML,
                         SantanderEsXmlUtils.parseJsonToXmlString(getBalance()))
                 .build();
     }
@@ -145,7 +161,6 @@ public class AccountEntity {
             log.infoExtraLong(
                     SerializationUtils.serializeToString(this),
                     SantanderEsConstants.Tags.UNKNOWN_ACCOUNT_TYPE);
-
         }
         return checkingAccount;
     }
@@ -156,6 +171,7 @@ public class AccountEntity {
 
         // As far as we know today, checking accounts have product number 300 or 301.
         return SantanderEsConstants.AccountTypes.PROD_NR_300.equalsIgnoreCase(productTypeNumber)
-                || SantanderEsConstants.AccountTypes.PROD_NR_301.equalsIgnoreCase(productTypeNumber);
+                || SantanderEsConstants.AccountTypes.PROD_NR_301.equalsIgnoreCase(
+                        productTypeNumber);
     }
 }

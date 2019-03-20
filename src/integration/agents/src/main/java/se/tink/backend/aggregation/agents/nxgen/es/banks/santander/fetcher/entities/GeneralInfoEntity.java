@@ -9,15 +9,21 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class GeneralInfoEntity {
     @JsonProperty("contratoID")
     private ContractEntity contractId;
+
     @JsonProperty("descContrato")
     private String contractDescription;
+
     private String alias;
+
     @JsonProperty("subtipoProd")
     private SubProductTypeEntity subProductType;
+
     @JsonProperty("tipoInterv")
     private String typeInterv;
+
     @JsonProperty("descTipoInterv")
     private String typeIntervalDescription;
+
     @JsonProperty("indVisibleAlias")
     private String indicatorVisibleAlias;
 

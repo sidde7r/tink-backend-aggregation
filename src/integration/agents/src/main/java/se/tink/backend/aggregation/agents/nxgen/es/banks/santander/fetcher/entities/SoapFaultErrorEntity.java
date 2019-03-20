@@ -15,8 +15,28 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class SoapFaultErrorEntity {
     @JsonProperty("errorDesc")
     private String errorDescription;
+
     @JsonProperty("errorCode")
     private String errorCode;
+
+    public static Optional<SoapFaultErrorEntity> parseFaultErrorFromSoapError(
+            String xmlErrorResponseString) {
+        String errorAsString =
+                SerializationUtils.deserializeFromString(
+                        SerializationUtils.serializeToString(
+                                SantanderEsXmlUtils.getTagNodeFromSoapString(
+                                        xmlErrorResponseString,
+                                        SantanderEsConstants.NodeTags.FAULT_ERROR)),
+                        String.class);
+
+        if (Strings.isNullOrEmpty(errorAsString)) {
+            return Optional.empty();
+        }
+        SoapFaultErrorEntity soapFaultErrorEntity =
+                SantanderEsXmlUtils.parseXmlStringToJson(errorAsString, SoapFaultErrorEntity.class);
+
+        return Optional.ofNullable(soapFaultErrorEntity);
+    }
 
     public String getErrorDescription() {
         return errorDescription;
@@ -24,21 +44,6 @@ public class SoapFaultErrorEntity {
 
     public String getErrorCode() {
         return errorCode;
-    }
-
-    public static Optional<SoapFaultErrorEntity> parseFaultErrorFromSoapError(String xmlErrorResponseString) {
-        String errorAsString = SerializationUtils.deserializeFromString(
-                SerializationUtils.serializeToString(
-                        SantanderEsXmlUtils.getTagNodeFromSoapString(
-                                xmlErrorResponseString, SantanderEsConstants.NodeTags.FAULT_ERROR)
-                ), String.class);
-
-        if (Strings.isNullOrEmpty(errorAsString)) {
-            return Optional.empty();
-        }
-        SoapFaultErrorEntity soapFaultErrorEntity = SantanderEsXmlUtils.parseXmlStringToJson(errorAsString, SoapFaultErrorEntity.class);
-
-        return Optional.ofNullable(soapFaultErrorEntity);
     }
 
     @JsonIgnore

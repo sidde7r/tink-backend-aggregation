@@ -12,26 +12,37 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CardEntity {
     @JsonProperty("comunes")
     private GeneralInfoEntity generalInfo;
+
     @JsonProperty("pan")
     private String cardNumber;
+
     @JsonProperty("descTipoTarjeta")
     private String cardType;
+
     @JsonProperty("descSituacionContratoTarjeta") // Active or not
     private String contractDescription;
+
     @JsonProperty("impSaldoDispuesto")
     private AmountEntity disposableBalance;
+
     @JsonProperty("impDisponible")
     private AmountEntity disposable;
+
     @JsonProperty("importeSalDisponibleContravalor")
     private AmountEntity disposableBalanceCountervalue;
+
     @JsonProperty("importeSalDisptoContravalor")
     private AmountEntity disposableCounterValue;
+
     @JsonProperty("permiteDineroDirecto")
     private String allowsDirectMoney;
+
     @JsonProperty("subtipoProd")
     private SubProductTypeEntity subProductType;
+
     @JsonProperty("indECashPrepago")
     private String eCashPrepaidIndicator;
+
     @JsonProperty("tipoInterv")
     private int typeInterv;
 
@@ -83,4 +94,3 @@ public class CardEntity {
         return typeInterv;
     }
 }
-

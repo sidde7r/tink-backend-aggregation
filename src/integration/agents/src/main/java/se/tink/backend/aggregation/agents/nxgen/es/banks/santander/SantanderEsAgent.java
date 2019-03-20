@@ -30,29 +30,33 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 public class SantanderEsAgent extends NextGenerationAgent {
     private final SantanderEsApiClient apiClient;
 
-    public SantanderEsAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SantanderEsAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = new SantanderEsApiClient(client);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new SantanderEsAuthenticator(apiClient, sessionStorage));
+        return new PasswordAuthenticationController(
+                new SantanderEsAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         return Optional.of(
-                new TransactionalAccountRefreshController(metricRefreshController, updateController,
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
                         new SantanderEsAccountFetcher(sessionStorage),
-                        new TransactionFetcherController<>(transactionPaginationHelper,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
                                 new TransactionKeyPaginationController<>(
-                                        new SantanderEsTransactionFetcher(apiClient))))
-        );
+                                        new SantanderEsTransactionFetcher(apiClient)))));
     }
 
     @Override
@@ -60,18 +64,23 @@ public class SantanderEsAgent extends NextGenerationAgent {
         CreditCardFetcher creditcardFetcher = new CreditCardFetcher(apiClient, sessionStorage);
 
         return Optional.of(
-                new CreditCardRefreshController(metricRefreshController, updateController,
-                        creditcardFetcher, new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(creditcardFetcher)))
-        );
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditcardFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(creditcardFetcher))));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        SantanderEsInvestmentFetcher investmentFetcher = new SantanderEsInvestmentFetcher(apiClient, sessionStorage);
+        SantanderEsInvestmentFetcher investmentFetcher =
+                new SantanderEsInvestmentFetcher(apiClient, sessionStorage);
 
-        return Optional
-                .of(new InvestmentRefreshController(metricRefreshController, updateController, investmentFetcher));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentFetcher));
     }
 
     @Override
@@ -89,7 +98,8 @@ public class SantanderEsAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
