@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-04 11:03PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2019-03-13 15:15PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -97,7 +97,7 @@ msgstr ""
 msgid ""
 "You will soon receive a message on your s Identity App.\n"
 "Open s Identity and sign.\n"
-"Then open Tink and press Submit"
+"Then return and press Submit"
 msgstr ""
 
 # data/seeding/providers-at.json
@@ -577,28 +577,28 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
 msgid ""
-"In order to use CIC with Tink, please authenticate yourself using the same "
-"credentials you normally use in CIC's mobile banking app."
+"In order to use CIC, please authenticate yourself using the same credentials "
+"you normally use in CIC's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
 msgid ""
-"In order to use Crédit Mutuel du Bretagne with Tink, please authenticate "
-"yourself using the same credentials you normally use in Crédit Mutuel du "
-"Bretagne's mobile banking app."
+"In order to use Crédit Mutuel du Bretagne, please authenticate yourself "
+"using the same credentials you normally use in Crédit Mutuel du Bretagne's "
+"mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
 msgid ""
-"In order to use Crédit Mutuel du Sud-Ouest with Tink, please authenticate "
-"yourself using the same credentials you normally use in Crédit Mutuel du Sud-"
-"Ouest's mobile banking app."
+"In order to use Crédit Mutuel du Sud-Ouest, please authenticate yourself "
+"using the same credentials you normally use in Crédit Mutuel du Sud-Ouest's "
+"mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-FR.json
 msgid ""
-"In order to use Crédit Mutuel with Tink, please authenticate yourself using "
-"the same credentials you normally use in Crédit Mutuel's mobile banking app."
+"In order to use Crédit Mutuel, please authenticate yourself using the same "
+"credentials you normally use in Crédit Mutuel's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -607,7 +607,7 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
-"In order to use POSB with Tink, please authenticate yourself using the same "
+"In order to use POSB, please authenticate yourself using the same "
 "credentials you normally use in POSB's mobile banking app."
 msgstr ""
 
@@ -668,16 +668,16 @@ msgstr ""
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as in SEBs mobile app. You will return to Tink "
-"when you have authenticated yourself. more info at [SEB](http://www.seb.se)."
+"Mobile BankID the same way as in SEBs mobile app. You will return when you "
+"have authenticated yourself. More info at [SEB](http://www.seb.se)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as in Sparbanken Syds mobile app. You will return "
-"to Tink when you have authenticated yourself. Read more at [Sparbanken Syd]"
-"(https://www.sparbankensyd.se/vardagstjanster/mobilbanken/)."
+"when you have authenticated yourself. Read more at [Sparbanken Syd](https://"
+"www.sparbankensyd.se/vardagstjanster/mobilbanken/)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -708,7 +708,7 @@ msgstr ""
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to Eurocards website. You will "
-"return to Tink when you have authenticated yourself."
+"return when you have authenticated yourself."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -761,7 +761,7 @@ msgstr ""
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to SAS Eurobonus MasterCards "
-"website. You will return to Tink when you have authenticated yourself."
+"website. You will return when you have authenticated yourself."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -775,7 +775,7 @@ msgstr ""
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to SJ Prio MasterCards "
-"website. You will return to Tink when you have authenticated yourself."
+"website. You will return when you have authenticated yourself."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -794,7 +794,7 @@ msgstr ""
 msgid ""
 "To connect your card you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as when you log in to Supreme Cards website. You "
-"will return to Tink when you have authenticated yourself."
+"will return when you have authenticated yourself."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -842,7 +842,7 @@ msgid ""
 "have a personal code for simplified login, we recommend that you use that "
 "instead of Mobile BankID. Back out one step and choose Swedbank Ung. That "
 "way you can get automatic warnings and notifications without having to use "
-"Mobile BankID to log in to Tink every time."
+"Mobile BankID to log in every time."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -851,7 +851,7 @@ msgid ""
 "have a personal code for simplified login, we recommend that you use that "
 "instead of Mobile BankID. Back out one step and choose Swedbank och "
 "Sparbankerna. That way you can get automatic warnings and notifications "
-"without having to use Mobile BankID to log in to Tink every time."
+"without having to use Mobile BankID to log in every time."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -864,7 +864,7 @@ msgid ""
 "personal code for simplified login, we recommend that you use that instead "
 "of Mobile BankID. Back out one step and choose Swedbank Ung. That way you "
 "can get automatic warnings and notifications without having to use Mobile "
-"BankID to log in to Tink every time."
+"BankID to log in every time."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SE.json
@@ -1139,46 +1139,44 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
 msgid ""
-"In order to use American Express with Tink, please authenticate yourself "
-"using the same credentials you normally use in American Express's mobile "
-"banking app."
+"In order to use American Express, please authenticate yourself using the "
+"same credentials you normally use in American Express's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
 msgid ""
-"In order to use Banco do Brasil with Tink, please authenticate yourself "
-"using the same credentials you normally use in Banco do Brasil's mobile "
-"banking app."
+"In order to use Banco do Brasil, please authenticate yourself using the same "
+"credentials you normally use in Banco do Brasil's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
 msgid ""
-"In order to use Bradesco with Tink, please authenticate yourself using the "
-"same credentials you normally use in Bradesco's mobile banking app."
+"In order to use Bradesco, please authenticate yourself using the same "
+"credentials you normally use in Bradesco's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
 msgid ""
-"In order to use Citibank with Tink, please authenticate yourself using the "
-"same credentials you normally use in Citibank's mobile banking app."
+"In order to use Citibank, please authenticate yourself using the same "
+"credentials you normally use in Citibank's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
 msgid ""
-"In order to use Itaú Unibanco with Tink, please authenticate yourself using "
-"the same credentials you normally use in Itaú Unibanco's mobile banking app."
+"In order to use Itaú Unibanco, please authenticate yourself using the same "
+"credentials you normally use in Itaú Unibanco's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
 msgid ""
-"In order to use Nubank with Tink, please authenticate yourself using the "
-"same credentials you normally use in Nubank's mobile banking app."
+"In order to use Nubank, please authenticate yourself using the same "
+"credentials you normally use in Nubank's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
 msgid ""
-"In order to use Santander with Tink, please authenticate yourself using the "
-"same credentials you normally use in Santander's mobile banking app."
+"In order to use Santander, please authenticate yourself using the same "
+"credentials you normally use in Santander's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-BR.json
@@ -1257,40 +1255,40 @@ msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
 msgid ""
-"In order to use American Express with Tink, please authenticate yourself "
-"using the same credentials you normally use in American Express' mobile app "
-"or at their website."
+"In order to use American Express, please authenticate yourself using the "
+"same credentials you normally use in American Express' mobile app or at "
+"their website."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
 msgid ""
-"In order to use DBS with Tink, please authenticate yourself using the same "
-"credentials you normally use in DBS's mobile banking app."
+"In order to use DBS, please authenticate yourself using the same credentials "
+"you normally use in DBS's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
 msgid ""
-"In order to use Maybank with Tink, please authenticate yourself using the "
-"same credentials you normally use in Maybank's mobile banking app."
+"In order to use Maybank, please authenticate yourself using the same "
+"credentials you normally use in Maybank's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
 msgid ""
-"In order to use OCBC Bank with Tink, please authenticate yourself using the "
-"same credentials you normally use in OCBC Bank's mobile banking app."
+"In order to use OCBC Bank, please authenticate yourself using the same "
+"credentials you normally use in OCBC Bank's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-SG.json
 msgid ""
-"In order to use Standard Chartered Breeze with Tink, please authenticate "
-"yourself using the same credentials you normally use in Standard Chartered "
-"Breeze's mobile banking app."
+"In order to use Standard Chartered Breeze, please authenticate yourself "
+"using the same credentials you normally use in Standard Chartered Breeze's "
+"mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
 msgid ""
-"In order to use Danske Bank with Tink, please authenticate yourself using "
-"the same credentials you normally use in Danske Bank's mobile banking app."
+"In order to use Danske Bank, please authenticate yourself using the same "
+"credentials you normally use in Danske Bank's mobile banking app."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/oxford-production/provider-override-GB.json
@@ -1384,13 +1382,6 @@ msgstr ""
 # data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
-"Mobile BankID the same way as in SEBs mobile app. You will return to Tink "
-"when you have authenticated yourself. More info at [SEB](http://www.seb.se)."
-msgstr ""
-
-# data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
-msgid ""
-"To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as on Collector Banks website."
 msgstr ""
 
@@ -1436,7 +1427,7 @@ msgid ""
 "personal code for simplified login, we recommend that you use that instead "
 "of Mobile BankID. Back out one step and choose Swedbank och Sparbankerna. "
 "That way you can get automatic warnings and notifications without having to "
-"use Mobile BankID to log in to Tink every time."
+"use Mobile BankID to log in every time."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/newport-staging/provider-override-SE.json
@@ -1539,8 +1530,8 @@ msgstr ""
 msgid ""
 "To connect your bank you need to authenticate with Mobile BankID. You use "
 "Mobile BankID the same way as in Sparbanken Syds mobile app. You will return "
-"to Tink when you have authenticated yourself. Read more at [Sparbanken Syd]"
-"(https://internetbanken.sparbankensyd.se/BankIDLogin/Sidor/login.aspx)."
+"when you have authenticated yourself. Read more at [Sparbanken Syd](https://"
+"internetbanken.sparbankensyd.se/BankIDLogin/Sidor/login.aspx)."
 msgstr ""
 
 # data/seeding/providers/overriding-providers/farnham-production/provider-override-SE.json
@@ -1975,8 +1966,7 @@ msgstr ""
 
 # data/seeding/providers-no.json
 msgid ""
-"In order to use SpareBank 1 with Tink, please authenticate yourself with "
-"Mobile BankID."
+"In order to use SpareBank 1, please authenticate yourself with Mobile BankID."
 msgstr ""
 
 # data/seeding/providers-development.json
@@ -1996,10 +1986,18 @@ msgid "8 digits."
 msgstr ""
 
 # data/seeding/providers-be.json
+msgid "Card number (19 characters)"
+msgstr ""
+
+# data/seeding/providers-be.json
 msgid ""
 "Enter the full amount of your transfer including the digits after the "
 "decimal point.\n"
 "Press 'OK'."
+msgstr ""
+
+# data/seeding/providers-be.json
+msgid "Enter your 8 digit response code from your card reader."
 msgstr ""
 
 # data/seeding/providers-be.json
@@ -2063,6 +2061,15 @@ msgid ""
 "Enter your PIN.\n"
 "Press 'OK'.\n"
 "Enter the registration code from the card reader."
+msgstr ""
+
+# data/seeding/providers-be.json
+msgid ""
+"Insert your bank card into the card reader.\n"
+"Press 'M1'.\n"
+"Enter the challenge.\n"
+"Enter the pin code.\n"
+"Press 'OK'."
 msgstr ""
 
 # data/seeding/providers-be.json
@@ -2134,6 +2141,14 @@ msgstr ""
 
 # data/seeding/providers-be.json
 msgid "Login code, 8 digits."
+msgstr ""
+
+# data/seeding/providers-be.json
+msgid ""
+"Please authenticate yourself using the same card number you normally use in "
+"your bank's mobile banking app, including the letter N and the digit "
+"following it. You will also need your AXA card reader to finish the "
+"authentication."
 msgstr ""
 
 # data/seeding/providers-be.json
@@ -2257,7 +2272,7 @@ msgstr ""
 # data/seeding/providers-uk.json
 msgid ""
 "You will now be redirected to your bank. After logging in using your bank "
-"details you will be taken back to the Tink app!"
+"details you will be taken back!"
 msgstr ""
 
 # data/seeding/providers-de.json
@@ -2305,4 +2320,12 @@ msgstr ""
 
 # data/seeding/providers-de.json
 msgid "Username (suffixed with auth number, default is 001)"
+msgstr ""
+
+# data/seeding/providers-mx.json
+msgid "Card Number"
+msgstr ""
+
+# data/seeding/providers-mx.json
+msgid "Use the same credentials as when you log in to BBVA"
 msgstr ""
