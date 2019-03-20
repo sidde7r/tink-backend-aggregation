@@ -102,5 +102,5 @@ data:
         cryptoConfigurationId:
           clientName: local-development
           keyId: 1
-        base64encodedkey: 'QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE='
+        base64encodedkey: "QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUE="
     {{- end }}
