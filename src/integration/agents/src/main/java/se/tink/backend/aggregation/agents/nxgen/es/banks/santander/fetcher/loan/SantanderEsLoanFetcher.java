@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanMovementEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -67,6 +67,8 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
                     SerializationUtils.serializeToString(loanEntity),
                     SantanderEsConstants.Tags.LOAN_ACCOUNT);
 
+            // This request is necessary to get details in later stage
+            // We do not use this data for now as it's not supported in our model
             String loanMovementsResponse = apiClient.fetchLoanMovements(userDataXml, loanEntity);
             LoanMovementEntity loanMovementEntity =
                     SantanderEsXmlUtils.parseXmlStringToJson(
@@ -77,10 +79,13 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
 
             String loanDetailsResponse = apiClient.fetchLoanDetails(userDataXml, loanEntity);
 
-            LoanDetailsEntity loanDetailsEntity = SantanderEsXmlUtils
-                    .parseXmlStringToJson(loanDetailsResponse, LoanDetailsEntity.class);
+            LoanDetailsEntity loanDetailsEntity =
+                    SantanderEsXmlUtils.parseXmlStringToJson(
+                            loanDetailsResponse, LoanDetailsEntity.class);
 
-            LOG.infoExtraLong(loanDetailsResponse, SantanderEsConstants.Tags.LOAN_ACCOUNT);
+            LOG.infoExtraLong(
+                    SerializationUtils.serializeToString(loanDetailsEntity),
+                    SantanderEsConstants.Tags.LOAN_ACCOUNT);
 
         } catch (Exception e) {
             LOG.info("Could not fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
