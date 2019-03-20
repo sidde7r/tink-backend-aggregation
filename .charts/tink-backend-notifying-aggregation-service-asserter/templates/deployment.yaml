@@ -28,7 +28,7 @@ spec:
       containers:
       - name: tink-backend-nasa-service
         image: gcr.io/tink-containers/tink-backend-notifying-aggregation-service-asserter:{{ .Values.Version | default "latest" }}
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         securityContext:
           readOnlyRootFilesystem: true
 
