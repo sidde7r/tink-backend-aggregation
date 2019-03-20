@@ -216,6 +216,10 @@ public class NewAgentTestContext extends AgentContext {
         return accountsByBankId.get(uniqueId);
     }
 
+    public Account updateAccount(String uniqueId) {
+        return accountsByBankId.get(uniqueId);
+    }
+
     @Override
     public void updateTransferDestinationPatterns(
             Map<Account, List<TransferDestinationPattern>> transferDestinationPatterns) {
