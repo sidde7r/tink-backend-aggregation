@@ -78,8 +78,8 @@ public class SantanderEsCreditCardTransactionsRequest {
                         + "<fechaHasta>%s</fechaHasta>"
                         + "<esUnaPaginacion>%s</esUnaPaginacion>"
                         + "%s",
-                LocalDateToXml.seralizeLocalDateToXml(fromDate),
-                LocalDateToXml.seralizeLocalDateToXml(toDate),
+                LocalDateToXml.serializeLocalDateToXml(fromDate),
+                LocalDateToXml.serializeLocalDateToXml(toDate),
                 (isPaginationRequest ? "S" : "N"),
                 repositionData);
     }

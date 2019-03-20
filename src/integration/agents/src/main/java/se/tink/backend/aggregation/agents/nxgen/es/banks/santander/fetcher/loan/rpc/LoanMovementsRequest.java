@@ -17,8 +17,8 @@ public class LoanMovementsRequest {
         GeneralInfoEntity generalInfo = loanEntity.getGeneralInfo();
         ContractEntity contractEntity = generalInfo.getContractId();
         AmountEntity balance = loanEntity.getBalance();
-        DateEntity now = LocalDateToXml.seralizeLocalDateToXml(LocalDate.now());
-        DateEntity yearAgo = LocalDateToXml.seralizeLocalDateToXml(LocalDate.now().minusYears(1));
+        DateEntity now = LocalDateToXml.serializeLocalDateToXml(LocalDate.now());
+        DateEntity yearAgo = LocalDateToXml.serializeLocalDateToXml(LocalDate.now().minusYears(1));
 
         return String.format(
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
