@@ -27,8 +27,13 @@ spec:
 
       containers:
       - name: tink-backend-nasa-service
+        {{- if eq "local" .Values.Cluster }}
+        image: bazel/src/nasa/service:docker
+        imagePullPolicy: Never
+        {{ else }}
         image: gcr.io/tink-containers/tink-backend-notifying-aggregation-service-asserter:{{ .Values.Version | default "latest" }}
         imagePullPolicy: IfNotPresent
+        {{ end }}
         securityContext:
           readOnlyRootFilesystem: true
 
