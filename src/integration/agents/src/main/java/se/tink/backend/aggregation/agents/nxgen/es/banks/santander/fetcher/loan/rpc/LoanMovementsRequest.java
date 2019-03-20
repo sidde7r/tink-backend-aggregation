@@ -54,8 +54,6 @@ public class LoanMovementsRequest {
                 contractEntity.getBankOffice().getOffice(),
                 contractEntity.getProduct(),
                 contractEntity.getContractNumber(),
-                // TODO: Part including dates should be created as separate class and formatted
-                // there when there is time to do so
                 SantanderEsXmlUtils.parseJsonToXmlString(yearAgo),
                 SantanderEsXmlUtils.parseJsonToXmlString(now),
                 balance.getCurrency(),
