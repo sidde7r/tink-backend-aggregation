@@ -20,7 +20,9 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inves
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.InstrumentDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.PortfolioDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.PortfolioDetailsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanMovementEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.rpc.LoanMovementsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.transactionalaccounts.entities.RepositionEntity;
@@ -137,7 +139,7 @@ public class SantanderEsApiClient {
                 CreditCardTransactionsResponse.class);
     }
 
-    public String fetchLoanDetails(String userDataXml, LoanEntity loanEntity) {
+    public LoanDetailsEntity fetchLoanDetails(String userDataXml, LoanEntity loanEntity) {
         String loanDetailsRequest =
                 LoanDetailsRequest.create(tokenCredential, userDataXml, loanEntity);
 
@@ -147,10 +149,13 @@ public class SantanderEsApiClient {
                         SantanderEsConstants.Urls.LOANS_ENDPOINT.toString(),
                         loanDetailsRequest);
 
-        return soapResponseString;
+        return SantanderEsXmlUtils.deserializeFromSoapString(
+                soapResponseString,
+                SantanderEsConstants.NodeTags.METHOD_RESULT,
+                LoanDetailsEntity.class);
     }
 
-    public String fetchLoanMovements(String userDataXml, LoanEntity loanEntity) {
+    public LoanMovementEntity fetchLoanMovements(String userDataXml, LoanEntity loanEntity) {
         String loanDetailsRequest =
                 LoanMovementsRequest.create(tokenCredential, userDataXml, loanEntity);
 
@@ -160,7 +165,10 @@ public class SantanderEsApiClient {
                         SantanderEsConstants.Urls.LOANS_ENDPOINT.toString(),
                         loanDetailsRequest);
 
-        return soapResponseString;
+        return SantanderEsXmlUtils.deserializeFromSoapString(
+                soapResponseString,
+                SantanderEsConstants.NodeTags.METHOD_RESULT,
+                LoanMovementEntity.class);
     }
 
     public PortfolioDetailsResponse fetchPortfolioDetails(

@@ -69,22 +69,15 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
 
             // This request is necessary to get details in later stage
             // We do not use this data for now as it's not supported in our model
-            String loanMovementsResponse = apiClient.fetchLoanMovements(userDataXml, loanEntity);
-            LoanMovementEntity loanMovementEntity =
-                    SantanderEsXmlUtils.parseXmlStringToJson(
-                            loanMovementsResponse, LoanMovementEntity.class);
+            LoanMovementEntity loanMovementsResponse = apiClient.fetchLoanMovements(userDataXml, loanEntity);
             LOGGER.debug(
                     "Loans movement list: "
-                            + SerializationUtils.serializeToString(loanMovementEntity));
+                            + SerializationUtils.serializeToString(loanMovementsResponse));
 
-            String loanDetailsResponse = apiClient.fetchLoanDetails(userDataXml, loanEntity);
-
-            LoanDetailsEntity loanDetailsEntity =
-                    SantanderEsXmlUtils.parseXmlStringToJson(
-                            loanDetailsResponse, LoanDetailsEntity.class);
+            LoanDetailsEntity loanDetailsResponse = apiClient.fetchLoanDetails(userDataXml, loanEntity);
 
             LOG.infoExtraLong(
-                    SerializationUtils.serializeToString(loanDetailsEntity),
+                    SerializationUtils.serializeToString(loanDetailsResponse),
                     SantanderEsConstants.Tags.LOAN_ACCOUNT);
 
         } catch (Exception e) {
