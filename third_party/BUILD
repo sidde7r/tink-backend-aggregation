@@ -1659,3 +1659,27 @@ java_library(
         "@io_vavr_test//jar",
     ],
 )
+
+java_library(
+    name = "java_spark",
+    visibility = ["//visibility:public"],
+    exports = [
+        "@com_sparkjava_spark_core//jar",
+        "@javax_servlet_javax_servlet_api_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_api_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_client_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_common_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_server_spark_dep//jar",
+        "@org_eclipse_jetty_websocket_websocket_servlet_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_client_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_http_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_io_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_security_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_server_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_servlet_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_util_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_webapp_spark_dep//jar",
+        "@org_eclipse_jetty_jetty_xml_spark_dep//jar",
+        "@org_slf4j_slf4j_api//jar",
+    ],
+)

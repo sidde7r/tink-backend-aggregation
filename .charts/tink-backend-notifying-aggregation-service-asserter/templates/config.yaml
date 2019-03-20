@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nasa-configuration
+  namespace: notifying-aggregation-service-asserter
+data:
+  config.yaml: |
+    port: 8443
+    keyStorePath: data/security/developer.keystore
+    trustStorePath: data/security/TinkCA.truststore
+    certAlias: developer.internal.tink.se
+    validateCerts: {{ default "false" .Values.validateCerts }}
+
+{{ if .Values.createDevelopmentSecrets }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: nasa-secrets
+  namespace: notifying-aggregation-service-asserter
+type: Opaque
+data:
+  # tink
+{{ end }}

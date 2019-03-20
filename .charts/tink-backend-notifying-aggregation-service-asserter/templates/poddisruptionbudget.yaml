@@ -1,0 +1,10 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: nasa-poddisruptionbudget
+  namespace: notifying-aggregation-service-asserter
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: nasa-service
