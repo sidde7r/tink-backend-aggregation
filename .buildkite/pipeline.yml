@@ -12,7 +12,7 @@ steps:
   - name: ":kubernetes: Helm Lint"
     branches: '!master'
     command: /go/bin/kubernetes-generator --mode lint --repo .
-    timeout_in_minutes: 5
+    timeout_in_minutes: 10
     agents:
       queue: new
     plugins:
