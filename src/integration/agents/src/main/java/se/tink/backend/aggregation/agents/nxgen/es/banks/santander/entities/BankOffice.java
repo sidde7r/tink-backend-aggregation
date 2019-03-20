@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.bind.annotation.XmlRootElement;

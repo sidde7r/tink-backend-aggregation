@@ -6,7 +6,7 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
