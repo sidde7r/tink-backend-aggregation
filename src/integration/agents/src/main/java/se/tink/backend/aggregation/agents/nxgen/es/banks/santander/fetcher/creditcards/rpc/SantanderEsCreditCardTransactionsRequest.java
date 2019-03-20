@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXm
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardRepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.LocalDateToXml;
 
 public class SantanderEsCreditCardTransactionsRequest {
 
@@ -73,24 +74,12 @@ public class SantanderEsCreditCardTransactionsRequest {
         }
 
         return String.format(
-                "<fechaDesde>"
-                        + "<anyo>%d</anyo>"
-                        + "<mes>%d</mes>"
-                        + "<dia>%d</dia>"
-                        + "</fechaDesde>"
-                        + "<fechaHasta>"
-                        + "<anyo>%d</anyo>"
-                        + "<mes>%d</mes>"
-                        + "<dia>%d</dia>"
-                        + "</fechaHasta>"
+                "<fechaDesde>%s</fechaDesde>"
+                        + "<fechaHasta>%s</fechaHasta>"
                         + "<esUnaPaginacion>%s</esUnaPaginacion>"
                         + "%s",
-                fromDate.getYear(),
-                fromDate.getMonthValue(),
-                fromDate.getDayOfMonth(),
-                toDate.getYear(),
-                toDate.getMonthValue(),
-                toDate.getDayOfMonth(),
+                LocalDateToXml.seralizeLocalDateToXml(fromDate),
+                LocalDateToXml.seralizeLocalDateToXml(toDate),
                 (isPaginationRequest ? "S" : "N"),
                 repositionData);
     }
