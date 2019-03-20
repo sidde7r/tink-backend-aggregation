@@ -1,9 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
+@Ignore
 public class BBVAAgentTest {
 
   private AgentIntegrationTest.Builder builder;
