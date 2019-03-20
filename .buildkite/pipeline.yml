@@ -58,6 +58,15 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
 
+  - name: ':docker: tink-backend-notifying-aggregation-service-asserter'
+    branches: 'staging'
+    command: .buildkite/build-and-push-docker.sh //src/nasa/service:docker_push
+    timeout_in_minutes: 10
+    plugins:
+      docker-compose#v2.5.1:
+        run: "app"
+        config: "docker/docker-compose.bazel.yml"
+
   - name: ':debian: tink-backend-aggregation'
     branches: 'staging'
     command: .buildkite/build-and-upload-deb.sh //deb:aggregation deb/tink-backend-aggregation tink-backend-aggregation
@@ -84,6 +93,20 @@ steps:
       branch: "tink-backend-integration"
       env:
         CHART: "tink-backend-integration"
+        REPO_NAME: "tink-backend-aggregation"
+        REPO_SHA1: "$BUILDKITE_COMMIT"
+        VERSION: "$VERSION"
+        PRUNE: "True"
+
+  - name: "Trigger release-train for tink-backend-notifying-aggregation-service-asserter"
+    branches: 'master'
+    trigger: "release-train"
+    async: false
+    build:
+      message: "$BUILDKITE_MESSAGE"
+      branch: "tink-backend-notifying-aggregation-service-asserter"
+      env:
+        CHART: "tink-backend-notifying-aggregation-service-asserter"
         REPO_NAME: "tink-backend-aggregation"
         REPO_SHA1: "$BUILDKITE_COMMIT"
         VERSION: "$VERSION"
