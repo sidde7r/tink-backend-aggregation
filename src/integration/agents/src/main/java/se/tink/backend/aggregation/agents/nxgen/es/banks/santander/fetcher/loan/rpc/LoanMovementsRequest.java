@@ -2,10 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan
 
 import java.time.LocalDate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.GeneralInfoEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.DateEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.FromDateEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.LocalDateToXml;
 
 public class LoanMovementsRequest {
 
@@ -14,8 +18,8 @@ public class LoanMovementsRequest {
         GeneralInfoEntity generalInfo = loanEntity.getGeneralInfo();
         ContractEntity contractEntity = generalInfo.getContractId();
         AmountEntity balance = loanEntity.getBalance();
-        LocalDate now = LocalDate.now();
-        LocalDate yearAgo = LocalDate.now().minusYears(1);
+        DateEntity now = LocalDateToXml.seralizeLocalDateToXml(LocalDate.now());
+        DateEntity yearAgo = LocalDateToXml.seralizeLocalDateToXml(LocalDate.now().minusYears(1));
 
         return String.format(
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
@@ -33,16 +37,8 @@ public class LoanMovementsRequest {
                         + "<PRODUCTO>%s</PRODUCTO>"
                         + "<NUMERO_DE_CONTRATO>%s</NUMERO_DE_CONTRATO>"
                         + "</contrato>"
-                        + "<fechaDesde>"
-                        + "<dia>%s</dia>"
-                        + "<mes>%s</mes>"
-                        + "<anyo>%s</anyo>"
-                        + "</fechaDesde>"
-                        + "<fechaHasta>"
-                        + "<dia>%s</dia>"
-                        + "<mes>%s</mes>"
-                        + "<anyo>%s</anyo>"
-                        + "</fechaHasta>"
+                        + "<fechaDesde>%s</fechaDesde>"
+                        + "<fechaHasta>%s</fechaHasta>"
                         + "<divisa>%s</divisa>"
                         + "</entrada>"
                         + "<datosConexion>%s</datosConexion>"
@@ -61,12 +57,8 @@ public class LoanMovementsRequest {
                 contractEntity.getContractNumber(),
                 // TODO: Part including dates should be created as separate class and formatted
                 // there when there is time to do so
-                yearAgo.getDayOfMonth(),
-                yearAgo.getMonthValue(),
-                yearAgo.getYear(),
-                now.getDayOfMonth(),
-                now.getMonthValue(),
-                now.getYear(),
+                SantanderEsXmlUtils.parseJsonToXmlString(yearAgo),
+                SantanderEsXmlUtils.parseJsonToXmlString(now),
                 balance.getCurrency(),
                 userDataXml,
                 SantanderEsConstants.DataHeader.VERSION,
