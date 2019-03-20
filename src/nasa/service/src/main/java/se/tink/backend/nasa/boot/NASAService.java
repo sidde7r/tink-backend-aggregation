@@ -15,6 +15,7 @@ import se.tink.backend.nasa.boot.configuration.Configuration;
 import se.tink.backend.nasa.boot.configuration.ConfigurationUtils;
 import se.tink.backend.nasa.boot.configuration.NASAServiceModule;
 import se.tink.backend.nasa.boot.configuration.SensitiveConfiguration;
+import spark.Filter;
 import spark.Spark;
 
 class NASAService {
@@ -82,6 +83,8 @@ class NASAService {
                 sensitiveConfiguration.getTrustStorePassword(),
                 config.isValidateCerts());
 
+        Spark.before(SparkFilters.ACCESS_LOGGING);
+
         Spark.get("/ping", (req, res) -> "pong");
     }
 
@@ -102,6 +105,15 @@ class NASAService {
         shutdownLatch.await(duration + 1, unit);
 
         logger.info("Shutdown took: " + sw.stop().elapsed(TimeUnit.MILLISECONDS) + "ms");
+    }
+
+    private static class SparkFilters {
+        static Filter ACCESS_LOGGING = (request, response) ->
+                logger.info("Request info: {} {} {} {}",
+                        request.ip(),
+                        request.userAgent(),
+                        request.requestMethod(),
+                        request.url());
     }
 }
 
