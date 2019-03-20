@@ -64,6 +64,13 @@
     "banks.se.collector.CollectorAgent": [
         "TRANSFERS"
     ],
+    "nxgen.se.banks.danskebank.DanskeBankSEAgent": [
+        "CHECKING_ACCOUNTS",
+        "SAVINGS_ACCOUNTS",
+        "CREDIT_CARDS",
+        "LOANS",
+        "INVESTMENTS"
+    ],
     "banks.seb.SEBApiAgent": [
         "MORTGAGE_AGGREGATION",
         "TRANSFERS",
