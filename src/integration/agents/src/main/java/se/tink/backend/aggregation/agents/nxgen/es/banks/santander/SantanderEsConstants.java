@@ -109,6 +109,8 @@ public class SantanderEsConstants {
     public static final class SoapErrorMessages {
         public static final String NO_MORE_TRANSACTIONS =
                 "no existen movimientos asociados a esta consulta";
+        public static final String NO_MOVEMENTS_IN_INTERVAL =
+                "no hay movimientos en el intervalo indicado";
         public static final String NO_PERMISSION_TO_PERFORM_OPERATION =
                 "no dispone de los permisos necesarios para realizar esta operación";
         public static final String PROVIDE_VALID_INITIAL_DATE =
