@@ -496,9 +496,9 @@ maven_jar(
 )
 
 maven_jar(
-    name = "org_slf4j_slf4j_simple",
-    artifact = "org.slf4j:slf4j-simple:jar:1.7.21",
-    sha1 = "be4b3c560a37e69b6c58278116740db28832232c",
+    name = "org_apache_logging_log4j_log4j_slf4j",
+    artifact = "org.apache.logging.log4j:log4j-slf4j-impl:jar:2.11.1",
+    sha1 = "4b41b53a3a2d299ce381a69d165381ca19f62912",
 )
 
 maven_jar(
