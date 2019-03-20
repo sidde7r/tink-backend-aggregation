@@ -4,8 +4,10 @@ java_library(
     name = "agents",
     srcs = glob(["src/main/**/*.java"]),
     visibility = ["//visibility:public"],
-    deps = [
+    runtime_deps = [
         "//src/integration/agents/src/main/java/se/tink/backend/aggregation/agents/nxgen/be/banks/axa:be-axa-lib",
+    ],
+    deps = [
         "//src/integration/api",
         "//src/integration/lib",
         "//src/integration/models",
