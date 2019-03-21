@@ -260,8 +260,13 @@ public class Account implements Cloneable {
                 .add("userid", getUserId()).toString();
     }
 
+
     public List<AccountIdentifier> getIdentifiers() {
         return deserializeIdentifiers();
+    }
+
+    public String getIdentifiersSerialized() {
+        return this.identifiers;
     }
 
     public void setIdentifiers(Collection<AccountIdentifier> identifiers) {

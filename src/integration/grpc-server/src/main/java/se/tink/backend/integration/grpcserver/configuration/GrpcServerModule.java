@@ -12,6 +12,7 @@ import io.grpc.ServerInterceptor;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.List;
+import se.tink.backend.integration.fetchservice.FetchService;
 import se.tink.backend.integration.gprcserver.interceptors.AccessLogInterceptor;
 import se.tink.backend.integration.gprcserver.GrpcServer;
 import se.tink.backend.integration.gprcserver.interceptors.MonitoringInterceptor;
@@ -33,7 +34,8 @@ public class GrpcServerModule extends AbstractModule {
 
     private void bindServices(Binder binder) {
         List<Class<? extends BindableService>> services = Lists.newArrayList(
-                PingService.class
+                PingService.class,
+                FetchService.class
         );
 
         bindSet(binder, "grpcServices", BindableService.class, services);

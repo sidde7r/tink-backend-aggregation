@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents;
 
 import com.google.common.base.Objects;
+import com.google.inject.Inject;
 import java.lang.reflect.Constructor;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 public class AgentFactory {
     private AgentsServiceConfiguration configuration;
 
+    @Inject
     public AgentFactory(AgentsServiceConfiguration configuration) {
         this.configuration = configuration;
     }
@@ -42,6 +44,22 @@ public class AgentFactory {
         Constructor<?> agentConstructor = agentClass.getConstructor(
                 CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
         
+        Agent agent = (Agent) agentConstructor.newInstance(request, context, configuration.getSignatureKeyPair());
+        agent.setConfiguration(configuration);
+
+        return agent;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Class<? extends Agent> getAgentClass(String className) throws Exception {
+        return AgentClassFactory.getAgentClass(className);
+    }
+
+    public Agent createForIntegration(String className, CredentialsRequest request, AgentContext context) throws Exception {
+        Class<? extends Agent> agentClass = getAgentClass(className);
+        Constructor<?> agentConstructor = agentClass.getConstructor(
+                CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
+
         Agent agent = (Agent) agentConstructor.newInstance(request, context, configuration.getSignatureKeyPair());
         agent.setConfiguration(configuration);
 

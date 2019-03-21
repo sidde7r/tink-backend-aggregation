@@ -10,3 +10,7 @@ import "proto/integration_service/rpc.proto";
 service PingService {
     rpc Ping (PingRequest) returns (PingResponse) {}
 }
+
+service FetchService {
+    rpc CheckingAccounts (IntegrationRequest) returns (CheckingAccountsResponse) {}
+}
