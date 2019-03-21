@@ -5,7 +5,6 @@ import java.util.Map;
 import se.tink.backend.integration.api.models.IntegrationCredentials;
 import se.tink.backend.integration.fetchservice.controller.Credentials;
 
-
 public class EnumMapper {
 
     public static final Map<IntegrationCredentials.Type, Credentials.Type> CREDENTIALS_TYPE = new
