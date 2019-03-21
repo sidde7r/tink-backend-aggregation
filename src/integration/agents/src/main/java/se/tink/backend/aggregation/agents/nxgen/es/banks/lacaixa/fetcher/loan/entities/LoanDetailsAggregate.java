@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.e
 import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.LaCaixaConstants;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.LaCaixaLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.loan.rpc.LoanDetailsResponse;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
@@ -58,14 +59,9 @@ public class LoanDetailsAggregate {
     }
 
     private LoanDetails.Type getLoanType() {
-        // When we have information about more types we should investigate if we can use
-        // `productCode` instead
-        if (loanEntity.getContractDescription().contains("hipotec")) {
-            return LoanDetails.Type.MORTGAGE;
-        }
-
-        // Set to other if we do not know the loan type
-        return LoanDetails.Type.OTHER;
+        return LaCaixaConstants.LOAN_TYPE_MAPPER
+                .translate(loanEntity.getProductCode())
+                .orElse(LoanDetails.Type.OTHER);
     }
 
     // logging method to discover different types of loans than mortgage
