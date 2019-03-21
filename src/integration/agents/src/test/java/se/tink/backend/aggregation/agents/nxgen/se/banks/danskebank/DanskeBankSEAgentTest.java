@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
-import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
 public final class DanskeBankSEAgentTest {
@@ -25,7 +24,7 @@ public final class DanskeBankSEAgentTest {
 
     @AfterClass
     public static void afterClass() {
-        ArgumentHelper.afterClass();
+        ArgumentManager.afterClass();
     }
 
     @Test
