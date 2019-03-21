@@ -70,7 +70,6 @@ class NASAService {
         httpServer.start();
 
         // Start the Prometheus Exporter Server
-        DefaultExports.initialize();
 
         // Setup spark HTTPS server
         Spark.port(config.getPort());
