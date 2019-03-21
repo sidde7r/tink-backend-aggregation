@@ -14,14 +14,12 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceDetailsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoiceEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.einvoice.rpc.EInvoicePaymentEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.ApproveEInvoiceExecutor;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.transfer.enums.TransferPayloadType;
-import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor implements ApproveEInvoiceExecutor {
 
@@ -32,26 +30,19 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
 
     @Override
     public void approveEInvoice(Transfer transfer) throws TransferExecutionException {
-        // this is the current implementation for transfers, only use the last profile for transfers
-        apiClient.selectTransferProfile();
+        // We'll go through all the profiles to find the one the source account belongs to.
+        // That profile will also be selected so it's used going forward in the execution flow.
+        String sourceAccountId = this.getSourceAccountIdAndSelectProfile(transfer);
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers();
         registeredTransfers.noUnsignedTransfersOrThrow();
 
-        RegisteredTransfersResponse registeredTransfersResponse = registerEInvoice(transfer);
+        RegisteredTransfersResponse registeredTransfersResponse = registerEInvoice(transfer, sourceAccountId);
 
         signAndConfirmTransfer(registeredTransfersResponse);
     }
 
-    private RegisteredTransfersResponse registerEInvoice(Transfer transfer) {
-        PaymentBaseinfoResponse paymentBaseinfo = apiClient.paymentBaseinfo();
-        AccountIdentifier sourceAccount = SwedbankTransferHelper.getSourceAccount(transfer);
-        Optional<String> sourceAccountId = paymentBaseinfo.getSourceAccountId(sourceAccount);
-        if (!sourceAccountId.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND).build();
-        }
+    private RegisteredTransfersResponse registerEInvoice(Transfer transfer, String sourceAccountId) {
 
         Optional<String> providerUniqueId = transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
         if (!providerUniqueId.isPresent()) {
@@ -80,7 +71,7 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
         }
 
         RegisterTransferResponse registerTransferResponse = getRegisterEinvoice(transfer, sourceAccountId,
-                eInvoicePaymentEntity);
+                eInvoicePaymentEntity.get());
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers(
                 registerTransferResponse.getLinks().getNextOrThrow());
@@ -97,8 +88,8 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
         return registeredTransfers;
     }
 
-    private RegisterTransferResponse getRegisterEinvoice(Transfer transfer, Optional<String> sourceAccountId,
-            Optional<EInvoicePaymentEntity> eInvoicePaymentEntity) {
+    private RegisterTransferResponse getRegisterEinvoice(Transfer transfer, String sourceAccountId,
+            EInvoicePaymentEntity eInvoicePaymentEntity) {
 
         try {
             return apiClient.registerEInvoice(
@@ -106,9 +97,9 @@ public class SwedbankDefaultApproveEInvoiceExecutor extends BaseTransferExecutor
                     transfer.getDestinationMessage(),
                     SwedbankTransferHelper.getReferenceTypeFor(transfer),
                     transfer.getDueDate(),
-                    eInvoicePaymentEntity.get().getEinvoiceReference(),
-                    eInvoicePaymentEntity.get().getPayee().getId(),
-                    sourceAccountId.get());
+                    eInvoicePaymentEntity.getEinvoiceReference(),
+                    eInvoicePaymentEntity.getPayee().getId(),
+                    sourceAccountId);
         } catch (HttpResponseException hre) {
             throw convertExceptionIfBadPaymentDate(hre);
         }

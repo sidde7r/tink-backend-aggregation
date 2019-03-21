@@ -70,6 +70,12 @@ public class SwedbankTransferHelper {
                             .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_CANCELLED)
                             .build();
                 case TIMEOUT:
+                    throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
+                            .setEndUserMessage(
+                                    TransferExecutionException.EndUserMessage
+                                            .BANKID_NO_RESPONSE)
+                            .setMessage(SwedbankBaseConstants.ErrorMessage.COLLECT_BANKID_TIMEOUT)
+                            .build();
                 default:
                     throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                             .setEndUserMessage(

@@ -257,6 +257,7 @@ public class SwedbankBaseConstants {
         public static final String TRANSFER_REGISTER_FAILED = "Could not register transfer.";
         public static final String TRANSFER_CONFIRM_FAILED = "Could not confirm transfer was executed.";
         public static final String COLLECT_BANKID_FAILED = "Failed when collecting bankid for signing transfer.";
+        public static final String COLLECT_BANKID_TIMEOUT = "Timeout when collecting bankID for signing transfer";
         public static final String COLLECT_BANKID_CANCELLED = "Could not confirm transfer with BankID signing.";
         public static final String NOT_EXACTLY_ONE_UNSIGNED_TRANSFER = "Number of unsigned transfers not equal to one - Cancelling to not sign more than one transfer.";
         public static final String UNSIGNED_TRANFERS = "Existing unsigned transfers - Cancelling to not sign more than one transfer.";

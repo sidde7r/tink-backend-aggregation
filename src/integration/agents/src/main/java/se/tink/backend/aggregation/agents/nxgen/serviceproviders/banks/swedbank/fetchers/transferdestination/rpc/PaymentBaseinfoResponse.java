@@ -88,26 +88,29 @@ public class PaymentBaseinfoResponse {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Tries to match the given account identifier with an account in transactionAccountGroups, and then return
+     * that matching account entity.
+     */
     @JsonIgnore
-    public Optional<String> getSourceAccountId(AccountIdentifier accountIdentifier) {
+    public Optional<TransferDestinationAccountEntity> getSourceAccount(AccountIdentifier accountIdentifier) {
         Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
         Preconditions.checkState(accountIdentifier.isValid(), "The account identifier must be valid.");
 
-        Optional<TransferDestinationAccountEntity> accountEntity = Optional.ofNullable(transactionAccountGroups)
+        return Optional.ofNullable(transactionAccountGroups)
                 .orElseGet(Collections::emptyList).stream()
                 .map(TransactionAccountGroupEntity::getAccounts)
                 .flatMap(Collection::stream)
                 .filter(tdae -> accountIdentifier.equals(tdae.generalGetAccountIdentifier()))
                 .findFirst();
+    }
 
-        if (!accountEntity.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
-                    .build();
-        }
-
-        TransferDestinationAccountEntity transferDestinationAccountEntity = accountEntity.get();
+    /**
+     * Validates that it's allowed to make transfer from given account entity, if not an exception is thrown.
+     * If the ID of this account is null we also throw an exception, since the ID is required to make a transfer.
+     */
+    @JsonIgnore
+    public String validateAndGetSourceAccountId(TransferDestinationAccountEntity transferDestinationAccountEntity) {
 
         transferDestinationAccountEntity.getScopes().stream()
                 .filter(SwedbankBaseConstants.TransferScope.TRANSFER_FROM::equalsIgnoreCase)
@@ -117,7 +120,15 @@ public class PaymentBaseinfoResponse {
                         .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_TRANSFER_CAPABLE)
                         .build());
 
-        return Optional.ofNullable(transferDestinationAccountEntity.getId());
+        String transferDestinationAccountId = transferDestinationAccountEntity.getId();
+
+        if (transferDestinationAccountId == null) {
+            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                    .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
+                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND).build();
+        }
+
+        return transferDestinationAccountId;
     }
 
     @JsonIgnore
