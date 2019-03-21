@@ -23,7 +23,7 @@ public class CoreToGrpcConverter {
                             .setUniqueIdentifier(coreAccount.getBankId()) // CHECK: is this the unique idenfier
                             .setHolderName(HolderName.getDefaultInstance())
                             .setAgentAccountState(AgentAccountState.getDefaultInstance())
-                            .setAccountIdentifiers(coreAccount.getIdentifiersDeserialized())
+                            .setAccountIdentifiers(coreAccount.getIdentifiersSerialized())
                             .build());
                 }
         );
