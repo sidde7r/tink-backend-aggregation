@@ -37,6 +37,11 @@ public class HandelsbankenSEConfiguration
     }
 
     @Override
+    public String getDeviceModel() {
+        return HandelsbankenSEConstants.Headers.DEVICE_MODEL;
+    }
+
+    @Override
     public String getAuthTp() {
         return HandelsbankenSEConstants.DeviceAuthentication.AUTH_TP;
     }
@@ -67,7 +72,7 @@ public class HandelsbankenSEConfiguration
 
     @Override
     public URL toCards(ApplicationEntryPointResponse applicationEntryPoint) {
-        return applicationEntryPoint.toCardsV3();
+        return applicationEntryPoint.toCards();
     }
 
     @Override

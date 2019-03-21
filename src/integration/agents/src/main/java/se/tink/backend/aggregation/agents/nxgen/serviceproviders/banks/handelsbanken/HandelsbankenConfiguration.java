@@ -19,6 +19,8 @@ public interface HandelsbankenConfiguration<API extends HandelsbankenApiClient> 
 
     String getAppVersion();
 
+    String getDeviceModel();
+
     String getAuthTp();
 
     AuthorizeResponse toAuthorized(ValidateSignatureResponse validateSignature,

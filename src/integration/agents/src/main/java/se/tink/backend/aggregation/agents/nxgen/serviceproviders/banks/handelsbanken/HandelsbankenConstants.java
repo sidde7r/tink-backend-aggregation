@@ -47,7 +47,6 @@ public class HandelsbankenConstants {
             CARD_TRANSACTIONS("card-transactions"),
             CARD_MORE_TRANSACTIONS("card-more-transactions"),
             CARDS("cards"),
-            CARDS_V3("cards-v3"),
             CHECK_AGREEMENT("checkAgreement"),
             COMMIT_PROFILE("commitProfile"),
             CREATE("create"),
@@ -65,16 +64,16 @@ public class HandelsbankenConstants {
             NEXT_TRANSACTIONS("next"),
             PAYMENT_CONTEXT("payment-context"),
             PAYMENT_DETAIL("payment-detail"),
-            PENDING_EINVOICES("einvoice-pending-v4"),
-            PENDING_TRANSACTIONS("pending-transactions-v4"),
+            PENDING_EINVOICES("einvoice-pending"),
+            PENDING_TRANSACTIONS("pending-transactions"),
             PENSION_DETAILS("pension-detail"),
             PINNED_ACTIVATION("pinned-activation"),
             PINNED_LOGIN("pinned-login"),
-            SECURITIES_HOLDINGS("securities-holdings-v2"),
+            SECURITIES_HOLDINGS("securities-holdings"),
             SECURITY_HOLDING("security-holding"),
             SIGNATURE("signature"),
             TRANSACTIONS("transactions"),
-            TRANSFER_CONTEXT("transfer-context-v2"),
+            TRANSFER_CONTEXT("transfer-context"),
             TRANSINFO("transinfo"),
             UPDATE("update"),
             VALIDATE_SIGNATURE("validateSignature"),
@@ -132,7 +131,7 @@ public class HandelsbankenConstants {
     public static final class Authentication {
 
         public static final List<DeviceInfoKeyValue> DEVICE_INFO_DATA = Lists.newArrayList(
-                new DeviceInfoKeyValue("app_version", "Ny40LjA="),// 7.4.0
+                new DeviceInfoKeyValue("app_version", "OC41LjA="),// 8.5.0
                 new DeviceInfoKeyValue("comp_ver", "Mg=="), // 2
                 // Jailbreak detection. Set manually to `0` in order to not set off any alarms (as of today it is OK to have
                 // these set to `1`).
@@ -144,7 +143,7 @@ public class HandelsbankenConstants {
                 new DeviceInfoKeyValue("i_sid", "sHM+0eLKRWSeFaeFxqKArA=="),
                 new DeviceInfoKeyValue("i_sid_f", "MA=="), // 0
                 new DeviceInfoKeyValue("os_name", "aU9T"), // iOS
-                new DeviceInfoKeyValue("os_version", "MTAuMS4x"), // 10.1.1
+                new DeviceInfoKeyValue("os_version", "MTEuNC4x"), // 11.4.1
                 new DeviceInfoKeyValue("prof_trans_ver", "MQ==")
         );
 
