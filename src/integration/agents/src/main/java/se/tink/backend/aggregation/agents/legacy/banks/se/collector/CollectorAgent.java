@@ -1,7 +1,16 @@
 package se.tink.backend.aggregation.agents.banks.se.collector;
 
 import com.google.common.util.concurrent.Uninterruptibles;
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import org.apache.http.HttpStatus;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -17,6 +26,7 @@ import se.tink.backend.aggregation.agents.RefreshTransferDestinationExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.banks.se.collector.models.CollectAuthenticationResponse;
+import se.tink.backend.aggregation.agents.banks.se.collector.models.ErrorResponse;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
@@ -26,20 +36,14 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
+import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class CollectorAgent extends AbstractAgent
         implements RefreshSavingsAccountsExecutor,
@@ -74,8 +78,20 @@ public class CollectorAgent extends AbstractAgent
                 try {
                     authenticateWithMobileBankID(credentials.getField(Field.Key.USERNAME));
                 } catch (UniformInterfaceException e) {
-                    if (Objects.equals(e.getResponse().getStatus(), 500)) {
+                    ClientResponse response = e.getResponse();
+
+                    if (response.getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
                         throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                    }
+
+                    if (response.getStatus() == HttpStatus.SC_BAD_REQUEST) {
+                        ErrorResponse errorResponse = response.getEntity(ErrorResponse.class);
+
+                        if (errorResponse.isErrorDueToRepeatedRequests()) {
+                            throw BankIdError.CANCELLED.exception(new LocalizableKey(
+                                    "Because of repeated attempts the authentication request has been" +
+                                            " cancelled. Please try again later."));
+                        }
                     }
 
                     throw e;
