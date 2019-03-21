@@ -1,11 +1,10 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 from builtins import input
 from builtins import object
 import sys
 import argparse
 import os
 from flask import Flask, jsonify, request, abort, Response, redirect
-from functools import wraps
 import webbrowser
 
 from memqueue import MemoryMessageQueue
@@ -16,6 +15,7 @@ app = Flask(__name__)
 
 CREDENTIALS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/credentials/"
 
+
 class SupplementalStdin(object):
     def __init__(self, fields):
         self.answers = {}
@@ -24,7 +24,7 @@ class SupplementalStdin(object):
             key = field.get("name")
             desc = self.get_description(field)
             if field.get("value"):
-                value = field.get("value").encode("utf-8")
+                value = field.get("value")
                 print("%s: %s" % (desc, value))
             else:
                 value = input("%s: " % desc)
@@ -39,9 +39,9 @@ class SupplementalStdin(object):
     def get_description(field):
         desc = ''
         if field.get("description"):
-            desc += field.get("description").encode("utf-8")
+            desc += field.get("description")
         if field.get("helpText"):
-            desc += " (%s)" % field.get("helpText").encode("utf-8")
+            desc += " (%s)" % field.get("helpText")
 
         return desc
 
@@ -54,7 +54,7 @@ def ask_user_for_data(fields):
 
 
 def sanitize_filename(filename):
-    return "".join([c for c in filename if c.isalpha() or c.isdigit() or c==" "]).rstrip()
+    return "".join([c for c in filename if c.isalpha() or c.isdigit() or c == " "]).rstrip()
 
 
 def make_dirs(path):
@@ -67,7 +67,6 @@ def make_dirs(path):
 
 @app.route("/api/v1/credential/<provider>/<credentialId>", methods=("POST",))
 def save_credential(provider, credentialId):
-
     # make sure the credentials output path exists
     make_dirs(CREDENTIALS_PATH)
 
@@ -76,7 +75,7 @@ def save_credential(provider, credentialId):
     with open(filename, "wb") as f:
         f.write(request.get_data())
 
-    return ("", 204)
+    return "", 204
 
 
 @app.route("/api/v1/credential/<provider>/<credentialId>", methods=("GET",))
@@ -103,7 +102,7 @@ def request_supplemental(key):
     # when the agent asks for the supplemental information.
     queue.put(key, answers)
 
-    return ("", 204)
+    return "", 204
 
 
 @app.route("/api/v1/supplemental/<key>/<timeout_seconds>", methods=("GET",))
@@ -115,22 +114,21 @@ def get_supplemental(key, timeout_seconds):
 # only support web browser as app.
 @app.route("/api/v1/thirdparty/open", methods=("POST",))
 def thirdparty_open():
-
     def get_ios_url(payload):
         return payload.get("ios", {}).get("deepLinkUrl", None)
 
     if not request.json:
         return None
 
-    payload = request.get_json()
+    json_payload = request.get_json()
 
-    url = get_ios_url(payload)
+    url = get_ios_url(json_payload)
     if not url:
-        return ("invalid payload", 500)
+        return "invalid payload", 500
 
     webbrowser.open_new_tab(url)
 
-    return ("", 204)
+    return "", 204
 
 
 # This endpoint will be accessed/opened by the web browser as a result
@@ -138,7 +136,6 @@ def thirdparty_open():
 @app.route("/api/v1/thirdparty/callback", methods=("GET", "POST"))
 @app.route("/api/v1/credentials/third-party/callback", methods=("GET", "POST"))
 def thirdparty_callback():
-
     args = request.args or request.form
 
     state = args.get("state", None)
@@ -170,7 +167,7 @@ def thirdparty_callback():
 
     # turn it into a dict from a ImmutableMultiDict (we don't expect or
     # support lists)
-    parameters = {k:v for (k,v) in args.items()}
+    parameters = {k: v for (k, v) in list(args.items())}
 
     # Put the parameters on the queue so that it can be picked up
     # when the agent asks for the supplemental information.
@@ -184,17 +181,17 @@ def thirdparty_callback():
 def main():
     parser = argparse.ArgumentParser(description="Agent test server")
     parser.add_argument(
-            "-p",
-            "--port",
-            type=int,
-            default=7357,
-            help="web server port"
+        "-p",
+        "--port",
+        type=int,
+        default=7357,
+        help="web server port"
     )
     parser.add_argument(
-            "-b",
-            "--bind",
-            default="127.0.0.1",
-            help="ip to bind on"
+        "-b",
+        "--bind",
+        default="127.0.0.1",
+        help="ip to bind on"
     )
     args = parser.parse_args()
 
