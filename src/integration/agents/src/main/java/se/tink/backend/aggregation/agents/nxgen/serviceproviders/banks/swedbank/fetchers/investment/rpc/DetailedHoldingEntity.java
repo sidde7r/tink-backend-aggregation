@@ -141,8 +141,8 @@ public class DetailedHoldingEntity {
     }
 
     public Optional<Instrument> toTinkFundInstrument(String isinCode) {
-        if (isinCode == null || numberOfFundParts == null) {
-            if (isinCode == null) {
+        if (Strings.isNullOrEmpty(isinCode) || numberOfFundParts == null) {
+            if (Strings.isNullOrEmpty(isinCode)) {
                 log.warn(SwedbankBaseConstants.LogTags.FUND_MISSING_ISIN.toString(), name);
             }
             return Optional.empty();
