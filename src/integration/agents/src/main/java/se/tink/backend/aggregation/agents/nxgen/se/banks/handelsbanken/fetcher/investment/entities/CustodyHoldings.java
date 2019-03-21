@@ -49,4 +49,10 @@ public class CustodyHoldings {
     void setHoldingQuantity(Quantity holdingQuantity) {
         this.holdingQuantity = holdingQuantity;
     }
+
+    @VisibleForTesting
+    void setSecurityIdentifier(
+            SecurityIdentifier securityIdentifier) {
+        this.securityIdentifier = securityIdentifier;
+    }
 }
