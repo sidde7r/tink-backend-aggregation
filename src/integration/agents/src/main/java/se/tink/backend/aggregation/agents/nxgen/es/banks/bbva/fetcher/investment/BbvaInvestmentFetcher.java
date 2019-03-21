@@ -34,9 +34,9 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
         final String holderName = sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME);
 
         return Try.of(() -> apiClient.fetchProducts())
-                .peek(r -> log(r.getInternationalFundsPortfolios(), INVESTMENT_INTERNATIONAL_PORTFOLIO))
-                .peek(r -> log(r.getManagedFundsPortfolios(), INVESTMENT_MANAGED_FUNDS))
-                .peek(r -> log(r.getWealthDepositaryPortfolios(), INVESTMENT_WEALTH_DEPOSITARY))
+                .peek(r -> log(r, INVESTMENT_INTERNATIONAL_PORTFOLIO))
+//                .peek(r -> log(r.getManagedFundsPortfolios(), INVESTMENT_MANAGED_FUNDS))
+//                .peek(r -> log(r.getWealthDepositaryPortfolios(), INVESTMENT_WEALTH_DEPOSITARY))
                 .map(ProductsResponse::getStockAccounts)
                 .filter(not(List::isEmpty))
                 .getOrElse(List.empty())
@@ -44,9 +44,9 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
                 .toJavaList();
     }
 
-    private void log(List<Object> data, LogTag logTag) {
+    private void log(Object data, LogTag logTag) {
         Option.of(data)
-                .filter(not(List::isEmpty))
+//                .filter(not(List::isEmpty))
                 .toTry()
                 .onSuccess(d -> LOGGER.infoExtraLong(SerializationUtils.serializeToString(d), logTag))
                 .onFailure(e -> LOGGER.warn(logTag.toString() + " - Failed to log investment data, " + e.getMessage()));
