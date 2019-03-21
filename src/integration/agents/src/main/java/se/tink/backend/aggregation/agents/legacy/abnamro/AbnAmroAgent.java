@@ -311,7 +311,7 @@ public class AbnAmroAgent extends AbstractAgent
             List<Account> accounts = fetchCreditCardAccounts().getAccounts();
             for (Account account : accounts) {
                 account.setBalance(getCreditCardBalance(account));
-                systemUpdater.sendAccountToUpdateService(account.getBankId());
+                systemUpdater.updateAccount(account.getBankId());
                 Long accountNumber = getCreditCardContractNumber(account);
                 List<Transaction> transactions = getCreditCardTransactions(accountNumber);
                 transactionsMap.put(account, transactions);

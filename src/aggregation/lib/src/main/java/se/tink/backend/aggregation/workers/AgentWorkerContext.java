@@ -335,6 +335,45 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         return updatedAccount;
     }
 
+    public Account updateAccount(String uniqueId) {
+        Pair<Account, AccountFeatures> pair = allAvailableAccountsByUniqueId.get(uniqueId);
+
+        Account account = pair.first;
+        AccountFeatures accountFeatures = pair.second;
+
+        if (!shouldAggregateDataForAccount(account)) {
+            // Account marked to not aggregate data from.
+            // Preferably we would not even download the data but this makes sure
+            // we don't process further or store the account's data.
+            return account;
+        }
+
+        account.setCredentialsId(request.getCredentials().getId());
+        account.setUserId(request.getCredentials().getUserId());
+
+        se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest updateAccountRequest =
+                new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest();
+
+        updateAccountRequest.setUser(request.getCredentials().getUserId());
+        updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
+        updateAccountRequest.setAccountFeatures(accountFeatures);
+        updateAccountRequest.setCredentialsId(request.getCredentials().getId());
+
+        Account updatedAccount;
+        try {
+            updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
+
+        } catch (UniformInterfaceException e) {
+            log.error("Account update request failed, response: " +
+                    (e.getResponse().hasEntity() ? e.getResponse().getEntity(String.class) : ""));
+            throw e;
+        }
+
+        updatedAccountsByTinkId.put(updatedAccount.getId(), updatedAccount);
+
+        return updatedAccount;
+    }
+
     @Override
     public void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doStatusUpdate) {
         // Execute any event-listeners.
