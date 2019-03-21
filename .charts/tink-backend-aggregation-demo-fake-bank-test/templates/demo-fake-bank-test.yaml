@@ -28,7 +28,7 @@ spec:
             fsGroup: 65535
           containers:
           - name: tests
-            image: gcr.io/tink-containers/tink-backend-aggregation-demo-fake-bank-test:{{ .Files.Get "tink-versions/tink-backend-aggregation-demo-fake-bank-test.txt" | default "latest" }}
+            image: {{ .Values.demoFakeBankImage | default gcr.io/tink-containers/tink-backend-aggregation-demo-fake-bank-test:{{ .Files.Get "tink-versions/tink-backend-aggregation-demo-fake-bank-test.txt" | default "latest" }}}}
             imagePullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
@@ -41,3 +41,11 @@ spec:
                   secretKeyRef:
                     name: demo-fake-bank-test
                     key: api-key
+
+{{- if eq "local" .Values.Cluster }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: notifying-aggregation-service-asserter
+{{ end }}
