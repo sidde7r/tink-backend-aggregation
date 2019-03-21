@@ -15,6 +15,7 @@ import se.tink.backend.nasa.boot.configuration.Configuration;
 import se.tink.backend.nasa.boot.configuration.ConfigurationUtils;
 import se.tink.backend.nasa.boot.configuration.NASAServiceModule;
 import se.tink.backend.nasa.boot.configuration.SensitiveConfiguration;
+import se.tink.backend.nasa.metrics.PrometheusExportServer;
 import spark.Filter;
 import spark.Spark;
 
@@ -70,6 +71,7 @@ class NASAService {
         httpServer.start();
 
         // Start the Prometheus Exporter Server
+        injector.getInstance(PrometheusExportServer.class).start();
 
         // Setup spark HTTPS server
         Spark.port(config.getPort());
@@ -93,7 +95,10 @@ class NASAService {
 
         Stopwatch sw = Stopwatch.createStarted();
 
-        final CountDownLatch shutdownLatch = new CountDownLatch(2); // same numbers as components to close
+        final CountDownLatch shutdownLatch = new CountDownLatch(3); // same numbers as components to close
+
+        // Stop the Prometheus Exporter Server
+        injector.getInstance(PrometheusExportServer.class).stop();
 
         // Stop Spark HTTPS server
         Spark.stop();
