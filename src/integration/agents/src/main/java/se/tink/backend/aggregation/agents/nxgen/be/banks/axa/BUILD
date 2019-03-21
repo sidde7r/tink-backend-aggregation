@@ -1,5 +1,5 @@
 java_library(
-    name = "be-axa-lib",
+    name = "axa",
     srcs = glob(["**/*.java"]),
     visibility = ["//visibility:public"],
     deps = [
