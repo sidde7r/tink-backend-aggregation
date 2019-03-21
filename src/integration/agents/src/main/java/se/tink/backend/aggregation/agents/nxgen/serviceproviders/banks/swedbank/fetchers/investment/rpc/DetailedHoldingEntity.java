@@ -244,9 +244,14 @@ public class DetailedHoldingEntity {
             return Instrument.Type.STOCK;
         case "equityfund":
             return Instrument.Type.FUND;
-        // Subscription right doesn't match any of our instrument types, but setting it explicitly to OTHER
+        // Instrument types that don't match any of our instrument types, but setting it explicitly to OTHER
         // so we don't log it as a warning.
         case "subscription_right":
+        case "spax":
+        case "etf":
+        case "warrant":
+        case "fixed_income":
+        case "interestequity":
             return Instrument.Type.OTHER;
         default:
             log.warn("Unkown instrument type:[{}]", rawType);
