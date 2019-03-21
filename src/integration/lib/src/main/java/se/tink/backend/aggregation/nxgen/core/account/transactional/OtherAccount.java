@@ -1,15 +1,17 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
-import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountIdentifierStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountNumberStep;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AliasStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BalanceStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.OtherBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
 import se.tink.libraries.amount.Amount;
+
+import javax.annotation.Nonnull;
 
 public class OtherAccount extends TransactionalAccount {
     private static final Logger LOG = LoggerFactory.getLogger(OtherAccount.class);
@@ -25,27 +27,25 @@ public class OtherAccount extends TransactionalAccount {
         LOG.info("Unknown_account_type " + this.getName());
     }
 
-
     public static Builder<?, ?> builder(String uniqueIdentifier) {
         return new DefaultOtherAccountBuilder(uniqueIdentifier);
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier)
-                .setBalance(balance);
+        return builder(uniqueIdentifier).setBalance(balance);
     }
 
     public static UniqueIdentifierStep<OtherBuildStep> builder() {
         return new OtherAccountBuilder();
     }
 
-    private static class OtherAccountBuilder
-            extends StepBuilder<OtherAccount, OtherBuildStep>
+    private static class OtherAccountBuilder extends StepBuilder<OtherAccount, OtherBuildStep>
             implements UniqueIdentifierStep<OtherBuildStep>,
-            AccountNumberStep<OtherBuildStep>,
-            BalanceStep<OtherBuildStep>,
-            AccountIdentifierStep<OtherBuildStep>,
-            OtherBuildStep {
+                    AccountNumberStep<OtherBuildStep>,
+                    BalanceStep<OtherBuildStep>,
+                    AliasStep<OtherBuildStep>,
+                    AccountIdentifierStep<OtherBuildStep>,
+                    OtherBuildStep {
 
         @Override
         public AccountNumberStep<OtherBuildStep> setUniqueIdentifier(
@@ -61,8 +61,14 @@ public class OtherAccount extends TransactionalAccount {
         }
 
         @Override
-        public AccountIdentifierStep<OtherBuildStep> setBalance(@Nonnull Amount balance) {
+        public AliasStep<OtherBuildStep> setBalance(@Nonnull Amount balance) {
             applyBalance(balance);
+            return this;
+        }
+
+        @Override
+        public AccountIdentifierStep<OtherBuildStep> setAlias(@Nonnull String alias) {
+            applyAlias(alias);
             return this;
         }
 
@@ -84,7 +90,8 @@ public class OtherAccount extends TransactionalAccount {
 
     /** @deprecated Use OtherAccountBuilder instead */
     @Deprecated
-    public abstract static class Builder<A extends OtherAccount, T extends OtherAccount.Builder<A, T>>
+    public abstract static class Builder<
+                    A extends OtherAccount, T extends OtherAccount.Builder<A, T>>
             extends TransactionalAccount.Builder<OtherAccount, Builder<A, T>> {
 
         public Builder(String uniqueIdentifier) {

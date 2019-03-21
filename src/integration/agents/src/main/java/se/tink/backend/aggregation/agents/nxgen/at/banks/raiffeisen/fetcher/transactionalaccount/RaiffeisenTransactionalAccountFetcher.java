@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.RaiffeisenWebApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen.fetcher.transactionalaccount.entities.AccountEntity;
@@ -13,11 +11,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
-import se.tink.libraries.amount.Amount;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
 
 public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
@@ -60,6 +58,7 @@ public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<Tra
                         .setUniqueIdentifier(ae.getIban())
                         .setAccountNumber(ae.getIban())
                         .setBalance(ae.getBalance())
+                        .setAlias(ae.getIban())
                         .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN,  ae.getIban()))
                         .addHolderName(ae.getUsername())
                         .setProductName(ae.getIban())
@@ -69,6 +68,7 @@ public class RaiffeisenTransactionalAccountFetcher implements AccountFetcher<Tra
                         .setUniqueIdentifier(ae.getIban())
                         .setAccountNumber(ae.getIban())
                         .setBalance(ae.getBalance())
+                        .setAlias(ae.getIban())
                         .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN,  ae.getIban()))
                         .addHolderName(ae.getUsername())
                         .setProductName(ae.getIban())

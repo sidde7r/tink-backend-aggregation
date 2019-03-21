@@ -91,12 +91,12 @@ public class AgreementsListEntity {
                                         .setUniqueIdentifier(iban)
                                         .setAccountNumber(iban)
                                         .setBalance(balance)
+                                        .setAlias(aliasbe)
                                         .addAccountIdentifier(
                                                 AccountIdentifier.create(
                                                         AccountIdentifier.Type.IBAN, iban))
                                         .setApiIdentifier(agreement)
                                         .addHolderName(holderName)
-                                        .setAlias(aliasbe)
                                         .setProductName(accountType)
                                         .build());
 
@@ -109,12 +109,12 @@ public class AgreementsListEntity {
                                         .setUniqueIdentifier(iban)
                                         .setAccountNumber(iban)
                                         .setBalance(balance)
+                                        .setAlias(aliasbe)
                                         .addAccountIdentifier(
                                                 AccountIdentifier.create(
                                                         AccountIdentifier.Type.IBAN, iban))
                                         .setApiIdentifier(agreement)
                                         .addHolderName(holderName)
-                                        .setAlias(aliasbe)
                                         .setProductName(accountType)
                                         .build());
 

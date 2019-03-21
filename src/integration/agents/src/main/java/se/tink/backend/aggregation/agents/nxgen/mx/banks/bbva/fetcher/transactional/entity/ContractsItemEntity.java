@@ -48,9 +48,9 @@ public class ContractsItemEntity {
                 .setUniqueIdentifier(id)
                 .setAccountNumber(number)
                 .setBalance(detail.getCheckingBalance())
+                .setAlias(alias)
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, number))
                 .addHolderName(holdername)
-                .setAlias(alias)
                 .setProductName(subProductType.getName())
                 .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
                 .build();
@@ -61,9 +61,9 @@ public class ContractsItemEntity {
                 .setUniqueIdentifier(id)
                 .setAccountNumber(number)
                 .setBalance(detail.getCheckingBalance())
+                .setAlias(alias)
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.TINK, number))
                 .addHolderName(holdername)
-                .setAlias(alias)
                 .setProductName(subProductType.getName())
                 .putInTemporaryStorage(BbvaMxConstants.STORAGE.ACCOUNT_ID, id)
                 .build();

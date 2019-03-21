@@ -46,9 +46,9 @@ public final class GetAccountsResponse {
                                 .setUniqueIdentifier(accountNumber)
                                 .setAccountNumber(accountNumber)
                                 .setBalance(new Amount(accountEntity.getCurrency(), balance))
+                                .setAlias(accountEntity.getTypeDescription())
                                 .addAccountIdentifier(new IbanIdentifier(iban))
                                 .addHolderName(accountEntity.getTitularName())
-                                .setAlias(accountEntity.getTypeDescription())
                                 .build();
 
         final Supplier<TransactionalAccount> savingsAccount =
@@ -57,9 +57,9 @@ public final class GetAccountsResponse {
                                 .setUniqueIdentifier(accountNumber)
                                 .setAccountNumber(accountNumber)
                                 .setBalance(new Amount(accountEntity.getCurrency(), balance))
+                                .setAlias(accountEntity.getTypeDescription())
                                 .addAccountIdentifier(new IbanIdentifier(iban))
                                 .addHolderName(accountEntity.getTitularName())
-                                .setAlias(accountEntity.getTypeDescription())
                                 .build();
 
         final TypeMapper<Supplier<TransactionalAccount>> accountTypeMapper =

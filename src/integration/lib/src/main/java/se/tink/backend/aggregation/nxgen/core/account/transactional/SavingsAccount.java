@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountIdentifierStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountNumberStep;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AliasStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.BalanceStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.SavingsBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
@@ -53,10 +54,11 @@ public class SavingsAccount extends TransactionalAccount {
     private static class SavingsAccountBuilder
             extends Account.StepBuilder<SavingsAccount, SavingsBuildStep>
             implements UniqueIdentifierStep<SavingsBuildStep>,
-            AccountNumberStep<SavingsBuildStep>,
-            BalanceStep<SavingsBuildStep>,
-            AccountIdentifierStep<SavingsBuildStep>,
-            SavingsBuildStep {
+                    AccountNumberStep<SavingsBuildStep>,
+                    BalanceStep<SavingsBuildStep>,
+                    AliasStep<SavingsBuildStep>,
+                    AccountIdentifierStep<SavingsBuildStep>,
+                    SavingsBuildStep {
 
         private Double interestRate;
 
@@ -74,8 +76,14 @@ public class SavingsAccount extends TransactionalAccount {
         }
 
         @Override
-        public AccountIdentifierStep<SavingsBuildStep> setBalance(@Nonnull Amount balance) {
+        public AliasStep<SavingsBuildStep> setBalance(@Nonnull Amount balance) {
             applyBalance(balance);
+            return this;
+        }
+
+        @Override
+        public AccountIdentifierStep<SavingsBuildStep> setAlias(@Nonnull String alias) {
+            applyAlias(alias);
             return this;
         }
 
@@ -103,7 +111,7 @@ public class SavingsAccount extends TransactionalAccount {
     /** @deprecated Use SavingsAccountBuilder instead */
     @Deprecated
     public abstract static class Builder<
-            A extends SavingsAccount, T extends SavingsAccount.Builder<A, T>>
+                    A extends SavingsAccount, T extends SavingsAccount.Builder<A, T>>
             extends TransactionalAccount.Builder<SavingsAccount, Builder<A, T>> {
         private Double interestRate;
 
