@@ -14,12 +14,17 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.RegisteredTransfersResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.TransactionEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.executors.rpc.TransferTransactionEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.PaymentBaseinfoResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.fetchers.transferdestination.rpc.TransferDestinationAccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.BankProfile;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinkEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class BaseTransferExecutor {
     private static final Logger log = LoggerFactory.getLogger(BaseTransferExecutor.class);
@@ -32,6 +37,37 @@ public class BaseTransferExecutor {
     protected BaseTransferExecutor(SwedbankDefaultApiClient apiClient, SwedbankTransferHelper transferHelper) {
         this.apiClient = apiClient;
         this.transferHelper = transferHelper;
+    }
+
+    /**
+     * This method goes through all of the users profiles in order to find the source account of the transfer.
+     * If no source account is found an exception is thrown, otherwise the source account will be returned and the
+     * profile that the account belongs to will be selected.
+     */
+    protected String getSourceAccountIdAndSelectProfile(Transfer transfer) {
+
+        for (BankProfile bankProfile : apiClient.getBankProfiles()) {
+
+            PaymentBaseinfoResponse paymentBaseInfo = bankProfile.getPaymentBaseinfoResponse();
+
+            AccountIdentifier transferSourceAccount = SwedbankTransferHelper.getSourceAccount(transfer);
+
+            Optional<TransferDestinationAccountEntity> transferDestinationAccountEntity =
+                    paymentBaseInfo.getSourceAccount(transferSourceAccount);
+
+            if (transferDestinationAccountEntity.isPresent()) {
+                String sourceAccountId = paymentBaseInfo.validateAndGetSourceAccountId(
+                        transferDestinationAccountEntity.get());
+                apiClient.selectProfile(bankProfile);
+
+                return sourceAccountId;
+            }
+        }
+
+        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
+                .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
+                .build();
     }
 
     protected void signAndConfirmTransfer(RegisteredTransfersResponse registeredTransfersResponse) {
