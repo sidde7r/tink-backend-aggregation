@@ -87,6 +87,7 @@ class NASAService {
         Spark.before(SparkFilters.ACCESS_LOGGING);
 
         Spark.get("/ping", (req, res) -> "pong");
+        AggregationControllerApiFactory.createUpdateServiceEndpoints();
     }
 
     private void stop() throws Exception {
