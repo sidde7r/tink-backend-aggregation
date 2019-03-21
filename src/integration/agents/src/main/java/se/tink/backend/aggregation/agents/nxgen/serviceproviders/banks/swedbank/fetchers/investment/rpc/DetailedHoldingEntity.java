@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.SwedbankBaseConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.swedbank.rpc.LinksEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -141,6 +142,9 @@ public class DetailedHoldingEntity {
 
     public Optional<Instrument> toTinkFundInstrument(String isinCode) {
         if (isinCode == null || numberOfFundParts == null) {
+            if (isinCode == null) {
+                log.warn(SwedbankBaseConstants.LogTags.FUND_MISSING_ISIN.toString(), name);
+            }
             return Optional.empty();
         }
 

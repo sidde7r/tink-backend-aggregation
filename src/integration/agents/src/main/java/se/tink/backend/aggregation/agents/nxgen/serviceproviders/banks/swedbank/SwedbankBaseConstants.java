@@ -243,6 +243,7 @@ public class SwedbankBaseConstants {
         public static final LogTag ENDOWMENT_DETAILED_PORTFOLIO_RESPONSE = LogTag.from(
                 "Swedbank detailed portfolio - type: ENDOWMENT");
         public static final LogTag PORTFOLIO_HOLDINGS_RESPONSE = LogTag.from("Portfolio holdings response: {}");
+        public static final LogTag FUND_MISSING_ISIN = LogTag.from("Swedbank fund missing ISIN code, holding name: {}");
     }
 
     public static class BankErrorMessage {
