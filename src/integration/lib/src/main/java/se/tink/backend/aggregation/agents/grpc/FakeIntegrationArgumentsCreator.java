@@ -153,6 +153,10 @@ public class FakeIntegrationArgumentsCreator {
                 return metricRegistry;
             }
 
+            @Override
+            public Account updateAccount(String uniqueId) {
+                return null;
+            }
         };
         return context;
     }
