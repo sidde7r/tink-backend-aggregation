@@ -30,6 +30,8 @@ java_binary(
         "//third_party:com_google_inject_guice",
         "//third_party:java_spark",
 
+        "//src/nasa/metrics:metrics",
+
         "@org_apache_logging_log4j_log4j_slf4j//jar",
 
         "//third_party:com_google_guava_guava",
