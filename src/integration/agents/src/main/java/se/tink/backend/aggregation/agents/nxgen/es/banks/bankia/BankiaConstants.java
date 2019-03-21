@@ -30,14 +30,8 @@ public abstract class BankiaConstants {
         public static final String VALUE_ACCOUNT_POSITION_WALLET =
                 URL_BASE_OIP + "/api/microservicios/1.0/valores/posicionCartera";
 
-        public static final String LOANS_OVERVIEW =
-                URL_BASE_M + "/es/prestamos/mis-prestamos";
-
-        public static final String LOAN_DETAILS_POSITION =
-                URL_BASE_M + "/es/prestamos/mis-prestamos/{" + Parameter.ALIAS + "}/posicion";
-
-        public static final String LOAN_DETAILS_AVAL =
-                URL_BASE_M + "/es/prestamos/mis-prestamos/{" + Parameter.ALIAS + "}/datosAval";
+        public static final String LOAN_DETAILS =
+                URL_BASE_OIP + "/api/1.0/operativas/1.0/prestamos/ObtenerDatosGeneralesPrestamoSBP";
     }
 
     public static class Parameter {
@@ -129,6 +123,11 @@ public abstract class BankiaConstants {
     public static class CardTypes {
         public static final String CREDIT_CARD = "C";
     }
+
+    public static class Loans {
+        public static final String DEBTOR_CODE = "010";
+    }
+
 
     public static class InstrumentTypes {
         public static final String STOCK = "01"; // Type description (in Spanish): ACCIONES
