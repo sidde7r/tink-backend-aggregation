@@ -2,11 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanDetailsAggregate;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanMovementEntity;
@@ -38,9 +41,15 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
 
             String userDataXml =
                     SantanderEsXmlUtils.parseJsonToXmlString(loginResponse.getUserData());
-            Optional.ofNullable(loginResponse.getLoans())
-                    .orElse(Collections.emptyList())
-                    .forEach(loan -> getLoanDetails(loan, userDataXml));
+            List<LoanEntity> loanEntities =
+                    Optional.ofNullable(loginResponse.getLoans()).orElse(Collections.emptyList());
+            return loanEntities
+                    .stream()
+                    .map(loan -> getLoanDetails(loan, userDataXml))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toList());
+
         } catch (Exception e) {
             LOG.info("Failed to fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
         }
@@ -61,7 +70,7 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
         return SantanderEsXmlUtils.parseXmlStringToJson(loginResponseString, LoginResponse.class);
     }
 
-    private void getLoanDetails(LoanEntity loanEntity, String userDataXml) {
+    private Optional<LoanAccount> getLoanDetails(LoanEntity loanEntity, String userDataXml) {
         try {
             LOGGER.debug(
                     SerializationUtils.serializeToString(loanEntity),
@@ -77,13 +86,16 @@ public class SantanderEsLoanFetcher implements AccountFetcher<LoanAccount> {
 
             LoanDetailsEntity loanDetailsResponse =
                     apiClient.fetchLoanDetails(userDataXml, loanEntity);
-
             LOG.infoExtraLong(
                     SerializationUtils.serializeToString(loanDetailsResponse),
                     SantanderEsConstants.Tags.LOAN_ACCOUNT);
 
+            return Optional.of(
+                    new LoanDetailsAggregate(loanEntity, loanDetailsResponse).toTinkLoanAccount());
+
         } catch (Exception e) {
             LOG.info("Could not fetch loan details " + SantanderEsConstants.Tags.LOAN_ACCOUNT, e);
         }
+        return Optional.empty();
     }
 }

@@ -47,6 +47,46 @@ public class LoanDetailsEntity {
 
     @JsonProperty("tipoDeInteres")
     private String interestl;
+
+    public AmountEntity getInitialAmount() {
+        return initialAmount;
+    }
+
+    public ContractEntity getContractEntity() {
+        return contractEntity;
+    }
+
+    public Date getInitialEndDate() {
+        return initialEndDate;
+    }
+
+    public Date getCurrentEndDate() {
+        return currentEndDate;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public String getTypeOfIntresetDescription() {
+        return typeOfIntresetDescription;
+    }
+
+    public String getInstalmentsFrequency() {
+        return instalmentsFrequency;
+    }
+
+    public String getMainHolder() {
+        return mainHolder;
+    }
+
+    public String getAssociateAccountNumber() {
+        return associateAccountNumber;
+    }
+
+    public String getInterestl() {
+        return interestl;
+    }
 }
 /*
 <descTipoDeInteres>EURIBR.12 M-DIA+4.0</descTipoDeInteres>
