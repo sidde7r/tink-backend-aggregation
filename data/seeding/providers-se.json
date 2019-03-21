@@ -31,18 +31,20 @@
             "transactional": true,
             "type": "BANK"
         },
-      {
+        {
             "name": "se-alandsbanken-bankid",
             "className": "nxgen.se.banks.alandsbankenbankid.AlandsBankenSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Ålandsbanken",
-            "fields": [ {
+            "fields": [
+                {
                     "description": "Username",
                     "immutable": true,
                     "name": "username",
                     "numeric": true
-                }],
+                }
+            ],
             "market": "SE",
             "multiFactor": true,
             "passwordHelpText": "To connect your bank, you need to identify yourself using Mobile BankID.",
@@ -425,6 +427,71 @@
             "popular": true,
             "refreshFrequency": 0,
             "refreshFrequencyFactor": 1,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "se-danskebank-password",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.danskebank.DanskeBankSEAgent",
+            "credentialsType": "PASSWORD",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "description": "Social security number",
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "numeric": true
+                },
+                {
+                    "description": "Service code",
+                    "hint": "NNNN",
+                    "masked": true,
+                    "maxLength": 4,
+                    "minLength": 4,
+                    "sensitive": true,
+                    "name": "password",
+                    "numeric": true,
+                    "pattern": "([0-9]{4})",
+                    "patternError": "Please enter 4 digits."
+                }
+            ],
+            "multiFactor": false,
+            "passwordHelpText": "Use the same 4 digit service code you use in your Danske Bank mobile app.",
+            "popular": true,
+            "status": "ENABLED",
+            "transactional": true,
+            "type": "BANK"
+        },
+        {
+            "name": "se-danskebank-bankid",
+            "capabilities": [
+                "TRANSFERS",
+                "MORTGAGE_AGGREGATION"
+            ],
+            "className": "nxgen.se.banks.danskebank.DanskeBankSEAgent",
+            "credentialsType": "MOBILE_BANKID",
+            "displayName": "Danske Bank",
+            "fields": [
+                {
+                    "hint": "YYYYMMDDNNNN",
+                    "name": "username",
+                    "numeric": true,
+                    "maxLength": 12,
+                    "minLength": 12,
+                    "description": "Social security number",
+                    "patternError": "Please supply a valid social security number."
+                }
+            ],
+            "multiFactor": true,
+            "passwordHelpText": "Use Mobile BankID the same way as with the Danske Bank mobile app. You can order a Mobile BankID using the bank's web service.",
+            "popular": false,
             "status": "ENABLED",
             "transactional": true,
             "type": "BANK"

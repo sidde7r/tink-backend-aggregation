@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
+import se.tink.backend.aggregation.agents.models.Loan;
+
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.models.Loan;
 
 public interface DanskeBankConfiguration {
     String getAppVersionHeader();

@@ -1,14 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Predicate;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.GroupAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.GroupEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.investment.rpc.SecurityEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.fetchers.rpc.AccountEntity;
 import se.tink.backend.aggregation.agents.models.Loan;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 public final class DanskeBankPredicates {
     public static Predicate<AccountEntity> knownCheckingAccountProducts(List<String> checkingAccountProducts) {

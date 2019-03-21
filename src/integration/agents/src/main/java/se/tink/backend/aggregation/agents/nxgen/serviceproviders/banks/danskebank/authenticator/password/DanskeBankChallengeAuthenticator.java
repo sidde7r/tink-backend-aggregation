@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.danskebank.authenticator.password;
 
 import com.google.common.base.Strings;
-import java.util.Base64;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +39,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
+
+import java.util.Base64;
 
 public class DanskeBankChallengeAuthenticator extends DanskeBankAbstractAuthenticator implements KeyCardAuthenticator,
         AutoAuthenticator {
