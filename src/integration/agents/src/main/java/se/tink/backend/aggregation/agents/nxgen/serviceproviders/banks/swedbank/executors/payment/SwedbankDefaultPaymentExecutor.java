@@ -31,13 +31,14 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
 
     @Override
     public void executePayment(Transfer transfer) throws TransferExecutionException {
-        // this is the current implementation for transfers, only use the last profile for transfers
-        apiClient.selectTransferProfile();
+        // We'll go through all the profiles to find the one the source account belongs to.
+        // That profile will also be selected so it's used going forward in the execution flow.
+        String sourceAccountId = this.getSourceAccountIdAndSelectProfile(transfer);
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers();
         registeredTransfers.noUnsignedTransfersOrThrow();
 
-        RegisteredTransfersResponse registeredTransfersResponse = registerPayment(transfer);
+        RegisteredTransfersResponse registeredTransfersResponse = registerPayment(transfer, sourceAccountId);
 
         signAndConfirmTransfer(registeredTransfersResponse);
     }
@@ -53,16 +54,8 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
         return Optional.ofNullable(newDestinationAccount.getId());
     }
 
-    private RegisteredTransfersResponse registerPayment(Transfer transfer) {
+    private RegisteredTransfersResponse registerPayment(Transfer transfer, String sourceAccountId) {
         PaymentBaseinfoResponse paymentBaseinfo = apiClient.paymentBaseinfo();
-
-        AccountIdentifier sourceAccount = SwedbankTransferHelper.getSourceAccount(transfer);
-        Optional<String> sourceAccountId = paymentBaseinfo.getSourceAccountId(sourceAccount);
-        if (!sourceAccountId.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND).build();
-        }
 
         Optional<String> destinationAccountId = getDestinationAccountIdForPayment(transfer, paymentBaseinfo);
         if (!destinationAccountId.isPresent()) {
@@ -72,7 +65,7 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
         }
 
         RegisterTransferResponse registerTransferResponse = registerPayment(transfer, sourceAccountId,
-                destinationAccountId);
+                destinationAccountId.get());
 
         RegisteredTransfersResponse registeredTransfers = apiClient.registeredTransfers(
                 registerTransferResponse.getLinks().getNextOrThrow());
@@ -89,16 +82,16 @@ public class SwedbankDefaultPaymentExecutor extends BaseTransferExecutor impleme
         return registeredTransfers;
     }
 
-    private RegisterTransferResponse registerPayment(Transfer transfer, Optional<String> sourceAccountId,
-            Optional<String> destinationAccountId) {
+    private RegisterTransferResponse registerPayment(Transfer transfer, String sourceAccountId,
+            String destinationAccountId) {
         try {
             return apiClient.registerPayment(
                         transfer.getAmount().getValue(),
                         transfer.getDestinationMessage(),
                         SwedbankTransferHelper.getReferenceTypeFor(transfer),
                         transfer.getDueDate(),
-                        destinationAccountId.get(),
-                        sourceAccountId.get());
+                        destinationAccountId,
+                        sourceAccountId);
         } catch (HttpResponseException hre) {
             throw convertExceptionIfBadPaymentDate(hre);
         }
