@@ -33,21 +33,20 @@ message AgentAccountState {
     string serialized_temporary_storage = 2;
 }
 
-message IntegrationAccounts {
+message IntegrationAccount {
     enum Flag {
         FLAG_UNKNOWN = 0;
         FLAG_BUSINESS = 1;
         FLAG_MANDATE = 2;
     }
     string name = 1;
-    string product_name = 2;
-    string account_number = 3;
-    Amount balance = 4;
-    Amount available_credit = 5;
-    string unique_identifier = 6;
-    HolderName holder_name = 7;
-    AgentAccountState agent_account_state = 8;
-    string account_identifiers = 9;
+    string account_number = 2;
+    Amount balance = 3;
+    Amount available_credit = 4;
+    string unique_identifier = 5;
+    HolderName holder_name = 6;
+    AgentAccountState agent_account_state = 7;
+    string account_identifiers = 8;
 }
 
 message AgentState {

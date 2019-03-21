@@ -28,6 +28,5 @@ message IntegrationResponse {
 }
 
 message CheckingAccountsResponse {
-    IntegrationResponse integration_info = 1;
-    repeated IntegrationAccounts accounts = 2;
+    repeated IntegrationAccount accounts = 1;
 }
