@@ -43,4 +43,8 @@ public class Credentials {
 
     }
 
+    public enum Type {
+        UNKNOWN, PASSWORD, THIRD_PARTY_AUTHENTICATION, KEYFOB, FRAUD;
+    }
+
 }
