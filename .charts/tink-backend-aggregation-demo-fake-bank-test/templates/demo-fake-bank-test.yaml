@@ -2,7 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: demo-fake-bank-test
-  namespace: demo-fake-bank-test
+  namespace: notifying-aggregation-service-asserter
 spec:
   schedule: "{{ .Values.demoFakeBankTestCronSchedule | default "0/15 * * * *" }}"
   concurrencyPolicy: Forbid
@@ -28,8 +28,14 @@ spec:
             fsGroup: 65535
           containers:
           - name: tests
-            image: {{ .Values.demoFakeBankImage | default gcr.io/tink-containers/tink-backend-aggregation-demo-fake-bank-test:{{ .Files.Get "tink-versions/tink-backend-aggregation-demo-fake-bank-test.txt" | default "latest" }}}}
+
+            {{- if eq "local" .Values.Cluster }}
+            image: local_test
+            imagePullPolicy: Never
+            {{else}}
+            image: gcr.io/tink-containers/tink-backend-aggregation-demo-fake-bank-test:{{ .Files.Get "tink-versions/tink-backend-aggregation-demo-fake-bank-test.txt" | default "latest" }}
             imagePullPolicy: IfNotPresent
+            {{end}}
             securityContext:
               readOnlyRootFilesystem: true
               privileged: false
