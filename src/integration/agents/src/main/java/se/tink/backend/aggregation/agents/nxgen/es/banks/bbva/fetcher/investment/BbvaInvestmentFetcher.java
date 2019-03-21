@@ -34,7 +34,7 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
         final String holderName = sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME);
 
         return Try.of(() -> apiClient.fetchProducts())
-                .andThen(r -> log(r, INVESTMENT_INTERNATIONAL_PORTFOLIO))
+                .peek(r -> log(r, INVESTMENT_INTERNATIONAL_PORTFOLIO))
 //                .peek(r -> log(r.getManagedFundsPortfolios(), INVESTMENT_MANAGED_FUNDS))
 //                .peek(r -> log(r.getWealthDepositaryPortfolios(), INVESTMENT_WEALTH_DEPOSITARY))
                 .map(ProductsResponse::getStockAccounts)
