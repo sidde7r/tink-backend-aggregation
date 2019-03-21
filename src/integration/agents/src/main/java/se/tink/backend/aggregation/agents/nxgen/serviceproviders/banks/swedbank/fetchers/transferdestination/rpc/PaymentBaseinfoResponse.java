@@ -88,38 +88,6 @@ public class PaymentBaseinfoResponse {
                 .collect(Collectors.toList());
     }
 
-    @JsonIgnore
-    public Optional<String> getSourceAccountId(AccountIdentifier accountIdentifier) {
-        Preconditions.checkNotNull(accountIdentifier, "The account identifier cannot be null.");
-        Preconditions.checkState(accountIdentifier.isValid(), "The account identifier must be valid.");
-
-        Optional<TransferDestinationAccountEntity> accountEntity = Optional.ofNullable(transactionAccountGroups)
-                .orElseGet(Collections::emptyList).stream()
-                .map(TransactionAccountGroupEntity::getAccounts)
-                .flatMap(Collection::stream)
-                .filter(tdae -> accountIdentifier.equals(tdae.generalGetAccountIdentifier()))
-                .findFirst();
-
-        if (!accountEntity.isPresent()) {
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND)
-                    .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_FOUND)
-                    .build();
-        }
-
-        TransferDestinationAccountEntity transferDestinationAccountEntity = accountEntity.get();
-
-        transferDestinationAccountEntity.getScopes().stream()
-                .filter(SwedbankBaseConstants.TransferScope.TRANSFER_FROM::equalsIgnoreCase)
-                .findAny()
-                .orElseThrow(() -> TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                        .setEndUserMessage(TransferExecutionException.EndUserMessage.INVALID_SOURCE)
-                        .setMessage(SwedbankBaseConstants.ErrorMessage.SOURCE_NOT_TRANSFER_CAPABLE)
-                        .build());
-
-        return Optional.ofNullable(transferDestinationAccountEntity.getId());
-    }
-
     /**
      * Tries to match the given account identifier with an account in transactionAccountGroups, and then return
      * that matching account entity.
