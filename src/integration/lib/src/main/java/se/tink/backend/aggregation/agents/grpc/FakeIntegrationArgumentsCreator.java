@@ -44,8 +44,7 @@ public class FakeIntegrationArgumentsCreator {
 
         User user = new User();
 
-
-        CredentialsRequest credentialsRequest = new CredentialsRequest(user, provider,credentials) {
+        CredentialsRequest credentialsRequest = new CredentialsRequest(user, provider, credentials) {
             @Override
             public boolean isManual() {
                 return false;
@@ -153,7 +152,6 @@ public class FakeIntegrationArgumentsCreator {
             public MetricRegistry getMetricRegistry() {
                 return metricRegistry;
             }
-
 
         };
         return context;

@@ -26,6 +26,5 @@ public class FetchController {
         return agent.fetchCheckingAccounts();
     }
 
-
 }
 

@@ -29,7 +29,8 @@ public class FetchService extends FetchServiceGrpc.FetchServiceImplBase {
             responseObserver.onCompleted();
 
         } catch (Exception e) {
-            responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).withCause(e.getCause()).asRuntimeException());
+            responseObserver.onError(
+                    Status.INTERNAL.withDescription(e.getMessage()).withCause(e.getCause()).asRuntimeException());
         }
     }
 }

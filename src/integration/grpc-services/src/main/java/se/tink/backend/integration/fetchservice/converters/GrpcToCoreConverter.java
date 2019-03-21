@@ -19,7 +19,8 @@ public class GrpcToCoreConverter {
                         request.getCredentials().getUserId(),
                         request.getCredentials().getFieldsSerialized(),
                         EnumMapper.CREDENTIALS_TYPE.getOrDefault(request.getCredentials().getType(), Type.UNKNOWN)),
-                        AggregatorInfo.of(request.getAggregatorInfo().getClientId(), request.getAggregatorInfo().getAggregatorIdentifier()));
+                AggregatorInfo.of(request.getAggregatorInfo().getClientId(),
+                        request.getAggregatorInfo().getAggregatorIdentifier()));
 
     }
 }
