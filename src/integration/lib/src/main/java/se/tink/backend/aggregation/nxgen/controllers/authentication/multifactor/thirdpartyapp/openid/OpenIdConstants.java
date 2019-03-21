@@ -37,8 +37,8 @@ public class OpenIdConstants {
     }
 
     public static final ImmutableList<String> MANDATORY_GRANT_TYPES = ImmutableList.<String>builder()
-            .add("client_credentials")
             .add("authorization_code")
+            .add("client_credentials")
             .build();
 
     public static final ImmutableList<String> MANDATORY_RESPONSE_TYPES = ImmutableList.<String>builder()
