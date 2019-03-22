@@ -21,6 +21,5 @@ public class CommerzbankAgentTest {
                 .doLogout(true)
                 .build()
                 .testRefresh();
-
     }
 }

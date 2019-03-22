@@ -7,14 +7,11 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 
-//@Ignore
+// @Ignore
 public class FinTsAgentTest {
 
-    ArgumentHelper helper = new ArgumentHelper(
-            "tink.username",
-            "tink.password",
-            "tink.market",
-            "tink.provider");
+    ArgumentHelper helper =
+            new ArgumentHelper("tink.username", "tink.password", "tink.market", "tink.provider");
 
     @Before
     public void before() {
@@ -35,6 +32,5 @@ public class FinTsAgentTest {
                 .saveCredentialsAfter(false)
                 .build()
                 .testRefresh();
-
     }
 }
