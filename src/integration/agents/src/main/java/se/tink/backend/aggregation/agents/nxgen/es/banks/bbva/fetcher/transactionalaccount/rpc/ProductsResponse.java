@@ -4,6 +4,7 @@ import io.vavr.collection.List;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.creditcard.entities.CreditCardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.investment.entities.StockAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.fetcher.transactionalaccount.entities.InternationalFundsPortfoliosEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.rpc.BbvaResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -12,7 +13,7 @@ public class ProductsResponse extends BbvaResponse {
     private List<AccountEntity> accounts;
     private List<CreditCardEntity> cards;
     private List<StockAccountEntity> stockAccounts;
-    private List<Object> internationalFundsPortfolios;
+    private List<InternationalFundsPortfoliosEntity> internationalFundsPortfolios;
     private List<Object> workingCapitalLoansLimits;
     private List<Object> revolvingCredits;
     private List<Object> multiMortgages;
@@ -29,7 +30,7 @@ public class ProductsResponse extends BbvaResponse {
     }
 
     // getters to support logging
-    public List<Object> getInternationalFundsPortfolios() {
+    public List<InternationalFundsPortfoliosEntity> getInternationalFundsPortfolios() {
         return internationalFundsPortfolios;
     }
 
