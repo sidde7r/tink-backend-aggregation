@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "Context")
-@XmlType(propOrder = { "channel", "language", "devID", "deviceIdentifier" })
+@XmlType(propOrder = {"channel", "language", "devID", "deviceIdentifier"})
 public class Context {
     private String Channel;
     private String Language;

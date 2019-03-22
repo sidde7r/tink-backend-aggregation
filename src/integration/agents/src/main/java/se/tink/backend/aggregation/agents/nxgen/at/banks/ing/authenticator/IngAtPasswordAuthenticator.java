@@ -1,5 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator;
 
+import java.security.spec.RSAPublicKeySpec;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
@@ -15,11 +19,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.password.Pas
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
-
-import java.security.spec.RSAPublicKeySpec;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
     private final IngAtApiClient apiClient;
@@ -40,7 +39,8 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
         final IngAtRsa rsa = new IngAtRsa(publicKeySpec);
         final Form passwordForm = new IngAtPasswordFormParser(rsaParser.getDocument()).getForm();
         final String encryptedPassword = rsa.encrypt(password);
-        return passwordForm.rebuilder()
+        return passwordForm
+                .rebuilder()
                 .put("pinLoginHash", encryptedPassword)
                 .put("loginFeedBack:loginFeedBack_body:login", username)
                 .put("pin", org.apache.commons.lang3.StringUtils.repeat("X", password.length()))
@@ -72,8 +72,7 @@ public class IngAtPasswordAuthenticator implements PasswordAuthenticator {
         final List<IngAtAccountsListParser.AccountSummary> accountsSummary =
                 parser.getAccountsSummary();
         final List<AccountReferenceEntity> accountEntities =
-                accountsSummary
-                        .stream()
+                accountsSummary.stream()
                         .map(IngAtPasswordAuthenticator::summaryToAccountReference)
                         .collect(Collectors.toList());
         final WebLoginResponse webLoginResponse =

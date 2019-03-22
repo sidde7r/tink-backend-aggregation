@@ -18,7 +18,8 @@ public class ErsteBankTransactionFetcher implements TransactionPagePaginator<Tra
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-        String accountUrl = account.getFromTemporaryStorage(ErsteBankConstants.STORAGE.TRANSACTIONSURL);
+        String accountUrl =
+                account.getFromTemporaryStorage(ErsteBankConstants.STORAGE.TRANSACTIONSURL);
 
         if (!Strings.isNullOrEmpty(accountUrl)) {
             return this.ersteBankApiClient.fetchTransactions(page, accountUrl);

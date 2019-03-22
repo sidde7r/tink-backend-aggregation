@@ -1,7 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtSessionStorage;
@@ -9,18 +15,11 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.WebLoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils.IngAtTransactionalAccountParser;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class IngAtTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private static final Logger logger =
@@ -48,9 +47,7 @@ public class IngAtTransactionalAccountFetcher implements AccountFetcher<Transact
                                         new IllegalStateException(
                                                 "Could not find login response when fetching accounts"));
         final List<AccountReferenceEntity> transactionalAccountReferences =
-                webLoginResponse
-                        .getAccountReferenceEntities()
-                        .stream()
+                webLoginResponse.getAccountReferenceEntities().stream()
                         .filter(IngAtTransactionalAccountFetcher::isTransactionalAccountType)
                         .collect(Collectors.toList());
         final Collection<TransactionalAccount> res = new ArrayList<>();

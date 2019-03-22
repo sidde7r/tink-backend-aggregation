@@ -44,8 +44,10 @@ public class BawagPskPasswordAuthenticator implements PasswordAuthenticator {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             } else {
                 // Unknown reason
-                final String message = String.format("Failed to login because: %s",
-                        errorResponse.getErrorMessage().orElse("Unknown reason"));
+                final String message =
+                        String.format(
+                                "Failed to login because: %s",
+                                errorResponse.getErrorMessage().orElse("Unknown reason"));
                 throw new IllegalStateException(message);
             }
         }

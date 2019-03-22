@@ -26,7 +26,6 @@ public class AmericanExpressV62ATConfiguration implements AmericanExpressV62Conf
         return cardEntity.getCardNumberDisplay();
     }
 
-
     @Override
     public String getLocale() {
         return AmericanExpressV62ATConstants.BodyValue.LOCALE;
@@ -56,6 +55,4 @@ public class AmericanExpressV62ATConfiguration implements AmericanExpressV62Conf
         request.setTimestamp(Long.toString(System.currentTimeMillis()));
         return request;
     }
-
-
 }

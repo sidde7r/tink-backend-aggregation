@@ -12,13 +12,15 @@ public class ErstebankSidentityAgent extends ErsteBankPasswordAgent {
 
     private final ErsteBankApiClient ersteBankApiClient;
 
-    public ErstebankSidentityAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public ErstebankSidentityAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.ersteBankApiClient = new ErsteBankApiClient(client, persistentStorage);
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new ErstebankSidentityAuthenticator(ersteBankApiClient, supplementalInformationHelper);
+        return new ErstebankSidentityAuthenticator(
+                ersteBankApiClient, supplementalInformationHelper);
     }
 }

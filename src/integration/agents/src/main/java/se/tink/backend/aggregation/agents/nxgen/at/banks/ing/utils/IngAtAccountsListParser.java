@@ -1,18 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.agents.rpc.AccountTypes;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 public class IngAtAccountsListParser {
     private static Logger logger = LoggerFactory.getLogger(IngAtAccountsListParser.class);
@@ -45,9 +44,7 @@ public class IngAtAccountsListParser {
 
     public Optional<String> getAccountHolder() {
         final List<String> greeting =
-                doc.select("small[class=title__subheadline]")
-                        .select("span")
-                        .stream()
+                doc.select("small[class=title__subheadline]").select("span").stream()
                         .map(Element::text)
                         .collect(Collectors.toList());
 

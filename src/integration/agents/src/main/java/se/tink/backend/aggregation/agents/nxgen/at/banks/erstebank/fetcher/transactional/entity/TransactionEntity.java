@@ -17,7 +17,8 @@ public class TransactionEntity {
     private String title;
     private String subtitle;
     private String date;
-    private static final AggregationLogger LONGLOGGER = new AggregationLogger(TransactionEntity.class);
+    private static final AggregationLogger LONGLOGGER =
+            new AggregationLogger(TransactionEntity.class);
 
     public String getId() {
         return id;
@@ -44,7 +45,10 @@ public class TransactionEntity {
     }
 
     public boolean isValidTransaction() {
-        return !Strings.isNullOrEmpty(title) && !Strings.isNullOrEmpty(date) && amount != null && validDate();
+        return !Strings.isNullOrEmpty(title)
+                && !Strings.isNullOrEmpty(date)
+                && amount != null
+                && validDate();
     }
 
     private boolean validDate() {
@@ -101,7 +105,8 @@ public class TransactionEntity {
                 return getYesterdayDate();
             }
 
-            LONGLOGGER.errorExtraLong("DateParsing error", ErsteBankConstants.LOGTAG.ERROR_DATE_PARSING, e);
+            LONGLOGGER.errorExtraLong(
+                    "DateParsing error", ErsteBankConstants.LOGTAG.ERROR_DATE_PARSING, e);
             throw new IllegalArgumentException("Cannot parse date: " + e.toString());
         }
     }
@@ -114,6 +119,5 @@ public class TransactionEntity {
                 .setDescription(getTitle())
                 .setExternalId(id)
                 .build();
-
     }
 }

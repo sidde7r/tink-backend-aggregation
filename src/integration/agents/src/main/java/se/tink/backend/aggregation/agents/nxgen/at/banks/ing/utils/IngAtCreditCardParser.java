@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class IngAtCreditCardParser {
     private final Document doc;
@@ -66,9 +65,9 @@ public class IngAtCreditCardParser {
             if (Objects.nonNull(f)) {
                 final Element g =
                         f.select(
-                               String.format(
-                                        "dd:matches(%s)",
-                                        "\\*\\*\\*\\* \\*\\*\\*\\* \\*\\*\\*\\*"))
+                                        String.format(
+                                                "dd:matches(%s)",
+                                                "\\*\\*\\*\\* \\*\\*\\*\\* \\*\\*\\*\\*"))
                                 .first();
                 return g.text();
             }
@@ -83,10 +82,10 @@ public class IngAtCreditCardParser {
             if (Objects.nonNull(f)) {
                 final Element g =
                         f.select(
-                                String.format(
-                                        "dd:matches(%s)",
-                                        ".{2}\\d{2} \\d{4} \\d{4} \\d{4} \\d{4}"))
-                        .first();
+                                        String.format(
+                                                "dd:matches(%s)",
+                                                ".{2}\\d{2} \\d{4} \\d{4} \\d{4} \\d{4}"))
+                                .first();
                 if (Objects.nonNull(g)) {
                     return cleanAccountNumber(g.text());
                 }
@@ -110,7 +109,8 @@ public class IngAtCreditCardParser {
         if (Objects.isNull(f)) {
             return result;
         }
-        String formatted = String.format("span:matches(%s)", "\\*\\*\\*\\* \\*\\*\\*\\* \\*\\*\\*\\*");
+        String formatted =
+                String.format("span:matches(%s)", "\\*\\*\\*\\* \\*\\*\\*\\* \\*\\*\\*\\*");
         final Element g = e.select(formatted).first();
         if (Objects.isNull(g)) {
             return result;

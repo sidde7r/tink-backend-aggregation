@@ -3,14 +3,14 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.fetcher.tran
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.ErsteBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class ProductEntity {
@@ -19,10 +19,13 @@ public class ProductEntity {
     private String identifier;
     private String description;
     private String title;
+
     @JsonProperty("amount")
     private AmountEntity amountEntity;
+
     @JsonProperty("accountInfo")
     private AccountInfoEntity accountInfoEntity;
+
     @JsonProperty("extrasInfo")
     private ExtraInfoEntity extraInfoEntity;
 
@@ -66,14 +69,14 @@ public class ProductEntity {
     private AccountTypes getAccountType() {
         String accountType = getType().toUpperCase();
         switch (accountType) {
-        case ErsteBankConstants.ACCOUNTYPE.CHECKING:
-            return AccountTypes.CHECKING;
-        case ErsteBankConstants.ACCOUNTYPE.BUILDING_SAVING:
-        case ErsteBankConstants.ACCOUNTYPE.SAVING:
-            return AccountTypes.SAVINGS;
-        default:
-            logger.warn("{} {}", ErsteBankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE, accountType);
-            throw new IllegalStateException("Unknown account type");
+            case ErsteBankConstants.ACCOUNTYPE.CHECKING:
+                return AccountTypes.CHECKING;
+            case ErsteBankConstants.ACCOUNTYPE.BUILDING_SAVING:
+            case ErsteBankConstants.ACCOUNTYPE.SAVING:
+                return AccountTypes.SAVINGS;
+            default:
+                logger.warn("{} {}", ErsteBankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE, accountType);
+                throw new IllegalStateException("Unknown account type");
         }
     }
 
@@ -140,5 +143,4 @@ public class ProductEntity {
                 .putInTemporaryStorage(ErsteBankConstants.STORAGE.CREDITURL, getId())
                 .build();
     }
-
 }

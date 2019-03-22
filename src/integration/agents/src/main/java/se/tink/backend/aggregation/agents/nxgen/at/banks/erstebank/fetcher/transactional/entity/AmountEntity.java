@@ -21,22 +21,19 @@ public class AmountEntity {
         return currency;
     }
 
-    public Amount getTinkBalance(){
+    public Amount getTinkBalance() {
         String value = Integer.toString(getValue());
 
-        if(value.length() == 1){
+        if (value.length() == 1) {
             return new Amount(getCurrency(), Double.parseDouble(value));
-        }
-
-        else if(value.length() == 2){
-            value = new StringBuffer(value).insert(3-getPrecision(), ".").toString();
+        } else if (value.length() == 2) {
+            value = new StringBuffer(value).insert(3 - getPrecision(), ".").toString();
             double doubleValue = Double.parseDouble(value);
             return new Amount(getCurrency(), doubleValue);
         }
 
-        value = new StringBuffer(value).insert(value.length()-getPrecision(), ".").toString();
+        value = new StringBuffer(value).insert(value.length() - getPrecision(), ".").toString();
         double doubleValue = Double.parseDouble(value);
         return new Amount(getCurrency(), doubleValue);
-
     }
 }

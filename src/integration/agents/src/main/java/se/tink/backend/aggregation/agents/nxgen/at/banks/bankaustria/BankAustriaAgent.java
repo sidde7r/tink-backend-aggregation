@@ -1,11 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.authenticator.BankAustriaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.fetcher.BankAustriaTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml.OtmlBodyReader;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml.OtmlResponseConverter;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.sessionhandler.BankAustriaSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -22,18 +24,19 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.Optional;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-
 public class BankAustriaAgent extends NextGenerationAgent {
 
     private final OtmlResponseConverter otmlResponseConverter;
     private final BankAustriaSessionStorage bankAustriaSessionStorage;
     private BankAustriaApiClient apiClient;
 
-    public BankAustriaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public BankAustriaAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        this.bankAustriaSessionStorage = new BankAustriaSessionStorage(this.sessionStorage, BankAustriaConstants.Device.IPHONE7_OTML_LAYOUT_INITIAL);
+        this.bankAustriaSessionStorage =
+                new BankAustriaSessionStorage(
+                        this.sessionStorage,
+                        BankAustriaConstants.Device.IPHONE7_OTML_LAYOUT_INITIAL);
         this.apiClient = new BankAustriaApiClient(this.client, bankAustriaSessionStorage);
         this.otmlResponseConverter = new OtmlResponseConverter();
     }
@@ -45,19 +48,20 @@ public class BankAustriaAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        BankAustriaAuthenticator authenticator = new BankAustriaAuthenticator(
-                this.apiClient,
-                this.credentials,
-                this.persistentStorage,
-                bankAustriaSessionStorage,
-                otmlResponseConverter
-                );
+        BankAustriaAuthenticator authenticator =
+                new BankAustriaAuthenticator(
+                        this.apiClient,
+                        this.credentials,
+                        this.persistentStorage,
+                        bankAustriaSessionStorage,
+                        otmlResponseConverter);
 
         return new PasswordAuthenticationController(authenticator);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         BankAustriaTransactionalAccountFetcher transactionalAccountFetcher =
                 new BankAustriaTransactionalAccountFetcher(apiClient, otmlResponseConverter);
         return Optional.of(
@@ -67,7 +71,8 @@ public class BankAustriaAgent extends NextGenerationAgent {
                         transactionalAccountFetcher,
                         new TransactionFetcherController<>(
                                 this.transactionPaginationHelper,
-                                new TransactionDatePaginationController<>(transactionalAccountFetcher))));
+                                new TransactionDatePaginationController<>(
+                                        transactionalAccountFetcher))));
     }
 
     @Override
@@ -91,7 +96,8 @@ public class BankAustriaAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

@@ -25,8 +25,9 @@ public final class GetAccountStatementItemsResponse {
     }
 
     /**
-     * In the bank's nomenclature, the "ValueDate" is the date of requesting the money to be transferred, whereas the
-     * "BookingDate" is the date when the money hits the account. That is, ValueDate <= BookingDate.
+     * In the bank's nomenclature, the "ValueDate" is the date of requesting the money to be
+     * transferred, whereas the "BookingDate" is the date when the money hits the account. That is,
+     * ValueDate <= BookingDate.
      */
     private Optional<Date> dateOfRequestingTheTransfer(final AccountStatementItem item) {
         return Optional.ofNullable(item)
@@ -35,21 +36,26 @@ public final class GetAccountStatementItemsResponse {
     }
 
     private Optional<? extends Transaction> buildTransaction(final AccountStatementItem item) {
-        final Optional<String> currency = Optional.ofNullable(item)
-                .map(AccountStatementItem::getAmountEntity)
-                .map(AmountEntity::getCurrency);
-        final Optional<Double> balance = Optional.ofNullable(item)
-                .map(AccountStatementItem::getAmountEntity)
-                .map(AmountEntity::getAmount);
+        final Optional<String> currency =
+                Optional.ofNullable(item)
+                        .map(AccountStatementItem::getAmountEntity)
+                        .map(AmountEntity::getCurrency);
+        final Optional<Double> balance =
+                Optional.ofNullable(item)
+                        .map(AccountStatementItem::getAmountEntity)
+                        .map(AmountEntity::getAmount);
         final Optional<Date> date = dateOfRequestingTheTransfer(item);
-        final String description = String.join(" ", Optional.ofNullable(item.getTextLines())
-                .orElse(Collections.emptyList()));
+        final String description =
+                String.join(
+                        " ",
+                        Optional.ofNullable(item.getTextLines()).orElse(Collections.emptyList()));
         if (currency.isPresent() && balance.isPresent() && date.isPresent()) {
-            return Optional.of(Transaction.builder()
-                    .setAmount(new Amount(currency.get(), balance.get()))
-                    .setDate(date.get())
-                    .setDescription(description)
-                    .build());
+            return Optional.of(
+                    Transaction.builder()
+                            .setAmount(new Amount(currency.get(), balance.get()))
+                            .setDate(date.get())
+                            .setDescription(description)
+                            .build());
         }
         return Optional.empty();
     }
@@ -60,7 +66,8 @@ public final class GetAccountStatementItemsResponse {
                 .map(Body::getGetAccountStatementItemsResponseEntity)
                 .map(GetAccountStatementItemsResponseEntity::getOk)
                 .map(OK::getAccountStatementItemList)
-                .map(Stream::of).orElse(Stream.empty())
+                .map(Stream::of)
+                .orElse(Stream.empty())
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .map(this::buildTransaction)
@@ -68,4 +75,3 @@ public final class GetAccountStatementItemsResponse {
                 .collect(Collectors.toSet());
     }
 }
-

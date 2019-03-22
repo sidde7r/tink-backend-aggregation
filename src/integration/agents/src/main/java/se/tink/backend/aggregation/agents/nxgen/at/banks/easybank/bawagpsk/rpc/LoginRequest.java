@@ -23,7 +23,8 @@ public class LoginRequest {
         envelope.setHeader("");
     }
 
-    private LoginRequestEntity createRequest(final String username, final String password, final String shortName) {
+    private LoginRequestEntity createRequest(
+            final String username, final String password, final String shortName) {
         FinancialInstitute fininst = new FinancialInstitute();
         fininst.setBankCode(BawagPskConstants.Client.BANK_CODE);
         fininst.setShortName(shortName);
@@ -31,7 +32,8 @@ public class LoginRequest {
         DisposerContext dcontext = new DisposerContext();
 
         // DisposerNumber == Username + zero padding
-        dcontext.setDisposerNumber(StringUtils.leftPad(username, BawagPskConstants.DISPOSER_NUMBER_LENGTH, '0'));
+        dcontext.setDisposerNumber(
+                StringUtils.leftPad(username, BawagPskConstants.DISPOSER_NUMBER_LENGTH, '0'));
         dcontext.setFinancialInstitute(fininst);
 
         Context context = new Context();

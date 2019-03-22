@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.investment;
 
+import java.util.Collection;
+import java.util.Map;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.fetcher.BawagPskAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.pair.Pair;
-
-import java.util.Collection;
-import java.util.Map;
 
 public final class BawagPskInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
 

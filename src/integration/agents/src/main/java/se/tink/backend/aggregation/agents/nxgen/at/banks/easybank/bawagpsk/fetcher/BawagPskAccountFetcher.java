@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Products;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListRequest;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
-import se.tink.libraries.pair.Pair;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.pair.Pair;
 
 /**
  * Common class for fetching transactional accounts, credit cards, loans, since they are identical
@@ -34,8 +34,7 @@ public final class BawagPskAccountFetcher {
                 new GetAccountInformationListRequest(
                         sessionID,
                         qid,
-                        products.getProductList()
-                                .stream()
+                        products.getProductList().stream()
                                 .map(Product::getProductID)
                                 .filter(Objects::nonNull)
                                 .collect(Collectors.toList()));

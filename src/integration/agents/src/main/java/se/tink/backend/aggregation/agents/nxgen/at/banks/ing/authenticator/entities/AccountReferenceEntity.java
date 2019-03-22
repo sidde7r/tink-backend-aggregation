@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.entities;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountReferenceEntity {
