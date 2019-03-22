@@ -22,7 +22,7 @@ public class LoanMovementEntity {
     private ReposEntity repos;
 
     @JsonProperty("lista")
-    private List<LoanOperationEntity> oprationList;
+    private List<LoanOperationEntity> operationList;
 
 
 }
