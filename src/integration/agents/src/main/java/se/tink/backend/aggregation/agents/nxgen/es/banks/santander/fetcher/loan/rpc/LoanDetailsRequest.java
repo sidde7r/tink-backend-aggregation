@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.GeneralInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan.entities.LoanEntity;

@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsConstants;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsXmlUtils;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils.SantanderEsXmlUtils;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CardEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.entities.CreditCardRepositionEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.creditcards.rpc.CreditCardDetailsResponse;

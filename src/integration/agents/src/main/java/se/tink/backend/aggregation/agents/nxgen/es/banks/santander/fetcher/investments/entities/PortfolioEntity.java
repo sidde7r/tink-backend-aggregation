@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.inve
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.bind.annotation.XmlRootElement;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.ContractIdEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.GeneralInfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
