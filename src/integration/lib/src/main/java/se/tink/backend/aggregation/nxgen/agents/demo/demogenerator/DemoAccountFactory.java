@@ -1,9 +1,10 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
@@ -44,19 +45,30 @@ public class DemoAccountFactory {
         return accounts;
     }
 
-  public static Collection<CreditCardAccount> createCreditCardAccounts(
-      Catalog catalog, DemoCreditCardAccount demoCreditCardAccountDefinition) {
-    return Collections.singleton(
-        CreditCardAccount.builderFromFullNumber(
-                demoCreditCardAccountDefinition.getCreditCardNumber())
-            .setName(
-                    catalog.getString(demoCreditCardAccountDefinition.getAccountName()))
-            .setHolderName(
-                    demoCreditCardAccountDefinition.getNameOnCreditCard())
-            .setBalance(
-                    demoCreditCardAccountDefinition.getBalance())
-            .setAvailableCredit(
-                    demoCreditCardAccountDefinition.getAvailableCredit())
-            .build());
-  }
+    public static List<CreditCardAccount> createCreditCardAccounts(
+            Catalog catalog, Collection<DemoCreditCardAccount> demoCreditCardAccountDefinitions) {
+        ImmutableList.Builder<CreditCardAccount> accountListBuilder = ImmutableList.builder();
+
+        for (DemoCreditCardAccount accountDefinition : demoCreditCardAccountDefinitions) {
+            accountListBuilder.add(
+                    createCreditCardAccount(catalog, accountDefinition)
+            );
+        }
+
+        return accountListBuilder.build();
+    }
+
+    private static CreditCardAccount createCreditCardAccount(Catalog catalog, DemoCreditCardAccount accountDefinition) {
+        return CreditCardAccount.builderFromFullNumber(
+                accountDefinition.getCreditCardNumber())
+                .setName(
+                        catalog.getString(accountDefinition.getAccountName()))
+                .setHolderName(
+                        accountDefinition.getNameOnCreditCard())
+                .setBalance(
+                        accountDefinition.getBalance())
+                .setAvailableCredit(
+                        accountDefinition.getAvailableCredit())
+                .build();
+    }
 }
