@@ -13,8 +13,9 @@ public class RaiffeisenSessionStorage {
         this.sessionStorage = sessionStorage;
     }
 
-     public Optional<WebLoginResponse> getWebLoginResponse() {
-        return sessionStorage.get(RaiffeisenConstants.Storage.WEB_LOGIN_RESPONSE.name(), WebLoginResponse.class);
+    public Optional<WebLoginResponse> getWebLoginResponse() {
+        return sessionStorage.get(
+                RaiffeisenConstants.Storage.WEB_LOGIN_RESPONSE.name(), WebLoginResponse.class);
     }
 
     public void setWebLoginResponse(@Nonnull final WebLoginResponse loginResponse) {

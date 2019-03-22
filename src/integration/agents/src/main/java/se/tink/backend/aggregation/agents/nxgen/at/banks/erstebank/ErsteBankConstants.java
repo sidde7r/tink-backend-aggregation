@@ -49,9 +49,11 @@ public class ErsteBankConstants {
         public static final String CLIENT_ID_TRANSACTIONAPP = "transactionapp";
         public static final String REDIRECT_URI = "redirect_uri";
         public static final String REDIRECT_URI_AUTHENTICATION = "transactionapp://authentication";
-        public static final String SPARKASSE_ACCEPT = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        public static final String SPARKASSE_ACCEPT =
+                "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
         public static final String FEATURES = "features";
-        public static final String FEATURES_ALL = "qr,orders,atinsurances,skmobiletopup,roccrepayment,cardpermanentlock";
+        public static final String FEATURES_ALL =
+                "qr,orders,atinsurances,skmobiletopup,roccrepayment,cardpermanentlock";
         public static final String PAGE = "page";
     }
 
@@ -63,17 +65,21 @@ public class ErsteBankConstants {
     }
 
     public static class PATTERN {
-        public static final Pattern SALT = Pattern
-                .compile("\"saltCode\"\\s+value=\"(.+?)\".*", Pattern.DOTALL | Pattern.MULTILINE);
-        public static final Pattern MODULUS = Pattern
-                .compile("\"modulus\"\\s+value=\"(.+?)\"", Pattern.DOTALL | Pattern.MULTILINE);
-        public static final Pattern EXPONENT = Pattern
-                .compile("\"exponent\"\\s+value=\"(.+?)\"", Pattern.DOTALL | Pattern.MULTILINE);
+        public static final Pattern SALT =
+                Pattern.compile(
+                        "\"saltCode\"\\s+value=\"(.+?)\".*", Pattern.DOTALL | Pattern.MULTILINE);
+        public static final Pattern MODULUS =
+                Pattern.compile(
+                        "\"modulus\"\\s+value=\"(.+?)\"", Pattern.DOTALL | Pattern.MULTILINE);
+        public static final Pattern EXPONENT =
+                Pattern.compile(
+                        "\"exponent\"\\s+value=\"(.+?)\"", Pattern.DOTALL | Pattern.MULTILINE);
 
         public static final Pattern ACCESS_TOKEN = Pattern.compile("access_token=(.*)&token_type");
         public static final Pattern TOKEN_TYPE = Pattern.compile("token_type=(.*)&expires_in");
         public static final Pattern EXPIRES_IN = Pattern.compile("expires_in=(.*)&scope");
-        public static final Pattern SIDENTITY_VERIFICATION_CODE = Pattern.compile("Verification code: <b>(.*)<\\/b>");
+        public static final Pattern SIDENTITY_VERIFICATION_CODE =
+                Pattern.compile("Verification code: <b>(.*)<\\/b>");
 
         public static final String DATE_FORMAT = "M/d/y";
         public static final String TRANSACTION_FORMAT = "/bff/b/products/%s/transactions";
@@ -88,10 +94,13 @@ public class ErsteBankConstants {
     }
 
     public static class LOGTAG {
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("ERSTEBANK_SPARKASSE_ACCOUNT_TYPE");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
+                LogTag.from("ERSTEBANK_SPARKASSE_ACCOUNT_TYPE");
         public static final LogTag ERROR_DATE_PARSING = LogTag.from("ERSTEBANK_ERROR_PARSING_DATE");
-        public static final LogTag CREDIT_TRANSACTIONS_ERROR = LogTag.from("ERSTEBANK_TRANSACTIONS_ERROR");
-        public static final LogTag TRANSANSACTIONAL_ACC_ERR = LogTag.from("ERSTEBANK_TRANSANSACTIONAL_ACC_ERR");
+        public static final LogTag CREDIT_TRANSACTIONS_ERROR =
+                LogTag.from("ERSTEBANK_TRANSACTIONS_ERROR");
+        public static final LogTag TRANSANSACTIONAL_ACC_ERR =
+                LogTag.from("ERSTEBANK_TRANSANSACTIONAL_ACC_ERR");
         public static final LogTag CREDIT_ACC_ERR = LogTag.from("ERSTEBANK_CREDIT_ACC_ERR");
     }
 

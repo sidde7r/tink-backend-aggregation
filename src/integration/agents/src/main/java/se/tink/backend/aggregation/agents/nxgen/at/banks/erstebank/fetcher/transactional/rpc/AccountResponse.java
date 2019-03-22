@@ -17,14 +17,17 @@ public class AccountResponse {
     public List<TransactionalAccount> toTransactionalAccounts() {
         return productListEntity.stream()
                 .filter(productEntity -> productEntity.isValidTransactional())
-                .map(ProductEntity::toTransactionalAccount).collect(Collectors.toList());
+                .map(ProductEntity::toTransactionalAccount)
+                .collect(Collectors.toList());
     }
 
     public List<CreditCardAccount> toCreditCardAccounts() {
         return productListEntity.stream()
-                .filter(productEntity -> productEntity.isCreditCardAccount() && productEntity
-                        .isValidCreditCardAccount())
-                .map(ProductEntity::toCreditCardAccount).collect(Collectors.toList());
+                .filter(
+                        productEntity ->
+                                productEntity.isCreditCardAccount()
+                                        && productEntity.isValidCreditCardAccount())
+                .map(ProductEntity::toCreditCardAccount)
+                .collect(Collectors.toList());
     }
-
 }

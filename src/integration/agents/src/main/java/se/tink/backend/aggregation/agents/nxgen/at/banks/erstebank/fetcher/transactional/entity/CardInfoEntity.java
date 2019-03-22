@@ -7,157 +7,157 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CardInfoEntity {
 
-	@JsonProperty("cardInfo")
-	private CardInfoEntity cardInfo;
+    @JsonProperty("cardInfo")
+    private CardInfoEntity cardInfo;
 
-	@JsonProperty("cardImage")
-	private String cardImage;
+    @JsonProperty("cardImage")
+    private String cardImage;
 
-	@JsonProperty("progressCard")
-	private double progressCard;
+    @JsonProperty("progressCard")
+    private double progressCard;
 
-	@JsonProperty("repaymentMethod")
-	private String repaymentMethod;
+    @JsonProperty("repaymentMethod")
+    private String repaymentMethod;
 
-	@JsonProperty("holderName")
-	private String holderName;
+    @JsonProperty("holderName")
+    private String holderName;
 
-	@JsonProperty("accountsForIncreaseAvailableAmount")
-	private List<String> accountsForIncreaseAvailableAmount;
+    @JsonProperty("accountsForIncreaseAvailableAmount")
+    private List<String> accountsForIncreaseAvailableAmount;
 
-	@JsonProperty("cardImagePlaceholder")
-	private String cardImagePlaceholder;
+    @JsonProperty("cardImagePlaceholder")
+    private String cardImagePlaceholder;
 
-	@JsonProperty("cardBlockingText2")
-	private String cardBlockingText2;
+    @JsonProperty("cardBlockingText2")
+    private String cardBlockingText2;
 
-	@JsonProperty("resetVirtualCardPaymentCount")
-	private boolean resetVirtualCardPaymentCount;
+    @JsonProperty("resetVirtualCardPaymentCount")
+    private boolean resetVirtualCardPaymentCount;
 
-	@JsonProperty("replacementCardSupported")
-	private boolean replacementCardSupported;
+    @JsonProperty("replacementCardSupported")
+    private boolean replacementCardSupported;
 
-	@JsonProperty("posEnabled")
-	private boolean posEnabled;
+    @JsonProperty("posEnabled")
+    private boolean posEnabled;
 
-	@JsonProperty("cardBlockingText1")
-	private String cardBlockingText1;
+    @JsonProperty("cardBlockingText1")
+    private String cardBlockingText1;
 
-	@JsonProperty("progressCardAuthorized")
-	private double progressCardAuthorized;
+    @JsonProperty("progressCardAuthorized")
+    private double progressCardAuthorized;
 
-	@JsonProperty("availableAmount")
-	private AmountEntity availableAmount;
+    @JsonProperty("availableAmount")
+    private AmountEntity availableAmount;
 
-	@JsonProperty("balance")
-	private BalanceEntity balance;
+    @JsonProperty("balance")
+    private BalanceEntity balance;
 
-	@JsonProperty("atmEnabled")
-	private boolean atmEnabled;
+    @JsonProperty("atmEnabled")
+    private boolean atmEnabled;
 
-	@JsonProperty("cardBlockingButton2")
-	private CardBlockingButton2Entity cardBlockingButton2;
+    @JsonProperty("cardBlockingButton2")
+    private CardBlockingButton2Entity cardBlockingButton2;
 
-	@JsonProperty("cardBlockingButton1")
-	private CardBlockingButton1Entity cardBlockingButton1;
+    @JsonProperty("cardBlockingButton1")
+    private CardBlockingButton1Entity cardBlockingButton1;
 
-	@JsonProperty("panSuffix")
-	private String panSuffix;
+    @JsonProperty("panSuffix")
+    private String panSuffix;
 
-	@JsonProperty("brand")
-	private String brand;
+    @JsonProperty("brand")
+    private String brand;
 
-	@JsonProperty("cardLimit")
-	private CardLimitEntity cardLimit;
+    @JsonProperty("cardLimit")
+    private CardLimitEntity cardLimit;
 
-	@JsonProperty("onlineShoppingEnabled")
-	private boolean onlineShoppingEnabled;
+    @JsonProperty("onlineShoppingEnabled")
+    private boolean onlineShoppingEnabled;
 
-	public CardInfoEntity getCardInfo() {
-		return cardInfo;
-	}
+    public CardInfoEntity getCardInfo() {
+        return cardInfo;
+    }
 
-	public String getCardImage() {
-		return cardImage;
-	}
+    public String getCardImage() {
+        return cardImage;
+    }
 
-	public double getProgressCard() {
-		return progressCard;
-	}
+    public double getProgressCard() {
+        return progressCard;
+    }
 
-	public String getRepaymentMethod() {
-		return repaymentMethod;
-	}
+    public String getRepaymentMethod() {
+        return repaymentMethod;
+    }
 
-	public String getHolderName() {
-		return holderName;
-	}
+    public String getHolderName() {
+        return holderName;
+    }
 
-	public List<String> getAccountsForIncreaseAvailableAmount() {
-		return accountsForIncreaseAvailableAmount;
-	}
+    public List<String> getAccountsForIncreaseAvailableAmount() {
+        return accountsForIncreaseAvailableAmount;
+    }
 
-	public String getCardImagePlaceholder() {
-		return cardImagePlaceholder;
-	}
+    public String getCardImagePlaceholder() {
+        return cardImagePlaceholder;
+    }
 
-	public String getCardBlockingText2() {
-		return cardBlockingText2;
-	}
+    public String getCardBlockingText2() {
+        return cardBlockingText2;
+    }
 
-	public boolean isResetVirtualCardPaymentCount() {
-		return resetVirtualCardPaymentCount;
-	}
+    public boolean isResetVirtualCardPaymentCount() {
+        return resetVirtualCardPaymentCount;
+    }
 
-	public boolean isReplacementCardSupported() {
-		return replacementCardSupported;
-	}
+    public boolean isReplacementCardSupported() {
+        return replacementCardSupported;
+    }
 
-	public boolean isPosEnabled() {
-		return posEnabled;
-	}
+    public boolean isPosEnabled() {
+        return posEnabled;
+    }
 
-	public String getCardBlockingText1() {
-		return cardBlockingText1;
-	}
+    public String getCardBlockingText1() {
+        return cardBlockingText1;
+    }
 
-	public double getProgressCardAuthorized() {
-		return progressCardAuthorized;
-	}
+    public double getProgressCardAuthorized() {
+        return progressCardAuthorized;
+    }
 
-	public AmountEntity getAvailableAmount() {
-		return availableAmount;
-	}
+    public AmountEntity getAvailableAmount() {
+        return availableAmount;
+    }
 
-	public BalanceEntity getBalance() {
-		return balance;
-	}
+    public BalanceEntity getBalance() {
+        return balance;
+    }
 
-	public boolean isAtmEnabled() {
-		return atmEnabled;
-	}
+    public boolean isAtmEnabled() {
+        return atmEnabled;
+    }
 
-	public CardBlockingButton2Entity getCardBlockingButton2() {
-		return cardBlockingButton2;
-	}
+    public CardBlockingButton2Entity getCardBlockingButton2() {
+        return cardBlockingButton2;
+    }
 
-	public CardBlockingButton1Entity getCardBlockingButton1() {
-		return cardBlockingButton1;
-	}
+    public CardBlockingButton1Entity getCardBlockingButton1() {
+        return cardBlockingButton1;
+    }
 
-	public String getPanSuffix() {
-		return panSuffix;
-	}
+    public String getPanSuffix() {
+        return panSuffix;
+    }
 
-	public String getBrand() {
-		return brand;
-	}
+    public String getBrand() {
+        return brand;
+    }
 
-	public CardLimitEntity getCardLimit() {
-		return cardLimit;
-	}
+    public CardLimitEntity getCardLimit() {
+        return cardLimit;
+    }
 
-	public boolean isOnlineShoppingEnabled() {
-		return onlineShoppingEnabled;
-	}
+    public boolean isOnlineShoppingEnabled() {
+        return onlineShoppingEnabled;
+    }
 }

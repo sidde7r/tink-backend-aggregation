@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.authenticator;
 
+import java.util.Optional;
 import org.w3c.dom.Node;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
@@ -11,9 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.entities.Ot
 import se.tink.backend.aggregation.agents.nxgen.at.banks.bankaustria.otml.OtmlResponseConverter;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
-
-import java.util.Optional;
 
 public class BankAustriaAuthenticator implements PasswordAuthenticator {
     private final BankAustriaApiClient apiClient;
@@ -22,7 +21,12 @@ public class BankAustriaAuthenticator implements PasswordAuthenticator {
     private final BankAustriaSessionStorage bankAustriaSessionStorage;
     private OtmlResponseConverter otmlResponseConverter;
 
-    public BankAustriaAuthenticator(BankAustriaApiClient apiClient, Credentials credentials, PersistentStorage persistentStorage, BankAustriaSessionStorage bankAustriaSessionStorage, OtmlResponseConverter otmlResponseConverter) {
+    public BankAustriaAuthenticator(
+            BankAustriaApiClient apiClient,
+            Credentials credentials,
+            PersistentStorage persistentStorage,
+            BankAustriaSessionStorage bankAustriaSessionStorage,
+            OtmlResponseConverter otmlResponseConverter) {
         this.apiClient = apiClient;
         this.credentials = credentials;
         this.persistentStorage = persistentStorage;
@@ -31,7 +35,8 @@ public class BankAustriaAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         bankAustriaSessionStorage.setXOtmlManifest(apiClient.getMD5OfUpdatePage());
 
         OtmlResponse response = apiClient.login(removeDotsNotUsedByApp(username), password);
@@ -70,7 +75,11 @@ public class BankAustriaAuthenticator implements PasswordAuthenticator {
 
     private boolean resultNodeContainsKo(OtmlResponse response) {
         Optional<Node> result = otmlResponseConverter.getResultNode(response.getDataSources());
-        return result.filter(node -> BankAustriaConstants.NOT_OK.equals(otmlResponseConverter.getValue(node))).isPresent();
+        return result.filter(
+                        node ->
+                                BankAustriaConstants.NOT_OK.equals(
+                                        otmlResponseConverter.getValue(node)))
+                .isPresent();
     }
 
     private boolean passwordMissingOrInvalidFormatSetInParams(OtmlResponse response) {

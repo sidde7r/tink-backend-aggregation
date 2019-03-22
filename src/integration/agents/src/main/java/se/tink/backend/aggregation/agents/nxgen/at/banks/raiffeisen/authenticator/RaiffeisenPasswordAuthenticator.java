@@ -27,12 +27,13 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
-    private static final Logger logger = LoggerFactory.getLogger(RaiffeisenPasswordAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(RaiffeisenPasswordAuthenticator.class);
     private final RaiffeisenWebApiClient apiClient;
     private final RaiffeisenSessionStorage sessionStorage;
 
-    public RaiffeisenPasswordAuthenticator(final RaiffeisenWebApiClient apiClient,
-            final RaiffeisenSessionStorage sessionStorage) {
+    public RaiffeisenPasswordAuthenticator(
+            final RaiffeisenWebApiClient apiClient, final RaiffeisenSessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
@@ -87,7 +88,8 @@ public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
     }
 
     private MessageDigest getMD5() {
-        // Every implementation of the Java platform is required to support the MD5 MessageDigest algorithm...
+        // Every implementation of the Java platform is required to support the MD5 MessageDigest
+        // algorithm...
         try {
             return MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
@@ -105,21 +107,30 @@ public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
     private void checkUsername(final String username) throws LoginException {
         final int usernameLength = RaiffeisenConstants.IntValues.USERNAME_LENGTH;
         if (username.length() != usernameLength) {
-            logger.warn("The signatory number has {} characters; expected {} characters", username.length(),
+            logger.warn(
+                    "The signatory number has {} characters; expected {} characters",
+                    username.length(),
                     usernameLength);
-            throw LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(
-                    String.format("The signatory number has %d characters; expected %d characters",
-                            username.length(),
-                            usernameLength)));
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    new LocalizableKey(
+                            String.format(
+                                    "The signatory number has %d characters; expected %d characters",
+                                    username.length(), usernameLength)));
         }
     }
 
     private void checkPassword(final String password) throws LoginException {
         final int passwordLength = RaiffeisenConstants.IntValues.PASSWORD_LENGTH;
         if (password.length() != passwordLength) {
-            logger.warn("The PIN has {} characters; expected {} digits", password.length(), passwordLength);
-            throw LoginError.INCORRECT_CREDENTIALS.exception(new LocalizableKey(
-                    String.format("The PIN has %d characters; expected %d digits", password.length(), passwordLength)));
+            logger.warn(
+                    "The PIN has {} characters; expected {} digits",
+                    password.length(),
+                    passwordLength);
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    new LocalizableKey(
+                            String.format(
+                                    "The PIN has %d characters; expected %d digits",
+                                    password.length(), passwordLength)));
         }
     }
 
@@ -131,8 +142,10 @@ public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
         final String encryptedPassword = getEncryptedPassword(password);
         final HttpResponse homeResponse = apiClient.getHomePage();
         final HttpResponse refreshRegionResponse = apiClient.RefreshRegion(homeResponse);
-        final HttpResponse usernameResponse = apiClient.sendUsername(refreshRegionResponse, username);
-        final HttpResponse passwordResponse = apiClient.sendPassword(usernameResponse, encryptedPassword);
+        final HttpResponse usernameResponse =
+                apiClient.sendUsername(refreshRegionResponse, username);
+        final HttpResponse passwordResponse =
+                apiClient.sendPassword(usernameResponse, encryptedPassword);
         if (isWrongPin(passwordResponse)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
@@ -141,7 +154,8 @@ public class RaiffeisenPasswordAuthenticator implements PasswordAuthenticator {
         final URL ssoUrl = getSsoUrl(radSessionIdResponse);
         apiClient.sendSsoRequest(ssoUrl);
         final URL url = apiClient.sso();
-        final WebLoginResponse webLoginResponse = new WebLoginResponse(getTokenType(url), getAccessToken(url));
+        final WebLoginResponse webLoginResponse =
+                new WebLoginResponse(getTokenType(url), getAccessToken(url));
         sessionStorage.setWebLoginResponse(webLoginResponse);
     }
 }

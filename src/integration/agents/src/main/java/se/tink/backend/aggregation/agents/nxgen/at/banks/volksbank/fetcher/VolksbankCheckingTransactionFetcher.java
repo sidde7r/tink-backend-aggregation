@@ -22,9 +22,11 @@ import se.tink.libraries.strings.StringUtils;
 public class VolksbankCheckingTransactionFetcher
         implements TransactionDatePaginator<TransactionalAccount>, PaginatorResponse {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    private static final Pattern TRANSACTION_INFO = Pattern.compile(
-            "<.*Buchungsdatum:[\\s\\S]*?>(?<date>\\d{2}.\\d{2}.\\d{4})[\\s\\S]*?value\">(?<amount>.*(?=<)|.*(?=\\s*<))[\\s\\S]*?unit\">(?<currency>.*(?=<)|.*(?=\\s*<))[\\s\\S]*?buchungstext-line-0\">(?<description>.*(?=<)|.*(?=\\s*<))");
+    private static final DateTimeFormatter DATE_FORMATTER =
+            DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private static final Pattern TRANSACTION_INFO =
+            Pattern.compile(
+                    "<.*Buchungsdatum:[\\s\\S]*?>(?<date>\\d{2}.\\d{2}.\\d{4})[\\s\\S]*?value\">(?<amount>.*(?=<)|.*(?=\\s*<))[\\s\\S]*?unit\">(?<currency>.*(?=<)|.*(?=\\s*<))[\\s\\S]*?buchungstext-line-0\">(?<description>.*(?=<)|.*(?=\\s*<))");
 
     private final VolksbankApiClient apiClient;
     private List<Transaction> transactions;
@@ -35,7 +37,8 @@ public class VolksbankCheckingTransactionFetcher
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
 
         // TODO for multiple accounts, match account with product Id
         if (doSelectAccount) {
@@ -45,18 +48,28 @@ public class VolksbankCheckingTransactionFetcher
         }
         this.transactions = new ArrayList<>();
         apiClient.postMainFetchTransactionForDateChange(fromDate, toDate);
-        HttpResponse postMainFetchTransactionForDate = apiClient
-                .postMainFetchTransactionForDateAction(fromDate, toDate);
+        HttpResponse postMainFetchTransactionForDate =
+                apiClient.postMainFetchTransactionForDateAction(fromDate, toDate);
 
-        Matcher matcher = TRANSACTION_INFO.matcher(postMainFetchTransactionForDate.getBody(String.class));
+        Matcher matcher =
+                TRANSACTION_INFO.matcher(postMainFetchTransactionForDate.getBody(String.class));
 
         while (matcher.find()) {
-            Transaction transaction = Transaction.builder()
-                    .setAmount(new Amount(matcher.group(VolksbankConstants.REGEX_GROUP.CURRENCY), StringUtils
-                            .parseAmount(matcher.group(VolksbankConstants.REGEX_GROUP.AMOUNT))))
-                    .setDate(matcher.group(VolksbankConstants.REGEX_GROUP.DATE), DATE_FORMATTER)
-                    .setDescription(matcher.group(VolksbankConstants.REGEX_GROUP.DESCRIPTION))
-                    .build();
+            Transaction transaction =
+                    Transaction.builder()
+                            .setAmount(
+                                    new Amount(
+                                            matcher.group(VolksbankConstants.REGEX_GROUP.CURRENCY),
+                                            StringUtils.parseAmount(
+                                                    matcher.group(
+                                                            VolksbankConstants.REGEX_GROUP
+                                                                    .AMOUNT))))
+                            .setDate(
+                                    matcher.group(VolksbankConstants.REGEX_GROUP.DATE),
+                                    DATE_FORMATTER)
+                            .setDescription(
+                                    matcher.group(VolksbankConstants.REGEX_GROUP.DESCRIPTION))
+                            .build();
             this.transactions.add(transaction);
         }
 

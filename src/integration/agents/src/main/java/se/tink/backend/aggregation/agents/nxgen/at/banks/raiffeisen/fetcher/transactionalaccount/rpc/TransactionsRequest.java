@@ -10,12 +10,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TransactionsRequest {
     private Long offset;
     private Long limit;
+
     @JsonProperty("predicate")
     private IbansListEntity ibans;
+
     @JsonProperty("buchungVon")
     private String fromDate;
+
     @JsonProperty("buchungBis")
     private String toDate;
+
     private Boolean prependInfo;
 
     public TransactionsRequest(String iban, Date fromDate, Date toDate) {

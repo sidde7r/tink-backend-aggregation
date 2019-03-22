@@ -20,8 +20,10 @@ public class ErsteBankPasswordAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
-        EncryptionValuesEntity encryptionValuesEntity = ersteBankApiClient.getEncryptionValues(username);
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        EncryptionValuesEntity encryptionValuesEntity =
+                ersteBankApiClient.getEncryptionValues(username);
         String rsa = getRsa(encryptionValuesEntity, password);
         HttpResponse response = ersteBankApiClient.sendPassword(rsa);
 
@@ -36,16 +38,18 @@ public class ErsteBankPasswordAuthenticator implements PasswordAuthenticator {
 
     private String getRsa(EncryptionValuesEntity encryptionValuesEntity, String password) {
         try {
-            return ErsteBankCryptoUtil
-                    .getRSAPassword(encryptionValuesEntity.getSalt(), encryptionValuesEntity.getExponent(),
-                            encryptionValuesEntity.getModulus(), password);
+            return ErsteBankCryptoUtil.getRSAPassword(
+                    encryptionValuesEntity.getSalt(),
+                    encryptionValuesEntity.getExponent(),
+                    encryptionValuesEntity.getModulus(),
+                    password);
         } catch (Exception e) {
             throw new IllegalStateException("Encryption error: " + e.toString());
         }
     }
 
     private boolean containsToken(HttpResponse response) {
-        return response.getStatus() == 302 && response.getHeaders().containsKey(ErsteBankConstants.LOCATION);
+        return response.getStatus() == 302
+                && response.getHeaders().containsKey(ErsteBankConstants.LOCATION);
     }
-
 }

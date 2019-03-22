@@ -6,12 +6,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class BalanceEntity {
 
-	@JsonProperty("precision")
-	private int precision;
+    @JsonProperty("precision")
+    private int precision;
 
-	@JsonProperty("currency")
-	private String currency;
+    @JsonProperty("currency")
+    private String currency;
 
-	@JsonProperty("value")
-	private int value;
+    @JsonProperty("value")
+    private int value;
 }

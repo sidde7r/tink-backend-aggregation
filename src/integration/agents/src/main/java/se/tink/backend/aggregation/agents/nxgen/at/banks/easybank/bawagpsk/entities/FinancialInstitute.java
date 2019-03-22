@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement(name = "FinancialInstitute")
-@XmlType(propOrder = { "bankCode", "BIC", "code", "shortName" })
+@XmlType(propOrder = {"bankCode", "BIC", "code", "shortName"})
 public class FinancialInstitute {
     private String BankCode;
     private String ShortName;

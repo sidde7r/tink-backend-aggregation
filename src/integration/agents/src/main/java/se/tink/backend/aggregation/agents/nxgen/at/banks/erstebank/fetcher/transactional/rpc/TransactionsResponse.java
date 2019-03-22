@@ -19,7 +19,8 @@ public class TransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.stream().filter(TransactionEntity::isValidTransaction)
+        return transactions.stream()
+                .filter(TransactionEntity::isValidTransaction)
                 .map(TransactionEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }

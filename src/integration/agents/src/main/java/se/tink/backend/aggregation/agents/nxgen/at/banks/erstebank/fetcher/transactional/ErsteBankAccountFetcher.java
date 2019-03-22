@@ -9,7 +9,7 @@ public class ErsteBankAccountFetcher implements AccountFetcher<TransactionalAcco
 
     private final ErsteBankApiClient ersteBankApiClient;
 
-    public ErsteBankAccountFetcher(ErsteBankApiClient ersteBankApiClient){
+    public ErsteBankAccountFetcher(ErsteBankApiClient ersteBankApiClient) {
         this.ersteBankApiClient = ersteBankApiClient;
     }
 

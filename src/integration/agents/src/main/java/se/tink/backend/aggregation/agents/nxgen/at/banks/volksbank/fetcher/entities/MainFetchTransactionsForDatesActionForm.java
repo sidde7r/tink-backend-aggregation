@@ -8,9 +8,11 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 public class MainFetchTransactionsForDatesActionForm extends AbstractForm {
 
     public MainFetchTransactionsForDatesActionForm(String viewState, Date startDate, Date endDate) {
-        this.put(VolksbankConstants.Form.OVERLAY_DATE_FROM,
+        this.put(
+                VolksbankConstants.Form.OVERLAY_DATE_FROM,
                 ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.format(startDate));
-        this.put(VolksbankConstants.Form.OVERLAY_DATE_TO,
+        this.put(
+                VolksbankConstants.Form.OVERLAY_DATE_TO,
                 ThreadSafeDateFormat.FORMATTER_DOTTED_DAILY.format(endDate));
         this.put(VolksbankConstants.Form.OVERLAY_DATE_IS_RANGE);
         this.put(VolksbankConstants.Form.OVERLAY_SUBMIT, VolksbankConstants.ONE);

@@ -7,10 +7,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class MobileDevicesRequest {
     @JsonProperty("geraeteId")
     private String setupId;
+
     @JsonProperty("geraeteName")
     private String setupName;
+
     @JsonProperty("geraeteOs")
     private String setupOs;
+
     private String pushToken;
 
     public String getSetupId() {

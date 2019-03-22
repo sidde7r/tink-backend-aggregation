@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity.au
 
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
@@ -13,21 +14,22 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.erstebank.sidentity.aut
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class ErstebankSidentityAuthenticator implements Authenticator {
 
     private final ErsteBankApiClient ersteBankApiClient;
     private final SupplementalInformationHelper supplementalInformationHelper;
 
-    public ErstebankSidentityAuthenticator(ErsteBankApiClient ersteBankApiClient,
+    public ErstebankSidentityAuthenticator(
+            ErsteBankApiClient ersteBankApiClient,
             SupplementalInformationHelper supplementalInformationHelper) {
         this.ersteBankApiClient = ersteBankApiClient;
         this.supplementalInformationHelper = supplementalInformationHelper;
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         String username = credentials.getUsername();
         String verificationCode = ersteBankApiClient.getSidentityVerificationCode(username);
         supplementalInformationHelper.waitAndShowLoginDescription(verificationCode);
@@ -46,15 +48,18 @@ public class ErstebankSidentityAuthenticator implements Authenticator {
             }
 
             switch (response.getSecondFactorStatus()) {
-            case ErsteBankConstants.SIDENTITY.POLL_DONE:
-                return;
-            case ErsteBankConstants.SIDENTITY.POLL_WAITING:
-                break;
-            default:
-                throw new IllegalStateException(
-                        String.format("Unknown Sidentity status: %s", response.getSecondFactorStatus()));
+                case ErsteBankConstants.SIDENTITY.POLL_DONE:
+                    return;
+                case ErsteBankConstants.SIDENTITY.POLL_WAITING:
+                    break;
+                default:
+                    throw new IllegalStateException(
+                            String.format(
+                                    "Unknown Sidentity status: %s",
+                                    response.getSecondFactorStatus()));
             }
-            Uninterruptibles.sleepUninterruptibly(response.getPollingIntervalMs(), TimeUnit.MILLISECONDS);
+            Uninterruptibles.sleepUninterruptibly(
+                    response.getPollingIntervalMs(), TimeUnit.MILLISECONDS);
         }
         throw LoginError.INCORRECT_CREDENTIALS.exception();
     }

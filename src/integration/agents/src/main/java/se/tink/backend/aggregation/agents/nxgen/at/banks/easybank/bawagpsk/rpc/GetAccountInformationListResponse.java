@@ -1,7 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskAccountTypeMappers;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.BawagPskConstants;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInfo;
@@ -12,22 +21,12 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.OK;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import se.tink.libraries.amount.Amount;
 
 public final class GetAccountInformationListResponse {
     private static final Logger logger =
@@ -43,8 +42,7 @@ public final class GetAccountInformationListResponse {
 
     /** @return A collection of invalid IBANs for the accounts that have one. */
     public Collection<IbanIdentifier> getInvalidIbans() {
-        return getAccountInfoList()
-                .stream()
+        return getAccountInfoList().stream()
                 .map(AccountInfo::getProductID)
                 .filter(Objects::nonNull)
                 .filter(productID -> productID.getFinancialInstitute() != null)
@@ -86,8 +84,7 @@ public final class GetAccountInformationListResponse {
     // Too dumb and lazy to find a way to eliminate these dupes
     public Collection<TransactionalAccount> extractTransactionalAccounts(
             final Map<String, String> productCodes) {
-        return getAccountInfoList()
-                .stream()
+        return getAccountInfoList().stream()
                 .map(
                         accInfo ->
                                 toTransactionalAccount(
@@ -99,8 +96,7 @@ public final class GetAccountInformationListResponse {
 
     public Collection<CreditCardAccount> extractCreditCardAccounts(
             final Map<String, String> productCodes) {
-        return getAccountInfoList()
-                .stream()
+        return getAccountInfoList().stream()
                 .map(
                         accInfo ->
                                 toCreditCardAccount(
@@ -111,8 +107,7 @@ public final class GetAccountInformationListResponse {
     }
 
     public Collection<LoanAccount> extractLoanAccounts(final Map<String, String> productCodes) {
-        return getAccountInfoList()
-                .stream()
+        return getAccountInfoList().stream()
                 .map(
                         accInfo ->
                                 toLoanAccount(
@@ -122,9 +117,9 @@ public final class GetAccountInformationListResponse {
                 .collect(Collectors.toSet());
     }
 
-    public Collection<InvestmentAccount> extractInvestmentAccounts(final Map<String, String> productCodes) {
-        return getAccountInfoList()
-                .stream()
+    public Collection<InvestmentAccount> extractInvestmentAccounts(
+            final Map<String, String> productCodes) {
+        return getAccountInfoList().stream()
                 .map(
                         accInfo ->
                                 toInvestmentAccount(

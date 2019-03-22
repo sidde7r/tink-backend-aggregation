@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing;
 
 import com.google.common.base.Preconditions;
+import java.util.Optional;
+import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.WebLoginResponse;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
-import javax.annotation.Nonnull;
-import java.util.Optional;
 
 public class IngAtSessionStorage {
     private final SessionStorage sessionStorage;

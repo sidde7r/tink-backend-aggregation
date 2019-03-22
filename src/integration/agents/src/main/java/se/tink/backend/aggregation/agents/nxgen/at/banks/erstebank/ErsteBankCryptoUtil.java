@@ -43,7 +43,7 @@ public class ErsteBankCryptoUtil {
 
     private static String matchOrThrow(Pattern pattern, String html) throws LoginException {
         Matcher matcher = pattern.matcher(html);
-        if(matcher.find()){
+        if (matcher.find()) {
             return matcher.group(1);
         }
 
@@ -54,15 +54,17 @@ public class ErsteBankCryptoUtil {
         return matchOrThrow(ErsteBankConstants.PATTERN.SIDENTITY_VERIFICATION_CODE, html);
     }
 
-    public static String getRSAPassword(String salt, String privateExponent, String publicModulus, String password)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException,
-            InvalidKeyException, InvalidKeySpecException {
+    public static String getRSAPassword(
+            String salt, String privateExponent, String publicModulus, String password)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException,
+                    BadPaddingException, InvalidKeyException, InvalidKeySpecException {
         return getRsa(salt, privateExponent, publicModulus, password);
     }
 
-    private static String getRsa(String salt, String privateExponent, String publicModulus, String password)
-            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException,
-            BadPaddingException, IllegalBlockSizeException {
+    private static String getRsa(
+            String salt, String privateExponent, String publicModulus, String password)
+            throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
+                    InvalidKeySpecException, BadPaddingException, IllegalBlockSizeException {
 
         StringBuilder builder = new StringBuilder();
         builder.append(salt);
@@ -71,10 +73,15 @@ public class ErsteBankCryptoUtil {
 
         String var1 = builder.toString();
 
-        PublicKey publicKey = KeyFactory
-                .getInstance(ErsteBankConstants.ENCRYPTION.RSA).generatePublic((KeySpec)(new RSAPublicKeySpec(new BigInteger(privateExponent, 16), new BigInteger(publicModulus, 16))));
+        PublicKey publicKey =
+                KeyFactory.getInstance(ErsteBankConstants.ENCRYPTION.RSA)
+                        .generatePublic(
+                                (KeySpec)
+                                        (new RSAPublicKeySpec(
+                                                new BigInteger(privateExponent, 16),
+                                                new BigInteger(publicModulus, 16))));
         Cipher cipher = Cipher.getInstance(ErsteBankConstants.ENCRYPTION.RSA);
-        cipher.init(Cipher.ENCRYPT_MODE, (Key)publicKey);
+        cipher.init(Cipher.ENCRYPT_MODE, (Key) publicKey);
 
         byte[] var6 = var1.getBytes(StandardCharsets.UTF_8);
 
@@ -87,7 +94,7 @@ public class ErsteBankCryptoUtil {
 
         char[] var6 = new char[var1.length * 2];
 
-        for(int var3 = var1.length; var2 < var3; ++var2) {
+        for (int var3 = var1.length; var2 < var3; ++var2) {
             int var4 = var1[var2] & 255;
             int var5 = var2 * 2;
             var6[var5] = var0[var4 >>> 4];
@@ -96,5 +103,4 @@ public class ErsteBankCryptoUtil {
 
         return new String(var6);
     }
-
 }

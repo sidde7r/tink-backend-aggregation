@@ -14,7 +14,6 @@ public class BankAustriaConstants {
         public static final String SAVING = "SAVING";
     }
 
-
     public static final class Urls {
         static final String HOST = "https://mobile.bankaustria.at";
         static final URL LOGIN = new URL(HOST + "/IBOA/login.htm");
@@ -69,7 +68,8 @@ public class BankAustriaConstants {
         public static final String SECURITY_CHECK_AVAILABLE = "securityCheckAvailable";
         public static final String SUPPORT_FACE_ID_FALSE = "false";
         public static final String LANGUAGE_EN_US = "en_US";
-        public static final String ACTIVATE_FINGERPRINT_LOGIN_VALUE = "Activate%20fingerprint%20login";
+        public static final String ACTIVATE_FINGERPRINT_LOGIN_VALUE =
+                "Activate%20fingerprint%20login";
         public static final String OTML_SECURE_ENCLAVE_TOKEN = "token";
     }
 
@@ -104,27 +104,40 @@ public class BankAustriaConstants {
     }
 
     public static final class XPathExpression {
-        public static final String XPATH_RESPONSE_RESULT = "/datasources/datasource[@key='response']/element[@key='result']";
-        public static final String XPATH_SETTINGS_RESPONSE_ACCOUNTS = "/datasources/datasource[@key='response']/element[@key='customizedAccountMetaModelsList']/element";
-        public static final String XPATH_RTA_MESSAGE = "/datasources/datasource[@key='response']/element[@key='rtaMessage']";
+        public static final String XPATH_RESPONSE_RESULT =
+                "/datasources/datasource[@key='response']/element[@key='result']";
+        public static final String XPATH_SETTINGS_RESPONSE_ACCOUNTS =
+                "/datasources/datasource[@key='response']/element[@key='customizedAccountMetaModelsList']/element";
+        public static final String XPATH_RTA_MESSAGE =
+                "/datasources/datasource[@key='response']/element[@key='rtaMessage']";
         public static final String XPATH_ACCOUNT_NUMBER = ".//element[@key='accountNumber']";
         public static final String XPATH_ACCOUNT_NICKNAME = ".//element[@key='accountNickname']";
         public static final String XPATH_ACCOUNT_KEY = ".//element[@key='accountKey']";
         public static final String XPATH_SETTINGS_ACCOUNT_TYPE = ".//element[@key='accountType']";
-        public static final String XPATH_ACCOUNT_BALANCE = "/datasources/datasource[@key='response']/element[@key='balance']/element[@key='accountable']";
+        public static final String XPATH_ACCOUNT_BALANCE =
+                "/datasources/datasource[@key='response']/element[@key='balance']/element[@key='accountable']";
         public static final String XPATH_CURRENCY = ".//element[@key='currency']";
         public static final String XPATH_VALUE = ".//element[@key='value']";
-        public static final String XPATH_ACCOUNT_IBAN = "/datasources/datasource[@key='response']/element[@key='account']/element[@key='iban']";
-        public static final String XPATH_ACCOUNT_COMPANIES = "/datasources/datasource[@key='response']/element[@key='account']/element[@key='companies']";
+        public static final String XPATH_ACCOUNT_IBAN =
+                "/datasources/datasource[@key='response']/element[@key='account']/element[@key='iban']";
+        public static final String XPATH_ACCOUNT_COMPANIES =
+                "/datasources/datasource[@key='response']/element[@key='account']/element[@key='companies']";
         public static final String XPATH_NAME = ".//element[@key='name']";
-        public static final String XPATH_ACCOUNT_TYPE = "/datasources/datasource[@key='response']/element[@key='account']/element[@key='type']";
-        public static final String XPATH_ACCOUNT_DATABASE_CODE = "/datasources/datasource[@key='response']/element[@key='account']/element[@key='dataBaseCode']";
-        public static final String XPATH_TRANSACTIONS_MOVEMENTS = "/datasources/datasource[@key='response']/element[@key='movements']/element";
-        public static final String XPATH_TRANSACTION_CURRENCY = ".//element[@key='amount']/element[@key='currency']";
-        public static final String XPATH_TRANSACTION_VALUE = ".//element[@key='amount']/element[@key='value']";
+        public static final String XPATH_ACCOUNT_TYPE =
+                "/datasources/datasource[@key='response']/element[@key='account']/element[@key='type']";
+        public static final String XPATH_ACCOUNT_DATABASE_CODE =
+                "/datasources/datasource[@key='response']/element[@key='account']/element[@key='dataBaseCode']";
+        public static final String XPATH_TRANSACTIONS_MOVEMENTS =
+                "/datasources/datasource[@key='response']/element[@key='movements']/element";
+        public static final String XPATH_TRANSACTION_CURRENCY =
+                ".//element[@key='amount']/element[@key='currency']";
+        public static final String XPATH_TRANSACTION_VALUE =
+                ".//element[@key='amount']/element[@key='value']";
         public static final String XPATH_TRANSACTION_DESCRIPTION = ".//element[@key='bookingText']";
-        public static final String XPATH_TRANSACTION_DATE = ".//element[@key='transactionDate']/element[@key='date']";
-        public static final String XPATH_RESPONSE_WITH_ACCOUNT = "/datasources/datasource[@key='otml_store_session']/element[@key='account']/element";
+        public static final String XPATH_TRANSACTION_DATE =
+                ".//element[@key='transactionDate']/element[@key='date']";
+        public static final String XPATH_RESPONSE_WITH_ACCOUNT =
+                "/datasources/datasource[@key='otml_store_session']/element[@key='account']/element";
         public static final String XPATH_RTA_MESSAGE_ID = ".//element[@key='id']";
     }
 
@@ -132,5 +145,4 @@ public class BankAustriaConstants {
         public static final LogTag LOG_TAG_ACCOUNT = LogTag.from("#BankAustria_account");
         public static final LogTag LOG_TAG_CODE_ERROR = LogTag.from("#BankAustria_code_error");
     }
-
 }

@@ -1,19 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Objects;
+import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Date;
 
 public class IngAtCreditCardTransactionParser {
     private final Document doc;
@@ -59,7 +58,6 @@ public class IngAtCreditCardTransactionParser {
                         .setDate(transactionDate)
                         .setAmount(amount)
                         .build());
-
     }
 
     private Date getDateFromRow(final Element row) {

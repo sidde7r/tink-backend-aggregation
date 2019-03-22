@@ -6,7 +6,7 @@ public class EncryptionValuesEntity {
     private String modulus;
     private String exponent;
 
-    public EncryptionValuesEntity(String salt, String modulus, String exponent){
+    public EncryptionValuesEntity(String salt, String modulus, String exponent) {
         this.salt = salt;
         this.modulus = modulus;
         this.exponent = exponent;

@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.transactional;
 
+import java.util.Date;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtSessionStorage;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-
-import java.util.Date;
 
 public class IngAtTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
     private final IngAtApiClient apiClient;

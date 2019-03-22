@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
+import static org.hamcrest.core.Is.is;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,19 +10,13 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInfo;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.AccountInformationListItem;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Body;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Disposer;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Envelope;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.FinancialInstitute;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.GetAccountInformationListResponseEntity;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.LoginResponseEntity;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.OK;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Product;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.ProductID;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entities.Products;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.GetAccountInformationListResponse;
-import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.rpc.LoginResponse;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
-import static org.hamcrest.core.Is.is;
 
 public final class EntitiesTest {
     @Test
@@ -39,7 +35,8 @@ public final class EntitiesTest {
         envelope.setBody(body);
         Assert.assertTrue(response.getInvalidIbans().isEmpty());
 
-        final GetAccountInformationListResponseEntity responseEntity = new GetAccountInformationListResponseEntity();
+        final GetAccountInformationListResponseEntity responseEntity =
+                new GetAccountInformationListResponseEntity();
         body.setGetAccountInformationListResponseEntity(responseEntity);
         Assert.assertTrue(response.getInvalidIbans().isEmpty());
 
@@ -54,7 +51,8 @@ public final class EntitiesTest {
         accountInformationListItemList.add(null);
         Assert.assertTrue(response.getInvalidIbans().isEmpty());
 
-        final AccountInformationListItem accountInformationListItem = new AccountInformationListItem();
+        final AccountInformationListItem accountInformationListItem =
+                new AccountInformationListItem();
         accountInformationListItemList.add(accountInformationListItem);
         Assert.assertTrue(response.getInvalidIbans().isEmpty());
 
@@ -76,7 +74,8 @@ public final class EntitiesTest {
 
         final String invalidIban = "myIban";
         productId.setIban(invalidIban);
-        Assert.assertThat(response.getInvalidIbans(),
+        Assert.assertThat(
+                response.getInvalidIbans(),
                 is(Collections.singletonList(new IbanIdentifier(invalidBic, invalidIban))));
     }
 }

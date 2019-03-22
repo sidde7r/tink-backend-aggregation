@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
@@ -14,12 +19,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.libraries.amount.Amount;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class IngAtCreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
     private static final Logger logger =
@@ -47,9 +46,7 @@ public class IngAtCreditCardAccountFetcher implements AccountFetcher<CreditCardA
                                         new IllegalStateException(
                                                 "Could not find login response when fetching accounts"));
         final List<AccountReferenceEntity> accountReferences =
-                webLoginResponse
-                        .getAccountReferenceEntities()
-                        .stream()
+                webLoginResponse.getAccountReferenceEntities().stream()
                         .filter(IngAtCreditCardAccountFetcher::isCreditCardAccount)
                         .collect(Collectors.toList());
         final Collection<CreditCardAccount> res = new ArrayList<>();
