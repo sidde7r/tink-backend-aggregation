@@ -4,6 +4,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class LaCaixaConstants {
@@ -21,12 +22,25 @@ public class LaCaixaConstants {
                     .put(AccountTypes.CHECKING, "CUENTA CORRIENTE")
                     .build();
 
+    public static final TypeMapper<LoanDetails.Type> LOAN_TYPE_MAPPER =
+            TypeMapper.<LoanDetails.Type>builder()
+                    .put(LoanDetails.Type.MORTGAGE, "10045")
+                    .put(
+                            LoanDetails.Type.BLANCO,
+                            "12142", // personal
+                            "11410", // online
+                            "21919", // "canal"
+                            "14090", // micro personal
+                            "11407") // consumer loan
+                    .build();
+
     public static class ApiService {
         static final String LOGIN_INIT_PATH = "login/loginInicio";
         static final String LOGIN_SUBMIT_PATH = "login/loginResultado";
         static final String LOGOUT_PATH = "login/logout";
         static final String MAIN_ACCOUNT_PATH = "dashboardApp/cuentaPrincipal?";
-        static final String CHECK_FOTO_PATH = "smartContent/consultaFoto"; // Used for keep alive. TODO: Evaluate
+        static final String CHECK_FOTO_PATH =
+                "smartContent/consultaFoto"; // Used for keep alive. TODO: Evaluate
         static final String USER_DATA_PATH = "login/loginDatosUsuario";
         static final String ACCOUNT_TRANSACTION_PATH = "cuentas/extracto?";
         static final String GENERIC_CARDS_PATH = "tarjetas/listadoTarjetasGenerica";
@@ -59,31 +73,38 @@ public class LaCaixaConstants {
     public static class Urls {
         private static final String BASE = "https://loapp.caixabank.es/xmlapps/rest/";
 
-        public static final URL INIT_LOGIN = new URL(
-                BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
+        public static final URL INIT_LOGIN =
+                new URL(BASE + ApiService.LOGIN_INIT_PATH); // Gets session id. Needed before login.
         public static final URL SUBMIT_LOGIN = new URL(BASE + ApiService.LOGIN_SUBMIT_PATH);
         public static final URL LOGOUT = new URL(BASE + ApiService.LOGOUT_PATH);
         public static final URL FETCH_MAIN_ACCOUNT = new URL(BASE + ApiService.MAIN_ACCOUNT_PATH);
         public static final URL KEEP_ALIVE = new URL(BASE + ApiService.CHECK_FOTO_PATH);
         public static final URL FETCH_USER_DATA = new URL(BASE + ApiService.USER_DATA_PATH);
-        public static final URL FETCH_ACCOUNT_TRANSACTION = new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
+        public static final URL FETCH_ACCOUNT_TRANSACTION =
+                new URL(BASE + ApiService.ACCOUNT_TRANSACTION_PATH);
         public static final URL FETCH_CARDS = new URL(BASE + ApiService.GENERIC_CARDS_PATH);
-        public static final URL FETCH_CARD_TRANSACTIONS = new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
+        public static final URL FETCH_CARD_TRANSACTIONS =
+                new URL(BASE + ApiService.CARD_TRANSACTIONS_PATH);
         public static final URL FETCH_LOANS_LIST = new URL(BASE + ApiService.LOAN_LIST_PATH);
         public static final URL FETCH_LOANS_DETAILS = new URL(BASE + ApiService.LOAN_DETAILS_PATH);
 
         public static final URL FETCH_ENGAGEMENTS = new URL(BASE + ApiService.ENGAGEMENTS_PATH);
         public static final URL FETCH_DEPOSITS_LIST = new URL(BASE + ApiService.DEPOSITS_LIST_PATH);
-        public static final URL FETCH_DEPOSIT_DETAILS = new URL(BASE + ApiService.DEPOSIT_DETAILS_PATH);
+        public static final URL FETCH_DEPOSIT_DETAILS =
+                new URL(BASE + ApiService.DEPOSIT_DETAILS_PATH);
         public static final URL FETCH_FUNDS_LIST = new URL(BASE + ApiService.FUNDS_LIST_PATH);
         public static final URL FETCH_FUND_DETAILS = new URL(BASE + ApiService.FUND_DETAILS_PATH);
     }
 
     public static class DefaultRequestParams {
-        public static final String LANGUAGE_EN = "en"; // English TODO: Language constants already exists somewhere?
-        public static final String ORIGIN = "51402"; // Can seemingly be anything as long as it exists, purpose unknown.
-        public static final String CHANNEL = "O"; // Only some valid values (1, 2, O, ...), purpose unknown.
-        public static final String INSTALLATION_ID = "CIAPPLPh8,1XAEvy+IW9P82Pl+fvzwnfiAzzxs="; // App install ID?
+        public static final String LANGUAGE_EN =
+                "en"; // English TODO: Language constants already exists somewhere?
+        public static final String ORIGIN =
+                "51402"; // Can seemingly be anything as long as it exists, purpose unknown.
+        public static final String CHANNEL =
+                "O"; // Only some valid values (1, 2, O, ...), purpose unknown.
+        public static final String INSTALLATION_ID =
+                "CIAPPLPh8,1XAEvy+IW9P82Pl+fvzwnfiAzzxs="; // App install ID?
 
         public static final int NUM_CARDS = 0;
         public static final String OPTION_FILTER = "02";

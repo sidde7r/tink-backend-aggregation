@@ -10,21 +10,33 @@ public class LoanEntity {
 
     @JsonProperty("idContrato")
     private String contractId;
+
     @JsonProperty("descContrato")
     private String contractDescription;
+
     private String nomAplicacion;
+
     @JsonProperty("codProducto")
     private String productCode;
+
     @JsonProperty("importeConcedido")
     private String totalAmount;
+
     @JsonProperty("monedaImporteConcedido")
     private String currency;
+
     @JsonProperty("importePendiente")
     private String amountToPay;
+
     @JsonProperty("monedaImportePendiente")
     private String currencyToPay;
+
     @JsonProperty("fechaConstitucion")
     private String startDate;
+
+    public String getProductCode() {
+        return productCode;
+    }
 
     public String getContractDescription() {
         return contractDescription;
