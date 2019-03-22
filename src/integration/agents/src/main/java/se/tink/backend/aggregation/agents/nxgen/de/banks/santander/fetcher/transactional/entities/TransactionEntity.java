@@ -6,14 +6,14 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionEntity {
-  @JsonProperty("record")
-  private TransactionRecord transactionRecord;
+    @JsonProperty("record")
+    private TransactionRecord transactionRecord;
 
-  public Transaction toTinkTransaction() {
-    return transactionRecord.toTinkTransaction();
-  }
+    public Transaction toTinkTransaction() {
+        return transactionRecord.toTinkTransaction();
+    }
 
-  public boolean isValid() {
-    return transactionRecord.isValid();
-  }
+    public boolean isValid() {
+        return transactionRecord.isValid();
+    }
 }

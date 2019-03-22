@@ -14,84 +14,87 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class Mov {
 
-  @JsonProperty("date")
-  private String date;
+    @JsonProperty("date")
+    private String date;
 
-  @JsonProperty("submitter")
-  private String submitter;
+    @JsonProperty("submitter")
+    private String submitter;
 
-  @JsonProperty("amount")
-  private Amount amount;
+    @JsonProperty("amount")
+    private Amount amount;
 
-  @JsonProperty("exchangeRate")
-  private String exchangeRate;
+    @JsonProperty("exchangeRate")
+    private String exchangeRate;
 
-  @JsonProperty("location")
-  private String location;
+    @JsonProperty("location")
+    private String location;
 
-  @JsonProperty("transctionCurrency")
-  private String transctionCurrency;
+    @JsonProperty("transctionCurrency")
+    private String transctionCurrency;
 
-  @JsonProperty("pan")
-  private String pan;
+    @JsonProperty("pan")
+    private String pan;
 
-  @JsonProperty("transactionTypeDescription")
-  private String transactionTypeDescription;
+    @JsonProperty("transactionTypeDescription")
+    private String transactionTypeDescription;
 
-  @JsonProperty("foreignAmount")
-  private ForeignAmount foreignAmount;
+    @JsonProperty("foreignAmount")
+    private ForeignAmount foreignAmount;
 
-  @JsonProperty("status")
-  private String status;
+    @JsonProperty("status")
+    private String status;
 
-  @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Mov.class);
+    @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(Mov.class);
 
-  private String getDescription() {
-    StringBuilder builder = new StringBuilder();
+    private String getDescription() {
+        StringBuilder builder = new StringBuilder();
 
-    if (!Strings.isNullOrEmpty(location)) {
-      builder.append(location.trim());
+        if (!Strings.isNullOrEmpty(location)) {
+            builder.append(location.trim());
+        }
+
+        if (!Strings.isNullOrEmpty(submitter)) {
+            builder.append(" " + submitter.trim());
+        }
+
+        if (!Strings.isNullOrEmpty(transactionTypeDescription)) {
+            builder.append(" " + transactionTypeDescription.trim());
+        }
+        return builder.toString().trim();
     }
 
-    if (!Strings.isNullOrEmpty(submitter)) {
-      builder.append(" " + submitter.trim());
+    private Date getDate() {
+        try {
+            return SantanderConstants.DATE.DATE_FORMAT.parse(date);
+        } catch (ParseException e) {
+            logger.error(
+                    "{} cannot parse date: {}",
+                    SantanderConstants.LOGTAG.SANTANDER_DATE_PARSING_ERROR,
+                    date);
+            throw new IllegalStateException("Cannot parse date!");
+        }
     }
 
-    if (!Strings.isNullOrEmpty(transactionTypeDescription)) {
-      builder.append(" " + transactionTypeDescription.trim());
+    public boolean isValid() {
+        try {
+            toTinkTransaction();
+            return true;
+        } catch (Exception e) {
+            logger.error(
+                    "{} {}", SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR, e.toString());
+            return false;
+        }
     }
-    return builder.toString().trim();
-  }
 
-  private Date getDate() {
-    try {
-      return SantanderConstants.DATE.DATE_FORMAT.parse(date);
-    } catch (ParseException e) {
-      logger.error(
-          "{} cannot parse date: {}", SantanderConstants.LOGTAG.SANTANDER_DATE_PARSING_ERROR, date);
-      throw new IllegalStateException("Cannot parse date!");
+    private se.tink.libraries.amount.Amount getAmount() {
+        return new se.tink.libraries.amount.Amount(amount.getdIVISA(), amount.getiMPORTE());
     }
-  }
 
-  public boolean isValid() {
-    try {
-      toTinkTransaction();
-      return true;
-    } catch (Exception e) {
-      logger.error("{} {}", SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR, e.toString());
-      return false;
+    public Transaction toTinkTransaction() {
+        return Transaction.builder()
+                .setDescription(getDescription())
+                .setDate(getDate())
+                .setAmount(getAmount())
+                .build();
     }
-  }
-
-  private se.tink.libraries.amount.Amount getAmount() {
-    return new se.tink.libraries.amount.Amount(amount.getdIVISA(), amount.getiMPORTE());
-  }
-
-  public Transaction toTinkTransaction() {
-    return Transaction.builder()
-        .setDescription(getDescription())
-        .setDate(getDate())
-        .setAmount(getAmount())
-        .build();
-  }
 }

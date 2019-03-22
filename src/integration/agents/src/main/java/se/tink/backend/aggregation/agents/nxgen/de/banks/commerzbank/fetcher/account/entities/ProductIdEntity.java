@@ -23,7 +23,8 @@ public class ProductIdEntity {
     }
 
     public String getProductType() {
-        Preconditions.checkState(productType != null, "Expected a Product type object but it was null");
+        Preconditions.checkState(
+                productType != null, "Expected a Product type object but it was null");
         return productType;
     }
 }

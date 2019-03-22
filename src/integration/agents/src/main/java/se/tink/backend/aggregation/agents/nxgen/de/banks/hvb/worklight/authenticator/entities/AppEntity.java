@@ -15,4 +15,3 @@ public final class AppEntity {
         this.version = version;
     }
 }
-

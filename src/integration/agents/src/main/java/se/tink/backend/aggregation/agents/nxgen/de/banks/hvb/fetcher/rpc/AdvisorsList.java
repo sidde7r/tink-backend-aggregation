@@ -22,16 +22,18 @@ public final class AdvisorsList {
             return Optional.empty();
         }
 
-        final List<String> names = advisorProfiles.stream()
-                .map(AdvisorProfileEntity::getCustomerName)
-                .filter(Objects::nonNull)
-                .filter(StringUtils::isNotEmpty)
-                .collect(Collectors.toList());
+        final List<String> names =
+                advisorProfiles.stream()
+                        .map(AdvisorProfileEntity::getCustomerName)
+                        .filter(Objects::nonNull)
+                        .filter(StringUtils::isNotEmpty)
+                        .collect(Collectors.toList());
 
         if (names.isEmpty()) {
             return Optional.empty();
         } else if (names.size() >= 2) {
-            logger.warn("Found more than one customer name; account holder name may not be correct");
+            logger.warn(
+                    "Found more than one customer name; account holder name may not be correct");
         }
 
         return Optional.ofNullable(names.get(0));

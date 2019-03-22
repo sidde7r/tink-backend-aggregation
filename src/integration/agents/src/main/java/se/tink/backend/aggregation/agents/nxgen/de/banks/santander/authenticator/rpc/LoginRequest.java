@@ -4,15 +4,15 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.santander.SantanderCons
 
 public class LoginRequest {
 
-  private final String username;
-  private final String password;
+    private final String username;
+    private final String password;
 
-  public LoginRequest(String username, String password) {
-    this.username = username;
-    this.password = password;
-  }
+    public LoginRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
-  public String toXml() {
-    return String.format(SantanderConstants.SOAP.LOGIN_REQUEST, username, password);
-  }
+    public String toXml() {
+        return String.format(SantanderConstants.SOAP.LOGIN_REQUEST, username, password);
+    }
 }

@@ -7,14 +7,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class RequestAccountDataEntity {
-  @JsonProperty("getAccountServices_LA")
-  private AccountQueryParameters accountQueryParameters = new AccountQueryParameters();
+    @JsonProperty("getAccountServices_LA")
+    private AccountQueryParameters accountQueryParameters = new AccountQueryParameters();
 
-  public String toJson() {
-    try {
-      return new ObjectMapper().writeValueAsString(this);
-    } catch (JsonProcessingException e) {
-      throw new IllegalStateException(e);
+    public String toJson() {
+        try {
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e);
+        }
     }
-  }
 }

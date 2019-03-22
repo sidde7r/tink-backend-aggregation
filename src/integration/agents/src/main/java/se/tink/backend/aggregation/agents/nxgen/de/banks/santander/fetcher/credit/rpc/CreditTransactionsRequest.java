@@ -9,13 +9,13 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CreditTransactionsRequest {
 
-  @JsonProperty("getCardMovements")
-  private GetCardMovements getCardMovements;
+    @JsonProperty("getCardMovements")
+    private GetCardMovements getCardMovements;
 
-  public CreditTransactionsRequest(
-      String contractID, String pan, String indMPX, String dIALECTOISO, String iDIOMAISO) {
-    getCardMovements =
-        new GetCardMovements(
-            new Entrada(contractID, new Lang(dIALECTOISO, iDIOMAISO), pan, indMPX));
-  }
+    public CreditTransactionsRequest(
+            String contractID, String pan, String indMPX, String dIALECTOISO, String iDIOMAISO) {
+        getCardMovements =
+                new GetCardMovements(
+                        new Entrada(contractID, new Lang(dIALECTOISO, iDIOMAISO), pan, indMPX));
+    }
 }

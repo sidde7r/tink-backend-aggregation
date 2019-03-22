@@ -39,11 +39,27 @@ public class MT940Statement {
         String[] elements = tag_86.split("\\?");
         // TODO heuristic search for the description until got more samples to look at
 
-        String result = Arrays.stream(elements).filter(s -> hasField(s, "32")).findFirst().orElse(
-                Arrays.stream(elements).filter(s -> hasField(s, "21")).findFirst().orElse(
-                        Arrays.stream(elements).filter(s -> hasField(s, "20")).findFirst().orElse(
-                                Arrays.stream(elements).filter(s -> hasField(s, "00")).findFirst().orElse("")
-                        )));
+        String result =
+                Arrays.stream(elements)
+                        .filter(s -> hasField(s, "32"))
+                        .findFirst()
+                        .orElse(
+                                Arrays.stream(elements)
+                                        .filter(s -> hasField(s, "21"))
+                                        .findFirst()
+                                        .orElse(
+                                                Arrays.stream(elements)
+                                                        .filter(s -> hasField(s, "20"))
+                                                        .findFirst()
+                                                        .orElse(
+                                                                Arrays.stream(elements)
+                                                                        .filter(
+                                                                                s ->
+                                                                                        hasField(
+                                                                                                s,
+                                                                                                "00"))
+                                                                        .findFirst()
+                                                                        .orElse(""))));
 
         if (result.length() >= 2) {
             return result.substring(2);
@@ -52,41 +68,41 @@ public class MT940Statement {
         return result;
     }
 
-    //TODO: Write custom rules for each provider
+    // TODO: Write custom rules for each provider
     private String getDescriptionFromRaw(Map<String, String> elements) {
         StringBuilder builder = new StringBuilder();
 
-        //DKB - "00" -> "EIGENE KREDITKARTENABRECHN."
-        //Postbank - "00" -> "D GUT SEPA"
-        //ING - "00" -> "Gutschrift"
+        // DKB - "00" -> "EIGENE KREDITKARTENABRECHN."
+        // Postbank - "00" -> "D GUT SEPA"
+        // ING - "00" -> "Gutschrift"
         if (elements.containsKey("00")) {
             builder.append(elements.get("00") + " ");
         }
 
-        //Deutche - "20" -> "EREF+5208037201663421051815"
-        //Comdirect - "20" -> "ÜBERTRAG/ÜBERWEISUNG"
-        //DKB - "20" -> "VISA-ABR. 4930000020723497"
-        //ING - "20" -> "SVWZ+play"
+        // Deutche - "20" -> "EREF+5208037201663421051815"
+        // Comdirect - "20" -> "ÜBERTRAG/ÜBERWEISUNG"
+        // DKB - "20" -> "VISA-ABR. 4930000020723497"
+        // ING - "20" -> "SVWZ+play"
         if (elements.containsKey("20")) {
             builder.append(elements.get("20") + " ");
         }
 
-        //Deutche - "24" -> "SVWZ+SUBWAY RESTAURANT PASS"
-        //Comdirect - "24" -> "NICHT ANGEGEBEN"
-        //Postbank - "22" -> "To own account"
+        // Deutche - "24" -> "SVWZ+SUBWAY RESTAURANT PASS"
+        // Comdirect - "24" -> "NICHT ANGEGEBEN"
+        // Postbank - "22" -> "To own account"
         if (elements.containsKey("24")) {
             builder.append(elements.get("24") + " ");
         }
 
-        //Comdirect - "22" -> "LIDL VILNIUS NAUJININKAI//V"
+        // Comdirect - "22" -> "LIDL VILNIUS NAUJININKAI//V"
         if (elements.containsKey("22")) {
             builder.append(elements.get("22") + " ");
         }
 
-        //Deutche - "32" -> "SG-CardProcess GmbH"
-        //Comdirect - "32" -> "AEGEE-PASSAU"
-        //DKB - "32" -> "KREDITKARTENABRECHNUNG"
-        //Postbank - "32" -> "Jan Gillich"
+        // Deutche - "32" -> "SG-CardProcess GmbH"
+        // Comdirect - "32" -> "AEGEE-PASSAU"
+        // DKB - "32" -> "KREDITKARTENABRECHNUNG"
+        // Postbank - "32" -> "Jan Gillich"
         // ING - "32" -> "VERBEKEN CEDRIC"
         if (elements.containsKey("32")) {
             builder.append(elements.get("32") + " ");
@@ -124,5 +140,4 @@ public class MT940Statement {
     private boolean hasField(String str, String tag) {
         return str.startsWith(tag) && !Strings.isNullOrEmpty(str.substring(2).trim());
     }
-
 }

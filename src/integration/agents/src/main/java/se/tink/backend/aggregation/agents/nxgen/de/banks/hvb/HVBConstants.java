@@ -12,7 +12,8 @@ public final class HVBConstants {
     }
 
     public static class Url {
-        public static final URL ENDPOINT = new URL("https://my.hypovereinsbank.de/" + HVBConstants.MODULE_NAME);
+        public static final URL ENDPOINT =
+                new URL("https://my.hypovereinsbank.de/" + HVBConstants.MODULE_NAME);
     }
 
     public enum Storage {
@@ -24,7 +25,8 @@ public final class HVBConstants {
 
     public static final String CERT_TYPE = "X.509";
 
-    // Found hardcoded in the iOS app. Used for generating the 'a' and 'b' parameters found in outgoing /query messages.
+    // Found hardcoded in the iOS app. Used for generating the 'a' and 'b' parameters found in
+    // outgoing /query messages.
     public static final String SYMMETRIC_CERTIFICATE =
             "MIIFAjCCA+qgAwIBAgIEMadFvjANBgkqhkiG9w0BAQUFADCBnTELMAkGA1UEBhMC"
                     + "REUxDzANBgNVBAgTBkJheWVybjERMA8GA1UEBwwITcO8bmNoZW4xGjAYBgNVBAoT"
@@ -54,17 +56,19 @@ public final class HVBConstants {
                     + "VY04ZL62s9Qa9HK5LlMXCCtXaI8Oixq1B+RkyR5rov5IBy5NhEgOEqvJvN7JlNR0"
                     + "NgKyrHSPgFEsGXJdsPkHCkdDLNaZgFebgI2YHD3bljTgJODwrv8=";
 
-    public static final ImmutableSet<String> CHECKING_ACCOUNT_TITLE_SUBSTRINGS = ImmutableSet.<String>builder()
-            .add("KONTO START") // Observed as "HVB Konto Start", a.k.a. "HVB StartKonto"
-            .add("AKTIVKONTO") // Observed as "HVB AktivKonto"
-            .add("PLUSKONTO")
-            .add("EXKLUSIVKONTO")
-            .build();
+    public static final ImmutableSet<String> CHECKING_ACCOUNT_TITLE_SUBSTRINGS =
+            ImmutableSet.<String>builder()
+                    .add("KONTO START") // Observed as "HVB Konto Start", a.k.a. "HVB StartKonto"
+                    .add("AKTIVKONTO") // Observed as "HVB AktivKonto"
+                    .add("PLUSKONTO")
+                    .add("EXKLUSIVKONTO")
+                    .build();
 
-    public static final ImmutableSet<String> SAVINGS_ACCOUNT_TITLE_SUBSTRINGS = ImmutableSet.<String>builder()
-            .add("KOMFORTSPAREN")
-            .add("SPARKARTE") // Observed as "FCB SparKarte"
-            .build();
+    public static final ImmutableSet<String> SAVINGS_ACCOUNT_TITLE_SUBSTRINGS =
+            ImmutableSet.<String>builder()
+                    .add("KOMFORTSPAREN")
+                    .add("SPARKARTE") // Observed as "FCB SparKarte"
+                    .build();
 
     public enum LogTags {
         HVB_UNKNOWN_ACCOUNT_TYPE,

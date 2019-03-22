@@ -53,5 +53,4 @@ public class AmericanExpressDEConfiguration implements AmericanExpressV62Configu
 
         return request;
     }
-
 }

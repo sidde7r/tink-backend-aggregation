@@ -14,11 +14,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionDatePaginator<CreditCardAccount> {
+public class CommerzbankCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionDatePaginator<CreditCardAccount> {
 
     private final CommerzbankApiClient apiClient;
-    private static final AggregationLogger LOGGER = new AggregationLogger(CommerzbankCreditCardFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(CommerzbankCreditCardFetcher.class);
 
     public CommerzbankCreditCardFetcher(CommerzbankApiClient apiClient) {
         this.apiClient = apiClient;
@@ -31,28 +32,36 @@ public class CommerzbankCreditCardFetcher implements AccountFetcher<CreditCardAc
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
-        String productType = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE);
-        String identifier = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER);
-        String productBranch = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH);
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
+        String productType =
+                account.getFromTemporaryStorage(
+                        CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE);
+        String identifier =
+                account.getFromTemporaryStorage(
+                        CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER);
+        String productBranch =
+                account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH);
 
         if (!Strings.isNullOrEmpty(productType)
                 && !Strings.isNullOrEmpty(identifier)
                 && !Strings.isNullOrEmpty(productBranch)) {
             try {
-                TransactionResultEntity response = apiClient
-                        .fetchAllPages(fromDate, toDate, productType, identifier, productBranch);
+                TransactionResultEntity response =
+                        apiClient.fetchAllPages(
+                                fromDate, toDate, productType, identifier, productBranch);
                 if (response != null && response.containsTransactions()) {
                     return response.getItems().get(0);
                 }
 
             } catch (Exception e) {
-                LOGGER.errorExtraLong("Could not fetch credit transactions",
-                        CommerzbankConstants.LOGTAG.CREDIT_CARD_FETCHING_ERROR, e);
+                LOGGER.errorExtraLong(
+                        "Could not fetch credit transactions",
+                        CommerzbankConstants.LOGTAG.CREDIT_CARD_FETCHING_ERROR,
+                        e);
                 return PaginatorResponseImpl.createEmpty();
             }
         }
         return PaginatorResponseImpl.createEmpty();
     }
-
 }

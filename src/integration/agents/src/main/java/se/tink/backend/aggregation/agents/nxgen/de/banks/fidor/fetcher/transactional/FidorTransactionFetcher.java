@@ -9,15 +9,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
-public class FidorTransactionFetcher implements TransactionPagePaginator<TransactionalAccount>,
-        UpcomingTransactionFetcher<TransactionalAccount> {
+public class FidorTransactionFetcher
+        implements TransactionPagePaginator<TransactionalAccount>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
 
     private final FidorApiClient fidorApiClient;
 
-    public FidorTransactionFetcher(FidorApiClient fidorApiClient){
+    public FidorTransactionFetcher(FidorApiClient fidorApiClient) {
         this.fidorApiClient = fidorApiClient;
     }
-
 
     @Override
     public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
@@ -27,7 +27,8 @@ public class FidorTransactionFetcher implements TransactionPagePaginator<Transac
     }
 
     @Override
-    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
         OpenTokenEntity tokenEntity = this.fidorApiClient.getTokenFromStorage();
 
         return this.fidorApiClient.fetchUpcomingTransactions(tokenEntity).toUpcomingTransaction();

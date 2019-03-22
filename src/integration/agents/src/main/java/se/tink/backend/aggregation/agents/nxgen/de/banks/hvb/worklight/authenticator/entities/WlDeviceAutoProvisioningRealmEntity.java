@@ -9,8 +9,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public final class WlDeviceAutoProvisioningRealmEntity {
     @JsonProperty("ID")
     private IDEntity iD;
+
     @JsonProperty("CSR")
     private String csr;
+
     @JsonProperty("certificate")
     private String certificate;
 

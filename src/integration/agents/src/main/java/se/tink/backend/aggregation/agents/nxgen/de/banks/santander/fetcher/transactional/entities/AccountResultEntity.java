@@ -10,29 +10,28 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @JsonObject
 public class AccountResultEntity {
 
-  private List<CurrentEntity> listCurrent;
+    private List<CurrentEntity> listCurrent;
 
-  @JsonProperty("listTarjetas")
-  private List<ListTarjetasItem> listCredit;
+    @JsonProperty("listTarjetas")
+    private List<ListTarjetasItem> listCredit;
 
-  public List<TransactionalAccount> toTransactionalAccount() {
-    List<TransactionalAccount> result = new ArrayList<>();
+    public List<TransactionalAccount> toTransactionalAccount() {
+        List<TransactionalAccount> result = new ArrayList<>();
 
-    result.addAll(
-        listCurrent
-            .stream()
-            .filter(acc -> acc.isTransactionalAccount() && acc.isValid())
-            .map(CurrentEntity::toTransactionalAccount)
-            .collect(Collectors.toList()));
+        result.addAll(
+                listCurrent.stream()
+                        .filter(acc -> acc.isTransactionalAccount() && acc.isValid())
+                        .map(CurrentEntity::toTransactionalAccount)
+                        .collect(Collectors.toList()));
 
-    return result;
-  }
+        return result;
+    }
 
-  public boolean containsCreditCards() {
-    return !listCredit.isEmpty();
-  }
+    public boolean containsCreditCards() {
+        return !listCredit.isEmpty();
+    }
 
-  public List<ListTarjetasItem> getListCredit() {
-    return listCredit;
-  }
+    public List<ListTarjetasItem> getListCredit() {
+        return listCredit;
+    }
 }

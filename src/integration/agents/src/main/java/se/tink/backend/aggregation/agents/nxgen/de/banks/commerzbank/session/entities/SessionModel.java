@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class SessionModel {
     private Object error;
+
     @JsonProperty("result")
     private SessionResultEntity result;
 

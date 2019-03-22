@@ -3,5 +3,4 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.authenti
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public final class CustomEntity {
-}
+public final class CustomEntity {}

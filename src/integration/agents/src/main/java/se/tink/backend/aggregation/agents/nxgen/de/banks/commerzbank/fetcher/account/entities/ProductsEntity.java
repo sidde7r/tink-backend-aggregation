@@ -3,15 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.ac
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.CreditCardUtils;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.CommerzbankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class ProductsEntity {
@@ -31,8 +31,10 @@ public class ProductsEntity {
     private String technicalAccountNumber;
     private String branch;
     private ProductIdEntity productId;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private CreditLimit creditLimit;
+
     private BalanceEntity externalLimit;
     private String externalLimitInterestRate;
     private String openingDate;
@@ -313,27 +315,29 @@ public class ProductsEntity {
         return priceForPositionsAvailable;
     }
 
-    //Commerzbank sometimes sends ProductId as null, which means we cannot map the account type
+    // Commerzbank sometimes sends ProductId as null, which means we cannot map the account type
     public boolean hasValidProductId() {
         return productId != null;
     }
 
     public AccountTypes getType() {
         switch (productType.getDisplayCategoryIndex()) {
-        case CommerzbankConstants.DISPLAYCATEGORYINDEX.CHECKING:
-            return AccountTypes.CHECKING;
-        case CommerzbankConstants.DISPLAYCATEGORYINDEX.SAVINGS_OR_INVESTMENT:
-            return getSavingsOrInvestment();
-        default:
-            LOGGER.warnExtraLong(String.format("displayCategoryIndex: %s", productType.getDisplayCategoryIndex()),
-                    CommerzbankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE);
-            return AccountTypes.OTHER;
+            case CommerzbankConstants.DISPLAYCATEGORYINDEX.CHECKING:
+                return AccountTypes.CHECKING;
+            case CommerzbankConstants.DISPLAYCATEGORYINDEX.SAVINGS_OR_INVESTMENT:
+                return getSavingsOrInvestment();
+            default:
+                LOGGER.warnExtraLong(
+                        String.format(
+                                "displayCategoryIndex: %s", productType.getDisplayCategoryIndex()),
+                        CommerzbankConstants.LOGTAG.UNKNOWN_ACCOUNT_TYPE);
+                return AccountTypes.OTHER;
         }
     }
 
     private AccountTypes getSavingsOrInvestment() {
-        if (StringUtils
-                .containsIgnoreCase(productType.getProductName(), CommerzbankConstants.ACCOUNTS.SAVINGS_ACCOUNT)) {
+        if (StringUtils.containsIgnoreCase(
+                productType.getProductName(), CommerzbankConstants.ACCOUNTS.SAVINGS_ACCOUNT)) {
             return AccountTypes.SAVINGS;
         }
         return AccountTypes.OTHER;
@@ -353,28 +357,38 @@ public class ProductsEntity {
                 .setName(getProductType().getProductName())
                 .setAccountNumber(getInternalAccountNumber())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-                .putInTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER, getProductId().getIdentifier())
-                .putInTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE, getProductId().getProductType())
-                .putInTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH, getProductType().getProductBranch())
+                .putInTemporaryStorage(
+                        CommerzbankConstants.HEADERS.IDENTIFIER, getProductId().getIdentifier())
+                .putInTemporaryStorage(
+                        CommerzbankConstants.HEADERS.PRODUCT_TYPE, getProductId().getProductType())
+                .putInTemporaryStorage(
+                        CommerzbankConstants.HEADERS.PRODUCT_BRANCH,
+                        getProductType().getProductBranch())
                 .build();
     }
 
     public CreditCardAccount toCreditCardAccount() {
-        return CreditCardAccount
-                .builder(se.tink.libraries.strings.StringUtils.hashAsStringMD5(identifier), getTinkBalance(),
+        return CreditCardAccount.builder(
+                        se.tink.libraries.strings.StringUtils.hashAsStringMD5(identifier),
+                        getTinkBalance(),
                         getTinkCredit())
                 .setName(getProductType().getProductName())
                 .setAccountNumber(CreditCardUtils.maskCardNumber(creditCardNumber))
-                .putInTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER,
+                .putInTemporaryStorage(
+                        CommerzbankConstants.HEADERS.CREDIT_CARD_IDENTIFIER,
                         getProductId().getIdentifier())
-                .putInTemporaryStorage(CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE,
+                .putInTemporaryStorage(
+                        CommerzbankConstants.HEADERS.CREDIT_CARD_PRODUCT_TYPE,
                         getProductId().getProductType())
-                .putInTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH, getProductType().getProductBranch())
+                .putInTemporaryStorage(
+                        CommerzbankConstants.HEADERS.PRODUCT_BRANCH,
+                        getProductType().getProductBranch())
                 .build();
     }
 
     public boolean isCreditCard() {
-        return productType.getDisplayCategoryIndex() == CommerzbankConstants.DISPLAYCATEGORYINDEX.CREDIT;
+        return productType.getDisplayCategoryIndex()
+                == CommerzbankConstants.DISPLAYCATEGORYINDEX.CREDIT;
     }
 
     public Object getConvertedBalance() {

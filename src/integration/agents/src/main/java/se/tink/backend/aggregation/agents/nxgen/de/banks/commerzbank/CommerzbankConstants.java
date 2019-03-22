@@ -54,9 +54,11 @@ public class CommerzbankConstants {
     }
 
     public static class LOGTAG {
-        public static final LogTag CREDIT_CARD_FETCHING_ERROR = LogTag.from("#commerzbank_credit_card_fetching_error");
-        public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("#commerzbank_unknown_account_type");
-        public static final LogTag TRANSACTION_FETCHING_ERROR = LogTag.from("#commerzbank_transaction_fetching_error");
+        public static final LogTag CREDIT_CARD_FETCHING_ERROR =
+                LogTag.from("#commerzbank_credit_card_fetching_error");
+        public static final LogTag UNKNOWN_ACCOUNT_TYPE =
+                LogTag.from("#commerzbank_unknown_account_type");
+        public static final LogTag TRANSACTION_FETCHING_ERROR =
+                LogTag.from("#commerzbank_transaction_fetching_error");
     }
-
 }

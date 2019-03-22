@@ -25,8 +25,10 @@ public class PfmTransactionsEntity {
     private Object comment;
     private Object counterpartyAccountIdentifier;
     private int dataFormat;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date date;
+
     private Object detectedCategories;
     private String dueDate;
     private boolean hasUncertainCategorization;
@@ -135,9 +137,9 @@ public class PfmTransactionsEntity {
     }
 
     /*
-        Example of transaction: Kantine Deluxe           Berlin      000
-        Removing everything after the spaces, since it is not important
-     */
+       Example of transaction: Kantine Deluxe           Berlin      000
+       Removing everything after the spaces, since it is not important
+    */
     private String fixDescriptions(String text) {
         if (text.contains(CommerzbankConstants.MULTIPLE_SPACES)) {
             return text.substring(0, text.indexOf(CommerzbankConstants.MULTIPLE_SPACES)).trim();
@@ -203,7 +205,8 @@ public class PfmTransactionsEntity {
                 .setAmount(new Amount(getAmount().getCurrency(), getAmount().getValue()))
                 .setDate((getDate()))
                 .setDescription(getDescription())
-                .setPending(isUncleared()).build();
+                .setPending(isUncleared())
+                .build();
     }
 
     public Object getCategoryChangedTime() {

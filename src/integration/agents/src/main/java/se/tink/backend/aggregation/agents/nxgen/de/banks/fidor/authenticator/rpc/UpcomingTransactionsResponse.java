@@ -14,10 +14,11 @@ public class UpcomingTransactionsResponse {
 
     @JsonProperty("data")
     private List<UpcomingTransactionEntity> transactions;
+
     @JsonProperty("collection")
     private CollectionEntity collectionEntity;
 
-    public Collection<UpcomingTransaction> toUpcomingTransaction(){
+    public Collection<UpcomingTransaction> toUpcomingTransaction() {
         return transactions.stream()
                 .map(UpcomingTransactionEntity::toUpcomingTransaction)
                 .collect(Collectors.toList());

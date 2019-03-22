@@ -7,17 +7,17 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionQueryEntity {
 
-  @JsonProperty("getMoreBookedTransactionList_LA")
-  private GetMoreBookedTransactionListLAEntity getMoreBookedTransactionListLAEntity;
+    @JsonProperty("getMoreBookedTransactionList_LA")
+    private GetMoreBookedTransactionListLAEntity getMoreBookedTransactionListLAEntity;
 
-  public TransactionQueryEntity(
-      Date fromDate,
-      Date toDate,
-      String localContractType,
-      String localContractDetail,
-      String companyId) {
-    getMoreBookedTransactionListLAEntity =
-        new GetMoreBookedTransactionListLAEntity(
-            fromDate, toDate, localContractType, localContractDetail, companyId);
-  }
+    public TransactionQueryEntity(
+            Date fromDate,
+            Date toDate,
+            String localContractType,
+            String localContractDetail,
+            String companyId) {
+        getMoreBookedTransactionListLAEntity =
+                new GetMoreBookedTransactionListLAEntity(
+                        fromDate, toDate, localContractType, localContractDetail, companyId);
+    }
 }

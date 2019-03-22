@@ -7,14 +7,14 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class MovListItem {
 
-  @JsonProperty("mov")
-  private Mov mov;
+    @JsonProperty("mov")
+    private Mov mov;
 
-  public Transaction getTinkTransactions() {
-    return mov.toTinkTransaction();
-  }
+    public Transaction getTinkTransactions() {
+        return mov.toTinkTransaction();
+    }
 
-  public boolean isValid(){
-    return mov.isValid();
-  }
+    public boolean isValid() {
+        return mov.isValid();
+    }
 }

@@ -14,13 +14,18 @@ public class HKSPA extends FinTsSegment {
         super(segmentNumber);
 
         if (!Strings.isNullOrEmpty(accountNo)) {
-            addDataGroup(String.join(":", accountNo, subaccFeature, FinTsConstants.SegData.COUNTRY_CODE, blz));
+            addDataGroup(
+                    String.join(
+                            ":",
+                            accountNo,
+                            subaccFeature,
+                            FinTsConstants.SegData.COUNTRY_CODE,
+                            blz));
         }
 
         this.accountNo = accountNo;
         this.subaccFeature = subaccFeature;
         this.blz = blz;
-
     }
 
     public String getAccountNo() {

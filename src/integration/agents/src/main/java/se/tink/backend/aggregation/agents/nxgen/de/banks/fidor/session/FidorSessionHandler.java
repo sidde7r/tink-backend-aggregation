@@ -9,7 +9,7 @@ public class FidorSessionHandler implements SessionHandler {
 
     private final FidorApiClient fidorApiClient;
 
-    public FidorSessionHandler(FidorApiClient fidorApiClient){
+    public FidorSessionHandler(FidorApiClient fidorApiClient) {
         this.fidorApiClient = fidorApiClient;
     }
 
@@ -20,7 +20,7 @@ public class FidorSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        if(!this.fidorApiClient.isSessionAlive()){
+        if (!this.fidorApiClient.isSessionAlive()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

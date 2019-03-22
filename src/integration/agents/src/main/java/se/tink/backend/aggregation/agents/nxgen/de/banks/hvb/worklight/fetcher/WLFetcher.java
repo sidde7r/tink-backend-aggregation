@@ -1,6 +1,17 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.fetcher;
 
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.util.Collections;
+import java.util.List;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.xml.bind.DatatypeConverter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -19,18 +30,6 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import javax.xml.bind.DatatypeConverter;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.util.Collections;
-import java.util.List;
 
 public final class WLFetcher {
     private static final Logger logger = LoggerFactory.getLogger(WLFetcher.class);

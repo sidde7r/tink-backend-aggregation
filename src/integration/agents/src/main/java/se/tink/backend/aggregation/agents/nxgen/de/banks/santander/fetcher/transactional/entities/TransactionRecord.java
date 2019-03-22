@@ -14,67 +14,69 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionRecord {
-  @JsonProperty("TransactionDate")
-  private String transactionDate;
+    @JsonProperty("TransactionDate")
+    private String transactionDate;
 
-  @JsonProperty("ApplicationDate")
-  private String applicationDate;
+    @JsonProperty("ApplicationDate")
+    private String applicationDate;
 
-  @JsonProperty("TransactionDesc01")
-  private String description1;
+    @JsonProperty("TransactionDesc01")
+    private String description1;
 
-  @JsonProperty("TransactionDesc02")
-  private String description2;
+    @JsonProperty("TransactionDesc02")
+    private String description2;
 
-  @JsonProperty("TransactionDesc03")
-  private String description3;
+    @JsonProperty("TransactionDesc03")
+    private String description3;
 
-  @JsonProperty("TransactionAmount")
-  private TransactionAmount amount;
+    @JsonProperty("TransactionAmount")
+    private TransactionAmount amount;
 
-  @JsonIgnore private static final Logger logger = LoggerFactory.getLogger(TransactionRecord.class);
+    @JsonIgnore
+    private static final Logger logger = LoggerFactory.getLogger(TransactionRecord.class);
 
-  private String getDescription() {
-    StringBuilder builder = new StringBuilder();
+    private String getDescription() {
+        StringBuilder builder = new StringBuilder();
 
-    if (!Strings.isNullOrEmpty(description1)) {
-      builder.append(description1.trim()).append(SantanderConstants.WHITESPACE);
+        if (!Strings.isNullOrEmpty(description1)) {
+            builder.append(description1.trim()).append(SantanderConstants.WHITESPACE);
+        }
+
+        if (!Strings.isNullOrEmpty(description2)) {
+            builder.append(description2.trim()).append(SantanderConstants.WHITESPACE);
+        }
+
+        return builder.toString();
     }
 
-    if (!Strings.isNullOrEmpty(description2)) {
-      builder.append(description2.trim()).append(SantanderConstants.WHITESPACE);
+    public boolean isValid() {
+        try {
+            toTinkTransaction();
+            return true;
+        } catch (Exception e) {
+            logger.error(
+                    "{} {}", SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR, e.toString());
+            return false;
+        }
     }
 
-    return builder.toString();
-  }
-
-  public boolean isValid() {
-    try {
-      toTinkTransaction();
-      return true;
-    } catch (Exception e) {
-      logger.error("{} {}", SantanderConstants.LOGTAG.SANTANDER_TRANSACTION_ERROR, e.toString());
-      return false;
+    private Date toDate() {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(transactionDate);
+        } catch (ParseException e) {
+            logger.error(
+                    "{} Cannot parse date: {}",
+                    SantanderConstants.LOGTAG.SANTANDER_DATE_PARSING_ERROR,
+                    transactionDate);
+            throw new IllegalStateException("Cannot parse datetransaction");
+        }
     }
-  }
 
-  private Date toDate() {
-    try {
-      return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS").parse(transactionDate);
-    } catch (ParseException e) {
-      logger.error(
-          "{} Cannot parse date: {}",
-          SantanderConstants.LOGTAG.SANTANDER_DATE_PARSING_ERROR,
-          transactionDate);
-      throw new IllegalStateException("Cannot parse datetransaction");
+    public Transaction toTinkTransaction() {
+        return Transaction.builder()
+                .setDescription(getDescription())
+                .setDate(toDate())
+                .setAmount(amount.toTinkAmount())
+                .build();
     }
-  }
-
-  public Transaction toTinkTransaction() {
-    return Transaction.builder()
-        .setDescription(getDescription())
-        .setDate(toDate())
-        .setAmount(amount.toTinkAmount())
-        .build();
-  }
 }

@@ -29,4 +29,3 @@ public final class InitResponse {
         return challenges.getWlDeviceAutoProvisioningRealm().getCertificate();
     }
 }
-

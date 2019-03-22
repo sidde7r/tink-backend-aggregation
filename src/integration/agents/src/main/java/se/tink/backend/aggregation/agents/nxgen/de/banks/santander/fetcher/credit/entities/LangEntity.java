@@ -6,14 +6,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LangEntity {
 
-  @JsonProperty("IDIOMA_ISO")
-  private String iDIOMAISO;
+    @JsonProperty("IDIOMA_ISO")
+    private String iDIOMAISO;
 
-  @JsonProperty("DIALECTO_ISO")
-  private String dIALECTOISO;
+    @JsonProperty("DIALECTO_ISO")
+    private String dIALECTOISO;
 
-  public LangEntity(String dIALECTOISO, String iDIOMAISO) {
-    this.dIALECTOISO = dIALECTOISO;
-    this.iDIOMAISO = iDIOMAISO;
-  }
+    public LangEntity(String dIALECTOISO, String iDIOMAISO) {
+        this.dIALECTOISO = dIALECTOISO;
+        this.iDIOMAISO = iDIOMAISO;
+    }
 }

@@ -8,10 +8,13 @@ public class TransactionTypeDetailsEntity {
 
     @JsonProperty("remote_name")
     private String remoteName;
+
     @JsonProperty("remote_iban")
     private String remoteIban;
+
     @JsonProperty("remote_bic")
     private String remoteBic;
+
     @JsonProperty("remote_eref")
     private String remoteEref;
 

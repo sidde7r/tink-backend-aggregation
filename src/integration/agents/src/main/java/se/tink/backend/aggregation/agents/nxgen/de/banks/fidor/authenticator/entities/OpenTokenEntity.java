@@ -4,14 +4,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class OpenTokenEntity{
+public class OpenTokenEntity {
     private String state;
+
     @JsonProperty("refresh_token")
     private String refreshToken;
+
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("expires_in")
     private long expiresIn;
+
     @JsonProperty("token_type")
     private String tokenType;
 

@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ConcepEconRepo {
 
-  @JsonProperty("EMPRESA")
-  private String eMPRESA;
+    @JsonProperty("EMPRESA")
+    private String eMPRESA;
 
-  @JsonProperty("CODIGO_NUMERICO")
-  private int cODIGONUMERICO;
+    @JsonProperty("CODIGO_NUMERICO")
+    private int cODIGONUMERICO;
 }

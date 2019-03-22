@@ -11,8 +11,13 @@ public class SearchCriteriaDto {
     private int transactionsPerPage;
     private String text;
 
-    public SearchCriteriaDto(String fromDate, String toDate, int page, String amountType,
-            int transactionsPerPage, String text) {
+    public SearchCriteriaDto(
+            String fromDate,
+            String toDate,
+            int page,
+            String amountType,
+            int transactionsPerPage,
+            String text) {
         this.fromDate = fromDate;
         this.toDate = toDate;
         this.page = page;

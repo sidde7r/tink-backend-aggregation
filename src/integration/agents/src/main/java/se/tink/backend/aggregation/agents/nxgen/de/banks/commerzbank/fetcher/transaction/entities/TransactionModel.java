@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionModel {
     private Object error;
+
     @JsonProperty("result")
     private TransactionResultEntity result;
 

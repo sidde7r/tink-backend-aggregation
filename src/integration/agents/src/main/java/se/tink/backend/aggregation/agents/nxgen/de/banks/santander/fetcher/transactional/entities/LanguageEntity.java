@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LanguageEntity {
-  @JsonProperty("IDIOMA_ISO")
-  private String language = SantanderConstants.QUERYPARAMS.LANGUAGE_DE;
+    @JsonProperty("IDIOMA_ISO")
+    private String language = SantanderConstants.QUERYPARAMS.LANGUAGE_DE;
 
-  @JsonProperty("DIALECTO_ISO")
-  private String dialect = SantanderConstants.QUERYPARAMS.DIALECT_DE;
+    @JsonProperty("DIALECTO_ISO")
+    private String dialect = SantanderConstants.QUERYPARAMS.DIALECT_DE;
 }

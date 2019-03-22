@@ -26,80 +26,79 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class SantanderAgent extends NextGenerationAgent {
 
-  private final SantanderApiClient santanderApiClient;
+    private final SantanderApiClient santanderApiClient;
 
-  public SantanderAgent(
-      CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-    super(request, context, signatureKeyPair);
-    santanderApiClient = new SantanderApiClient(this.client, sessionStorage);
-  }
+    public SantanderAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
+        santanderApiClient = new SantanderApiClient(this.client, sessionStorage);
+    }
 
-  @Override
-  protected void configureHttpClient(TinkHttpClient client) {
-  }
+    @Override
+    protected void configureHttpClient(TinkHttpClient client) {}
 
-  @Override
-  protected Authenticator constructAuthenticator() {
-    return new PasswordAuthenticationController(
-        new SantanderPasswordAuthenticator(santanderApiClient));
-  }
+    @Override
+    protected Authenticator constructAuthenticator() {
+        return new PasswordAuthenticationController(
+                new SantanderPasswordAuthenticator(santanderApiClient));
+    }
 
-  @Override
-  protected Optional<TransactionalAccountRefreshController>
-      constructTransactionalAccountRefreshController() {
-    return Optional.of(
-        new TransactionalAccountRefreshController(
-            metricRefreshController,
-            updateController,
-            new SantanderAccountFetcher(santanderApiClient),
-            new TransactionFetcherController<>(
-                this.transactionPaginationHelper,
-                new TransactionDatePaginationController<>(
-                    new SantanderTransactionFetcher(santanderApiClient)))));
-  }
+    @Override
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SantanderAccountFetcher(santanderApiClient),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new SantanderTransactionFetcher(santanderApiClient)))));
+    }
 
-  @Override
-  protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+    @Override
+    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
 
-    return Optional.of(
-        new CreditCardRefreshController(
-            metricRefreshController,
-            updateController,
-            new SantanderCreditCardFetcher(santanderApiClient),
-            new TransactionFetcherController<>(
-                transactionPaginationHelper,
-                new TransactionKeyPaginationController<>(
-                    new SantanderCreditCardFetcher(santanderApiClient)))));
-  }
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new SantanderCreditCardFetcher(santanderApiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        new SantanderCreditCardFetcher(santanderApiClient)))));
+    }
 
-  @Override
-  protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected Optional<LoanRefreshController> constructLoanRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<LoanRefreshController> constructLoanRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected Optional<TransferDestinationRefreshController>
-      constructTransferDestinationRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected SessionHandler constructSessionHandler() {
-    return new SantanderSessionHandler(santanderApiClient);
-  }
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return new SantanderSessionHandler(santanderApiClient);
+    }
 
-  @Override
-  protected Optional<TransferController> constructTransferController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<TransferController> constructTransferController() {
+        return Optional.empty();
+    }
 }

@@ -1,34 +1,45 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.FidorConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
     private String id;
+
     @JsonProperty("account_number")
     private String accountNumber;
+
     private String iban;
     private double balance;
+
     @JsonProperty("balance_available")
     private double availableBalance;
+
     private String bic;
+
     @JsonProperty("preauth_amount")
     private double preauthAmount;
+
     @JsonProperty("cash_flow_per_year")
     private double cashFlowPerYear;
+
     @JsonProperty("is_locked")
     private boolean isLocked;
+
     private String currency;
+
     @JsonProperty("created_at")
     private String createdAt;
+
     @JsonProperty("updated_at")
     private String updatedAt;
+
     private String nick;
 
     public String getId() {
@@ -83,15 +94,15 @@ public class AccountEntity {
         return nick;
     }
 
-    public AccountTypes getType(){
+    public AccountTypes getType() {
         return AccountTypes.CHECKING;
     }
 
-    public Amount getTinkBalance(){
+    public Amount getTinkBalance() {
         return new Amount(FidorConstants.CURRENCY_EUR, availableBalance);
     }
 
-    public TransactionalAccount toTransactionalAccount(){
+    public TransactionalAccount toTransactionalAccount() {
         return TransactionalAccount.builder(getType(), getId(), getTinkBalance())
                 .setAccountNumber(getId())
                 .addIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))

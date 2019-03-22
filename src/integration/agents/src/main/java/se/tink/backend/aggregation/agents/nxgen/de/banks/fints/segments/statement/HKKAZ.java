@@ -10,7 +10,12 @@ public class HKKAZ extends FinTsSegment {
 
     private int version;
 
-    public HKKAZ(int segmentNumber, int version, String account, LocalDateTime dateStart, LocalDateTime dateEnd,
+    public HKKAZ(
+            int segmentNumber,
+            int version,
+            String account,
+            LocalDateTime dateStart,
+            LocalDateTime dateEnd,
             String touchDown) {
         super(segmentNumber, false);
 
