@@ -29,7 +29,6 @@ public class ProductsResponse extends BbvaResponse {
         return cards;
     }
 
-    // getters to support logging
     public List<InternationalFundsPortfoliosEntity> getInternationalFundsPortfolios() {
         return internationalFundsPortfolios;
     }
