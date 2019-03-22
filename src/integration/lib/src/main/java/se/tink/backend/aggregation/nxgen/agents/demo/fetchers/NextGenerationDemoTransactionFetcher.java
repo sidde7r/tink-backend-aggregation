@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoConstants;
 import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.PurchaseHistoryGenerator;
-import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.TransactionalAccountGenerator;
+import se.tink.backend.aggregation.nxgen.agents.demo.demogenerator.DemoAccountFactory;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -47,7 +47,7 @@ public class NextGenerationDemoTransactionFetcher
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return TransactionalAccountGenerator
+        return DemoAccountFactory
                 .fetchTransactionalAccounts(currency, catalog, transactionAccountDefinition, savingsAccountDefinition);
     }
 

@@ -12,7 +12,7 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.i18n.Catalog;
 
-public class TransactionalAccountGenerator {
+public class DemoAccountFactory {
     public static Collection<TransactionalAccount> fetchTransactionalAccounts(String currency, Catalog catalog,
             DemoTransactionAccount transactionAccountDefinition,
             DemoSavingsAccount savingsAccountDefinition) {
