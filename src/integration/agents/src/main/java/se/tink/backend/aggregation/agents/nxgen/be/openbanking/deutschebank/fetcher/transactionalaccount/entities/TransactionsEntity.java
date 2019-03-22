@@ -9,42 +9,43 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransactionsEntity {
-  private String originIban;
 
-  private Number amount;
+    private String originIban;
 
-  @JsonFormat(pattern = "yyyy-MM-dd")
-  private Date bookingDate;
+    private Number amount;
 
-  private String currencyCode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date bookingDate;
 
-  private String transactionCode;
+    private String currencyCode;
 
-  private String counterPartyName;
+    private String transactionCode;
 
-  private String paymentReference;
+    private String counterPartyName;
 
-  @JsonFormat(pattern = "yyyy-MM-dd")
-  private Date valueDate;
+    private String paymentReference;
 
-  public Transaction toTinkTransaction() {
-    return Transaction.builder()
-        .setAmount(getAmount())
-        .setDate(bookingDate)
-        .setDescription(getDescription())
-        .setPending(false)
-        .build();
-  }
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date valueDate;
 
-  private Amount getAmount() {
-    return new Amount(currencyCode, amount);
-  }
+    public Transaction toTinkTransaction() {
+        return Transaction.builder()
+            .setAmount(getAmount())
+            .setDate(bookingDate)
+            .setDescription(getDescription())
+            .setPending(false)
+            .build();
+    }
 
-  private String getDescription() {
-    return Strings.isNullOrEmpty(counterPartyName)
-        ? Strings.isNullOrEmpty(paymentReference) ? "" : paymentReference
-        : Strings.isNullOrEmpty(paymentReference)
-            ? counterPartyName
-            : counterPartyName + " " + paymentReference;
-  }
+    private Amount getAmount() {
+        return new Amount(currencyCode, amount);
+    }
+
+    private String getDescription() {
+        return Strings.isNullOrEmpty(counterPartyName)
+            ? Strings.isNullOrEmpty(paymentReference) ? "" : paymentReference
+            : Strings.isNullOrEmpty(paymentReference)
+                ? counterPartyName
+                : counterPartyName + " " + paymentReference;
+    }
 }

@@ -12,25 +12,26 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class FetchTransactionsResponse implements PaginatorResponse {
-  private int totalItems;
 
-  private int limit;
+    private int totalItems;
 
-  private int offset;
+    private int limit;
 
-  private List<TransactionsEntity> transactions;
+    private int offset;
 
-  @Override
-  public Collection<? extends Transaction> getTinkTransactions() {
-    return transactions != null
-        ? transactions.stream()
+    private List<TransactionsEntity> transactions;
+
+    @Override
+    public Collection<? extends Transaction> getTinkTransactions() {
+        return transactions != null
+            ? transactions.stream()
             .map(TransactionsEntity::toTinkTransaction)
             .collect(Collectors.toList())
-        : Collections.emptyList();
-  }
+            : Collections.emptyList();
+    }
 
-  @Override
-  public Optional<Boolean> canFetchMore() {
-    return Optional.of((offset + 1) * limit < totalItems);
-  }
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of((offset + 1) * limit < totalItems);
+    }
 }

@@ -6,15 +6,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PartnersResponse {
-  private List<PartnersEntity> partners;
 
-  public String getNaturalFullName() {
-    return partners != null
-        ? partners.stream()
+    private List<PartnersEntity> partners;
+
+    public String getNaturalFullName() {
+        return partners != null
+            ? partners.stream()
             .filter(PartnersEntity::isNatural)
             .map(PartnersEntity::getFullName)
             .findFirst()
             .orElse("")
-        : "";
-  }
+            : "";
+    }
 }

@@ -5,24 +5,25 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class DeutscheBankConfiguration implements ClientConfiguration {
-  private String baseUrl;
-  private String clientId;
-  private String clientSecret;
-  private String redirectUri;
 
-  public String getBaseUrl() {
-    return baseUrl;
-  }
+    private String baseUrl;
+    private String clientId;
+    private String clientSecret;
+    private String redirectUri;
 
-  public String getClientId() {
-    return clientId;
-  }
+    public String getBaseUrl() {
+        return baseUrl;
+    }
 
-  public String getClientSecret() {
-    return clientSecret;
-  }
+    public String getClientId() {
+        return clientId;
+    }
 
-  public String getRedirectUri() {
-    return redirectUri;
-  }
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public String getRedirectUri() {
+        return redirectUri;
+    }
 }

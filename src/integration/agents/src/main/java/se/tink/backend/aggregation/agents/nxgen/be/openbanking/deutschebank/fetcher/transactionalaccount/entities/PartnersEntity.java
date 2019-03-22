@@ -5,15 +5,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PartnersEntity {
-  private String partnerType;
 
-  private NatuarlPersonEntity naturalPerson;
+    private String partnerType;
 
-  public boolean isNatural() {
-    return partnerType.equalsIgnoreCase(DeutscheBankConstants.Accounts.PARTNER_TYPE_NATURAL);
-  }
+    private NatuarlPersonEntity naturalPerson;
 
-  public String getFullName() {
-    return naturalPerson.getFullName();
-  }
+    public boolean isNatural() {
+        return partnerType.equalsIgnoreCase(DeutscheBankConstants.Accounts.PARTNER_TYPE_NATURAL);
+    }
+
+    public String getFullName() {
+        return naturalPerson.getFullName();
+    }
 }

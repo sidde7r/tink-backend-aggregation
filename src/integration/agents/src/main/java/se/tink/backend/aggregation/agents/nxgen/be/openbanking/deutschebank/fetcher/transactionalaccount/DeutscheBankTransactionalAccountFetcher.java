@@ -9,20 +9,22 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class DeutscheBankTransactionalAccountFetcher
     implements AccountFetcher<TransactionalAccount>,
-        TransactionPagePaginator<TransactionalAccount> {
-  private final DeutscheBankApiClient apiClient;
+    TransactionPagePaginator<TransactionalAccount> {
 
-  public DeutscheBankTransactionalAccountFetcher(DeutscheBankApiClient apiClient) {
-    this.apiClient = apiClient;
-  }
+    private final DeutscheBankApiClient apiClient;
 
-  @Override
-  public Collection<TransactionalAccount> fetchAccounts() {
-    return apiClient.fetchAccounts().toTinkAccounts(apiClient.fetchPartners().getNaturalFullName());
-  }
+    public DeutscheBankTransactionalAccountFetcher(DeutscheBankApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-  @Override
-  public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
-    return apiClient.fetchTransactions(account, page - 1);
-  }
+    @Override
+    public Collection<TransactionalAccount> fetchAccounts() {
+        return apiClient.fetchAccounts()
+            .toTinkAccounts(apiClient.fetchPartners().getNaturalFullName());
+    }
+
+    @Override
+    public PaginatorResponse getTransactionsFor(TransactionalAccount account, int page) {
+        return apiClient.fetchTransactions(account, page - 1);
+    }
 }

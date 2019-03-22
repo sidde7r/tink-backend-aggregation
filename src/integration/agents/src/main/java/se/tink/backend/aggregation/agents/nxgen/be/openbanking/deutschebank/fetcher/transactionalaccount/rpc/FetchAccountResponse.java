@@ -11,13 +11,13 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 @JsonObject
 public class FetchAccountResponse {
 
-  private List<AccountsEntity> accounts;
+    private List<AccountsEntity> accounts;
 
-  public Collection<TransactionalAccount> toTinkAccounts(String owner) {
-    return accounts != null
-        ? accounts.stream()
+    public Collection<TransactionalAccount> toTinkAccounts(String owner) {
+        return accounts != null
+            ? accounts.stream()
             .map(a -> a.toTinkAccount(owner))
             .collect(Collectors.toList())
-        : Collections.emptyList();
-  }
+            : Collections.emptyList();
+    }
 }

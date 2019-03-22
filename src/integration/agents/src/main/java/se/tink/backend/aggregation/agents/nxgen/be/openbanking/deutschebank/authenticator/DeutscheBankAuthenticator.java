@@ -8,32 +8,33 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class DeutscheBankAuthenticator implements OAuth2Authenticator {
-  private final DeutscheBankApiClient apiClient;
 
-  public DeutscheBankAuthenticator(DeutscheBankApiClient apiClient) {
-    this.apiClient = apiClient;
-  }
+    private final DeutscheBankApiClient apiClient;
 
-  @Override
-  public URL buildAuthorizeUrl(String state) {
-    return apiClient.getAuthorizeUrl(state);
-  }
+    public DeutscheBankAuthenticator(DeutscheBankApiClient apiClient) {
+        this.apiClient = apiClient;
+    }
 
-  @Override
-  public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
-    return apiClient.getToken(code);
-  }
+    @Override
+    public URL buildAuthorizeUrl(String state) {
+        return apiClient.getAuthorizeUrl(state);
+    }
 
-  @Override
-  public OAuth2Token refreshAccessToken(String refreshToken)
-      throws BankServiceException, SessionException {
-    OAuth2Token token = apiClient.refreshToken(refreshToken);
-    apiClient.setTokenToSession(token);
-    return token;
-  }
+    @Override
+    public OAuth2Token exchangeAuthorizationCode(String code) throws BankServiceException {
+        return apiClient.getToken(code);
+    }
 
-  @Override
-  public void useAccessToken(OAuth2Token accessToken) {
-    apiClient.setTokenToSession(accessToken);
-  }
+    @Override
+    public OAuth2Token refreshAccessToken(String refreshToken)
+        throws BankServiceException, SessionException {
+        OAuth2Token token = apiClient.refreshToken(refreshToken);
+        apiClient.setTokenToSession(token);
+        return token;
+    }
+
+    @Override
+    public void useAccessToken(OAuth2Token accessToken) {
+        apiClient.setTokenToSession(accessToken);
+    }
 }

@@ -4,11 +4,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class NatuarlPersonEntity {
-  private String firstName;
 
-  private String lastName;
+    private String firstName;
 
-  public String getFullName() {
-    return firstName + " " + lastName;
-  }
+    private String lastName;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
