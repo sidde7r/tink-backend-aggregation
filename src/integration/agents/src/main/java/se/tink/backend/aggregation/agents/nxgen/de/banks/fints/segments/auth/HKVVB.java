@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.auth;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.SegData.PRODUCT_VERSION;
+
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.FinTsSegment;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.SegData.PRODUCT_VERSION;
 
 public class HKVVB extends FinTsSegment {
 

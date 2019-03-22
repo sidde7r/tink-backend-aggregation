@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ContratoLocal {
 
-  @JsonProperty("TIPO_CONTRATO_LOCAL")
-  private String tIPOCONTRATOLOCAL;
+    @JsonProperty("TIPO_CONTRATO_LOCAL")
+    private String tIPOCONTRATOLOCAL;
 
-  @JsonProperty("DETALLE_CONTRATO_LOCAL")
-  private String dETALLECONTRATOLOCAL;
+    @JsonProperty("DETALLE_CONTRATO_LOCAL")
+    private String dETALLECONTRATOLOCAL;
 }

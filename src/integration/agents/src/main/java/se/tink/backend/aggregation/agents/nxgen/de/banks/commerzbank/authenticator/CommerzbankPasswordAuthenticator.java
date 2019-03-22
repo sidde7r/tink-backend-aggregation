@@ -17,7 +17,8 @@ import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 
 public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommerzbankPasswordAuthenticator.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(CommerzbankPasswordAuthenticator.class);
     private CommerzbankApiClient apiClient;
 
     public CommerzbankPasswordAuthenticator(CommerzbankApiClient apiClient) {
@@ -25,9 +26,10 @@ public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
 
-        //With cookies saved, the user can access all the other parts of the app
+        // With cookies saved, the user can access all the other parts of the app
         HttpResponse response = null;
         try {
             response = apiClient.login(username, password);
@@ -35,18 +37,24 @@ public class CommerzbankPasswordAuthenticator implements PasswordAuthenticator {
             throw new IllegalArgumentException("The credentials are not correct");
         }
 
-        Optional<ErrorEntity> errorEntity = Optional.ofNullable(response.getBody(RootModel.class).getError());
+        Optional<ErrorEntity> errorEntity =
+                Optional.ofNullable(response.getBody(RootModel.class).getError());
         if (errorEntity.isPresent()) {
-            if (response.getBody(RootModel.class).getError().getCode()
+            if (response.getBody(RootModel.class)
+                    .getError()
+                    .getCode()
                     .equalsIgnoreCase(CommerzbankConstants.ERRORS.PIN_ERROR)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
-            }
-            else if (response.getBody(RootModel.class).getError().getCode()
+            } else if (response.getBody(RootModel.class)
+                    .getError()
+                    .getCode()
                     .equalsIgnoreCase(CommerzbankConstants.ERRORS.ACCOUNT_SESSION_ACTIVE_ERROR)) {
                 throw SessionError.SESSION_ALREADY_ACTIVE.exception();
             } else {
-                final String message = String.format("Failed to login because: %s",
-                        response.getBody(RootModel.class).getError().getMessage());
+                final String message =
+                        String.format(
+                                "Failed to login because: %s",
+                                response.getBody(RootModel.class).getError().getMessage());
                 logger.error(message);
                 throw new IllegalStateException(message);
             }

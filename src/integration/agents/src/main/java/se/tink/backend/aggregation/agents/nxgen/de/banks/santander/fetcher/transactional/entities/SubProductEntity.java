@@ -5,10 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class SubProductEntity {
-  @JsonProperty("TIPO_DE_PRODUCTO")
-  private ProductEntity productEntity;
+    @JsonProperty("TIPO_DE_PRODUCTO")
+    private ProductEntity productEntity;
 
-  public ProductEntity getProductEntity() {
-    return productEntity;
-  }
+    public ProductEntity getProductEntity() {
+        return productEntity;
+    }
 }

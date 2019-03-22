@@ -4,8 +4,6 @@ import java.util.Optional;
 
 public interface WLSessionHandlerStorage {
 
-    /**
-     * Will exist in storage after successful authentication.
-     */
+    /** Will exist in storage after successful authentication. */
     Optional<String> getOptionalWlInstanceId();
 }

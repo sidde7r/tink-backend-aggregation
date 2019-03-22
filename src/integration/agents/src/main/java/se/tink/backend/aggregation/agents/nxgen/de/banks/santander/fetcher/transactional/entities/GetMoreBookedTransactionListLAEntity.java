@@ -7,19 +7,23 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class GetMoreBookedTransactionListLAEntity {
 
-  @JsonProperty("filter")
-  private FilterEntity filter;
+    @JsonProperty("filter")
+    private FilterEntity filter;
 
-  @JsonProperty("initialList")
-  private InitialListEntity initialList;
+    @JsonProperty("initialList")
+    private InitialListEntity initialList;
 
-  @JsonProperty("profile")
-  private ProfileEntity profile;
+    @JsonProperty("profile")
+    private ProfileEntity profile;
 
-  public GetMoreBookedTransactionListLAEntity(
-      Date from, Date to, String localContractType, String localContractDetail, String company) {
-    filter = new FilterEntity(from, to);
-    initialList = new InitialListEntity(localContractType, localContractDetail);
-    profile = new ProfileEntity(company);
-  }
+    public GetMoreBookedTransactionListLAEntity(
+            Date from,
+            Date to,
+            String localContractType,
+            String localContractDetail,
+            String company) {
+        filter = new FilterEntity(from, to);
+        initialList = new InitialListEntity(localContractType, localContractDetail);
+        profile = new ProfileEntity(company);
+    }
 }

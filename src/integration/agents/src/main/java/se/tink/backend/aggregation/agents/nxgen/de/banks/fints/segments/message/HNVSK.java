@@ -9,7 +9,8 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.FinTsSeg
 // Section B.5.3
 public class HNVSK extends FinTsSegment {
 
-    public HNVSK(int segmentNumber, int profileVersion, String systemId, String blz, String username) {
+    public HNVSK(
+            int segmentNumber, int profileVersion, String systemId, String blz, String username) {
         super(segmentNumber, false);
 
         LocalDateTime now = LocalDateTime.now();

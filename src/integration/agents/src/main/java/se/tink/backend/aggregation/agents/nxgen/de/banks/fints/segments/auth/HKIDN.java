@@ -25,5 +25,4 @@ public class HKIDN extends FinTsSegment {
     public String getType() {
         return FinTsConstants.Segments.HKIDN;
     }
-
 }

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight;
 
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class WLApiClient {
     private final TinkHttpClient client;

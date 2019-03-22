@@ -10,7 +10,7 @@ public class FidorAccountFetcher implements AccountFetcher<TransactionalAccount>
 
     private final FidorApiClient fidorApiClient;
 
-    public FidorAccountFetcher(FidorApiClient fidorApiClient){
+    public FidorAccountFetcher(FidorApiClient fidorApiClient) {
         this.fidorApiClient = fidorApiClient;
     }
 
@@ -19,5 +19,4 @@ public class FidorAccountFetcher implements AccountFetcher<TransactionalAccount>
         OpenTokenEntity tokenEntity = fidorApiClient.getTokenFromStorage();
         return fidorApiClient.fetchOpenApiAccounts(tokenEntity).toTransactionalAccounts();
     }
-
 }

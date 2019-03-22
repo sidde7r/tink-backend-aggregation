@@ -6,12 +6,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ContratoPartenon {
 
-  @JsonProperty("CENTRO")
-  private CENTRO cENTRO;
+    @JsonProperty("CENTRO")
+    private CENTRO cENTRO;
 
-  @JsonProperty("PRODUCTO")
-  private String pRODUCTO;
+    @JsonProperty("PRODUCTO")
+    private String pRODUCTO;
 
-  @JsonProperty("NUMERO_DE_CONTRATO")
-  private String nUMERODECONTRATO;
+    @JsonProperty("NUMERO_DE_CONTRATO")
+    private String nUMERODECONTRATO;
 }

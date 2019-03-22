@@ -1,10 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.HKSPA;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SEPAAccount;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.accounts.SepaAccountGuesser;
@@ -20,21 +34,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.AccountTypes;
-
-import java.nio.charset.StandardCharsets;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FinTsApiClient {
     private final TinkHttpClient apiClient;
@@ -55,7 +54,10 @@ public class FinTsApiClient {
 
     private final PersistentStorage persistStorage;
 
-    public FinTsApiClient(TinkHttpClient apiClient, FinTsConfiguration configuration, PersistentStorage persistStorage) {
+    public FinTsApiClient(
+            TinkHttpClient apiClient,
+            FinTsConfiguration configuration,
+            PersistentStorage persistStorage) {
         this.apiClient = apiClient;
         this.configuration = configuration;
         sepaAccounts = new ArrayList<>();
@@ -68,8 +70,10 @@ public class FinTsApiClient {
         String b64Response =
                 apiClient.request(configuration.getEndpoint()).post(String.class, b64Request);
 
-        String plainResponse = new String(Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")),
-                StandardCharsets.ISO_8859_1);
+        String plainResponse =
+                new String(
+                        Base64.getDecoder().decode(b64Response.replaceAll("\\R", "")),
+                        StandardCharsets.ISO_8859_1);
 
         FinTsResponse response = new FinTsResponse(plainResponse);
 
@@ -85,7 +89,13 @@ public class FinTsApiClient {
         HKSYN segSync = new HKSYN(5);
         this.messageNumber = 1;
         return new FinTsRequest(
-                configuration, dialogId, this.messageNumber, this.systemId, segIdentification, segPrepare, segSync);
+                configuration,
+                dialogId,
+                this.messageNumber,
+                this.systemId,
+                segIdentification,
+                segPrepare,
+                segSync);
     }
 
     private FinTsRequest getMessageInit() {
@@ -116,33 +126,33 @@ public class FinTsApiClient {
     private String getAccountString(SEPAAccount sepaAccount, int hVersion) {
         String account;
         switch (hVersion) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-            account =
-                    String.join(
-                            ":",
-                            sepaAccount.getAccountNo(),
-                            sepaAccount.getSubAccount(),
-                            FinTsConstants.SegData.COUNTRY_CODE,
-                            sepaAccount.getBlz());
-            break;
-        case 7:
-            account =
-                    String.join(
-                            ":",
-                            sepaAccount.getIban(),
-                            sepaAccount.getBic(),
-                            sepaAccount.getAccountNo(),
-                            sepaAccount.getSubAccount(),
-                            FinTsConstants.SegData.COUNTRY_CODE,
-                            sepaAccount.getBlz());
-            break;
-        default:
-            throw new IllegalArgumentException("Invalid hVersion found!");
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+                account =
+                        String.join(
+                                ":",
+                                sepaAccount.getAccountNo(),
+                                sepaAccount.getSubAccount(),
+                                FinTsConstants.SegData.COUNTRY_CODE,
+                                sepaAccount.getBlz());
+                break;
+            case 7:
+                account =
+                        String.join(
+                                ":",
+                                sepaAccount.getIban(),
+                                sepaAccount.getBic(),
+                                sepaAccount.getAccountNo(),
+                                sepaAccount.getSubAccount(),
+                                FinTsConstants.SegData.COUNTRY_CODE,
+                                sepaAccount.getBlz());
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid hVersion found!");
         }
         return account;
     }
@@ -155,7 +165,9 @@ public class FinTsApiClient {
                 this.messageNumber,
                 this.systemId,
                 this.tanCapability,
-                new HKSAL(3, this.hksalVersion,
+                new HKSAL(
+                        3,
+                        this.hksalVersion,
                         this.getAccountString(sepaAccount, this.hksalVersion)));
     }
 
@@ -259,32 +271,39 @@ public class FinTsApiClient {
         for (String account : accountList) {
             // J:IBAN:BIC:AccNo:<Something>:CountryCode:BLZ
             List<String> elements = FinTsParser.getDataGroupElements(account);
-            // Sometimes we got accounts with same accountNo. That's why we need some special handling here.
-            SEPAAccount targetAccount = this.sepaAccounts.stream()
-                    .filter(sepaAccount -> {
-                        switch (hksalVersion) {
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                        case 6:
-                            return Objects.equals(sepaAccount.getAccountNo(), elements.get(3));
-                        case 7:
-                            return Objects.equals(sepaAccount.getIban(), elements.get(1));
-                        default:
-                            throw new IllegalArgumentException("Invalid hVersion found!");
-                        }
-
-                    })
-                    .filter(sepaAccount -> sepaAccount.getBic() == null)
-                    .findFirst()
-                    .orElseThrow(IllegalStateException::new);
+            // Sometimes we got accounts with same accountNo. That's why we need some special
+            // handling here.
+            SEPAAccount targetAccount =
+                    this.sepaAccounts.stream()
+                            .filter(
+                                    sepaAccount -> {
+                                        switch (hksalVersion) {
+                                            case 1:
+                                            case 2:
+                                            case 3:
+                                            case 4:
+                                            case 5:
+                                            case 6:
+                                                return Objects.equals(
+                                                        sepaAccount.getAccountNo(),
+                                                        elements.get(3));
+                                            case 7:
+                                                return Objects.equals(
+                                                        sepaAccount.getIban(), elements.get(1));
+                                            default:
+                                                throw new IllegalArgumentException(
+                                                        "Invalid hVersion found!");
+                                        }
+                                    })
+                            .filter(sepaAccount -> sepaAccount.getBic() == null)
+                            .findFirst()
+                            .orElseThrow(IllegalStateException::new);
 
             targetAccount.setBic(elements.get(2));
             targetAccount.setSubAccount(elements.get(4));
 
-            // N means this account doesn't have IBAN or BIC, which indicates it is not a checking account.
+            // N means this account doesn't have IBAN or BIC, which indicates it is not a checking
+            // account.
             if (Objects.equals("N", elements.get(0))) {
                 // We don't know yet what type it is if the bank doesn't set the account type field
                 targetAccount.setAccountType(99);
@@ -307,8 +326,12 @@ public class FinTsApiClient {
         // We cannot fetch the balance for all account types
         if (!getBalanceResponse.isSuccess()) {
             String accountNumber = account.getAccountNo();
-            LONGLOGGER.warnExtraLong(String.format("Cannot fetch balance AccountNumber: %s , AccounType: %s", account.getAccountNo(), account.getAccountType()), FinTsConstants.LogTags.ERROR_CANNOT_FETCH_ACCOUNT_BALANCE);
-            //If we cannot fetch balance, return
+            LONGLOGGER.warnExtraLong(
+                    String.format(
+                            "Cannot fetch balance AccountNumber: %s , AccounType: %s",
+                            account.getAccountNo(), account.getAccountType()),
+                    FinTsConstants.LogTags.ERROR_CANNOT_FETCH_ACCOUNT_BALANCE);
+            // If we cannot fetch balance, return
             return;
         }
 
@@ -317,13 +340,17 @@ public class FinTsApiClient {
         for (String balanceSeg : segments) {
             List<String> deg = FinTsParser.getSegmentDataGroups(balanceSeg);
             SEPAAccount sepaAccount =
-                    this.sepaAccounts
-                            .stream()
-                            .filter(acc -> Objects
-                                    .equals(this.getAccountString(acc, this.hksalVersion), deg.get(1)))
+                    this.sepaAccounts.stream()
+                            .filter(
+                                    acc ->
+                                            Objects.equals(
+                                                    this.getAccountString(acc, this.hksalVersion),
+                                                    deg.get(1)))
                             .findFirst()
                             .orElseThrow(IllegalStateException::new);
-            sepaAccount.setBalance(FinTsParser.getDataGroupElements(deg.get(4)).get(1), isBalancePositive(deg.get(4)));
+            sepaAccount.setBalance(
+                    FinTsParser.getDataGroupElements(deg.get(4)).get(1),
+                    isBalancePositive(deg.get(4)));
         }
     }
 
@@ -331,45 +358,54 @@ public class FinTsApiClient {
         return balanceSegment.startsWith("C");
     }
 
-    // Sparkasse sometimes sends FinTsConstants.StatusCode.NO_ENTRY if a phone number is not active on account
+    // Sparkasse sometimes sends FinTsConstants.StatusCode.NO_ENTRY if a phone number is not active
+    // on account
     private boolean noEntry(Map<String, String> status) {
-        if (status.containsValue(FinTsConstants.StatusCode.NO_ENTRY) &&
-                status.containsKey(FinTsConstants.StatusMessage.NO_ACTIVE_PHONE_NUMBER_WARNING)) {
+        if (status.containsValue(FinTsConstants.StatusCode.NO_ENTRY)
+                && status.containsKey(
+                        FinTsConstants.StatusMessage.NO_ACTIVE_PHONE_NUMBER_WARNING)) {
             return false;
         }
         return status.containsValue(FinTsConstants.StatusCode.NO_ENTRY);
     }
 
     public Collection<MT940Statement> getTransactions(String accountNo, Date start, Date end) {
-        SEPAAccount targetAccount = this.sepaAccounts.stream()
-                .filter(sepaAccount -> Objects.equals(sepaAccount.getAccountNo(), accountNo))
-                .filter(sepaAccount -> FinTsAccountTypeConverter.getAccountTypeFor(sepaAccount.getAccountType())
-                        != AccountTypes.OTHER)
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
+        SEPAAccount targetAccount =
+                this.sepaAccounts.stream()
+                        .filter(
+                                sepaAccount ->
+                                        Objects.equals(sepaAccount.getAccountNo(), accountNo))
+                        .filter(
+                                sepaAccount ->
+                                        FinTsAccountTypeConverter.getAccountTypeFor(
+                                                        sepaAccount.getAccountType())
+                                                != AccountTypes.OTHER)
+                        .findFirst()
+                        .orElseThrow(IllegalStateException::new);
 
-        FinTsRequest getTransactionRequest = this.createStatementRequest(targetAccount, start, end, null);
+        FinTsRequest getTransactionRequest =
+                this.createStatementRequest(targetAccount, start, end, null);
 
         FinTsResponse response = sendMessage(getTransactionRequest);
         String segment = response.findSegment(FinTsConstants.Segments.HIKAZ);
 
         Map<String, String> status = response.getLocalStatus();
 
-        //Comdirect do not support getting transactions with an end date
+        // Comdirect do not support getting transactions with an end date
         if (status.containsKey(FinTsConstants.StatusMessage.END_DATE_NOT_SUPPORTED)) {
             endDateSupported = false;
-            getTransactionRequest = this.createStatementRequest(targetAccount, start, new Date(), null);
+            getTransactionRequest =
+                    this.createStatementRequest(targetAccount, start, new Date(), null);
             response = sendMessage(getTransactionRequest);
             status = response.getLocalStatus();
         }
 
-        //TODO: Need to start checking key AND value
-        if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED) ||
-                noEntry(status) ||
-                status.containsValue(FinTsConstants.StatusCode.NO_DATA_AVAILABLE) ||
-                status.containsValue(FinTsConstants.StatusCode.TECHNICAL_ERROR) ||
-                Strings.isNullOrEmpty(segment)
-                ) {
+        // TODO: Need to start checking key AND value
+        if (status.containsValue(FinTsConstants.StatusCode.ACCOUNT_NOT_ASSIGNED)
+                || noEntry(status)
+                || status.containsValue(FinTsConstants.StatusCode.NO_DATA_AVAILABLE)
+                || status.containsValue(FinTsConstants.StatusCode.TECHNICAL_ERROR)
+                || Strings.isNullOrEmpty(segment)) {
             return Collections.emptyList();
         }
 
@@ -383,24 +419,28 @@ public class FinTsApiClient {
         List<MT940Statement> transactions = new ArrayList<>(this.parseMt940Transactions(mt940));
 
         // Process with touchdowns
-        String  seg = null;
+        String seg = null;
         String mt940Content;
         while (touchdowns.containsKey(FinTsConstants.Segments.HKKAZ)) {
             try {
                 FinTsRequest getFurtherTransactionRequest =
-                        this.createStatementRequest(targetAccount, start, end,
+                        this.createStatementRequest(
+                                targetAccount,
+                                start,
+                                end,
                                 touchdowns.get(FinTsConstants.Segments.HKKAZ));
-                FinTsResponse furtherTransactionsResponse = sendMessage(getFurtherTransactionRequest);
+                FinTsResponse furtherTransactionsResponse =
+                        sendMessage(getFurtherTransactionRequest);
                 seg = furtherTransactionsResponse.findSegment(FinTsConstants.Segments.HIKAZ);
                 mt940Content = FinTsParser.getMT940Content(seg);
                 transactions.addAll(this.parseMt940Transactions(mt940Content));
-                touchdowns = furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
+                touchdowns =
+                        furtherTransactionsResponse.getTouchDowns(getFurtherTransactionRequest);
             } catch (Exception e) {
                 LONGLOGGER.warnExtraLong(
-                        String.format("Cannot fetch transactions AccountNumber: %s , AccountType: %s Seg: %s",
-                        targetAccount.getAccountNo(),
-                        targetAccount.getAccountType(),
-                                seg),
+                        String.format(
+                                "Cannot fetch transactions AccountNumber: %s , AccountType: %s Seg: %s",
+                                targetAccount.getAccountNo(), targetAccount.getAccountType(), seg),
                         FinTsConstants.LogTags.ERROR_CANNOT_FETCH_ACCOUNT_TRANSACTIONS,
                         e);
                 touchdowns = Collections.emptyMap();
@@ -411,10 +451,14 @@ public class FinTsApiClient {
         if (!endDateSupported) {
             Interval transactionInterval = new Interval(new DateTime(start), new DateTime(end));
             return transactions.stream()
-                    .filter(transaction -> transactionInterval.contains(new DateTime(transaction.getDate())))
+                    .filter(
+                            transaction ->
+                                    transactionInterval.contains(
+                                            new DateTime(transaction.getDate())))
                     .collect(Collectors.toList());
-        }  else  {
-            return transactions.stream().filter(transaction -> transaction.getDate().before(end))
+        } else {
+            return transactions.stream()
+                    .filter(transaction -> transaction.getDate().before(end))
                     .collect(Collectors.toList());
         }
     }
@@ -431,7 +475,8 @@ public class FinTsApiClient {
         return transactions;
     }
 
-    private String process_61_86elements(String nextLine, Scanner mt940Scanner, List<MT940Statement> transactions) {
+    private String process_61_86elements(
+            String nextLine, Scanner mt940Scanner, List<MT940Statement> transactions) {
         String tag61 = nextLine.substring(4);
         StringBuilder tag86 = new StringBuilder();
         if (!mt940Scanner.hasNextLine()) {
@@ -455,22 +500,20 @@ public class FinTsApiClient {
         return nextLine;
     }
 
-    private FinTsRequest createStatementRequest(SEPAAccount account, Date start, Date end, String touchdown) {
+    private FinTsRequest createStatementRequest(
+            SEPAAccount account, Date start, Date end, String touchdown) {
         return new FinTsRequest(
                 configuration,
                 this.dialogId,
                 this.messageNumber,
                 this.systemId,
                 this.tanCapability,
-                new HKKAZ(3,
+                new HKKAZ(
+                        3,
                         this.hkkazVersion,
                         this.getAccountString(account, this.hkkazVersion),
-                        start.toInstant()
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDateTime(),
-                        end.toInstant()
-                                .atZone(ZoneId.systemDefault())
-                                .toLocalDateTime(),
+                        start.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
+                        end.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
                         touchdown));
     }
 }

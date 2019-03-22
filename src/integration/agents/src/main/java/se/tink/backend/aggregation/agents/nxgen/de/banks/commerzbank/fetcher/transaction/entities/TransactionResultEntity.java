@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionResultEntity {
     private Object metaData;
+
     @JsonProperty("items")
     private List<TransactionEntity> items;
 

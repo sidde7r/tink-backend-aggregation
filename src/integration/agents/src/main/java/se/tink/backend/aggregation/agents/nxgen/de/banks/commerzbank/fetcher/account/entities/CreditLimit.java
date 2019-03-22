@@ -16,7 +16,7 @@ public class CreditLimit {
         return currency;
     }
 
-    public Amount toTinkAmount(){
+    public Amount toTinkAmount() {
         double limitValue = Double.parseDouble(value);
         return new Amount(currency, limitValue);
     }

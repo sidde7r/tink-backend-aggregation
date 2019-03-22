@@ -6,10 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class InitialListEntity {
 
-  @JsonProperty("contrato_local")
-  private ContratoLocalEntity contratoLocal;
+    @JsonProperty("contrato_local")
+    private ContratoLocalEntity contratoLocal;
 
-  public InitialListEntity(String localContractType, String localContractDetail) {
-    contratoLocal = new ContratoLocalEntity(localContractType, localContractDetail);
-  }
+    public InitialListEntity(String localContractType, String localContractDetail) {
+        contratoLocal = new ContratoLocalEntity(localContractType, localContractDetail);
+    }
 }

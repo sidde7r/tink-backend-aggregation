@@ -9,7 +9,8 @@ public class Identifier {
     private String identifier;
     private String productBranch;
 
-    public Identifier(String productType, String currency, String identifier, String productBranch) {
+    public Identifier(
+            String productType, String currency, String identifier, String productBranch) {
         this.productType = productType;
         this.currency = currency;
         this.identifier = identifier;

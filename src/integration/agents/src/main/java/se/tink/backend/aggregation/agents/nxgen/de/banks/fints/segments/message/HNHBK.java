@@ -6,20 +6,23 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.FinTsSeg
 
 public class HNHBK extends FinTsSegment {
 
-    private final static int HEADER_LENGTH = 29;
-    private final static String FINTS3_VERSION = "300"; // version 3.0
+    private static final int HEADER_LENGTH = 29;
+    private static final String FINTS3_VERSION = "300"; // version 3.0
 
     public HNHBK(int messageLength, String dialogId, int messageNumber) {
-        super(1, false);// always the first segment
+        super(1, false); // always the first segment
 
         Preconditions.checkArgument(messageNumber > 0, "Invalid message number, must be > 0.");
 
         String msgLength = String.valueOf(messageLength);
         if (msgLength.length() != 12) {
-            msgLength = String.format("%012d", messageLength +
-                    HEADER_LENGTH +
-                    dialogId.length() +
-                    String.valueOf(messageNumber).length());
+            msgLength =
+                    String.format(
+                            "%012d",
+                            messageLength
+                                    + HEADER_LENGTH
+                                    + dialogId.length()
+                                    + String.valueOf(messageNumber).length());
         }
 
         addDataGroup(msgLength);
@@ -37,5 +40,4 @@ public class HNHBK extends FinTsSegment {
     public String getType() {
         return FinTsConstants.Segments.HNHBK;
     }
-
 }

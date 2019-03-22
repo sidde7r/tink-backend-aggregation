@@ -10,13 +10,13 @@ import javax.annotation.Nullable;
 import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.HVBConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonObject
@@ -25,32 +25,30 @@ public final class AccountResponse {
 
     private List<AccountEntity> accounts;
 
-    public AccountResponse() {
-    }
+    public AccountResponse() {}
 
     public AccountResponse(final List<AccountEntity> accountEntities) {
         accounts = accountEntities;
     }
 
     public Collection<TransactionalAccount.Builder<?, ?>> getTransactionalAccounts() {
-        return Optional.ofNullable(accounts).orElse(Collections.emptyList())
-                .stream()
+        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .filter(AccountResponse::validateAndLogAccountType)
                 .map(AccountResponse::toTransactionalAccount)
                 .collect(Collectors.toSet());
     }
 
     /**
-     * @return true iff the account type is recognized.
-     * Logs an error if the account type was not found.
+     * @return true iff the account type is recognized. Logs an error if the account type was not
+     *     found.
      */
     private static boolean validateAndLogAccountType(final AccountEntity accountEntity) {
         final Optional<AccountTypes> accountType = entityToAccountType(accountEntity);
         if (!accountType.isPresent()) {
-            logger.error("{} - Could not figure out account type for account entity {}",
+            logger.error(
+                    "{} - Could not figure out account type for account entity {}",
                     HVBConstants.LogTags.HVB_UNRECOGNIZED_ACCOUNT_TYPE.toTag(),
-                    SerializationUtils.serializeToString(accountEntity)
-            );
+                    SerializationUtils.serializeToString(accountEntity));
             return false;
         }
         return true;
@@ -64,14 +62,13 @@ public final class AccountResponse {
         final String accountTypeString = Preconditions.checkNotNull(accountEntity.getType()).trim();
         final Optional<AccountTypes> type = stringToAccountType(accountTypeString);
         if (!type.isPresent()) {
-            logger.warn("{} - Received unknown account type: {} for account entity {}",
+            logger.warn(
+                    "{} - Received unknown account type: {} for account entity {}",
                     HVBConstants.LogTags.HVB_UNKNOWN_ACCOUNT_TYPE.toTag(),
                     accountTypeString,
-                    SerializationUtils.serializeToString(accountEntity)
-            );
-            final String title = Optional.ofNullable(accountEntity.getTitle())
-                    .map(String::trim)
-                    .orElse("");
+                    SerializationUtils.serializeToString(accountEntity));
+            final String title =
+                    Optional.ofNullable(accountEntity.getTitle()).map(String::trim).orElse("");
             return titleToAccountType(title);
         }
         return type;
@@ -79,9 +76,11 @@ public final class AccountResponse {
 
     private static Optional<AccountTypes> titleToAccountType(@Nonnull final String accountTitle) {
         final String upperCaseTitle = accountTitle.toUpperCase();
-        if (HVBConstants.CHECKING_ACCOUNT_TITLE_SUBSTRINGS.stream().anyMatch(upperCaseTitle::contains)) {
+        if (HVBConstants.CHECKING_ACCOUNT_TITLE_SUBSTRINGS.stream()
+                .anyMatch(upperCaseTitle::contains)) {
             return Optional.of(AccountTypes.CHECKING);
-        } else if (HVBConstants.SAVINGS_ACCOUNT_TITLE_SUBSTRINGS.stream().anyMatch(upperCaseTitle::contains)) {
+        } else if (HVBConstants.SAVINGS_ACCOUNT_TITLE_SUBSTRINGS.stream()
+                .anyMatch(upperCaseTitle::contains)) {
             return Optional.of(AccountTypes.SAVINGS);
         }
         return Optional.empty();
@@ -89,12 +88,12 @@ public final class AccountResponse {
 
     private static Optional<AccountTypes> stringToAccountType(@Nonnull final String accountType) {
         switch (accountType) {
-        case "2":
-            return Optional.of(AccountTypes.CHECKING);
-        case "6":
-            return Optional.of(AccountTypes.SAVINGS);
-        default:
-            return Optional.empty();
+            case "2":
+                return Optional.of(AccountTypes.CHECKING);
+            case "6":
+                return Optional.of(AccountTypes.SAVINGS);
+            default:
+                return Optional.empty();
         }
     }
 
@@ -103,7 +102,8 @@ public final class AccountResponse {
         return string == null ? null : string.trim();
     }
 
-    private static TransactionalAccount.Builder<?, ?> toTransactionalAccount(final AccountEntity accountEntity) {
+    private static TransactionalAccount.Builder<?, ?> toTransactionalAccount(
+            final AccountEntity accountEntity) {
         final String currency = trimNullable(accountEntity.getCurrency());
         final Double balance = accountEntity.getCurrentBalance();
         final String bic = Preconditions.checkNotNull(accountEntity.getBic());

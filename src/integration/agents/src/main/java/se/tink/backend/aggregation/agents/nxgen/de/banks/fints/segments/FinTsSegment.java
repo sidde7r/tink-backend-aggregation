@@ -27,9 +27,10 @@ public abstract class FinTsSegment {
     }
 
     public abstract int getVersion();
+
     public abstract String getType();
 
-    protected void addDataGroup(String ...elements) {
+    protected void addDataGroup(String... elements) {
         DataGroup dataGroup = new DataGroup();
 
         for (String element : elements) {
@@ -64,13 +65,15 @@ public abstract class FinTsSegment {
     private String getDataAsString() {
         String dataString;
         if (doEscapeData) {
-            dataString = dataGroups.stream()
-                    .map(DataGroup::asEscapedString)
-                    .collect(Collectors.joining(FinTsConstants.SegData.GROUP_DELIMITER));
+            dataString =
+                    dataGroups.stream()
+                            .map(DataGroup::asEscapedString)
+                            .collect(Collectors.joining(FinTsConstants.SegData.GROUP_DELIMITER));
         } else {
-            dataString = dataGroups.stream()
-                    .map(DataGroup::asString)
-                    .collect(Collectors.joining(FinTsConstants.SegData.GROUP_DELIMITER));
+            dataString =
+                    dataGroups.stream()
+                            .map(DataGroup::asString)
+                            .collect(Collectors.joining(FinTsConstants.SegData.GROUP_DELIMITER));
         }
         if (dataString.length() > 0) {
             dataString = FinTsConstants.SegData.GROUP_DELIMITER + dataString;
@@ -80,12 +83,12 @@ public abstract class FinTsSegment {
 
     @Override
     public String toString() {
-        return String.format("%s:%s:%s%s%s",
+        return String.format(
+                "%s:%s:%s%s%s",
                 getType(),
                 segmentNumber,
                 getVersion(),
                 getDataAsString(),
-                FinTsConstants.SegData.SEGMENT_DELIMITED
-        );
+                FinTsConstants.SegData.SEGMENT_DELIMITED);
     }
 }

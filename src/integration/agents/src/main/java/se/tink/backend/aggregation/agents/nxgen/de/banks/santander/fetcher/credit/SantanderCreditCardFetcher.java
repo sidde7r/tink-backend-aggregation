@@ -13,36 +13,39 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
 public class SantanderCreditCardFetcher
-    implements AccountFetcher<CreditCardAccount>,
-        TransactionKeyPaginator<CreditCardAccount, String> {
+        implements AccountFetcher<CreditCardAccount>,
+                TransactionKeyPaginator<CreditCardAccount, String> {
 
-  private final SantanderApiClient client;
+    private final SantanderApiClient client;
 
-  public SantanderCreditCardFetcher(SantanderApiClient client) {
-    this.client = client;
-  }
-
-  @Override
-  public Collection<CreditCardAccount> fetchAccounts() {
-    ArrayList<CreditCardAccount> res = new ArrayList<>();
-    AccountsResponse response = client.fetchAccounts();
-    if (!response.containsCreditCards()) {
-      return res;
+    public SantanderCreditCardFetcher(SantanderApiClient client) {
+        this.client = client;
     }
 
-    for (ListTarjetasItem item : response.getAccountResultEntity().getListCredit()) {
-      CardDetailsResponse creditInfoResponse =
-          client.fetchCardInfo(
-              item.getCards().getCardPan(), item.getCards().getDetailContractLocal());
-      res.add(creditInfoResponse.toCreditCardAccount(item.getCards().getDetailContractLocal()));
+    @Override
+    public Collection<CreditCardAccount> fetchAccounts() {
+        ArrayList<CreditCardAccount> res = new ArrayList<>();
+        AccountsResponse response = client.fetchAccounts();
+        if (!response.containsCreditCards()) {
+            return res;
+        }
+
+        for (ListTarjetasItem item : response.getAccountResultEntity().getListCredit()) {
+            CardDetailsResponse creditInfoResponse =
+                    client.fetchCardInfo(
+                            item.getCards().getCardPan(), item.getCards().getDetailContractLocal());
+            res.add(
+                    creditInfoResponse.toCreditCardAccount(
+                            item.getCards().getDetailContractLocal()));
+        }
+
+        return res;
     }
 
-    return res;
-  }
-
-  @Override
-  public TransactionKeyPaginatorResponse<String> getTransactionsFor(
-      CreditCardAccount account, String key) {
-    return client.fetchCardTransactions(account.getFromTemporaryStorage(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL));
-  }
+    @Override
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            CreditCardAccount account, String key) {
+        return client.fetchCardTransactions(
+                account.getFromTemporaryStorage(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL));
+    }
 }

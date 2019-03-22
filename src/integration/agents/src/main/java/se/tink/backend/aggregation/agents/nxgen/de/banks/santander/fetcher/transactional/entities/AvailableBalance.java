@@ -6,21 +6,21 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AvailableBalance {
-  @JsonProperty("IMPORTE")
-  private double amount;
+    @JsonProperty("IMPORTE")
+    private double amount;
 
-  @JsonProperty("DIVISA")
-  private String currency;
+    @JsonProperty("DIVISA")
+    private String currency;
 
-  public double getAmount() {
-    return amount;
-  }
+    public double getAmount() {
+        return amount;
+    }
 
-  public String getCurrency() {
-    return currency;
-  }
+    public String getCurrency() {
+        return currency;
+    }
 
-  public Amount toTinkAmount() {
-    return new Amount(currency, amount);
-  }
+    public Amount toTinkAmount() {
+        return new Amount(currency, amount);
+    }
 }

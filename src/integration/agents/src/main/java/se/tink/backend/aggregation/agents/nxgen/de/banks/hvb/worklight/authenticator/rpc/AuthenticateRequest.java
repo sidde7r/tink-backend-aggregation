@@ -14,16 +14,21 @@ public final class AuthenticateRequest {
     @JsonProperty("wl_deviceAutoProvisioningRealm")
     private WlDeviceAutoProvisioningRealmRequestEntity wlDeviceAutoProvisioningRealm;
 
-    public AuthenticateRequest(final String token, final String certificate, final RSAPrivateKey privateKey,
+    public AuthenticateRequest(
+            final String token,
+            final String certificate,
+            final RSAPrivateKey privateKey,
             final String moduleName) {
         wlDeviceAutoProvisioningRealm = new WlDeviceAutoProvisioningRealmRequestEntity();
         wlDeviceAutoProvisioningRealm.setID(getId(token, certificate, privateKey, moduleName));
     }
 
-    private String getId(final String token, final String certificate, final RSAPrivateKey privateKey,
+    private String getId(
+            final String token,
+            final String certificate,
+            final RSAPrivateKey privateKey,
             final String moduleName) {
         final Jwt jwt = new AuthenticateJwt(token, certificate, moduleName);
         return CertManager.createJwt(jwt, privateKey);
     }
 }
-

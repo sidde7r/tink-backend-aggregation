@@ -11,33 +11,41 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public class CommerzbankTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
+public class CommerzbankTransactionFetcher
+        implements TransactionDatePaginator<TransactionalAccount> {
 
     private final CommerzbankApiClient apiClient;
-    private static final AggregationLogger LOGGER = new AggregationLogger(CommerzbankTransactionFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(CommerzbankTransactionFetcher.class);
 
     public CommerzbankTransactionFetcher(CommerzbankApiClient apiClient) {
         this.apiClient = apiClient;
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        String productType = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE);
-        String identifier = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER);
-        String productBranch = account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH);
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        String productType =
+                account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_TYPE);
+        String identifier =
+                account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.IDENTIFIER);
+        String productBranch =
+                account.getFromTemporaryStorage(CommerzbankConstants.HEADERS.PRODUCT_BRANCH);
 
         if (!Strings.isNullOrEmpty(productType)
                 && !Strings.isNullOrEmpty(identifier)
                 && !Strings.isNullOrEmpty(productBranch)) {
             try {
-                TransactionResultEntity response = apiClient
-                        .fetchAllPages(fromDate, toDate, productType, identifier, productBranch);
+                TransactionResultEntity response =
+                        apiClient.fetchAllPages(
+                                fromDate, toDate, productType, identifier, productBranch);
                 if (response != null && response.containsTransactions()) {
                     return response.getItems().get(0);
                 }
 
             } catch (Exception e) {
-                LOGGER.errorExtraLong("Error fetching transactions",
+                LOGGER.errorExtraLong(
+                        "Error fetching transactions",
                         CommerzbankConstants.LOGTAG.TRANSACTION_FETCHING_ERROR,
                         e);
                 return PaginatorResponseImpl.createEmpty();
@@ -45,5 +53,4 @@ public class CommerzbankTransactionFetcher implements TransactionDatePaginator<T
         }
         return PaginatorResponseImpl.createEmpty();
     }
-
 }

@@ -25,5 +25,3 @@ public final class DeviceEntity {
         this.os = os;
     }
 }
-
-

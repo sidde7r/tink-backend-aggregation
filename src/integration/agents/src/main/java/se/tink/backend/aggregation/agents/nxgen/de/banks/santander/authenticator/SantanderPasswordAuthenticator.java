@@ -14,29 +14,30 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class SantanderPasswordAuthenticator implements PasswordAuthenticator {
 
-  private final SantanderApiClient client;
-  Logger logger = LoggerFactory.getLogger(SantanderPasswordAuthenticator.class);
+    private final SantanderApiClient client;
+    Logger logger = LoggerFactory.getLogger(SantanderPasswordAuthenticator.class);
 
-  public SantanderPasswordAuthenticator(SantanderApiClient client) {
-    this.client = client;
-  }
-
-  @Override
-  public void authenticate(String username, String password)
-      throws AuthenticationException, AuthorizationException {
-    LoginRequest request = new LoginRequest(username, password);
-    try {
-      client.login(request);
-    } catch (HttpResponseException e) {
-      String error = e.getResponse().getBody(String.class);
-      if (StringUtils.containsIgnoreCase(error, SantanderConstants.ERROR.WRONG_PASSWORD_CODE)) {
-        throw LoginError.INCORRECT_CREDENTIALS.exception();
-      }
-      logger.error(
-          "{} Unable to authenticate error {}",
-          SantanderConstants.LOGTAG.SANTANDER_LOGIN_ERROR,
-          error);
-      throw e;
+    public SantanderPasswordAuthenticator(SantanderApiClient client) {
+        this.client = client;
     }
-  }
+
+    @Override
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
+        LoginRequest request = new LoginRequest(username, password);
+        try {
+            client.login(request);
+        } catch (HttpResponseException e) {
+            String error = e.getResponse().getBody(String.class);
+            if (StringUtils.containsIgnoreCase(
+                    error, SantanderConstants.ERROR.WRONG_PASSWORD_CODE)) {
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            }
+            logger.error(
+                    "{} Unable to authenticate error {}",
+                    SantanderConstants.LOGTAG.SANTANDER_LOGIN_ERROR,
+                    error);
+            throw e;
+        }
+    }
 }

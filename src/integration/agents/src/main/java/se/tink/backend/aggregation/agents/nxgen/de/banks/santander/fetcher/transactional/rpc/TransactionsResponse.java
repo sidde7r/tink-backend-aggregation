@@ -9,10 +9,10 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class TransactionsResponse {
 
-  @JsonProperty("methodResult")
-  private TransactionResultEntity transactionResult;
+    @JsonProperty("methodResult")
+    private TransactionResultEntity transactionResult;
 
-  public Collection<Transaction> toTinkTransactions() {
-    return transactionResult.toTinkTransactions();
-  }
+    public Collection<Transaction> toTinkTransactions() {
+        return transactionResult.toTinkTransactions();
+    }
 }

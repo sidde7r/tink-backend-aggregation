@@ -11,21 +11,21 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class CreditTransactionsResponse implements TransactionKeyPaginatorResponse<String> {
 
-  @JsonProperty("methodResult")
-  private CreditMethodResult creditMethodResult;
+    @JsonProperty("methodResult")
+    private CreditMethodResult creditMethodResult;
 
-  @Override
-  public String nextKey() {
-    return null;
-  }
+    @Override
+    public String nextKey() {
+        return null;
+    }
 
-  @Override
-  public Collection<? extends Transaction> getTinkTransactions() {
-    return creditMethodResult.getTinkTransactions();
-  }
+    @Override
+    public Collection<? extends Transaction> getTinkTransactions() {
+        return creditMethodResult.getTinkTransactions();
+    }
 
-  @Override
-  public Optional<Boolean> canFetchMore() {
-    return Optional.of(!creditMethodResult.getIsLastPage());
-  }
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(!creditMethodResult.getIsLastPage());
+    }
 }

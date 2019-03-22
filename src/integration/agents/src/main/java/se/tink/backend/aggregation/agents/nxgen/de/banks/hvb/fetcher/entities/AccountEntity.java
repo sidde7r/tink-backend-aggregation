@@ -12,11 +12,16 @@ public final class AccountEntity {
     private String bic;
     private String type;
 
-    public AccountEntity() {
-    }
+    public AccountEntity() {}
 
-    public AccountEntity(final Double currentBalance, final String iban, final String number, final String currency,
-            final String title, final String bic, final String type) {
+    public AccountEntity(
+            final Double currentBalance,
+            final String iban,
+            final String number,
+            final String currency,
+            final String title,
+            final String bic,
+            final String type) {
         this.currentBalance = currentBalance;
         this.iban = iban;
         this.number = number;

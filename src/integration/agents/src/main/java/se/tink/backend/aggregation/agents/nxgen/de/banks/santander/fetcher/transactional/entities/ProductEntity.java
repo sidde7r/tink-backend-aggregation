@@ -5,10 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ProductEntity {
-  @JsonProperty("EMPRESA")
-  private String companyId;
+    @JsonProperty("EMPRESA")
+    private String companyId;
 
-  public String getCompanyId() {
-    return companyId;
-  }
+    public String getCompanyId() {
+        return companyId;
+    }
 }

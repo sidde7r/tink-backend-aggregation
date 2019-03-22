@@ -6,115 +6,115 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class MethodResult {
 
-  @JsonProperty("lastSettlement")
-  private String lastSettlement;
+    @JsonProperty("lastSettlement")
+    private String lastSettlement;
 
-  @JsonProperty("lastMovementData")
-  private String lastMovementData;
+    @JsonProperty("lastMovementData")
+    private String lastMovementData;
 
-  @JsonProperty("cardHolderName")
-  private String cardHolderName;
+    @JsonProperty("cardHolderName")
+    private String cardHolderName;
 
-  @JsonProperty("paymentMode")
-  private String paymentMode;
+    @JsonProperty("paymentMode")
+    private String paymentMode;
 
-  @JsonProperty("autorisedSaldo")
-  private AutorisedSaldo autorisedSaldo;
+    @JsonProperty("autorisedSaldo")
+    private AutorisedSaldo autorisedSaldo;
 
-  @JsonProperty("saldo")
-  private Saldo saldo;
+    @JsonProperty("saldo")
+    private Saldo saldo;
 
-  @JsonProperty("productName")
-  private String productName;
+    @JsonProperty("productName")
+    private String productName;
 
-  @JsonProperty("availableAmount")
-  private AvailableAmount availableAmount;
+    @JsonProperty("availableAmount")
+    private AvailableAmount availableAmount;
 
-  @JsonProperty("referenceAccount")
-  private ReferenceAccount referenceAccount;
+    @JsonProperty("referenceAccount")
+    private ReferenceAccount referenceAccount;
 
-  @JsonProperty("mainCardPan")
-  private String mainCardPan;
+    @JsonProperty("mainCardPan")
+    private String mainCardPan;
 
-  @JsonProperty("limit")
-  private Limit limit;
+    @JsonProperty("limit")
+    private Limit limit;
 
-  @JsonProperty("localAccount")
-  private LocalAccount localAccount;
+    @JsonProperty("localAccount")
+    private LocalAccount localAccount;
 
-  @JsonProperty("interventionType")
-  private String interventionType;
+    @JsonProperty("interventionType")
+    private String interventionType;
 
-  @JsonProperty("dueNextDirectDebit")
-  private String dueNextDirectDebit;
+    @JsonProperty("dueNextDirectDebit")
+    private String dueNextDirectDebit;
 
-  @JsonProperty("pan")
-  private Object pan;
+    @JsonProperty("pan")
+    private Object pan;
 
-  @JsonProperty("nextCardSettelmentDate")
-  private String nextCardSettelmentDate;
+    @JsonProperty("nextCardSettelmentDate")
+    private String nextCardSettelmentDate;
 
-  public String getLastSettlement() {
-    return lastSettlement;
-  }
+    public String getLastSettlement() {
+        return lastSettlement;
+    }
 
-  public String getLastMovementData() {
-    return lastMovementData;
-  }
+    public String getLastMovementData() {
+        return lastMovementData;
+    }
 
-  public String getCardHolderName() {
-    return cardHolderName;
-  }
+    public String getCardHolderName() {
+        return cardHolderName;
+    }
 
-  public String getPaymentMode() {
-    return paymentMode;
-  }
+    public String getPaymentMode() {
+        return paymentMode;
+    }
 
-  public AutorisedSaldo getAutorisedSaldo() {
-    return autorisedSaldo;
-  }
+    public AutorisedSaldo getAutorisedSaldo() {
+        return autorisedSaldo;
+    }
 
-  public Saldo getSaldo() {
-    return saldo;
-  }
+    public Saldo getSaldo() {
+        return saldo;
+    }
 
-  public String getProductName() {
-    return productName;
-  }
+    public String getProductName() {
+        return productName;
+    }
 
-  public AvailableAmount getAvailableAmount() {
-    return availableAmount;
-  }
+    public AvailableAmount getAvailableAmount() {
+        return availableAmount;
+    }
 
-  public ReferenceAccount getReferenceAccount() {
-    return referenceAccount;
-  }
+    public ReferenceAccount getReferenceAccount() {
+        return referenceAccount;
+    }
 
-  public String getMainCardPan() {
-    return mainCardPan;
-  }
+    public String getMainCardPan() {
+        return mainCardPan;
+    }
 
-  public Limit getLimit() {
-    return limit;
-  }
+    public Limit getLimit() {
+        return limit;
+    }
 
-  public LocalAccount getLocalAccount() {
-    return localAccount;
-  }
+    public LocalAccount getLocalAccount() {
+        return localAccount;
+    }
 
-  public String getInterventionType() {
-    return interventionType;
-  }
+    public String getInterventionType() {
+        return interventionType;
+    }
 
-  public String getDueNextDirectDebit() {
-    return dueNextDirectDebit;
-  }
+    public String getDueNextDirectDebit() {
+        return dueNextDirectDebit;
+    }
 
-  public Object getPan() {
-    return pan;
-  }
+    public Object getPan() {
+        return pan;
+    }
 
-  public String getNextCardSettelmentDate() {
-    return nextCardSettelmentDate;
-  }
+    public String getNextCardSettelmentDate() {
+        return nextCardSettelmentDate;
+    }
 }

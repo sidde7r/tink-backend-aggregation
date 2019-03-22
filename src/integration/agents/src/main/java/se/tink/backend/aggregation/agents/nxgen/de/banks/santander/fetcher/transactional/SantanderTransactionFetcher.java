@@ -11,24 +11,27 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 public class SantanderTransactionFetcher implements TransactionDatePaginator<TransactionalAccount> {
-  private final SantanderApiClient santanderApiClient;
+    private final SantanderApiClient santanderApiClient;
 
-  public SantanderTransactionFetcher(SantanderApiClient santanderApiClient) {
-    this.santanderApiClient = santanderApiClient;
-  }
+    public SantanderTransactionFetcher(SantanderApiClient santanderApiClient) {
+        this.santanderApiClient = santanderApiClient;
+    }
 
-  @Override
-  public PaginatorResponse getTransactionsFor(
-      TransactionalAccount account, Date fromDate, Date toDate) {
-    Collection<? extends Transaction> transactions =
-        santanderApiClient
-            .fetchTransactions(
-                fromDate,
-                toDate,
-                account.getFromTemporaryStorage(SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL),
-                account.getFromTemporaryStorage((SantanderConstants.STORAGE.LOCAL_CONTRACT_TYPE)),
-                account.getFromTemporaryStorage(SantanderConstants.STORAGE.COMPANY_ID))
-            .toTinkTransactions();
-    return PaginatorResponseImpl.create(transactions);
-  }
+    @Override
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions =
+                santanderApiClient
+                        .fetchTransactions(
+                                fromDate,
+                                toDate,
+                                account.getFromTemporaryStorage(
+                                        SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL),
+                                account.getFromTemporaryStorage(
+                                        (SantanderConstants.STORAGE.LOCAL_CONTRACT_TYPE)),
+                                account.getFromTemporaryStorage(
+                                        SantanderConstants.STORAGE.COMPANY_ID))
+                        .toTinkTransactions();
+        return PaginatorResponseImpl.create(transactions);
+    }
 }

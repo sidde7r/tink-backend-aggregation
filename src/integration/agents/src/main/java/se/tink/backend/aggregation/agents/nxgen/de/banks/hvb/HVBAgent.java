@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.fetcher.HVBTransact
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.session.HVBSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLApiClient;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConfig;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -23,28 +24,30 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public final class HVBAgent extends NextGenerationAgent {
-    private static final WLConfig wlConfig = new WLConfig(
-            HVBConstants.Url.ENDPOINT,
-            HVBPasswordAuthenticator.certificateStringToPublicKey(HVBConstants.SYMMETRIC_CERTIFICATE),
-            HVBConstants.MODULE_NAME,
-            HVBConstants.APP_ID
-    );
+    private static final WLConfig wlConfig =
+            new WLConfig(
+                    HVBConstants.Url.ENDPOINT,
+                    HVBPasswordAuthenticator.certificateStringToPublicKey(
+                            HVBConstants.SYMMETRIC_CERTIFICATE),
+                    HVBConstants.MODULE_NAME,
+                    HVBConstants.APP_ID);
 
     private final WLApiClient apiClient;
     private final HVBStorage storage;
 
-    public HVBAgent(final CredentialsRequest request, final AgentContext context, final SignatureKeyPair keyPair) {
+    public HVBAgent(
+            final CredentialsRequest request,
+            final AgentContext context,
+            final SignatureKeyPair keyPair) {
         super(request, context, keyPair);
         apiClient = new WLApiClient(client);
         storage = new HVBStorage(sessionStorage, persistentStorage);
     }
 
     @Override
-    protected void configureHttpClient(final TinkHttpClient client) {
-    }
+    protected void configureHttpClient(final TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -53,14 +56,17 @@ public final class HVBAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                new HVBTransactionalAccountFetcher(apiClient, storage, wlConfig),
-                new TransactionFetcherController<>(this.transactionPaginationHelper,
-                        new TransactionKeyPaginationController<>(
-                                new HVBTransactionFetcher(apiClient, storage, wlConfig)))));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new HVBTransactionalAccountFetcher(apiClient, storage, wlConfig),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionKeyPaginationController<>(
+                                        new HVBTransactionFetcher(apiClient, storage, wlConfig)))));
     }
 
     @Override
@@ -84,7 +90,8 @@ public final class HVBAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

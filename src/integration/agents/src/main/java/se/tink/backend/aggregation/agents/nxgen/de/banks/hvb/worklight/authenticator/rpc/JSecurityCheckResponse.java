@@ -5,12 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class JSecurityCheckResponse {
-    @JsonProperty
-    private String username;
-    @JsonProperty
-    private String px2;
-    @JsonProperty
-    private String secP;
+    @JsonProperty private String username;
+    @JsonProperty private String px2;
+    @JsonProperty private String secP;
 
     public void setUsername(String username) {
         this.username = username;

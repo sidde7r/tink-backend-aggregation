@@ -12,7 +12,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 public final class HVBSessionHandler implements SessionHandler {
     private WLSessionHandler wlSessionHandler;
 
-    public HVBSessionHandler(final WLApiClient client, final HVBStorage storage, final WLConfig config) {
+    public HVBSessionHandler(
+            final WLApiClient client, final HVBStorage storage, final WLConfig config) {
         wlSessionHandler = new WLSessionHandler(client, storage, config);
     }
 

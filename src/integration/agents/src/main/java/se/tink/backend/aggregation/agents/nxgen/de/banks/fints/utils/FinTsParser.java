@@ -10,11 +10,14 @@ import se.tink.libraries.strings.StringUtils;
 
 public final class FinTsParser {
 
-    private static final Pattern RE_ENCRYPTED_SEGMENTS = Pattern.compile("HNVSD:\\d+:\\d+\\+@\\d+@(.+)(?<!\\?)''");
+    private static final Pattern RE_ENCRYPTED_SEGMENTS =
+            Pattern.compile("HNVSD:\\d+:\\d+\\+@\\d+@(.+)(?<!\\?)''");
 
     private static final Pattern RE_SEGMENT_NAME = Pattern.compile("^(.+?(?<!\\?)):");
-    private static final Pattern RE_SEGMENT_NUMBER = Pattern.compile("^.+?(?<!\\?):([0-9]+(?<!\\?)):");
-    private static final Pattern RE_SEGMENT_VERSION = Pattern.compile("^.+?(?<!\\?):[0-9]+(?<!\\?):([0-9]+)");
+    private static final Pattern RE_SEGMENT_NUMBER =
+            Pattern.compile("^.+?(?<!\\?):([0-9]+(?<!\\?)):");
+    private static final Pattern RE_SEGMENT_VERSION =
+            Pattern.compile("^.+?(?<!\\?):[0-9]+(?<!\\?):([0-9]+)");
 
     private static final Pattern RE_SEGMENT_DATA =
             Pattern.compile("^.+?(?<!\\?):[0-9]+?(?<!\\?):[0-9:]+?(?<!\\?)\\+([\\s\\S]*(?<!\\?))$");
@@ -30,7 +33,8 @@ public final class FinTsParser {
 
     // MT 940 related
     private static final Pattern RE_MT940_DATA = Pattern.compile("@\\d*@\\s*([\\s\\S]*)");
-    private static final Pattern RE_MT940_AMOUNT = Pattern.compile("(^\\d{6})(\\d{4})?(D|C|RC|RD)\\D?(\\d*,\\d*)N.*");
+    private static final Pattern RE_MT940_AMOUNT =
+            Pattern.compile("(^\\d{6})(\\d{4})?(D|C|RC|RD)\\D?(\\d*,\\d*)N.*");
 
     public static String[] splitSegments(String data) {
         return RE_SEGMENTS.split(data);
@@ -137,5 +141,4 @@ public final class FinTsParser {
     public static List<String> getDataGroupElements(String dataGroup) {
         return Arrays.stream(RE_SPLIT_DATA_ELEMENT.split(dataGroup)).collect(Collectors.toList());
     }
-
 }

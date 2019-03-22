@@ -6,18 +6,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class EntradaEntity {
 
-  @JsonProperty("lang")
-  private LangEntity lang;
+    @JsonProperty("lang")
+    private LangEntity lang;
 
-  @JsonProperty("contractID")
-  private String contractID;
+    @JsonProperty("contractID")
+    private String contractID;
 
-  @JsonProperty("pan")
-  private String pan;
+    @JsonProperty("pan")
+    private String pan;
 
-  public EntradaEntity(String contractID, LangEntity lang, String pan) {
-    this.contractID = contractID;
-    this.lang = lang;
-    this.pan = pan;
-  }
+    public EntradaEntity(String contractID, LangEntity lang, String pan) {
+        this.contractID = contractID;
+        this.lang = lang;
+        this.pan = pan;
+    }
 }
