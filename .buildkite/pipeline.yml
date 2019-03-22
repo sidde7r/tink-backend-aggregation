@@ -49,7 +49,7 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
 
-  - name: ':docker: tink-backend-statuspage-providers-cronjob'
+  - name: ':docker: cronjobs'
     branches: 'staging'
     command: .buildkite/build-and-push-python-docker.sh
     timeout_in_minutes: 10
