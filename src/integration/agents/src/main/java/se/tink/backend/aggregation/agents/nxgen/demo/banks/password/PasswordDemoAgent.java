@@ -16,11 +16,16 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoCreditCardFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class PasswordDemoAgent extends NextGenerationDemoAgent {
@@ -154,6 +159,38 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
 
     @Override
     public List<DemoCreditCardAccount> getCreditCardAccounts() {
-        return Collections.emptyList();
+        return Collections.singletonList(
+                new DemoCreditCardAccount() {
+                    @Override
+                    public String getAccountId() {
+                        return "1122 3344 - 1234";
+                    }
+
+                    @Override
+                    public String getCreditCardNumber() {
+                        return "1234 5678 9101 1121";
+                    }
+
+                    @Override
+                    public HolderName getNameOnCreditCard() {
+                        return new HolderName("Tink Tinkerton");
+                    }
+
+                    @Override
+                    public String getAccountName() {
+                        return "Basic Credit Card";
+                    }
+
+                    @Override
+                    public Amount getBalance() {
+                        return Amount.valueOf("EUR", -145610, 2);
+                    }
+
+                    @Override
+                    public Amount getAvailableCredit() {
+                        return Amount.valueOf("EUR", 854390, 2);
+                    }
+                }
+        );
     }
 }

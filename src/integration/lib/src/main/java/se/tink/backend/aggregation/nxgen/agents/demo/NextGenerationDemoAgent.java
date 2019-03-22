@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoCreditCardFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoInvestmentFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoLoanFetcher;
 import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoTransactionFetcher;
@@ -70,7 +71,15 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        return Optional.empty();
+        NextGenerationDemoCreditCardFetcher transactionAndAccountFetcher = new NextGenerationDemoCreditCardFetcher(
+                request.getAccounts(),
+                catalog,
+                getCreditCardAccounts());
+
+        return Optional.of(
+                new CreditCardRefreshController(metricRefreshController, updateController,
+                        transactionAndAccountFetcher,
+                        new TransactionFetcherController<>(transactionPaginationHelper, transactionAndAccountFetcher)));
     }
 
     @Override
