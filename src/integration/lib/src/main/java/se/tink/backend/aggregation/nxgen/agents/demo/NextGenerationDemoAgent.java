@@ -1,8 +1,10 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -112,5 +114,7 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     public abstract DemoLoanAccount getDemoLoanAccounts();
 
     public abstract DemoTransactionAccount getTransactionalAccountAccounts();
+
+    public abstract List<DemoCreditCardAccount> getCreditCardAccounts();
 
 }
