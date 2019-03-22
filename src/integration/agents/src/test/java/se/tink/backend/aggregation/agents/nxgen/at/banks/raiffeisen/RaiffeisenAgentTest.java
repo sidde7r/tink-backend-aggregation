@@ -10,15 +10,15 @@ import se.tink.backend.aggregation.agents.framework.ArgumentHelper;
 public class RaiffeisenAgentTest {
     private final ArgumentHelper helper = new ArgumentHelper("tink.username", "tink.password");
 
-    private final AgentIntegrationTest.Builder builderRaff2 = new AgentIntegrationTest.Builder("at",
-            "at-raiffeisen2-password")
-            .loadCredentialsBefore(false) // true ~ run python agent_test_server.py
-            .saveCredentialsAfter(false);
+    private final AgentIntegrationTest.Builder builderRaff2 =
+            new AgentIntegrationTest.Builder("at", "at-raiffeisen2-password")
+                    .loadCredentialsBefore(false) // true ~ run python agent_test_server.py
+                    .saveCredentialsAfter(false);
 
-    private final AgentIntegrationTest.Builder builderRaff6 = new AgentIntegrationTest.Builder("at",
-            "at-raiffeisen6-password")
-            .loadCredentialsBefore(false) // true ~ run python agent_test_server.py
-            .saveCredentialsAfter(false);
+    private final AgentIntegrationTest.Builder builderRaff6 =
+            new AgentIntegrationTest.Builder("at", "at-raiffeisen6-password")
+                    .loadCredentialsBefore(false) // true ~ run python agent_test_server.py
+                    .saveCredentialsAfter(false);
 
     @Before
     public void before() {
@@ -32,9 +32,10 @@ public class RaiffeisenAgentTest {
 
     @Test
     public void testLoginAndRefresh2() throws Exception {
-        builderRaff2.addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
+        builderRaff2
+                .addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
                 .addCredentialField(Field.Key.PASSWORD, helper.get("tink.password"))
-                //.doLogout(true)
+                // .doLogout(true)
                 .transactionsToPrint(0) // 0 ~ no limit
                 .build()
                 .testRefresh();
@@ -42,9 +43,10 @@ public class RaiffeisenAgentTest {
 
     @Test
     public void testLoginAndRefresh6() throws Exception {
-        builderRaff6.addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
+        builderRaff6
+                .addCredentialField(Field.Key.USERNAME, helper.get("tink.username"))
                 .addCredentialField(Field.Key.PASSWORD, helper.get("tink.password"))
-                //.doLogout(true)
+                // .doLogout(true)
                 .transactionsToPrint(0) // 0 ~ no limit
                 .build()
                 .testRefresh();
