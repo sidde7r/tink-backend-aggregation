@@ -245,7 +245,8 @@
         "SAVINGS_ACCOUNTS",
         "CREDIT_CARDS",
         "LOANS",
-        "INVESTMENTS"
+        "INVESTMENTS",
+        "TRANSFERS"
     ],
     "nxgen.demo.banks.finovate.PasswordDemoAgent": [
         "CHECKING_ACCOUNTS",

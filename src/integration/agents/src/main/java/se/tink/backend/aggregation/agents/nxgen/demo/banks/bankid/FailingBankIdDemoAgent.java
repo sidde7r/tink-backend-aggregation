@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.controllers.authentication.TypedAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticationController;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 
@@ -134,6 +135,9 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
             public double getBalance() {
                 return  26245.33;
             }
+
+            @Override
+            public AccountIdentifier getIdentifier() { return null; }
         };
     }
 }

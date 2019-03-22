@@ -25,6 +25,7 @@ public class TransactionalAccountGenerator {
                     .setAccountNumber(transactionAccountDefinition.getAccountId())
                     .setName(catalog.getString(transactionAccountDefinition.getAccountName()))
                     .setBankIdentifier(transactionAccountDefinition.getAccountId())
+                    .addIdentifier(transactionAccountDefinition.getIdentifier())
                     .build());
         }
 
