@@ -83,7 +83,7 @@ data:
 
       clusterConfiguration:
         clusterId: local-development
-        host: http://192.168.99.1:5000
+        host: http://nasa-service.notifying-aggregation-service-asserter.svc.cluster.local
         apiToken: devtoken
         base64encodedclientcert: ""
         disablerequestcompression: false

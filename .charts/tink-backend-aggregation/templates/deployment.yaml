@@ -66,8 +66,14 @@ spec:
       - name: add-secrets-to-config
         command:
           - "/mnt/scripts/add-secrets.sh"
+        # Run `docker pull gcr.io/tink-containers/debian:stretch`
+        {{- if eq "local" .Values.Cluster }}
+        image: gcr.io/tink-containers/debian:stretch
+        imagePullPolicy: Never
+        {{ else }}
         image: gcr.io/tink-containers/debian:stretch
         imagePullPolicy: IfNotPresent
+        {{ end }}
         securityContext:
           readOnlyRootFilesystem: true
         volumeMounts:
@@ -254,8 +260,13 @@ spec:
             memory: {{ default "1Gi" .Values.podMemoryLimit }}
             cpu: {{ default "1000m" .Values.podCpuLimit }}
 
+        {{- if eq "local" .Values.Cluster }}
+        image: bazel/docker:aggregation_image
+        imagePullPolicy: Never
+        {{ else }}
         image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default "latest" }}
         imagePullPolicy: IfNotPresent
+        {{ end }}
         securityContext:
           readOnlyRootFilesystem: true
 
