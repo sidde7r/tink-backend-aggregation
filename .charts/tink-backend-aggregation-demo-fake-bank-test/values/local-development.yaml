@@ -1,3 +1,0 @@
-demoFakeBankTestCronSchedule: "*/15 * * * *"
-demoFakeBankTestStartingDeadlineSeconds: 300
-demoFakeBankTestActiveDeadlineSeconds: 300

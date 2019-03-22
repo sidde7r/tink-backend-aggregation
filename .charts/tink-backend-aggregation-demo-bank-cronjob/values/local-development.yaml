@@ -1,0 +1,3 @@
+demoBankCronjobCronSchedule: "*/15 * * * *"
+demoBankCronjobStartingDeadlineSeconds: 300
+demoBankCronjobActiveDeadlineSeconds: 300

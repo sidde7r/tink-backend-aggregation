@@ -1,22 +1,22 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: demo-fake-bank-test
+  name: demo-bank-cronjob
   namespace: notifying-aggregation-service-asserter
 spec:
-  schedule: "{{ .Values.demoFakeBankTestCronSchedule | default "0/15 * * * *" }}"
+  schedule: "{{ .Values.demoBankCronjobCronSchedule | default "0/15 * * * *" }}"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
-  startingDeadlineSeconds: {{ .Values.demoFakeBankStartingDeadlineSeconds | default 300 }}
+  startingDeadlineSeconds: {{ .Values.demoBankCronjobStartingDeadlineSeconds | default 300 }}
   jobTemplate:
     spec:
-      activeDeadlineSeconds: {{ .Values.demoFakeBankActiveDeadlineSeconds | default 300 }}
+      activeDeadlineSeconds: {{ .Values.demoBankCronjobActiveDeadlineSeconds | default 300 }}
       backoffLimit: 6
       template:
         metadata:
           labels:
-            app: demo-fake-bank-test
+            app: demo-bank-cronjob
         spec:
           restartPolicy: OnFailure
           imagePullSecrets:
@@ -33,19 +33,19 @@ spec:
             image: local_test
             imagePullPolicy: Never
             {{else}}
-            image: gcr.io/tink-containers/tink-backend-aggregation-demo-fake-bank-test:{{ .Files.Get "tink-versions/tink-backend-aggregation-demo-fake-bank-test.txt" | default "latest" }}
+            image: gcr.io/tink-containers/tink-backend-aggregation-demo-bank-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-demo-bank-cronjob.txt" | default "latest" }}
             imagePullPolicy: IfNotPresent
             {{end}}
             securityContext:
               readOnlyRootFilesystem: true
               privileged: false
             command:
-            - "/opt/demo_fake_bank_test/cronjob.py"
+            - "/opt/demo_bank/cronjob.py"
             env:
               - name: STATUSPAGE_API_KEY
                 valueFrom:
                   secretKeyRef:
-                    name: demo-fake-bank-test
+                    name: demo-bank-cronjob
                     key: api-key
 
 {{- if eq "local" .Values.Cluster }}

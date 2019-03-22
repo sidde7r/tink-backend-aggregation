@@ -1,4 +1,4 @@
-name: tink-backend-aggregation-demo-fake-bank-test
+name: tink-backend-aggregation-demo-bank-cronjob
 version: 1.0.0
 
 tink:
