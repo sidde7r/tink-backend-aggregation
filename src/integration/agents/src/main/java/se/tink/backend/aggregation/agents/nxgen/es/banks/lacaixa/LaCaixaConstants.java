@@ -27,11 +27,11 @@ public class LaCaixaConstants {
                     .put(LoanDetails.Type.MORTGAGE, "10045")
                     .put(
                             LoanDetails.Type.BLANCO,
-                            "12142",
-                            "11410",
-                            "21919",
-                            "14090",
-                            "11407") // personal, online, canal?, micro personal, consumer loan
+                            "12142", // personal
+                            "11410", // online
+                            "21919", // "canal"
+                            "14090", // micro personal
+                            "11407") // consumer loan
                     .build();
 
     public static class ApiService {
