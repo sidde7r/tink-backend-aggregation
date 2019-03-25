@@ -55,16 +55,23 @@ public class CardEntity {
             Map<String, CardAccountEntity> accountsHashMap, CardContractEntity contract) {
         final CardAccountEntity account = accountsHashMap.get(contract.getCardAccountId());
 
-        return CreditCardAccount.builder(getMaskedCardNumber())
+        CreditCardAccount.Builder builder = CreditCardAccount.builder(getMaskedCardNumber())
                 .setAccountNumber(getMaskedCardNumber())
                 .setName(contract.getProductName())
                 .setHolderName(new HolderName(getNameOnCard()))
                 .setBankIdentifier(contract.getCardAccountId())
                 .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_ID, getId())
-                .setBalance(
-                        new Amount(account.getCurrencyCode(), account.getCurrentBalance()).negate())
-                .setAvailableCredit(
-                        new Amount(account.getCurrencyCode(), account.getDisposableAmount()))
-                .build();
+                .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_CONTRACT_ID, contract.getId());
+
+        if (account != null) {
+            return (CreditCardAccount) builder
+                    .setBalance(new Amount(account.getCurrencyCode(), account.getCurrentBalance()).negate())
+                    .setAvailableCredit(new Amount(account.getCurrencyCode(), account.getDisposableAmount()))
+                    .build();
+        } else {
+            return (CreditCardAccount) builder
+                    .setBalance(new Amount(contract.getCurrencyCode(), contract.getNonBilledAmount()).negate())
+                    .build();
+        }
     }
 }

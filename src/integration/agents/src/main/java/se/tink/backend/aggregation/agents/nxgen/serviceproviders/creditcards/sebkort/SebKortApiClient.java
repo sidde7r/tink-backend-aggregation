@@ -54,22 +54,39 @@ public class SebKortApiClient {
                         SebKortConstants.QueryValue.LANGUAGE_CODE);
     }
 
-    public TransactionsResponse fetchTransactions(
-            String cardAccountId, Date fromDate, Date toDate) {
+    private RequestBuilder fetchTransactionsFor(Date fromDate, Date toDate) {
         return createRequestInSession(SebKortConstants.Urls.SEBKORT_TRANSACTIONS)
-                .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
                 .queryParam(
                         SebKortConstants.QueryKey.FROM_DATE,
                         SebKortConstants.DATE_FORMAT.format(fromDate))
                 .queryParam(
                         SebKortConstants.QueryKey.TO_DATE,
-                        SebKortConstants.DATE_FORMAT.format(toDate))
+                        SebKortConstants.DATE_FORMAT.format(toDate));
+    }
+
+    public TransactionsResponse fetchTransactionsForAccountId(
+            String cardAccountId, Date fromDate, Date toDate) {
+        return fetchTransactionsFor(fromDate, toDate)
+                .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
                 .get(TransactionsResponse.class);
     }
 
-    public ReservationsResponse fetchReservations(String cardAccountId) {
+    public TransactionsResponse fetchTransactionsForContractId(
+            String cardContractId, Date fromDate, Date toDate) {
+        return fetchTransactionsFor(fromDate, toDate)
+                .queryParam(SebKortConstants.QueryKey.CARD_CONTRACT_ID, cardContractId)
+                .get(TransactionsResponse.class);
+    }
+
+    public ReservationsResponse fetchReservationsForAccountId(String cardAccountId) {
         return createRequestInSession(SebKortConstants.Urls.SEBKORT_RESERVATIONS)
                 .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
+                .get(ReservationsResponse.class);
+    }
+
+    public ReservationsResponse fetchReservationsForContractId(String cardContractId) {
+        return createRequestInSession(SebKortConstants.Urls.SEBKORT_RESERVATIONS)
+                .queryParam(SebKortConstants.QueryKey.CARD_CONTRACT_ID, cardContractId)
                 .get(ReservationsResponse.class);
     }
 

@@ -31,11 +31,13 @@ public class SebKortConstants {
     public static class StorageKey {
         public static final String AUTHORIZATION = "Authorization";
         public static final String CARD_ID = "CARD_ID";
+        public static final String CARD_CONTRACT_ID = "CARD_CONTRACT_ID";
     }
 
     public static class QueryKey {
         public static final String LANGUAGE_CODE = "languageCode";
         public static final String CARD_ACCOUNT_ID = "cardAccountId";
+        public static final String CARD_CONTRACT_ID = "cardContractId";
         public static final String FROM_DATE = "fromDate";
         public static final String TO_DATE = "toDate";
         public static final String METHOD = "method";
