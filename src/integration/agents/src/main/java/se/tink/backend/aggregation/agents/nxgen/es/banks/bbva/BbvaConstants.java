@@ -54,6 +54,8 @@ public final class BbvaConstants {
         public static final LogTag UNKNOWN_ACCOUNT_TYPE = LogTag.from("bbva_unknown_account_type");
         public static final LogTag INVESTMENT_INTERNATIONAL_PORTFOLIO =
                 LogTag.from("bbva_investment_international_portfolio");
+        public static final LogTag PRODUCTS_FULL_RESPONSE =
+                LogTag.from("bbva_products_full_response");
         public static final LogTag INVESTMENT_MANAGED_FUNDS =
                 LogTag.from("bbva_investment_managed_funds");
         public static final LogTag INVESTMENT_WEALTH_DEPOSITARY =

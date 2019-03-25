@@ -17,6 +17,7 @@ import static io.vavr.Predicates.not;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_INTERNATIONAL_PORTFOLIO;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_MANAGED_FUNDS;
 import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.INVESTMENT_WEALTH_DEPOSITARY;
+import static se.tink.backend.aggregation.agents.nxgen.es.banks.bbva.BbvaConstants.LogTags.PRODUCTS_FULL_RESPONSE;
 
 public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private static final AggregationLogger LOGGER =
@@ -34,9 +35,10 @@ public class BbvaInvestmentFetcher implements AccountFetcher<InvestmentAccount> 
         final String holderName = sessionStorage.get(BbvaConstants.StorageKeys.HOLDER_NAME);
 
         return Try.of(() -> apiClient.fetchProducts())
-                .peek(r -> log(r, INVESTMENT_INTERNATIONAL_PORTFOLIO))
-//                .peek(r -> log(r.getManagedFundsPortfolios(), INVESTMENT_MANAGED_FUNDS))
-//                .peek(r -> log(r.getWealthDepositaryPortfolios(), INVESTMENT_WEALTH_DEPOSITARY))
+                .peek(r -> log(r, PRODUCTS_FULL_RESPONSE))
+                .peek(r -> log(r.getInternationalFundsPortfolios(), INVESTMENT_INTERNATIONAL_PORTFOLIO))
+                .peek(r -> log(r.getManagedFundsPortfolios(), INVESTMENT_MANAGED_FUNDS))
+                .peek(r -> log(r.getWealthDepositaryPortfolios(), INVESTMENT_WEALTH_DEPOSITARY))
                 .map(ProductsResponse::getStockAccounts)
                 .filter(not(List::isEmpty))
                 .getOrElse(List.empty())
