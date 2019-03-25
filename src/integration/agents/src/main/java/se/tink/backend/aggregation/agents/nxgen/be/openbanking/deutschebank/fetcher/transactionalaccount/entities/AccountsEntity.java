@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.entities;
 
-import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -34,7 +33,7 @@ public class AccountsEntity {
             .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, iban))
             .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
             .addHolderName(owner)
-            .setAlias(getName(owner))
+            .setAlias(owner)
             .setProductName(productDescription)
             .setApiIdentifier(iban)
             .putInTemporaryStorage(DeutscheBankConstants.StorageKeys.ACCOUNT_ID, iban)
@@ -49,15 +48,11 @@ public class AccountsEntity {
             .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, iban))
             .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
             .addHolderName(owner)
-            .setAlias(getName(owner))
+            .setAlias(owner)
             .setProductName(productDescription)
             .setApiIdentifier(iban)
             .putInTemporaryStorage(DeutscheBankConstants.StorageKeys.ACCOUNT_ID, iban)
             .build();
-    }
-
-    private String getName(String owner) {
-        return Strings.isNullOrEmpty(owner) ? iban : owner;
     }
 
     public boolean isCheckingAccount() {
