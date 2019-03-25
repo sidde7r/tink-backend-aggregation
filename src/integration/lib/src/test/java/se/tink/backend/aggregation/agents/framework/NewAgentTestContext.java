@@ -179,8 +179,9 @@ public class NewAgentTestContext extends AgentContext {
         if (Strings.isNullOrEmpty(autoStartToken)) {
             log.info(String.format("[CredentialsId:%s]: Open BankID", credential.getId()));
         } else {
-            log.info(String.format("[CredentialsId:%s]: Open BankID with autoStartToken: %s",
+            log.info(String.format("[CredentialsId:%s]: Sending autoStartToken to test server: %s",
                     credential.getId(), autoStartToken));
+            AgentTestServerClient.sendBankIdAutoStartToken(autoStartToken);
         }
     }
 

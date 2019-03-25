@@ -11,7 +11,7 @@ from memqueue import MemoryMessageQueue
 
 queue = MemoryMessageQueue()
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 CREDENTIALS_PATH = os.path.dirname(os.path.realpath(__file__)) + "/credentials/"
 
@@ -176,6 +176,33 @@ def thirdparty_callback():
     if request.method == "GET":
         return redirect("tink://open", 302)
     return "tink://open"
+
+
+autoStartToken = None
+
+
+@app.route("/bankid", methods=("GET",))
+def bankid_page():
+    return app.send_static_file("bankid.html")
+
+
+@app.route("/api/v1/bankid/poll", methods=("GET",))
+def bankid_poll():
+    global autoStartToken
+    currentToken = None
+    if autoStartToken is not None:
+        currentToken = autoStartToken
+        autoStartToken = None
+        print("Sending autostart token: '" + currentToken + "'")
+
+    return jsonify({"token": currentToken})
+
+
+@app.route("/api/v1/bankid/send/<token>", methods=("POST",))
+def bankid_send_autostart(token):
+    global autoStartToken
+    autoStartToken = token
+    return jsonify({})
 
 
 def main():
