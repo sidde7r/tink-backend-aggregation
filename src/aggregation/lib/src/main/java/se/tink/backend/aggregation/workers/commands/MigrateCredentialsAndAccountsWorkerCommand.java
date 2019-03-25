@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
 import se.tink.backend.aggregation.workers.commands.migrations.AgentVersionMigration;
+import se.tink.backend.aggregation.workers.commands.migrations.implementations.serviceproviders.sebkort.SebKortSanitizeUniqueIdentifierMgration;
 import se.tink.backend.aggregation.workers.commands.migrations.implemntations.other.handelsbanken.HandelsbankenBankIdMigrationNoClearingNumber;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
@@ -16,6 +17,7 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     protected ImmutableMap<String, AgentVersionMigration> migrations =
             ImmutableMap.of(
                     // Add your migrations here
+                    "sjpriomastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration(),
                     "handelsbanken-bankid", new HandelsbankenBankIdMigrationNoClearingNumber());
 
     public MigrateCredentialsAndAccountsWorkerCommand(
