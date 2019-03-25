@@ -59,9 +59,13 @@ public class BankiaApiClient {
         CardTransactionsRequest request = CardTransactionsRequest.create(cardNumberUnmasked, limit);
         return client.request(BankiaConstants.Url.CREDIT_CARD_TRANSACTIONS)
                 .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
-                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
-                .queryParam(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .queryParam(
+                        BankiaConstants.Query.X_J_GID_COD_APP,
+                        BankiaConstants.Default.LOWER_CASE_AM)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(request, MediaType.APPLICATION_JSON)
                 .post(CardTransactionsResponse.class);
@@ -72,37 +76,49 @@ public class BankiaApiClient {
                 .queryParam(BankiaConstants.Query.GROUP_BY_FAMILIA, BankiaConstants.Default.TRUE)
                 .queryParam(BankiaConstants.Query.ID_VISTA, BankiaConstants.Default._1)
                 .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
-                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
-                .queryParam(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .queryParam(
+                        BankiaConstants.Query.X_J_GID_COD_APP,
+                        BankiaConstants.Default.LOWER_CASE_AM)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(ContractsResponse.class);
     }
 
     public AcountTransactionsResponse getTransactions(Account account, Date fromDate, Date toDate) {
         AccountIdentifierEntity accountIdentifier = new AccountIdentifierEntity();
-        accountIdentifier.setCountry(account.getFromTemporaryStorage(BankiaConstants.StorageKey.COUNTRY));
-        accountIdentifier.setControlDigits(account.getFromTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS));
+        accountIdentifier.setCountry(
+                account.getFromTemporaryStorage(BankiaConstants.StorageKey.COUNTRY));
+        accountIdentifier.setControlDigits(
+                account.getFromTemporaryStorage(BankiaConstants.StorageKey.CONTROL_DIGITS));
         accountIdentifier.setIdentifier(account.getBankIdentifier());
 
         SearchCriteriaEntity searchCriteria = new SearchCriteriaEntity();
         searchCriteria.setDateOperationFrom(DateEntity.of(fromDate));
         searchCriteria.setOperationDateUntil(DateEntity.of(toDate));
 
-        AccountTransactionsRequest request = AccountTransactionsRequest.create(accountIdentifier, searchCriteria,
-                BankiaConstants.LANGUAGE);
+        AccountTransactionsRequest request =
+                AccountTransactionsRequest.create(
+                        accountIdentifier, searchCriteria, BankiaConstants.LANGUAGE);
 
         return client.request(BankiaConstants.Url.SERVICES_ACCOUNT_MOVEMENT)
                 .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
-                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
-                .queryParam(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .queryParam(
+                        BankiaConstants.Query.X_J_GID_COD_APP,
+                        BankiaConstants.Default.LOWER_CASE_AM)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .body(request, MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(AcountTransactionsResponse.class);
     }
 
-    public PositionWalletResponse getPositionsWallet(String internalProductCode, String resumePoint) {
+    public PositionWalletResponse getPositionsWallet(
+            String internalProductCode, String resumePoint) {
         ValueAccountIdentifierEntity accountIdentifier =
                 ValueAccountIdentifierEntity.fromInternalProductCode(internalProductCode);
 
@@ -111,32 +127,37 @@ public class BankiaApiClient {
         PositionWalletRequest request = new PositionWalletRequest(dataHomeModel);
 
         return client.request(BankiaConstants.Url.VALUE_ACCOUNT_POSITION_WALLET)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
-                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
                 .queryParam(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.O3)
                 .body(request, MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(PositionWalletResponse.class);
-
     }
 
     public void getDisconnect() {
         client.request(BankiaConstants.Url.DISCONNECT)
                 .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(String.class);
     }
 
     public LoginResponse initiateLogin() {
         return client.request(BankiaConstants.Url.LOGIN)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .queryParam(BankiaConstants.Query.VERSION, BankiaConstants.Default._5_0)
                 .queryParam(BankiaConstants.Query.TIPO, BankiaConstants.Default.ANDROID_PHONE)
                 .queryParam(BankiaConstants.Query.OIGID, BankiaConstants.Default.TRUE)
-                .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
-                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP)
                 .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(LoginResponse.class);
@@ -144,29 +165,37 @@ public class BankiaApiClient {
 
     public RsaKeyResponse getLoginKey() {
         return client.request(BankiaConstants.Url.LOGIN_KEY)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .queryParam(BankiaConstants.Query.OIGID, BankiaConstants.Default.TRUE)
-                .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
-                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP)
                 .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(RsaKeyResponse.class);
     }
 
-    public LoginResponse login(String username, String password, String execution, String encryptionKey) {
+    public LoginResponse login(
+            String username, String password, String execution, String encryptionKey) {
 
         String encryptedPassword = BankiaCrypto.encryptPassword(password, encryptionKey);
 
-        LoginRequest formBody = LoginRequest.create(persistentStorage, username, password, execution,
-                encryptedPassword);
+        LoginRequest formBody =
+                LoginRequest.create(
+                        persistentStorage, username, password, execution, encryptedPassword);
 
         return client.request(BankiaConstants.Url.LOGIN)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .queryParam(BankiaConstants.Query.VERSION, BankiaConstants.Default._5_0)
                 .queryParam(BankiaConstants.Query.TIPO, BankiaConstants.Default.ANDROID_PHONE)
                 .queryParam(BankiaConstants.Query.OIGID, BankiaConstants.Default.TRUE)
-                .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
-                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.UPPER_CASE_OIP)
                 .queryParam(BankiaConstants.Query.ORIGEN, BankiaConstants.Default.UPPER_CASE_AM)
                 .body(formBody, MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
@@ -174,13 +203,12 @@ public class BankiaApiClient {
     }
 
     /**
-     * This method is the first call made to the "oip.bankia.es" domain and is necessary for any subsequent calls to work
-     * (getting accounts and transactions).
-     * If the user is not properly logged in it returns status 4XX.
-     * If the call is sucessful the response contains some basic info about the client's contracts.
-     * If the call fails (4XX) the response contains the same response as {@link #getLoginKey()}.
-     * We're not interested in the actual response...
-     * Doesn't seem to be a problem to call this method repeatedly.
+     * This method is the first call made to the "oip.bankia.es" domain and is necessary for any
+     * subsequent calls to work (getting accounts and transactions). If the user is not properly
+     * logged in it returns status 4XX. If the call is sucessful the response contains some basic
+     * info about the client's contracts. If the call fails (4XX) the response contains the same
+     * response as {@link #getLoginKey()}. We're not interested in the actual response... Doesn't
+     * seem to be a problem to call this method repeatedly.
      *
      * @return true if the user is properly logged in, otherwise false
      */
@@ -188,9 +216,15 @@ public class BankiaApiClient {
         try {
             client.request(BankiaConstants.Url.GLOBAL_POSITION_CLIENT_SCENARIO)
                     .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
-                    .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
-                    .queryParam(BankiaConstants.Query.X_J_GID_COD_APP, BankiaConstants.Default.LOWER_CASE_AM)
-                    .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                    .queryParam(
+                            BankiaConstants.Query.J_GID_COD_DS,
+                            BankiaConstants.Default.LOWER_CASE_OIP)
+                    .queryParam(
+                            BankiaConstants.Query.X_J_GID_COD_APP,
+                            BankiaConstants.Default.LOWER_CASE_AM)
+                    .queryParam(
+                            BankiaConstants.Query.CM_FORCED_DEVICE_TYPE,
+                            BankiaConstants.Default.JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .get(String.class);
             return true;
@@ -207,11 +241,13 @@ public class BankiaApiClient {
 
     public LoanDetailsResponse getLoanDetails(LoanDetailsRequest loanDetailsRequest) {
         return client.request(BankiaConstants.Url.LOAN_DETAILS)
-                .queryParam(BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
+                .queryParam(
+                        BankiaConstants.Query.CM_FORCED_DEVICE_TYPE, BankiaConstants.Default.JSON)
                 .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
-                .queryParam(BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .queryParam(
+                        BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(loanDetailsRequest, MediaType.APPLICATION_JSON)
-            .post(LoanDetailsResponse.class);
+                .post(LoanDetailsResponse.class);
     }
 }
