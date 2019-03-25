@@ -49,7 +49,7 @@ steps:
         run: "app"
         config: "docker/docker-compose.bazel.yml"
 
-  - name: ':docker: cronjobs'
+  - name: ':docker: tink-backend-aggregation-statuspage-providers-cronjob'
     branches: 'staging'
     command: .buildkite/build-and-push-python-docker.sh
     timeout_in_minutes: 10
@@ -107,6 +107,20 @@ steps:
       branch: "tink-backend-notifying-aggregation-service-asserter"
       env:
         CHART: "tink-backend-notifying-aggregation-service-asserter"
+        REPO_NAME: "tink-backend-aggregation"
+        REPO_SHA1: "$BUILDKITE_COMMIT"
+        VERSION: "$VERSION"
+        PRUNE: "True"
+
+  - name: "Trigger release-train for tink-backend-aggregation-demo-bank-cronjob"
+    branches: 'master'
+    trigger: "release-train"
+    async: false
+    build:
+      message: "$BUILDKITE_MESSAGE"
+      branch: "tink-backend-aggregation-demo-bank-cronjob"
+      env:
+        CHART: "tink-backend-aggregation-demo-bank-cronjob"
         REPO_NAME: "tink-backend-aggregation"
         REPO_SHA1: "$BUILDKITE_COMMIT"
         VERSION: "$VERSION"

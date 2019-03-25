@@ -28,7 +28,7 @@ PROJECTS = {
                 'aggregation-staging': {'block': False},
             },
         },
-    'tink-backend-aggregation-cronjobs': {
+    'tink-backend-aggregation-statuspage-providers-cronjob': {
         'chart': True,
         'salt': False,
         'branches': {
