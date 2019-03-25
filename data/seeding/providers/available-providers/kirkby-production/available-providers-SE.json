@@ -2,6 +2,7 @@
   "clusterid" : "kirkby-production",
   "providers" : [
     "alandsbanken",
+    "se-alandsbanken-bankid",
     "americanexpress",
     "avanza-bankid",
     "chevroletmastercard-bankid",

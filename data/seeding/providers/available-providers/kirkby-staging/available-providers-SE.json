@@ -2,6 +2,7 @@
   "clusterid" : "kirkby-staging",
   "providers" : [
     "alandsbanken",
+    "se-alandsbanken-bankid",
     "americanexpress",
     "avanza-bankid",
     "chevroletmastercard-bankid",
