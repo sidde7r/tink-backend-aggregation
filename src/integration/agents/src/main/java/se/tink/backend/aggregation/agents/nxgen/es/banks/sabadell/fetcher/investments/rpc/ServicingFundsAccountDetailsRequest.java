@@ -42,7 +42,7 @@ public class ServicingFundsAccountDetailsRequest {
         request.number = account.getNumber();
         request.contractNumberFormatted = account.getContractNumberFormatted();
         request.bic = account.getBic();
-        request.isSBPManaged = String.valueOf(account.isSBPManaged());
+        request.isSBPManaged = String.valueOf(account.isIsSBPManaged());
         request.joint = account.getJoint();
         request.numOwners = account.getNumOwners();
 

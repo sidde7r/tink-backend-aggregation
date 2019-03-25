@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
@@ -76,9 +77,13 @@ public class AccountEntity {
                 (firstKey, v) -> {
                     if (v instanceof Map) {
                         ((Map<String, String>) v)
-                                .forEach((secondKey, l) -> mappedAttributes.put(composeKey(firstKey, secondKey), l));
+                                .forEach(
+                                        (secondKey, l) ->
+                                                mappedAttributes.put(
+                                                        composeKey(firstKey, secondKey), l));
                     } else {
-                        mappedAttributes.put(composeKey(firstKey), v == null ? "" : String.valueOf(v));
+                        mappedAttributes.put(
+                                composeKey(firstKey), v == null ? "" : String.valueOf(v));
                     }
                 });
 
@@ -149,10 +154,12 @@ public class AccountEntity {
         return isOwner;
     }
 
-    public boolean isSBPManaged() {
+    @JsonProperty("isSBPManaged")
+    public boolean isIsSBPManaged() {
         return isSBPManaged;
     }
 
+    @JsonProperty("isIberSecurities")
     public boolean isIberSecurities() {
         return isIberSecurities;
     }
