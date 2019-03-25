@@ -246,6 +246,9 @@ public class BankiaApiClient {
                 .queryParam(BankiaConstants.Query.J_GID_COD_APP, BankiaConstants.Default.O3)
                 .queryParam(
                         BankiaConstants.Query.J_GID_COD_DS, BankiaConstants.Default.LOWER_CASE_OIP)
+                .queryParam(
+                    BankiaConstants.Query.X_J_GID_COD_APP,
+                    BankiaConstants.Default.LOWER_CASE_AM)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(loanDetailsRequest, MediaType.APPLICATION_JSON)
                 .post(LoanDetailsResponse.class);
