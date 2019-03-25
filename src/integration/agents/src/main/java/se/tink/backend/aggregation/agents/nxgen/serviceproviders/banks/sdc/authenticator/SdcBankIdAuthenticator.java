@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +51,12 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public BankIdStatus collect(String reference) throws AuthenticationException, AuthorizationException {
+        // SDC doesn't poll the bankID, if we try to fetch the agreements before the user has
+        // signed we get a 500 response. We can't "poll" using the agreements endpoint, if we get
+        // 500 in response that session is killed. Therefore added a super arbitrary sleep of 8 sec
+        // before trying to fetch the agreements.
+        Uninterruptibles.sleepUninterruptibly(8, TimeUnit.SECONDS);
+
         try {
             AgreementsResponse agreementsResponse = bankClient.fetchAgreements();
 
