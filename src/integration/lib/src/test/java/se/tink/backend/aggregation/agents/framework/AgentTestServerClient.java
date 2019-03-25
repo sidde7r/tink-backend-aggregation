@@ -13,6 +13,7 @@ public class AgentTestServerClient {
     private static final String PROVIDER_NAME_KEY = "providerName";
     private static final String CREDENTIAL_ID_KEY = "credentialId";
     private static final String SUPPLEMENTAL_KEY_KEY = "key";
+    private static final String AUTOSTART_TOKEN_KEY = "autoStartToken";
     private static final String SUPPLEMENTAL_TIMEOUT_KEY = "timeout";
     private final static int TIMEOUT_MS = Math.toIntExact(TimeUnit.MINUTES.toMillis(20));
     private static final TinkHttpClient client = constructHttpClient();
@@ -21,7 +22,8 @@ public class AgentTestServerClient {
         OPEN_THIRDPARTYAPP("thirdparty/open"),
         INITIATE_SUPPLEMENTAL(String.format("supplemental/{%s}", SUPPLEMENTAL_KEY_KEY)),
         WAIT_FOR_SUPPLEMENTAL(String.format("supplemental/{%s}/{%s}", SUPPLEMENTAL_KEY_KEY, SUPPLEMENTAL_TIMEOUT_KEY)),
-        CREDENTIAL(String.format("credential/{%s}/{%s}", PROVIDER_NAME_KEY, CREDENTIAL_ID_KEY));
+        CREDENTIAL(String.format("credential/{%s}/{%s}", PROVIDER_NAME_KEY, CREDENTIAL_ID_KEY)),
+        BANKID_SEND_AUTOSTART(String.format("bankid/send/{%s}", AUTOSTART_TOKEN_KEY));
 
         private URL url;
 
@@ -90,5 +92,13 @@ public class AgentTestServerClient {
 
             throw hre;
         }
+    }
+
+    public static void sendBankIdAutoStartToken(String autoStartToken) {
+        client.request(
+                        Urls.BANKID_SEND_AUTOSTART
+                                .getUrl()
+                                .parameter(AUTOSTART_TOKEN_KEY, autoStartToken))
+                .post();
     }
 }

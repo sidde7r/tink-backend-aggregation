@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script>
+			var token = null;
+			function launchDirectly() {
+				const url = 'bankid:///?autostarttoken=' + token + '&redirect=' + encodeURIComponent(window.location.href);
+				console.log("Launching url: ", url);
+				window.location.href = url;
+			}
+			function launchViaBankId() {
+				const url = 'https://app.bankid.com/?autostarttoken=' + token + '&redirect=' + encodeURIComponent(window.location.href);
+				console.log("Launching url: ", url);
+				window.location.href = url;
+			}
+			function receiveToken(response) {
+				if (response.token != null) {
+					token = response.token;
+					document.getElementById('launcher').style.display = 'inline';
+				}
+			};
+			function pollBankId() {
+				fetch("/api/v1/bankid/poll").then(r => r.json()).then(receiveToken);
+			}
+			document.addEventListener("DOMContentLoaded", function(event) { 
+				setInterval(pollBankId, 1500);
+			});
+		</script>
+		<style>
+		body {
+		font: 400 16px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+		text-align: center;
+		}
+		button {
+		background-color: #4CAF50; /* Green */
+		border: none;
+		color: white;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		}
+		#launcher {display:none;}
+		</style>
+		<title></title>
+	</head>
+	<body>
+		<div>
+			<h3>
+				BankID Autostart
+			</h3>
+		</div>
+		<div id="launcher">
+			<p><button onclick="launchDirectly();">Launch directly</button></p>
+			<p><button onclick="launchViaBankId();">Launch via bankid.com</button></p>
+		</div>
+	</body>
+</html>
