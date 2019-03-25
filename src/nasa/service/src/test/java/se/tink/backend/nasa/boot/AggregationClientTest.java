@@ -3,6 +3,7 @@ package se.tink.backend.nasa.boot;
 import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.security.KeyManagementException;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import org.apache.http.HttpResponse;
 import org.junit.Ignore;
@@ -21,7 +22,7 @@ public class AggregationClientTest {
 
     @Ignore("This test requires having aggregation running locally.")
     @Test
-    public void testAggregationRefresh() throws IOException {
+    public void testAggregationRefresh() throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 
         User user = new User();
         Provider provider = new Provider();
@@ -47,10 +48,8 @@ public class AggregationClientTest {
                     AggregationClient.refreshInformation(
                             "00000000-0000-0000-0000-000000000000",
                             refreshInformationRequest); // TODO: Fetch apiKey from config
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
+            throw e;
         }
 
         assertThat(httpResponse.getStatusLine().getStatusCode()).isEqualTo(204);

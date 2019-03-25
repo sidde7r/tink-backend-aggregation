@@ -27,7 +27,7 @@ public class AggregationClient {
 
     public static HttpResponse refreshInformation(
             String apiClientKey, RefreshInformationRequest request)
-            throws IOException, KeyManagementException, NoSuchAlgorithmException {
+            throws IOException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
 
         CloseableHttpClient client = createCloseableHttpClientTrustingAllHosts();
         HttpPost httpPost = createAggregationHttpPost(apiClientKey, request, REFRESH_ENDPOINT);
@@ -51,14 +51,12 @@ public class AggregationClient {
     }
 
     private static CloseableHttpClient createCloseableHttpClientTrustingAllHosts()
-            throws NoSuchAlgorithmException, KeyManagementException {
+            throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         SSLContextBuilder builder = new SSLContextBuilder();
         try {
             builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyStoreException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException | KeyStoreException e) {
+            throw e;
         }
         SSLConnectionSocketFactory sslsf =
                 new SSLConnectionSocketFactory(
