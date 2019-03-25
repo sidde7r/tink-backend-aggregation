@@ -42,7 +42,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent {
                         .getIntegrations()
                         .getClientConfiguration(
                                 LansforsakringarConstants.Market.INTEGRATION_NAME,
-                                LansforsakringarConstants.Market.CLIENT_NAME,
+                                request.getProvider().getPayload(),
                                 LansforsakringarConfiguration.class)
                         .orElseThrow(
                                 () ->

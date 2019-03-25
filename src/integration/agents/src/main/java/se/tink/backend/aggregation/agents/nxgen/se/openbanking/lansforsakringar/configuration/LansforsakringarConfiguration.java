@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 public class LansforsakringarConfiguration implements ClientConfiguration {
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
-    @JsonProperty private String redirectUrl;
     @JsonProperty private String consentId;
 
     public String getClientId() {
@@ -17,10 +16,6 @@ public class LansforsakringarConfiguration implements ClientConfiguration {
 
     public String getClientSecret() {
         return clientSecret;
-    }
-
-    public String getRedirectUrl() {
-        return redirectUrl;
     }
 
     public String getConsentId() {

@@ -17,6 +17,7 @@ import se.tink.libraries.date.ThreadSafeDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 public final class LansforsakringarApiClient {
     private final TinkHttpClient client;
@@ -35,10 +36,20 @@ public final class LansforsakringarApiClient {
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
-                .type(MediaType.APPLICATION_JSON);
+                .type(MediaType.APPLICATION_JSON)
+                .header(
+                        LansforsakringarConstants.HeaderKeys.CONSENT_ID,
+                        persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID))
+                .header(
+                        LansforsakringarConstants.HeaderKeys.PSU_IP_ADDRESS,
+                        LansforsakringarConstants.HeaderValues.PSU_IP_ADDRESS)
+                .header(
+                        LansforsakringarConstants.HeaderKeys.PSU_USER_AGENT,
+                        LansforsakringarConstants.HeaderValues.PSU_USER_AGENT)
+                .header(LansforsakringarConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
     }
 
-    private RequestBuilder createRequestInSession(URL url) {
+    public RequestBuilder createRequestInSession(URL url) {
         OAuth2Token token = getToken().get();
         return createRequest(url)
                 .header(
@@ -46,20 +57,9 @@ public final class LansforsakringarApiClient {
                         token.getTokenType() + " " + token.getAccessToken());
     }
 
-    public OAuth2Token authenticate() {
-        AuthenticateForm request =
-                AuthenticateForm.builder()
-                        .setClientId(
-                                persistentStorage.get(
-                                        LansforsakringarConstants.StorageKeys.CLIENT_ID))
-                        .setClientSecret(
-                                persistentStorage.get(
-                                        LansforsakringarConstants.StorageKeys.CLIENT_SECRET))
-                        .setGrantType(LansforsakringarConstants.FormValues.CLIENT_CREDENTIALS)
-                        .build();
-
+    public OAuth2Token authenticate(AuthenticateForm form) {
         return client.request(new URL(LansforsakringarConstants.Urls.AUTHENTICATE))
-                .body(request, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(AuthenticateResponse.class)
                 .toTinkToken();
     }
@@ -70,18 +70,6 @@ public final class LansforsakringarApiClient {
                                 .queryParam(
                                         LansforsakringarConstants.QueryKeys.WITH_BALANCE,
                                         LansforsakringarConstants.QueryValues.TRUE))
-                .header(
-                        LansforsakringarConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID))
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        LansforsakringarConstants.HeaderValues.PSU_IP_ADDRESS)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_USER_AGENT,
-                        LansforsakringarConstants.HeaderValues.PSU_USER_AGENT)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.X_REQUEST_ID,
-                        LansforsakringarConstants.HeaderValues.X_REQUEST_ID)
                 .get(GetAccountsResponse.class)
                 .toTinkAccounts();
     }
@@ -92,37 +80,10 @@ public final class LansforsakringarApiClient {
     }
 
     public TransactionKeyPaginatorResponse<String> getTransactions(
-            TransactionalAccount account, String key) {
-        RequestBuilder req =
-                key == null
-                        ? createRequestInSession(
-                                        new URL(LansforsakringarConstants.Urls.GET_TRANSACTIONS)
-                                                .parameter(
-                                                        LansforsakringarConstants.IdTags.ACCOUNT_ID,
-                                                        account.getApiIdentifier()))
-                                .queryParam(
-                                        LansforsakringarConstants.QueryKeys.DATE_FROM,
-                                        ThreadSafeDateFormat.FORMATTER_DAILY.format(new Date()))
-                                .queryParam(
-                                        LansforsakringarConstants.QueryKeys.BOOKING_STATUS,
-                                        LansforsakringarConstants.QueryValues.BOTH)
-                        : createRequestInSession(
-                                        new URL(LansforsakringarConstants.Urls.BASE_URL + key))
-                                .queryParam(
-                                        LansforsakringarConstants.QueryKeys.BOOKING_STATUS,
-                                        LansforsakringarConstants.QueryValues.BOTH);
-        return req.header(
-                        LansforsakringarConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID))
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        LansforsakringarConstants.HeaderValues.PSU_IP_ADDRESS)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_USER_AGENT,
-                        LansforsakringarConstants.HeaderValues.PSU_USER_AGENT)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.X_REQUEST_ID,
-                        LansforsakringarConstants.HeaderValues.X_REQUEST_ID)
+            TransactionalAccount account, RequestBuilder req) {
+        return req.queryParam(
+                        LansforsakringarConstants.QueryKeys.BOOKING_STATUS,
+                        LansforsakringarConstants.QueryValues.BOTH)
                 .get(GetTransactionsResponse.class);
     }
 }

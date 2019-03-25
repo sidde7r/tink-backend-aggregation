@@ -34,11 +34,10 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder()
-                .setUniqueIdentifier(resourceId)
+                .setUniqueIdentifier(bban)
                 .setAccountNumber(bban)
                 .setBalance(getAvailableBalance())
-                .addAccountIdentifier(
-                        AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
                 .setAlias(getName())
                 .setProductName(product)
                 .setApiIdentifier(resourceId)
@@ -50,11 +49,11 @@ public class AccountEntity {
     }
 
     private Amount getAvailableBalance() {
-        return balances != null
+        return balances != null && !balances.isEmpty()
                 ? balances.stream()
                         .filter(BalanceEntity::isAvailableBalance)
                         .findFirst()
-                        .orElse(new BalanceEntity())
+                        .orElse(balances.get(0))
                         .toAmount()
                 : BalanceEntity.Default;
     }

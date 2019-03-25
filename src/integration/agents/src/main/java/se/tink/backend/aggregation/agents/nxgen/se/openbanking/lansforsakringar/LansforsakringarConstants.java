@@ -11,8 +11,8 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class StorageKeys {
-        public static final String CLIENT_ID = "lfbank-4RfBMSpa8zH9SwJqQX8h4F2i";
-        public static final String CLIENT_SECRET = "69003ad9c4c9bcced4f7edd407e51a17e4783bd8";
+        public static final String CLIENT_ID = "clientId";
+        public static final String CLIENT_SECRET = "clientSecret";
         public static final String CONSENT_ID = "consentId";
         public static final String ACCESS_TOKEN = "access-token";
     }
@@ -37,9 +37,9 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class HeaderValues {
+        //TODO: We need to support these PSU headers in production.
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
         public static final String PSU_USER_AGENT = "Desktop Mode";
-        public static final String X_REQUEST_ID = "X-Request-ID";
     }
 
     public static class FormKeys {
@@ -54,7 +54,6 @@ public abstract class LansforsakringarConstants {
 
     public class Market {
         public static final String INTEGRATION_NAME = "lansforsakringar";
-        public static final String CLIENT_NAME = "tink";
     }
 
     public class IdTags {
