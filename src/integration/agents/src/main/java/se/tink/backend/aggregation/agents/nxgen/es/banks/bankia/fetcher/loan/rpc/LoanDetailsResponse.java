@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.bankia.fetcher.loan.ent
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 import se.tink.libraries.amount.Amount;
 
 @JsonObject
@@ -92,8 +93,8 @@ public class LoanDetailsResponse {
 
     @JsonIgnore
     private LoanDetails.Type getType(LoanAccountEntity loan) {
-        // currently we have translation of different loan types. only mortgages seen so far
-        return LoanDetails.Type.MORTGAGE;
+        return BankiaConstants.LOAN_TYPE_MAPPER.translate(loan.getContract().getCustomizedProductCode())
+            .orElse(Type.OTHER);
     }
 
     @JsonIgnore
