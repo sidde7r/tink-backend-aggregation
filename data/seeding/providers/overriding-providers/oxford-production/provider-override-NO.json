@@ -11,7 +11,7 @@
             "market": "NO",
             "multiFactor": false,
             "name": "danskebank-no",
-            "passwordHelpText": "You use the same 4-digit service code as for Danske Banks mobile app.",
+            "passwordHelpText": "You use the same 4-digit mobile code as in the %s mobile app.",
             "payload": "NO",
             "popular": true,
             "refreshFrequency": 0,

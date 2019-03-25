@@ -10,7 +10,8 @@
             "credentialsType": "PASSWORD",
             "type": "CREDIT_CARD",
             "transactional": true,
-            "passwordHelpText": "Use the same credentials as when you log in to americanexpress.es. You can order a new password at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES).",
+            "passwordHelpText": "You use the same password as when you log in to the %s website. You can order a new username and password from [%s](%s).",
+            "tutorialUrl": "https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=es_ES",
             "fields": [
                 {
                     "name": "username",

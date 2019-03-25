@@ -24,7 +24,8 @@
             "groupDisplayName": "American Express",
             "market": "DE",
             "multiFactor": false,
-            "passwordHelpText": "Use the same credentials as when you log in to americanexpress.de. You can order new passwords at [American Express](https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_DE).",
+            "passwordHelpText": "You use the same password as when you log in to the %s website. You can order a new username and password from [%s](%s).",
+            "tutorialUrl": "https://global.americanexpress.com/myca/fuidfyp/emea/action?request_type=RecoverPasswordStep1&Face=de_DE",
             "payload": "DE",
             "popular": false,
             "refreshFrequency": 1,
@@ -43,7 +44,7 @@
             "credentialsType": "PASSWORD",
             "multiFactor": false,
             "className": "nxgen.de.banks.hvb.HVBAgent",
-            "passwordHelpText": "Use the same PIN as you would in your bank's mobile app.",
+            "passwordHelpText": "Use the same PIN code as you would in the %s mobile app.",
             "transactional": true,
             "fields": [
                 {
@@ -9380,7 +9381,7 @@
             "credentialsType": "PASSWORD",
             "multiFactor": false,
             "className": "nxgen.de.banks.fints.FinTsAgent",
-            "passwordHelpText": "Use the same password as you would in your bank's web login.. The account number shall be suffixed with three digit auth number, default 001",
+            "passwordHelpText": "Use the same password as you would in your bank's web login. The account number shall be suffixed with three digit auth number, default 001",
             "transactional": true,
             "payload": "70120400 https://brokerage-hbci.consorsbank.de/hbci",
             "fields": [
