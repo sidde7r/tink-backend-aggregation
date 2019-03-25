@@ -19,7 +19,7 @@ public class AggregationClientTest {
 
     public static final String PROVIDER_NAME = "se-test-demo-fake-bank";
 
-    //@Ignore("This test requires having aggregation running locally.")
+    @Ignore("This test requires having aggregation running locally.")
     @Test
     public void testAggregationRefresh() throws IOException {
 
