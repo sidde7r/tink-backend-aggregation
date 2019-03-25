@@ -45,6 +45,7 @@ public class ProviderConfiguration {
     private double refreshFrequencyFactor;
     private ProviderStatuses status;
     private boolean transactional;
+    private String tutorialUrl;
     private ProviderTypes type;
     private String displayDescription;
     private String refreshScheduleSerialized;
@@ -143,6 +144,10 @@ public class ProviderConfiguration {
 
     public String getPasswordHelpText() {
         return passwordHelpText;
+    }
+
+    public String getTutorialUrl() {
+        return tutorialUrl;
     }
 
     public String getPayload() {
@@ -245,6 +250,10 @@ public class ProviderConfiguration {
 
     public void setPasswordHelpText(String passwordHelpText) {
         this.passwordHelpText = passwordHelpText;
+    }
+
+    public void setTutorialUrl(String tutorialUrl) {
+        this.tutorialUrl = tutorialUrl;
     }
 
     public void setPayload(String payload) {

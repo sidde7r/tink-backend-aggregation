@@ -1,14 +1,14 @@
 package se.tink.backend.aggregation.provider.configuration.http.converter;
 
 import com.google.common.collect.Sets;
-import java.util.Set;
-import java.util.function.Predicate;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.rpc.ProviderConfigurationDTO;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class HttpProviderConfigurationConverter {
     private static final Set<ProviderConfiguration.Capability> NON_OXFORD_CAPABILITIES = Sets.immutableEnumSet(
@@ -37,6 +37,7 @@ public class HttpProviderConfigurationConverter {
         dto.setRefreshFrequencyFactor(providerConfiguration.getRefreshFrequencyFactor());
         dto.setStatus(providerConfiguration.getStatus());
         dto.setTransactional(providerConfiguration.isTransactional());
+        dto.setTutorialUrl(providerConfiguration.getTutorialUrl());
         dto.setType(providerConfiguration.getType());
         dto.setRefreshSchedule(providerConfiguration.getRefreshSchedule().orElse(null));
         dto.setStatus(providerConfiguration.getStatus());
