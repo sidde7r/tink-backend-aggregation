@@ -15,16 +15,16 @@ public class SecurityHoldingContainerTest {
     private CustodyHoldings holdingDetail;
     private Quantity holdingQuantity;
     private Double quantityValue;
-    private InstrumentSummary summary;
-    private SecurityIdentifier identifier;
+    private SecurityHoldingIdentifier identifier;
 
     @Before
     public void setUp() throws Exception {
+        SecurityIdentifier securityIdentifier = new SecurityIdentifier();
         holdingDetail = new CustodyHoldings();
+        holdingDetail.setSecurityIdentifier(securityIdentifier);
         holdingQuantity = new Quantity();
         quantityValue = 1d;
-        summary = new InstrumentSummary();
-        identifier = new SecurityIdentifier();
+        identifier = new SecurityHoldingIdentifier();
     }
 
     @Test
@@ -45,7 +45,6 @@ public class SecurityHoldingContainerTest {
 
     @Test
     public void withoutSummaryAndIdentifier() {
-        summary = null;
         identifier = null;
 
         mapToInstrument();
@@ -85,9 +84,6 @@ public class SecurityHoldingContainerTest {
 
         securityHoldingContainer.setHoldingDetail(holdingDetail);
 
-        if (summary != null) {
-            securityHoldingContainer.setInstrumentSummary(summary);
-        }
         if (identifier != null) {
             securityHoldingContainer.setSecurityIdentifier(identifier);
         }

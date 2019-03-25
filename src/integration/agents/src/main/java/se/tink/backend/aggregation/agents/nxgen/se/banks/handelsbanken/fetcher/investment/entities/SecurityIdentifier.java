@@ -1,19 +1,29 @@
 package se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.fetcher.investment.entities;
 
-import se.tink.backend.aggregation.agents.nxgen.se.banks.handelsbanken.HandelsbankenSEConstants;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonObject
-public class SecurityIdentifier implements SecurityHoldingContainer.InstrumentEnricher {
+public class SecurityIdentifier {
+    private String isinCode;
     private String currency;
-    private String type;
+    private String country;
+    @JsonProperty("mic")
+    private String market;
 
-    @Override
-    public Instrument applyTo(Instrument instrument) {
-        instrument.setCurrency(currency);
-        instrument.setRawType(type == null ? null : type.toLowerCase());
-        instrument.setType(HandelsbankenSEConstants.Fetcher.Investments.InstrumentType.asType(type));
-        return instrument;
+    public String getIsinCode() {
+        return isinCode;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String getMarket() {
+        return market;
     }
 }

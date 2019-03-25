@@ -20,10 +20,6 @@ public class ApplicationEntryPointResponse extends BaseResponse {
         return findLink(HandelsbankenConstants.URLS.Links.CARDS);
     }
 
-    public URL toCardsV3() {
-        return findLink(HandelsbankenConstants.URLS.Links.CARDS_V3);
-    }
-
     public URL toKeepAlive() {
         return findLink(HandelsbankenConstants.URLS.Links.KEEP_ALIVE);
     }

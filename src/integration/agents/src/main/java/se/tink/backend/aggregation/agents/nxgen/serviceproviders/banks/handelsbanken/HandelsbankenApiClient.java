@@ -156,7 +156,7 @@ public abstract class HandelsbankenApiClient {
                 .header(HandelsbankenConstants.Headers.X_SHB_DEVICE_NAME,
                         HandelsbankenConstants.Headers.DEVICE_NAME)
                 .header(HandelsbankenConstants.Headers.X_SHB_DEVICE_MODEL,
-                        HandelsbankenConstants.Headers.DEVICE_MODEL)
+                        handelsbankenConfiguration.getDeviceModel())
                 .header(HandelsbankenConstants.Headers.X_SHB_DEVICE_CLASS,
                         HandelsbankenConstants.Headers.DEVICE_CLASS)
                 .header(HandelsbankenConstants.Headers.X_SHB_APP_VERSION,

@@ -16,14 +16,15 @@ public class HandelsbankenFIConstants {
     }
 
     public static final class DeviceAuthentication {
-        public static final String APP_ID = "glsOOxjLhKc8lXoJNKsksa7RCbYTMGYjigyk1KfrPY8=";
+        public static final String APP_ID = "J+CVMjvIFTfbiNvFXmBJHEjMACcAsm9UsZYrFNX0C8E=";
         public static final String AUTH_TP = "3";
         public static final String SIGNUP_PASSWORD = "signupPassword";
         public static final String VALID_SIGNATURE_RESULT = "AUTHORIZED";
     }
 
     public static final class Headers {
-        public static final String APP_VERSION = "3.4:1.5";
+        public static final String APP_VERSION = "3.4:1.6";
+        public static final String DEVICE_MODEL = "IOS-11.4.1,2.5.1,iPhone9.3,FIPRIV";
     }
 
     public static final class Fetcher {

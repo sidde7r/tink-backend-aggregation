@@ -8,26 +8,23 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 @JsonObject
 public class SecurityHoldingContainer {
     private CustodyHoldings holdingDetail;
-    private InstrumentSummary instrumentSummary;
-    private SecurityIdentifier identifier;
+    private SecurityHoldingIdentifier identifier;
+    private String name;
 
     public Optional<Instrument> toInstrument() {
         if (holdingDetail == null || holdingDetail.hasNoValue()) {
             return Optional.empty();
         }
-        if (identifier == null && instrumentSummary == null) {
+        if (identifier == null) {
             return Optional.empty();
         }
-        return Optional.of(new Instrument())
-                .map(instrument -> enrich(holdingDetail, instrument))
-                .map(instrument -> enrich(instrumentSummary, instrument))
-                .map(instrument -> enrich(identifier, instrument));
-    }
 
-    private static Instrument enrich(InstrumentEnricher instrumentEnricher, Instrument instrument) {
-        return Optional.ofNullable(instrumentEnricher)
-                .map(enricher -> enricher.applyTo(instrument))
-                .orElse(instrument);
+        Instrument tinkInstrument = new Instrument();
+        tinkInstrument.setType(identifier.getTinkType());
+        tinkInstrument.setRawType(identifier.getType());
+        tinkInstrument.setName(name);
+
+        return Optional.of(holdingDetail.applyTo(tinkInstrument));
     }
 
     @VisibleForTesting
@@ -36,16 +33,7 @@ public class SecurityHoldingContainer {
     }
 
     @VisibleForTesting
-    void setInstrumentSummary(InstrumentSummary instrumentSummary) {
-        this.instrumentSummary = instrumentSummary;
-    }
-
-    @VisibleForTesting
-    void setSecurityIdentifier(SecurityIdentifier identifier) {
+    void setSecurityIdentifier(SecurityHoldingIdentifier identifier) {
         this.identifier = identifier;
-    }
-
-    public interface InstrumentEnricher {
-        Instrument applyTo(Instrument instrument);
     }
 }

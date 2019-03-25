@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
 
     private String currency;
+    private HandelsbankenAmount totalChange;
     private HandelsbankenSEFundDetails fundDetails;
     private String isin;
     private HandelsbankenAmount marketValue;
@@ -27,6 +28,9 @@ public class HandelsbankenSEFundAccountHoldingDetail extends BaseResponse {
                             details.map(HandelsbankenSEFundDetails::getIsin)
                                     .orElse(null)
                     );
+                    if (totalChange != null) {
+                      instrument.setProfit(totalChange.asDouble());
+                    }
                     String marketPlace = details.map(HandelsbankenSEFundDetails::getExternalFundId).orElse(null);
                     instrument.setIsin(isin);
                     instrument.setMarketPlace(marketPlace);
