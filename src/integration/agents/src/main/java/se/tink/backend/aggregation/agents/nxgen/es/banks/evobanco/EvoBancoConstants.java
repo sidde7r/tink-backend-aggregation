@@ -24,6 +24,7 @@ public class EvoBancoConstants {
                 "SOA_RVIA/Empresa/PS/rest/v3/SE_RVA_VinculacionyLogin";
         static final String FETCH_CARD_TRANSACTIONS_PATH =
                 "SOA_RVIA/Empresa/PS/rest/v1/SE_RVA_ConsultaMovimientosTarjetaBE";
+        static final String INVESTMENTS_PATH = "EVO_PAI/v1/api/investments";
     }
 
     public static class Urls {
@@ -44,6 +45,8 @@ public class EvoBancoConstants {
                 new URL(BASE_MOBILE_SERVICES + ApiService.LINKING_LOGIN_PATH);
         public static final URL FETCH_CARD_TRANSACTIONS =
                 new URL(BASE_MOBILE_SERVICES + ApiService.FETCH_CARD_TRANSACTIONS_PATH);
+        public static final URL FETCH_INVESTMENTS =
+                new URL(BASE_MOBILE_SERVICES + ApiService.INVESTMENTS_PATH);
     }
 
     public static class StatusCodes {
@@ -144,5 +147,10 @@ public class EvoBancoConstants {
         public static final int DEVICE_ID_LENGTH = 25;
         public static final String CREDIT_TRANSACTION_TYPE = "1";
         public static final String ACCOUNT_TRANSACTION_PLUS_SIGN = "H";
+    }
+
+    public static class Tags {
+        public static final LogTag INVESTMENTS_ERROR = LogTag.from("es_evobanco_investments_error");
+        public static final LogTag INVESTMENTS = LogTag.from("es_evobanco_investments");
     }
 }
