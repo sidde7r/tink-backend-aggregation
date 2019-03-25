@@ -81,7 +81,7 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
         authenticationRequest.getCredentials().setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
         return new AuthenticationResponse(
                 STEP_SIGN,
-                supplementalInformationFormer.formChallenageResponseFields(
+                supplementalInformationFormer.formChallengeResponseFields(
                         challengeExchangeValues.getChallenge()));
     }
 
