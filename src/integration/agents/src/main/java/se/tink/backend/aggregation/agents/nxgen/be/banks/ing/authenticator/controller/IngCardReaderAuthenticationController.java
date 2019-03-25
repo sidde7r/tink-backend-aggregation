@@ -50,35 +50,49 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
                         credentials.getType()));
         switch (authenticationRequest.getStep()) {
             case AuthenticationStepConstants.STEP_INIT:
-                List<Field> otpInput =
-                        Collections.singletonList(
-                                supplementalInformationFormer.getField(Field.Key.OTP_INPUT));
-                return new AuthenticationResponse(STEP_OTP, otpInput);
+                return step1();
             case STEP_OTP:
-                String username = credentials.getField(Field.Key.USERNAME);
-                String cardNumber = credentials.getField(CARD_ID_FIELD);
-                String otp = authenticationRequest.getUserInputs().get(0);
-                if (Strings.isNullOrEmpty(username)
-                        || Strings.isNullOrEmpty(cardNumber)
-                        || Strings.isNullOrEmpty(otp)) {
-                    throw LoginError.INCORRECT_CREDENTIALS.exception();
-                }
-                ChallengeExchangeValues challengeExchangeValues = authenticator.initEnroll(username, cardNumber, otp);
-                credentials.setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
-                return new AuthenticationResponse(
-                        STEP_SIGN,
-                        supplementalInformationFormer.formChallenageResponseFields(
-                                challengeExchangeValues.getChallenge()));
+                return step2(authenticationRequest);
             case STEP_SIGN:
-                authenticator.confirmEnroll(
-                        credentials.getField(Field.Key.USERNAME),
-                        authenticationRequest.getUserInputs().get(1),
-                        credentials.getSensitivePayload(SIGN_ID));
-                authenticator.authenticate(credentials.getField(Field.Key.USERNAME));
-                return new AuthenticationResponse(AuthenticationStepConstants.STEP_FINALIZE, null);
+                return step3(authenticationRequest);
             default:
                 throw new IllegalStateException("bad step!");
         }
+    }
+
+    private AuthenticationResponse step1() {
+        List<Field> otpInput =
+                Collections.singletonList(
+                        supplementalInformationFormer.getField(Field.Key.OTP_INPUT));
+        return new AuthenticationResponse(STEP_OTP, otpInput);
+    }
+
+    private AuthenticationResponse step2(AuthenticationRequest authenticationRequest)
+            throws AuthenticationException, AuthorizationException {
+        String username = authenticationRequest.getCredentials().getField(Field.Key.USERNAME);
+        String cardNumber = authenticationRequest.getCredentials().getField(CARD_ID_FIELD);
+        String otp = authenticationRequest.getUserInputs().get(0);
+        if (Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(cardNumber)
+                || Strings.isNullOrEmpty(otp)) {
+            throw LoginError.INCORRECT_CREDENTIALS.exception();
+        }
+        ChallengeExchangeValues challengeExchangeValues = authenticator.initEnroll(username, cardNumber, otp);
+        authenticationRequest.getCredentials().setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
+        return new AuthenticationResponse(
+                STEP_SIGN,
+                supplementalInformationFormer.formChallenageResponseFields(
+                        challengeExchangeValues.getChallenge()));
+    }
+
+    private AuthenticationResponse step3(AuthenticationRequest authenticationRequest)
+            throws AuthenticationException {
+        authenticator.confirmEnroll(
+                authenticationRequest.getCredentials().getField(Field.Key.USERNAME),
+                authenticationRequest.getUserInputs().get(1),
+                authenticationRequest.getCredentials().getSensitivePayload(SIGN_ID));
+        authenticator.authenticate(authenticationRequest.getCredentials().getField(Field.Key.USERNAME));
+        return new AuthenticationResponse(AuthenticationStepConstants.STEP_FINALIZE, null);
     }
 
     @Override
