@@ -6,6 +6,15 @@ import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import javax.ws.rs.core.MediaType;
 import org.joda.time.DateTime;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -43,16 +52,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-import javax.ws.rs.core.MediaType;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
 /**
  * Agent will import data from Bank Norwegian. It is only possible to have one credit-card per person at Norwegian
  * so the only Tink account that will be created right now is a credit-card account. No support for Loans.
@@ -81,7 +80,8 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
     private static class QueryValues {
         private static final String GET_LAST_DAYS = "false";
-        private static final String FROM_LAST_EOC = "false";
+        private static final String FROM_LAST_EOC_FALSE = "false";
+        private static final String FROM_LAST_EOC_TRUE = "true";
         private static final String CORE_DOWN = "false";
     }
 
@@ -328,6 +328,16 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
 
         List<Transaction> transactions = Lists.newArrayList();
+
+        // Fetch uninvoiced transactions and add to list of transactions
+        createClientRequest(
+            getFormattedRecentTransactionsUrl(encodedAccountNumber))
+            .get(TransactionListResponse.class)
+            .stream()
+            .map(TransactionEntity::toTransaction)
+            .forEach(transactions::add);
+
+        // Page through rest of transactions
         do {
             createClientRequest(
                     getFormattedPaginationUrl(encodedAccountNumber,
@@ -352,13 +362,32 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         financialDataCacher.updateTransactions(account, transactions);
     }
 
+    /**
+     * Returns request string for fetching uninvoiced transactions. This is done by omitting
+     * dates and setting the EOC query param to true.
+     */
+    private String getFormattedRecentTransactionsUrl(final String accountNo) {
+        return TRANSACTIONS_PAGINATION_URL
+            .queryParam(QueryKeys.ACCOUNT_NUMBER, accountNo)
+            .queryParam(QueryKeys.DATE_TO, "")
+            .queryParam(QueryKeys.DATE_FROM, "")
+            .queryParam(QueryKeys.CORE_DOWN, QueryValues.CORE_DOWN)
+            .queryParam(QueryKeys.GET_LAST_DAYS, QueryValues.GET_LAST_DAYS)
+            .queryParam(QueryKeys.FROM_LAST_EOC, QueryValues.FROM_LAST_EOC_TRUE)
+            .toString();
+    }
+
+    /**
+     * Returns request string for fetching transactions through pagination, date params are set
+     * and EOC param is set to false (EOC being uninvoiced transactions).
+     */
     private String getFormattedPaginationUrl(final String accountNo, final Date from, final Date to) {
         return TRANSACTIONS_PAGINATION_URL.queryParam(QueryKeys.ACCOUNT_NUMBER, accountNo)
                 .queryParam(QueryKeys.DATE_FROM, toFormattedDate(from))
                 .queryParam(QueryKeys.DATE_TO, toFormattedDate(to))
                 .queryParam(QueryKeys.CORE_DOWN, QueryValues.CORE_DOWN)
                 .queryParam(QueryKeys.GET_LAST_DAYS, QueryValues.GET_LAST_DAYS)
-                .queryParam(QueryKeys.FROM_LAST_EOC, QueryValues.FROM_LAST_EOC)
+                .queryParam(QueryKeys.FROM_LAST_EOC, QueryValues.FROM_LAST_EOC_FALSE)
                 .toString();
     }
 
