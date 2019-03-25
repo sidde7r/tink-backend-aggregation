@@ -155,7 +155,7 @@ public class AccountEntity {
     }
 
     @JsonProperty("isSBPManaged")
-    public boolean isIsSBPManaged() {
+    public boolean isSBPManaged() {
         return isSBPManaged;
     }
 
