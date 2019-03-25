@@ -184,6 +184,28 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return true;
     }
 
+    private void progressiveLogin() throws Exception{
+        AuthenticationResponse response =
+                ((ProgressiveAuthAgent) agent)
+                        .login(
+                                new AuthenticationRequest(
+                                        AuthenticationStepConstants.STEP_INIT, null));
+        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
+            // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
+            // etc.
+            List<Field> fields = response.getFields();
+            Map<String, String> map =
+                    supplementalInformationController.askSupplementalInformation(
+                            fields.toArray(new Field[fields.size()]));
+            response =
+                    ((ProgressiveAuthAgent) agent)
+                            .login(
+                                    new AuthenticationRequest(
+                                            response.getStep(),
+                                            new ArrayList<>(map.values())));
+        }
+    }
+
     private AgentWorkerCommandResult login() throws Exception {
         ArrayList<Context> loginTimerContext = state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGIN));
@@ -191,25 +213,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         try {
             // TODO auth: temporarily use the annotation to filter agents that are migrated to use new Auth flow
             if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
-                AuthenticationResponse response =
-                        ((ProgressiveAuthAgent) agent)
-                                .login(
-                                        new AuthenticationRequest(
-                                                AuthenticationStepConstants.STEP_INIT, null));
-                while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
-                    // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
-                    // etc.
-                    List<Field> fields = response.getFields();
-                    Map<String, String> map =
-                            supplementalInformationController.askSupplementalInformation(
-                                    fields.toArray(new Field[fields.size()]));
-                    response =
-                            ((ProgressiveAuthAgent) agent)
-                                    .login(
-                                            new AuthenticationRequest(
-                                                    response.getStep(),
-                                                    new ArrayList<>(map.values())));
-                }
+                progressiveLogin();
                 action.completed();
                 return AgentWorkerCommandResult.CONTINUE;
             }

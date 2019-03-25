@@ -162,30 +162,34 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return true;
     }
 
+    private void progressiveLogin(Agent agent) throws Exception{
+        AuthenticationResponse response =
+                ((ProgressiveAuthAgent) agent)
+                        .login(
+                                new AuthenticationRequest(
+                                        AuthenticationStepConstants.STEP_INIT, null));
+        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
+            // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
+            // etc.
+            List<Field> fields = response.getFields();
+            Map<String, String> map =
+                    supplementalInformationController.askSupplementalInformation(
+                            fields.toArray(new Field[fields.size()]));
+            response =
+                    ((ProgressiveAuthAgent) agent)
+                            .login(
+                                    new AuthenticationRequest(
+                                            response.getStep(),
+                                            new ArrayList<>(map.values())));
+        }
+    }
+
     private void login(Agent agent) throws Exception {
         if (isLoggedIn(agent)) {
             return;
         }
         if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
-            AuthenticationResponse response =
-                    ((ProgressiveAuthAgent) agent)
-                            .login(
-                                    new AuthenticationRequest(
-                                            AuthenticationStepConstants.STEP_INIT, null));
-            while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
-                // TODO think about cases other than supplemental info, e.g. bankid, redirect
-                // etc.
-                List<Field> fields = response.getFields();
-                Map<String, String> map =
-                        supplementalInformationController.askSupplementalInformation(
-                                fields.toArray(new Field[fields.size()]));
-                response =
-                        ((ProgressiveAuthAgent) agent)
-                                .login(
-                                        new AuthenticationRequest(
-                                                response.getStep(),
-                                                new ArrayList<>(map.values())));
-            }
+            progressiveLogin(agent);
             return;
         }
 
