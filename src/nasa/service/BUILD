@@ -26,8 +26,6 @@ java_binary(
         "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
 
-        "//src/libraries/credentials:rpc",
-        "//src/libraries/account:rpc",
         "//src/libraries/user:rpc",
         "//src/libraries/serialization:serialization",
 
@@ -58,8 +56,6 @@ junit_test(
         "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
 
-        "//src/libraries/credentials:rpc",
-        "//src/libraries/account:rpc",
         "//src/libraries/user:rpc",
         "//src/libraries/serialization:serialization",
 
