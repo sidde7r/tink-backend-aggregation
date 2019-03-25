@@ -14,11 +14,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsAccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.StocksResponse;
-<<<<<<< HEAD
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoansResponse;
-=======
->>>>>>> fix(Sabadell): Small code style fixes
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
@@ -150,17 +147,23 @@ public class SabadellApiClient {
                 .post(MarketsResponse.class, request);
     }
 
-    public StocksResponse fetchStocks(String market, Map<String, String> headers) {
+    public StocksResponse fetchStocks(String market, Map<String, String> queryParams) {
         return createRequest(
                         SabadellConstants.Urls.FETCH_STOCKS.parameter(
                                 SabadellConstants.UrlParams.MARKET, market))
-                .queryParams(headers)
+                .queryParams(queryParams)
                 .get(StocksResponse.class);
     }
 
     public String fetchServicingFundsAccountDetails(ServicingFundsAccountDetailsRequest request) {
         return createRequest(SabadellConstants.Urls.FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS)
                 .post(String.class, request);
+    }
+
+    public String fetchSavingsPlanDetails(Map<String, String> queryParams) {
+        return createRequest(SabadellConstants.Urls.FETCH_SAVINGS_PLAN_DETAILS)
+                .queryParams(queryParams)
+                .get(String.class);
     }
 
     public String fetchLoanDetails(LoanDetailsRequest loanDetailsRequest) {

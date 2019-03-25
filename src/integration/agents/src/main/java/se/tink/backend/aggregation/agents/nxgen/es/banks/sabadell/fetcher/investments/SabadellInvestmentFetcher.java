@@ -154,6 +154,18 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
                 log.infoExtraLong(
                         SerializationUtils.serializeToString(savingsResponse),
                         SabadellConstants.Tags.SAVINGS);
+
+                savingsResponse
+                        .getSavingPlans()
+                        .forEach(
+                                savingsPlan -> {
+                                    String detailsResponse =
+                                            apiClient.fetchSavingsPlanDetails(savingsPlan.getQueryParamsForDetailsRequest());
+
+                                    log.infoExtraLong(
+                                            detailsResponse,
+                                            SabadellConstants.Tags.SAVINGS_PLAN_DETAILS);
+                                });
             }
         } catch (Exception e) {
             log.warn(

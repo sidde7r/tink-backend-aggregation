@@ -40,6 +40,7 @@ public final class SabadellConstants {
         public static final URL FETCH_MARKETS = new URL(BASE_URL + "/securities/markets");
         public static final URL FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS =
                 new URL(BASE_URL + "/servicingfunds/refunds");
+        public static final URL FETCH_SAVINGS_PLAN_DETAILS = new URL(BASE_URL + "/savings/detail");
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE_URL + "/loans");
     }
 
@@ -131,6 +132,8 @@ public final class SabadellConstants {
         public static final LogTag SAVINGS = LogTag.from("es_sabadell_savings");
         public static final LogTag SERVICING_FUNDS_ACCOUNT_DETAILS =
                 LogTag.from("es_sabadell_servicing_funds_account_details");
+        public static final LogTag SAVINGS_PLAN_DETAILS =
+                LogTag.from("es_sabadell_savings_plan_details");;
         public static final LogTag LOAN_DETAILS = LogTag.from("es_sabadell_loan_details");
     }
 
@@ -148,5 +151,11 @@ public final class SabadellConstants {
 
     public static final class Constants {
         public static final String NOT_AVAILABLE_ABBREVIATION = "N.D.";
+    }
+
+    public static final class QueryParamsKeys {
+        public static final String CONTRACT_CODE = "contractCode";
+        public static final String ENTITY_CODE = "entityCode";
+        public static final String PRODUCT_TYPE = "productType";
     }
 }
