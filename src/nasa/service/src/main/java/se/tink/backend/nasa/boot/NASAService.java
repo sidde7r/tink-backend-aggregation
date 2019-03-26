@@ -87,6 +87,7 @@ class NASAService {
         Spark.before(SparkFilters.ACCESS_LOGGING);
 
         Spark.get("/ping", (req, res) -> "pong");
+        Spark.get("/initiate", (request, response) -> "initiating aggregation test");
 
         // Log the path and the body of requests to the Aggregation Controller API
         Spark.before("/aggregation/controller/v1/system/*", SparkFilters.REQUEST_LOGGING);
