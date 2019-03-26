@@ -71,4 +71,7 @@ public class Account {
         return name;
     }
 
+    public String getCashAccountType() {
+        return cashAccountType;
+    }
 }

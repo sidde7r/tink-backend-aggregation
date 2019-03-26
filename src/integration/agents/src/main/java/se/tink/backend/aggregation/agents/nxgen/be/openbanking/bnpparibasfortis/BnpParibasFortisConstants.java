@@ -7,10 +7,9 @@ public abstract class BnpParibasFortisConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
         TypeMapper.<AccountTypes>builder()
-            .put(AccountTypes.CHECKING, "some_string1_the_integratee_uses")
-            .put(AccountTypes.SAVINGS, "some_string2_the_integratee_uses")
-            .put(AccountTypes.CREDIT_CARD, "some_string3_the_integratee_uses")
-            .ignoreKeys("some_string4_the_integratee_uses")
+            .put(AccountTypes.CHECKING, "CACC")
+            .put(AccountTypes.SAVINGS, "SVGS")
+            .put(AccountTypes.OTHER, "OTHR")
             .build();
 
     public static class Urls {

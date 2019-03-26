@@ -4,7 +4,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.stream.Collectors;
 import org.apache.http.HttpStatus;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisApiClient;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account.Account;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
@@ -32,9 +35,17 @@ public class BnpParibasFortisTransactionalAccountFetcher implements
             .getAccounts()
             .getAccounts()
             .stream()
+            .filter(this::isCheckingAccount)
             .map(account -> account
                 .toTinkModel(apiClient.getBalanceForAccount(account).getBalances()))
             .collect(Collectors.toList());
+    }
+
+    private boolean isCheckingAccount(Account account) {
+        return BnpParibasFortisConstants.ACCOUNT_TYPE_MAPPER
+            .translate(account.getCashAccountType())
+            .map(item -> item == AccountTypes.CHECKING)
+            .orElse(false);
     }
 
     @Override
