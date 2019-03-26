@@ -39,6 +39,7 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrossKeyApiClient {
     private final TinkHttpClient client;
@@ -50,25 +51,28 @@ public class CrossKeyApiClient {
     }
 
     public CrossKeyResponse initSession() {
-        return buildRequest(CrossKeyConstants.Url.SYSTEM_STATUS_URI)
-                .queryParam(CrossKeyConstants.Query.APP_ID, CrossKeyConstants.AutoAuthentication.APP_VERSION)
-                .queryParam(CrossKeyConstants.Query.LANGUAGE, CrossKeyConstants.AutoAuthentication.LANGUAGE)
-                .get(CrossKeyResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.SYSTEM_STATUS_URI)
+                .queryParam(CrossKeyConstants.Query.APP_ID,
+                    CrossKeyConstants.AutoAuthentication.APP_VERSION)
+                .queryParam(CrossKeyConstants.Query.LANGUAGE,
+                    CrossKeyConstants.AutoAuthentication.LANGUAGE),
+            CrossKeyResponse.class);
     }
 
     public BankIdAutostartTokenResponse initBankId() {
-        return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKID)
-                .post(BankIdAutostartTokenResponse.class);
+        return post(buildRequest(CrossKeyConstants.Url.LOGIN_WITH_BANKID),
+            BankIdAutostartTokenResponse.class,
+            null);
     }
 
     public LoginProvidersResponse getLoginProviders() {
-        return buildRequest(CrossKeyConstants.Url.GET_LOGIN_PROVIDERS)
-                .get(LoginProvidersResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.GET_LOGIN_PROVIDERS),
+            LoginProvidersResponse.class);
     }
 
     public ContentResponse getContent() {
-        return buildRequest(CrossKeyConstants.Url.GET_CONTENT)
-                .get(ContentResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.GET_CONTENT),
+            ContentResponse.class);
     }
 
     public BankiIdResponse collectBankId() {
@@ -79,52 +83,58 @@ public class CrossKeyApiClient {
                             .getAppVersion()
                             .map(
                                     v ->
-                                            buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID)
-                                                    .post(
-                                                            HttpResponse.class,
-                                                            new BankiIdCollectRequest(v)))
+                                        post(buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID),
+                                            HttpResponse.class,
+                                            new BankiIdCollectRequest(v)))
                             .orElseGet(
                                     () ->
-                                            buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID)
-                                                    .post(HttpResponse.class));
+                                        post(buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID),
+                                            HttpResponse.class,
+                                            null));
         } catch (HttpResponseException ex) {
             return ex.getResponse().getBody(BankiIdResponse.class);
         }
+
         return post.getBody(BankiIdResponse.class);
     }
 
     public LoginWithoutTokenResponse loginUsernamePassword(LoginWithoutTokenRequest request) {
-        return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_USERNAME_PASSWORD)
-                .post(LoginWithoutTokenResponse.class, request);
+        return post(buildRequest(CrossKeyConstants.Url.LOGIN_WITH_USERNAME_PASSWORD),
+            LoginWithoutTokenResponse.class,
+            request);
     }
 
     public LoginWithTokenResponse loginWithToken(LoginWithTokenRequest loginRequest) {
-        return buildRequest(CrossKeyConstants.Url.LOGIN_WITH_TOKEN)
-                .post(LoginWithTokenResponse.class, loginRequest);
+        return post(buildRequest(CrossKeyConstants.Url.LOGIN_WITH_TOKEN),
+            LoginWithTokenResponse.class,
+            loginRequest);
     }
 
     public ConfirmTanCodeResponse confirmTanCode(ConfirmTanCodeRequest request) {
-        return buildRequest(CrossKeyConstants.Url.CONFIRM_TAN_CODE)
-                .post(ConfirmTanCodeResponse.class, request);
+        return post(buildRequest(CrossKeyConstants.Url.CONFIRM_TAN_CODE),
+            ConfirmTanCodeResponse.class,
+            request);
     }
 
     public AddDeviceResponse addDevice(AddDeviceRequest request) {
-        return buildRequest(CrossKeyConstants.Url.ADD_DEVICE)
-                .post(AddDeviceResponse.class, request);
+        return post(buildRequest(CrossKeyConstants.Url.ADD_DEVICE),
+            AddDeviceResponse.class,
+            request);
     }
 
     public AccountsResponse fetchAccounts() {
-        return buildRequest(CrossKeyConstants.Url.FETCH_ACCOUNTS)
-                .queryParam(CrossKeyConstants.Query.SHOW_HIDDEN, CrossKeyConstants.Query.VALUE_TRUE)
-                .get(AccountsResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.FETCH_ACCOUNTS)
+                .queryParam(CrossKeyConstants.Query.SHOW_HIDDEN,
+                    CrossKeyConstants.Query.VALUE_TRUE),
+            AccountsResponse.class);
     }
 
     public TransactionsResponse fetchTransactions(Account account, Date fromDate, Date toDate) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_TRANSACTIONS)
-                .queryParam(CrossKeyConstants.Query.ACCOUNT_ID, account.getBankIdentifier())
+        return get(buildRequest(CrossKeyConstants.Url.FETCH_TRANSACTIONS)
+                .queryParam(CrossKeyConstants.Query.ACCOUNT_ID, account.getApiIdentifier())
                 .queryParam(CrossKeyConstants.Query.FROM_DATE, format(fromDate))
-                .queryParam(CrossKeyConstants.Query.TO_DATE, format(toDate))
-                .get(TransactionsResponse.class);
+                .queryParam(CrossKeyConstants.Query.TO_DATE, format(toDate)),
+            TransactionsResponse.class);
     }
 
     private static String format(Date date) {
@@ -134,65 +144,111 @@ public class CrossKeyApiClient {
     }
 
     public LogoutResponse logout() {
-        return buildRequest(CrossKeyConstants.Url.LOGOUT)
-                .get(LogoutResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.LOGOUT),
+            LogoutResponse.class);
     }
 
     public KeepAliveResponse keepAlive() {
-        return buildRequest(CrossKeyConstants.Url.KEEPALIVE)
-                .get(KeepAliveResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.KEEPALIVE),
+            KeepAliveResponse.class);
     }
 
     public LoanDetailsResponse fetchLoanDetails(CrossKeyAccount account) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_LOANDETAILS)
-                .queryParam(CrossKeyConstants.Query.LOAN_ACCOUNT_ID, account.getAccountId())
-                .get(LoanDetailsResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.FETCH_LOANDETAILS)
+                .queryParam(CrossKeyConstants.Query.LOAN_ACCOUNT_ID, account.getAccountId()),
+            LoanDetailsResponse.class);
     }
 
     public CardsResponse fetchCards(CardsRequest request) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_GETCARDS)
-                .post(CardsResponse.class, request);
+        return post(buildRequest(CrossKeyConstants.Url.FETCH_GETCARDS),
+            CardsResponse.class,
+            request);
     }
 
     public CrossKeyCard fetchCard(String cardId) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_GETCARD)
-                .queryParam(CrossKeyConstants.Query.ID, cardId)
-                .get(CrossKeyCard.class);
+        return get(buildRequest(CrossKeyConstants.Url.FETCH_GETCARD)
+                .queryParam(CrossKeyConstants.Query.ID, cardId),
+            CrossKeyCard.class);
     }
 
-    public List<CreditCardTransactionEntity> fetchCreditCardTransactions(String cardId, Date fromDate, Date toDate) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_CARD_TRANSACTIONS)
+    public List<CreditCardTransactionEntity> fetchCreditCardTransactions(String cardId,
+        Date fromDate, Date toDate) {
+
+        return get(buildRequest(CrossKeyConstants.Url.FETCH_CARD_TRANSACTIONS)
                 .queryParam(CrossKeyConstants.Query.CARD_ID, cardId)
                 .queryParam(CrossKeyConstants.Query.FROM_DATE, format(fromDate))
-                .queryParam(CrossKeyConstants.Query.TO_DATE, format(toDate))
-                .get(CreditCardTransactionsResponse.class).getCreditTransactions();
+                .queryParam(CrossKeyConstants.Query.TO_DATE, format(toDate)),
+            CreditCardTransactionsResponse.class).getCreditTransactions();
     }
 
     public PortfolioResponse fetchPortfolio(String accountId) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO)
-                .post(PortfolioResponse.class, PortfolioRequest.withAccountId(accountId));
+        return post(buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO),
+            PortfolioResponse.class,
+            PortfolioRequest.withAccountId(accountId));
     }
 
     public String fetchPortfolioAsString(String accountId) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO)
-                .post(String.class, PortfolioRequest.withAccountId(accountId));
+        return post(buildRequest(CrossKeyConstants.Url.FETCH_PORTFOLIO),
+            String.class,
+            PortfolioRequest.withAccountId(accountId));
     }
 
     public InstrumentDetailsResponse fetchInstrumentDetails(String isinCode, String marketPlace) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_INSTRUMENT_DETAILS)
-                .post(InstrumentDetailsResponse.class, InstrumentDetailsRequest.of(isinCode, marketPlace));
+        return post(buildRequest(CrossKeyConstants.Url.FETCH_INSTRUMENT_DETAILS),
+            InstrumentDetailsResponse.class,
+            InstrumentDetailsRequest.of(isinCode, marketPlace));
     }
 
     public FundInfoResponse fetchFundInfo(String fundCode) {
-        return buildRequest(CrossKeyConstants.Url.FETCH_FUND_INFO)
-                .queryParam(CrossKeyConstants.Query.FUND_CODE, fundCode)
-                .get(FundInfoResponse.class);
+        return get(buildRequest(CrossKeyConstants.Url.FETCH_FUND_INFO)
+                .queryParam(CrossKeyConstants.Query.FUND_CODE, fundCode),
+            FundInfoResponse.class);
     }
 
     private RequestBuilder buildRequest(String path) {
         return client
-                .request(CrossKeyConstants.Url.getUrl(agentConfiguration.getBaseUrl(), path))
-                .type(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON_TYPE);
+            .request(CrossKeyConstants.Url.getUrl(agentConfiguration.getBaseUrl(), path))
+            .type(MediaType.APPLICATION_JSON_TYPE)
+            .accept(MediaType.APPLICATION_JSON_TYPE);
+    }
+
+    private <T> T get(RequestBuilder request, Class<T> responseType) {
+        String response = request.get(String.class);
+
+        return deserializeResponse(responseType, response);
+    }
+
+    private <T> T post(RequestBuilder request, Class<T> responseType, Object requestBody) {
+        String response = "";
+        if (requestBody!= null) {
+            response = request.post(String.class, requestBody);
+        } else {
+            response = request.post(String.class);
+        }
+
+        return deserializeResponse(responseType, response);
+    }
+
+    private <T> T deserializeResponse(Class<T> responseType, String response) {
+        response = cleanResponseString(response);
+
+        if (responseType.equals(String.class)) {
+            return (T) response;
+        }
+
+        return SerializationUtils.deserializeFromString(response, responseType);
+    }
+
+    private String cleanResponseString(String response) {
+        if (response == null) {
+            return response;
+        }
+
+        int idx = response.indexOf('\n');
+        if (idx >= 0) {
+            return response.substring(idx + 1);
+        }
+
+        return response;
     }
 }

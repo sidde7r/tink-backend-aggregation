@@ -43,15 +43,6 @@ public abstract class CrossKeyAgent extends NextGenerationAgent {
 
     @Override
     protected void configureHttpClient(TinkHttpClient client) {
-        client.addMessageReader(new CrossKeyMessageBodyReader(CrossKeyAgent.class.getPackage()));
-    }
-
-    @Override
-    protected Authenticator constructAuthenticator() {
-
-        return new BankIdAuthenticationController<>(
-                supplementalRequester,
-                new CrossKeyBankIdAuthenticator(apiClient, agentConfiguration, sessionStorage, credentials));
     }
 
     @Override
