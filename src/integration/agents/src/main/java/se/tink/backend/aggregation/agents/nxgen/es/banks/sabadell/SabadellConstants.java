@@ -32,6 +32,7 @@ public final class SabadellConstants {
         public static final URL FETCH_SAVINGS = new URL(BASE_URL + "/savings");
         public static final URL FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS =
                 new URL(BASE_URL + "/servicingfunds/refunds");
+        public static final URL FETCH_LOAN_DETAILS = new URL(BASE_URL + "/loans");
     }
 
     public static final class Headers {
@@ -122,6 +123,7 @@ public final class SabadellConstants {
         public static final LogTag SAVINGS = LogTag.from("es_sabadell_savings");
         public static final LogTag SERVICING_FUNDS_ACCOUNT_DETAILS =
                 LogTag.from("es_sabadell_servicing_funds_account_details");
+        public static final LogTag LOAN_DETAILS = LogTag.from("es_sabadell_loan_details");
     }
 
     public static final class AccountTypes {

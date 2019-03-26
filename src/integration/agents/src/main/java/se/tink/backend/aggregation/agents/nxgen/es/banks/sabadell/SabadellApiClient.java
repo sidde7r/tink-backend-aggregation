@@ -10,6 +10,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.invest
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.SavingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsAccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
@@ -79,7 +81,7 @@ public class SabadellApiClient {
                 .post(CreditCardTransactionsResponse.class, requestEntity);
     }
 
-    public String fetchLoans() {
+    public LoansResponse fetchLoans() {
         return createRequest(SabadellConstants.Urls.FETCH_LOANS)
                 .queryParam(
                         SabadellConstants.QueryParamPairs.PAGE.getKey(),
@@ -90,7 +92,7 @@ public class SabadellApiClient {
                 .queryParam(
                         SabadellConstants.QueryParamPairs.ORDER_DESC.getKey(),
                         SabadellConstants.QueryParamPairs.ORDER_DESC.getValue())
-                .get(String.class);
+                .get(LoansResponse.class);
     }
 
     public DepositsResponse fetchDeposits() {
@@ -130,5 +132,10 @@ public class SabadellApiClient {
     public String fetchServicingFundsAccountDetails(ServicingFundsAccountDetailsRequest request) {
         return createRequest(SabadellConstants.Urls.FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS)
                 .post(String.class, request);
+    }
+
+    public String fetchLoanDetails(LoanDetailsRequest loanDetailsRequest) {
+        return createRequest(SabadellConstants.Urls.FETCH_LOAN_DETAILS)
+                .post(String.class, loanDetailsRequest);
     }
 }
