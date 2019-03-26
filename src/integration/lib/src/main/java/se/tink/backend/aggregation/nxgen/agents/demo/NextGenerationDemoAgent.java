@@ -73,6 +73,7 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         NextGenerationDemoCreditCardFetcher transactionAndAccountFetcher = new NextGenerationDemoCreditCardFetcher(
                 request.getAccounts(),
+                currency,
                 catalog,
                 getCreditCardAccounts());
 

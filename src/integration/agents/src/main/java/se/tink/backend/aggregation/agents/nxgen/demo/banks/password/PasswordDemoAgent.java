@@ -182,13 +182,13 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
                     }
 
                     @Override
-                    public Amount getBalance() {
-                        return Amount.valueOf("EUR", -145610, 2);
+                    public double getBalance() {
+                        return -1456D;
                     }
 
                     @Override
-                    public Amount getAvailableCredit() {
-                        return Amount.valueOf("EUR", 854390, 2);
+                    public double getAvailableCredit() {
+                        return 8543D;
                     }
                 }
         );

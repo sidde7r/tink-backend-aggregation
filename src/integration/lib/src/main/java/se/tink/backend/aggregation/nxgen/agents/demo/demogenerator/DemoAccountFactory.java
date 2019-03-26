@@ -25,7 +25,8 @@ public class DemoAccountFactory {
         if (Objects.nonNull(transactionAccountDefinition)) {
             accounts.add(TransactionalAccount.builder(AccountTypes.CHECKING,
                     transactionAccountDefinition.getAccountId(), new Amount(currency,
-                            DemoConstants.getSekToCurrencyConverter(currency, transactionAccountDefinition.getBalance())))
+                            DemoConstants
+                                    .getSekToCurrencyConverter(currency, transactionAccountDefinition.getBalance())))
                     .setAccountNumber(transactionAccountDefinition.getAccountId())
                     .setName(catalog.getString(transactionAccountDefinition.getAccountName()))
                     .setBankIdentifier(transactionAccountDefinition.getAccountId())
@@ -35,7 +36,8 @@ public class DemoAccountFactory {
         if (Objects.nonNull(savingsAccountDefinition)) {
             accounts.add(TransactionalAccount.builder(AccountTypes.SAVINGS,
                     savingsAccountDefinition.getAccountId(), new Amount(currency,
-                            DemoConstants.getSekToCurrencyConverter(currency, savingsAccountDefinition.getAccountBalance())))
+                            DemoConstants
+                                    .getSekToCurrencyConverter(currency, savingsAccountDefinition.getAccountBalance())))
                     .setAccountNumber(savingsAccountDefinition.getAccountId())
                     .setName(catalog.getString(savingsAccountDefinition.getAccountName()))
                     .setBankIdentifier(savingsAccountDefinition.getAccountId())
@@ -46,19 +48,21 @@ public class DemoAccountFactory {
     }
 
     public static List<CreditCardAccount> createCreditCardAccounts(
+            String currency,
             Catalog catalog, Collection<DemoCreditCardAccount> demoCreditCardAccountDefinitions) {
         ImmutableList.Builder<CreditCardAccount> accountListBuilder = ImmutableList.builder();
 
         for (DemoCreditCardAccount accountDefinition : demoCreditCardAccountDefinitions) {
             accountListBuilder.add(
-                    createCreditCardAccount(catalog, accountDefinition)
+                    createCreditCardAccount(currency, catalog, accountDefinition)
             );
         }
 
         return accountListBuilder.build();
     }
 
-    private static CreditCardAccount createCreditCardAccount(Catalog catalog, DemoCreditCardAccount accountDefinition) {
+    private static CreditCardAccount createCreditCardAccount(String currency, Catalog catalog,
+            DemoCreditCardAccount accountDefinition) {
         return CreditCardAccount.builderFromFullNumber(
                 accountDefinition.getCreditCardNumber())
                 .setName(
@@ -66,9 +70,11 @@ public class DemoAccountFactory {
                 .setHolderName(
                         accountDefinition.getNameOnCreditCard())
                 .setBalance(
-                        accountDefinition.getBalance())
+                        new Amount(currency,
+                                DemoConstants.getSekToCurrencyConverter(currency, accountDefinition.getBalance())))
                 .setAvailableCredit(
-                        accountDefinition.getAvailableCredit())
+                        new Amount(currency, DemoConstants
+                                .getSekToCurrencyConverter(currency, accountDefinition.getAvailableCredit())))
                 .build();
     }
 }

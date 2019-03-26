@@ -27,10 +27,12 @@ public class NextGenerationDemoCreditCardFetcher implements AccountFetcher<Credi
     private final PurchaseHistoryGenerator purchaseHistoryGenerator;
     private final Catalog catalog;
     private final List<DemoCreditCardAccount> creditCardAccountDefinition;
+    private final String currency;
 
-    public NextGenerationDemoCreditCardFetcher(List<Account> accounts, Catalog catalog,
+    public NextGenerationDemoCreditCardFetcher(List<Account> accounts, String currency, Catalog catalog,
             List<DemoCreditCardAccount> creditCardAccountDefinition) {
         this.accounts = accounts;
+        this.currency = currency;
         this.purchaseHistoryGenerator = new PurchaseHistoryGenerator(BASE_PATH);
         this.catalog = catalog;
         this.creditCardAccountDefinition = creditCardAccountDefinition;
@@ -38,7 +40,7 @@ public class NextGenerationDemoCreditCardFetcher implements AccountFetcher<Credi
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return DemoAccountFactory.createCreditCardAccounts(catalog, creditCardAccountDefinition);
+        return DemoAccountFactory.createCreditCardAccounts(currency, catalog, creditCardAccountDefinition);
     }
 
     @Override

@@ -8,6 +8,6 @@ public interface DemoCreditCardAccount {
     String getCreditCardNumber();
     HolderName getNameOnCreditCard();
     String getAccountName();
-    Amount getBalance();
-    Amount getAvailableCredit();
+    double getBalance();
+    double getAvailableCredit();
 }
