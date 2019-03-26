@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.santander;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.utils;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.base.Preconditions;

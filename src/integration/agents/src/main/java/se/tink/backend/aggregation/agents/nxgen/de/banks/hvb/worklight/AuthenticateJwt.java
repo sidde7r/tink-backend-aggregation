@@ -49,5 +49,4 @@ public final class AuthenticateJwt implements Jwt {
 
         return id;
     }
-
 }

@@ -7,15 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @XmlRootElement(name = "ProductID")
-@XmlType(propOrder = {
-        "productType",
-        "productCode",
-        "productDescription",
-        "accountNumber",
-        "iban",
-        "financialInstitute",
-        "accountOwner"
-})
+@XmlType(
+        propOrder = {
+            "productType",
+            "productCode",
+            "productDescription",
+            "accountNumber",
+            "iban",
+            "financialInstitute",
+            "accountOwner"
+        })
 public class ProductID {
     private String productType;
     private String productCode;

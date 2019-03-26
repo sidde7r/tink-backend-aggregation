@@ -6,10 +6,16 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.credit
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.CreditCardTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.creditcards.rpc.FetchCreditCardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.DepositsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.MarketsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.MarketsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.PensionPlansResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ProductsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.SavingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsAccountDetailsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.StocksResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoanDetailsRequest;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.loans.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.transactionalaccounts.rpc.AccountTransactionsResponse;
@@ -20,6 +26,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 import javax.ws.rs.core.MediaType;
+import java.util.Map;
 
 public class SabadellApiClient {
     private final TinkHttpClient client;
@@ -79,7 +86,7 @@ public class SabadellApiClient {
                 .post(CreditCardTransactionsResponse.class, requestEntity);
     }
 
-    public String fetchLoans() {
+    public LoansResponse fetchLoans() {
         return createRequest(SabadellConstants.Urls.FETCH_LOANS)
                 .queryParam(
                         SabadellConstants.QueryParamPairs.PAGE.getKey(),
@@ -90,7 +97,7 @@ public class SabadellApiClient {
                 .queryParam(
                         SabadellConstants.QueryParamPairs.ORDER_DESC.getKey(),
                         SabadellConstants.QueryParamPairs.ORDER_DESC.getValue())
-                .get(String.class);
+                .get(LoansResponse.class);
     }
 
     public DepositsResponse fetchDeposits() {
@@ -127,8 +134,40 @@ public class SabadellApiClient {
         createRequest(SabadellConstants.Urls.INITIATE_SESSION).delete();
     }
 
+    public ProductsResponse fetchProducts() {
+        return createRequest(SabadellConstants.Urls.FETCH_PRODUCTS)
+                .queryParam(
+                        SabadellConstants.QueryParamPairs.NO_ERROR.getKey(),
+                        SabadellConstants.QueryParamPairs.NO_ERROR.getValue())
+                .get(ProductsResponse.class);
+    }
+
+    public MarketsResponse fetchMarkets(MarketsRequest request) {
+        return createRequest(SabadellConstants.Urls.FETCH_MARKETS)
+                .post(MarketsResponse.class, request);
+    }
+
+    public StocksResponse fetchStocks(String market, Map<String, String> queryParams) {
+        return createRequest(
+                        SabadellConstants.Urls.FETCH_STOCKS.parameter(
+                                SabadellConstants.UrlParams.MARKET, market))
+                .queryParams(queryParams)
+                .get(StocksResponse.class);
+    }
+
     public String fetchServicingFundsAccountDetails(ServicingFundsAccountDetailsRequest request) {
         return createRequest(SabadellConstants.Urls.FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS)
                 .post(String.class, request);
+    }
+
+    public String fetchSavingsPlanDetails(Map<String, String> queryParams) {
+        return createRequest(SabadellConstants.Urls.FETCH_SAVINGS_PLAN_DETAILS)
+                .queryParams(queryParams)
+                .get(String.class);
+    }
+
+    public String fetchLoanDetails(LoanDetailsRequest loanDetailsRequest) {
+        return createRequest(SabadellConstants.Urls.FETCH_LOAN_DETAILS)
+                .post(String.class, loanDetailsRequest);
     }
 }

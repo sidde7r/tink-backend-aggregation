@@ -20,8 +20,6 @@ public class BankAustriaAgentTest {
 
     @Test
     public void testRefresh() throws Exception {
-        builder.build()
-                .testRefresh();
+        builder.build().testRefresh();
     }
-
 }

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -7,6 +9,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.authenticator.MultiSupplementalAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.demo.banks.multisupplemental.authenticator.MultiSupplementalManualAuthenticator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -168,5 +171,10 @@ public class MultiSupplementalDemoAgent extends NextGenerationDemoAgent {
             @Override
             public AccountIdentifier getIdentifier() { return null; }
         };
+    }
+
+    @Override
+    public List<DemoCreditCardAccount> getCreditCardAccounts() {
+        return Collections.emptyList();
     }
 }

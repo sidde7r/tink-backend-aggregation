@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils;
 
 import com.google.api.client.util.Strings;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +10,8 @@ import java.util.Optional;
 public class FinTsDateParser {
     private static final int BOOKED_DATE_LENGTH = 4;
     private static final String INTEGER_DATE_COMPACT = "yyMMdd";
-    private static final DateTimeFormatter FORMATTER_INTEGER_DATE_COMPACT = DateTimeFormatter.ofPattern(INTEGER_DATE_COMPACT);
+    private static final DateTimeFormatter FORMATTER_INTEGER_DATE_COMPACT =
+            DateTimeFormatter.ofPattern(INTEGER_DATE_COMPACT);
 
     public static LocalDate parseDate(final String dateString) {
         String date = "";
@@ -28,7 +28,8 @@ public class FinTsDateParser {
         }
     }
 
-    private static Optional<LocalDate> parseBookedDate(final String bookedDate, final LocalDate valueDate) {
+    private static Optional<LocalDate> parseBookedDate(
+            final String bookedDate, final LocalDate valueDate) {
         if (Strings.isNullOrEmpty(bookedDate) || bookedDate.length() != BOOKED_DATE_LENGTH) {
             return Optional.empty();
         }
@@ -36,13 +37,13 @@ public class FinTsDateParser {
         final int bookedDay = Integer.parseInt(bookedDate.substring(2, 4));
         int bookedYear = valueDate.getYear();
         if (bookedMonth > valueDate.getMonth().getValue()) {
-             --bookedYear;
+            --bookedYear;
         }
         return Optional.of(LocalDate.of(bookedYear, bookedMonth, bookedDay));
     }
 
-    //Sparkasse sometimes sends invalid dates such as 180229
-    //This date is not valid since 2018 is not a leap year, and February 29 is a leap day
+    // Sparkasse sometimes sends invalid dates such as 180229
+    // This date is not valid since 2018 is not a leap year, and February 29 is a leap day
     private static LocalDate dateFallback(String date) {
         return LocalDate.parse(date, FORMATTER_INTEGER_DATE_COMPACT);
     }

@@ -6,6 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ListContentItem {
 
-  @JsonProperty("contenido")
-  private Content content;
+    @JsonProperty("contenido")
+    private Content content;
 }

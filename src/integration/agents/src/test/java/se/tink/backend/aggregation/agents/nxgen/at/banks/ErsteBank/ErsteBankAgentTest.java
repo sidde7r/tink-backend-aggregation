@@ -22,7 +22,6 @@ public class ErsteBankAgentTest {
                 .testRefresh();
     }
 
-
     @Test
     public void testLoginAndRefreshSidentity() throws Exception {
         new AgentIntegrationTest.Builder("at", "at-erstebank-thirdparty")
@@ -33,4 +32,3 @@ public class ErsteBankAgentTest {
                 .testRefresh();
     }
 }
-

@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class Account {
 
-  @JsonProperty("contratoPartenon")
-  private ContratoPartenon contratoPartenon;
+    @JsonProperty("contratoPartenon")
+    private ContratoPartenon contratoPartenon;
 
-  @JsonProperty("contratoLocal")
-  private ContratoLocal contratoLocal;
+    @JsonProperty("contratoLocal")
+    private ContratoLocal contratoLocal;
 }

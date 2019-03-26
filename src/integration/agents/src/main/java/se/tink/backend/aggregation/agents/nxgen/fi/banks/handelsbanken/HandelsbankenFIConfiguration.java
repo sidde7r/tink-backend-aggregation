@@ -36,6 +36,11 @@ public class HandelsbankenFIConfiguration implements HandelsbankenConfiguration 
     }
 
     @Override
+    public String getDeviceModel() {
+        return HandelsbankenFIConstants.Headers.APP_VERSION;
+    }
+
+    @Override
     public String getAuthTp() {
         return HandelsbankenFIConstants.DeviceAuthentication.AUTH_TP;
     }

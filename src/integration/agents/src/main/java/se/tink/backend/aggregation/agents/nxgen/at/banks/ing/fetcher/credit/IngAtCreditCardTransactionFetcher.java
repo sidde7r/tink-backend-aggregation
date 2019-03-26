@@ -1,14 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.fetcher.credit;
 
+import java.util.Date;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtApiClient;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.IngAtSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.ing.authenticator.rpc.WebLoginResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-
-import java.util.Date;
-import java.util.Optional;
 
 public class IngAtCreditCardTransactionFetcher
         implements TransactionDatePaginator<CreditCardAccount> {
@@ -22,7 +21,8 @@ public class IngAtCreditCardTransactionFetcher
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(CreditCardAccount account, Date fromDate, Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            CreditCardAccount account, Date fromDate, Date toDate) {
         final Optional<WebLoginResponse> webLoginResponse = sessionStorage.getWebLoginResponse();
         webLoginResponse.orElseThrow(
                 () ->

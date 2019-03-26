@@ -21,12 +21,18 @@ public class Products {
     }
 
     public Optional<ProductID> getProductIDByAccountNumber(final String accountNumber) {
-        final List<ProductID> productIDs = productList.stream()
-                .map(Product::getProductID)
-                .filter(Objects::nonNull)
-                .filter(productID -> productID.getAccountNumber() != null)
-                .filter(productID -> productID.getAccountNumber().trim().equalsIgnoreCase(accountNumber))
-                .collect(Collectors.toList());
+        final List<ProductID> productIDs =
+                productList.stream()
+                        .map(Product::getProductID)
+                        .filter(Objects::nonNull)
+                        .filter(productID -> productID.getAccountNumber() != null)
+                        .filter(
+                                productID ->
+                                        productID
+                                                .getAccountNumber()
+                                                .trim()
+                                                .equalsIgnoreCase(accountNumber))
+                        .collect(Collectors.toList());
         return productIDs.isEmpty() ? Optional.empty() : Optional.of(productIDs.get(0));
     }
 }

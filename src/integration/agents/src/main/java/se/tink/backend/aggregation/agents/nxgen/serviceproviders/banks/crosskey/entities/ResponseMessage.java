@@ -3,7 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.crosskey
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
+@JsonObject
 public class ResponseMessage {
     private boolean success;
     private List<String> errors;

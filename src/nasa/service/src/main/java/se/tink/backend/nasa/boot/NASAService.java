@@ -87,6 +87,13 @@ class NASAService {
         Spark.before(SparkFilters.ACCESS_LOGGING);
 
         Spark.get("/ping", (req, res) -> "pong");
+
+        // Log the path and the body of requests to the Aggregation Controller API
+        Spark.before("/aggregation/controller/v1/system/*", SparkFilters.REQUEST_LOGGING);
+
+        AggregationControllerApiFactory.createUpdateServiceEndpoints();
+        AggregationControllerApiFactory.createProcessServiceEndpoints();
+        AggregationControllerApiFactory.createCredentialsServiceEndpoints();
     }
 
     private void stop() throws Exception {
@@ -118,6 +125,12 @@ class NASAService {
                         request.userAgent(),
                         request.requestMethod(),
                         request.url());
+
+
+        static Filter REQUEST_LOGGING = (request, response) ->
+                logger.info("Request to path: {} - body: {}",
+                    request.pathInfo(),
+                    request.body());
     }
 }
 

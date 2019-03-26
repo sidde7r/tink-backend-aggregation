@@ -11,9 +11,9 @@ public class TokenEntity {
     private String type;
     private String expiresIn;
 
-    public TokenEntity(){}
+    public TokenEntity() {}
 
-    public TokenEntity(String token, String type, String expiresIn){
+    public TokenEntity(String token, String type, String expiresIn) {
         this.token = token;
         this.type = type;
         this.expiresIn = expiresIn;
@@ -43,7 +43,7 @@ public class TokenEntity {
         this.expiresIn = expiresIn;
     }
 
-    public Date getExpiryDate(){
+    public Date getExpiryDate() {
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());
         c.add(Calendar.SECOND, Integer.parseInt(expiresIn));

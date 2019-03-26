@@ -10,24 +10,23 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 @JsonObject
 public class CreditMethodResult {
 
-  @JsonProperty("nextPageOffset")
-  private NextPageOffset nextPageOffset;
+    @JsonProperty("nextPageOffset")
+    private NextPageOffset nextPageOffset;
 
-  @JsonProperty("movList")
-  private List<MovListItem> movList;
+    @JsonProperty("movList")
+    private List<MovListItem> movList;
 
-  @JsonProperty("isLastPage")
-  private String isLastPage;
+    @JsonProperty("isLastPage")
+    private String isLastPage;
 
-  public Collection<? extends Transaction> getTinkTransactions() {
-    return movList
-        .stream()
-        .filter(movListItem -> movListItem.isValid())
-        .map(t -> t.getTinkTransactions())
-        .collect(Collectors.toList());
-  }
+    public Collection<? extends Transaction> getTinkTransactions() {
+        return movList.stream()
+                .filter(movListItem -> movListItem.isValid())
+                .map(t -> t.getTinkTransactions())
+                .collect(Collectors.toList());
+    }
 
-  public boolean getIsLastPage() {
-    return "true".equalsIgnoreCase(isLastPage);
-  }
+    public boolean getIsLastPage() {
+        return "true".equalsIgnoreCase(isLastPage);
+    }
 }

@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
+import java.util.Optional;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Optional;
 
 public class IngAtTransactionalAccountParser {
 

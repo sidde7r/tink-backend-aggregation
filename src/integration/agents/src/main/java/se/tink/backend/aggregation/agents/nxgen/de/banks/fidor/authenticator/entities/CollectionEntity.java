@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,10 +8,13 @@ public class CollectionEntity {
 
     @JsonProperty("current_page")
     private Long currentPage;
+
     @JsonProperty("per_page")
     private Long perPage;
+
     @JsonProperty("total_entries")
     private Long totalEntries;
+
     @JsonProperty("total_pages")
     private Long totalPages;
 

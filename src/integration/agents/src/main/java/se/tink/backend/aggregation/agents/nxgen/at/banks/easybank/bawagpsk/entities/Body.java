@@ -55,7 +55,9 @@ public class Body {
         return logoutResponseEntity;
     }
 
-    @XmlElement(name = "GetAccountInformationListRequest", namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
+    @XmlElement(
+            name = "GetAccountInformationListRequest",
+            namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
     public void setGetAccountInformationListRequestEntity(
             GetAccountInformationListRequestEntity getAccountInformationListRequestEntity) {
         this.getAccountInformationListRequestEntity = getAccountInformationListRequestEntity;
@@ -65,7 +67,9 @@ public class Body {
         return getAccountInformationListRequestEntity;
     }
 
-    @XmlElement(name = "GetAccountInformationListResponse", namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
+    @XmlElement(
+            name = "GetAccountInformationListResponse",
+            namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
     public void setGetAccountInformationListResponseEntity(
             GetAccountInformationListResponseEntity getAccountInformationListResponseEntity) {
         this.getAccountInformationListResponseEntity = getAccountInformationListResponseEntity;
@@ -75,7 +79,9 @@ public class Body {
         return getAccountInformationListResponseEntity;
     }
 
-    @XmlElement(name = "GetAccountStatementItemsRequest", namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
+    @XmlElement(
+            name = "GetAccountStatementItemsRequest",
+            namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
     public void setGetAccountStatementItemsRequestEntity(
             GetAccountStatementItemsRequestEntity getAccountStatementItemsRequestEntity) {
         this.getAccountStatementItemsRequestEntity = getAccountStatementItemsRequestEntity;
@@ -85,7 +91,9 @@ public class Body {
         return getAccountStatementItemsRequestEntity;
     }
 
-    @XmlElement(name = "GetAccountStatementItemsResponse", namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
+    @XmlElement(
+            name = "GetAccountStatementItemsResponse",
+            namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
     public void setGetAccountStatementItemsResponseEntity(
             GetAccountStatementItemsResponseEntity getAccountStatementItemsResponseEntity) {
         this.getAccountStatementItemsResponseEntity = getAccountStatementItemsResponseEntity;
@@ -105,8 +113,7 @@ public class Body {
     }
 
     @XmlElement(name = "ServiceResponse", namespace = BawagPskConstants.Urls.SOAP_NAMESPACE)
-    public void setServiceResponseEntity(
-            ServiceResponseEntity serviceResponseEntity) {
+    public void setServiceResponseEntity(ServiceResponseEntity serviceResponseEntity) {
         this.serviceResponseEntity = serviceResponseEntity;
     }
 

@@ -28,17 +28,22 @@ public final class TransactionsResponse implements TransactionKeyPaginatorRespon
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
         return movements.stream()
-                .map(movement -> Transaction.builder()
-                        .setAmount(new Amount(movement.getCurrency(), movement.getAmount()))
-                        .setDescription(String.join(" ", movement.getDescription()))
-                        .setDate(movement.getDate())
-                        .build()
-                )
+                .map(
+                        movement ->
+                                Transaction.builder()
+                                        .setAmount(
+                                                new Amount(
+                                                        movement.getCurrency(),
+                                                        movement.getAmount()))
+                                        .setDescription(String.join(" ", movement.getDescription()))
+                                        .setDate(movement.getDate())
+                                        .build())
                 .collect(Collectors.toSet());
     }
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        return Optional.of(false); // No next key -- all available transactions are fetched in one page
+        return Optional.of(
+                false); // No next key -- all available transactions are fetched in one page
     }
 }

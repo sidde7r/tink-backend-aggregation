@@ -7,14 +7,14 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class FilterEntity {
 
-  @JsonProperty("iniDateRange")
-  private String iniDateRange;
+    @JsonProperty("iniDateRange")
+    private String iniDateRange;
 
-  @JsonProperty("endDateRange")
-  private String endDateRange;
+    @JsonProperty("endDateRange")
+    private String endDateRange;
 
-  public FilterEntity(Date from, Date to) {
-    this.iniDateRange = from.toInstant().toString();
-    this.endDateRange = to.toInstant().toString();
-  }
+    public FilterEntity(Date from, Date to) {
+        this.iniDateRange = from.toInstant().toString();
+        this.endDateRange = to.toInstant().toString();
+    }
 }

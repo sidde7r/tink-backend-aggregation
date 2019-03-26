@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -7,7 +8,6 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankApiC
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.VolksbankConstants;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class VolksbankAutoAuthenticator implements AutoAuthenticator {
 
@@ -16,7 +16,9 @@ public class VolksbankAutoAuthenticator implements AutoAuthenticator {
     private final Credentials credentials;
 
     public VolksbankAutoAuthenticator(
-            VolksbankApiClient apiClient, PersistentStorage persistentStorage, Credentials credentials) {
+            VolksbankApiClient apiClient,
+            PersistentStorage persistentStorage,
+            Credentials credentials) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
         this.credentials = credentials;

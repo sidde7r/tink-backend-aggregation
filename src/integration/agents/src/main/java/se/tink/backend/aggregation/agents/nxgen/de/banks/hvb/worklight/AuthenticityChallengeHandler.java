@@ -10,17 +10,17 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public final class AuthenticityChallengeHandler {
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticityChallengeHandler.class);
+    private static final Logger logger =
+            LoggerFactory.getLogger(AuthenticityChallengeHandler.class);
 
     private AuthenticityChallengeHandler() {
         throw new AssertionError();
     }
 
     public static String challengeToAuthenticityRealmString(
-            final String wlChallengeData,
-            final String moduleName,
-            final String appId) {
-        final ImmutableList<String> strings = ImmutableList.copyOf(wlChallengeData.split("\\+")); // Assert len == 2
+            final String wlChallengeData, final String moduleName, final String appId) {
+        final ImmutableList<String> strings =
+                ImmutableList.copyOf(wlChallengeData.split("\\+")); // Assert len == 2
         final String firstString = strings.get(0);
 
         final List<Byte> buffer = new ArrayList<>(); // TODO better alternative?
@@ -33,23 +33,31 @@ public final class AuthenticityChallengeHandler {
             i += 3;
             final char seventhChar = firstString.charAt(i);
             switch (seventhChar) {
-            case 'N':
-                numberOfBytes = cda98(buffer, moduleName, numberOfBytes, firstNumber, secondNumber);
-                break;
-            case 'X': {
-                final String substring = cda10(i + 1, firstString);
-                for (int j = 0; j < numberOfBytes; ++j) {
-                    buffer.set(j, (byte) (buffer.get(j) ^ substring.charAt(moduloesque(j, substring.length()))));
-                }
-                i += substring.length() + 1;
-                break;
-            }
-            case 'C':
-                numberOfBytes = cda98(buffer, appId, numberOfBytes, firstNumber, secondNumber);
-                break;
-            default:
-                logger.error("Found unexpected AuthenticityChallenge character: {}", seventhChar);
-                break;
+                case 'N':
+                    numberOfBytes =
+                            cda98(buffer, moduleName, numberOfBytes, firstNumber, secondNumber);
+                    break;
+                case 'X':
+                    {
+                        final String substring = cda10(i + 1, firstString);
+                        for (int j = 0; j < numberOfBytes; ++j) {
+                            buffer.set(
+                                    j,
+                                    (byte)
+                                            (buffer.get(j)
+                                                    ^ substring.charAt(
+                                                            moduloesque(j, substring.length()))));
+                        }
+                        i += substring.length() + 1;
+                        break;
+                    }
+                case 'C':
+                    numberOfBytes = cda98(buffer, appId, numberOfBytes, firstNumber, secondNumber);
+                    break;
+                default:
+                    logger.error(
+                            "Found unexpected AuthenticityChallenge character: {}", seventhChar);
+                    break;
             }
         }
 
@@ -57,8 +65,12 @@ public final class AuthenticityChallengeHandler {
         return "i" + bsodString;
     }
 
-    private static int cda98(final List<Byte> buffer, final String staticName, final int numberOfBytes,
-            final int firstNumber, final int secondNumber) {
+    private static int cda98(
+            final List<Byte> buffer,
+            final String staticName,
+            final int numberOfBytes,
+            final int firstNumber,
+            final int secondNumber) {
         final int length = staticName.length();
         final int a;
         final int b;
@@ -72,7 +84,8 @@ public final class AuthenticityChallengeHandler {
         int newNumberOfBytes = numberOfBytes;
         if (a < staticName.length()) {
             newNumberOfBytes += a - b + 1;
-            buffer.addAll(Arrays.asList(ArrayUtils.toObject(staticName.substring(b, a + 1).getBytes())));
+            buffer.addAll(
+                    Arrays.asList(ArrayUtils.toObject(staticName.substring(b, a + 1).getBytes())));
         }
         return newNumberOfBytes;
     }

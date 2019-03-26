@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.EELoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.GlobalPositionFirstTimeResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.KeepAliveResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LinkingLoginRequest;
@@ -11,8 +12,8 @@ import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.LoginResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.rpc.CardTransactionsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments.rpc.InvestmentsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.rpc.GlobalPositionResponse;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.rpc.GlobalPositionFirstTimeResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsPaginationRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.rpc.TransactionsResponse;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
@@ -112,7 +113,7 @@ public class EvoBancoApiClient {
             setNextCodSecIpHeader(response);
 
             response.getBody(KeepAliveResponse.class).handleReturnCode();
-            
+
         } catch (HttpResponseException e) {
             return false;
         }
@@ -179,6 +180,29 @@ public class EvoBancoApiClient {
         return response.getBody(CardTransactionsResponse.class);
     }
 
+    public InvestmentsResponse fetchInvestments() {
+        HttpResponse response =
+                createRequest(EvoBancoConstants.Urls.FETCH_INVESTMENTS)
+                        .headers(getEEHeaders())
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
+                                sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.ENTITY_CODE,
+                                sessionStorage.get(EvoBancoConstants.Storage.ENTITY_CODE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.INTERNAL_ID_PE,
+                                sessionStorage.get(EvoBancoConstants.Storage.INTERNAL_ID_PE))
+                        .queryParam(
+                                EvoBancoConstants.QueryParamsKeys.USER_BE,
+                                sessionStorage.get(EvoBancoConstants.Storage.USER_BE))
+                        .get(HttpResponse.class);
+
+        setNextCodSecIpHeader(response);
+
+        return response.getBody(InvestmentsResponse.class);
+    }
+
     private Map<String, Object> getEEHeaders() {
         Map<String, Object> headers = new HashMap<>();
         headers.put(EvoBancoConstants.HeaderKeys.COD_SEC_USER, "");
@@ -201,7 +225,8 @@ public class EvoBancoApiClient {
 
     private Map<String, String> getEEQueryParams() {
         Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
+        queryParams.put(
+                EvoBancoConstants.QueryParamsKeys.AGREEMENT_BE,
                 sessionStorage.get(EvoBancoConstants.Storage.AGREEMENT_BE));
         queryParams.put(
                 EvoBancoConstants.QueryParamsKeys.ENTITY_CODE,

@@ -7,14 +7,14 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class SantanderAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
-  private final SantanderApiClient client;
+    private final SantanderApiClient client;
 
-  public SantanderAccountFetcher(SantanderApiClient client) {
-    this.client = client;
-  }
+    public SantanderAccountFetcher(SantanderApiClient client) {
+        this.client = client;
+    }
 
-  @Override
-  public Collection<TransactionalAccount> fetchAccounts() {
-    return client.fetchAccounts().toTransactionalAccounts();
-  }
+    @Override
+    public Collection<TransactionalAccount> fetchAccounts() {
+        return client.fetchAccounts().toTransactionalAccounts();
+    }
 }

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AccountResponse {
     @JsonProperty("data")
     private List<AccountEntity> accountEntity;
+
     private CollectionEntity collection;
 
     public List<AccountEntity> getAccountEntity() {
@@ -23,7 +24,7 @@ public class AccountResponse {
         return collection;
     }
 
-    public Collection<TransactionalAccount> toTransactionalAccounts(){
+    public Collection<TransactionalAccount> toTransactionalAccounts() {
         return accountEntity.stream()
                 .map(AccountEntity::toTransactionalAccount)
                 .collect(Collectors.toList());

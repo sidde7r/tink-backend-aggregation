@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.authenticator.EvoBancoMultifactorAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.creditcard.EvoBancoCreditCardFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.investments.EvoBancoInvestmentFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.EvoBancoAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.fetcher.transactionalaccount.EvoBancoTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.evobanco.session.EvoBancoSessionHandler;
@@ -94,7 +95,11 @@ public class EvoBancoAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.empty();
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new EvoBancoInvestmentFetcher(bankClient)));
     }
 
     @Override

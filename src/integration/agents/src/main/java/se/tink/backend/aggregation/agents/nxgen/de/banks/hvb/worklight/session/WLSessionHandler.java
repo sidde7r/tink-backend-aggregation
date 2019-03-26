@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.session;
 
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLApiClient;
@@ -7,9 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConfig;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.hvb.worklight.WLConstants;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
 
 public final class WLSessionHandler {
     private final WLApiClient client;

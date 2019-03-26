@@ -9,18 +9,25 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class UpcomingTransactionEntity {
     private long id;
+
     @JsonProperty("account_id")
     private long accountId;
+
     private double amount;
     private String currency;
+
     @JsonProperty("preauth_type")
     private String preauthType;
+
     @JsonProperty("expires_at")
     private Date expiresAt;
+
     @JsonProperty("created_at")
     private Date createdAt;
+
     @JsonProperty("updated_at")
     private Date updatedAt;
+
     @JsonProperty("preauth_type_details")
     private UpcomingTransactionDetails details;
 
@@ -56,12 +63,11 @@ public class UpcomingTransactionEntity {
         return updatedAt;
     }
 
-    public UpcomingTransaction toUpcomingTransaction(){
+    public UpcomingTransaction toUpcomingTransaction() {
         return UpcomingTransaction.builder()
                 .setDescription(details.getMerchantName())
                 .setDate(expiresAt)
                 .setAmount(new Amount(currency, amount))
                 .build();
     }
-
 }

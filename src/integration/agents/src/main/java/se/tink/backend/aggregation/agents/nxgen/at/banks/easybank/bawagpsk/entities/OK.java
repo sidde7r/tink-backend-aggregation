@@ -32,7 +32,8 @@ public class OK {
     }
 
     @XmlElement(name = "AccountInformationListItem")
-    public void setAccountInformationListItemList(List<AccountInformationListItem> accountInformationListItemList) {
+    public void setAccountInformationListItemList(
+            List<AccountInformationListItem> accountInformationListItemList) {
         this.accountInformationListItemList = accountInformationListItemList;
     }
 

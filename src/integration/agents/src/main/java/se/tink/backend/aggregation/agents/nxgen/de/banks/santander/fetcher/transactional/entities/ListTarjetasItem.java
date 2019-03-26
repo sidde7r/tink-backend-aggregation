@@ -6,10 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class ListTarjetasItem {
 
-  @JsonProperty("tarjetas")
-  private Cards cards;
+    @JsonProperty("tarjetas")
+    private Cards cards;
 
-  public Cards getCards() {
-    return cards;
-  }
+    public Cards getCards() {
+        return cards;
+    }
 }

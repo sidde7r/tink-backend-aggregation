@@ -11,26 +11,29 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionKeyPaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-public final class HVBTransactionFetcher implements TransactionKeyPaginator<TransactionalAccount, Integer> {
+public final class HVBTransactionFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, Integer> {
     private static final Logger logger = LoggerFactory.getLogger(HVBTransactionFetcher.class);
 
     private final WLFetcher wlFetcher;
 
-    public HVBTransactionFetcher(final WLApiClient client, final HVBStorage storage,
-            final WLConfig config) {
+    public HVBTransactionFetcher(
+            final WLApiClient client, final HVBStorage storage, final WLConfig config) {
         wlFetcher = new WLFetcher(client, storage, config);
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<Integer> getTransactionsFor(final TransactionalAccount account,
-            final Integer key) {
-        final TransactionsResponse response = wlFetcher
-                .getTransactions(TransactionsResponse.class, account.getAccountNumber());
+    public TransactionKeyPaginatorResponse<Integer> getTransactionsFor(
+            final TransactionalAccount account, final Integer key) {
+        final TransactionsResponse response =
+                wlFetcher.getTransactions(TransactionsResponse.class, account.getAccountNumber());
 
-        response.getErrorMessage().ifPresent(msg -> {
-            logger.error(msg);
-            throw new IllegalStateException(msg);
-        });
+        response.getErrorMessage()
+                .ifPresent(
+                        msg -> {
+                            logger.error(msg);
+                            throw new IllegalStateException(msg);
+                        });
 
         return response;
     }

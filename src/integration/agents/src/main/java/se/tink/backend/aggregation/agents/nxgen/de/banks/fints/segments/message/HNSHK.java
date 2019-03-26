@@ -5,10 +5,16 @@ import java.time.format.DateTimeFormatter;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.FinTsSegment;
 
-public class HNSHK extends FinTsSegment{
+public class HNSHK extends FinTsSegment {
 
-    public HNSHK(int segmentNumber, int profileVersion, int securityReference, String securityFunction,
-            String systemId, String blz, String username) {
+    public HNSHK(
+            int segmentNumber,
+            int profileVersion,
+            int securityReference,
+            String securityFunction,
+            String systemId,
+            String blz,
+            String username) {
         super(segmentNumber, false);
 
         LocalDateTime now = LocalDateTime.now();

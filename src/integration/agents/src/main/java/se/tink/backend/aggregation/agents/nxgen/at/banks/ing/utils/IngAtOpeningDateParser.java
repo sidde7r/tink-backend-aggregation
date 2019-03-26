@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.ing.utils;
 
 import com.google.common.base.Preconditions;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class IngAtOpeningDateParser {
     private final Document doc;

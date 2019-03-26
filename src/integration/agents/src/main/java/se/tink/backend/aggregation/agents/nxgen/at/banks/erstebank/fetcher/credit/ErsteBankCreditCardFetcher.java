@@ -12,8 +12,8 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.page.TransactionPagePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 
-public class ErsteBankCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionPagePaginator<CreditCardAccount> {
+public class ErsteBankCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionPagePaginator<CreditCardAccount> {
 
     private final ErsteBankApiClient client;
     private Logger logger = LoggerFactory.getLogger(ErsteBankCreditCardFetcher.class);
@@ -38,8 +38,11 @@ public class ErsteBankCreditCardFetcher implements AccountFetcher<CreditCardAcco
         try {
             return client.fetchTransactions(page, creditUrl);
         } catch (Exception e) {
-            logger.error(String.format("%s: %s", ErsteBankConstants.LOGTAG.CREDIT_TRANSACTIONS_ERROR.toString(),
-                    e.toString()));
+            logger.error(
+                    String.format(
+                            "%s: %s",
+                            ErsteBankConstants.LOGTAG.CREDIT_TRANSACTIONS_ERROR.toString(),
+                            e.toString()));
             return PaginatorResponseImpl.createEmpty(false);
         }
     }

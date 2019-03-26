@@ -25,11 +25,11 @@ public final class CsrJwt implements Jwt {
         entity.setAlg(WLConstants.ALG);
         final BigInteger n = this.publicKey.getModulus();
         final BigInteger e = this.publicKey.getPublicExponent();
-        final JpkEntity jpk = new JpkEntity(
-                "RSA",
-                Base64.getUrlEncoder().encodeToString(n.toByteArray()),
-                Base64.getUrlEncoder().encodeToString(e.toByteArray())
-        );
+        final JpkEntity jpk =
+                new JpkEntity(
+                        "RSA",
+                        Base64.getUrlEncoder().encodeToString(n.toByteArray()),
+                        Base64.getUrlEncoder().encodeToString(e.toByteArray()));
         entity.setJpk(jpk);
 
         return entity;

@@ -6,10 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class GetCardMovements {
 
-  @JsonProperty("entrada")
-  private Entrada entrada;
+    @JsonProperty("entrada")
+    private Entrada entrada;
 
-  public GetCardMovements(Entrada entrada) {
-    this.entrada = entrada;
-  }
+    public GetCardMovements(Entrada entrada) {
+        this.entrada = entrada;
+    }
 }

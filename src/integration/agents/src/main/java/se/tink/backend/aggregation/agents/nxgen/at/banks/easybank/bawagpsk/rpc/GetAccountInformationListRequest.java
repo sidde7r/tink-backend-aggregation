@@ -12,9 +12,10 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk.entit
 public class GetAccountInformationListRequest {
     private Envelope envelope;
 
-    public GetAccountInformationListRequest(final String serverSessionID, final String qid,
-            final List<ProductID> productIDs) {
-        GetAccountInformationListRequestEntity requestEntity = new GetAccountInformationListRequestEntity();
+    public GetAccountInformationListRequest(
+            final String serverSessionID, final String qid, final List<ProductID> productIDs) {
+        GetAccountInformationListRequestEntity requestEntity =
+                new GetAccountInformationListRequestEntity();
         requestEntity.setServerSessionID(serverSessionID);
         requestEntity.setQid(qid);
         requestEntity.setProductIdList(productIDs);

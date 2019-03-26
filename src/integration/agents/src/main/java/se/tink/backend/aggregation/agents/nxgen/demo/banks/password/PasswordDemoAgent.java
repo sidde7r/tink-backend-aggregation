@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.password;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
@@ -10,15 +12,21 @@ import se.tink.backend.aggregation.agents.nxgen.demo.banks.password.executor.tra
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.DemoAccountDefinitionGenerator;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
+import se.tink.backend.aggregation.nxgen.agents.demo.fetchers.NextGenerationDemoCreditCardFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.creditcard.CreditCardRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
+import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
+import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class PasswordDemoAgent extends NextGenerationDemoAgent {
@@ -150,5 +158,42 @@ public class PasswordDemoAgent extends NextGenerationDemoAgent {
     public DemoTransactionAccount getTransactionalAccountAccounts() {
         return DemoAccountDefinitionGenerator.getDemoTransactionalAccount(
                 this.username, this.provider);
+    }
+
+    @Override
+    public List<DemoCreditCardAccount> getCreditCardAccounts() {
+        return Collections.singletonList(
+                new DemoCreditCardAccount() {
+                    @Override
+                    public String getAccountId() {
+                        return "1122 3344 - 1234";
+                    }
+
+                    @Override
+                    public String getCreditCardNumber() {
+                        return "1234 5678 9101 1121";
+                    }
+
+                    @Override
+                    public HolderName getNameOnCreditCard() {
+                        return new HolderName("Tink Tinkerton");
+                    }
+
+                    @Override
+                    public String getAccountName() {
+                        return "Basic Credit Card";
+                    }
+
+                    @Override
+                    public double getBalance() {
+                        return -1456D;
+                    }
+
+                    @Override
+                    public double getAvailableCredit() {
+                        return 8543D;
+                    }
+                }
+        );
     }
 }

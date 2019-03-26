@@ -11,6 +11,7 @@ public class ServiceResponse {
     }
 
     public boolean requestWasSuccessful() {
-        return Optional.ofNullable(envelope.getBody().getServiceResponseEntity().getActionCall()).isPresent();
+        return Optional.ofNullable(envelope.getBody().getServiceResponseEntity().getActionCall())
+                .isPresent();
     }
 }

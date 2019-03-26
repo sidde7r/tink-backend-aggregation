@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountQueryProfile {
-  private String company = SantanderConstants.QUERYPARAMS.COMPANY_ID;
-  private String channel = SantanderConstants.QUERYPARAMS.CHANNEL;
-  private LanguageEntity language = new LanguageEntity();
+    private String company = SantanderConstants.QUERYPARAMS.COMPANY_ID;
+    private String channel = SantanderConstants.QUERYPARAMS.CHANNEL;
+    private LanguageEntity language = new LanguageEntity();
 }

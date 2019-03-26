@@ -10,23 +10,33 @@ import se.tink.libraries.amount.Amount;
 public class TransactionEntity {
 
     private String id;
+
     @JsonProperty("account_id")
     private String accountId;
+
     @JsonProperty("transaction_type")
     private String transactionType;
+
     private String subject;
     private double amount;
+
     @JsonProperty("booking_code")
     private String bookingCode;
+
     @JsonProperty("booking_date")
     private Date bookingDate;
+
     @JsonProperty("value_date")
     private Date valueDate;
+
     @JsonProperty("created_at")
     private Date createdAt;
+
     @JsonProperty("updated_at")
     private Date updatedAt;
+
     private String currency;
+
     @JsonProperty("transaction_type_details")
     private TransactionTypeDetailsEntity transactionTypeDetailsEntity;
 
@@ -78,12 +88,11 @@ public class TransactionEntity {
         return transactionTypeDetailsEntity;
     }
 
-    public Transaction toTinkTransaction(){
+    public Transaction toTinkTransaction() {
         return Transaction.builder()
                 .setAmount(new Amount(getCurrency(), getAmount()))
                 .setDate(getCreatedAt())
                 .setDescription(subject)
                 .build();
     }
-
 }

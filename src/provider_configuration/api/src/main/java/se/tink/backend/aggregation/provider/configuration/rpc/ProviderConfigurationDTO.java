@@ -43,6 +43,7 @@ public class ProviderConfigurationDTO {
     private boolean multiFactor;
     private String name;
     private String passwordHelpText;
+    private String tutorialUrl;
     private String payload;
     private boolean popular;
     private double refreshFrequency;
@@ -120,6 +121,10 @@ public class ProviderConfigurationDTO {
 
     public String getPasswordHelpText() {
         return passwordHelpText;
+    }
+
+    public String getTutorialUrl() {
+        return tutorialUrl;
     }
 
     public String getPayload() {
@@ -213,6 +218,10 @@ public class ProviderConfigurationDTO {
 
     public void setPasswordHelpText(String passwordHelpText) {
         this.passwordHelpText = passwordHelpText;
+    }
+
+    public void setTutorialUrl(String tutorialUrl) {
+        this.tutorialUrl = tutorialUrl;
     }
 
     public void setPayload(String payload) {

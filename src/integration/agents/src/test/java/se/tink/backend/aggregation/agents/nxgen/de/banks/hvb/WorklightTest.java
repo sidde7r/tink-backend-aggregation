@@ -28,11 +28,11 @@ public class WorklightTest {
     public void testAuthenticityChallengeHandler() {
         // First argument to PSecurityUtils::answerChallenge:
         // Roughly 154-character string containing one '+' and two '-' near the end
-        String returned = AuthenticityChallengeHandler.challengeToAuthenticityRealmString(
-                helper.get("tink.challengeData"),
-                HVBConstants.MODULE_NAME,
-                HVBConstants.APP_ID
-        );
+        String returned =
+                AuthenticityChallengeHandler.challengeToAuthenticityRealmString(
+                        helper.get("tink.challengeData"),
+                        HVBConstants.MODULE_NAME,
+                        HVBConstants.APP_ID);
         // Return value of PSecurityUtils::answerChallenge:
         // Roughly 37-character base64-encoded string
         String expected = helper.get("tink.authenticityRealm");

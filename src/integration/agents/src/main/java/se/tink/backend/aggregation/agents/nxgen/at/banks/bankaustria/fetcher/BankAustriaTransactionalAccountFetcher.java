@@ -14,40 +14,45 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class BankAustriaTransactionalAccountFetcher implements
-        AccountFetcher<TransactionalAccount>,
-        TransactionDatePaginator<TransactionalAccount> {
+public class BankAustriaTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionDatePaginator<TransactionalAccount> {
 
     private BankAustriaApiClient apiClient;
     private OtmlResponseConverter otmlResponseConverter;
 
-    public BankAustriaTransactionalAccountFetcher(BankAustriaApiClient apiClient,
-            OtmlResponseConverter otmlResponseConverter) {
+    public BankAustriaTransactionalAccountFetcher(
+            BankAustriaApiClient apiClient, OtmlResponseConverter otmlResponseConverter) {
         this.apiClient = apiClient;
         this.otmlResponseConverter = otmlResponseConverter;
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        Collection<TransactionalAccount> accountsFromSettings = otmlResponseConverter
-                .getAccountsFromSettings(apiClient.getAccountsFromSettings().getDataSources());
+        Collection<TransactionalAccount> accountsFromSettings =
+                otmlResponseConverter.getAccountsFromSettings(
+                        apiClient.getAccountsFromSettings().getDataSources());
 
         // If we did not get any accounts we might have been shown a pop up screen instead,
         // retry loading the settings and accepting RTA message
         if (accountsFromSettings.isEmpty()) {
-            otmlResponseConverter.anyRtaMessageToAccept(apiClient.getAccountsFromSettings().getDataSources())
+            otmlResponseConverter
+                    .anyRtaMessageToAccept(apiClient.getAccountsFromSettings().getDataSources())
                     .ifPresent(rtaMessage -> acceptRtaMessage(rtaMessage));
 
-            accountsFromSettings = otmlResponseConverter
-                    .getAccountsFromSettings(apiClient.getAccountsFromSettings().getDataSources());
+            accountsFromSettings =
+                    otmlResponseConverter.getAccountsFromSettings(
+                            apiClient.getAccountsFromSettings().getDataSources());
         }
 
-        return accountsFromSettings
-                .stream()
-                .map(account -> otmlResponseConverter
-                        .fillAccountInformation(
-                                apiClient.getAccountInformationFromAccountMovement(
-                                        account).getDataSources(), account))
+        return accountsFromSettings.stream()
+                .map(
+                        account ->
+                                otmlResponseConverter.fillAccountInformation(
+                                        apiClient
+                                                .getAccountInformationFromAccountMovement(account)
+                                                .getDataSources(),
+                                        account))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -57,9 +62,13 @@ public class BankAustriaTransactionalAccountFetcher implements
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate, Date toDate) {
-        Collection<? extends Transaction> transactions = otmlResponseConverter.getTransactions(
-                apiClient.getTransactionsForDatePeriod(account, fromDate, toDate).getDataSources());
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        Collection<? extends Transaction> transactions =
+                otmlResponseConverter.getTransactions(
+                        apiClient
+                                .getTransactionsForDatePeriod(account, fromDate, toDate)
+                                .getDataSources());
 
         return PaginatorResponseImpl.create(transactions);
     }

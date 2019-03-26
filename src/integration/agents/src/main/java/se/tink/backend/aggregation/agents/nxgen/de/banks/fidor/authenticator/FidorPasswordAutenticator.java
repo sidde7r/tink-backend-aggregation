@@ -27,7 +27,7 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
     private static final File phantomJsFile;
     private Logger logger = LoggerFactory.getLogger(FidorPasswordAutenticator.class);
 
-    public FidorPasswordAutenticator(FidorApiClient client){
+    public FidorPasswordAutenticator(FidorApiClient client) {
         this.client = client;
     }
 
@@ -41,55 +41,71 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
         }
     }
 
-    private WebDriver createWebdriver(){
+    private WebDriver createWebdriver() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
+        capabilities.setCapability(
+                PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
                 phantomJsFile.getAbsolutePath());
 
         capabilities.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
         capabilities.setCapability(CapabilityType.SUPPORTS_ALERTS, false);
 
-        String[] phantomArgs = new String[] {
-                // To allow iframe-hacking
-                "--web-security=false",
-                // No need to load images
-                "--load-images=false",
-                // For debugging, activate these:
-                //"--webdriver-loglevel=DEBUG",
-                //"--debug=true",
-        };
+        String[] phantomArgs =
+                new String[] {
+                    // To allow iframe-hacking
+                    "--web-security=false",
+                    // No need to load images
+                    "--load-images=false",
+                    // For debugging, activate these:
+                    // "--webdriver-loglevel=DEBUG",
+                    // "--debug=true",
+                };
         capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
         return new PhantomJSDriver(capabilities);
     }
 
-    private String getCode(WebDriver driver, String clientId, String state, String redirectUrl, String username, String password)
+    private String getCode(
+            WebDriver driver,
+            String clientId,
+            String state,
+            String redirectUrl,
+            String username,
+            String password)
             throws LoginException {
-        String url = new URL(FidorConstants.URL.OPENAPI.SANDBOX_BASE + FidorConstants.URL.OPENAPI.OAUTH_AUTHORIZE)
-                .queryParam(FidorConstants.QUERYPARAMS.CLIENT_ID, clientId)
-                .queryParam(FidorConstants.QUERYPARAMS.REDRIECT_URI, redirectUrl)
-                .queryParam(FidorConstants.QUERYPARAMS.STATE, state)
-                .queryParam(FidorConstants.QUERYPARAMS.RESPONSE_TYPE, FidorConstants.QUERYPARAMS.RESPONSE_TYPE_CODE)
-                .get();
+        String url =
+                new URL(
+                                FidorConstants.URL.OPENAPI.SANDBOX_BASE
+                                        + FidorConstants.URL.OPENAPI.OAUTH_AUTHORIZE)
+                        .queryParam(FidorConstants.QUERYPARAMS.CLIENT_ID, clientId)
+                        .queryParam(FidorConstants.QUERYPARAMS.REDRIECT_URI, redirectUrl)
+                        .queryParam(FidorConstants.QUERYPARAMS.STATE, state)
+                        .queryParam(
+                                FidorConstants.QUERYPARAMS.RESPONSE_TYPE,
+                                FidorConstants.QUERYPARAMS.RESPONSE_TYPE_CODE)
+                        .get();
 
         driver.navigate().to(url);
 
         WebElement emailField = null;
         WebElement passwordField = null;
         WebElement submitButton = null;
-        try{
+        try {
             emailField = driver.findElement(By.id(FidorConstants.FORM.EMAIL_ID));
             passwordField = driver.findElement(By.id(FidorConstants.FORM.PASSWORD_ID));
             submitButton = driver.findElement(By.name(FidorConstants.FORM.SUBMIT_NAME));
-        }
-        catch (org.openqa.selenium.NoSuchElementException e){
-            logger.error("{} Selenium could not find element: {}", FidorConstants.LOGGING.AUTHENTICATION_ERROR, e);
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            logger.error(
+                    "{} Selenium could not find element: {}",
+                    FidorConstants.LOGGING.AUTHENTICATION_ERROR,
+                    e);
         }
 
         emailField.sendKeys(username);
         passwordField.sendKeys(password);
         submitButton.click();
 
-        if(StringUtils.containsIgnoreCase(driver.getPageSource(), FidorConstants.ERROR.INVALID_CREDENTIALS)){
+        if (StringUtils.containsIgnoreCase(
+                driver.getPageSource(), FidorConstants.ERROR.INVALID_CREDENTIALS)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
@@ -100,9 +116,21 @@ public class FidorPasswordAutenticator implements PasswordAuthenticator {
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         WebDriver driver = createWebdriver();
-        String code = getCode(driver, FidorConstants.SANBOX_CLIENT_ID, FidorConstants.STATE, FidorConstants.SANDBOX_REDIRECT_URL, username, password);
-        client.getOpenApiToken(FidorConstants.SANDBOX_BASE64_BASIC_AUTH, code, FidorConstants.SANDBOX_REDIRECT_URL, FidorConstants.SANBOX_CLIENT_ID);
+        String code =
+                getCode(
+                        driver,
+                        FidorConstants.SANBOX_CLIENT_ID,
+                        FidorConstants.STATE,
+                        FidorConstants.SANDBOX_REDIRECT_URL,
+                        username,
+                        password);
+        client.getOpenApiToken(
+                FidorConstants.SANDBOX_BASE64_BASIC_AUTH,
+                code,
+                FidorConstants.SANDBOX_REDIRECT_URL,
+                FidorConstants.SANBOX_CLIENT_ID);
     }
 }

@@ -7,12 +7,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TimelineDERequest extends TimelineRequest {
 
-
     private boolean cmlEnabled;
     private boolean goodsSvcOfferEnabled;
     private boolean payWithPointsEnabled;
     private boolean payYourWayEnabled;
     private boolean pushEnabled;
+
     @JsonProperty("sortedIndex")
     private String sortedIndexUK;
 

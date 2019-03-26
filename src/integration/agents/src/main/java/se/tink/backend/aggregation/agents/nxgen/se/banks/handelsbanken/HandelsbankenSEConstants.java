@@ -31,7 +31,7 @@ public class HandelsbankenSEConstants {
     }
 
     public static final class DeviceAuthentication {
-        public static final String APP_ID = "jlAMGMG0N1YxvFvR+arooau3G+jETykFOJU16lgUOFU=";
+        public static final String APP_ID = "UmUsM5dTKaClsKjKOYRv7o4tXQ3rn9fDxFeCB0b8BpQ=";
         public static final String AUTH_TP = "1";
         public static final String VALID_SIGNATURE_RESULT = "AUTHENTICATED";
     }
@@ -55,7 +55,8 @@ public class HandelsbankenSEConstants {
     }
 
     public static final class Headers {
-        public static final String APP_VERSION = "3.3:8.8";
+        public static final String APP_VERSION = "3.5:9.2";
+        public static final String DEVICE_MODEL = "IOS-11.4.1,8.5.0,iPhone9.3,SEPRIV";
     }
 
     public static final class Fetcher {

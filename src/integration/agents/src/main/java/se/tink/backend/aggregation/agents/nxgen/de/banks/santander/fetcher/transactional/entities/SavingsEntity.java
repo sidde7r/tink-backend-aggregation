@@ -7,6 +7,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class SavingsEntity {
 
-  @JsonProperty("listTarjetas")
-  private List<ListTarjetasItem> listTarjetas;
+    @JsonProperty("listTarjetas")
+    private List<ListTarjetasItem> listTarjetas;
 }

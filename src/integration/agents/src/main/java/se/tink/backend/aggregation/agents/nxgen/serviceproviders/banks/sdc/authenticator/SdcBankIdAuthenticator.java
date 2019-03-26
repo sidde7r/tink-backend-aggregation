@@ -1,6 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator;
 
+import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import org.apache.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -10,9 +16,10 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcAp
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.SdcSessionStorage;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.banks.sdc.authenticator.rpc.AgreementsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
-import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SdcBankIdAuthenticator.class);
 
     private final SdcApiClient bankClient;
     private final SdcSessionStorage sessionStorage;
@@ -26,7 +33,16 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public String init(String ssn) throws BankIdException, AuthorizationException {
-        bankClient.initSession();
+
+        // Sparbanken Syd app does this request and receives 500 in response, this doesn't
+        // result in an error in the app. Logging a warning but continuing with authentication.
+        try {
+            bankClient.initSession();
+        } catch (HttpResponseException e) {
+            if (e.getResponse().getStatus() == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                LOGGER.warn("SDC SE: Received 500 response on init session request.");
+            }
+        }
 
         bankClient.initBankId(ssn);
 
@@ -35,6 +51,12 @@ public class SdcBankIdAuthenticator implements BankIdAuthenticator<String> {
 
     @Override
     public BankIdStatus collect(String reference) throws AuthenticationException, AuthorizationException {
+        // SDC doesn't poll the bankID, if we try to fetch the agreements before the user has
+        // signed we get a 500 response. We can't "poll" using the agreements endpoint, if we get
+        // 500 in response that session is killed. Therefore added a super arbitrary sleep of 8 sec
+        // before trying to fetch the agreements.
+        Uninterruptibles.sleepUninterruptibly(8, TimeUnit.SECONDS);
+
         try {
             AgreementsResponse agreementsResponse = bankClient.fetchAgreements();
 

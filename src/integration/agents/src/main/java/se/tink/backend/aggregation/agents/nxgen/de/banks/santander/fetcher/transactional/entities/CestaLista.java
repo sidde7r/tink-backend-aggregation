@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CestaLista {
 
-  @JsonProperty("CODIGO_AGRUPACION")
-  private String cODIGOAGRUPACION;
+    @JsonProperty("CODIGO_AGRUPACION")
+    private String cODIGOAGRUPACION;
 
-  @JsonProperty("EMPRESA")
-  private String eMPRESA;
+    @JsonProperty("EMPRESA")
+    private String eMPRESA;
 }

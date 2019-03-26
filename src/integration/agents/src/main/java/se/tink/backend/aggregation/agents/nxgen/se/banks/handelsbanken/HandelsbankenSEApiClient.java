@@ -251,6 +251,13 @@ public class HandelsbankenSEApiClient extends HandelsbankenApiClient {
                 .map(url -> createRequest(url).get(HandelsbankenSEFundAccountHoldingDetail.class));
     }
 
+    public Optional<HandelsbankenSEFundAccountHoldingDetail> fundHoldingDetail(
+            SecurityHolding fund) {
+        return fund
+                .toFundHoldingDetail()
+                .map(url -> createRequest(url).get(HandelsbankenSEFundAccountHoldingDetail.class));
+    }
+
     public HandelsbankenSETransferContext transferContext(
             ApplicationEntryPointResponse applicationEntryPoint) {
         return createRequest(applicationEntryPoint.toTransferContext())

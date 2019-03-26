@@ -9,14 +9,13 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class TransactionResultEntity {
-  @JsonProperty("bookedTransactionList")
-  private List<TransactionEntity> transactions;
+    @JsonProperty("bookedTransactionList")
+    private List<TransactionEntity> transactions;
 
-  public Collection<Transaction> toTinkTransactions() {
-    return transactions
-        .stream()
-        .filter(transactionEntity -> transactionEntity.isValid())
-        .map(TransactionEntity::toTinkTransaction)
-        .collect(Collectors.toList());
-  }
+    public Collection<Transaction> toTinkTransactions() {
+        return transactions.stream()
+                .filter(transactionEntity -> transactionEntity.isValid())
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
+    }
 }

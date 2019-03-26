@@ -4,8 +4,7 @@ public final class QueryParameterEntity {
     private PayloadEntity payloadEntity;
     private String procedure;
 
-    public void setPayloadEntity(
-            PayloadEntity payloadEntity) {
+    public void setPayloadEntity(PayloadEntity payloadEntity) {
         this.payloadEntity = payloadEntity;
     }
 

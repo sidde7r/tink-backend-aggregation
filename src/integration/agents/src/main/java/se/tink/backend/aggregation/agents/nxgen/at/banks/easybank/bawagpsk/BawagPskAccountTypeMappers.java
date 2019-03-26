@@ -1,17 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.easybank.bawagpsk;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.pair.Pair;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapperExecutor;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypePredicateMapper;
+import se.tink.libraries.pair.Pair;
 
 public final class BawagPskAccountTypeMappers {
     private static final Logger logger = LoggerFactory.getLogger(BawagPskAccountTypeMappers.class);
@@ -143,7 +142,8 @@ public final class BawagPskAccountTypeMappers {
                                     AccountTypes.CREDIT_CARD, Product.codeMatches("00\\w\\w"))
                             .fallbackValue(AccountTypes.LOAN, Product.codeMatches("S\\w\\w\\w"))
                             .fallbackValue(AccountTypes.LOAN, Product.codeMatches("U\\w\\w\\w"))
-                            .fallbackValue(AccountTypes.INVESTMENT, Product.codeMatches("T\\w\\w\\w"))
+                            .fallbackValue(
+                                    AccountTypes.INVESTMENT, Product.codeMatches("T\\w\\w\\w"))
                             .build();
         }
         return productFallbackMapper;
@@ -224,7 +224,7 @@ public final class BawagPskAccountTypeMappers {
                             .put(AccountTypes.INVESTMENT, "TIME_DEPOSIT")
                             .ignoreKeys(
                                     "BUILDING_SAVINGS" // Not sure what this is
-                            )
+                                    )
                             .build();
         }
         return productTypeMapper;

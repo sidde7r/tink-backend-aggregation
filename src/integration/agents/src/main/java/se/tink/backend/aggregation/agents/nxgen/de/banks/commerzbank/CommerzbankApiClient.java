@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -15,12 +14,10 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.tra
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.SearchCriteriaDto;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.fetcher.transaction.rpc.TransactionRequestBody;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.commerzbank.session.entities.SessionModel;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CommerzbankApiClient {
 
@@ -36,20 +33,27 @@ public class CommerzbankApiClient {
 
     private RequestBuilder firstRequest() {
         return client.request(getUrl(CommerzbankConstants.URLS.LOGIN))
-                .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON);
+                .header(
+                        CommerzbankConstants.HEADERS.CONTENT_TYPE,
+                        CommerzbankConstants.VALUES.JSON);
     }
 
     private RequestBuilder makeRequest(String resource) {
         return client.request(getUrl(resource))
                 .header(CommerzbankConstants.HEADERS.CONTENT_TYPE, CommerzbankConstants.VALUES.JSON)
-                .header(CommerzbankConstants.HEADERS.CCB_CLIENT_VERSION, CommerzbankConstants.VALUES.CCB_VALUE)
-                .header(CommerzbankConstants.HEADERS.USER_AGENT, CommerzbankConstants.VALUES.USER_AGENT_VALUE);
+                .header(
+                        CommerzbankConstants.HEADERS.CCB_CLIENT_VERSION,
+                        CommerzbankConstants.VALUES.CCB_VALUE)
+                .header(
+                        CommerzbankConstants.HEADERS.USER_AGENT,
+                        CommerzbankConstants.VALUES.USER_AGENT_VALUE);
     }
 
     public HttpResponse login(String username, String password) throws JsonProcessingException {
 
-        LoginRequestBody loginRequestBody = new LoginRequestBody(username, password,
-                CommerzbankConstants.VALUES.SESSION_TOKEN_VALUE);
+        LoginRequestBody loginRequestBody =
+                new LoginRequestBody(
+                        username, password, CommerzbankConstants.VALUES.SESSION_TOKEN_VALUE);
         String serialized = new ObjectMapper().writeValueAsString(loginRequestBody);
 
         return firstRequest().post(HttpResponse.class, serialized);
@@ -64,8 +68,7 @@ public class CommerzbankApiClient {
     }
 
     public HttpResponse keepAlive() {
-        return makeRequest(CommerzbankConstants.URLS.OVERVIEW)
-                .post(HttpResponse.class);
+        return makeRequest(CommerzbankConstants.URLS.OVERVIEW).post(HttpResponse.class);
     }
 
     private String toCommerzDate(Date date) {
@@ -74,37 +77,50 @@ public class CommerzbankApiClient {
         return sdf.format(date);
     }
 
-    public TransactionResultEntity fetchAllPages(Date fromDate, Date toDate, String productType, String identifier,
-            String productBranch)
+    public TransactionResultEntity fetchAllPages(
+            Date fromDate, Date toDate, String productType, String identifier, String productBranch)
             throws JsonProcessingException {
 
-        TransactionResultEntity transactionResultEntity = transactionOverview(productType, identifier, fromDate, toDate,
-                productBranch, 0);
+        TransactionResultEntity transactionResultEntity =
+                transactionOverview(productType, identifier, fromDate, toDate, productBranch, 0);
         int page = 1;
-        while (transactionResultEntity != null
-                && transactionResultEntity.canFetchMore(page)) {
-            transactionResultEntity
-                    .addAll(transactionOverview(productType, identifier, fromDate, toDate, productBranch, page));
+        while (transactionResultEntity != null && transactionResultEntity.canFetchMore(page)) {
+            transactionResultEntity.addAll(
+                    transactionOverview(
+                            productType, identifier, fromDate, toDate, productBranch, page));
 
             page++;
         }
         return transactionResultEntity;
     }
 
-    private TransactionResultEntity transactionOverview(String productType, String identifier, Date fromdate,
-            Date toDate, String productBranch, int page)
+    private TransactionResultEntity transactionOverview(
+            String productType,
+            String identifier,
+            Date fromdate,
+            Date toDate,
+            String productBranch,
+            int page)
             throws JsonProcessingException {
 
-        TransactionRequestBody transactionRequestBody = new TransactionRequestBody(
-                new SearchCriteriaDto(toCommerzDate(fromdate), toCommerzDate(toDate), page,
-                        CommerzbankConstants.VALUES.AMOUNT_TYPE,
-                        50, null),
-                new Identifier(productType, CommerzbankConstants.VALUES.CURRENCY_VALUE, identifier,
-                        productBranch));
+        TransactionRequestBody transactionRequestBody =
+                new TransactionRequestBody(
+                        new SearchCriteriaDto(
+                                toCommerzDate(fromdate),
+                                toCommerzDate(toDate),
+                                page,
+                                CommerzbankConstants.VALUES.AMOUNT_TYPE,
+                                50,
+                                null),
+                        new Identifier(
+                                productType,
+                                CommerzbankConstants.VALUES.CURRENCY_VALUE,
+                                identifier,
+                                productBranch));
         String serialized = new ObjectMapper().writeValueAsString(transactionRequestBody);
 
         return makeRequest(CommerzbankConstants.URLS.TRANSACTIONS)
-                .post(TransactionModel.class, serialized).getResult();
+                .post(TransactionModel.class, serialized)
+                .getResult();
     }
-
 }

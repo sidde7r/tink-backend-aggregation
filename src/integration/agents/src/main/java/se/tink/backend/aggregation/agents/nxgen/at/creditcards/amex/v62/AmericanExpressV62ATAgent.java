@@ -8,14 +8,11 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV62ATAgent extends AmericanExpressV62Agent {
 
-    public AmericanExpressV62ATAgent(CredentialsRequest request, AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public AmericanExpressV62ATAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair, new AmericanExpressV62ATConfiguration());
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
-
+    protected void configureHttpClient(TinkHttpClient client) {}
 }

@@ -6,12 +6,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class NextPageOffset {
 
-  @JsonProperty("numMovimientoRepo")
-  private int numMovimientoRepo;
+    @JsonProperty("numMovimientoRepo")
+    private int numMovimientoRepo;
 
-  @JsonProperty("idPASRepo")
-  private String idPASRepo;
+    @JsonProperty("idPASRepo")
+    private String idPASRepo;
 
-  @JsonProperty("concepEconRepo")
-  private ConcepEconRepo concepEconRepo;
+    @JsonProperty("concepEconRepo")
+    private ConcepEconRepo concepEconRepo;
 }

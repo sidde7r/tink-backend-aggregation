@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.authenticator.Fid
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.fetcher.transactional.FidorAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.fetcher.transactional.FidorTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fidor.session.FidorSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticationController;
@@ -21,34 +22,40 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class FidorAgent extends NextGenerationAgent {
 
     private final FidorApiClient fidorApiClient;
 
-    public FidorAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public FidorAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         fidorApiClient = new FidorApiClient(this.client, persistentStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new FidorPasswordAutenticator(this.fidorApiClient));
+        return new PasswordAuthenticationController(
+                new FidorPasswordAutenticator(this.fidorApiClient));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         FidorTransactionFetcher transactionFetcher = new FidorTransactionFetcher(fidorApiClient);
 
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new FidorAccountFetcher(fidorApiClient),
-                new TransactionFetcherController<>(transactionPaginationHelper,
-                        new TransactionPagePaginationController<>(transactionFetcher, 0), transactionFetcher)));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new FidorAccountFetcher(fidorApiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(transactionFetcher, 0),
+                                transactionFetcher)));
     }
 
     @Override
@@ -72,7 +79,8 @@ public class FidorAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

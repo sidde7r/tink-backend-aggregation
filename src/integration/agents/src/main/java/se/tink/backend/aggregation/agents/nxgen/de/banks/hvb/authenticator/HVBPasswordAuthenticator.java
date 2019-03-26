@@ -18,26 +18,28 @@ public final class HVBPasswordAuthenticator implements PasswordAuthenticator {
     private final WLPasswordAuthenticator wlAuthenticator;
     private final HVBStorage storage;
 
-    public HVBPasswordAuthenticator(final WLApiClient client, final HVBStorage storage, final WLConfig wlConfig) {
+    public HVBPasswordAuthenticator(
+            final WLApiClient client, final HVBStorage storage, final WLConfig wlConfig) {
         this.wlAuthenticator = new WLPasswordAuthenticator(client, storage, wlConfig);
         this.storage = storage;
     }
 
     public static RSAPublicKey certificateStringToPublicKey(final String certificate) {
-        final String certificatePem = "-----BEGIN CERTIFICATE-----\n" + certificate + "\n-----END CERTIFICATE-----";
+        final String certificatePem =
+                "-----BEGIN CERTIFICATE-----\n" + certificate + "\n-----END CERTIFICATE-----";
         try {
-            return (RSAPublicKey) CertificateFactory.getInstance(HVBConstants.CERT_TYPE)
-                    .generateCertificate(new ByteArrayInputStream(certificatePem.getBytes()))
-                    .getPublicKey();
+            return (RSAPublicKey)
+                    CertificateFactory.getInstance(HVBConstants.CERT_TYPE)
+                            .generateCertificate(
+                                    new ByteArrayInputStream(certificatePem.getBytes()))
+                            .getPublicKey();
         } catch (CertificateException e) {
             throw new SecurityException(
                     String.format("Invalid %s certificate", HVBConstants.CERT_TYPE), e);
         }
     }
 
-    /**
-     * Will add WL-Instance-Id to storage.
-     */
+    /** Will add WL-Instance-Id to storage. */
     @Override
     public void authenticate(final String username, final String password)
             throws AuthenticationException, AuthorizationException {

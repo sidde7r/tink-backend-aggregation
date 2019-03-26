@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.AccountEntity;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

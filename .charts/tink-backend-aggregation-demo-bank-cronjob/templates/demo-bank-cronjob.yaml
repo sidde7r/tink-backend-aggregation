@@ -1,0 +1,57 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: demo-bank-cronjob
+  namespace: notifying-aggregation-service-asserter
+spec:
+  schedule: "{{ .Values.demoBankCronjobCronSchedule | default "0/15 * * * *" }}"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  startingDeadlineSeconds: {{ .Values.demoBankCronjobStartingDeadlineSeconds | default 300 }}
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: {{ .Values.demoBankCronjobActiveDeadlineSeconds | default 300 }}
+      backoffLimit: 6
+      template:
+        metadata:
+          labels:
+            app: demo-bank-cronjob
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+          - name: tink-containers
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            fsGroup: 65535
+          containers:
+          - name: tests
+
+            {{- if eq "local" .Values.Cluster }}
+            image: local_test
+            imagePullPolicy: Never
+            {{else}}
+            image: gcr.io/tink-containers/tink-backend-aggregation-demo-bank-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-demo-bank-cronjob.txt" | default "latest" }}
+            imagePullPolicy: IfNotPresent
+            {{end}}
+            securityContext:
+              readOnlyRootFilesystem: true
+              privileged: false
+            command:
+            - "/opt/demo_bank/cronjob.py"
+            env:
+              - name: STATUSPAGE_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: demo-bank-cronjob
+                    key: api-key
+
+{{- if eq "local" .Values.Cluster }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: notifying-aggregation-service-asserter
+{{ end }}

@@ -17,5 +17,4 @@ public class AmericanExpressDEConstants extends AmericanExpressConstants {
         public static final String LOCALE = "de_DE";
         public static final String CLIENT_VERSION = "4.4.1";
     }
-
 }

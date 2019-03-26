@@ -22,9 +22,6 @@ public class AccountEntity {
     private String availability;
     private String owner;
     private String product;
-    private String productType;
-    private String entityCode;
-    private String contractCode;
     private String bic;
     private String number;
     private String iban;
@@ -35,7 +32,6 @@ public class AccountEntity {
     private boolean isIberSecurities;
     private String joint;
     private String mobileWarning;
-    private String contractNumberFormatted;
 
     @JsonIgnore
     public TransactionalAccount toTinkAccount() {
@@ -97,18 +93,6 @@ public class AccountEntity {
         return product;
     }
 
-    public String getProductType() {
-        return productType;
-    }
-
-    public String getEntityCode() {
-        return entityCode;
-    }
-
-    public String getContractCode() {
-        return contractCode;
-    }
-
     public String getBic() {
         return bic;
     }
@@ -145,9 +129,5 @@ public class AccountEntity {
 
     public String getMobileWarning() {
         return mobileWarning;
-    }
-
-    public String getContractNumberFormatted() {
-        return contractNumberFormatted;
     }
 }

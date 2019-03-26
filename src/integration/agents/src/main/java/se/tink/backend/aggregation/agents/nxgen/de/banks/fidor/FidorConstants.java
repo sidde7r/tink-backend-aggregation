@@ -9,7 +9,8 @@ public class FidorConstants {
     public static final String CURRENCY_EUR = "EUR";
 
     public static final String SANBOX_CLIENT_ID = "4c7b5996af0ee5db";
-    public static final String SANDBOX_BASE64_BASIC_AUTH = "NGM3YjU5OTZhZjBlZTVkYjo2ZTU4MWM0NDBjZjk5ZjE3NjI1YTJlYzZiYzQwNGE4MA=="; //client_id:client_secret
+    public static final String SANDBOX_BASE64_BASIC_AUTH =
+            "NGM3YjU5OTZhZjBlZTVkYjo2ZTU4MWM0NDBjZjk5ZjE3NjI1YTJlYzZiYzQwNGE4MA=="; // client_id:client_secret
     public static final String SANDBOX_REDIRECT_URL = "http://google.com";
     public static final String STATE = "99MagiCat99";
 
@@ -67,12 +68,12 @@ public class FidorConstants {
 
     public class HEADERS {
         public class OPENAPI {
-            public static final String APPLICATION_JSON_FIDOR_V1 = "application/vnd.fidor.de; version=1,text/json";
+            public static final String APPLICATION_JSON_FIDOR_V1 =
+                    "application/vnd.fidor.de; version=1,text/json";
         }
     }
 
     public static class LOGGING {
         public static final LogTag AUTHENTICATION_ERROR = LogTag.from("FIDOR_AUTHENTICATION_ERROR");
     }
-
 }

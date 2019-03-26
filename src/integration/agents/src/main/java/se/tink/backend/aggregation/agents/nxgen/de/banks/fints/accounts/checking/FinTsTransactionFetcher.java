@@ -24,9 +24,7 @@ public class FinTsTransactionFetcher implements TransactionDatePaginator<Transac
             TransactionalAccount account, Date fromDate, Date toDate) {
 
         Collection<? extends Transaction> transactions =
-                apiClient
-                        .getTransactions(account.getAccountNumber(), fromDate, toDate)
-                        .stream()
+                apiClient.getTransactions(account.getAccountNumber(), fromDate, toDate).stream()
                         .map(MT940Statement::toTinkTransaction)
                         .collect(Collectors.toList());
 

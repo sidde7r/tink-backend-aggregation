@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class SubtipoProducto {
 
-  @JsonProperty("SUBTIPO_DE_PRODUCTO")
-  private String sUBTIPODEPRODUCTO;
+    @JsonProperty("SUBTIPO_DE_PRODUCTO")
+    private String sUBTIPODEPRODUCTO;
 
-  @JsonProperty("TIPO_DE_PRODUCTO")
-  private KindOfProduct kindOfProduct;
+    @JsonProperty("TIPO_DE_PRODUCTO")
+    private KindOfProduct kindOfProduct;
 }

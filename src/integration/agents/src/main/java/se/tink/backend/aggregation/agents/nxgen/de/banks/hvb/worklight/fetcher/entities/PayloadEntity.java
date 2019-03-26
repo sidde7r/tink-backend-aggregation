@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public final class PayloadEntity {
     @JsonProperty("H")
     private String H;
+
     private String a;
     private String b;
     private String c;

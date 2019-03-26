@@ -1,0 +1,10 @@
+name: tink-backend-aggregation-demo-bank-cronjob
+version: 1.0.0
+
+tink:
+  deployment:
+    strategy: custom
+    custom_strategy:
+    - group:
+      - cluster: aggregation
+        environment: staging

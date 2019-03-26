@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.authenticator
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.VolksbankCheckingAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.fetcher.VolksbankCheckingTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.at.banks.volksbank.session.VolksbankSessionHandler;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -22,15 +23,13 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public class VolksbankAgent extends NextGenerationAgent {
 
     private final VolksbankApiClient apiClient;
 
-    public VolksbankAgent(CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public VolksbankAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.apiClient = VolksbankApiClient.create(persistentStorage, sessionStorage, client);
     }
@@ -42,19 +41,25 @@ public class VolksbankAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new AutoAuthenticationController(request, systemUpdater, new VolksbankPasswordAuthenticator(apiClient),
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new VolksbankPasswordAuthenticator(apiClient),
                 new VolksbankAutoAuthenticator(apiClient, persistentStorage, credentials));
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,
-                new VolksbankCheckingAccountFetcher(apiClient, sessionStorage),
-                new TransactionFetcherController<>(
-                        this.transactionPaginationHelper,
-                        new TransactionDatePaginationController<>(
-                                new VolksbankCheckingTransactionFetcher(apiClient)
-                        ))));
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new VolksbankCheckingAccountFetcher(apiClient, sessionStorage),
+                        new TransactionFetcherController<>(
+                                this.transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(
+                                        new VolksbankCheckingTransactionFetcher(apiClient)))));
     }
 
     @Override
@@ -78,7 +83,8 @@ public class VolksbankAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

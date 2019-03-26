@@ -14,10 +14,10 @@ public class HVBAgentTest {
         helper = new ArgumentHelper("tink.username", "tink.password");
     }
 
-    private final AgentIntegrationTest.Builder builder = new AgentIntegrationTest.Builder("de",
-            "de-hypovereinsbank-password")
-            .loadCredentialsBefore(false)
-            .saveCredentialsAfter(false);
+    private final AgentIntegrationTest.Builder builder =
+            new AgentIntegrationTest.Builder("de", "de-hypovereinsbank-password")
+                    .loadCredentialsBefore(false)
+                    .saveCredentialsAfter(false);
 
     @Before
     public void before() {

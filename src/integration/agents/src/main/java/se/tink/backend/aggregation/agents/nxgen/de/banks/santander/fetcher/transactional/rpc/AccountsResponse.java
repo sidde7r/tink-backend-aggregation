@@ -8,18 +8,18 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class AccountsResponse {
-  @JsonProperty("methodResult")
-  private AccountResultEntity result;
+    @JsonProperty("methodResult")
+    private AccountResultEntity result;
 
-  public Collection<TransactionalAccount> toTransactionalAccounts() {
-    return result.toTransactionalAccount();
-  }
+    public Collection<TransactionalAccount> toTransactionalAccounts() {
+        return result.toTransactionalAccount();
+    }
 
-  public AccountResultEntity getAccountResultEntity() {
-    return result;
-  }
+    public AccountResultEntity getAccountResultEntity() {
+        return result;
+    }
 
-  public boolean containsCreditCards() {
-    return result.containsCreditCards();
-  }
+    public boolean containsCreditCards() {
+        return result.containsCreditCards();
+    }
 }

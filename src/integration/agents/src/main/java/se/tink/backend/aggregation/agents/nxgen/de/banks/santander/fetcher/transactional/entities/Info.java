@@ -6,12 +6,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class Info {
 
-  @JsonProperty("errorDesc")
-  private String errorDesc;
+    @JsonProperty("errorDesc")
+    private String errorDesc;
 
-  @JsonProperty("errorCode")
-  private String errorCode;
+    @JsonProperty("errorCode")
+    private String errorCode;
 
-  @JsonProperty("codError")
-  private String codError;
+    @JsonProperty("codError")
+    private String codError;
 }

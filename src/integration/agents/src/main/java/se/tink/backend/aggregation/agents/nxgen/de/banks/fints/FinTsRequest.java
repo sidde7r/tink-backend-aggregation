@@ -27,13 +27,22 @@ public class FinTsRequest {
     private String securityFunction;
     private HNVSD encEnvelop;
 
-    public FinTsRequest(FinTsConfiguration configuration, String dialogId, int messageNumber, String systemId,
+    public FinTsRequest(
+            FinTsConfiguration configuration,
+            String dialogId,
+            int messageNumber,
+            String systemId,
             FinTsSegment... encryptedSegments) {
         this(configuration, dialogId, messageNumber, systemId, null, encryptedSegments);
     }
 
-    public FinTsRequest(FinTsConfiguration configuration, String dialogId, int messageNumber, String systemId,
-            List<String> tanMechs, FinTsSegment... encryptedSegments) {
+    public FinTsRequest(
+            FinTsConfiguration configuration,
+            String dialogId,
+            int messageNumber,
+            String systemId,
+            List<String> tanMechs,
+            FinTsSegment... encryptedSegments) {
 
         this.configuration = configuration;
         this.systemId = systemId;
@@ -65,7 +74,8 @@ public class FinTsRequest {
         // 3 header segments + # encrypted (command specific) segments
         int segmentCount = 3 + encryptedSegments.length;
 
-        HNSHA signatureEnd = new HNSHA(segmentCount++, securityReference, configuration.getPassword());
+        HNSHA signatureEnd =
+                new HNSHA(segmentCount++, securityReference, configuration.getPassword());
         encEnvelop.appendEncryptedSegment(signatureEnd);
 
         HNHBS endSegment = new HNHBS(segmentCount, messageNumber);
@@ -82,13 +92,21 @@ public class FinTsRequest {
     }
 
     private HNVSK buildEncryptionHead() {
-        return new HNVSK(998, profileVersion, systemId, configuration.getBlz(), configuration.getUsername());
+        return new HNVSK(
+                998, profileVersion, systemId, configuration.getBlz(), configuration.getUsername());
     }
 
     private HNSHK buildSignatureHead() {
-        securityReference = SECREF_MIN_RANDOM + new Random().nextInt(SECREF_MAX_RANDOM - SECREF_MIN_RANDOM + 1);
-        return new HNSHK(2, profileVersion, securityReference,
-                securityFunction, systemId, configuration.getBlz(), configuration.getUsername());
+        securityReference =
+                SECREF_MIN_RANDOM + new Random().nextInt(SECREF_MAX_RANDOM - SECREF_MIN_RANDOM + 1);
+        return new HNSHK(
+                2,
+                profileVersion,
+                securityReference,
+                securityFunction,
+                systemId,
+                configuration.getBlz(),
+                configuration.getUsername());
     }
 
     public int getSecurityReference() {

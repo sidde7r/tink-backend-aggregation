@@ -14,12 +14,11 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 /**
- * Facade for SessionStorage and PersistentStorage, for a cleaner API and restricted mutability and access.
+ * Facade for SessionStorage and PersistentStorage, for a cleaner API and restricted mutability and
+ * access.
  */
-public final class HVBStorage implements
-        WLSessionHandlerStorage,
-        WLAuthenticatorStorage,
-        WLFetcherStorage {
+public final class HVBStorage
+        implements WLSessionHandlerStorage, WLAuthenticatorStorage, WLFetcherStorage {
 
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
@@ -58,7 +57,8 @@ public final class HVBStorage implements
     @Override
     public void setKeyPair(@Nonnull final KeyPair keyPair) {
         Preconditions.checkNotNull(keyPair);
-        persistentStorage.put(WLConstants.Storage.KEY_PAIR, SerializationUtils.serializeKeyPair(keyPair));
+        persistentStorage.put(
+                WLConstants.Storage.KEY_PAIR, SerializationUtils.serializeKeyPair(keyPair));
     }
 
     @Override

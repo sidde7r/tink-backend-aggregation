@@ -23,26 +23,33 @@ public class ResultEntity {
         return metaData;
     }
 
-
-    public Collection<CreditCardAccount> toCreditAccounts(){
+    public Collection<CreditCardAccount> toCreditAccounts() {
         Collection<CreditCardAccount> result = new ArrayList<>();
         for (ItemsEntity entity : items) {
-            result.addAll(entity.getProducts().stream()
-                    .filter(productsEntity -> productsEntity.hasValidProductId() && productsEntity.isCreditCard())
-                    .map(ProductsEntity::toCreditCardAccount).collect(Collectors.toList()));
+            result.addAll(
+                    entity.getProducts().stream()
+                            .filter(
+                                    productsEntity ->
+                                            productsEntity.hasValidProductId()
+                                                    && productsEntity.isCreditCard())
+                            .map(ProductsEntity::toCreditCardAccount)
+                            .collect(Collectors.toList()));
         }
         return result;
     }
 
-    public Collection<TransactionalAccount> toTransactionalAccounts(){
+    public Collection<TransactionalAccount> toTransactionalAccounts() {
         Collection<TransactionalAccount> result = new ArrayList<>();
         for (ItemsEntity entity : items) {
-            result.addAll(entity.getProducts().stream()
-                    .filter(productsEntity -> productsEntity.hasValidProductId() && !productsEntity.isCreditCard())
-                    .map(ProductsEntity::toTransactionalAccount).collect(Collectors.toList()));
+            result.addAll(
+                    entity.getProducts().stream()
+                            .filter(
+                                    productsEntity ->
+                                            productsEntity.hasValidProductId()
+                                                    && !productsEntity.isCreditCard())
+                            .map(ProductsEntity::toTransactionalAccount)
+                            .collect(Collectors.toList()));
         }
         return result;
     }
-
-
 }

@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class KreditLine {
 
-  @JsonProperty("DIVISA")
-  private String dIVISA;
+    @JsonProperty("DIVISA")
+    private String dIVISA;
 
-  @JsonProperty("IMPORTE")
-  private double iMPORTE;
+    @JsonProperty("IMPORTE")
+    private double iMPORTE;
 }

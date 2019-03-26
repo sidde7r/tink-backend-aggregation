@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CENTRO {
 
-  @JsonProperty("CENTRO")
-  private String cENTRO;
+    @JsonProperty("CENTRO")
+    private String cENTRO;
 
-  @JsonProperty("EMPRESA")
-  private String eMPRESA;
+    @JsonProperty("EMPRESA")
+    private String eMPRESA;
 }

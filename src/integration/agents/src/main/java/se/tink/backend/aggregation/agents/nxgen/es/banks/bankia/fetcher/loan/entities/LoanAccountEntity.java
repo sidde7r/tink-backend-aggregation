@@ -38,6 +38,10 @@ public class LoanAccountEntity {
         return pendingDebt;
     }
 
+    public ContractEntity getContract() {
+        return contract;
+    }
+
     @JsonIgnore
     public LoanAccount toTinkLoanAccount(LoanDetailsResponse loanDetailsResponse) {
         LoanDetails details = loanDetailsResponse.toLoanDetails(this);

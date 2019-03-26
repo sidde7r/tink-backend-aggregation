@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.loan
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.bind.annotation.XmlRootElement;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.CustomerData;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.GeneralInfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -31,6 +31,10 @@ public class LoanEntity {
 
     @JsonProperty("importeSalDisptoContravalor")
     private AmountEntity balanceCounterValue;
+
+    public String getContractDescription() {
+        return contractDescription;
+    }
 
     public AmountEntity getBalance() {
         return balance;

@@ -1,5 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.at.banks.raiffeisen;
 
+import java.net.URI;
+import java.util.Date;
+import java.util.List;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Provider;
@@ -14,12 +19,6 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import java.net.URI;
-import java.util.Date;
-import java.util.List;
 
 public class RaiffeisenWebApiClient {
     private static final Logger logger = LoggerFactory.getLogger(RaiffeisenWebApiClient.class);

@@ -5,8 +5,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class AuthorizationEntity {
-    @JsonProperty
-    private String wl_authenticityRealm;
+    @JsonProperty private String wl_authenticityRealm;
 
     public AuthorizationEntity(final String wl_authenticityRealm) {
         this.wl_authenticityRealm = wl_authenticityRealm;

@@ -26,26 +26,32 @@ public final class CertManager {
         return keyPairGenerator.genKeyPair();
     }
 
-    private static String signData(final RSAPrivateKey privateKey, final JoseHeaderEntity joseHeader,
+    private static String signData(
+            final RSAPrivateKey privateKey,
+            final JoseHeaderEntity joseHeader,
             final JwtPayloadEntity payload) {
-        final Algorithm algorithm = Algorithm.RSA256(null, privateKey); // publicKey need not be provided
+        final Algorithm algorithm =
+                Algorithm.RSA256(null, privateKey); // publicKey need not be provided
 
-        final String signedData = String.format(
-                "%s.%s",
-                Base64.getUrlEncoder().encodeToString(SerializationUtils.serializeToString(joseHeader).getBytes()),
-                Base64.getUrlEncoder().encodeToString(SerializationUtils.serializeToString(payload).getBytes())
-        );
+        final String signedData =
+                String.format(
+                        "%s.%s",
+                        Base64.getUrlEncoder()
+                                .encodeToString(
+                                        SerializationUtils.serializeToString(joseHeader)
+                                                .getBytes()),
+                        Base64.getUrlEncoder()
+                                .encodeToString(
+                                        SerializationUtils.serializeToString(payload).getBytes()));
 
         final byte[] jwtSignature = algorithm.sign(signedData.getBytes());
 
-        return String.format("%s.%s", signedData, Base64.getUrlEncoder().encodeToString(jwtSignature));
+        return String.format(
+                "%s.%s", signedData, Base64.getUrlEncoder().encodeToString(jwtSignature));
     }
 
-    /**
-     * @return String taking the form <Header>.<Payload>.<Sign> as defined by JWT
-     */
+    /** @return String taking the form <Header>.<Payload>.<Sign> as defined by JWT */
     public static String createJwt(final Jwt jwt, final RSAPrivateKey privateKey) {
         return signData(privateKey, jwt.getJoseHeader(), jwt.getPayload());
     }
 }
-

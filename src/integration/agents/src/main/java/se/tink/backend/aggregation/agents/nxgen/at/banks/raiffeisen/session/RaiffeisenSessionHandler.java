@@ -12,10 +12,11 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 public class RaiffeisenSessionHandler implements SessionHandler {
     private static final Logger logger = LoggerFactory.getLogger(RaiffeisenSessionHandler.class);
-    final private RaiffeisenWebApiClient apiClient;
-    final private RaiffeisenSessionStorage raiffeisenSessionStorage;
+    private final RaiffeisenWebApiClient apiClient;
+    private final RaiffeisenSessionStorage raiffeisenSessionStorage;
 
-    public RaiffeisenSessionHandler(final RaiffeisenWebApiClient apiClient,
+    public RaiffeisenSessionHandler(
+            final RaiffeisenWebApiClient apiClient,
             final RaiffeisenSessionStorage raiffeisenSessionStorage) {
         this.apiClient = apiClient;
         this.raiffeisenSessionStorage = raiffeisenSessionStorage;
@@ -29,8 +30,10 @@ public class RaiffeisenSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        final WebLoginResponse loginResponse = raiffeisenSessionStorage.getWebLoginResponse()
-                .orElseThrow(SessionError.SESSION_EXPIRED::exception);
+        final WebLoginResponse loginResponse =
+                raiffeisenSessionStorage
+                        .getWebLoginResponse()
+                        .orElseThrow(SessionError.SESSION_EXPIRED::exception);
         try {
             apiClient.keepAlive(loginResponse);
         } catch (HttpResponseException e) {
@@ -42,4 +45,3 @@ public class RaiffeisenSessionHandler implements SessionHandler {
         }
     }
 }
-

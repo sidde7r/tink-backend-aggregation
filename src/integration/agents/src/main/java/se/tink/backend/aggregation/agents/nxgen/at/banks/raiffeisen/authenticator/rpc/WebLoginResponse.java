@@ -8,8 +8,7 @@ public class WebLoginResponse {
     private String tokenType;
     private String accessToken;
 
-    public WebLoginResponse() {
-    }
+    public WebLoginResponse() {}
 
     public WebLoginResponse(String tokenType, String accessToken) {
         this.tokenType = tokenType;

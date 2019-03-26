@@ -13,178 +13,178 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class Accounts {
 
-  @JsonProperty("tipoIntervencion")
-  private String tipoIntervencion;
+    @JsonProperty("tipoIntervencion")
+    private String tipoIntervencion;
 
-  @JsonProperty("subtipoProducto")
-  private SubtipoProducto subtipoProducto;
+    @JsonProperty("subtipoProducto")
+    private SubtipoProducto subtipoProducto;
 
-  @JsonProperty("indOper")
-  private Object indOper;
+    @JsonProperty("indOper")
+    private Object indOper;
 
-  @JsonProperty("aliasCta")
-  private String aliasCta;
+    @JsonProperty("aliasCta")
+    private String aliasCta;
 
-  @JsonProperty("indOpera")
-  private String indOpera;
+    @JsonProperty("indOpera")
+    private String indOpera;
 
-  @JsonProperty("formInter")
-  private String formInter;
+    @JsonProperty("formInter")
+    private String formInter;
 
-  @JsonProperty("fecBajaCto")
-  private String fecBajaCto;
+    @JsonProperty("fecBajaCto")
+    private String fecBajaCto;
 
-  @JsonProperty("monedaCta")
-  private Object monedaCta;
+    @JsonProperty("monedaCta")
+    private Object monedaCta;
 
-  @JsonProperty("kreditLine")
-  private KreditLine kreditLine;
+    @JsonProperty("kreditLine")
+    private KreditLine kreditLine;
 
-  @JsonProperty("indPreferenca")
-  private String indPreferenca;
+    @JsonProperty("indPreferenca")
+    private String indPreferenca;
 
-  @JsonProperty("cestaLista")
-  private CestaLista cestaLista;
+    @JsonProperty("cestaLista")
+    private CestaLista cestaLista;
 
-  @JsonProperty("fecAltaCto")
-  private String fecAltaCto;
+    @JsonProperty("fecAltaCto")
+    private String fecAltaCto;
 
-  @JsonProperty("panTarjeta")
-  private String panTarjeta;
+    @JsonProperty("panTarjeta")
+    private String panTarjeta;
 
-  @JsonProperty("conceptoPcas")
-  private ConceptoPcas conceptoPcas;
+    @JsonProperty("conceptoPcas")
+    private ConceptoPcas conceptoPcas;
 
-  @JsonProperty("saldo")
-  private Saldo saldo;
+    @JsonProperty("saldo")
+    private Saldo saldo;
 
-  @JsonProperty("estadoCto")
-  private String estadoCto;
+    @JsonProperty("estadoCto")
+    private String estadoCto;
 
-  @JsonProperty("calidadParticipacion")
-  private String calidadParticipacion;
+    @JsonProperty("calidadParticipacion")
+    private String calidadParticipacion;
 
-  @JsonProperty("cestaNegocio")
-  private CestaNegocio cestaNegocio;
+    @JsonProperty("cestaNegocio")
+    private CestaNegocio cestaNegocio;
 
-  @JsonProperty("ordenRealcion")
-  private int ordenRealcion;
+    @JsonProperty("ordenRealcion")
+    private int ordenRealcion;
 
-  @JsonProperty("ordenPres")
-  private int ordenPres;
+    @JsonProperty("ordenPres")
+    private int ordenPres;
 
-  @JsonProperty("caducidadTarjeta")
-  private int caducidadTarjeta;
+    @JsonProperty("caducidadTarjeta")
+    private int caducidadTarjeta;
 
-  @JsonProperty("ordenPrioridad")
-  private int ordenPrioridad;
+    @JsonProperty("ordenPrioridad")
+    private int ordenPrioridad;
 
-  @JsonProperty("indCtasTerceros")
-  private String indCtasTerceros;
+    @JsonProperty("indCtasTerceros")
+    private String indCtasTerceros;
 
-  @JsonProperty("ordenInter")
-  private int ordenInter;
+    @JsonProperty("ordenInter")
+    private int ordenInter;
 
-  @JsonProperty("account")
-  private Account account;
+    @JsonProperty("account")
+    private Account account;
 
-  public String getTipoIntervencion() {
-    return tipoIntervencion;
-  }
+    public String getTipoIntervencion() {
+        return tipoIntervencion;
+    }
 
-  public SubtipoProducto getSubtipoProducto() {
-    return subtipoProducto;
-  }
+    public SubtipoProducto getSubtipoProducto() {
+        return subtipoProducto;
+    }
 
-  public Object getIndOper() {
-    return indOper;
-  }
+    public Object getIndOper() {
+        return indOper;
+    }
 
-  public String getAliasCta() {
-    return aliasCta;
-  }
+    public String getAliasCta() {
+        return aliasCta;
+    }
 
-  public String getIndOpera() {
-    return indOpera;
-  }
+    public String getIndOpera() {
+        return indOpera;
+    }
 
-  public String getFormInter() {
-    return formInter;
-  }
+    public String getFormInter() {
+        return formInter;
+    }
 
-  public String getFecBajaCto() {
-    return fecBajaCto;
-  }
+    public String getFecBajaCto() {
+        return fecBajaCto;
+    }
 
-  public Object getMonedaCta() {
-    return monedaCta;
-  }
+    public Object getMonedaCta() {
+        return monedaCta;
+    }
 
-  public KreditLine getKreditLine() {
-    return kreditLine;
-  }
+    public KreditLine getKreditLine() {
+        return kreditLine;
+    }
 
-  public String getIndPreferenca() {
-    return indPreferenca;
-  }
+    public String getIndPreferenca() {
+        return indPreferenca;
+    }
 
-  public CestaLista getCestaLista() {
-    return cestaLista;
-  }
+    public CestaLista getCestaLista() {
+        return cestaLista;
+    }
 
-  public String getFecAltaCto() {
-    return fecAltaCto;
-  }
+    public String getFecAltaCto() {
+        return fecAltaCto;
+    }
 
-  public String getPanTarjeta() {
-    return panTarjeta;
-  }
+    public String getPanTarjeta() {
+        return panTarjeta;
+    }
 
-  public ConceptoPcas getConceptoPcas() {
-    return conceptoPcas;
-  }
+    public ConceptoPcas getConceptoPcas() {
+        return conceptoPcas;
+    }
 
-  public Saldo getSaldo() {
-    return saldo;
-  }
+    public Saldo getSaldo() {
+        return saldo;
+    }
 
-  public String getEstadoCto() {
-    return estadoCto;
-  }
+    public String getEstadoCto() {
+        return estadoCto;
+    }
 
-  public String getCalidadParticipacion() {
-    return calidadParticipacion;
-  }
+    public String getCalidadParticipacion() {
+        return calidadParticipacion;
+    }
 
-  public CestaNegocio getCestaNegocio() {
-    return cestaNegocio;
-  }
+    public CestaNegocio getCestaNegocio() {
+        return cestaNegocio;
+    }
 
-  public int getOrdenRealcion() {
-    return ordenRealcion;
-  }
+    public int getOrdenRealcion() {
+        return ordenRealcion;
+    }
 
-  public int getOrdenPres() {
-    return ordenPres;
-  }
+    public int getOrdenPres() {
+        return ordenPres;
+    }
 
-  public int getCaducidadTarjeta() {
-    return caducidadTarjeta;
-  }
+    public int getCaducidadTarjeta() {
+        return caducidadTarjeta;
+    }
 
-  public int getOrdenPrioridad() {
-    return ordenPrioridad;
-  }
+    public int getOrdenPrioridad() {
+        return ordenPrioridad;
+    }
 
-  public String getIndCtasTerceros() {
-    return indCtasTerceros;
-  }
+    public String getIndCtasTerceros() {
+        return indCtasTerceros;
+    }
 
-  public int getOrdenInter() {
-    return ordenInter;
-  }
+    public int getOrdenInter() {
+        return ordenInter;
+    }
 
-  public Account getAccount() {
-    return account;
-  }
+    public Account getAccount() {
+        return account;
+    }
 }

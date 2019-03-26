@@ -53,7 +53,9 @@ public class FinTsAgent extends NextGenerationAgent {
         FinTsIntegrationConfiguration finTsIntegrationConfiguration =
                 configuration
                         .getIntegrations()
-                        .getIntegration(FinTsConstants.INTEGRATION_NAME, FinTsIntegrationConfiguration.class)
+                        .getIntegration(
+                                FinTsConstants.INTEGRATION_NAME,
+                                FinTsIntegrationConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(

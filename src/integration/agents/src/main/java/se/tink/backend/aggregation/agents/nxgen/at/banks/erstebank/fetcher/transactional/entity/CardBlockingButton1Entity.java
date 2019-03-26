@@ -6,9 +6,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class CardBlockingButton1Entity {
 
-	@JsonProperty("actionPayload")
-	private ActionPayloadEntity actionPayloadEntity;
+    @JsonProperty("actionPayload")
+    private ActionPayloadEntity actionPayloadEntity;
 
-	@JsonProperty("label")
-	private String label;
+    @JsonProperty("label")
+    private String label;
 }

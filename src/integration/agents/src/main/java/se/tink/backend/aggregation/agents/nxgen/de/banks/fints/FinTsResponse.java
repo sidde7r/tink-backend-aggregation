@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.de.banks.fints;
 
+import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.StatusCode.PIN_TEMP_BLOCKED;
+
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +13,6 @@ import java.util.Objects;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.FinTsSegment;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsEscape;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsParser;
-import static se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants.StatusCode.PIN_TEMP_BLOCKED;
 
 public class FinTsResponse {
 
@@ -22,7 +23,6 @@ public class FinTsResponse {
 
         this.segments = Arrays.asList(FinTsParser.splitSegments(data));
         this.response = FinTsParser.unwrapSegment(data);
-
     }
 
     public String findSegment(String name) {
@@ -42,12 +42,13 @@ public class FinTsResponse {
 
         List<String> found = new ArrayList<>();
 
-        this.segments.forEach(s -> {
-            String[] splits = s.split(FinTsConstants.SegData.ELEMENT_DELIMITER, 2);
-            if (Objects.equals(splits[0], name)) {
-                found.add(s);
-            }
-        });
+        this.segments.forEach(
+                s -> {
+                    String[] splits = s.split(FinTsConstants.SegData.ELEMENT_DELIMITER, 2);
+                    if (Objects.equals(splits[0], name)) {
+                        found.add(s);
+                    }
+                });
         return found;
     }
 
@@ -167,7 +168,8 @@ public class FinTsResponse {
                 parts.remove(0);
                 for (String p : parts) {
                     List<String> psplit = FinTsParser.getDataGroupElements(p);
-                    if (FinTsConstants.StatusCode.MORE_INFORMATION_AVAILABLE.equals(psplit.get(0))) {
+                    if (FinTsConstants.StatusCode.MORE_INFORMATION_AVAILABLE.equals(
+                            psplit.get(0))) {
                         String td = psplit.get(3);
                         touchdown.put(msgseg.getType(), FinTsEscape.unescapeDataElement(td));
                     }
@@ -180,7 +182,8 @@ public class FinTsResponse {
     private String findSegmentForReference(String name, FinTsSegment ref) {
         List<String> segs = this.findSegments(name);
         for (String seg : segs) {
-            List<String> segSplit = FinTsParser.getDataGroupElements(FinTsParser.getSegmentDataGroups(seg).get(0));
+            List<String> segSplit =
+                    FinTsParser.getDataGroupElements(FinTsParser.getSegmentDataGroups(seg).get(0));
             if (Objects.equals(segSplit.get(3), String.valueOf(ref.getSegmentNumber()))) {
                 return seg;
             }
@@ -190,8 +193,6 @@ public class FinTsResponse {
 
     @Override
     public String toString() {
-        return "FinTsResponse{" +
-                "response='" + response + '\'' +
-                '}';
+        return "FinTsResponse{" + "response='" + response + '\'' + '}';
     }
 }

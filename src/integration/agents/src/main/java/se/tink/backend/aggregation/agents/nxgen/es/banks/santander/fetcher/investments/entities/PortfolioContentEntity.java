@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.SantanderEsApiClient;
-import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.entities.AmountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.entities.AmountEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.santander.fetcher.investments.rpc.InstrumentDetailsResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 

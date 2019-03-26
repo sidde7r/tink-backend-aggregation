@@ -6,6 +6,9 @@ import java.time.ZoneId;
 import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
+import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails.Type;
 
 public abstract class BankiaConstants {
 
@@ -94,6 +97,15 @@ public abstract class BankiaConstants {
         public static final String CONTROL_DIGITS = "control_digits";
 
     }
+
+    public static final TypeMapper<Type> LOAN_TYPE_MAPPER =
+        TypeMapper.<LoanDetails.Type>builder()
+            .put(LoanDetails.Type.MORTGAGE,
+                "13157",
+                "13135")
+            .put(LoanDetails.Type.BLANCO,
+                "10060") // CREDITO INMEDIATO
+            .build();
 
     public static class AccountType {
         private static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES_MAP =

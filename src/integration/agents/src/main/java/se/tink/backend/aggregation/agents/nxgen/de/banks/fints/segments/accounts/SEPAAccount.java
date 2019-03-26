@@ -2,13 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.de.banks.fints.segments.account
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import io.netty.util.internal.StringUtil;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.FinTsConstants;
 import se.tink.backend.aggregation.agents.nxgen.de.banks.fints.utils.FinTsAccountTypeConverter;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
 
 public class SEPAAccount {
@@ -155,9 +155,9 @@ public class SEPAAccount {
 
     public TransactionalAccount toTinkAccount() {
         return TransactionalAccount.builder(
-                getType(),
-                getAccountNo(),
-                new Amount(getCurrency(), StringUtils.parseAmount(getBalance())))
+                        getType(),
+                        getAccountNo(),
+                        new Amount(getCurrency(), StringUtils.parseAmount(getBalance())))
                 .setHolderName(new HolderName(getHolderName()))
                 .setName(getProductName())
                 .setAccountNumber(getAccountNo())
@@ -176,8 +176,9 @@ public class SEPAAccount {
 
     // Only consider transactional types for now
     private AccountTypes getType() {
-        if (AccountTypes.CHECKING.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType)) ||
-                AccountTypes.SAVINGS.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType))) {
+        if (AccountTypes.CHECKING.equals(FinTsAccountTypeConverter.getAccountTypeFor(accountType))
+                || AccountTypes.SAVINGS.equals(
+                        FinTsAccountTypeConverter.getAccountTypeFor(accountType))) {
             return FinTsAccountTypeConverter.getAccountTypeFor(accountType);
         } else {
             throw new IllegalStateException("Invalid accountType for transactional account");

@@ -13,27 +13,30 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class CardDetailsResponse {
 
-  @JsonProperty("methodResult")
-  private MethodResult methodResult;
+    @JsonProperty("methodResult")
+    private MethodResult methodResult;
 
-  private Amount getAvailableBalance() {
-    return new Amount(
-        methodResult.getAvailableAmount().getdIVISA(),
-        methodResult.getAvailableAmount().getiMPORTE());
-  }
+    private Amount getAvailableBalance() {
+        return new Amount(
+                methodResult.getAvailableAmount().getdIVISA(),
+                methodResult.getAvailableAmount().getiMPORTE());
+    }
 
-  private Amount getBalance() {
-    return new Amount(methodResult.getSaldo().getdIVISA(), methodResult.getSaldo().getiMPORTE());
-  }
+    private Amount getBalance() {
+        return new Amount(
+                methodResult.getSaldo().getdIVISA(), methodResult.getSaldo().getiMPORTE());
+    }
 
-  public CreditCardAccount toCreditCardAccount(String localContractDetail) {
-    return CreditCardAccount.builder(
-            Hash.sha1AsHex(methodResult.getMainCardPan()), getBalance(), getAvailableBalance())
-        .setHolderName(new HolderName(methodResult.getCardHolderName()))
-        .setAccountNumber(CreditCardMasker.maskCardNumber(methodResult.getMainCardPan()))
-        .setName(methodResult.getProductName())
-        .putInTemporaryStorage(
-            SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL, localContractDetail)
-        .build();
-  }
+    public CreditCardAccount toCreditCardAccount(String localContractDetail) {
+        return CreditCardAccount.builder(
+                        Hash.sha1AsHex(methodResult.getMainCardPan()),
+                        getBalance(),
+                        getAvailableBalance())
+                .setHolderName(new HolderName(methodResult.getCardHolderName()))
+                .setAccountNumber(CreditCardMasker.maskCardNumber(methodResult.getMainCardPan()))
+                .setName(methodResult.getProductName())
+                .putInTemporaryStorage(
+                        SantanderConstants.STORAGE.LOCAL_CONTRACT_DETAIL, localContractDetail)
+                .build();
+    }
 }

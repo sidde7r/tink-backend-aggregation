@@ -7,9 +7,7 @@ public interface WLAuthenticatorStorage {
 
     void setWlInstanceId(String wlInstanceId);
 
-    /**
-     * @return A serialized public/private RSA key pair, if it exists in this storage
-     */
+    /** @return A serialized public/private RSA key pair, if it exists in this storage */
     Optional<KeyPair> getKeyPair();
 
     void setKeyPair(KeyPair keyPair);
