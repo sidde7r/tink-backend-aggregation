@@ -28,7 +28,7 @@ public final class SpareBank1Agent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new SpareBank1ApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new SpareBank1ApiClient(client, sessionStorage);
     }
 
     @Override

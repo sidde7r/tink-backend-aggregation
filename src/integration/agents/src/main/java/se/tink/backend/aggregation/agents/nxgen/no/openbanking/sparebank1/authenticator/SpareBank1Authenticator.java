@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.backend.agents.rpc.Credentials;
 
+// TODO: OAuth flow with authorization code will be implemented for production
 public class SpareBank1Authenticator implements Authenticator {
     private final SpareBank1ApiClient apiClient;
     private final SessionStorage sessionStorage;

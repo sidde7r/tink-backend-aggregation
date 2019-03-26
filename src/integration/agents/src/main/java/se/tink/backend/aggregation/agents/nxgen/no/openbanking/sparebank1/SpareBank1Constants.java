@@ -1,6 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1;
 
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+
 public abstract class SpareBank1Constants {
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "USER").build();
 
     public static class Urls {
         public static final String BASE_URL = "https://developer-api.sparebank1.no";

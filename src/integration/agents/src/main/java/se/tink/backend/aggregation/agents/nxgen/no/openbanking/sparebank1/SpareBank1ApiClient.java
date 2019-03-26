@@ -15,15 +15,10 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 public final class SpareBank1ApiClient {
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
 
-    public SpareBank1ApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage) {
+    public SpareBank1ApiClient(TinkHttpClient client, SessionStorage sessionStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
     }
 
     private RequestBuilder createRequest(URL url) {
