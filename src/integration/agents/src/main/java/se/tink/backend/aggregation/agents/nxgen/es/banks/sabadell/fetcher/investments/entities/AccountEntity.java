@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
@@ -14,7 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccou
 import se.tink.libraries.amount.Amount;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -68,47 +68,13 @@ public class AccountEntity {
 
     @JsonIgnore
     public Map<String, String> getMappedAttributes() {
+        SimpleModule module =
+                new SimpleModule()
+                        .addSerializer(AccountEntity.class, new AccountEntitySerializer());
 
-        Map<String, String> mappedAttributes = new HashMap<>();
-
-        Map<String, Object> map =
-                new ObjectMapper().convertValue(this, new TypeReference<Map<String, Object>>() {});
-
-        map.forEach(
-                (firstKey, v) -> {
-                    if (v instanceof Map) {
-                        ((Map<String, String>) v)
-                                .forEach(
-                                        (secondKey, l) ->
-                                                mappedAttributes.put(
-                                                        composeKey(firstKey, secondKey), l));
-                    } else {
-                        mappedAttributes.put(
-                                composeKey(firstKey), v == null ? "" : String.valueOf(v));
-                    }
-                });
-
-        return mappedAttributes;
-    }
-
-    @JsonIgnore
-    private String composeKey(String firstKey, String... otherKeys) {
-        final String firstKeyPrefix = "account[";
-        final String otherKeyPrefix = "[";
-        final String keySuffix = "]";
-
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(firstKeyPrefix);
-        buffer.append(firstKey);
-        buffer.append(keySuffix);
-
-        for (String otherKey : otherKeys) {
-            buffer.append(otherKeyPrefix);
-            buffer.append(otherKey);
-            buffer.append(keySuffix);
-        }
-
-        return buffer.toString();
+        return new ObjectMapper()
+                .registerModule(module)
+                .convertValue(this, new TypeReference<Map<String, String>>() {});
     }
 
     public String getAlias() {
@@ -175,5 +141,25 @@ public class AccountEntity {
 
     public String getContractNumberFormatted() {
         return contractNumberFormatted;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public String getEntityCode() {
+        return entityCode;
+    }
+
+    public String getContractCode() {
+        return contractCode;
+    }
+
+    public String getHashIban() {
+        return hashIban;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

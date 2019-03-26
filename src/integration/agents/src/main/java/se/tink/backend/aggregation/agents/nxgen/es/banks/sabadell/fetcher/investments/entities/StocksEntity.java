@@ -43,7 +43,7 @@ public class StocksEntity {
                 surplusValua
                                 .getValue()
                                 .equals(SabadellConstants.Constants.NOT_AVAILABLE_ABBREVIATION)
-                        ? 0.0
+                        ? null
                         : AgentParsingUtils.parseAmount(surplusValua.getValue()));
 
         return instrument;
