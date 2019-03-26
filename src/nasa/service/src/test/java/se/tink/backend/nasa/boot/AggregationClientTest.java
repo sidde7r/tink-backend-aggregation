@@ -12,7 +12,7 @@ import se.tink.backend.nasa.boot.rpc.Credentials;
 import se.tink.backend.nasa.boot.rpc.Provider;
 import se.tink.backend.nasa.boot.rpc.RefreshInformationRequest;
 import se.tink.backend.nasa.boot.rpc.RefreshableItem;
-import se.tink.libraries.user.rpc.User;
+import se.tink.backend.nasa.boot.rpc.User;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

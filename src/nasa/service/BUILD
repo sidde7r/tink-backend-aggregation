@@ -26,7 +26,6 @@ java_binary(
         "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
 
-        "//src/libraries/user:rpc",
         "//src/libraries/serialization:serialization",
 
         "//third_party:log",
@@ -56,7 +55,6 @@ junit_test(
         "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
 
-        "//src/libraries/user:rpc",
         "//src/libraries/serialization:serialization",
 
         "//third_party:log",

@@ -1,7 +1,6 @@
 package se.tink.backend.nasa.boot.rpc;
 
 import java.util.Set;
-import se.tink.libraries.user.rpc.User;
 
 public class RefreshInformationRequest extends CredentialsRequest {
 

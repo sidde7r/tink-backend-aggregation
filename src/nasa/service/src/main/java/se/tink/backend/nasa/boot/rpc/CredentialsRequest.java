@@ -1,7 +1,6 @@
 package se.tink.backend.nasa.boot.rpc;
 
 import java.util.List;
-import se.tink.libraries.user.rpc.User;
 
 public abstract class CredentialsRequest {
     private Credentials credentials;
@@ -10,8 +9,7 @@ public abstract class CredentialsRequest {
     private String userDeviceId;
     private List<Account> accounts;
 
-    public CredentialsRequest() {
-    }
+    public CredentialsRequest() {}
 
     public CredentialsRequest(Credentials credentials, Provider provider, User user) {
         this.credentials = credentials;
@@ -22,7 +20,6 @@ public abstract class CredentialsRequest {
     public abstract boolean isManual();
 
     public abstract CredentialsRequestType getType();
-
 
     public void setCredentials(Credentials credentials) {
         this.credentials = credentials;
