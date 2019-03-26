@@ -62,7 +62,7 @@ public final class BnpParibasFortisApiClient {
                 BnpParibasFortisConstants.HeaderKeys.SIGNATURE,
                 UUID.randomUUID().toString()
             )
-            .accept("application/hal+json");
+            .accept(BnpParibasFortisConstants.HeaderKeys.APPLICATION_HAL_JSON);
     }
 
     public URL getAuthorizeUrl(String state) {

@@ -60,6 +60,7 @@ public abstract class BnpParibasFortisConstants {
         public static final String OPENBANK_STET_VERSION = "X-Openbank-Stet-Version";
         public static final String REQUEST_ID = "X-Request-ID";
         public static final String SIGNATURE = "Signature";
+        public static final String APPLICATION_HAL_JSON = "application/hal+json";
     }
 
     public static class FormValues {
