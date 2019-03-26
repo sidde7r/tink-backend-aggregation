@@ -1,8 +1,14 @@
 package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments;
 
+import se.tink.backend.aggregation.agents.models.Instrument;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellApiClient;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.SabadellConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.AccountEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.MarketsEntity;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.StocksEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.DepositsResponse;
+import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.MarketsRequest;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.PensionPlansResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.SavingsResponse;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.rpc.ServicingFundsAccountDetailsRequest;
@@ -12,8 +18,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccount> {
     private final AggregationLogger log = new AggregationLogger(SabadellInvestmentFetcher.class);
@@ -26,11 +36,45 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
     @Override
     public Collection<InvestmentAccount> fetchAccounts() {
         logDeposits();
-        logServicingFunds();
         logPensionPlans();
         logSavings();
+        logServicingFunds();
 
-        return Collections.emptyList();
+        List<InvestmentAccount> allInvestmentAccounts = new ArrayList<>();
+
+        List<InvestmentAccount> stockInvestmentAccounts =
+                apiClient.fetchProducts().getInvestmentProduct().getSecurities().getAccounts()
+                        .stream()
+                        .map(aggregateStockInvestmentAccount())
+                        .collect(Collectors.toList());
+
+        allInvestmentAccounts.addAll(stockInvestmentAccounts);
+        return allInvestmentAccounts;
+    }
+
+    private Function<AccountEntity, InvestmentAccount> aggregateStockInvestmentAccount() {
+        return accountEntity -> {
+            List<Instrument> instruments =
+                    apiClient.fetchMarkets(new MarketsRequest(accountEntity)).getMarkets().stream()
+                            .flatMap(getInstruments(accountEntity))
+                            .collect(Collectors.toList());
+
+            List<Portfolio> portfolios = accountEntity.toTinkPortfolios(instruments);
+
+            return accountEntity.toTinkInvestmentAccount(portfolios);
+        };
+    }
+
+    private Function<MarketsEntity, Stream<? extends Instrument>> getInstruments(
+            AccountEntity accountEntity) {
+
+        return marketsEntity ->
+                apiClient
+                        .fetchStocks(
+                                marketsEntity.getName().toLowerCase(),
+                                accountEntity.getMappedAttributes())
+                        .getStocks().stream()
+                        .map(StocksEntity::toTinkInstrument);
     }
 
     private void logDeposits() {
@@ -110,6 +154,18 @@ public class SabadellInvestmentFetcher implements AccountFetcher<InvestmentAccou
                 log.infoExtraLong(
                         SerializationUtils.serializeToString(savingsResponse),
                         SabadellConstants.Tags.SAVINGS);
+
+                savingsResponse
+                        .getSavingPlans()
+                        .forEach(
+                                savingsPlan -> {
+                                    String detailsResponse =
+                                            apiClient.fetchSavingsPlanDetails(savingsPlan.getQueryParamsForDetailsRequest());
+
+                                    log.infoExtraLong(
+                                            detailsResponse,
+                                            SabadellConstants.Tags.SAVINGS_PLAN_DETAILS);
+                                });
             }
         } catch (Exception e) {
             log.warn(

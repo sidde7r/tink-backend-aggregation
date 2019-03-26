@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities;
 
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.entities.PaginatorEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.banks.sabadell.fetcher.investments.entities.AccountEntity;

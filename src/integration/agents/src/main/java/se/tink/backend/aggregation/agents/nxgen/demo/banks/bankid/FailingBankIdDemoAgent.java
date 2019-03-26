@@ -1,8 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.demo.banks.bankid;
 
+import java.util.Collections;
+import java.util.List;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.demo.NextGenerationDemoAgent;
+import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoLoanAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
@@ -135,5 +138,10 @@ public class FailingBankIdDemoAgent extends NextGenerationDemoAgent {
                 return  26245.33;
             }
         };
+    }
+
+    @Override
+    public List<DemoCreditCardAccount> getCreditCardAccounts() {
+        return Collections.emptyList();
     }
 }

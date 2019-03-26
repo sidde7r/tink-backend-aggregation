@@ -11,6 +11,13 @@ public class AmountEntity {
     private String value;
     private String currency;
 
+    public AmountEntity() {}
+
+    public AmountEntity(String value, String currency) {
+        this.value = value;
+        this.currency = currency;
+    }
+
     public String getValue() {
         return value;
     }

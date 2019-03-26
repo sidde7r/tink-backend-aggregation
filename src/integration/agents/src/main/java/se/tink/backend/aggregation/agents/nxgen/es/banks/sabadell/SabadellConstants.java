@@ -14,6 +14,10 @@ public final class SabadellConstants {
                         + "br2kR1wyJybVgg12VJmhE0yvy5McZEzm3T8wIDAQAB";
     }
 
+    public static class UrlParams {
+        public static final String MARKET = "market";
+    }
+
     public static final class Urls {
         public static final String BASE_URL = "https://www.bancsabadell.mobi/bsmobil/api";
 
@@ -30,8 +34,13 @@ public final class SabadellConstants {
                 new URL(BASE_URL + "/servicingfunds/contracts");
         public static final URL FETCH_PENSION_PLANS = new URL(BASE_URL + "/pensionplans");
         public static final URL FETCH_SAVINGS = new URL(BASE_URL + "/savings");
+        public static final URL FETCH_PRODUCTS = new URL(BASE_URL + "/products");
+        public static final URL FETCH_STOCKS =
+                new URL(BASE_URL + "/securities/markets/{" + UrlParams.MARKET + "}/stocks");
+        public static final URL FETCH_MARKETS = new URL(BASE_URL + "/securities/markets");
         public static final URL FETCH_SERVICING_FUNDS_ACCOUNT_DETAILS =
                 new URL(BASE_URL + "/servicingfunds/refunds");
+        public static final URL FETCH_SAVINGS_PLAN_DETAILS = new URL(BASE_URL + "/savings/detail");
         public static final URL FETCH_LOAN_DETAILS = new URL(BASE_URL + "/loans");
     }
 
@@ -123,6 +132,8 @@ public final class SabadellConstants {
         public static final LogTag SAVINGS = LogTag.from("es_sabadell_savings");
         public static final LogTag SERVICING_FUNDS_ACCOUNT_DETAILS =
                 LogTag.from("es_sabadell_servicing_funds_account_details");
+        public static final LogTag SAVINGS_PLAN_DETAILS =
+                LogTag.from("es_sabadell_savings_plan_details");;
         public static final LogTag LOAN_DETAILS = LogTag.from("es_sabadell_loan_details");
     }
 
@@ -136,5 +147,15 @@ public final class SabadellConstants {
         public static final String CREDIT_CARD_SIN = "sin";
         public static final String CURRENCY_ACCOUNT = "CUENTA EN DIVISA";
         public static final String BUSINESS_EXPANSION_ACCOUNT = "CUENTA EXPANSIÓN NEGOCIOS";
+    }
+
+    public static final class Constants {
+        public static final String NOT_AVAILABLE_ABBREVIATION = "N.D.";
+    }
+
+    public static final class QueryParamsKeys {
+        public static final String CONTRACT_CODE = "contractCode";
+        public static final String ENTITY_CODE = "entityCode";
+        public static final String PRODUCT_TYPE = "productType";
     }
 }
