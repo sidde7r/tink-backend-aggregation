@@ -65,4 +65,12 @@ public class Credentials {
 
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsMap.class);
     }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setType(CredentialsType type) {
+        this.type = type;
+    }
 }
