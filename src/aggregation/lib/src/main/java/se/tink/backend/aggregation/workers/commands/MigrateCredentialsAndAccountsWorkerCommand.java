@@ -15,10 +15,25 @@ public class MigrateCredentialsAndAccountsWorkerCommand extends AgentWorkerComma
     private final ControllerWrapper controllerWrapper;
     private final CredentialsRequest request;
     protected ImmutableMap<String, AgentVersionMigration> migrations =
-            ImmutableMap.of(
-                    // Add your migrations here
-                    "sjpriomastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration(),
-                    "handelsbanken-bankid", new HandelsbankenBankIdMigrationNoClearingNumber());
+            new ImmutableMap.Builder<String, AgentVersionMigration>()
+                // Add your migrations here
+                .put("handelsbanken-bankid", new HandelsbankenBankIdMigrationNoClearingNumber())
+
+                // SEB Kort migrations
+                .put("chevroletmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("choicemastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("djurgardskortetmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("eurocard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("finnairmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("jetmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("nknyckelnmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("opelmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("saabmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("saseurobonusmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("sebwalletmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("sjpriomastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .put("statoilmastercard-bankid", new SebKortSanitizeUniqueIdentifierMgration())
+                .build();
 
     public MigrateCredentialsAndAccountsWorkerCommand(
             CredentialsRequest request, ControllerWrapper controllerWrapper) {

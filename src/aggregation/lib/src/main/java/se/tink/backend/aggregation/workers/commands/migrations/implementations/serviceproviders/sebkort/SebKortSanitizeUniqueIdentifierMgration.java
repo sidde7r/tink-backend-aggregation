@@ -17,11 +17,22 @@ public class SebKortSanitizeUniqueIdentifierMgration extends AgentVersionMigrati
     private static final Pattern MASKED_CARD_NUMBER_PATTERN = Pattern.compile("^[0-9]{6}\\*{6}[0-9]{4}$");
     private static final Pattern SANITIZED_PATTERN = Pattern.compile("^[0-9]{10}$");
 
-    private static final Map<String, String> AGENT_CLASS_MAPPING = ImmutableMap.of(
-            "sjse:0104", "nxgen.se.creditcards.sebkort.sjprio.SjPrioMastercardAgent",
-            "sase:0102", "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent",
-            "ecse:0005", "nxgen.se.creditcards.sebkort.eurocard.EurocardSEAgent"
-    );
+    private static final Map<String, String> AGENT_CLASS_MAPPING = new ImmutableMap.Builder<String, String>()
+        .put("chse:0086", "nxgen.se.creditcards.sebkort.chevrolet.ChevroletMastercardAgent")
+        .put("cose:0108", "nxgen.se.creditcards.sebkort.nordicchoice.NordicChoiceClubMastercardSEAgent")
+        .put("djse:0116", "nxgen.se.creditcards.sebkort.djurgardskortet.DjurgardskortetMastercardAgent")
+        .put("ecse:0005", "nxgen.se.creditcards.sebkort.eurocard.EurocardSEAgent")
+        .put("fase:0129", "nxgen.se.creditcards.sebkort.finnair.FinnairMastercardSEAgent")
+        .put("jese:0032", "nxgen.se.creditcards.sebkort.ingo.IngoMastercardAgent")
+        .put("nkse:0007", "nxgen.se.creditcards.sebkort.nknyckeln.NkNyckelnMastercardAgent")
+        .put("opse:0107", "nxgen.se.creditcards.sebkort.opel.OpelMastercardAgent")
+        .put("sase:0102", "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent")
+        .put("sbse:0106", "nxgen.se.creditcards.sebkort.saab.SaabMastercardAgent")
+        .put("sjse:0104", "nxgen.se.creditcards.sebkort.sjprio.SjPrioMastercardAgent")
+        .put("stse:0122", "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent")
+        .put("wase:0121", "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent")
+        .build();
+
 
     private static final List<String> NEW_SEBKORT_AGENT_CLASSES = ImmutableList.copyOf(
             AGENT_CLASS_MAPPING.values()
