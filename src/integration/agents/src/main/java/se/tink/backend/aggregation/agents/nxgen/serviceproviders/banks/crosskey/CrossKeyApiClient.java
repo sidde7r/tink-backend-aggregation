@@ -79,23 +79,23 @@ public class CrossKeyApiClient {
         HttpResponse post = null;
         try {
             post =
-                    agentConfiguration
-                            .getAppVersion()
-                            .map(
-                                    v ->
-                                        post(buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID),
-                                            HttpResponse.class,
-                                            new BankiIdCollectRequest(v)))
-                            .orElseGet(
-                                    () ->
-                                        post(buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID),
-                                            HttpResponse.class,
-                                            null));
+                agentConfiguration
+                    .getAppVersion()
+                    .map(
+                        v ->
+                            post(buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID),
+                                HttpResponse.class,
+                                new BankiIdCollectRequest(v)))
+                    .orElseGet(
+                        () ->
+                            post(buildRequest(CrossKeyConstants.Url.COLLECT_BANKIID),
+                                HttpResponse.class,
+                                null));
         } catch (HttpResponseException ex) {
-            return ex.getResponse().getBody(BankiIdResponse.class);
+            return deserializeResponse(BankiIdResponse.class, ex.getResponse().getBody(String.class));
         }
 
-        return post.getBody(BankiIdResponse.class);
+        return deserializeResponse(BankiIdResponse.class, post.getBody(String.class));
     }
 
     public LoginWithoutTokenResponse loginUsernamePassword(LoginWithoutTokenRequest request) {
@@ -213,20 +213,29 @@ public class CrossKeyApiClient {
     }
 
     private <T> T get(RequestBuilder request, Class<T> responseType) {
-        String response = request.get(String.class);
+        HttpResponse httpResponse = request.get(HttpResponse.class);
 
-        return deserializeResponse(responseType, response);
+        return deserializeResponse(responseType, httpResponse);
     }
 
     private <T> T post(RequestBuilder request, Class<T> responseType, Object requestBody) {
-        String response = "";
+        HttpResponse httpResponse = null;
+
         if (requestBody!= null) {
-            response = request.post(String.class, requestBody);
+            httpResponse = request.post(HttpResponse.class, requestBody);
         } else {
-            response = request.post(String.class);
+            httpResponse = request.post(HttpResponse.class);
         }
 
-        return deserializeResponse(responseType, response);
+        return deserializeResponse(responseType, httpResponse);
+    }
+
+    private <T> T deserializeResponse(Class<T> responseType, HttpResponse httpResponse) {
+        if (responseType.equals(HttpResponse.class)) {
+            return (T) httpResponse;
+        }
+
+        return deserializeResponse(responseType, httpResponse.getBody(String.class));
     }
 
     private <T> T deserializeResponse(Class<T> responseType, String response) {
