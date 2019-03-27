@@ -47,7 +47,6 @@ public class AccountsEntity {
             .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, iban))
             .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
             .addHolderName(owner)
-            .setAlias(owner)
             .setProductName(productDescription)
             .setApiIdentifier(iban)
             .putInTemporaryStorage(DeutscheBankConstants.StorageKeys.ACCOUNT_ID, iban)
