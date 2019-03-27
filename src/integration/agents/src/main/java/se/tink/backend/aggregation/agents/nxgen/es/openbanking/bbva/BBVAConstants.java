@@ -1,8 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public abstract class BBVAConstants {
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+        TypeMapper.<AccountTypes>builder()
+            .put(AccountTypes.CHECKING, "CHECKING")
+            .put(AccountTypes.CREDIT_CARD, "CREDIT")
+            .build();
 
     public static class Urls {
 
