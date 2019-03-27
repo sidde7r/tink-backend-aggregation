@@ -1565,7 +1565,7 @@
         },
         {
             "name": "sjpriomastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.sjprio.SjPrioMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SJ Prio MasterCard",
