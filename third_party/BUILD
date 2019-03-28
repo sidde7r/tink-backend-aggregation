@@ -1564,6 +1564,7 @@ java_library(
         "@org_apache_logging_log4j_log4j_api//jar",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
+        "@commons_logging_commons_logging//jar",
     ]
 )
 
