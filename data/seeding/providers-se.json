@@ -27,7 +27,7 @@
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
+            "status": "DISABLED",
             "transactional": true,
             "type": "BANK"
         },
