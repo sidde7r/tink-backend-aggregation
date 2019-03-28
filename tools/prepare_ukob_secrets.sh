@@ -1,31 +1,81 @@
 #!/bin/bash
-#Super dummy script that takes the UK Open Banking config as input
+
+heredoc(){
+cat <<EOL
+
+    -------------------------------------------------------------------------
+    NAME:
+            prepare_ukob_secrets.sh
+
+    DESCRIPTION:
+            Takes json file from standard input and converts it to a oneliner
+            and encodes another file with base64
+
+    USAGE:
+            Execute:          \$ $0 [file.json]
+            Help:             \$ $0 -h --help
+
+    EXAMPLE:
+            \$ $0 ukob.json
+
+    HELP:
+            Contact Integration Team
+
+    CREATOR:
+            Adriana Rychlinska
+            Love Bååk
+    -------------------------------------------------------------------------
+
+EOL
+exit 0
+}
+
 FILE="$1"
 ONE_LINE="${FILE}_oneLine"
 ENCODED="${FILE}_encoded"
+SYSTEM_KERNEL=$(uname)
 
-# One possible improvement is to create a help here.
+case $1 in
+    "-h" )
+    heredoc
+        ;;
+    "--help" )
+    heredoc
+        ;;
+esac
 
+if [[ $FILE != *.json ]]; then
+    echo "Unrecognized file format"
+    echo "Use -h or --help for usage information"
+    exit 1
+fi
 
-
-# We are using this command twice as on Linux machones there is wrapping, which should be turned off with -w0 flag
-# however for Mac users base64 does not have this flag
-# Improvement for that would be to detect system unix/bsd and decide if base64 or base64 -w0 should be used
-#REMOVE_WHITESPACES_COMMAND="tr -d '\n ' < $CURRENT_FILE | sed '$s/ $/\n/'"
-function remove_all_white_characters(){
+remove_all_white_characters(){
     tr -d '\n ' < "$1" > "$2"
-    echo "" >> "$2"
 }
 
-function encode_input(){
+if [[ ! $SYSTEM_KERNEL == "Darwin" ]]; then
+    encode_input(){
+        cat "$1" | base64 -w0 > "$2"
+    }
+else
+    encode_input(){
         cat "$1" | base64 > "$2"
-}
+    }
+fi
 
-
-#Remove all the new lines and then add one at the end (tr removes too much, not being compatible with unix standard)
+# Remove all the new lines and then add one at the end (tr removes too much, not being compatible with unix standard)
 remove_all_white_characters $FILE $ONE_LINE
-encode_input $ONE_LINE "${ENCODED}tmp"
-remove_all_white_characters "${ENCODED}tmp" $ENCODED
-rm "${ENCODED}tmp"
-echo "created files $ONE_LINE and $ENCODED"
+# Adding new line to end of file
+echo "" >> "$ONE_LINE"
+encode_input $ONE_LINE "${ENCODED}"
+
+if [[ -f "$ONE_LINE" ]] && [[ -f "$ENCODED" ]]; then
+    echo "created files $ONE_LINE and $ENCODED"
+else
+    echo "Something went wrong"
+    exit 1
+fi
+
+
 exit 0
