@@ -111,17 +111,3 @@ steps:
         REPO_SHA1: "$BUILDKITE_COMMIT"
         VERSION: "$VERSION"
         PRUNE: "True"
-
-  - name: "Trigger release-train for tink-backend-aggregation-demo-bank-cronjob"
-    branches: 'master'
-    trigger: "release-train"
-    async: false
-    build:
-      message: "$BUILDKITE_MESSAGE"
-      branch: "tink-backend-aggregation-demo-bank-cronjob"
-      env:
-        CHART: "tink-backend-aggregation-demo-bank-cronjob"
-        REPO_NAME: "tink-backend-aggregation"
-        REPO_SHA1: "$BUILDKITE_COMMIT"
-        VERSION: "$VERSION"
-        PRUNE: "True"
