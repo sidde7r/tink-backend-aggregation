@@ -15,6 +15,7 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import se.tink.backend.nasa.boot.rpc.CredentialsRequest;
 import se.tink.backend.nasa.boot.rpc.RefreshInformationRequest;
 
 public class AggregationClient {
@@ -22,12 +23,14 @@ public class AggregationClient {
     private static final String X_TINK_CLIENT_API_KEY = "X-Tink-Client-Api-Key";
     private static final String CONTENT_TYPE = "Content-type";
     private static final String AGGREGATION =
-            "https://192.168.99.100:31011"; // TODO: Fetch from config
+            // "https://192.168.99.100:31011"; // TODO: Fetch from config
+            "https://localhost:9105"; // url to aggregation running locally
     private static final String REFRESH_ENDPOINT = "/aggregation/refresh";
 
     public static HttpResponse refreshInformation(
             String apiClientKey, RefreshInformationRequest request)
-            throws IOException, KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+            throws IOException, KeyManagementException, NoSuchAlgorithmException,
+                    KeyStoreException {
 
         CloseableHttpClient client = createCloseableHttpClientTrustingAllHosts();
         HttpPost httpPost = createAggregationHttpPost(apiClientKey, request, REFRESH_ENDPOINT);
@@ -38,7 +41,7 @@ public class AggregationClient {
     }
 
     private static HttpPost createAggregationHttpPost(
-            String apiClientKey, RefreshInformationRequest request, String endpoint)
+            String apiClientKey, CredentialsRequest request, String endpoint)
             throws UnsupportedEncodingException {
 
         HttpPost httpPost = new HttpPost(AGGREGATION + endpoint);
