@@ -151,7 +151,7 @@
         },
         {
             "name": "chevroletmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.chevrolet.ChevroletMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Chevrolet Big Plus Card",
@@ -183,7 +183,7 @@
         },
         {
             "name": "choicemastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.nordicchoice.NordicChoiceClubMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Nordic Choice Club MasterCard",
@@ -526,7 +526,7 @@
         },
         {
             "name": "djurgardskortetmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.djurgardskortet.DjurgardskortetMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Djurgårdskortet MasterCard",
@@ -586,7 +586,7 @@
         },
         {
             "name": "finnairmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.finnair.FinnairMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Finnair Plus MasterCard",
@@ -820,7 +820,7 @@
         },
         {
             "name": "jetmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.ingo.IngoMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "INGO MasterCard (JET)",
@@ -914,7 +914,7 @@
         },
         {
             "name": "nknyckelnmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.nknyckeln.NkNyckelnMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "NK Nyckeln MasterCard",
@@ -1120,7 +1120,7 @@
         },
         {
             "name": "opelmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.opel.OpelMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Opel MasterCard",
@@ -1211,7 +1211,7 @@
         },
         {
             "name": "saabmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.saab.SaabMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SAAB MasterCard",
@@ -1502,7 +1502,7 @@
         },
         {
             "name": "sebwalletmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SEB Wallet MasterCard",
@@ -1691,7 +1691,7 @@
         },
         {
             "name": "statoilmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Circle K MasterCard",
