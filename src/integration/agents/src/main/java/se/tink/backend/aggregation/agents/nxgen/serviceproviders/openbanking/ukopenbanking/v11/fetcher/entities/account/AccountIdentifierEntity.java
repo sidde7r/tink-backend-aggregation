@@ -19,6 +19,10 @@ public class AccountIdentifierEntity {
     @JsonProperty("SecondaryIdentification")
     private String secondaryIdentification;
 
+    public boolean isSortCode() {
+        return identifierType == UkOpenBankingConstants.ExternalAccountIdentification2Code.SORT_CODE_ACCOUNT_NUMBER;
+    }
+
     public String getIdentification() {
         return identification;
     }
