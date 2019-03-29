@@ -30,7 +30,7 @@ public class CreditCardSETransactionsResponse extends CreditCardTransactionsResp
 
         // Calculate balance based on credit limit and spendable amount if these values are present
         if (cardInvoiceInfo.hasCreditLimitLargerThanZero() && cardInvoiceInfo.hasSpendable()) {
-            return cardInvoiceInfo.getCredit().asDouble() - cardInvoiceInfo.getSpendable().asDouble();
+            return cardInvoiceInfo.getSpendable().asAmount().subtract(cardInvoiceInfo.getCredit().asAmount()).doubleValue();
         }
 
         // Return fallback amount if it contains any value, otherwise default to 0

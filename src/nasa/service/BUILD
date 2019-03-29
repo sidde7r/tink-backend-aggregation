@@ -1,3 +1,4 @@
+load("//tools/bzl:junit.bzl", "junit_test")
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 load(
     "@io_bazel_rules_docker//container:container.bzl",
@@ -25,6 +26,8 @@ java_binary(
         "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
 
+        "//src/libraries/serialization:serialization",
+
         "//third_party:log",
         "//third_party:prometheus",
         "//third_party:com_google_inject_guice",
@@ -36,6 +39,38 @@ java_binary(
 
         "//third_party:com_google_guava_guava",
         "//third_party:org_yaml_snakeyaml",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:com_google_code_gson_gson"
+    ],
+)
+
+junit_test(
+    name = "nasa_test",
+    srcs = glob(["src/test/java/**/*.java"]),
+    data = [
+        "//etc/nasa:development-configuration",
+        "//data:security",
+    ],
+    deps = [
+        "//src/libraries:simple-http-server",
+        "//src/libraries:health-check-handler",
+
+        "//src/libraries/serialization:serialization",
+
+        "//third_party:log",
+        "//third_party:prometheus",
+        "//third_party:com_google_inject_guice",
+        "//third_party:java_spark",
+
+        "//src/nasa/metrics:metrics",
+
+        "//third_party:com_google_guava_guava",
+        "//third_party:org_yaml_snakeyaml",
+        "//third_party:org_apache_httpcomponents_httpclient",
+        "//third_party:com_google_code_gson_gson",
+
+        "//third_party:org_assertj_assertj_core",
+        "//src/nasa/service:nasa"
     ],
 )
 

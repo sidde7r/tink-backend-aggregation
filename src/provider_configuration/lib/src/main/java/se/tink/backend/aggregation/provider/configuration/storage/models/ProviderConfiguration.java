@@ -8,16 +8,17 @@ import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import se.tink.libraries.credentials.enums.CredentialsTypes;
+import se.tink.libraries.field.rpc.Field;
+import se.tink.libraries.provider.enums.ProviderStatuses;
+import se.tink.libraries.provider.enums.ProviderTypes;
+import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
+import se.tink.libraries.serialization.utils.SerializationUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import se.tink.libraries.credentials.enums.CredentialsTypes;
-import se.tink.libraries.field.rpc.Field;
-import se.tink.libraries.provider.rpc.ProviderRefreshSchedule;
-import se.tink.libraries.provider.enums.ProviderStatuses;
-import se.tink.libraries.provider.enums.ProviderTypes;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderConfiguration {
@@ -41,6 +42,7 @@ public class ProviderConfiguration {
     private boolean multiFactor;
     private String name;
     private String passwordHelpText;
+    private String tutorialUrl;
     private String payload;
     private boolean popular;
     private double refreshFrequency = 1d;
@@ -130,6 +132,10 @@ public class ProviderConfiguration {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public String getTutorialUrl() {
+        return tutorialUrl;
     }
 
     public List<Field> getSupplementalFields() {
@@ -276,6 +282,10 @@ public class ProviderConfiguration {
 
     public void setTransactional(boolean transactional) {
         this.transactional = transactional;
+    }
+
+    public void setTutorialUrl(String tutorialUrl) {
+        this.tutorialUrl = tutorialUrl;
     }
 
     public void setType(ProviderTypes type) {

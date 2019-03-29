@@ -1,12 +1,13 @@
 package se.tink.backend.aggregation.provider.configuration.storage.converter;
 
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.libraries.provider.enums.ProviderStatuses;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
-import se.tink.libraries.provider.enums.ProviderStatuses;
 
 public class StorageProviderConfigurationConverter {
 
@@ -50,6 +51,7 @@ public class StorageProviderConfigurationConverter {
         core.setTransactional(providerConfiguration.isTransactional());
         core.setDisplayDescription(providerConfiguration.getDisplayDescription());
         core.setSupplementalFields(providerConfiguration.getSupplementalFields());
+        core.setTutorialUrl(providerConfiguration.getTutorialUrl());
 
         if (providerStatus.isPresent()) {
             core.setStatus(providerStatus.get());

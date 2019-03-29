@@ -100,6 +100,39 @@
     "creditcards.sebkort.SEBKortAgent": [
         "CREDIT_CARDS"
     ],
+    "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.chevrolet.ChevroletMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.nordicchoice.NordicChoiceClubMastercardSEAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.djurgardskortet.DjurgardskortetMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.finnair.FinnairMastercardSEAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.ingo.IngoMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.nknyckeln.NkNyckelnMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.opel.OpelMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.saab.SaabMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.sjprio.SjPrioMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
     "creditcards.supremecard.v2.SupremeCardAgent": [
         "CREDIT_CARDS"
     ],

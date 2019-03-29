@@ -27,7 +27,7 @@
             "popular": true,
             "refreshFrequency": 1,
             "refreshFrequencyFactor": 1,
-            "status": "ENABLED",
+            "status": "DISABLED",
             "transactional": true,
             "type": "BANK"
         },
@@ -151,20 +151,22 @@
         },
         {
             "name": "chevroletmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.chevrolet.ChevroletMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Chevrolet Big Plus Card",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -177,25 +179,26 @@
             "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
             "name": "choicemastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.nordicchoice.NordicChoiceClubMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Nordic Choice Club MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -204,11 +207,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "cose:0108",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -526,20 +526,22 @@
         },
         {
             "name": "djurgardskortetmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.djurgardskortet.DjurgardskortetMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Djurgårdskortet MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -548,11 +550,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "djse:0116",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -563,14 +562,16 @@
             "displayName": "Eurocard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -579,29 +580,28 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "ecse:0005",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
             "name": "finnairmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.finnair.FinnairMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Finnair Plus MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -610,11 +610,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "fase:0129",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -823,20 +820,22 @@
         },
         {
             "name": "jetmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.ingo.IngoMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "INGO MasterCard (JET)",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -845,11 +844,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "jese:0032",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -918,20 +914,22 @@
         },
         {
             "name": "nknyckelnmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.nknyckeln.NkNyckelnMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "NK Nyckeln MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -940,11 +938,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "nkse:0007",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -1125,20 +1120,22 @@
         },
         {
             "name": "opelmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.opel.OpelMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Opel MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -1147,11 +1144,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "opse:0107",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -1217,20 +1211,22 @@
         },
         {
             "name": "saabmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.saab.SaabMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SAAB MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -1239,11 +1235,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "sbse:0106",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -1509,20 +1502,22 @@
         },
         {
             "name": "sebwalletmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SEB Wallet MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -1531,11 +1526,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "wase:0121",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -1573,20 +1565,22 @@
         },
         {
             "name": "sjpriomastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.sjprio.SjPrioMastercardAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SJ Prio MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -1595,11 +1589,8 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "sjse:0104",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
-            "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",
             "type": "CREDIT_CARD"
         },
         {
@@ -1700,20 +1691,22 @@
         },
         {
             "name": "statoilmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Circle K MasterCard",
             "fields": [
                 {
+                    "description": "Social security number",
+                    "exposed": true,
                     "hint": "YYYYMMDDNNNN",
-                    "name": "username",
-                    "numeric": true,
-                    "pattern": "(19|20)[0-9]{10}",
                     "immutable": true,
                     "maxLength": 12,
                     "minLength": 12,
-                    "description": "Social security number",
+                    "name": "username",
+                    "numeric": true,
+                    "optional": false,
+                    "pattern": "(19|20)[0-9]{10}",
                     "patternError": "Please enter a valid social security number."
                 }
             ],
@@ -1722,8 +1715,6 @@
             "passwordHelpText": "To connect your credit card, you need to identify yourself using Mobile BankID.",
             "payload": "stse:0122",
             "popular": false,
-            "refreshFrequency": 0,
-            "refreshFrequencyFactor": 1,
             "status": "ENABLED",
             "transactional": true,
             "tutorialUrl": "https://www.tink.se/sv/koppla-in-kreditkort-mobilt-bankid/chromeless/",

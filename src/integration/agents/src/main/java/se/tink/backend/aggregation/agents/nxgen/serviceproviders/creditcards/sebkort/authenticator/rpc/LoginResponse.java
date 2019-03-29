@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.rpc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
@@ -25,5 +26,18 @@ public class LoginResponse {
 
     public String getUid() {
         return uid;
+    }
+
+    @JsonIgnore
+    public String toDebugString() {
+        return "LoginResponse{" +
+            "action='" + action + '\'' +
+            ", target='" + target + '\'' +
+            ", uid.length='" + uid.length() + '\'' +
+            ", type='" + type + '\'' +
+            ", sebAuthMechanism='" + sebAuthMechanism + '\'' +
+            ", sebReferer='" + sebReferer + '\'' +
+            ", secret.length='" + secret.length() + '\'' +
+            '}';
     }
 }
