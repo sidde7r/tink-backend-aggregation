@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.uk
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Map;
-import java.util.Optional;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.fetcher.IdentifiableAccount;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.UkOpenBankingV20Constants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ukopenbanking.v20.fetcher.entities.deserializer.AccountIdentifierDeserializer;
@@ -11,8 +10,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.AccountIdentifier;
+
+import java.util.Map;
+import java.util.Optional;
 
 @JsonObject
 public class AccountEntity implements IdentifiableAccount {
@@ -41,7 +42,13 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public String getUniqueIdentifier() {
-        return getIdentifierEntity().getIdentification();
+
+        // In order to avoid account duplication we throw error if account does not have sort-code identifier.
+        if (!accountIdentifierMap.containsKey(UkOpenBankingV20Constants.AccountIdentifier.SORT_CODE_ACCOUNT_NUMBER)) {
+            throw new IllegalStateException("Sort-code identifier needed for unique identifier.");
+        }
+
+        return accountIdentifierMap.get(UkOpenBankingV20Constants.AccountIdentifier.SORT_CODE_ACCOUNT_NUMBER).getIdentification();
     }
 
     public AccountTypes getAccountType() {
