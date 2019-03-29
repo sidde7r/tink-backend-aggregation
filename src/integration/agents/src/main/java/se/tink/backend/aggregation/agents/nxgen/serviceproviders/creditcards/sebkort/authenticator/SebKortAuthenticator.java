@@ -23,6 +23,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.seb
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitResponse> {
     private static final Logger LOGGER = LoggerFactory.getLogger(SebKortAuthenticator.class);
@@ -66,14 +67,19 @@ public class SebKortAuthenticator implements BankIdAuthenticator<BankIdInitRespo
                         new LoginRequest(completeResponse.getResponseSAML(), config);
                 final LoginResponse loginResponse = apiClient.login(loginRequest);
 
+                LOGGER.info("BankID LoginResponse debugString: " + loginResponse.toDebugString());
+
                 final AuthRequest authRequest =
                         new AuthRequest(loginResponse.getUid(), loginResponse.getSecret(), config);
                 final AuthResponse authResponse = apiClient.auth(authRequest);
 
                 if (authResponse.isSuccess()) {
+                    LOGGER.info("BankID Login successful " + SerializationUtils.serializeToString(authResponse));
                     sessionStorage.put(
                             SebKortConstants.StorageKey.AUTHORIZATION,
                             "Bearer " + SebKortConstants.AUTHORIZATION_UUID);
+                } else {
+                    LOGGER.info("BankID Login Failed " + SerializationUtils.serializeToString(authResponse));
                 }
             }
             return bankIdStatus;
