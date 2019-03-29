@@ -1564,7 +1564,6 @@ java_library(
         "@org_apache_logging_log4j_log4j_api//jar",
         "@com_fasterxml_jackson_dataformat_jackson_dataformat_yaml//jar",
         "@com_fasterxml_jackson_core_jackson_databind//jar",
-        "@commons_logging_commons_logging//jar",
     ]
 )
 
@@ -1665,6 +1664,7 @@ java_library(
     name = "java_spark",
     visibility = ["//visibility:public"],
     exports = [
+        "@commons_logging_commons_logging//jar",
         "@com_sparkjava_spark_core//jar",
         "@javax_servlet_javax_servlet_api_spark_dep//jar",
         "@org_eclipse_jetty_websocket_websocket_api_spark_dep//jar",
