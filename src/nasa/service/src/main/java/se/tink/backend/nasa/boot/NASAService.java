@@ -4,7 +4,6 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import io.prometheus.client.hotspot.DefaultExports;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +43,7 @@ class NASAService {
     private final CountDownLatch keepRunningLatch;
     private SimpleHTTPServer httpServer;
     private Injector injector;
+    private NasaRequestHandler nasaRequestHandler;
 
     NASAService(Configuration config, SensitiveConfiguration sensitiveConfiguration) throws Exception {
         injector = Guice.createInjector(ImmutableList.of(new NASAServiceModule(config, sensitiveConfiguration)));
@@ -60,6 +60,8 @@ class NASAService {
 
     private void start(Configuration config, SensitiveConfiguration sensitiveConfiguration) throws Exception {
         logger.info("Starting Servers");
+
+        nasaRequestHandler = NasaRequestHandler.CreateNasaRequestHandler();
 
         // Start HTTP health check service
         httpServer = new SimpleHTTPServer(8080);
@@ -86,8 +88,8 @@ class NASAService {
 
         Spark.before(SparkFilters.ACCESS_LOGGING);
 
-        Spark.get("/ping", (req, res) -> "pong");
-        Spark.get("/initiate", (request, response) -> "initiating aggregation test");
+        Spark.get("/ping", (request, response) -> nasaRequestHandler.ping(request, response));
+        Spark.get("/initiate", (request, response) -> nasaRequestHandler.initiate(request, response));
 
         // Log the path and the body of requests to the Aggregation Controller API
         Spark.before("/aggregation/controller/v1/system/*", SparkFilters.REQUEST_LOGGING);
