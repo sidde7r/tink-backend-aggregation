@@ -1,15 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.session;
 
 import com.google.common.base.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
+import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class SebKortSessionHandler implements SessionHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SebKortSessionHandler.class);
+
     private final SebKortApiClient apiClient;
     private final SessionStorage sessionStorage;
 
@@ -30,9 +35,14 @@ public class SebKortSessionHandler implements SessionHandler {
         }
 
         try {
+            LOGGER.info("SEBKort keepAlive - fetching cards");
             apiClient.fetchCards();
-        } catch (HttpResponseException e) {
+        } catch (HttpResponseException | HttpClientException e) {
+            LOGGER.debug("SEBKort HTTP Exception during keepalive", e);
             throw SessionError.SESSION_EXPIRED.exception();
+        } catch (Exception e) {
+            LOGGER.debug("SEBKort exception during keepalive", e);
+            throw e;
         }
     }
 }
