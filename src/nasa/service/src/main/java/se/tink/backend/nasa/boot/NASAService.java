@@ -78,13 +78,13 @@ class NASAService {
         // Setup spark HTTPS server
         Spark.port(config.getPort());
 
-//        Spark.secure(
-//                config.getKeyStorePath(),
-//                sensitiveConfiguration.getKeyStorePassword(),
-//                config.getCertAlias(),
-//                config.getTrustStorePath(),
-//                sensitiveConfiguration.getTrustStorePassword(),
-//                config.isValidateCerts());
+        Spark.secure(
+                config.getKeyStorePath(),
+                sensitiveConfiguration.getKeyStorePassword(),
+                config.getCertAlias(),
+                config.getTrustStorePath(),
+                sensitiveConfiguration.getTrustStorePassword(),
+                config.isValidateCerts());
 
         Spark.before(SparkFilters.ACCESS_LOGGING);
 

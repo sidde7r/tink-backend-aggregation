@@ -34,7 +34,7 @@ developmentConfiguration:
 
   clusterConfiguration:
     clusterId: local-development
-    host: http://localhost:8443
+    host: http://localhost:9098
     apiToken: devtoken
     base64encodedclientcert: ""
     disablerequestcompression: false
