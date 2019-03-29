@@ -50,6 +50,7 @@ if [[ $FILE != *.json ]]; then
     exit 1
 fi
 
+# Remove all the new lines and then add one at the end (tr removes too much, not being compatible with unix standard)
 remove_all_white_characters(){
     tr -d '\n ' < "$1" > "$2"
 }
@@ -64,7 +65,6 @@ else
     }
 fi
 
-# Remove all the new lines and then add one at the end (tr removes too much, not being compatible with unix standard)
 remove_all_white_characters $FILE $ONE_LINE
 # Adding new line to end of file
 echo "" >> "$ONE_LINE"
