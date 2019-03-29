@@ -32,14 +32,14 @@ public class PasswordDemoTransferExecutor implements BankTransferExecutor {
         Field challengeField = new Field();
 
         challengeField.setImmutable(true);
-        challengeField.setDescription("Kod");
-        challengeField.setValue("Kod");
+        challengeField.setDescription("Code");
+        challengeField.setValue("Code");
         challengeField.setName("code");
-        challengeField.setHelpText("Koden är: " + code);
+        challengeField.setHelpText("The code is: " + code);
 
         Field responseField = new Field();
 
-        responseField.setDescription("Sändkod");
+        responseField.setDescription("Response code");
         responseField.setName("response");
         responseField.setNumeric(false);
         responseField.setHint("NNNNN");
@@ -57,14 +57,14 @@ public class PasswordDemoTransferExecutor implements BankTransferExecutor {
             String response = requestChallengeResponse(credentials, "code1");
             if (Strings.isNullOrEmpty(response) || !response.equals("code1")) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage("Kod nr 1 var felaktig")
+                        .setEndUserMessage("Code no. 1 was invalid")
                         .build();
             }
 
             response = requestChallengeResponse(credentials, "code2");
             if (Strings.isNullOrEmpty(response) || !response.equals("code2")) {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage("Kod nr 2 var felaktig")
+                        .setEndUserMessage("Code no. 2 was invalid")
                         .build();
             }
         }
