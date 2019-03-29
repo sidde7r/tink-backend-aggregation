@@ -33,6 +33,12 @@ public class AccountEntity implements IdentifiableAccount {
     }
 
     public String getUniqueIdentifier() {
+
+        // In order to avoid account duplication we throw error if account does not have sort-code identifier.
+        if(!identifierEntity.isSortCode()) {
+            throw new IllegalStateException("Sort-code identifier needed for unique identifier.");
+        }
+
         return identifierEntity.getIdentification();
     }
 
