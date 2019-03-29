@@ -1,7 +1,10 @@
 package se.tink.backend.aggregation.nxgen.agents.demo;
 
+import java.net.URI;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoSavingsAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount;
+import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
 /**
  * Deterministic account generator based on user-name and provider
@@ -75,6 +78,12 @@ public class DemoAccountDefinitionGenerator {
             @Override
             public double getBalance() {
                 return generateDouble(deterministicKey, 5);
+            }
+
+            @Override
+            public AccountIdentifier getIdentifier() {
+                SwedishIdentifier recipientAccount = new SwedishIdentifier(getAccountId());
+                return AccountIdentifier.create(URI.create(recipientAccount.toUriAsString()));
             }
         };
     }
