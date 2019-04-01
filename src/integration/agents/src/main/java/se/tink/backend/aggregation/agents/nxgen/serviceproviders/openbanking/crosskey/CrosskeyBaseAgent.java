@@ -100,9 +100,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-        client.setDebugOutput(true);
-    }
+    protected void configureHttpClient(TinkHttpClient client) { }
 
     @Override
     protected Authenticator constructAuthenticator() {
