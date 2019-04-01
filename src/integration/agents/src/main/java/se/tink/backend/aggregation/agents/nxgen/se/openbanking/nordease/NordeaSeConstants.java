@@ -7,6 +7,7 @@ public abstract class NordeaSeConstants {
     public static class Urls {
         public static final String BASE_URL = NordeaBaseConstants.Urls.BASE_URL;
         public static final String AUTHORIZE = BASE_URL + "/v3/authorize-decoupled";
+        public static final String GET_CODE = AUTHORIZE + "/";
         public static final String GET_TOKEN = AUTHORIZE + "/token";
     }
 

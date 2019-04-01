@@ -48,7 +48,7 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
             e.printStackTrace();
         }
         return createRequestWithTppToken(
-                        new URL(NordeaSeConstants.Urls.AUTHORIZE + "/" + getOrderRef()))
+                        new URL(NordeaSeConstants.Urls.GET_CODE + getOrderRef()))
                 .get(GetCodeResponse.class);
     }
 
