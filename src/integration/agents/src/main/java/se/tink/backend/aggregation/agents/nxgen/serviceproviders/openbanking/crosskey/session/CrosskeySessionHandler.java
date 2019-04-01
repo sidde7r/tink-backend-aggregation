@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public class CrosskeySessionHandler implements SessionHandler {
 
@@ -22,10 +21,7 @@ public class CrosskeySessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        try {
-            throw new NotImplementedException("keepAlive not implemented");
-        } catch (Exception e) {
-            throw new SessionException(SessionError.SESSION_EXPIRED);
-        }
+        // Keepalive not implemented -- session expires after only 30 seconds
+        throw SessionError.SESSION_EXPIRED.exception();
     }
 }
