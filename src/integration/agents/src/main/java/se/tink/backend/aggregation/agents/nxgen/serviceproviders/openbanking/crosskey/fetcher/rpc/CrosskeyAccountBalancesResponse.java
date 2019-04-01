@@ -9,7 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
-public class CrosskyeAccountBalancesResponse {
+public class CrosskeyAccountBalancesResponse {
 
     private AccountBalancesDataEntity data;
     private LinksEntity links;

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.rpc.InitialTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.rpc.TokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.transaction.TransactionTypeEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskyeAccountBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.utils.DateUtils;
@@ -158,7 +158,7 @@ public class CrosskeyBaseApiClient {
             .get(CrosskeyAccountsResponse.class);
     }
 
-    public CrosskyeAccountBalancesResponse fetchAccountBalances(String accountId) {
+    public CrosskeyAccountBalancesResponse fetchAccountBalances(String accountId) {
         return client
             .request(new URL(
                 persistentStorage.get(CrosskeyBaseConstants.StorageKeys.BASE_API_URL)
@@ -171,7 +171,7 @@ public class CrosskeyBaseApiClient {
                 persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET))
             .header(CrosskeyBaseConstants.HeaderKeys.X_FAPI_FINANCIAL_ID,
                 persistentStorage.get(StorageKeys.X_FAPI_FINANCIAL_ID))
-            .get(CrosskyeAccountBalancesResponse.class);
+            .get(CrosskeyAccountBalancesResponse.class);
     }
 
     public PaginatorResponse fetchCreditCardTransactions(CreditCardAccount account, Date fromDate,

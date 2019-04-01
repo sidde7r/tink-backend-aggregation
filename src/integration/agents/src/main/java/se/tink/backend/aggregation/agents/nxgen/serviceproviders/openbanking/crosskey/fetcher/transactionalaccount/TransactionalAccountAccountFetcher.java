@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountDetailsEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.AmountEntity;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskyeAccountBalancesResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.rpc.CrosskeyAccountBalancesResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -36,11 +36,11 @@ public class TransactionalAccountAccountFetcher implements AccountFetcher<Transa
 
     protected CheckingAccount toCheckingAccount(AccountEntity accountEntity) {
 
-        CrosskyeAccountBalancesResponse crosskyeAccountBalancesResponse = apiClient
+        CrosskeyAccountBalancesResponse crosskeyAccountBalancesResponse = apiClient
             .fetchAccountBalances(accountEntity.getAccountId());
 
         AccountDetailsEntity accountDetails = accountEntity.resolveAccountDetails();
-        AmountEntity amount = crosskyeAccountBalancesResponse.getData()
+        AmountEntity amount = crosskeyAccountBalancesResponse.getData()
             .getInterimAvailableBalance().getAmount();
 
         String uniqueIdentifier = accountDetails != null ?

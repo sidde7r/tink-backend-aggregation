@@ -18,6 +18,7 @@ public class SerializationTest {
                 + "      \"resourceId\": \"EX09999999\",\n"
                 + "      \"iban\": \"AT611904300234573201\",\n"
                 + "      \"currency\": \"EUR\",\n"
+                + "      \"name\": \"Main Account\",\n"
                 + "      \"name\": \"Main AccountEntity\",\n"
                 + "      \"product\": \"Main Product\",\n"
                 + "      \"cashAccountType\": \"CurrentAccount\",\n"
