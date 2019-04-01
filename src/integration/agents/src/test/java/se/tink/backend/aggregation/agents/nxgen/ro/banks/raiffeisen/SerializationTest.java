@@ -19,7 +19,6 @@ public class SerializationTest {
                 + "      \"iban\": \"AT611904300234573201\",\n"
                 + "      \"currency\": \"EUR\",\n"
                 + "      \"name\": \"Main Account\",\n"
-                + "      \"name\": \"Main AccountEntity\",\n"
                 + "      \"product\": \"Main Product\",\n"
                 + "      \"cashAccountType\": \"CurrentAccount\",\n"
                 + "      \"bic\": \"DABAIE2D\",\n"
