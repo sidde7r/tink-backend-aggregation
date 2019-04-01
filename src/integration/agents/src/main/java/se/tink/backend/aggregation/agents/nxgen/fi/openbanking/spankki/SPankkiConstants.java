@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.spankki;
 
-public class SPankkiConstants {
+public final class SPankkiConstants {
 
     public static class Market {
 
