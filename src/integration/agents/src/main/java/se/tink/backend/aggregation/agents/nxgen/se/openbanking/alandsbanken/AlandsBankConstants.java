@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.alandsbanken;
 
-public class AlandsBankConstants {
+public final class AlandsBankConstants {
 
     public static class Market {
         public static final String INTEGRATION_NAME = "alandsbank-se";
