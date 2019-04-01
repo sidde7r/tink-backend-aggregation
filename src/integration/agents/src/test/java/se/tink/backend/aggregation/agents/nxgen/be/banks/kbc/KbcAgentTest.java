@@ -11,7 +11,6 @@ import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 import se.tink.backend.aggregation.agents.framework.ArgumentManager;
 
-@Ignore
 public class KbcAgentTest {
     private enum Arg {
         LOAD_BEFORE,
