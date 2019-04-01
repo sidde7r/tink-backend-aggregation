@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.seb
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.rpc.BankIdInitResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.rpc.LoginRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.authenticator.rpc.LoginResponse;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.exceptions.SebKortUnexpectedMediaTypeException;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.rpc.CardsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.rpc.ReservationsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.fetcher.rpc.TransactionsResponse;
@@ -131,6 +132,15 @@ public class SebKortApiClient {
     }
 
     public CardsResponse fetchCards() {
-        return createRequestInSession(SebKortConstants.Urls.SEBKORT_CARDS).get(CardsResponse.class);
+        HttpResponse response = createRequestInSession(SebKortConstants.Urls.SEBKORT_CARDS)
+            .accept(MediaType.APPLICATION_JSON, MediaType.TEXT_HTML)
+            .get(HttpResponse.class);
+
+        if (response.getType().getType().equals(MediaType.APPLICATION_JSON_TYPE.getType()) &&
+            response.getType().getSubtype().equals(MediaType.APPLICATION_JSON_TYPE.getSubtype())) {
+            return response.getBody(CardsResponse.class);
+        } else {
+            throw new SebKortUnexpectedMediaTypeException(response.getBody(String.class));
+        }
     }
 }
