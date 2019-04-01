@@ -76,7 +76,7 @@ public class AccountEntity {
 
     private TransactionalAccount parseSavingsAccount() {
         return SavingsAccount.builder()
-                .setUniqueIdentifier(getBban())
+                .setUniqueIdentifier(getIban())
                 .setAccountNumber(getBban())
                 .setBalance(getAvailableBalance())
                 .addAccountIdentifier(
@@ -91,7 +91,7 @@ public class AccountEntity {
 
     private TransactionalAccount parseCheckingAccount() {
         return CheckingAccount.builder()
-                .setUniqueIdentifier(getBban())
+                .setUniqueIdentifier(getIban())
                 .setAccountNumber(getBban())
                 .setBalance(getAvailableBalance())
                 .addAccountIdentifier(
