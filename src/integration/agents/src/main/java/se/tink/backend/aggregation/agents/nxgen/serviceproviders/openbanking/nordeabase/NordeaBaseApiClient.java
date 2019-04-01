@@ -96,12 +96,13 @@ public class NordeaBaseApiClient {
 
     public GetTransactionsResponse getTransactions(TransactionalAccount account, String key) {
         URL url =
-                key == null
-                        ? new URL(NordeaBaseConstants.Urls.GET_TRANSACTIONS)
+                key != null
+                        ? new URL(NordeaBaseConstants.Urls.BASE_URL + key)
+                        : new URL(NordeaBaseConstants.Urls.GET_TRANSACTIONS)
                                 .parameter(
                                         NordeaBaseConstants.IdTags.ACCOUNT_ID,
-                                        account.getApiIdentifier())
-                        : new URL(NordeaBaseConstants.Urls.BASE_URL + key);
+                                        account.getApiIdentifier());
+
         return createRequestInSession(url).get(GetTransactionsResponse.class);
     }
 
