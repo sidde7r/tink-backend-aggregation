@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.resursbank;
 
-public class ResursBankConstants {
+public final class ResursBankConstants {
 
     public static class Market {
         public static final String INTEGRATION_NAME = "resursbank";
