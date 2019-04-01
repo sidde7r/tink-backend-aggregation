@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.SebKortConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.creditcards.sebkort.exceptions.SebKortUnexpectedMediaTypeException;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
@@ -37,7 +37,7 @@ public class SebKortSessionHandler implements SessionHandler {
         try {
             LOGGER.info("SEBKort keepAlive - fetching cards");
             apiClient.fetchCards();
-        } catch (HttpResponseException | HttpClientException e) {
+        } catch (HttpResponseException | SebKortUnexpectedMediaTypeException e) {
             LOGGER.debug("SEBKort HTTP Exception during keepalive", e);
             throw SessionError.SESSION_EXPIRED.exception();
         } catch (Exception e) {
