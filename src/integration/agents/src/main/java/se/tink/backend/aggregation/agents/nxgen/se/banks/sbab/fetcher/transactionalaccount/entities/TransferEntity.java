@@ -29,7 +29,7 @@ public class TransferEntity {
     private String transferId;
 
     @JsonProperty("type")
-    private String type;
+    private TransferTypeEntity type;
 
     @JsonProperty("running_balance")
     private String runningBalance;
@@ -43,7 +43,7 @@ public class TransferEntity {
     private Date valueDate;
 
     @JsonProperty("status")
-    private String status;
+    private TransferStatusEntity status;
 
     @JsonProperty("counter_part_statement")
     private String counterPartStatement;
@@ -72,7 +72,7 @@ public class TransferEntity {
         return transferId;
     }
 
-    public String getType() {
+    public TransferTypeEntity getType() {
         return type;
     }
 
@@ -88,7 +88,7 @@ public class TransferEntity {
         return valueDate;
     }
 
-    public String getStatus() {
+    public TransferStatusEntity getStatus() {
         return status;
     }
 
@@ -98,8 +98,24 @@ public class TransferEntity {
 
     @JsonIgnore
     public Transaction toTinkTransaction() {
+        final Amount tinkAmount;
+
+        // TODO: Confirm INTEREST_RATE and OTHER
+        switch (type) {
+            case DEPOSIT:
+            case INTEREST_RATE:
+                tinkAmount = Amount.inSEK(amount);
+                break;
+            case WITHDRAWAL:
+            case OTHER:
+                tinkAmount = Amount.inSEK(amount).negate();
+                break;
+            default:
+                tinkAmount = Amount.inSEK(amount).negate();
+        }
+
         return Transaction.builder()
-                .setAmount(Amount.inSEK(amount))
+                .setAmount(tinkAmount)
                 .setDescription(statement)
                 .setDate(accountingDate)
                 .build();
