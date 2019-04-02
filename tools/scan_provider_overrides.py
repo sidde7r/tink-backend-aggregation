@@ -6,7 +6,22 @@ import difflib
 SEEDING_DIR = "data/seeding"
 OVERRIDES_BASE = path.join(SEEDING_DIR, "providers/overriding-providers")
 
-providername = sys.argv[1]
+if len(sys.argv) != 2:
+    print("""
+    Provider override scanner
+    
+    Run from the root of the tink-backend-aggregation repository with the name
+    of a provider to find all the configurations that override it and their
+    differences.
+    
+    e.g. 
+    $ python tools/scan_provider_overrides.py icabanken-bankid
+    
+    """)
+    sys.exit(0)
+else:
+    providername = sys.argv[1]
+
 print('Scanning overrides for provider "' + providername + "'")
 
 base_provider = None
