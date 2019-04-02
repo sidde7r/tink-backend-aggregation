@@ -9,7 +9,7 @@ OVERRIDES_BASE = path.join(SEEDING_DIR, "providers/overriding-providers")
 providername = sys.argv[1]
 print('Scanning overrides for provider "' + providername + "'")
 
-baseProvider = None
+base_provider = None
 for filename in listdir(SEEDING_DIR):
     if re.compile("^providers\\-..\\.json").match(filename):
         baseproviderfilename = path.join(SEEDING_DIR, filename)
@@ -23,16 +23,16 @@ for filename in listdir(SEEDING_DIR):
 
                 for provider in data['providers']:
                     if provider['name'] == providername:
-                        if baseProvider is not None:
+                        if base_provider is not None:
                             print("WARN: Duplicate provider found, ignoring. Found in file: " + baseproviderfilename)
                         else:
                             print("Found provider in " + baseproviderfilename)
-                            baseProvider = provider
+                            base_provider = provider
 
-firstOverride = None
+first_override = None
 
 for clusterdir in listdir(OVERRIDES_BASE):
-    providerFound = False
+    provider_found = False
 
     for overridefilename in listdir(path.join(OVERRIDES_BASE, clusterdir)):
 
@@ -47,16 +47,16 @@ for clusterdir in listdir(OVERRIDES_BASE):
                 for override in data['provider-configuration']:
 
                     if override['name'] == providername:
-                        if providerFound:
+                        if provider_found:
                             print("WARN: provider overridden more than once in " + clusterdir)
                         else:
-                            providerFound = True
+                            provider_found = True
                             print("Found override in " + overridefilepath)
 
-                        if firstOverride is None:
-                            firstOverride = override
+                        if first_override is None:
+                            first_override = override
 
-                            origjson = json.dumps(baseProvider, indent=4, sort_keys=True, default=str).split("\n")
+                            origjson = json.dumps(base_provider, indent=4, sort_keys=True, default=str).split("\n")
                             overjson = json.dumps(override, indent=4, sort_keys=True, default=str).split("\n")
 
                             for line in difflib.unified_diff(origjson, overjson):
@@ -64,7 +64,7 @@ for clusterdir in listdir(OVERRIDES_BASE):
                         else:
                             print("Diffing to first override")
 
-                            origjson = json.dumps(firstOverride, indent=4, sort_keys=True, default=str).split("\n")
+                            origjson = json.dumps(first_override, indent=4, sort_keys=True, default=str).split("\n")
                             overjson = json.dumps(override, indent=4, sort_keys=True, default=str).split("\n")
                             for line in difflib.unified_diff(origjson, overjson):
                                 print(line)
