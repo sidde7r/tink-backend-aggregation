@@ -134,9 +134,16 @@ agentsServiceConfiguration:
         clientSSLKeyPassword: "dummyPassword"
     starling:
       tink:
-        clientId: "dummyId"
-        clientSecret: "dummySecret"
-        redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        aisConfiguration:
+          clientId: "dummyId"
+          clientSecret: "dummySecret"
+          redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        pisConfiguration:
+          clientId: "dummyId"
+          clientSecret: "dummySecret"
+          redirectUrl: "https://127.0.0.1:7357/api/v1/thirdparty/callback"
+        keyUid: "dummyUid"
+        signingKey: "signingKeyInBase64"
     nordea:
       tink:
         clientId: "dummyId"
