@@ -1272,7 +1272,7 @@
         },
         {
             "name": "saseurobonusmastercard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "SAS EuroBonus MasterCard",
