@@ -319,6 +319,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setAccountFeatures(accountFeatures);
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
 
+        // This is to handle legacy agents. Once all legacy agents are gone this can be removed.
+        // The logic of adding currency code for next gen agents is done in Account.toSystemAccount
+        if (Strings.isNullOrEmpty(account.getCurrencyCode())) {
+            account.setCurrencyCode(request.getProvider().getCurrency());
+        }
+
         Account updatedAccount;
         try {
             updatedAccount = controllerWrapper.updateAccount(updateAccountRequest);
