@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKey;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.SbabLoanFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
@@ -68,12 +70,25 @@ public class SbabAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
+        final Environment environment =
+                persistentStorage
+                        .get(StorageKey.ENVIRONMENT, Environment.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "No SBAB environment is set in persistent storage."));
+
+        if (environment == Environment.SANDBOX) {
+            return new SbabSandboxAuthenticator();
+        }
+
         return new ThirdPartyAppAuthenticationController<>(
-                new OAuth2AuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        new SbabAuthenticator(apiClient, sessionStorage, persistentStorage)),
-                supplementalInformationHelper);
+            new OAuth2AuthenticationController(
+                persistentStorage,
+                supplementalInformationHelper,
+                new SbabAuthenticator(
+                    apiClient, sessionStorage, persistentStorage)),
+            supplementalInformationHelper);
     }
 
     @Override
