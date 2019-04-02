@@ -99,7 +99,7 @@ public final class SpareBank1Agent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new SpareBank1SessionHandler(apiClient);
+        return new SpareBank1SessionHandler(apiClient, sessionStorage);
     }
 
     @Override
