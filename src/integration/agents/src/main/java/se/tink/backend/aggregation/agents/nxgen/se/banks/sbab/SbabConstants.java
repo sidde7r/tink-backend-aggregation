@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.sun.jersey.api.uri.UriTemplate;
-import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 
 public abstract class SbabConstants {
     public static final String INTEGRATION_NAME = "sbab";
@@ -21,14 +21,20 @@ public abstract class SbabConstants {
 
     public enum Environment {
         @JsonAlias({"sandbox", "SANDBOX"})
-        SANDBOX("sandbox"),
+        SANDBOX("developer", "sandbox"),
         @JsonAlias({"production", "PRODUCTION"})
-        PRODUCTION("api");
+        PRODUCTION("api", "api");
 
+        private final String prefix;
         private final String baseUri;
 
-        Environment(String baseUri) {
+        Environment(String prefix, String baseUri) {
+            this.prefix = prefix;
             this.baseUri = baseUri;
+        }
+
+        public String getPrefix() {
+            return prefix;
         }
 
         public String getBaseUri() {
@@ -47,7 +53,7 @@ public abstract class SbabConstants {
     }
 
     public static final class Uris {
-        private static final String BASE_URL = "https://api.sbab.se/{environment}";
+        private static final String BASE_URL = "https://{prefix}.sbab.se/{environment}";
 
         private static final String AUTH = "/auth/1.0";
         private static final String AUTHORIZE = AUTH + "/authorize";
@@ -63,7 +69,7 @@ public abstract class SbabConstants {
         private static final String AMORTISATION = LOAN + "/amortisation";
 
         public static String GET_BASE_URL(Environment env) {
-            return new UriTemplate(BASE_URL).createURI();
+            return new UriTemplate(BASE_URL).createURI(env.getPrefix(), env.getBaseUri());
         }
 
         public static String GET_PENDING_AUTH_CODE() {
