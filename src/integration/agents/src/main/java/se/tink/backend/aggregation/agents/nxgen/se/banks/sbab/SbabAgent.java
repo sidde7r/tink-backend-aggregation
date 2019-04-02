@@ -95,7 +95,7 @@ public class SbabAgent extends NextGenerationAgent {
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
         final SbabTransactionalAccountFetcher fetcher =
-                new SbabTransactionalAccountFetcher(apiClient);
+                new SbabTransactionalAccountFetcher(apiClient, persistentStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(

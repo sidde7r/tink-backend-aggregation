@@ -17,6 +17,8 @@ public class TransfersResponse implements PaginatorResponse {
     @JsonProperty("transfers")
     private List<TransferEntity> transfers;
 
+    @JsonIgnore private boolean shouldFetchMore = true;
+
     @JsonIgnore
     public List<TransferEntity> getTransfers() {
         return Optional.ofNullable(transfers).orElse(Collections.emptyList());
@@ -25,8 +27,7 @@ public class TransfersResponse implements PaginatorResponse {
     @Override
     @JsonIgnore
     public Collection<? extends Transaction> getTinkTransactions() {
-        return getTransfers()
-                .stream()
+        return getTransfers().stream()
                 .map(TransferEntity::toTinkTransaction)
                 .collect(Collectors.toList());
     }
@@ -34,6 +35,11 @@ public class TransfersResponse implements PaginatorResponse {
     @Override
     @JsonIgnore
     public Optional<Boolean> canFetchMore() {
-        return Optional.empty();
+        return Optional.of(shouldFetchMore && !getTransfers().isEmpty());
+    }
+
+    public TransfersResponse withShouldFetchMore(boolean shouldFetchMore) {
+        this.shouldFetchMore = shouldFetchMore;
+        return this;
     }
 }
