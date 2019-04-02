@@ -127,6 +127,9 @@
     "nxgen.se.creditcards.sebkort.saab.SaabMastercardAgent": [
         "CREDIT_CARDS"
     ],
+    "nxgen.se.creditcards.sebkort.saseurobonus.SasEurobonusMastercardSEAgent": [
+        "CREDIT_CARDS"
+    ],
     "nxgen.se.creditcards.sebkort.sebwallet.SebWalletMastercardAgent": [
         "CREDIT_CARDS"
     ],
