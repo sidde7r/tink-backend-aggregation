@@ -9,8 +9,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Stor
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Uris;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.AccessTokenResponse;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.InvalidateTokenRequest;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.InvalidateTokenResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.rpc.LoanResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.rpc.LoansResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccount.rpc.AccountResponse;
@@ -90,13 +88,6 @@ public final class SbabApiClient {
         final String uri = SbabConstants.Uris.GET_AUTH_STATUS(pendingAuthCode);
 
         return createRequest(uri).get(String.class);
-    }
-
-    public InvalidateTokenResponse invalidateAccessToken(
-            InvalidateTokenRequest invalidateTokenRequest) {
-        final String uri = Uris.INVALIDATE_ACCESS_TOKEN();
-
-        return createRequest(uri).body(invalidateTokenRequest).post(InvalidateTokenResponse.class);
     }
 
     public AccessTokenResponse getAccessToken(AccessTokenRequest accessTokenRequest) {
