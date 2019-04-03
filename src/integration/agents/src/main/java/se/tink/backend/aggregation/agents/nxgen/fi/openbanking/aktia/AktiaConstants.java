@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.akita;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia;
 
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.agents.rpc.AccountTypes;
 
-public final class AkitaConstants {
+public final class AktiaConstants {
 
-    private AkitaConstants() {
+    private AktiaConstants() {
         throw new AssertionError();
     }
 
@@ -46,7 +46,7 @@ public final class AkitaConstants {
     }
 
     public class Market {
-        public static final String INTEGRATION_NAME = "akita";
+        public static final String INTEGRATION_NAME = "aktia";
     }
 
     public class IdTags {

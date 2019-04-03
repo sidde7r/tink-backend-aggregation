@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.akita.configuration;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class AkitaConfiguration implements ClientConfiguration {
+public class AktiaConfiguration implements ClientConfiguration {
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
     @JsonProperty private String consentId;
