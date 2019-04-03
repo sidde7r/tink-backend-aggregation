@@ -6,14 +6,11 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class NordnetConfiguration implements ClientConfiguration {
-    @JsonProperty
-    private String clientId;
+    @JsonProperty private String clientId;
 
-    @JsonProperty
-    private String clientSecret;
+    @JsonProperty private String clientSecret;
 
-    @JsonProperty
-    private String redirectUrl;
+    @JsonProperty private String redirectUrl;
 
     public String getClientId() {
         return clientId;

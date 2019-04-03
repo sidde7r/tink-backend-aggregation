@@ -2,7 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.NordnetAuthenticator;import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.fetcher.transactionalaccount.NordnetTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator.NordnetAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.fetcher.transactionalaccount.NordnetTransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.session.NordnetSessionHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -36,12 +37,13 @@ public final class NordnetAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new PasswordAuthenticationController(new NordnetAuthenticator(apiClient, sessionStorage));
+        return new PasswordAuthenticationController(
+                new NordnetAuthenticator(apiClient, sessionStorage));
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         NordnetTransactionalAccountFetcher accountFetcher =
                 new NordnetTransactionalAccountFetcher(apiClient);
 
@@ -77,13 +79,13 @@ public final class NordnetAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordnetSessionHandler(apiClient);
+        return new NordnetSessionHandler(apiClient, sessionStorage);
     }
 
     @Override

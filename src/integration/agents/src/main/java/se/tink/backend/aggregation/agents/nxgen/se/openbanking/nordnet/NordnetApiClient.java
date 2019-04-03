@@ -27,17 +27,16 @@ public final class NordnetApiClient {
 
     public GetSessionKeyResponse getSessionKey(String encodedAuthParam) {
 
-        GetSessionForm form = GetSessionForm
-                .builder()
-                .setAuth(encodedAuthParam)
-                .setService(NordnetConstants.FormValues.SERVICE)
-                .build();
+        GetSessionForm form =
+                GetSessionForm.builder()
+                        .setAuth(encodedAuthParam)
+                        .setService(NordnetConstants.FormValues.SERVICE)
+                        .build();
 
         return createRequest(new URL(NordnetConstants.Urls.LOGIN_PATH))
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(GetSessionKeyResponse.class);
-
     }
 
     public GetAccountsResponse getAccounts() {
@@ -48,18 +47,20 @@ public final class NordnetApiClient {
     }
 
     public void getAccount(long accountNumber) {
-        GetAccountDetailsResponse response = createRequest(new URL(NordnetConstants.Urls.GET_ACCOUNT_DETAILS_PATH)
-                .parameter(NordnetConstants.IdTags.ACCOUNT_NUMBER,
-                        String.valueOf(accountNumber)))
-                .header(NordnetConstants.HeaderKeys.AUTHORIZATION, getKey())
-                .accept(MediaType.APPLICATION_JSON)
-                .get(GetAccountDetailsResponse.class);
+        GetAccountDetailsResponse response =
+                createRequest(
+                                new URL(NordnetConstants.Urls.GET_ACCOUNT_DETAILS_PATH)
+                                        .parameter(
+                                                NordnetConstants.IdTags.ACCOUNT_NUMBER,
+                                                String.valueOf(accountNumber)))
+                        .header(NordnetConstants.HeaderKeys.AUTHORIZATION, getKey())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .get(GetAccountDetailsResponse.class);
     }
 
     public String getKey() {
         String sessionKey = sessionStorage.get(NordnetConstants.StorageKeys.SESSION_KEY);
-        return NordnetConstants.HeaderValues.AUTHORIZATION_PREFIX +
-                DatatypeConverter.printBase64Binary((sessionKey + ":" + sessionKey).getBytes());
+        return NordnetConstants.HeaderValues.AUTHORIZATION_PREFIX
+                + DatatypeConverter.printBase64Binary((sessionKey + ":" + sessionKey).getBytes());
     }
-
 }

@@ -14,7 +14,7 @@ import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 @JsonObject
 public class NordnetTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, URL> {
+                TransactionKeyPaginator<TransactionalAccount, URL> {
     private final NordnetApiClient apiClient;
 
     public NordnetTransactionalAccountFetcher(NordnetApiClient apiClient) {
@@ -28,7 +28,8 @@ public class NordnetTransactionalAccountFetcher
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(TransactionalAccount account, URL nextUrl) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            TransactionalAccount account, URL nextUrl) {
         throw new NotImplementedException("getTransactionsFor not implemented");
     }
 }

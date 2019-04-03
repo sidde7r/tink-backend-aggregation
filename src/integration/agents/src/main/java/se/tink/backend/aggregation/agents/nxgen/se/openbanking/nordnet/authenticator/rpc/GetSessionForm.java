@@ -28,10 +28,7 @@ public class GetSessionForm extends AbstractForm {
         }
 
         public GetSessionForm build() {
-            return new GetSessionForm(
-                    this.auth,
-                    this.service
-            );
+            return new GetSessionForm(this.auth, this.service);
         }
     }
 }

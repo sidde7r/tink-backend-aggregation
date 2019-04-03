@@ -3,19 +3,20 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet;
 public abstract class NordnetConstants {
 
     public static class Keys {
-        public static final String PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5td/64fAicX2r8sN6RP" +
-                "3mfHf2bcwvTzmHrLcjJbU85gLROL+IXclrjWsluqyt5xtc/TCwMTfC/NcRVIAvfZdt+OPdDoO0rJYIY3hOGB" +
-                "wLQJeLRfruM8dhVD+/Kpu8yKzKOcRdne2hBb/mpkVtIl5avJPFZ6AQbICpOC8kEfI1DHrfgT18fBswt85deI" +
-                "LBTxVUIXsXdG1ljFAQ/lJd/62J74vayQJq6l2DT663QB8nLEILUKEt/hQAJGU3VT4APSfT+5bkClfRb9+kNT" +
-                "7RXT/pNCctbBTKujr3tmkrdUZiQiJZdl/O7LhI99nCe6uyJ+la9jNPOuK5z6v72cXenmKZwIDAQAB";
-
+        public static final String PUBLIC_KEY =
+                "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5td/64fAicX2r8sN6RP"
+                        + "3mfHf2bcwvTzmHrLcjJbU85gLROL+IXclrjWsluqyt5xtc/TCwMTfC/NcRVIAvfZdt+OPdDoO0rJYIY3hOGB"
+                        + "wLQJeLRfruM8dhVD+/Kpu8yKzKOcRdne2hBb/mpkVtIl5avJPFZ6AQbICpOC8kEfI1DHrfgT18fBswt85deI"
+                        + "LBTxVUIXsXdG1ljFAQ/lJd/62J74vayQJq6l2DT663QB8nLEILUKEt/hQAJGU3VT4APSfT+5bkClfRb9+kNT"
+                        + "7RXT/pNCctbBTKujr3tmkrdUZiQiJZdl/O7LhI99nCe6uyJ+la9jNPOuK5z6v72cXenmKZwIDAQAB";
     }
 
     public static class Urls {
         public static final String BASE_PATH = "https://api.test.nordnet.se";
         public static final String LOGIN_PATH = BASE_PATH + "/next/2/login";
         public static final String GET_ACCOUNTS_PATH = BASE_PATH + "/next/2/accounts";
-        public static final String GET_ACCOUNT_DETAILS_PATH = GET_ACCOUNTS_PATH + "/{accountNumber}";
+        public static final String GET_ACCOUNT_DETAILS_PATH =
+                GET_ACCOUNTS_PATH + "/{accountNumber}";
     }
 
     public static class IdTags {

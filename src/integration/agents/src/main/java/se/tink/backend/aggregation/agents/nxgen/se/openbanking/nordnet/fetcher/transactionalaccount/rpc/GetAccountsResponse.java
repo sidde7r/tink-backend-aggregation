@@ -6,6 +6,4 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import java.util.ArrayList;
 
 @JsonObject
-public class GetAccountsResponse extends ArrayList<AccountEntity> {
-
-}
+public class GetAccountsResponse extends ArrayList<AccountEntity> {}

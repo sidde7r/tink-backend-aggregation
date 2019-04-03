@@ -45,5 +45,4 @@ public class GetAccountDetailsResponse {
 
     @JsonProperty("full_marketvalue")
     private AccountDetailsEntity fullMarketvalue;
-
 }
