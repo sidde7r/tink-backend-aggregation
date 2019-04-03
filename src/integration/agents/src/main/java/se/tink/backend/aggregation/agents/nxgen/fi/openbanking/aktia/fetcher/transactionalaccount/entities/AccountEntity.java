@@ -1,11 +1,11 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.akita.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.entities;
 
 import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.akita.AkitaConstants;
+import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
@@ -28,7 +28,7 @@ public class AccountEntity {
     private String resourceId;
 
     public TransactionalAccount toTinkAccount() {
-        Optional<AccountTypes> accountType = AkitaConstants.ACCOUNT_TYPE_MAPPER.translate(product);
+        Optional<AccountTypes> accountType = AktiaConstants.ACCOUNT_TYPE_MAPPER.translate(product);
         if (!accountType.isPresent()) {
             throw new IllegalStateException("Unknown account type.");
         }

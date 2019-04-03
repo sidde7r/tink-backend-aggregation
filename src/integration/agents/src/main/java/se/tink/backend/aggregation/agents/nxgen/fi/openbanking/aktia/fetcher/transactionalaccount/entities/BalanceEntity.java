@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.akita.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.entities;
 
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
