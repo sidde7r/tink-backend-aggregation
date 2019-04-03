@@ -1,14 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.entities;
+
+import static se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.ACCOUNT_TYPE_MAPPER;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
-import java.util.Optional;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
-import static se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.ACCOUNT_TYPE_MAPPER;
 
 @JsonObject
 public class AccountEntity {
@@ -91,22 +92,21 @@ public class AccountEntity {
         return status;
     }
 
-    public boolean isTransactionalAccount() {
-        return ACCOUNT_TYPE_MAPPER.isTransactionalAccount(accountType);
+    public boolean isSavingsAccount() {
+        return getTinkAccountType().equals(AccountTypes.SAVINGS);
     }
 
     private AccountTypes getTinkAccountType() {
-        final Optional<AccountTypes> accountType = ACCOUNT_TYPE_MAPPER.translate(getAccountType());
-
-        return accountType.orElse(AccountTypes.OTHER);
+        return ACCOUNT_TYPE_MAPPER.translate(getAccountType()).orElse(AccountTypes.OTHER);
     }
 
-    public TransactionalAccount toTinkAccount() {
-        return TransactionalAccount.builder(getTinkAccountType(), accountNumber.toLowerCase())
+    public SavingsAccount toTinkAccount() {
+        return SavingsAccount.builder()
+            .setUniqueIdentifier(accountNumber.toLowerCase())
                 .setAccountNumber(accountNumber)
-                .setName(getAccountName())
                 .setBalance(Amount.inSEK(balance))
-                .setBankIdentifier(accountNumber)
+                .setAlias(getAccountName())
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, accountNumber))
                 .build();
     }
 }

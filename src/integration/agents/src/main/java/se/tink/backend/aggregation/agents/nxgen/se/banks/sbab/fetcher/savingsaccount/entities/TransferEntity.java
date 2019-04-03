@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccount.entities;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -100,7 +100,6 @@ public class TransferEntity {
     public Transaction toTinkTransaction() {
         final Amount tinkAmount;
 
-        // TODO: Confirm INTEREST_RATE and OTHER
         switch (type) {
             case DEPOSIT:
             case INTEREST_RATE:

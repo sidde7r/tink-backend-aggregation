@@ -8,7 +8,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.Sbab
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.SbabLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.SbabSavingsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.session.SbabSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -94,8 +94,8 @@ public class SbabAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        final SbabTransactionalAccountFetcher fetcher =
-                new SbabTransactionalAccountFetcher(apiClient, persistentStorage);
+        final SbabSavingsAccountFetcher fetcher =
+                new SbabSavingsAccountFetcher(apiClient, persistentStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
