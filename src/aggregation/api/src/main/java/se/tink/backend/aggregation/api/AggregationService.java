@@ -5,24 +5,24 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import se.tink.backend.aggregation.rpc.ConnectivityRequest;
-import se.tink.libraries.api.annotations.Team;
-import se.tink.libraries.api.annotations.TeamOwnership;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.CreateCredentialsRequest;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
+import se.tink.libraries.api.annotations.Team;
+import se.tink.libraries.api.annotations.TeamOwnership;
+import se.tink.libraries.credentials.service.CreateCredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
 
@@ -114,10 +114,9 @@ public interface AggregationService {
     @Produces(MediaType.APPLICATION_JSON)
     Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClientContext ClientInfo clientInfo);
 
-    @POST
-    @Path("connectivity")
+    @GET
+    @Path("connectivity/{clusterId}")
     @TeamOwnership(Team.INTEGRATION)
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    Response checkConnectivity(ConnectivityRequest request);
+    Response checkConnectivity(@PathParam("clusterId") String clusterId);
 }
