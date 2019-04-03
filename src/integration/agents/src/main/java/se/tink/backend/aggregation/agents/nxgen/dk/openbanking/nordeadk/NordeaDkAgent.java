@@ -69,6 +69,6 @@ public final class NordeaDkAgent extends NordeaBaseAgent {
     }
 
     protected SessionHandler constructSessionHandler() {
-        return new NordeaBaseSessionHandler(apiClient);
+        return SessionHandler.alwaysFail();
     }
 }
