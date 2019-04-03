@@ -15,7 +15,7 @@ import se.tink.libraries.amount.Amount;
 @JsonObject
 public class AccountEntity {
 
-    @JsonProperty("TransactionsLinksEntity")
+    @JsonProperty("_links")
     private LinksEntity links;
 
     private List<String> accountOwners;
