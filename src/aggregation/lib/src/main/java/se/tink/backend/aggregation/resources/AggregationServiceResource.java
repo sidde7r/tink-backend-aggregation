@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.inject.Inject;
+import com.sun.jersey.api.client.ClientHandlerException;
 import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -199,6 +200,11 @@ public class AggregationServiceResource implements AggregationService {
 
     @Override
     public Response checkConnectivity(String clusterId) {
-        return connectivityController.checkConnectivity(clusterId);
+        try {
+            connectivityController.checkConnectivity(clusterId);
+        } catch (ClientHandlerException e) {
+            HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
+        }
+        return HttpResponseHelper.ok();
     }
 }
