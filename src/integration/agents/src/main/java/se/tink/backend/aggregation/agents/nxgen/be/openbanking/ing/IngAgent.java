@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.configuration.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.IngAccountsFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.IngTransactionsFetcher;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.session.IngSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.utils.IngUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -129,7 +128,7 @@ public final class IngAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new IngSessionHandler(apiClient, sessionStorage);
+        return SessionHandler.alwaysFail();
     }
 
     @Override

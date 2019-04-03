@@ -20,8 +20,7 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 
 public final class IngUtils {
 
-    private IngUtils() {
-    }
+    private IngUtils() {}
 
     public static String getRequestId() {
         return UUID.randomUUID().toString();
