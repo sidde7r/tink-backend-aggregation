@@ -9,6 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.ConnectivityController;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -16,6 +17,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
+import se.tink.backend.aggregation.rpc.ConnectivityRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -48,16 +50,18 @@ public class AggregationServiceResource implements AggregationService {
     private SupplementalInformationController supplementalInformationController;
     private ApplicationDrainMode applicationDrainMode;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
+    private ConnectivityController connectivityController;
 
     @Inject
     public AggregationServiceResource(AgentWorker agentWorker, QueueProducer producer,
             AgentWorkerOperationFactory agentWorkerOperationFactory, SupplementalInformationController supplementalInformationController,
-            ApplicationDrainMode applicationDrainMode) {
+            ApplicationDrainMode applicationDrainMode, ConnectivityController connectivityController) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
+        this.connectivityController = connectivityController;
     }
 
 
@@ -192,5 +196,12 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         return HttpResponseHelper.ok();
+    }
+
+    @Override
+    public Response checkConnectivity(ConnectivityRequest request) {
+
+        return connectivityController.checkConnectivity(request.getClusterId());
+        //TODO: Handle HttpResponse.ok or error
     }
 }

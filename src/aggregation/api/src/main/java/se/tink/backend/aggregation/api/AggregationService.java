@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import se.tink.backend.aggregation.rpc.ConnectivityRequest;
 import se.tink.libraries.api.annotations.Team;
 import se.tink.libraries.api.annotations.TeamOwnership;
 import se.tink.backend.aggregation.cluster.annotations.ClientContext;
@@ -112,4 +113,11 @@ public interface AggregationService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response reEncryptCredentials(ReEncryptCredentialsRequest request, @ClientContext ClientInfo clientInfo);
+
+    @POST
+    @Path("connectivity")
+    @TeamOwnership(Team.INTEGRATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    Response checkConnectivity(ConnectivityRequest request);
 }

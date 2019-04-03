@@ -5,6 +5,9 @@ import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.Client;
 import javax.ws.rs.core.Response;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.aggregation.aggregationcontroller.v1.api.AggregationControllerService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.CredentialsService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.ProcessService;
 import se.tink.backend.aggregation.aggregationcontroller.v1.api.UpdateService;
@@ -22,12 +25,10 @@ import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateDocumentRe
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransactionsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransferDestinationPatternsRequest;
 import se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateTransfersRequest;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.signableoperation.rpc.SignableOperation;
 import se.tink.backend.system.rpc.UpdateFraudDetailsRequest;
 import se.tink.libraries.http.client.WebResourceFactory;
 import se.tink.libraries.jersey.utils.JerseyUtils;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
 
 public class AggregationControllerAggregationClient {
     private static final String EMPTY_PASSWORD = "";
@@ -58,6 +59,10 @@ public class AggregationControllerAggregationClient {
 
     private UpdateService getUpdateService(HostConfiguration hostConfiguration) {
         return buildInterClusterServiceFromInterface(hostConfiguration, UpdateService.class);
+    }
+
+    private AggregationControllerService getAggregationControllerService(HostConfiguration hostConfiguration) {
+        return buildInterClusterServiceFromInterface(hostConfiguration, AggregationControllerService.class);
     }
 
     public Response generateStatisticsAndActivityAsynchronously(HostConfiguration hostConfiguration,
@@ -128,5 +133,9 @@ public class AggregationControllerAggregationClient {
                 .setSensitiveData(sensitiveData);
 
         return getCredentialsService(hostConfiguration).updateSensitive(request);
+    }
+
+    public Response checkConnectivity(HostConfiguration hostConfiguration) {
+        return getAggregationControllerService(hostConfiguration).connectivityCheck();
     }
 }
