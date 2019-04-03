@@ -74,7 +74,12 @@
     "banks.seb.SEBApiAgent": [
         "MORTGAGE_AGGREGATION",
         "TRANSFERS",
-        "PAYMENTS"
+        "PAYMENTS",
+        "CHECKING_ACCOUNTS",
+        "SAVINGS_ACCOUNTS",
+        "CREDIT_CARDS",
+        "INVESTMENTS",
+        "LOANS"
     ],
     "brokers.NordnetAgent": [
         "SAVINGS_ACCOUNTS",
