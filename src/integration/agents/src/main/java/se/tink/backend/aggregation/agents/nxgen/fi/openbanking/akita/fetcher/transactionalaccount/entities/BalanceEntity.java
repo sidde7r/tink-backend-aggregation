@@ -11,7 +11,7 @@ public class BalanceEntity {
     private String balanceType;
 
     public boolean isAvailableBalance() {
-        return StringUtils.containsIgnoreCase(balanceType, "available");
+        return StringUtils.equalsIgnoreCase(balanceType, "interimAvailable");
     }
 
     public Amount getAmount() {
