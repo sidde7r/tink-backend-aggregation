@@ -101,7 +101,7 @@ public final class BecAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BecSessionHandler(apiClient);
+        return new BecSessionHandler(apiClient, sessionStorage);
     }
 
     @Override
