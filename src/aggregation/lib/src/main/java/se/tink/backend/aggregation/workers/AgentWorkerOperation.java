@@ -207,6 +207,7 @@ public class AgentWorkerOperation implements Runnable {
         List<Context> contexts = Lists.newArrayList();
 
         for (MetricId.MetricLabels timerName : timerNames) {
+            timerName.add("operation", operationMetricName);
             contexts.add(getTimerContext(timerName));
         }
 
