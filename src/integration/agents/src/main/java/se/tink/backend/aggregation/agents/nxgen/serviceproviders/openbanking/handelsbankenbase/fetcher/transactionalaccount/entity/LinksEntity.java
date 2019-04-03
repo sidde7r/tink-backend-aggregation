@@ -4,5 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
-  private LinksTransactionsEntity transactions;
+
+    private LinksTransactionsEntity transactions;
 }

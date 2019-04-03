@@ -2,15 +2,16 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.ha
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.HandelsbankenBaseApiClient;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.HandelsbankenBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public final class HandelsbankenBaseSessionHandler implements SessionHandler {
-    private final HandelsbankenBaseApiClient apiClient;
+public class HandelsbankenBaseSessionHandler implements SessionHandler {
 
-    public HandelsbankenBaseSessionHandler(HandelsbankenBaseApiClient apiClient) {
-        this.apiClient = apiClient;
+    private final SessionStorage sessionStorage;
+
+    public HandelsbankenBaseSessionHandler(SessionStorage sessionStorage) {
+        this.sessionStorage = sessionStorage;
     }
 
     @Override
@@ -20,10 +21,9 @@ public final class HandelsbankenBaseSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        try {
-            throw new NotImplementedException("keepAlive not implemented");
-        } catch (Exception e) {
-            throw new SessionException(SessionError.SESSION_EXPIRED);
+        String accessToken = sessionStorage.get(StorageKeys.ACCESS_TOKEN);
+        if (accessToken == null) {
+            throw SessionError.SESSION_EXPIRED.exception();
         }
     }
 }

@@ -12,22 +12,26 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HandelsbankenBaseApiClient {
 
     protected final TinkHttpClient client;
     protected final PersistentStorage persistentStorage;
+    protected final SessionStorage sessionStorage;
 
-    public HandelsbankenBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage) {
+    public HandelsbankenBaseApiClient(TinkHttpClient client, PersistentStorage persistentStorage,
+        SessionStorage sessionStorage) {
         this.client = client;
         this.persistentStorage = persistentStorage;
+        this.sessionStorage = sessionStorage;
     }
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
             .header(HeaderKeys.X_IBM_CLIENT_ID, persistentStorage.get(StorageKeys.CLIENT_ID))
-            .header(HeaderKeys.AUTHORIZATION, persistentStorage.get(StorageKeys.ACCESS_TOKEN))
+            .header(HeaderKeys.AUTHORIZATION, sessionStorage.get(StorageKeys.ACCESS_TOKEN))
             .header(HeaderKeys.TPP_TRANSACTION_ID,
                 persistentStorage.get(StorageKeys.TPP_TRANSACTION_ID))
             .header(HeaderKeys.TPP_REQUEST_ID, persistentStorage.get(StorageKeys.TPP_REQUEST_ID))

@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.au
 
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.HandelsbankenApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.authenticator.HandelsbankenBaseAuthenticator;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 
 public class HandelsbankenAuthenticator extends HandelsbankenBaseAuthenticator {
 
     public HandelsbankenAuthenticator(HandelsbankenApiClient apiClient,
-        PersistentStorage persistentStorage) {
-        super(apiClient, persistentStorage);
+        SessionStorage sessionStorage) {
+        super(apiClient, sessionStorage);
     }
 
 }

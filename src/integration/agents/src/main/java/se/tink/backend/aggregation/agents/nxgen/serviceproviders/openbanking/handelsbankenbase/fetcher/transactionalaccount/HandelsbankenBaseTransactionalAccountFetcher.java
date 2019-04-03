@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.fetcher.transactionalaccount;
 
 import java.util.Collection;

@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.HandelsbankenBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.authenticator.HandelsbankenBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.configuration.HandelsbankenBaseConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.session.HandelsbankenBaseSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -29,7 +28,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
     public HandelsbankenBaseAgent(
         CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new HandelsbankenBaseApiClient(client, persistentStorage);
+        apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, sessionStorage);
     }
 
     protected abstract Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController();
@@ -47,7 +46,8 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
         persistentStorage
             .put(StorageKeys.TPP_REQUEST_ID, handelsBankenBaseConfiguration.getTppRequestId());
         persistentStorage
-            .put(StorageKeys.TPP_TRANSACTION_ID, handelsBankenBaseConfiguration.getTppTransactionId());
+            .put(StorageKeys.TPP_TRANSACTION_ID,
+                handelsBankenBaseConfiguration.getTppTransactionId());
         persistentStorage
             .put(StorageKeys.PSU_IP_ADDRESS, handelsBankenBaseConfiguration.getPsuIpAddress());
     }
@@ -58,7 +58,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new HandelsbankenBaseAuthenticator(apiClient, persistentStorage);
+        return new HandelsbankenBaseAuthenticator(apiClient, sessionStorage);
     }
 
     @Override
@@ -88,9 +88,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected SessionHandler constructSessionHandler() {
-        return new HandelsbankenBaseSessionHandler(apiClient);
-    }
+    protected abstract SessionHandler constructSessionHandler();
 
     @Override
     protected Optional<TransferController> constructTransferController() {

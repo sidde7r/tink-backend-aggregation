@@ -5,9 +5,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BalancesEntity {
-  private List<BalanceEntity> balances;
 
-  public List<BalanceEntity> getBalances() {
-    return balances;
-  }
+    private List<BalanceEntity> balances;
+
+    public List<BalanceEntity> getBalances() {
+        return balances;
+    }
 }

@@ -4,7 +4,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ErrorEntity {
-  private Long httpCode;
-  private String httpMessage;
-  private String moreInformation;
+
+    private Long httpCode;
+    private String httpMessage;
+    private String moreInformation;
 }

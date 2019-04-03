@@ -4,14 +4,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AmountEntity {
-  private String currency;
-  private Double content;
 
-  public String getCurrency() {
-    return currency;
-  }
+    private String currency;
+    private Double content;
 
-  public Double getContent() {
-    return content;
-  }
+    public String getCurrency() {
+        return currency;
+    }
+
+    public Double getContent() {
+        return content;
+    }
 }

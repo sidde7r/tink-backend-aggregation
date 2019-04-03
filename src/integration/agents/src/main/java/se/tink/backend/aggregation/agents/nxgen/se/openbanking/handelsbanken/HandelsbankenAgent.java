@@ -28,7 +28,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
     public HandelsbankenAgent(
         CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new HandelsbankenApiClient(client, persistentStorage);
+        apiClient = new HandelsbankenApiClient(client, persistentStorage, sessionStorage);
     }
 
     @Override
@@ -37,7 +37,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new HandelsbankenAuthenticator(apiClient, persistentStorage);
+        return new HandelsbankenAuthenticator(apiClient, sessionStorage);
     }
 
     @Override
@@ -84,7 +84,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new HandelsbankenSessionHandler(apiClient);
+        return new HandelsbankenSessionHandler(sessionStorage);
     }
 
     @Override
