@@ -35,7 +35,7 @@ public abstract class BaseAccountEntity {
     public CheckingAccount createCheckingAccount(BalanceEntity balance) {
         return CheckingAccount
             .builder()
-            .setUniqueIdentifier(accountId)
+            .setUniqueIdentifier(iban)
             .setAccountNumber(iban)
             .setBalance(
                 new Amount(balance.getAmount().getCurrency(),
@@ -50,7 +50,7 @@ public abstract class BaseAccountEntity {
     public SavingsAccount createSavingsAccount(BalanceEntity balance) {
         return SavingsAccount
             .builder()
-            .setUniqueIdentifier(accountId)
+            .setUniqueIdentifier(iban)
             .setAccountNumber(iban)
             .setBalance(
                 new Amount(balance.getAmount().getCurrency(),
