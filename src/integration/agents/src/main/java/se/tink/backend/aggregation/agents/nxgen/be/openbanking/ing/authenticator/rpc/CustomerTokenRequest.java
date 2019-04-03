@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.rpc;
 
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.FormValues;
 import se.tink.backend.aggregation.nxgen.http.Form;
 
 public class CustomerTokenRequest {

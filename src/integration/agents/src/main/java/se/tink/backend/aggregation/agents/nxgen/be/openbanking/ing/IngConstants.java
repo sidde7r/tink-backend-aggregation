@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 
-public abstract class IngConstants {
+public final class IngConstants {
 
     public static class Urls {
 
-        private static final String BASE_AUTH = "/oauth2";
-
         public static final String ACCOUNTS = "/v2/accounts";
+        private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
         public static final String TOKEN = BASE_AUTH + "/token";
     }
@@ -62,10 +61,6 @@ public abstract class IngConstants {
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
         public static final String EMPTY = "";
-    }
-
-    public static class LogTags {
-
     }
 
     public static class Signature {

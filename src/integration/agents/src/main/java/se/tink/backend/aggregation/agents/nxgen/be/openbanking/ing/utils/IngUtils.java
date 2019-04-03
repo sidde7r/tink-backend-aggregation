@@ -9,23 +9,19 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
-import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.libraries.pair.Pair;
 
 public final class IngUtils {
 
-    private IngUtils() {}
+    private IngUtils() {
+    }
 
     public static String getRequestId() {
         return UUID.randomUUID().toString();
