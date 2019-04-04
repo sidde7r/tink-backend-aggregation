@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
@@ -39,23 +40,11 @@ public class Account {
     }
 
     private Amount getBalance(List<Balance> balances) {
-        return Optional
-            .ofNullable(balances)
-            .map(balances1 -> balances
-                .stream()
-                .filter(balance -> balance
-                    .getBalanceType()
-                    .equalsIgnoreCase(BnpParibasFortisConstants.Accounts.OTHR_BALANCE_TYPE))
+        return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
+                .filter(Balance::isBalanceTypeOther)
                 .findFirst()
-                .map(balance -> new Amount(
-                    balance.getBalanceAmount().getCurrency(),
-                    Double.parseDouble(balance.getBalanceAmount().getAmount())))
-                .orElseGet(this::defaultAmount))
-            .orElse(defaultAmount());
-    }
-
-    public Amount defaultAmount() {
-        return new Amount(currency, 0);
+                .map(Balance::toTinkAmount)
+                .orElse(new Amount(currency, 0));
     }
 
     public Links getLinks() {

@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.transaction;
 
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
 import java.util.Date;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Transactions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
@@ -21,14 +21,12 @@ public class Transaction {
     private TransactionAmount transactionAmount;
 
     public se.tink.backend.aggregation.nxgen.core.transaction.Transaction toTinkModel(
-        TransactionalAccount account) {
-        return se.tink.backend.aggregation.nxgen.core.transaction.Transaction
-            .builder()
-            .setAmount(getAmount())
-            .setDate(getDate())
-            .setPending(
-                status.equalsIgnoreCase(BnpParibasFortisConstants.Transactions.PENDING_STATUS))
-            .build();
+            TransactionalAccount account) {
+        return se.tink.backend.aggregation.nxgen.core.transaction.Transaction.builder()
+                .setAmount(getAmount())
+                .setDate(getDate())
+                .setPending(status.equalsIgnoreCase(Transactions.PENDING_STATUS))
+                .build();
     }
 
     private Date getDate() {
