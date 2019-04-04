@@ -2,6 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import javax.ws.rs.core.MediaType;
 
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.IdTags;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.QueryValues;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateForm;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.rpc.AuthenticateResponse;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.rpc.GetAccountsResponse;
@@ -37,16 +44,10 @@ public final class LansforsakringarApiClient {
         return client.request(url)
                 .accept(MediaType.APPLICATION_JSON)
                 .type(MediaType.APPLICATION_JSON)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.CONSENT_ID,
-                        persistentStorage.get(LansforsakringarConstants.StorageKeys.CONSENT_ID))
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_IP_ADDRESS,
-                        LansforsakringarConstants.HeaderValues.PSU_IP_ADDRESS)
-                .header(
-                        LansforsakringarConstants.HeaderKeys.PSU_USER_AGENT,
-                        LansforsakringarConstants.HeaderValues.PSU_USER_AGENT)
-                .header(LansforsakringarConstants.HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
+                .header(HeaderKeys.CONSENT_ID, persistentStorage.get(StorageKeys.CONSENT_ID))
+                .header(HeaderKeys.PSU_IP_ADDRESS, HeaderValues.PSU_IP_ADDRESS)
+                .header(HeaderKeys.PSU_USER_AGENT, HeaderValues.PSU_USER_AGENT)
+                .header(HeaderKeys.X_REQUEST_ID, UUID.randomUUID());
     }
 
     public RequestBuilder createRequestInSession(URL url) {
