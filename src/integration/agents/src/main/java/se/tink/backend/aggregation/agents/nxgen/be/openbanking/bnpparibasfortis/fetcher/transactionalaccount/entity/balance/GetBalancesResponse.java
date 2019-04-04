@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.balance;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,8 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class GetBalancesResponse {
+
     @JsonProperty("_links")
     private Links links;
+
     private List<Balance> balances;
 
     public Links getLinks() {

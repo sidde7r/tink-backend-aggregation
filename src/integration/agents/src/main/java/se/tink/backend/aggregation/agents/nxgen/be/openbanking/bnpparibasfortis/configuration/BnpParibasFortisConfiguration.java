@@ -6,18 +6,13 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BnpParibasFortisConfiguration implements ClientConfiguration {
+
     @JsonProperty private String clientId;
-
     @JsonProperty private String clientSecret;
-
     @JsonProperty private String redirectUri;
-
     @JsonProperty private String authBaseUrl;
-
     @JsonProperty private String organisationId;
-
     @JsonProperty private String openbankStetVersion;
-
     @JsonProperty private String apiBaseUrl;
 
     public String getClientId() {

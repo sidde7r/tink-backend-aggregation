@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class Links {
+
     @JsonProperty("parent-list")
     private ParentList parentList;
 

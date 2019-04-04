@@ -14,6 +14,7 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class Account {
+
     @JsonProperty("_links")
     private Links links;
 

@@ -6,6 +6,7 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class Balance {
+
     private BalanceAmount balanceAmount;
     private String balanceType;
     private String lastCommittedTransaction;

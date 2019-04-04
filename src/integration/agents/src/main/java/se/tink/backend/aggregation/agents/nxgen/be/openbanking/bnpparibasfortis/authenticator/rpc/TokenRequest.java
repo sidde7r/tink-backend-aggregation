@@ -5,7 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TokenRequest {
+
     @JsonProperty private String code;
+    @JsonProperty private String scope;
 
     @JsonProperty("grant_type")
     private String grantType;
@@ -18,8 +20,6 @@ public class TokenRequest {
 
     @JsonProperty("client_secret")
     private String clientSecret;
-
-    @JsonProperty private String scope;
 
     private TokenRequest(
             String code,
@@ -34,6 +34,10 @@ public class TokenRequest {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.scope = scope;
+    }
+
+    public static TokenRequestBuilder builder() {
+        return new TokenRequestBuilder();
     }
 
     public String getCode() {
@@ -58,10 +62,6 @@ public class TokenRequest {
 
     public String getScope() {
         return scope;
-    }
-
-    public static TokenRequestBuilder builder() {
-        return new TokenRequestBuilder();
     }
 
     public static class TokenRequestBuilder {

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public final class BnpParibasFortisSessionHandler implements SessionHandler {
+
     private final BnpParibasFortisApiClient apiClient;
 
     public BnpParibasFortisSessionHandler(BnpParibasFortisApiClient apiClient) {

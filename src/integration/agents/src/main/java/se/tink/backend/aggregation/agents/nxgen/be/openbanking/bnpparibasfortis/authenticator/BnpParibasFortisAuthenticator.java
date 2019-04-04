@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BnpParibasFortisAuthenticator implements OAuth2Authenticator {
+
     private final BnpParibasFortisApiClient apiClient;
     private final SessionStorage sessionStorage;
 

@@ -8,11 +8,11 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class GetAccountsResponse {
+
     @JsonProperty("_links")
     private Links links;
 
     private List<Account> accounts;
-
     private String connectedPsu;
 
     public Links getLinks() {

@@ -29,6 +29,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BnpParibasFortisAgent extends NextGenerationAgent {
+
     private final BnpParibasFortisApiClient apiClient;
 
     public BnpParibasFortisAgent(

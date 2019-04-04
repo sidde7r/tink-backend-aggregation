@@ -15,6 +15,9 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
 public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<URL> {
+
+    public TransactionalAccount account;
+
     @JsonProperty("_links")
     private Links links;
 
@@ -27,8 +30,6 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
     public List<Transaction> getTransactions() {
         return transactions;
     }
-
-    public TransactionalAccount account;
 
     @Override
     public URL nextKey() {

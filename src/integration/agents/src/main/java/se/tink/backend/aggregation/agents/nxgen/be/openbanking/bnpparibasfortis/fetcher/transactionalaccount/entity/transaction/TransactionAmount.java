@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransactionAmount {
+
     private String amount;
     private String currency;
 
