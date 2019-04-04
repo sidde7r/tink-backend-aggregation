@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.inject.Inject;
-import com.sun.jersey.api.client.ClientHandlerException;
 import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
-import se.tink.backend.aggregation.controllers.ClusterConnectivityController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
@@ -50,18 +48,19 @@ public class AggregationServiceResource implements AggregationService {
     private SupplementalInformationController supplementalInformationController;
     private ApplicationDrainMode applicationDrainMode;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
-    private ClusterConnectivityController clusterConnectivityController;
 
     @Inject
-    public AggregationServiceResource(AgentWorker agentWorker, QueueProducer producer,
-            AgentWorkerOperationFactory agentWorkerOperationFactory, SupplementalInformationController supplementalInformationController,
-            ApplicationDrainMode applicationDrainMode, ClusterConnectivityController clusterConnectivityController) {
+    public AggregationServiceResource(
+            AgentWorker agentWorker,
+            QueueProducer producer,
+            AgentWorkerOperationFactory agentWorkerOperationFactory,
+            SupplementalInformationController supplementalInformationController,
+            ApplicationDrainMode applicationDrainMode) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
-        this.clusterConnectivityController = clusterConnectivityController;
     }
 
 
@@ -196,15 +195,5 @@ public class AggregationServiceResource implements AggregationService {
         }
 
         return HttpResponseHelper.ok();
-    }
-
-    @Override
-    public String checkConnectivity(String clusterId) {
-        try {
-            clusterConnectivityController.checkConnectivity(clusterId);
-        } catch (ClientHandlerException e) {
-            HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
-        }
-        return "OK";
     }
 }
