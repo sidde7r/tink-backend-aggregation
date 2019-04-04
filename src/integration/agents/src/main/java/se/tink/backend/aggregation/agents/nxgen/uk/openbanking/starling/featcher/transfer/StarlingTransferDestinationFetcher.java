@@ -44,10 +44,10 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
         Map<Account, List<TransferDestinationPattern>> destinations = new TransferDestinationPatternBuilder()
                 .setTinkAccounts(accounts)
 //                .setDestinationAccounts(getDestinationAccounts(payeesRespose.getPayees()))
-//                .setDestinationAccounts(getDestinationAccounts(accounts.)
+                .setDestinationAccounts(getSourceAccounts(accounts))
                 .setSourceAccounts(getSourceAccounts(accounts))
                 .addMultiMatchPattern(AccountIdentifier.Type.SORT_CODE, TransferDestinationPattern.ALL)
-//                .matchDestinationAccountsOn(AccountIdentifier.Type.SORT_CODE, SortCodeIdentifier.class)
+                .matchDestinationAccountsOn(AccountIdentifier.Type.SORT_CODE, SortCodeIdentifier.class)
                 .build();
 
         return new TransferDestinationsResponse(destinations);
