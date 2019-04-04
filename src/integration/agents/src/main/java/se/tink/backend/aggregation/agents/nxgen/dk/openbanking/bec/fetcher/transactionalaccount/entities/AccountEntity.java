@@ -26,9 +26,9 @@ public class AccountEntity {
                 .setUniqueIdentifier(iban)
                 .setAccountNumber(iban)
                 .setBalance(getBalance())
+                .setAlias(bic)
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .setProductName(product)
-                .setAlias(bic)
                 .setApiIdentifier(resourceId)
                 .build();
     }
