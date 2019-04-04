@@ -32,16 +32,16 @@ public class AccountEntity {
 
     public TransactionalAccount toTinkAccount(Amount balance) {
         return CheckingAccount.builder()
-            .setUniqueIdentifier(iban)
-            .setAccountNumber(iban)
-            .setBalance(balance)
-            .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-            .addHolderName(name)
-            .setAlias(name)
-            .setApiIdentifier(resourceId)
-            .putInTemporaryStorage(IngConstants.StorageKeys.ACCOUNT_ID, resourceId)
-            .putInTemporaryStorage(IngConstants.StorageKeys.TRANSACTIONS_URL,
-                links.getTransactionsUrl())
-            .build();
+                .setUniqueIdentifier(iban)
+                .setAccountNumber(iban)
+                .setBalance(balance)
+                .setAlias(name)
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addHolderName(name)
+                .setApiIdentifier(resourceId)
+                .putInTemporaryStorage(IngConstants.StorageKeys.ACCOUNT_ID, resourceId)
+                .putInTemporaryStorage(
+                        IngConstants.StorageKeys.TRANSACTIONS_URL, links.getTransactionsUrl())
+                .build();
     }
 }

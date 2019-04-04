@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseApiClient;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.account.AccountDetailsEntity;
@@ -12,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.libraries.amount.Amount;
 
 public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccount> {
-
     private final CrosskeyBaseApiClient apiClient;
 
     public CreditCardAccountFetcher(CrosskeyBaseApiClient apiClient) {
@@ -21,34 +21,37 @@ public class CreditCardAccountFetcher implements AccountFetcher<CreditCardAccoun
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return apiClient.fetchAccounts()
-            .getData().getAccounts().stream()
-            .filter(AccountEntity::isCreditCardAccount)
-            .map(this::toCreditCardAccount)
-            .collect(Collectors.toList());
+        return apiClient.fetchAccounts().getData().getAccounts().stream()
+                .filter(AccountEntity::isCreditCardAccount)
+                .map(this::toCreditCardAccount)
+                .collect(Collectors.toList());
     }
 
-    protected CreditCardAccount toCreditCardAccount(AccountEntity accountEntity) {
+    private CreditCardAccount toCreditCardAccount(AccountEntity accountEntity) {
+        final CrosskeyAccountBalancesResponse crosskeyAccountBalancesResponse =
+                apiClient.fetchAccountBalances(accountEntity.getAccountId());
 
-        CrosskeyAccountBalancesResponse crosskeyAccountBalancesResponse = apiClient
-            .fetchAccountBalances(accountEntity.getAccountId());
+        final Optional<AccountDetailsEntity> accountDetails = accountEntity.resolveAccountDetails();
+        final AmountEntity amount =
+                crosskeyAccountBalancesResponse.getData().getInterimAvailableBalance().getAmount();
 
-        AccountDetailsEntity accountDetails = accountEntity.resolveAccountDetails();
-        AmountEntity amount = crosskeyAccountBalancesResponse.getData()
-            .getInterimAvailableBalance().getAmount();
-
-        String uniqueIdentifier = accountDetails != null ?
-            accountDetails.getIdentification() : accountEntity.getAccountId();
-
-        return getCreditCardAccount(accountEntity, accountDetails, amount, uniqueIdentifier);
+        return getCreditCardAccount(accountEntity, accountDetails, amount);
     }
 
-    protected CreditCardAccount getCreditCardAccount(AccountEntity accountEntity,
-        AccountDetailsEntity accountDetails, AmountEntity amount, String uniqueIdentifier) {
+    private CreditCardAccount getCreditCardAccount(
+            AccountEntity accountEntity,
+            Optional<AccountDetailsEntity> accountDetails,
+            AmountEntity amount) {
+        final String uniqueIdentifier =
+                accountDetails
+                        .map(AccountDetailsEntity::getIdentification)
+                        .orElse(accountEntity.getAccountId());
+
         return CreditCardAccount.builder(uniqueIdentifier)
-            .setAccountNumber(uniqueIdentifier)
-            .setBalance(new Amount(amount.getCurrency(), amount.getAmount()))
-            .setBankIdentifier(accountEntity.getAccountId())//TODO To apiIdentifier once possible
-            .build();
+                .setAccountNumber(uniqueIdentifier)
+                .setBalance(new Amount(amount.getCurrency(), amount.getAmount()))
+                .setBankIdentifier(
+                        accountEntity.getAccountId()) // TODO: To apiIdentifier once possible
+                .build();
     }
 }

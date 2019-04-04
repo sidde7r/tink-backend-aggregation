@@ -53,19 +53,19 @@ public class AccountsEntity {
   @JsonProperty("_links")
   private LinksEntity links;
 
-  public TransactionalAccount toTinkAccount() {
-    return CheckingAccount.builder()
-        .setUniqueIdentifier(iban)
-        .setAccountNumber(bban)
-        .setBalance(getAvailableBalance())
-        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
-        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-        .addHolderName(getOwnerName())
-        .setAlias(getName())
-        .setApiIdentifier(bban)
-        .putInTemporaryStorage(SebConstants.StorageKeys.ACCOUNT_ID, resourceId)
-        .build();
-  }
+    public TransactionalAccount toTinkAccount() {
+        return CheckingAccount.builder()
+                .setUniqueIdentifier(iban)
+                .setAccountNumber(bban)
+                .setBalance(getAvailableBalance())
+                .setAlias(getName())
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addHolderName(getOwnerName())
+                .setApiIdentifier(bban)
+                .putInTemporaryStorage(SebConstants.StorageKeys.ACCOUNT_ID, resourceId)
+                .build();
+    }
 
   public boolean isEnabled() {
     return status.equalsIgnoreCase(SebConstants.Accounts.STATUS_ENABLED);
