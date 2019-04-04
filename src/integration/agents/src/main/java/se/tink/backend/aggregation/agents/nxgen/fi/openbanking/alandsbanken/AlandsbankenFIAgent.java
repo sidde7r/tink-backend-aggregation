@@ -5,20 +5,20 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cro
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public class AlandsBankAgent extends CrosskeyBaseAgent {
+public class AlandsbankenFIAgent extends CrosskeyBaseAgent {
 
-    public AlandsBankAgent(
+    public AlandsbankenFIAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
     @Override
     public String getIntegrationName() {
-        return AlandsBankConstants.Market.INTEGRATION_NAME;
+        return AlandsbankenFIConstants.Market.INTEGRATION_NAME;
     }
 
     @Override
     public String getClientName() {
-        return AlandsBankConstants.Market.CLIENT_NAME;
+        return AlandsbankenFIConstants.Market.CLIENT_NAME;
     }
 }
