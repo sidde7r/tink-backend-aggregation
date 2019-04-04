@@ -1,19 +1,18 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.transaction;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Transactions;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import java.text.ParseException;
 
 @JsonObject
 public class Transaction {
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date bookingDate;
 
-    private String bookingDate;
     private String creditDebitIndicator;
     private String entryReference;
     private List<String> remittanceInformation;
@@ -30,11 +29,7 @@ public class Transaction {
     }
 
     private Date getDate() {
-        try {
-            return ThreadSafeDateFormat.FORMATTER_DAILY.parse(bookingDate);
-        } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse date", e);
-        }
+        return bookingDate;
     }
 
     private Amount getAmount() {
