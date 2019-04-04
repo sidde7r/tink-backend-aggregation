@@ -17,7 +17,6 @@ public class TransactionsEntity {
     private TransactionsLinksEntity links;
 
     private List<BookedEntity> booked;
-
     private List<PendingEntity> pending;
 
     public TransactionsLinksEntity getLinks() {

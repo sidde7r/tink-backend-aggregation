@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class LansforsakringarAgent extends NextGenerationAgent {
+
     private final LansforsakringarApiClient apiClient;
 
     public LansforsakringarAgent(

@@ -13,23 +13,17 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
+
     @JsonProperty("_links")
     private LinksEntity links;
 
     private List<String> allowedTransactionTypes;
-
     private List<BalanceEntity> balances;
-
     private String bban;
-
     private String currency;
-
     private String href;
-
     private String name;
-
     private String product;
-
     private String resourceId;
 
     public TransactionalAccount toTinkAccount() {

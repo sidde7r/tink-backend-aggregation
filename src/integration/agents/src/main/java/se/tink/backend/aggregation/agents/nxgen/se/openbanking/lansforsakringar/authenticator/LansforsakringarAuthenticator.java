@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class LansforsakringarAuthenticator implements Authenticator {
+
     private final LansforsakringarApiClient apiClient;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;

@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.
 import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class AuthenticateForm extends AbstractForm {
+
     private AuthenticateForm(String grantType, String clientId, String clientSecret) {
         put(LansforsakringarConstants.FormKeys.GRANT_TYPE, grantType);
         put(LansforsakringarConstants.FormKeys.CLIENT_ID, clientId);
@@ -35,11 +36,7 @@ public class AuthenticateForm extends AbstractForm {
         }
 
         public AuthenticateForm build() {
-            return new AuthenticateForm(
-                    this.grantType,
-                    this.clientId,
-                    this.clientSecret
-            );
+            return new AuthenticateForm(this.grantType, this.clientId, this.clientSecret);
         }
     }
 }
