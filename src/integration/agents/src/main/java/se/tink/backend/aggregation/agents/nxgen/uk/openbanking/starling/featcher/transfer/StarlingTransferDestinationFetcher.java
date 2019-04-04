@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.featcher.transfer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.TransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
@@ -21,8 +23,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class StarlingTransferDestinationFetcher implements TransferDestinationFetcher {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StarlingTransferDestinationFetcher.class);
+
 
     private final StarlingApiClient apiClient;
 
@@ -32,6 +37,7 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
 
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
+        LOGGER.debug("Calling fetchTransferDestinationsFor");
 
 //        PayeesResponse payeesRespose = apiClient.fetchPayees();
 
@@ -41,7 +47,7 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
 //                .setDestinationAccounts(getDestinationAccounts(accounts.)
                 .setSourceAccounts(getSourceAccounts(accounts))
                 .addMultiMatchPattern(AccountIdentifier.Type.SORT_CODE, TransferDestinationPattern.ALL)
-                .matchDestinationAccountsOn(AccountIdentifier.Type.SORT_CODE, SortCodeIdentifier.class)
+//                .matchDestinationAccountsOn(AccountIdentifier.Type.SORT_CODE, SortCodeIdentifier.class)
                 .build();
 
         return new TransferDestinationsResponse(destinations);
@@ -63,6 +69,7 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
     }
 
     private static List<? extends GeneralAccountEntity> getSourceAccounts(Collection<Account> accounts) {
+        LOGGER.debug("Getting source accounts from " + SerializationUtils.serializeToString(accounts));
         return accounts.stream()
                 .map(GeneralAccountEntityImpl::createFromCoreAccount)
                 .filter(Optional::isPresent)
