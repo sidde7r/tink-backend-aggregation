@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.entity.transaction;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Formats;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
@@ -13,7 +12,10 @@ import se.tink.libraries.amount.Amount;
 public class AccountTransactionEntity {
     private String id;
     private String operationDate;
-    private String valueDate;
+
+    @JsonFormat(pattern = Formats.TRANSACTION_DATE_FORMAT)
+    private Date valueDate;
+
     private double amount;
     private String currency;
     private String description;
@@ -26,17 +28,8 @@ public class AccountTransactionEntity {
         return Transaction.builder()
                 .setExternalId(id)
                 .setAmount(new Amount(currency, amount))
-                .setDate(getValueDate())
+                .setDate(valueDate)
                 .setDescription(description)
                 .build();
-    }
-
-    public Date getValueDate() {
-        try {
-            return new SimpleDateFormat(BbvaConstants.Formats.TRANSACTION_DATE_FORMAT)
-                    .parse(valueDate);
-        } catch (ParseException e) {
-            throw new IllegalStateException(e);
-        }
     }
 }
