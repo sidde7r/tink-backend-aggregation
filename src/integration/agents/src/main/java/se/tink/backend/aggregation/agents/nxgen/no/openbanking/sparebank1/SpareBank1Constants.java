@@ -5,12 +5,12 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class SpareBank1Constants {
 
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "USER").build();
+
     private SpareBank1Constants() {
         throw new AssertionError();
     }
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "USER").build();
 
     public static class Urls {
         public static final String BASE_URL = "https://developer-api.sparebank1.no";

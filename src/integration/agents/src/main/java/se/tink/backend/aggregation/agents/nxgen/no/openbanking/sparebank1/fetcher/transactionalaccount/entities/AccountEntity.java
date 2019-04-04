@@ -8,8 +8,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAcco
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 
-import java.util.Optional;
-
 @JsonObject
 public class AccountEntity {
 
