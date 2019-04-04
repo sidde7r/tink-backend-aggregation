@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordease;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
 
-public abstract class NordeaSeConstants {
-
+public final class NordeaSeConstants {
+    private NordeaSeConstants() {
+        throw new AssertionError();
+    }
     public static class Urls {
         public static final String BASE_URL = NordeaBaseConstants.Urls.BASE_URL;
         public static final String AUTHORIZE = BASE_URL + "/v3/authorize-decoupled";
