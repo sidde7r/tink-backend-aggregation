@@ -23,7 +23,7 @@ public final class NordnetSessionHandler implements SessionHandler {
 
     @Override
     public void keepAlive() throws SessionException {
-        if ( Strings.isNullOrEmpty(sessionStorage.get(NordnetConstants.StorageKeys.SESSION_KEY))) {
+        if (Strings.isNullOrEmpty(sessionStorage.get(NordnetConstants.StorageKeys.SESSION_KEY))) {
             throw new SessionException(SessionError.SESSION_EXPIRED);
         }
     }
