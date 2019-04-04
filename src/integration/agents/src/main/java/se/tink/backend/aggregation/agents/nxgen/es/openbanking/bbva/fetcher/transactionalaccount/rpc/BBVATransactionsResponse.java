@@ -29,10 +29,6 @@ public class BBVATransactionsResponse implements PaginatorResponse {
 
     @Override
     public Optional<Boolean> canFetchMore() {
-        if (pagination == null) {
-            return Optional.of(false);
-        }
-
-        return Optional.of(pagination.getPage() < pagination.getNumPages());
+        return Optional.ofNullable(pagination).map(p -> p.getPage() < p.getNumPages());
     }
 }
