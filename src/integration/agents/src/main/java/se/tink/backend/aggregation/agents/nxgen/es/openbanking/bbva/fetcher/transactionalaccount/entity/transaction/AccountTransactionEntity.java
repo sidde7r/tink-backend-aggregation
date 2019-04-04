@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.entity.transaction;
 
 import java.text.ParseException;
@@ -12,7 +11,6 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountTransactionEntity {
-
     private String id;
     private String operationDate;
     private String valueDate;
@@ -26,17 +24,17 @@ public class AccountTransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-            .setExternalId(id)
-            .setAmount(new Amount(currency, amount))
-            .setDate(getValueDate())
-            .setDescription(description)
-            .build();
+                .setExternalId(id)
+                .setAmount(new Amount(currency, amount))
+                .setDate(getValueDate())
+                .setDescription(description)
+                .build();
     }
 
     public Date getValueDate() {
         try {
             return new SimpleDateFormat(BBVAConstants.Formats.TRANSACTION_DATE_FORMAT)
-                .parse(valueDate);
+                    .parse(valueDate);
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }

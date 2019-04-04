@@ -4,6 +4,5 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class NavigationLinkEntity {
-
     private String href;
 }

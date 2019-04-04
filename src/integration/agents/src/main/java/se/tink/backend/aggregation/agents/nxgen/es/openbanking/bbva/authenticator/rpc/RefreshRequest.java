@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BBVAConstant
 import se.tink.backend.aggregation.nxgen.http.Form;
 
 public class RefreshRequest {
-
     private String refreshToken;
 
     public RefreshRequest(String refreshToken) {
@@ -13,8 +12,8 @@ public class RefreshRequest {
 
     public String toForm() {
         return Form.builder()
-            .put(BBVAConstants.BodyKeys.REFRESH_TOKEN, refreshToken)
-            .build().serialize();
+                .put(BBVAConstants.BodyKeys.REFRESH_TOKEN, refreshToken)
+                .build()
+                .serialize();
     }
-
 }

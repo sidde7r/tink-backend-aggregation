@@ -4,7 +4,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class FormatsEntity {
-
     private String iban;
     private String ccc;
 

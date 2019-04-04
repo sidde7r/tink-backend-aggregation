@@ -1,6 +1,4 @@
-
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.rpc;
-
 
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.entity.account.DetailedDataEntity;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.entity.common.ResultEntity;
@@ -9,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class BBVADetailedAccountResponse {
-
     private ResultEntity result;
     private DetailedDataEntity data;
 

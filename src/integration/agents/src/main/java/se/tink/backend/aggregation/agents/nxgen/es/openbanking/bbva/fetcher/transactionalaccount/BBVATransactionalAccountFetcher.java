@@ -13,7 +13,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class BBVATransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
-
     private final BBVAApiClient apiClient;
 
     public BBVATransactionalAccountFetcher(BBVAApiClient apiClient) {
@@ -22,21 +21,22 @@ public class BBVATransactionalAccountFetcher implements AccountFetcher<Transacti
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchAccounts()
-            .getData().getAccounts().stream()
-            .filter(this::isCheckingAccount)
-            .map(accountEntity -> {
-                BBVADetailedAccountResponse bbvaDetailedAccountResponse = apiClient
-                    .fetchAccountDetails(accountEntity.getId());
+        return apiClient.fetchAccounts().getData().getAccounts().stream()
+                .filter(this::isCheckingAccount)
+                .map(
+                        accountEntity -> {
+                            BBVADetailedAccountResponse bbvaDetailedAccountResponse =
+                                    apiClient.fetchAccountDetails(accountEntity.getId());
 
-                return bbvaDetailedAccountResponse.toTinkAccount();
-            }).collect(Collectors.toList());
+                            return bbvaDetailedAccountResponse.toTinkAccount();
+                        })
+                .collect(Collectors.toList());
     }
 
     private boolean isCheckingAccount(AccountEntity account) {
         return BBVAConstants.ACCOUNT_TYPE_MAPPER
-            .translate(account.getType())
-            .map(item -> item == AccountTypes.CHECKING)
-            .orElse(false);
+                .translate(account.getType())
+                .map(item -> item == AccountTypes.CHECKING)
+                .orElse(false);
     }
 }

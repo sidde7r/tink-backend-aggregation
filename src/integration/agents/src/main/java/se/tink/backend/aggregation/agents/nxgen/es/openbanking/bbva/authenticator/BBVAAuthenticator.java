@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
-
 public class BBVAAuthenticator implements OAuth2Authenticator {
     private final BBVAApiClient apiClient;
 

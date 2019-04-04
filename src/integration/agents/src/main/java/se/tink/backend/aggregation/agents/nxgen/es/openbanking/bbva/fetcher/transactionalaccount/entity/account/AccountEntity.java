@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.entity.account;
 
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -10,7 +9,6 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
-
     private String id;
     private String alias;
     private String type;
