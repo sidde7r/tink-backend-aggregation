@@ -11,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class FetchAccountResponse {
+
     private List<AccountsEntity> accounts;
 
     public Collection<TransactionalAccount> toTinkAccounts(String owner) {

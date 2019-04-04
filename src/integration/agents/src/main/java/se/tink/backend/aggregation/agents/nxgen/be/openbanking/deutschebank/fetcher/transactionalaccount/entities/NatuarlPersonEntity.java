@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class NatuarlPersonEntity {
 
     private String firstName;
-
     private String lastName;
 
     public String getFullName() {

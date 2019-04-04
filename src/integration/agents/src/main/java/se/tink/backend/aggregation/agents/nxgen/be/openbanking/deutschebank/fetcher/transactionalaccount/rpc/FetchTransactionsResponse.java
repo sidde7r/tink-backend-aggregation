@@ -14,11 +14,8 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class FetchTransactionsResponse implements PaginatorResponse {
 
     private int totalItems;
-
     private int limit;
-
     private int offset;
-
     private List<TransactionsEntity> transactions;
 
     @Override

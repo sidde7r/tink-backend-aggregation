@@ -11,18 +11,14 @@ import se.tink.libraries.amount.Amount;
 public class TransactionsEntity {
 
     private String originIban;
-
     private Number amount;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
 
     private String currencyCode;
-
     private String transactionCode;
-
     private String counterPartyName;
-
     private String paymentReference;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -30,11 +26,11 @@ public class TransactionsEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-            .setAmount(getAmount())
-            .setDate(bookingDate)
-            .setDescription(getDescription())
-            .setPending(false)
-            .build();
+                .setAmount(getAmount())
+                .setDate(bookingDate)
+                .setDescription(getDescription())
+                .setPending(false)
+                .build();
     }
 
     private Amount getAmount() {
