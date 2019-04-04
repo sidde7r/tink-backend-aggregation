@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.entities;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import org.assertj.core.util.Strings;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
@@ -12,7 +11,6 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
-
     @JsonProperty("_links")
     private LinksEntity links;
 
@@ -37,8 +35,8 @@ public class AccountEntity {
                 .setUniqueIdentifier(bban)
                 .setAccountNumber(bban)
                 .setBalance(getAvailableBalance())
-                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
                 .setAlias(getName())
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
                 .setProductName(product)
                 .setApiIdentifier(resourceId)
                 .build();
