@@ -132,7 +132,7 @@ public class StarlingAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
-        LOGGER.debug("Creating TransferDestinationRefreshController");
+        LOGGER.info("Creating TransferDestinationRefreshController");
         return Optional.of(
                 new TransferDestinationRefreshController(
                         metricRefreshController,
@@ -146,7 +146,7 @@ public class StarlingAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        LOGGER.debug("Creating TransferController");
+        LOGGER.info("Creating TransferController");
         return Optional.of(
                 new TransferController(
                         null,

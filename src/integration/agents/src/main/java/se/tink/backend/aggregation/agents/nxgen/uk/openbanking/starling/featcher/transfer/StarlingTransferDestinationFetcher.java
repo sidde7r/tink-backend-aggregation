@@ -37,7 +37,7 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
 
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
-        LOGGER.debug("Calling fetchTransferDestinationsFor");
+        LOGGER.info("Calling fetchTransferDestinationsFor");
 
 //        PayeesResponse payeesRespose = apiClient.fetchPayees();
 
@@ -69,7 +69,7 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
     }
 
     private static List<? extends GeneralAccountEntity> getSourceAccounts(Collection<Account> accounts) {
-        LOGGER.debug("Getting source accounts from " + SerializationUtils.serializeToString(accounts));
+        LOGGER.info("Getting source accounts from " + SerializationUtils.serializeToString(accounts));
         return accounts.stream()
                 .map(GeneralAccountEntityImpl::createFromCoreAccount)
                 .filter(Optional::isPresent)
