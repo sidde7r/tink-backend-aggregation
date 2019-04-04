@@ -58,7 +58,7 @@ public final class NordnetApiClient {
                         .get(GetAccountDetailsResponse.class);
     }
 
-    public String getKey() {
+    private String getKey() {
         String sessionKey = sessionStorage.get(NordnetConstants.StorageKeys.SESSION_KEY);
         return NordnetConstants.HeaderValues.AUTHORIZATION_PREFIX
                 + DatatypeConverter.printBase64Binary((sessionKey + ":" + sessionKey).getBytes());
