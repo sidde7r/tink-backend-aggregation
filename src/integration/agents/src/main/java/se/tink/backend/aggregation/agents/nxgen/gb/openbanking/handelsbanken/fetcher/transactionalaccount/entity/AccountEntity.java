@@ -11,8 +11,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 public class AccountEntity extends BaseAccountEntity {
 
     private AccountTypes getTinkAccountType() {
-        return HandelsbankenConstants.ACCOUNT_TYPE_MAPPER.translate(getAccountType())
-            .orElse(AccountTypes.OTHER);
+        return HandelsbankenConstants.ACCOUNT_TYPE_MAPPER
+                .translate(getAccountType())
+                .orElse(AccountTypes.OTHER);
     }
 
     @Override
@@ -24,5 +25,4 @@ public class AccountEntity extends BaseAccountEntity {
         }
         throw new IllegalStateException(ACCOUNT_TYPE_NOT_SUPPORTED + accountType);
     }
-
 }

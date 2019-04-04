@@ -33,34 +33,30 @@ public abstract class BaseAccountEntity {
     public abstract TransactionalAccount toTinkAccount(BalanceEntity balance);
 
     public CheckingAccount createCheckingAccount(BalanceEntity balance) {
-        return CheckingAccount
-            .builder()
-            .setUniqueIdentifier(iban)
-            .setAccountNumber(iban)
-            .setBalance(
-                new Amount(balance.getAmount().getCurrency(),
-                    balance.getAmount().getContent()))
-            .addAccountIdentifier(
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-            .addHolderName(ownerName)
-            .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
-            .build();
+        return CheckingAccount.builder()
+                .setUniqueIdentifier(iban)
+                .setAccountNumber(iban)
+                .setBalance(
+                        new Amount(
+                                balance.getAmount().getCurrency(),
+                                balance.getAmount().getContent()))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addHolderName(ownerName)
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
+                .build();
     }
 
     public SavingsAccount createSavingsAccount(BalanceEntity balance) {
-        return SavingsAccount
-            .builder()
-            .setUniqueIdentifier(iban)
-            .setAccountNumber(iban)
-            .setBalance(
-                new Amount(balance.getAmount().getCurrency(),
-                    balance.getAmount().getContent()))
-            .addAccountIdentifier(
-                AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-            .addHolderName(ownerName)
-            .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
-            .build();
+        return SavingsAccount.builder()
+                .setUniqueIdentifier(iban)
+                .setAccountNumber(iban)
+                .setBalance(
+                        new Amount(
+                                balance.getAmount().getCurrency(),
+                                balance.getAmount().getContent()))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addHolderName(ownerName)
+                .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
+                .build();
     }
-
-
 }

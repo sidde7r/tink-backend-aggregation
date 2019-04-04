@@ -26,14 +26,13 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
     private final HandelsbankenApiClient apiClient;
 
     public HandelsbankenAgent(
-        CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new HandelsbankenApiClient(client, persistentStorage, sessionStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -42,18 +41,18 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         HandelsbankenTransactionalAccountFetcher accountFetcher =
-            new HandelsbankenTransactionalAccountFetcher(apiClient);
+                new HandelsbankenTransactionalAccountFetcher(apiClient);
 
         return Optional.of(
-            new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                    transactionPaginationHelper,
-                    new TransactionDatePaginationController<>(accountFetcher))));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(accountFetcher))));
     }
 
     @Override
@@ -78,7 +77,7 @@ public final class HandelsbankenAgent extends HandelsbankenBaseAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

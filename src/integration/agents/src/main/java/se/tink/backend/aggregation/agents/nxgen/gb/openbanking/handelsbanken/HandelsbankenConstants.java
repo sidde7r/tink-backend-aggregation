@@ -6,8 +6,8 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 public abstract class HandelsbankenConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-        TypeMapper.<AccountTypes>builder()
-            .put(AccountTypes.CHECKING, "Current Account")
-            .put(AccountTypes.SAVINGS, "Instant Access Deposit Account")
-            .build();
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "Current Account")
+                    .put(AccountTypes.SAVINGS, "Instant Access Deposit Account")
+                    .build();
 }

@@ -6,8 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 public abstract class HandelsbankenConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-        TypeMapper.<AccountTypes>builder()
-            .put(AccountTypes.CHECKING, "Käyttötili", "Tuottotili", "Monitili")
-            .build();
-
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "Käyttötili", "Tuottotili", "Monitili")
+                    .build();
 }

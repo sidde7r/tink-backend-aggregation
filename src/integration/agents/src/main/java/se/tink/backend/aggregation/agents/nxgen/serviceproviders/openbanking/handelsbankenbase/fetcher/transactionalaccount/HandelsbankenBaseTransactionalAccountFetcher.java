@@ -18,9 +18,11 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
-public abstract class HandelsbankenBaseTransactionalAccountFetcher<AccountsResponseType extends BaseAccountsResponse<AccountEntityType>, AccountEntityType extends BaseAccountEntity>
-    implements AccountFetcher<TransactionalAccount>,
-    TransactionDatePaginator<TransactionalAccount> {
+public abstract class HandelsbankenBaseTransactionalAccountFetcher<
+                AccountsResponseType extends BaseAccountsResponse<AccountEntityType>,
+                AccountEntityType extends BaseAccountEntity>
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionDatePaginator<TransactionalAccount> {
 
     protected final HandelsbankenBaseApiClient apiClient;
 
@@ -33,24 +35,27 @@ public abstract class HandelsbankenBaseTransactionalAccountFetcher<AccountsRespo
     }
 
     protected TransactionalAccount mapToTransactionalAccount(BaseAccountEntity accountEntity) {
-        BalancesEntity balances = apiClient
-            .getAccountDetails(accountEntity.getAccountId());
-        BalanceEntity availableBalance = balances.getBalances().stream().filter(
-            balance -> balance.getBalanceType().equalsIgnoreCase(AccountBalance.TYPE))
-            .findFirst()
-            .orElseThrow(() -> new IllegalStateException(
-                ExceptionMessages.BALANCE_NOT_FOUND));
+        BalancesEntity balances = apiClient.getAccountDetails(accountEntity.getAccountId());
+        BalanceEntity availableBalance =
+                balances.getBalances().stream()
+                        .filter(
+                                balance ->
+                                        balance.getBalanceType()
+                                                .equalsIgnoreCase(AccountBalance.TYPE))
+                        .findFirst()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                ExceptionMessages.BALANCE_NOT_FOUND));
         return accountEntity.toTinkAccount(availableBalance);
     }
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return fetchAccountsForType(getResponseType())
-            .getAccounts()
-            .stream()
-            .filter(this::isAccountTypeSupported)
-            .map(this::mapToTransactionalAccount)
-            .collect(Collectors.toList());
+        return fetchAccountsForType(getResponseType()).getAccounts().stream()
+                .filter(this::isAccountTypeSupported)
+                .map(this::mapToTransactionalAccount)
+                .collect(Collectors.toList());
     }
 
     protected abstract boolean isAccountTypeSupported(AccountEntityType accountEntityType);
@@ -58,11 +63,9 @@ public abstract class HandelsbankenBaseTransactionalAccountFetcher<AccountsRespo
     public abstract Class<AccountsResponseType> getResponseType();
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate,
-        Date toDate) {
-        return apiClient
-            .getTransactions(account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID), fromDate,
-                toDate);
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        return apiClient.getTransactions(
+                account.getFromTemporaryStorage(StorageKeys.ACCOUNT_ID), fromDate, toDate);
     }
-
 }

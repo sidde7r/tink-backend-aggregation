@@ -27,9 +27,7 @@ public abstract class HandelsbankenBaseConstants {
         public static String WITH_BALANCE = "withBalance";
     }
 
-    public static class QueryValues {
-
-    }
+    public static class QueryValues {}
 
     public static class HeaderKeys {
 
@@ -40,17 +38,11 @@ public abstract class HandelsbankenBaseConstants {
         public static String AUTHORIZATION = "authorization";
     }
 
-    public static class FormKeys {
+    public static class FormKeys {}
 
-    }
+    public static class FormValues {}
 
-    public static class FormValues {
-
-    }
-
-    public static class LogTags {
-
-    }
+    public static class LogTags {}
 
     public static class AccountBalance {
 

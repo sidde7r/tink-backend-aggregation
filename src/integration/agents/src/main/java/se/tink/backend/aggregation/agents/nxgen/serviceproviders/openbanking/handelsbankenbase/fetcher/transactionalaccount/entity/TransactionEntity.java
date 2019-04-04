@@ -15,10 +15,13 @@ public class TransactionEntity {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date ledgerDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date transactionDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date bookingDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date valueDate;
 
@@ -28,10 +31,10 @@ public class TransactionEntity {
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()
-            .setDate(transactionDate != null ? transactionDate : valueDate)
-            .setAmount(new Amount(amount.getCurrency(), amount.getContent()))
-            .setDescription(remittanceInformation)
-            .setPending(status.equalsIgnoreCase(Transactions.PENDING_TYPE))
-            .build();
+                .setDate(transactionDate != null ? transactionDate : valueDate)
+                .setAmount(new Amount(amount.getCurrency(), amount.getContent()))
+                .setDescription(remittanceInformation)
+                .setPending(status.equalsIgnoreCase(Transactions.PENDING_TYPE))
+                .build();
     }
 }

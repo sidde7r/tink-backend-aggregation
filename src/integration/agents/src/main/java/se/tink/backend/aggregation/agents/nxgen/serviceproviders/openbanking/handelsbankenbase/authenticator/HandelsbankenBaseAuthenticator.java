@@ -6,14 +6,13 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-
 public class HandelsbankenBaseAuthenticator implements Authenticator {
 
     protected final HandelsbankenBaseApiClient apiClient;
     protected final SessionStorage sessionStorage;
 
-    public HandelsbankenBaseAuthenticator(HandelsbankenBaseApiClient apiClient,
-        SessionStorage sessionStorage) {
+    public HandelsbankenBaseAuthenticator(
+            HandelsbankenBaseApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }

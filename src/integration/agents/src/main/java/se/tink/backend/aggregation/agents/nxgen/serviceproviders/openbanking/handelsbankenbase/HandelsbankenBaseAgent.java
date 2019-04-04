@@ -26,35 +26,37 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
     private final HandelsbankenBaseApiClient apiClient;
 
     public HandelsbankenBaseAgent(
-        CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         apiClient = new HandelsbankenBaseApiClient(client, persistentStorage, sessionStorage);
     }
 
-    protected abstract Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController();
+    protected abstract Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController();
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
         HandelsbankenBaseConfiguration handelsBankenBaseConfiguration =
-            configuration
-                .getIntegrations()
-                .getClientConfiguration(Configuration.INTEGRATION_NAME, Configuration.CLIENT_NAME,
-                    HandelsbankenBaseConfiguration.class)
-                .orElseThrow(IllegalStateException::new);
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                Configuration.INTEGRATION_NAME,
+                                Configuration.CLIENT_NAME,
+                                HandelsbankenBaseConfiguration.class)
+                        .orElseThrow(IllegalStateException::new);
         persistentStorage.put(StorageKeys.CLIENT_ID, handelsBankenBaseConfiguration.getClientId());
-        persistentStorage
-            .put(StorageKeys.TPP_REQUEST_ID, handelsBankenBaseConfiguration.getTppRequestId());
-        persistentStorage
-            .put(StorageKeys.TPP_TRANSACTION_ID,
+        persistentStorage.put(
+                StorageKeys.TPP_REQUEST_ID, handelsBankenBaseConfiguration.getTppRequestId());
+        persistentStorage.put(
+                StorageKeys.TPP_TRANSACTION_ID,
                 handelsBankenBaseConfiguration.getTppTransactionId());
-        persistentStorage
-            .put(StorageKeys.PSU_IP_ADDRESS, handelsBankenBaseConfiguration.getPsuIpAddress());
+        persistentStorage.put(
+                StorageKeys.PSU_IP_ADDRESS, handelsBankenBaseConfiguration.getPsuIpAddress());
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -83,7 +85,7 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

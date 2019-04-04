@@ -13,9 +13,9 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class HandelsbankenTransactionalAccountFetcher
-    extends HandelsbankenBaseTransactionalAccountFetcher<AccountsResponse, AccountEntity>
-    implements AccountFetcher<TransactionalAccount>,
-    TransactionDatePaginator<TransactionalAccount> {
+        extends HandelsbankenBaseTransactionalAccountFetcher<AccountsResponse, AccountEntity>
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionDatePaginator<TransactionalAccount> {
 
     public HandelsbankenTransactionalAccountFetcher(HandelsbankenApiClient apiClient) {
         super(apiClient);
@@ -24,9 +24,9 @@ public class HandelsbankenTransactionalAccountFetcher
     @Override
     protected boolean isAccountTypeSupported(AccountEntity account) {
         return HandelsbankenConstants.ACCOUNT_TYPE_MAPPER
-            .translate(account.getAccountType())
-            .map(item -> item == AccountTypes.CHECKING || item == AccountTypes.SAVINGS)
-            .orElse(false);
+                .translate(account.getAccountType())
+                .map(item -> item == AccountTypes.CHECKING || item == AccountTypes.SAVINGS)
+                .orElse(false);
     }
 
     @Override

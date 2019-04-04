@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class HandelsbankenApiClient extends HandelsbankenBaseApiClient {
 
-    public HandelsbankenApiClient(TinkHttpClient client, PersistentStorage persistentStorage,
-        SessionStorage sessionStorage) {
+    public HandelsbankenApiClient(
+            TinkHttpClient client,
+            PersistentStorage persistentStorage,
+            SessionStorage sessionStorage) {
         super(client, persistentStorage, sessionStorage);
     }
 }

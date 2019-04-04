@@ -16,8 +16,9 @@ public class TransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.stream().map(TransactionEntity::toTinkTransaction)
-            .collect(Collectors.toList());
+        return transactions.stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -25,4 +26,3 @@ public class TransactionsResponse implements PaginatorResponse {
         return Optional.empty();
     }
 }
-

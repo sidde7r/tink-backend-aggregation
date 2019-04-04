@@ -7,14 +7,10 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class HandelsbankenBaseConfiguration implements ClientConfiguration {
 
-    @JsonProperty
-    private String clientId;
-    @JsonProperty
-    private String tppTransactionId;
-    @JsonProperty
-    private String tppRequestId;
-    @JsonProperty
-    private String psuIpAddress;
+    @JsonProperty private String clientId;
+    @JsonProperty private String tppTransactionId;
+    @JsonProperty private String tppRequestId;
+    @JsonProperty private String psuIpAddress;
 
     public String getClientId() {
         return clientId;
@@ -32,4 +28,3 @@ public class HandelsbankenBaseConfiguration implements ClientConfiguration {
         return psuIpAddress;
     }
 }
-

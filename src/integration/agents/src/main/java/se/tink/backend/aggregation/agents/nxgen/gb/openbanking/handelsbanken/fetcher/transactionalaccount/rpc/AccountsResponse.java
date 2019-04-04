@@ -5,6 +5,4 @@ import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.han
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountsResponse extends BaseAccountsResponse<AccountEntity> {
-
-}
+public class AccountsResponse extends BaseAccountsResponse<AccountEntity> {}
