@@ -129,11 +129,10 @@ public class StarlingAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
-        return Optional.empty();
-//        return Optional.of(
-//                new TransferDestinationRefreshController(
-//                        metricRefreshController,
-//                        new StarlingTransferDestinationFetcher(apiClient)));
+        return Optional.of(
+                new TransferDestinationRefreshController(
+                        metricRefreshController,
+                        new StarlingTransferDestinationFetcher(apiClient)));
     }
 
     @Override
@@ -143,18 +142,17 @@ public class StarlingAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
-        return Optional.empty();
-//        return Optional.of(
-//                new TransferController(
-//                        null,
-//                        new StarlingTransferExecutor(
-//                                apiClient,
-//                                pisConfiguration,
-//                                signingKeyUid,
-//                                signingKey,
-//                                credentials,
-//                                supplementalInformationHelper),
-//                        null,
-//                        null));
+        return Optional.of(
+                new TransferController(
+                        null,
+                        new StarlingTransferExecutor(
+                                apiClient,
+                                pisConfiguration,
+                                signingKeyUid,
+                                signingKey,
+                                credentials,
+                                supplementalInformationHelper),
+                        null,
+                        null));
     }
 }

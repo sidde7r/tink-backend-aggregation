@@ -33,11 +33,12 @@ public class StarlingTransferDestinationFetcher implements TransferDestinationFe
     @Override
     public TransferDestinationsResponse fetchTransferDestinationsFor(Collection<Account> accounts) {
 
-        PayeesResponse payeesRespose = apiClient.fetchPayees();
+//        PayeesResponse payeesRespose = apiClient.fetchPayees();
 
         Map<Account, List<TransferDestinationPattern>> destinations = new TransferDestinationPatternBuilder()
                 .setTinkAccounts(accounts)
-                .setDestinationAccounts(getDestinationAccounts(payeesRespose.getPayees()))
+//                .setDestinationAccounts(getDestinationAccounts(payeesRespose.getPayees()))
+//                .setDestinationAccounts(getDestinationAccounts(accounts.)
                 .setSourceAccounts(getSourceAccounts(accounts))
                 .addMultiMatchPattern(AccountIdentifier.Type.SORT_CODE, TransferDestinationPattern.ALL)
                 .matchDestinationAccountsOn(AccountIdentifier.Type.SORT_CODE, SortCodeIdentifier.class)
