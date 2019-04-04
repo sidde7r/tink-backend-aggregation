@@ -38,20 +38,20 @@ public final class SpareBank1ApiClient {
     }
 
     public OAuth2Token getToken(GetTokenForm form) {
-        return createRequest(new URL(SpareBank1Constants.Urls.GET_TOKEN))
+        return createRequest(SpareBank1Constants.Urls.FETCH_TOKEN)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .post(GetTokenResponse.class)
                 .toTinkToken();
     }
 
     public GetAccountsResponse getAccounts() {
-        return createRequestInSession(new URL(SpareBank1Constants.Urls.GET_ACCOUNTS))
+        return createRequestInSession(SpareBank1Constants.Urls.FETCH_ACCOUNTS)
                 .get(GetAccountsResponse.class);
     }
 
     public GetTransactionsResponse getTransactions(TransactionalAccount account) {
         return createRequestInSession(
-                        new URL(SpareBank1Constants.Urls.GET_TRANSACTIONS)
+                        SpareBank1Constants.Urls.FETCH_TRANSACTIONS
                                 .parameter(
                                         SpareBank1Constants.IdTags.ACCOUNT_ID,
                                         account.getFromTemporaryStorage(

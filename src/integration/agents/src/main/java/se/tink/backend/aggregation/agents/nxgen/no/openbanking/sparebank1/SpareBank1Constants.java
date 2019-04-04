@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class SpareBank1Constants {
 
@@ -13,11 +14,18 @@ public final class SpareBank1Constants {
     }
 
     public static class Urls {
-        public static final String BASE_URL = "https://developer-api.sparebank1.no";
-        public static final String GET_TOKEN = BASE_URL + "/oauth/token";
-        public static final String GET_ACCOUNTS = BASE_URL + "/open/personal/banking/accounts/all";
+        public static final String BASE_URL = "https://developer-api.sparebank1.no/";
+
+        public static final URL FETCH_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
+        public static final URL FETCH_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
+        public static final URL FETCH_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
+    }
+
+    public static class ApiService {
+        public static final String GET_TOKEN = "oauth/token";
+        public static final String GET_ACCOUNTS = "open/personal/banking/accounts/all";
         public static final String GET_TRANSACTIONS =
-                BASE_URL + "/open/personal/banking/accounts/{accountId}/transactions";
+                "open/personal/banking/accounts/{accountId}/transactions";
     }
 
     public static class HeaderKeys {
