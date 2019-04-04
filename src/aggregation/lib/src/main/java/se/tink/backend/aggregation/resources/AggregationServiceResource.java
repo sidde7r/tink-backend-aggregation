@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.ConnectivityController;
+import se.tink.backend.aggregation.ClusterConnectivityController;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -50,18 +50,18 @@ public class AggregationServiceResource implements AggregationService {
     private SupplementalInformationController supplementalInformationController;
     private ApplicationDrainMode applicationDrainMode;
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
-    private ConnectivityController connectivityController;
+    private ClusterConnectivityController clusterConnectivityController;
 
     @Inject
     public AggregationServiceResource(AgentWorker agentWorker, QueueProducer producer,
             AgentWorkerOperationFactory agentWorkerOperationFactory, SupplementalInformationController supplementalInformationController,
-            ApplicationDrainMode applicationDrainMode, ConnectivityController connectivityController) {
+            ApplicationDrainMode applicationDrainMode, ClusterConnectivityController clusterConnectivityController) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;
         this.supplementalInformationController = supplementalInformationController;
         this.producer = producer;
         this.applicationDrainMode = applicationDrainMode;
-        this.connectivityController = connectivityController;
+        this.clusterConnectivityController = clusterConnectivityController;
     }
 
 
@@ -201,7 +201,7 @@ public class AggregationServiceResource implements AggregationService {
     @Override
     public Response checkConnectivity(String clusterId) {
         try {
-            connectivityController.checkConnectivity(clusterId);
+            clusterConnectivityController.checkConnectivity(clusterId);
         } catch (ClientHandlerException e) {
             HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
         }

@@ -5,12 +5,12 @@ import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 
-public class ConnectivityController {
+public class ClusterConnectivityController {
 
     private ControllerWrapperProvider controllerWrapperProvider;
 
     @Inject
-    public ConnectivityController(ControllerWrapperProvider controllerWrapperProvider) {
+    public ClusterConnectivityController(ControllerWrapperProvider controllerWrapperProvider) {
         this.controllerWrapperProvider = controllerWrapperProvider;
     }
 
