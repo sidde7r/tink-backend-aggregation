@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transferdestination.IngTransferDestinationFetcher;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.filter.IngHttpFilter;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.session.IngSessionHandler;
+import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
@@ -29,10 +30,14 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-import java.util.Optional;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import java.util.Optional;
+
 import static se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants.Headers.USER_AGENT;
 
+
+@ProgressiveAuth
 public class IngAgent extends NextGenerationAgent {
     private final IngApiClient apiClient;
     private final IngHelper ingHelper;
@@ -57,7 +62,7 @@ public class IngAgent extends NextGenerationAgent {
         return new AutoAuthenticationController(request, systemUpdater,
                 new IngCardReaderAuthenticationController(
                         new IngCardReaderAuthenticator(apiClient, persistentStorage, ingHelper),
-                        supplementalInformationHelper),
+                        supplementalInformationFormer),
                 new IngAutoAuthenticator(apiClient, persistentStorage, ingHelper));
     }
 

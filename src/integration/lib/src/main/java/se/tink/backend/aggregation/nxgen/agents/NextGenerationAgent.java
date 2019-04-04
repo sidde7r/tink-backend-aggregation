@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.agents.FetchLoanAccountsResponse;
 import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.FetchTransferDestinationsResponse;
 import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshEInvoiceExecutor;
@@ -30,7 +31,10 @@ import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.ProgressiveAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.Refresher;
@@ -48,6 +52,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionController;
 import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
@@ -77,7 +82,9 @@ public abstract class NextGenerationAgent extends AbstractAgent
                 RefreshTransferDestinationExecutor,
                 RefreshEInvoiceExecutor,
                 TransferExecutorNxgen,
-                PersistentLogin {
+                PersistentLogin,
+// TODO auth: remove this implements
+                ProgressiveAuthAgent {
 
     static {
         Security.addProvider(new BouncyCastleProvider());
@@ -89,10 +96,12 @@ public abstract class NextGenerationAgent extends AbstractAgent
     protected final SessionStorage sessionStorage;
     protected final Credentials credentials;
     protected final TransactionPaginationHelper transactionPaginationHelper;
-    protected final SupplementalInformationController supplementalInformationController;
     protected final UpdateController updateController;
     protected final MetricRefreshController metricRefreshController;
+    // TODO auth: remove helper and controller when refactor is done
     protected final SupplementalInformationHelper supplementalInformationHelper;
+    protected final SupplementalInformationController supplementalInformationController;
+    protected final SupplementalInformationFormer supplementalInformationFormer;
 
     private List<Refresher> refreshers;
     private TransferController transferController;
@@ -126,6 +135,7 @@ public abstract class NextGenerationAgent extends AbstractAgent
         this.supplementalInformationHelper = new SupplementalInformationHelper(
                 request.getProvider(),
                 supplementalInformationController);
+        this.supplementalInformationFormer = new SupplementalInformationFormer(request.getProvider());
         configureHttpClient(client);
     }
 
@@ -149,10 +159,18 @@ public abstract class NextGenerationAgent extends AbstractAgent
         log.info("Proxy-setup: successfully attached proxy.");
     }
 
+    // TODO auth: remove the legacy login.
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
         getAuthenticator().authenticate(credentials);
         return true;
+    }
+
+    @Override
+    public AuthenticationResponse login(AuthenticationRequest request)
+            throws AuthenticationException, AuthorizationException {
+        request.setCredentials(credentials);
+        return ((ProgressiveAuthenticator) getAuthenticator()).authenticate(request);
     }
 
     @Override

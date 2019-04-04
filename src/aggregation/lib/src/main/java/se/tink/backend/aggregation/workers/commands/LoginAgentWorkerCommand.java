@@ -4,14 +4,21 @@ import org.apache.curator.framework.recipes.locks.InterProcessSemaphoreMutex;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.agents.rpc.CredentialsTypes;
+import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.Agent;
 import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
+import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.workers.AgentWorkerCommand;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandContext;
 import se.tink.backend.aggregation.workers.AgentWorkerCommandResult;
@@ -27,6 +34,7 @@ import se.tink.libraries.user.rpc.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -54,6 +62,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
     private final Credentials credentials;
     private final User user;
     private Agent agent;
+    private final SupplementalInformationController supplementalInformationController;
 
     private InterProcessSemaphoreMutex lock;
 
@@ -66,6 +75,7 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         this.metrics = metrics.init(this);
         this.credentials = request.getCredentials();
         this.user = request.getUser();
+        this.supplementalInformationController = new SupplementalInformationController(context , request.getCredentials());
     }
 
     @Override
@@ -174,12 +184,40 @@ public class LoginAgentWorkerCommand extends AgentWorkerCommand implements Metri
         return true;
     }
 
+    private void progressiveLogin() throws Exception{
+        AuthenticationResponse response =
+                ((ProgressiveAuthAgent) agent)
+                        .login(
+                                new AuthenticationRequest(
+                                        AuthenticationStepConstants.STEP_INIT, null));
+        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
+            // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
+            // etc.
+            List<Field> fields = response.getFields();
+            Map<String, String> map =
+                    supplementalInformationController.askSupplementalInformation(
+                            fields.toArray(new Field[fields.size()]));
+            response =
+                    ((ProgressiveAuthAgent) agent)
+                            .login(
+                                    new AuthenticationRequest(
+                                            response.getStep(),
+                                            new ArrayList<>(map.values())));
+        }
+    }
+
     private AgentWorkerCommandResult login() throws Exception {
         ArrayList<Context> loginTimerContext = state.getTimerContexts(state.LOGIN_TIMER_NAME, credentials.getType());
         MetricAction action = metrics.buildAction(metricForAction(MetricName.LOGIN));
 
         try {
-            if (agent.login()) {
+            // TODO auth: temporarily use the annotation to filter agents that are migrated to use new Auth flow
+            if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
+                progressiveLogin();
+                action.completed();
+                return AgentWorkerCommandResult.CONTINUE;
+            }
+            else if (agent.login()) {
                 action.completed();
                 return AgentWorkerCommandResult.CONTINUE;
             } else {

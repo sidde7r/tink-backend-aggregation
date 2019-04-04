@@ -16,13 +16,19 @@ import se.tink.backend.aggregation.agents.AgentClassFactory;
 import se.tink.backend.aggregation.agents.AgentFactory;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
 import se.tink.backend.aggregation.agents.PersistentLogin;
+import se.tink.backend.aggregation.agents.ProgressiveAuthAgent;
 import se.tink.backend.aggregation.agents.RefreshExecutorUtils;
 import se.tink.backend.aggregation.agents.TransferExecutor;
 import se.tink.backend.aggregation.agents.TransferExecutorNxgen;
+import se.tink.backend.aggregation.annotations.ProgressiveAuth;
 import se.tink.backend.aggregation.configuration.AbstractConfigurationBase;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfigurationWrapper;
 import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationResponse;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationStepConstants;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
 import se.tink.backend.aggregation.nxgen.framework.validation.AisValidator;
 import se.tink.backend.aggregation.nxgen.framework.validation.ValidatorFactory;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -35,6 +41,7 @@ import se.tink.libraries.user.rpc.UserProfile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -67,6 +74,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private final NewAgentTestContext context;
 
+
+    private final SupplementalInformationController supplementalInformationController;
+
     private AgentIntegrationTest(Builder builder) {
         this.provider = builder.getProvider();
         this.user = builder.getUser();
@@ -82,6 +92,9 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         this.validator = builder.validator;
 
         this.context = new NewAgentTestContext(user, credential, builder.getTransactionsToPrint());
+
+        this.supplementalInformationController = new SupplementalInformationController(context , credential);
+
     }
 
     private boolean loadCredentials() {
@@ -149,10 +162,37 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return true;
     }
 
+    private void progressiveLogin(Agent agent) throws Exception{
+        AuthenticationResponse response =
+                ((ProgressiveAuthAgent) agent)
+                        .login(
+                                new AuthenticationRequest(
+                                        AuthenticationStepConstants.STEP_INIT, null));
+        while (!AuthenticationStepConstants.STEP_FINALIZE.equals(response.getStep())) {
+            // TODO auth: think about cases other than supplemental info, e.g. bankid, redirect
+            // etc.
+            List<Field> fields = response.getFields();
+            Map<String, String> map =
+                    supplementalInformationController.askSupplementalInformation(
+                            fields.toArray(new Field[fields.size()]));
+            response =
+                    ((ProgressiveAuthAgent) agent)
+                            .login(
+                                    new AuthenticationRequest(
+                                            response.getStep(),
+                                            new ArrayList<>(map.values())));
+        }
+    }
+
     private void login(Agent agent) throws Exception {
         if (isLoggedIn(agent)) {
             return;
         }
+        if (agent.getAgentClass().getAnnotation(ProgressiveAuth.class) != null) {
+            progressiveLogin(agent);
+            return;
+        }
+
         boolean loginSuccessful = agent.login();
         Assert.assertTrue("Agent could not login successfully.", loginSuccessful);
     }

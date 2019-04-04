@@ -2,20 +2,22 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import java.io.File;
-import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.IngCardReaderAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.controller.IngCardReaderAuthenticationController;
+import se.tink.backend.aggregation.configuration.ProviderConfig;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationController;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
+
+import java.io.File;
+import java.io.IOException;
+
 import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -69,7 +71,7 @@ public class IngTwoFactorAuthenticatorTest {
 
         new IngCardReaderAuthenticationController(
                 authenticator,
-                new SupplementalInformationHelper(provider, supplementalInformationController)).authenticate(credentials);
+                new SupplementalInformationFormer(provider)).authenticate(credentials);
 
         assertFalse(persistentStorage.isEmpty());
     }
