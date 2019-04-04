@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.controllers;
 
 import com.google.inject.Inject;
-import javax.ws.rs.core.Response;
+import com.sun.jersey.api.client.ClientHandlerException;
 import se.tink.backend.aggregation.aggregationcontroller.ControllerWrapper;
 import se.tink.backend.aggregation.storage.database.providers.ControllerWrapperProvider;
 
@@ -14,9 +14,14 @@ public class ClusterConnectivityController {
         this.controllerWrapperProvider = controllerWrapperProvider;
     }
 
-    public Response checkConnectivity(String clusterId) {
+    public void checkConnectivity(String clusterId) throws AggregationControllerNotReachable {
         ControllerWrapper controllerWrapper =
                 controllerWrapperProvider.createControllerWrapper(clusterId);
-        return controllerWrapper.checkConnectivity();
+
+        try {
+            controllerWrapper.checkConnectivity();
+        } catch (ClientHandlerException e) {
+            throw new AggregationControllerNotReachable();
+        }
     }
 }
