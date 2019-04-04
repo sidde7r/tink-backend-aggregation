@@ -40,6 +40,7 @@ public abstract class BaseAccountEntity {
                         new Amount(
                                 balance.getAmount().getCurrency(),
                                 balance.getAmount().getContent()))
+                .setAlias(name)
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .addHolderName(ownerName)
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
@@ -54,6 +55,7 @@ public abstract class BaseAccountEntity {
                         new Amount(
                                 balance.getAmount().getCurrency(),
                                 balance.getAmount().getContent()))
+                .setAlias(name)
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .addHolderName(ownerName)
                 .putInTemporaryStorage(StorageKeys.ACCOUNT_ID, accountId)
