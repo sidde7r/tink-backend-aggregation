@@ -117,6 +117,6 @@ public interface AggregationService {
     @GET
     @Path("connectivity/{clusterId}")
     @TeamOwnership(Team.INTEGRATION)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response checkConnectivity(@PathParam("clusterId") String clusterId);
+    @Produces(MediaType.TEXT_PLAIN)
+    String checkConnectivity(@PathParam("clusterId") String clusterId);
 }

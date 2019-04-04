@@ -11,10 +11,10 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.aggregation.controllers.ClusterConnectivityController;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
+import se.tink.backend.aggregation.controllers.ClusterConnectivityController;
 import se.tink.backend.aggregation.controllers.SupplementalInformationController;
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
@@ -199,12 +199,12 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public Response checkConnectivity(String clusterId) {
+    public String checkConnectivity(String clusterId) {
         try {
             clusterConnectivityController.checkConnectivity(clusterId);
         } catch (ClientHandlerException e) {
             HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
         }
-        return HttpResponseHelper.ok();
+        return "OK";
     }
 }
