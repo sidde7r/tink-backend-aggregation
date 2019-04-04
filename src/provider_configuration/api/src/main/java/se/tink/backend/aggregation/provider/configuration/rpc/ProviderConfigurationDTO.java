@@ -20,6 +20,11 @@ import java.util.Set;
 
 // FIXME: remove all code that has JSON IGNORE
 public class ProviderConfigurationDTO {
+
+    public enum AccessType {
+        OPEN_BANKING, OTHER
+    }
+
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {
     }
@@ -28,6 +33,7 @@ public class ProviderConfigurationDTO {
     private static class FieldsList extends ArrayList<Field> {
     }
 
+    private AccessType accessType;
     private String capabilitiesSerialized;
     private String className;
     private CredentialsTypes credentialsType;
@@ -54,6 +60,10 @@ public class ProviderConfigurationDTO {
     private boolean transactional;
     private ProviderTypes type;
     private String refreshScheduleSerialized;
+
+    public AccessType getAccessType() {
+        return accessType;
+    }
 
     @JsonProperty("capabilities")
     public Set<Capability> getCapabilities() {
@@ -171,6 +181,11 @@ public class ProviderConfigurationDTO {
 
     public boolean isTransactional() {
         return transactional;
+    }
+
+    public void setAccessType(
+            AccessType accessType) {
+        this.accessType = accessType;
     }
 
     @JsonProperty("capabilities")

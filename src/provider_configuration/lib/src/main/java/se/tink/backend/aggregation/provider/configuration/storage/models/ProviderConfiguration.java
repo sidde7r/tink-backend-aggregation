@@ -23,11 +23,16 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderConfiguration {
 
+    public enum AccessType {
+        OPEN_BANKING, OTHER
+    }
+
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
+    private AccessType accessType;
     private String capabilitiesSerialized;
     private String className;
     private CredentialsTypes credentialsType;
@@ -81,6 +86,10 @@ public class ProviderConfiguration {
             return false;
         }
         return true;
+    }
+
+    public AccessType getAccessType() {
+        return accessType;
     }
 
     @JsonProperty("capabilities")
@@ -207,6 +216,11 @@ public class ProviderConfiguration {
 
     public boolean isTransactional() {
         return transactional;
+    }
+
+    public void setAccessType(
+            AccessType accessType) {
+        this.accessType = accessType;
     }
 
     @JsonProperty("capabilities")
