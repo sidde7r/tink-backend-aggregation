@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.authenticator.StarlingAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling.configuration.StarlingConfiguration;
@@ -33,6 +35,7 @@ import java.util.Optional;
 
 /** Starling documentation is available at https://api-sandbox.starlingbank.com/api/swagger.yaml */
 public class StarlingAgent extends NextGenerationAgent {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StarlingAgent.class);
     private final String clientName;
     private final StarlingApiClient apiClient;
 
@@ -129,6 +132,7 @@ public class StarlingAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransferDestinationRefreshController>
             constructTransferDestinationRefreshController() {
+        LOGGER.info("Creating TransferDestinationRefreshController");
         return Optional.of(
                 new TransferDestinationRefreshController(
                         metricRefreshController,
@@ -142,6 +146,7 @@ public class StarlingAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferController> constructTransferController() {
+        LOGGER.info("Creating TransferController");
         return Optional.of(
                 new TransferController(
                         null,
