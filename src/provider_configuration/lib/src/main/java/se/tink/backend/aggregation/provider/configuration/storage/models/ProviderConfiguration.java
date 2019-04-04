@@ -35,6 +35,8 @@ public class ProviderConfiguration {
     private String displayName;
     @JsonProperty("fields")
     private String fieldsSerialized;
+    private String financialInstituteId;
+    private String financialInstituteName;
     @JsonProperty("supplementalFields")
     private String supplementalFieldsSerialized;
     private String groupDisplayName;
@@ -132,6 +134,14 @@ public class ProviderConfiguration {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public String getFinancialInstituteId() {
+        return financialInstituteId;
+    }
+
+    public String getFinancialInstituteName() {
+        return financialInstituteName;
     }
 
     public String getTutorialUrl() {
@@ -234,6 +244,14 @@ public class ProviderConfiguration {
 
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
+    }
+
+    public void setFinancialInstituteId(String financialInstituteId) {
+        this.financialInstituteId = financialInstituteId;
+    }
+
+    public void setFinancialInstituteName(String financialInstituteName) {
+        this.financialInstituteName = financialInstituteName;
     }
 
     public void setSupplementalFields(List<Field> fields) {

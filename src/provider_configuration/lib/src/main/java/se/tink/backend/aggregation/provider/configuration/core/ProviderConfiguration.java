@@ -33,6 +33,8 @@ public class ProviderConfiguration {
     private String currency;
     private String displayName;
     private String fieldsSerialized;
+    private String financialInstituteId;
+    private String financialInstituteName;
     private String supplementalFieldsSerialized;
     private String groupDisplayName;
     private String market;
@@ -128,6 +130,14 @@ public class ProviderConfiguration {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public String getFinancialInstituteId() {
+        return financialInstituteId;
+    }
+
+    public String getFinancialInstituteName() {
+        return financialInstituteName;
     }
 
     public String getGroupDisplayName() {
@@ -230,6 +240,14 @@ public class ProviderConfiguration {
 
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
+    }
+
+    public void setFinancialInstituteId(String financialInstituteId) {
+        this.financialInstituteId = financialInstituteId;
+    }
+
+    public void setFinancialInstituteName(String financialInstituteName) {
+        this.financialInstituteName = financialInstituteName;
     }
 
     public void setGroupDisplayName(String groupDisplayName) {
