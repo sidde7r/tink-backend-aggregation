@@ -85,7 +85,7 @@ public final class NordnetAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new NordnetSessionHandler(apiClient, sessionStorage);
+        return SessionHandler.alwaysFail();
     }
 
     @Override
