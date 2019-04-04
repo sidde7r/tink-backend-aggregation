@@ -23,11 +23,9 @@ public class FetchTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions != null
-            ? transactions.stream()
-            .map(TransactionsEntity::toTinkTransaction)
-            .collect(Collectors.toList())
-            : Collections.emptyList();
+        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+                .map(TransactionsEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     @Override
