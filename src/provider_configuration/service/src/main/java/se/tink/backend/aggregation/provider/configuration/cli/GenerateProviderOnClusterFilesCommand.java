@@ -18,7 +18,7 @@ import se.tink.backend.aggregation.provider.configuration.cli.util.ProviderConfi
 import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
-import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigWrapper;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderSpecificationModel;
 
 import java.io.File;
@@ -161,7 +161,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
                                                             Map<String, Map<String, ProviderConfiguration>>
                                                                     providerConfigurationByMarket)
             throws IOException, IllegalStateException {
-        ProviderConfigModel providerConfig = mapper.readValue(providerFile, ProviderConfigModel.class);
+        ProviderConfigWrapper providerConfig = mapper.readValue(providerFile, ProviderConfigWrapper.class);
 
         String currency = providerConfig.getCurrency();
         String market = providerConfig.getMarket();

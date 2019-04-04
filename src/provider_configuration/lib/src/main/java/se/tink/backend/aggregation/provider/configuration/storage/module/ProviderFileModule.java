@@ -2,8 +2,6 @@ package se.tink.backend.aggregation.provider.configuration.storage.module;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
@@ -15,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.AgentCapabilitiesMapModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
-import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigModel;
+import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigWrapper;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderSpecificationModel;
 
 
@@ -217,7 +215,7 @@ public class ProviderFileModule extends AbstractModule {
 
     private void parseProviderConfigurations(File providerFile, Map<String, ProviderConfiguration> providerConfigurationByProviderName)
             throws IOException, IllegalStateException {
-        ProviderConfigModel providerConfig = mapper.readValue(providerFile, ProviderConfigModel.class);
+        ProviderConfigWrapper providerConfig = mapper.readValue(providerFile, ProviderConfigWrapper.class);
 
         String currency = providerConfig.getCurrency();
         String market = providerConfig.getMarket();

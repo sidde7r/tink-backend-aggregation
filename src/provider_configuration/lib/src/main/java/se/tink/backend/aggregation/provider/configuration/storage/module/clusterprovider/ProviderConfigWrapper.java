@@ -10,7 +10,7 @@ import java.util.List;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProviderConfigModel {
+public class ProviderConfigWrapper {
     private String market;
     private String currency;
     private List<ProviderConfiguration> providers;
