@@ -23,20 +23,21 @@ public class BbvaTransactionalAccountFetcher implements AccountFetcher<Transacti
     public Collection<TransactionalAccount> fetchAccounts() {
         return apiClient.fetchAccounts().getData().getAccounts().stream()
                 .filter(this::isCheckingAccount)
-                .map(
-                        accountEntity -> {
-                            BbvaDetailedAccountResponse bbvaDetailedAccountResponse =
-                                    apiClient.fetchAccountDetails(accountEntity.getId());
-
-                            return bbvaDetailedAccountResponse.toTinkAccount();
-                        })
+                .map(this::enrichAccountWithDetails)
                 .collect(Collectors.toList());
+    }
+
+    private TransactionalAccount enrichAccountWithDetails(AccountEntity account) {
+        final BbvaDetailedAccountResponse bbvaDetailedAccountResponse =
+                apiClient.fetchAccountDetails(account.getId());
+
+        return bbvaDetailedAccountResponse.toTinkAccount();
     }
 
     private boolean isCheckingAccount(AccountEntity account) {
         return BbvaConstants.ACCOUNT_TYPE_MAPPER
                 .translate(account.getType())
-                .map(item -> item == AccountTypes.CHECKING)
+                .map(AccountTypes.CHECKING::equals)
                 .orElse(false);
     }
 }
