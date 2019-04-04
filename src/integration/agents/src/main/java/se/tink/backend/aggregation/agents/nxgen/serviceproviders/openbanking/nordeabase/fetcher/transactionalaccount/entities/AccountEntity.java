@@ -79,10 +79,10 @@ public class AccountEntity {
                 .setUniqueIdentifier(getIban())
                 .setAccountNumber(getBban())
                 .setBalance(getAvailableBalance())
+                .setAlias(getBban())
                 .addAccountIdentifier(
                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .addHolderName(accountName)
-                .setAlias(getBban())
                 .setProductName(product)
                 .setApiIdentifier(id)
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
@@ -94,10 +94,10 @@ public class AccountEntity {
                 .setUniqueIdentifier(getIban())
                 .setAccountNumber(getBban())
                 .setBalance(getAvailableBalance())
+                .setAlias(getBban())
                 .addAccountIdentifier(
                         AccountIdentifier.create(AccountIdentifier.Type.IBAN, getIban()))
                 .addHolderName(accountName)
-                .setAlias(getBban())
                 .setProductName(product)
                 .setApiIdentifier(id)
                 .putInTemporaryStorage(NordeaBaseConstants.StorageKeys.ACCOUNT_ID, id)
