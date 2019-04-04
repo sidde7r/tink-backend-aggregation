@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation;
+package se.tink.backend.aggregation.controllers;
 
 import com.google.inject.Inject;
 import javax.ws.rs.core.Response;
