@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc;
 
 import java.text.ParseException;
@@ -26,10 +25,8 @@ public class FetchTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return Stream.concat(
-            getBookedTransactions().stream(),
-            getPendingTransactions().stream()
-        ).collect(Collectors.toList());
+        return Stream.concat(getBookedTransactions().stream(), getPendingTransactions().stream())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -38,39 +35,33 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     }
 
     private List<Transaction> getBookedTransactions() {
-        return transactions
-            .getBooked()
-            .stream()
-            .map(this::toTinkTransaction)
-            .collect(Collectors.toList());
+        return transactions.getBooked().stream()
+                .map(this::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     private List<Transaction> getPendingTransactions() {
-        return transactions
-            .getPending()
-            .stream()
-            .map(this::toTinkTransaction)
-            .collect(Collectors.toList());
+        return transactions.getPending().stream()
+                .map(this::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     private Transaction toTinkTransaction(BookedEntity transaction) {
-        return Transaction
-            .builder()
-            .setPending(false)
-            .setDate(this.parseDate(transaction.getBookingDate()))
-            .setAmount(transaction.getTransactionAmount().toAmount())
-            .setDescription(transaction.getTransactionText())
-            .build();
+        return Transaction.builder()
+                .setPending(false)
+                .setDate(this.parseDate(transaction.getBookingDate()))
+                .setAmount(transaction.getTransactionAmount().toAmount())
+                .setDescription(transaction.getTransactionText())
+                .build();
     }
 
     private Transaction toTinkTransaction(PendingEntity transaction) {
-        return Transaction
-            .builder()
-            .setPending(true)
-            .setDate(this.parseDate(transaction.getBookingDate()))
-            .setAmount(transaction.getTransactionAmount().toAmount())
-            .setDescription(transaction.getTransactionText())
-            .build();
+        return Transaction.builder()
+                .setPending(true)
+                .setDate(this.parseDate(transaction.getBookingDate()))
+                .setAmount(transaction.getTransactionAmount().toAmount())
+                .setDescription(transaction.getTransactionText())
+                .build();
     }
 
     private Date parseDate(String date) {
@@ -82,5 +73,4 @@ public class FetchTransactionsResponse implements PaginatorResponse {
             throw new IllegalStateException("Cannot parse date", e);
         }
     }
-
 }

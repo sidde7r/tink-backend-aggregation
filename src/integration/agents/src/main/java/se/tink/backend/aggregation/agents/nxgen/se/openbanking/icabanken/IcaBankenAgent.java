@@ -29,15 +29,14 @@ public final class IcaBankenAgent extends NextGenerationAgent {
     private final IcaBankenApiClient apiClient;
 
     public IcaBankenAgent(
-        CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         apiClient = new IcaBankenApiClient(client, sessionStorage, persistentStorage);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -49,34 +48,37 @@ public final class IcaBankenAgent extends NextGenerationAgent {
         super.setConfiguration(configuration);
 
         final IcaBankenConfiguration sebConfiguration =
-            configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                    IcaBankenConstants.Market.INTEGRATION_NAME,
-                    IcaBankenConstants.Market.CLIENT_NAME,
-                    IcaBankenConfiguration.class)
-                .orElseThrow(() -> new IllegalStateException("ICA Banken configuration missing."));
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                IcaBankenConstants.Market.INTEGRATION_NAME,
+                                IcaBankenConstants.Market.CLIENT_NAME,
+                                IcaBankenConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "ICA Banken configuration missing."));
 
-        persistentStorage
-            .put(IcaBankenConstants.StorageKeys.BASE_URL, sebConfiguration.getBaseUrl());
+        persistentStorage.put(
+                IcaBankenConstants.StorageKeys.BASE_URL, sebConfiguration.getBaseUrl());
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         IcaBankenTransactionalAccountFetcher accountFetcher =
-            new IcaBankenTransactionalAccountFetcher(apiClient);
+                new IcaBankenTransactionalAccountFetcher(apiClient);
 
         IcaBankenTransactionFetcher transactionFetcher = new IcaBankenTransactionFetcher(apiClient);
 
         return Optional.of(
-            new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                    transactionPaginationHelper,
-                    new TransactionDatePaginationController<>(transactionFetcher))));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionDatePaginationController<>(transactionFetcher))));
     }
 
     @Override
@@ -101,7 +103,7 @@ public final class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

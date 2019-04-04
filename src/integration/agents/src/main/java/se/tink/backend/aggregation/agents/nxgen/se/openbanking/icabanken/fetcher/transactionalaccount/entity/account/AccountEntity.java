@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.account;
 
 import java.util.List;
@@ -21,24 +20,22 @@ public class AccountEntity {
     private String resourceId;
 
     public TransactionalAccount toTinkModel() {
-        return CheckingAccount
-            .builder()
-            .setUniqueIdentifier(iban)
-            .setAccountNumber(iban)
-            .setBalance(getBalance())
-            .addAccountIdentifier(new IbanIdentifier(iban))
-            .addHolderName(name)
-            .setAlias(name)
-            .setApiIdentifier(resourceId)
-            .build();
+        return CheckingAccount.builder()
+                .setUniqueIdentifier(iban)
+                .setAccountNumber(iban)
+                .setBalance(getBalance())
+                .addAccountIdentifier(new IbanIdentifier(iban))
+                .addHolderName(name)
+                .setAlias(name)
+                .setApiIdentifier(resourceId)
+                .build();
     }
 
     private Amount getBalance() {
-        return this.balances
-            .stream()
-            .filter(BalanceEntity::isInterimAvailable)
-            .findFirst()
-            .map(BalanceEntity::getAmount)
-            .orElseGet(() -> new Amount(currency, 0));
+        return this.balances.stream()
+                .filter(BalanceEntity::isInterimAvailable)
+                .findFirst()
+                .map(BalanceEntity::getAmount)
+                .orElseGet(() -> new Amount(currency, 0));
     }
 }

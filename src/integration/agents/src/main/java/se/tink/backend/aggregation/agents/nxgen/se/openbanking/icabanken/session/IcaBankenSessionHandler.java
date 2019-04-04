@@ -12,8 +12,7 @@ public final class IcaBankenSessionHandler implements SessionHandler {
     private final IcaBankenApiClient apiClient;
     private final SessionStorage sessionStorage;
 
-    public IcaBankenSessionHandler(IcaBankenApiClient apiClient,
-        SessionStorage sessionStorage) {
+    public IcaBankenSessionHandler(IcaBankenApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }

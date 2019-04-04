@@ -7,8 +7,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class IcaBankenConfiguration implements ClientConfiguration {
 
-    @JsonProperty
-    private String baseUrl;
+    @JsonProperty private String baseUrl;
 
     public String getBaseUrl() {
         return baseUrl;

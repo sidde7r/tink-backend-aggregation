@@ -15,8 +15,8 @@ public class IcaBankenTransactionFetcher implements TransactionDatePaginator<Tra
     }
 
     @Override
-    public PaginatorResponse getTransactionsFor(TransactionalAccount account, Date fromDate,
-        Date toDate) {
+    public PaginatorResponse getTransactionsFor(
+            TransactionalAccount account, Date fromDate, Date toDate) {
         return apiClient.fetchTransactionsForAccount(account.getApiIdentifier(), fromDate, toDate);
     }
 }

@@ -19,8 +19,10 @@ public final class IcaBankenApiClient {
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;
 
-    public IcaBankenApiClient(TinkHttpClient client, SessionStorage sessionStorage,
-        PersistentStorage persistentStorage) {
+    public IcaBankenApiClient(
+            TinkHttpClient client,
+            SessionStorage sessionStorage,
+            PersistentStorage persistentStorage) {
         this.client = client;
         this.sessionStorage = sessionStorage;
         this.persistentStorage = persistentStorage;
@@ -28,13 +30,12 @@ public final class IcaBankenApiClient {
 
     private RequestBuilder createRequest(URL url) {
         return client.request(url)
-            .accept(MediaType.APPLICATION_JSON)
-            .type(MediaType.APPLICATION_JSON);
+                .accept(MediaType.APPLICATION_JSON)
+                .type(MediaType.APPLICATION_JSON);
     }
 
     private RequestBuilder createRequestInSession(URL url) {
-        return createRequest(url)
-            .header("authToken", "123");
+        return createRequest(url).header("authToken", "123");
     }
 
     public FetchAccountsResponse fetchAccounts() {
@@ -42,25 +43,27 @@ public final class IcaBankenApiClient {
         URL requestUrl = baseUrl.concatWithSeparator(IcaBankenConstants.Urls.ACCOUNTS_PATH);
 
         return createRequest(requestUrl)
-            .queryParam(IcaBankenConstants.QueryKeys.WITH_BALANCE, "true")
-            .get(FetchAccountsResponse.class);
-
+                .queryParam(IcaBankenConstants.QueryKeys.WITH_BALANCE, "true")
+                .get(FetchAccountsResponse.class);
     }
 
-    public FetchTransactionsResponse fetchTransactionsForAccount(String apiIdentifier, Date fromDate,
-        Date toDate) {
+    public FetchTransactionsResponse fetchTransactionsForAccount(
+            String apiIdentifier, Date fromDate, Date toDate) {
         URL baseUrl = new URL(persistentStorage.get(IcaBankenConstants.StorageKeys.BASE_URL));
-        URL requestUrl = baseUrl.concatWithSeparator(Urls.TRANSACTIONS_PATH)
-            .parameter(IcaBankenConstants.Account.ACCOUNT_ID, apiIdentifier);
+        URL requestUrl =
+                baseUrl.concatWithSeparator(Urls.TRANSACTIONS_PATH)
+                        .parameter(IcaBankenConstants.Account.ACCOUNT_ID, apiIdentifier);
 
         return createRequest(requestUrl)
-            .queryParam(IcaBankenConstants.QueryKeys.DATE_FROM,
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-            .queryParam(IcaBankenConstants.QueryKeys.DATE_TO,
-                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-            .queryParam(IcaBankenConstants.QueryKeys.STATUS, IcaBankenConstants.QueryValues.STATUS)
-            .header(IcaBankenConstants.HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
-            .get(FetchTransactionsResponse.class);
+                .queryParam(
+                        IcaBankenConstants.QueryKeys.DATE_FROM,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(
+                        IcaBankenConstants.QueryKeys.DATE_TO,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .queryParam(
+                        IcaBankenConstants.QueryKeys.STATUS, IcaBankenConstants.QueryValues.STATUS)
+                .header(IcaBankenConstants.HeaderKeys.REQUEST_ID, UUID.randomUUID().toString())
+                .get(FetchTransactionsResponse.class);
     }
 }
-

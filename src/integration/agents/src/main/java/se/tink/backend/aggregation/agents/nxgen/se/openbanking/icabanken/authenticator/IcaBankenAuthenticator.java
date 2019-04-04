@@ -8,7 +8,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticato
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-
 public class IcaBankenAuthenticator implements Authenticator {
 
     private final IcaBankenApiClient apiClient;
@@ -21,7 +20,7 @@ public class IcaBankenAuthenticator implements Authenticator {
 
     @Override
     public void authenticate(Credentials credentials)
-        throws AuthenticationException, AuthorizationException {
+            throws AuthenticationException, AuthorizationException {
         throw new NotImplementedException("authenticate not implemented");
     }
 }

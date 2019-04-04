@@ -7,7 +7,7 @@ public abstract class IcaBankenConstants {
         private static String BASE_URL = "accounts/1.0.0";
         public static final String ACCOUNTS_PATH = BASE_URL + "/Accounts";
         public static final String TRANSACTIONS_PATH =
-            BASE_URL + "/Accounts/{accountId}/transactions";
+                BASE_URL + "/Accounts/{accountId}/transactions";
     }
 
     public static class StorageKeys {
@@ -34,17 +34,11 @@ public abstract class IcaBankenConstants {
         public static final String REQUEST_ID = "X-Request-ID";
     }
 
-    public static class FormKeys {
+    public static class FormKeys {}
 
-    }
+    public static class FormValues {}
 
-    public static class FormValues {
-
-    }
-
-    public static class LogTags {
-
-    }
+    public static class LogTags {}
 
     public class Market {
 

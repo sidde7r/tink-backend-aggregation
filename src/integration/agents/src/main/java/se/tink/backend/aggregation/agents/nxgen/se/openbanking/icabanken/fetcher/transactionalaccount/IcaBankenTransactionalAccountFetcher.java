@@ -10,8 +10,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
-public class IcaBankenTransactionalAccountFetcher
-    implements AccountFetcher<TransactionalAccount> {
+public class IcaBankenTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
 
     private final IcaBankenApiClient apiClient;
 
@@ -22,10 +21,8 @@ public class IcaBankenTransactionalAccountFetcher
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         FetchAccountsResponse res = apiClient.fetchAccounts();
-        return res
-            .getAccounts()
-            .stream()
-            .map(AccountEntity::toTinkModel)
-            .collect(Collectors.toList());
+        return res.getAccounts().stream()
+                .map(AccountEntity::toTinkModel)
+                .collect(Collectors.toList());
     }
 }
