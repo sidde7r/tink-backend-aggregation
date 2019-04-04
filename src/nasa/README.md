@@ -8,7 +8,7 @@ What is this service used for?
 ## Running NASA locally with Kubernetes:
 1. In the terminal run: `eval $(minikube docker-env)` (https://stackoverflow.com/a/42564211)
 2. In the same terminal window run: `bazel run //src/nasa/service:docker`
-3. Standing in `tink-backend-aggregation` run: `../tink-infrastructure/kubernetes-generator/kubernetes-generator.sh --cluster local --environment development --chart tink-backend-notifying-aggregation-service-asserter --repo /Users/larsalmgren/src/tink-backend-aggregation/ | kubectl apply -f-`
+3. From `tink-backend-aggregation` run: `../tink-infrastructure/kubernetes-generator/kubernetes-generator.sh --cluster local --environment development --chart tink-backend-notifying-aggregation-service-asserter --repo /Users/larsalmgren/src/tink-backend-aggregation/ | kubectl apply -f-`
 
 If you do any updates to the Java code you’ll need to build the image again (step two).
 To get the latest image running in Kubernets you can do,
