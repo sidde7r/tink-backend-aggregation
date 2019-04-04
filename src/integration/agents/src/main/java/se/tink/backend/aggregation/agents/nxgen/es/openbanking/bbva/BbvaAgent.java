@@ -71,11 +71,11 @@ public final class BbvaAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-
-        BbvaAuthenticator authenticator = new BbvaAuthenticator(apiClient);
-        OAuth2AuthenticationController oAuth2AuthenticationController =
+        final BbvaAuthenticator authenticator = new BbvaAuthenticator(apiClient);
+        final OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage, supplementalInformationHelper, authenticator);
+
         return new AutoAuthenticationController(
                 request,
                 context,
@@ -87,10 +87,9 @@ public final class BbvaAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        BbvaTransactionalAccountFetcher accountFetcher =
+        final BbvaTransactionalAccountFetcher accountFetcher =
                 new BbvaTransactionalAccountFetcher(apiClient);
-
-        BbvaTransactionFetcher transactionFetcher = new BbvaTransactionFetcher(apiClient);
+        final BbvaTransactionFetcher transactionFetcher = new BbvaTransactionFetcher(apiClient);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
