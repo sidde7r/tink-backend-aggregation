@@ -1,9 +1,9 @@
-
 package se.tink.backend.aggregation.agents.nxgen.no.openbanking.sparebank1.fetcher.transactionalaccount.rpc;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,10 +21,8 @@ public class GetTransactionsResponse {
     private List<TransactionEntity> transactions;
 
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions != null ?
-                transactions.stream()
-                        .map(TransactionEntity::toTinkTransaction)
-                        .collect(Collectors.toList()) :
-                Collections.emptyList();
+        return Optional.ofNullable(transactions).orElse(Collections.emptyList()).stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 }

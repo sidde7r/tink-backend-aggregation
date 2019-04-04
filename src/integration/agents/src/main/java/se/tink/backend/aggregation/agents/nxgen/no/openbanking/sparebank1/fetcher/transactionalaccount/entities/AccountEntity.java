@@ -37,19 +37,6 @@ public class AccountEntity {
     private String type;
 
     public TransactionalAccount toTinkAccount() {
-        Optional<AccountTypes> accountType =
-                SpareBank1Constants.ACCOUNT_TYPE_MAPPER.translate(type);
-        if (!accountType.isPresent()) {
-            throw new IllegalStateException("Unknown account type.");
-        }
-
-        if (accountType.get().equals(AccountTypes.CHECKING)) {
-            return parseCheckingAccount();
-        }
-        throw new IllegalStateException("Unknown account type.");
-    }
-
-    private TransactionalAccount parseCheckingAccount() {
         return CheckingAccount.builder()
                 .setUniqueIdentifier(iban)
                 .setAccountNumber(accountNumber.getValue())
@@ -60,5 +47,12 @@ public class AccountEntity {
                 .setApiIdentifier(id)
                 .putInTemporaryStorage(SpareBank1Constants.StorageKeys.ACCOUNT_ID, id)
                 .build();
+    }
+
+    public boolean isCheckingAccount() {
+        return SpareBank1Constants.ACCOUNT_TYPE_MAPPER
+                .translate(type)
+                .get()
+                .equals(AccountTypes.CHECKING);
     }
 }
