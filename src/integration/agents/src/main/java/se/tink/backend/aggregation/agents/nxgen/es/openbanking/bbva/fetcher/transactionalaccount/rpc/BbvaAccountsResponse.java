@@ -5,7 +5,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.tran
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class BBVAAccountsResponse {
+public class BbvaAccountsResponse {
     private ResultEntity result;
     private AccountDataEntity data;
 

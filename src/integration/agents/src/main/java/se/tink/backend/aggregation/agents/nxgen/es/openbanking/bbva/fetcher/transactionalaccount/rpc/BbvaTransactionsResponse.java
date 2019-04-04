@@ -12,7 +12,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
-public class BBVATransactionsResponse implements PaginatorResponse {
+public class BbvaTransactionsResponse implements PaginatorResponse {
     private ResultEntity result;
     private TransactionDataEntity data;
     private PaginationEntity pagination;

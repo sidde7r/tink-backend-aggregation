@@ -2,11 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.authenticator.BBVAAuthenticator;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.configuration.BBVAConfiguration;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.BBVATransactionFetcher;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.BBVATransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.session.BBVASessionHandler;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.authenticator.BbvaAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.configuration.BbvaConfiguration;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.BbvaTransactionFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.BbvaTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.session.BbvaSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -27,43 +27,43 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-public final class BBVAAgent extends NextGenerationAgent {
-    private final BBVAApiClient apiClient;
+public final class BbvaAgent extends NextGenerationAgent {
+    private final BbvaApiClient apiClient;
 
-    public BBVAAgent(
+    public BbvaAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new BBVAApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new BbvaApiClient(client, sessionStorage, persistentStorage);
     }
 
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        final BBVAConfiguration bbvaConfiguration =
+        final BbvaConfiguration bbvaConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
-                                BBVAConstants.Market.INTEGRATION_NAME,
-                                BBVAConstants.Market.CLIENT_NAME,
-                                BBVAConfiguration.class)
+                                BbvaConstants.Market.INTEGRATION_NAME,
+                                BbvaConstants.Market.CLIENT_NAME,
+                                BbvaConfiguration.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                BBVAConstants.Exceptions.MISSING_CONFIGURATION));
+                                                BbvaConstants.Exceptions.MISSING_CONFIGURATION));
         if (!bbvaConfiguration.isValid()) {
-            throw new IllegalStateException(BBVAConstants.Exceptions.INVALID_CONFIGURATION);
+            throw new IllegalStateException(BbvaConstants.Exceptions.INVALID_CONFIGURATION);
         }
 
         persistentStorage.put(
-                BBVAConstants.StorageKeys.BASE_AUTH_URL, bbvaConfiguration.getBaseAuthUrl());
+                BbvaConstants.StorageKeys.BASE_AUTH_URL, bbvaConfiguration.getBaseAuthUrl());
         persistentStorage.put(
-                BBVAConstants.StorageKeys.BASE_API_URL, bbvaConfiguration.getBaseApiUrl());
-        persistentStorage.put(BBVAConstants.StorageKeys.CLIENT_ID, bbvaConfiguration.getClientId());
+                BbvaConstants.StorageKeys.BASE_API_URL, bbvaConfiguration.getBaseApiUrl());
+        persistentStorage.put(BbvaConstants.StorageKeys.CLIENT_ID, bbvaConfiguration.getClientId());
         persistentStorage.put(
-                BBVAConstants.StorageKeys.CLIENT_SECRET, bbvaConfiguration.getClientSecret());
+                BbvaConstants.StorageKeys.CLIENT_SECRET, bbvaConfiguration.getClientSecret());
         persistentStorage.put(
-                BBVAConstants.StorageKeys.REDIRECT_URI, bbvaConfiguration.getRedirectUrl());
+                BbvaConstants.StorageKeys.REDIRECT_URI, bbvaConfiguration.getRedirectUrl());
     }
 
     @Override
@@ -72,7 +72,7 @@ public final class BBVAAgent extends NextGenerationAgent {
     @Override
     protected Authenticator constructAuthenticator() {
 
-        BBVAAuthenticator authenticator = new BBVAAuthenticator(apiClient);
+        BbvaAuthenticator authenticator = new BbvaAuthenticator(apiClient);
         OAuth2AuthenticationController oAuth2AuthenticationController =
                 new OAuth2AuthenticationController(
                         persistentStorage, supplementalInformationHelper, authenticator);
@@ -87,10 +87,10 @@ public final class BBVAAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        BBVATransactionalAccountFetcher accountFetcher =
-                new BBVATransactionalAccountFetcher(apiClient);
+        BbvaTransactionalAccountFetcher accountFetcher =
+                new BbvaTransactionalAccountFetcher(apiClient);
 
-        BBVATransactionFetcher transactionFetcher = new BBVATransactionFetcher(apiClient);
+        BbvaTransactionFetcher transactionFetcher = new BbvaTransactionFetcher(apiClient);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(
@@ -100,7 +100,7 @@ public final class BBVAAgent extends NextGenerationAgent {
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionPagePaginationController<>(
-                                        transactionFetcher, BBVAConstants.Pagination.START_PAGE))));
+                                        transactionFetcher, BbvaConstants.Pagination.START_PAGE))));
     }
 
     @Override
@@ -131,7 +131,7 @@ public final class BBVAAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new BBVASessionHandler(apiClient, sessionStorage);
+        return new BbvaSessionHandler(apiClient, sessionStorage);
     }
 
     @Override

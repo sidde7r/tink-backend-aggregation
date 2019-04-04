@@ -8,14 +8,14 @@ import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BBVAConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
-public class BBVAConfiguration implements ClientConfiguration {
+public class BbvaConfiguration implements ClientConfiguration {
     @JsonIgnore
-    private static final Logger logger = LoggerFactory.getLogger(BBVAConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(BbvaConfiguration.class);
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
     @JsonProperty private String redirectUrl;
@@ -73,8 +73,8 @@ public class BBVAConfiguration implements ClientConfiguration {
             }
 
             logger.error(
-                    BBVAConstants.Exceptions.MISSING_CONFIGURATION_LOG,
-                    BBVAConstants.LogTags.MISSING_CONFIGURATION,
+                    BbvaConstants.Exceptions.MISSING_CONFIGURATION_LOG,
+                    BbvaConstants.LogTags.MISSING_CONFIGURATION,
                     Arrays.toString(list.toArray()));
             return false;
         }

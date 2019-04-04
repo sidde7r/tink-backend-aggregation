@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 @JsonObject
-public class BBVADetailedAccountResponse {
+public class BbvaDetailedAccountResponse {
     private ResultEntity result;
     private DetailedDataEntity data;
 

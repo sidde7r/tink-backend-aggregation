@@ -6,7 +6,7 @@ import org.junit.Test;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore
-public class BBVAAgentTest {
+public class BbvaAgentTest {
 
   private AgentIntegrationTest.Builder builder;
 

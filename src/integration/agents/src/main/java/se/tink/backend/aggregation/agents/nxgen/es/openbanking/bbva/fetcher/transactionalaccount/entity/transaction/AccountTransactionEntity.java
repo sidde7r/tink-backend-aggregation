@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BBVAConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
@@ -33,7 +33,7 @@ public class AccountTransactionEntity {
 
     public Date getValueDate() {
         try {
-            return new SimpleDateFormat(BBVAConstants.Formats.TRANSACTION_DATE_FORMAT)
+            return new SimpleDateFormat(BbvaConstants.Formats.TRANSACTION_DATE_FORMAT)
                     .parse(valueDate);
         } catch (ParseException e) {
             throw new IllegalStateException(e);
