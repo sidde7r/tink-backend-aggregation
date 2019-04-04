@@ -14,16 +14,16 @@ public class AuthorizationEntity {
 
     public String toString() {
         return IngConstants.Signature.KEY_ID_NAME
-            + "\""
-            + clientId
-            + "\","
-            + IngConstants.Signature.ALGORITHM
-            + ","
-            + IngConstants.Signature.HEADERS
-            + ","
-            + IngConstants.Signature.SIGNATURE_NAME
-            + "\""
-            + signature
-            + "\"";
+                + "\""
+                + clientId
+                + "\","
+                + IngConstants.Signature.ALGORITHM
+                + ","
+                + IngConstants.Signature.HEADERS
+                + ","
+                + IngConstants.Signature.SIGNATURE_NAME
+                + "\""
+                + signature
+                + "\"";
     }
 }

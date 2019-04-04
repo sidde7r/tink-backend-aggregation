@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 public final class IngConstants {
 
     public static class Urls {
-
         public static final String ACCOUNTS = "/v2/accounts";
         private static final String BASE_AUTH = "/oauth2";
         public static final String OAUTH = BASE_AUTH + "/authorization-server-url";
@@ -11,11 +10,11 @@ public final class IngConstants {
     }
 
     public static class StorageKeys {
-
         public static final String BASE_URL = "BASE_URL";
         public static final String CLIENT_ID = "CLIENT_ID";
         public static final String CLIENT_SIGNING_KEY_PATH = "CLIENT_SIGNING_KEY_PATH";
-        public static final String CLIENT_SIGNING_CERTIFICATE_PATH = "CLIENT_SIGNING_CERTIFICATE_PATH";
+        public static final String CLIENT_SIGNING_CERTIFICATE_PATH =
+                "CLIENT_SIGNING_CERTIFICATE_PATH";
         public static final String REDIRECT_URL = "REDIRECT_URL";
         public static final String TOKEN = "TOKEN";
         public static final String ACCOUNT_ID = "ACCOUNT_ID";
@@ -24,7 +23,6 @@ public final class IngConstants {
     }
 
     public static class QueryKeys {
-
         public static final String SCOPE = "scope";
         public static final String COUNTRY_CODE = "country_code";
         public static final String REDIRECT_URI = "redirect_uri";
@@ -33,12 +31,10 @@ public final class IngConstants {
     }
 
     public static class QueryValues {
-
         public static final String DATE_FORMAT = "yyyy-MM-dd";
     }
 
     public static class HeaderKeys {
-
         public static final String DIGEST = "Digest";
         public static final String DATE = "Date";
         public static final String X_ING_REQUEST_ID = "X-ING-ReqID";
@@ -48,7 +44,6 @@ public final class IngConstants {
     }
 
     public static class FormKeys {
-
         public static final String GRANT_TYPE = "grant_type";
         public static final String CODE = "code";
         public static final String REDIRECT_URI = "redirect_uri";
@@ -56,7 +51,6 @@ public final class IngConstants {
     }
 
     public static class FormValues {
-
         public static final String CLIENT_CREDENTIALS = "client_credentials";
         public static final String AUTHORIZATION_CODE = "authorization_code";
         public static final String REFRESH_TOKEN = "refresh_token";
@@ -64,7 +58,6 @@ public final class IngConstants {
     }
 
     public static class Signature {
-
         public static final String SIGNING_STRING = "(request-target): ";
         public static final String DATE = "date: ";
         public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss 'GMT'";
@@ -83,13 +76,11 @@ public final class IngConstants {
     }
 
     public static class Market {
-
         public static final String INTEGRATION_NAME = "ing";
         public static final String CLIENT_NAME = "tink";
     }
 
     public static class BalanceTypes {
-
         public static final String EXPECTED = "expected";
         public static final String INTERIM_BOOKED = "interimBooked";
         public static final String CLOSING_BOOKED = "closingBooked";

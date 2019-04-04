@@ -19,10 +19,11 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class FetchTransactionsResponse implements PaginatorResponse {
 
     private TransactionsEntity transactions;
+
     @JsonProperty("_links")
     private LinkEntity links;
-    @JsonIgnore
-    private Function<String, FetchTransactionsResponse> fetchNextConsumer;
+
+    @JsonIgnore private Function<String, FetchTransactionsResponse> fetchNextConsumer;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {

@@ -19,7 +19,10 @@ public class IngAccountsFetcher implements AccountFetcher<TransactionalAccount> 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
         return client.fetchAccounts().getAccounts(currency).stream()
-            .map(a -> a.toTinkAccount(client.fetchBalances(a).getBalanceAmount(a.getCurrency())))
-            .collect(Collectors.toList());
+                .map(
+                        a ->
+                                a.toTinkAccount(
+                                        client.fetchBalances(a).getBalanceAmount(a.getCurrency())))
+                .collect(Collectors.toList());
     }
 }
