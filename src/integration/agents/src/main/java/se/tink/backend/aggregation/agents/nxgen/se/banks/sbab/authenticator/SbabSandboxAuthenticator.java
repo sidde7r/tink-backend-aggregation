@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 
 public class SbabSandboxAuthenticator implements Authenticator {
-
     @Override
     public void authenticate(Credentials credentials)
             throws AuthenticationException, AuthorizationException {}
