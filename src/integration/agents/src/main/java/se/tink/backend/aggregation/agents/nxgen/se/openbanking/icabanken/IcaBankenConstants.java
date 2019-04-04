@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken;
 
-public abstract class IcaBankenConstants {
+public final class IcaBankenConstants {
 
     public static class Urls {
 
@@ -33,12 +33,6 @@ public abstract class IcaBankenConstants {
 
         public static final String REQUEST_ID = "X-Request-ID";
     }
-
-    public static class FormKeys {}
-
-    public static class FormValues {}
-
-    public static class LogTags {}
 
     public class Market {
 

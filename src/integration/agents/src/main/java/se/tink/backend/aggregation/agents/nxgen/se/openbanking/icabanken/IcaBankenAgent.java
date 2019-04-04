@@ -6,7 +6,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.authent
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.configuration.IcaBankenConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.IcaBankenTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.session.IcaBankenSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -109,7 +108,7 @@ public final class IcaBankenAgent extends NextGenerationAgent {
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new IcaBankenSessionHandler(apiClient, sessionStorage);
+        return SessionHandler.alwaysFail();
     }
 
     @Override

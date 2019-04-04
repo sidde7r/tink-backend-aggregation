@@ -1,12 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.rpc;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.icabanken.fetcher.transactionalaccount.entity.transaction.AccountEntity;
@@ -49,7 +45,7 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     private Transaction toTinkTransaction(BookedEntity transaction) {
         return Transaction.builder()
                 .setPending(false)
-                .setDate(this.parseDate(transaction.getBookingDate()))
+                .setDate(transaction.getBookingDate())
                 .setAmount(transaction.getTransactionAmount().toAmount())
                 .setDescription(transaction.getTransactionText())
                 .build();
@@ -58,19 +54,9 @@ public class FetchTransactionsResponse implements PaginatorResponse {
     private Transaction toTinkTransaction(PendingEntity transaction) {
         return Transaction.builder()
                 .setPending(true)
-                .setDate(this.parseDate(transaction.getBookingDate()))
+                .setDate(transaction.getBookingDate())
                 .setAmount(transaction.getTransactionAmount().toAmount())
                 .setDescription(transaction.getTransactionText())
                 .build();
-    }
-
-    private Date parseDate(String date) {
-        try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            return simpleDateFormat.parse(date);
-        } catch (ParseException e) {
-            throw new IllegalStateException("Cannot parse date", e);
-        }
     }
 }

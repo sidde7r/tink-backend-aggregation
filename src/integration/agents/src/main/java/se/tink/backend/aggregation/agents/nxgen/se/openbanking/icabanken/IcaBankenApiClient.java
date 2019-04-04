@@ -34,10 +34,6 @@ public final class IcaBankenApiClient {
                 .type(MediaType.APPLICATION_JSON);
     }
 
-    private RequestBuilder createRequestInSession(URL url) {
-        return createRequest(url).header("authToken", "123");
-    }
-
     public FetchAccountsResponse fetchAccounts() {
         URL baseUrl = new URL(persistentStorage.get(IcaBankenConstants.StorageKeys.BASE_URL));
         URL requestUrl = baseUrl.concatWithSeparator(IcaBankenConstants.Urls.ACCOUNTS_PATH);
