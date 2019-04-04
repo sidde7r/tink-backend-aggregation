@@ -39,9 +39,9 @@ public class AccountEntity {
                 .setUniqueIdentifier(iban)
                 .setAccountNumber(accountNumber.getValue())
                 .setBalance(balance.toAmount())
+                .setAlias(name)
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .addHolderName(owner.getName())
-                .setAlias(name)
                 .setApiIdentifier(id)
                 .putInTemporaryStorage(SpareBank1Constants.StorageKeys.ACCOUNT_ID, id)
                 .build();
