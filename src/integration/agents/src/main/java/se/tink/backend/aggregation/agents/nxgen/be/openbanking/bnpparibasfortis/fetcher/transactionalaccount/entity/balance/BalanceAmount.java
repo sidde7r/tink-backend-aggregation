@@ -5,7 +5,6 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BalanceAmount {
-
     private String amount;
     private String currency;
 

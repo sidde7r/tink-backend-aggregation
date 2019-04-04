@@ -19,9 +19,9 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 
 @JsonObject
-public class BnpParibasFortisTransactionalAccountFetcher implements
-    AccountFetcher<TransactionalAccount>,
-    TransactionKeyPaginator<TransactionalAccount, URL> {
+public class BnpParibasFortisTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, URL> {
 
     private final BnpParibasFortisApiClient apiClient;
 
@@ -49,8 +49,8 @@ public class BnpParibasFortisTransactionalAccountFetcher implements
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(TransactionalAccount account,
-        URL nextUrl) {
+    public TransactionKeyPaginatorResponse<URL> getTransactionsFor(
+            TransactionalAccount account, URL nextUrl) {
         try {
             GetTransactionsResponse response = apiClient.getTransactionsForAccount(account);
             response.setAccount(account);

@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
 public final class BnpParibasFortisSessionHandler implements SessionHandler {
-
     private final BnpParibasFortisApiClient apiClient;
 
     public BnpParibasFortisSessionHandler(BnpParibasFortisApiClient apiClient) {
@@ -15,9 +14,7 @@ public final class BnpParibasFortisSessionHandler implements SessionHandler {
     }
 
     @Override
-    public void logout() {
-
-    }
+    public void logout() {}
 
     @Override
     public void keepAlive() throws SessionException {

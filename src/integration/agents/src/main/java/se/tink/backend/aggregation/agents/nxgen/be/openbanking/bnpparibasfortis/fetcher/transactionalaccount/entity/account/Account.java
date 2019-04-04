@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,9 +13,9 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class Account {
-
     @JsonProperty("_links")
     private Links links;
+
     private String bicFi;
     private String cashAccountType;
     private String currency;
