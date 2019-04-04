@@ -729,7 +729,8 @@
         "CHECKING_ACCOUNTS"
     ],
     "nxgen.uk.openbanking.starling.StarlingAgent": [
-        "CHECKING_ACCOUNTS"
+        "CHECKING_ACCOUNTS",
+        "TRANSFERS"
     ],
     "nxgen.uk.openbanking.natwest.NatWestAgent": [
         "CHECKING_ACCOUNTS",
