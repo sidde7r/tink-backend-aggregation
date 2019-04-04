@@ -2,6 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import java.util.Base64;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Exceptions;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.HeaderValues;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.authenticator.rpc.RefreshRequest;
@@ -33,130 +38,103 @@ public final class BbvaApiClient {
     }
 
     public PaginatorResponse fetchTransactions(TransactionalAccount account, int page) {
-        return client.request(
-                        new URL(
-                                persistentStorage.get(StorageKeys.BASE_API_URL)
-                                        + String.format(
-                                                Urls.ACCOUNT_TRANSACTIONS,
-                                                account.getApiIdentifier())))
+        final URL url =
+                new URL(
+                        persistentStorage.get(StorageKeys.BASE_API_URL)
+                                + String.format(
+                                        Urls.ACCOUNT_TRANSACTIONS, account.getApiIdentifier()));
+
+        return client.request(url)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(
-                        BbvaConstants.HeaderKeys.AUTHORIZATION,
-                        getHeaderFormattedTokenFromSession())
-                .queryParam(BbvaConstants.QueryKeys.PAGINATION, String.valueOf(page))
+                .header(HeaderKeys.AUTHORIZATION, getHeaderFormattedTokenFromSession())
+                .queryParam(QueryKeys.PAGINATION, String.valueOf(page))
                 .get(BbvaTransactionsResponse.class);
     }
 
     public BbvaDetailedAccountResponse fetchAccountDetails(String id) {
-        return client.request(
-                        new URL(
-                                persistentStorage.get(StorageKeys.BASE_API_URL)
-                                        + String.format(Urls.ACCOUNT, id)))
+        final URL url =
+                new URL(
+                        persistentStorage.get(StorageKeys.BASE_API_URL)
+                                + String.format(Urls.ACCOUNT, id));
+
+        return client.request(url)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(
-                        BbvaConstants.HeaderKeys.AUTHORIZATION,
-                        getHeaderFormattedTokenFromSession())
+                .header(HeaderKeys.AUTHORIZATION, getHeaderFormattedTokenFromSession())
                 .get(BbvaDetailedAccountResponse.class);
     }
 
     public BbvaAccountsResponse fetchAccounts() {
-        return client.request(
-                        new URL(
-                                persistentStorage.get(BbvaConstants.StorageKeys.BASE_API_URL)
-                                        + BbvaConstants.Urls.ACCOUNTS))
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_API_URL) + Urls.ACCOUNTS);
+
+        return client.request(url)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(
-                        BbvaConstants.HeaderKeys.AUTHORIZATION,
-                        getHeaderFormattedTokenFromSession())
+                .header(HeaderKeys.AUTHORIZATION, getHeaderFormattedTokenFromSession())
                 .get(BbvaAccountsResponse.class);
     }
 
     public URL getAuthorizeUrl(String state) {
-        return client.request(
-                        new URL(
-                                persistentStorage.get(BbvaConstants.StorageKeys.BASE_AUTH_URL)
-                                        + BbvaConstants.Urls.OAUTH))
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_AUTH_URL) + Urls.OAUTH);
+
+        return client.request(url)
                 .header(HttpHeaders.ACCEPT, MediaType.TEXT_HTML)
-                .queryParam(
-                        BbvaConstants.QueryKeys.RESPONSE_TYPE,
-                        BbvaConstants.QueryValues.RESPONSE_TYPE)
-                .queryParam(
-                        BbvaConstants.QueryKeys.CLIENT_ID,
-                        persistentStorage.get(BbvaConstants.StorageKeys.CLIENT_ID))
-                .queryParam(
-                        BbvaConstants.QueryKeys.REDIRECT_URI,
-                        persistentStorage.get(BbvaConstants.StorageKeys.REDIRECT_URI))
-                .queryParam(BbvaConstants.QueryKeys.STATE, state)
-                .queryParam(BbvaConstants.QueryKeys.SCOPE, BbvaConstants.QueryValues.SCOPE)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
+                .queryParam(QueryKeys.CLIENT_ID, persistentStorage.get(StorageKeys.CLIENT_ID))
+                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
+                .queryParam(QueryKeys.STATE, state)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .getUrl();
     }
 
     public OAuth2Token getToken(String code) {
-        return client.request(
-                        new URL(
-                                persistentStorage.get(BbvaConstants.StorageKeys.BASE_AUTH_URL)
-                                        + BbvaConstants.Urls.TOKEN))
-                .queryParam(
-                        BbvaConstants.QueryKeys.GRANT_TYPE, BbvaConstants.QueryValues.GRANT_TYPE)
-                .queryParam(BbvaConstants.QueryKeys.CODE, code)
-                .queryParam(
-                        BbvaConstants.QueryKeys.REDIRECT_URI,
-                        persistentStorage.get(BbvaConstants.StorageKeys.REDIRECT_URI))
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_AUTH_URL) + Urls.TOKEN);
+
+        return client.request(url)
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE)
+                .queryParam(QueryKeys.CODE, code)
+                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
                 .header(
-                        BbvaConstants.HeaderKeys.AUTHORIZATION,
-                        String.format(
-                                BbvaConstants.HeaderValues.AUTHORIZATION_RESPONSE,
-                                getBase64Credentials()))
+                        HeaderKeys.AUTHORIZATION,
+                        String.format(HeaderValues.AUTHORIZATION_RESPONSE, getBase64Credentials()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .post(TokenResponse.class)
                 .toTinkToken();
     }
 
     public OAuth2Token getRefreshToken(String refreshToken) {
-        RefreshRequest refreshRequest = new RefreshRequest(refreshToken);
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_AUTH_URL) + Urls.TOKEN);
+        final RefreshRequest refreshRequest = new RefreshRequest(refreshToken);
 
-        return client.request(
-                        new URL(
-                                persistentStorage.get(BbvaConstants.StorageKeys.BASE_AUTH_URL)
-                                        + BbvaConstants.Urls.TOKEN))
-                .queryParam(
-                        BbvaConstants.QueryKeys.GRANT_TYPE, BbvaConstants.QueryValues.REFRESH_TOKEN)
-                .queryParam(
-                        BbvaConstants.QueryKeys.REDIRECT_URI,
-                        persistentStorage.get(BbvaConstants.StorageKeys.REDIRECT_URI))
+        return client.request(url)
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.REFRESH_TOKEN)
+                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
                 .header(
-                        BbvaConstants.HeaderKeys.AUTHORIZATION,
-                        String.format(
-                                BbvaConstants.HeaderValues.AUTHORIZATION_RESPONSE,
-                                getBase64Credentials()))
+                        HeaderKeys.AUTHORIZATION,
+                        String.format(HeaderValues.AUTHORIZATION_RESPONSE, getBase64Credentials()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, refreshRequest.toForm())
                 .toTinkToken();
     }
 
     public String getBase64Credentials() {
-        return Base64.getEncoder()
-                .encodeToString(
-                        (persistentStorage.get(BbvaConstants.StorageKeys.CLIENT_ID)
-                                        + ":"
-                                        + persistentStorage.get(
-                                                BbvaConstants.StorageKeys.CLIENT_SECRET))
-                                .getBytes());
+        final String credentialString =
+                persistentStorage.get(StorageKeys.CLIENT_ID)
+                        + ":"
+                        + persistentStorage.get(StorageKeys.CLIENT_SECRET);
+
+        return Base64.getEncoder().encodeToString(credentialString.getBytes());
     }
 
     public void setTokenToSession(OAuth2Token accessToken) {
-        sessionStorage.put(BbvaConstants.StorageKeys.TOKEN, accessToken);
+        sessionStorage.put(StorageKeys.TOKEN, accessToken);
     }
 
     private OAuth2Token getTokenFromSession() {
         return sessionStorage
-                .get(BbvaConstants.StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () -> new IllegalStateException(BbvaConstants.Exceptions.MISSING_TOKEN));
+                .get(StorageKeys.TOKEN, OAuth2Token.class)
+                .orElseThrow(() -> new IllegalStateException(Exceptions.MISSING_TOKEN));
     }
 
     private String getHeaderFormattedTokenFromSession() {
-        return String.format(
-                BbvaConstants.HeaderValues.AUTHORIZATION, getTokenFromSession().getAccessToken());
+        return String.format(HeaderValues.AUTHORIZATION, getTokenFromSession().getAccessToken());
     }
 }
