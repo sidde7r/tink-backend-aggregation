@@ -5,12 +5,10 @@ import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.Han
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.fetcher.transactionalaccount.entity.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.nl.openbanking.handelsbanken.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.fetcher.transactionalaccount.HandelsbankenBaseTransactionalAccountFetcher;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.date.TransactionDatePaginator;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
-@JsonObject
 public class HandelsbankenTransactionalAccountFetcher
         extends HandelsbankenBaseTransactionalAccountFetcher<AccountsResponse, AccountEntity>
         implements AccountFetcher<TransactionalAccount>,

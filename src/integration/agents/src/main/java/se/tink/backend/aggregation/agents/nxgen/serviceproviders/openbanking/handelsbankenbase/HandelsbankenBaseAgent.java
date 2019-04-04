@@ -90,7 +90,9 @@ public abstract class HandelsbankenBaseAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected abstract SessionHandler constructSessionHandler();
+    protected SessionHandler constructSessionHandler() {
+        return SessionHandler.alwaysFail();
+    }
 
     @Override
     protected Optional<TransferController> constructTransferController() {

@@ -1,6 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase;
 
-public abstract class HandelsbankenBaseConstants {
+public final class HandelsbankenBaseConstants {
 
     public static class Urls {
 

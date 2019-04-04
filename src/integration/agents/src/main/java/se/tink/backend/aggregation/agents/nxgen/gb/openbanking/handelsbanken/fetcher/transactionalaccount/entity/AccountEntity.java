@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.gb.openbanking.handelsbanken.fe
 
 import static se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.HandelsbankenBaseConstants.ExceptionMessages.ACCOUNT_TYPE_NOT_SUPPORTED;
 
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.gb.openbanking.handelsbanken.HandelsbankenConstants;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.handelsbankenbase.fetcher.transactionalaccount.entity.BalanceEntity;
@@ -10,19 +11,24 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 public class AccountEntity extends BaseAccountEntity {
 
-    private AccountTypes getTinkAccountType() {
-        return HandelsbankenConstants.ACCOUNT_TYPE_MAPPER
-                .translate(getAccountType())
-                .orElse(AccountTypes.OTHER);
-    }
-
     @Override
     public TransactionalAccount toTinkAccount(BalanceEntity balance) {
-        if (getTinkAccountType().equals(AccountTypes.CHECKING)) {
+        return HandelsbankenConstants.ACCOUNT_TYPE_MAPPER
+                .translate(getAccountType())
+                .map(account -> toTransactionalAccount(balance))
+                .get();
+    }
+
+    private TransactionalAccount toTransactionalAccount(BalanceEntity balance) {
+        Optional<AccountTypes> accountType =
+                HandelsbankenConstants.ACCOUNT_TYPE_MAPPER.translate(getAccountType());
+
+        if (accountType.filter(AccountTypes.CHECKING::equals).isPresent()) {
             return createCheckingAccount(balance);
-        } else if (getTinkAccountType().equals(AccountTypes.SAVINGS)) {
+        } else if (accountType.filter(AccountTypes.SAVINGS::equals).isPresent()) {
             return createSavingsAccount(balance);
+        } else {
+            throw new IllegalStateException(ACCOUNT_TYPE_NOT_SUPPORTED + accountType);
         }
-        throw new IllegalStateException(ACCOUNT_TYPE_NOT_SUPPORTED + accountType);
     }
 }
