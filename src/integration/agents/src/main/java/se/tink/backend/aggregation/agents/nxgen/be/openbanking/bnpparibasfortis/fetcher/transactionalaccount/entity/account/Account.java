@@ -26,17 +26,17 @@ public class Account {
     private String usage;
 
     public TransactionalAccount toTinkModel(List<Balance> balances) {
-        return CheckingAccount
-            .builder()
-            .setUniqueIdentifier(resourceId)
-            .setAccountNumber(resourceId)
-            .setBalance(getBalance(balances))
-            .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, resourceId))
-            .addHolderName(name)
-            .setAlias(name)
-            .setApiIdentifier(resourceId)
-            .putInTemporaryStorage(BnpParibasFortisConstants.StorageKeys.ACCOUNT_LINKS, links)
-            .build();
+        return CheckingAccount.builder()
+                .setUniqueIdentifier(resourceId)
+                .setAccountNumber(resourceId)
+                .setBalance(getBalance(balances))
+                .setAlias(name)
+                .addAccountIdentifier(
+                        AccountIdentifier.create(AccountIdentifier.Type.IBAN, resourceId))
+                .addHolderName(name)
+                .setApiIdentifier(resourceId)
+                .putInTemporaryStorage(BnpParibasFortisConstants.StorageKeys.ACCOUNT_LINKS, links)
+                .build();
     }
 
     private Amount getBalance(List<Balance> balances) {
