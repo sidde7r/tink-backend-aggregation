@@ -429,7 +429,6 @@
             "capabilities": []
         },
         {
-            "capabilitiesSerialized": "[\"MORTGAGE_AGGREGATION\",\"TRANSFERS\"]",
             "className": "banks.seb.SEBApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
@@ -472,10 +471,6 @@
                     "checkbox": false,
                     "additionalInfo": null
                 }
-            ],
-            "capabilities": [
-                "MORTGAGE_AGGREGATION",
-                "TRANSFERS"
             ]
         },
         {
@@ -1710,7 +1705,6 @@
             "capabilities": []
         },
         {
-            "capabilitiesSerialized": "[]",
             "className": "banks.seb.SEBApiAgent",
             "credentialsType": "PASSWORD",
             "currency": "SEK",
@@ -1775,8 +1769,7 @@
                     "checkbox": false,
                     "additionalInfo": null
                 }
-            ],
-            "capabilities": []
+            ]
         },
         {
             "capabilitiesSerialized": "[]",

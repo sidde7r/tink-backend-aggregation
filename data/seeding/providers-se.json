@@ -1467,10 +1467,6 @@
         },
         {
             "name": "seb-bankid",
-            "capabilities": [
-                "TRANSFERS",
-                "MORTGAGE_AGGREGATION"
-            ],
             "className": "banks.seb.SEBApiAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
