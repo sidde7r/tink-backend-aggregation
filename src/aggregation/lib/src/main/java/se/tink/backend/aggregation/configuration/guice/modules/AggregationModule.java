@@ -53,9 +53,9 @@ public class AggregationModule extends AbstractModule {
         bind(AggregatorInfoProvider.class).in(Scopes.SINGLETON);
         bind(ClientConfigurationProvider.class).in(Scopes.SINGLETON);
 
-        bind(AggregationService.class).to(AggregationServiceResource.class);
-        bind(CreditSafeService.class).to(CreditSafeServiceResource.class);
-        bind(MonitoringService.class).to(MonitoringServiceResource.class);
+        bind(AggregationService.class).to(AggregationServiceResource.class).in(Scopes.SINGLETON);
+        bind(CreditSafeService.class).to(CreditSafeServiceResource.class).in(Scopes.SINGLETON);
+        bind(MonitoringService.class).to(MonitoringServiceResource.class).in(Scopes.SINGLETON);
 
         JerseyResourceRegistrar.build()
                 .binder(binder())
