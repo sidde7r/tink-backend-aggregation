@@ -7,7 +7,7 @@ import javax.persistence.NoResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.cluster.identifiers.ClusterId;
-import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 
 public class ProviderServiceController {
@@ -20,15 +20,15 @@ public class ProviderServiceController {
         this.providerConfigurationDAO = providerConfigurationDAO;
     }
 
-    public List<ProviderConfiguration> list(ClusterId clusterId) {
+    public List<ProviderConfigurationCore> list(ClusterId clusterId) {
         return providerConfigurationDAO.findAllByClusterId(clusterId.getId());
     }
 
-    public List<ProviderConfiguration> listByMarket(ClusterId clusterId, String market) {
+    public List<ProviderConfigurationCore> listByMarket(ClusterId clusterId, String market) {
         return providerConfigurationDAO.findAllByClusterIdAndMarket(clusterId.getId(), market);
     }
 
-    public Optional<ProviderConfiguration> getProviderByName(ClusterId clusterId, String providerName) {
+    public Optional<ProviderConfigurationCore> getProviderByName(ClusterId clusterId, String providerName) {
         try {
             return Optional.of(providerConfigurationDAO.findByClusterIdAndProviderName(clusterId.getId(), providerName));
         } catch (NoResultException e) {

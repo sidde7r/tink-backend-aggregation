@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 
-public class ProviderConfiguration {
+public class ProviderConfigurationCore {
 
     public enum AccessType {
         OPEN_BANKING, OTHER
@@ -57,7 +57,7 @@ public class ProviderConfiguration {
     private String displayDescription;
     private String refreshScheduleSerialized;
 
-    public ProviderConfiguration() {
+    public ProviderConfigurationCore() {
         setFields(Lists.<Field> newArrayList());
     }
 
@@ -73,7 +73,7 @@ public class ProviderConfiguration {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        ProviderConfiguration other = (ProviderConfiguration) obj;
+        ProviderConfigurationCore other = (ProviderConfigurationCore) obj;
         if (name == null) {
             if (other.name != null) {
                 return false;

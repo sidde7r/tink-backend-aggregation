@@ -5,11 +5,11 @@ import se.tink.libraries.provider.enums.ProviderStatuses;
 import java.util.List;
 
 public interface ProviderConfigurationDAO {
-    List<ProviderConfiguration> findAllByClusterId(String id);
+    List<ProviderConfigurationCore> findAllByClusterId(String id);
 
-    List<ProviderConfiguration> findAllByClusterIdAndMarket(String id, String market);
+    List<ProviderConfigurationCore> findAllByClusterIdAndMarket(String id, String market);
 
-    ProviderConfiguration findByClusterIdAndProviderName(String id, String providerName);
+    ProviderConfigurationCore findByClusterIdAndProviderName(String id, String providerName);
 
     void updateStatus(String providerName, ProviderStatuses providerStatus);
 

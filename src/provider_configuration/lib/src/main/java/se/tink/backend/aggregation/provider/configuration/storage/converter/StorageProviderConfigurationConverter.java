@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.provider.configuration.storage.converter;
 
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
 import se.tink.libraries.provider.enums.ProviderStatuses;
 
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class StorageProviderConfigurationConverter {
 
-    public static List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> convert(
+    public static List<ProviderConfigurationCore> convert(
             Collection<ProviderConfiguration> providerConfiguration,
             Map<String, ProviderStatuses> providerStatusesMap) {
         return providerConfiguration
@@ -27,11 +28,11 @@ public class StorageProviderConfigurationConverter {
         return Optional.ofNullable(providerStatusesMap.get(providerConfiguration.getName()));
     }
 
-    public static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration convert(
+    public static ProviderConfigurationCore convert(
             ProviderConfiguration providerConfiguration, Optional<ProviderStatuses> providerStatus) {
 
-        se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration core =
-                new se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration();
+        ProviderConfigurationCore core =
+                new ProviderConfigurationCore();
 
         core.setAccessType(
                 convertAccessType(providerConfiguration.getAccessType())
@@ -72,12 +73,12 @@ public class StorageProviderConfigurationConverter {
 
     }
 
-    private static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration.AccessType convertAccessType(ProviderConfiguration.AccessType accessType) {
+    private static ProviderConfigurationCore.AccessType convertAccessType(ProviderConfiguration.AccessType accessType) {
         if (accessType == null) {
             return null;
         }
 
-        return se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration.AccessType.valueOf(
+        return ProviderConfigurationCore.AccessType.valueOf(
                 accessType.name()
         );
     }

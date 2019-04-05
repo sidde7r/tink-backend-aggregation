@@ -8,10 +8,8 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
-import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
-import se.tink.backend.aggregation.provider.configuration.storage.module.ProviderFileModule;
-import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -25,7 +23,7 @@ public class DebugProviderCommand extends ProviderConfigurationCommand<ProviderS
         super("debug-provider", "Dump debug info for a provider");
     }
 
-    private void printProviderInfo(ProviderConfiguration provider) {
+    private void printProviderInfo(ProviderConfigurationCore provider) {
         List<Map<String, String>> output = Lists.newArrayList();
 
         output.add(CliPrintUtils.keyValueEntry("name", provider.getName()));
@@ -61,7 +59,7 @@ public class DebugProviderCommand extends ProviderConfigurationCommand<ProviderS
         Preconditions.checkNotNull(clusterId, "clusterId must not be null.");
 
         ProviderConfigurationProvider providers = injector.getInstance(ProviderConfigurationProvider.class);
-        ProviderConfiguration provider = providers.findByClusterIdAndProviderName(clusterId, providerName);
+        ProviderConfigurationCore provider = providers.findByClusterIdAndProviderName(clusterId, providerName);
 
         if (provider == null) {
             log.warn("Provider {} not found in {}" , providerName, clusterId);
