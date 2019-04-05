@@ -140,6 +140,19 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
+    public void authenticate(final RefreshInformationRequest request, ClientInfo clientInfo) throws Exception {
+        if (request.isManual()) {
+            agentWorker.execute(agentWorkerCommandFactory.createOperationRefresh(request, clientInfo));
+        } else {
+            if (producer.isAvailable()) {
+                producer.send(new RefreshInformation(request, clientInfo));
+            } else {
+                agentWorker.executeAutomaticRefresh(AgentWorkerRefreshOperationCreatorWrapper.of(agentWorkerCommandFactory, request, clientInfo));
+            }
+        }
+    }
+
+    @Override
     public void transfer(final TransferRequest request, ClientInfo clientInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createOperationExecuteTransfer(request, clientInfo));
     }

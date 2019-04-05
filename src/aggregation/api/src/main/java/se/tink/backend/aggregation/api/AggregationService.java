@@ -65,6 +65,13 @@ public interface AggregationService {
     void refreshInformation(RefreshInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
+    @Path("authenticate")
+    @TeamOwnership(Team.INTEGRATION)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    void authenticate(RefreshInformationRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+
+    @POST
     @Path("transfer")
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
