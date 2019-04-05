@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class UserRoleEntity {
-    String code;
-    String name;
+
+    private String code;
+    private String name;
 }

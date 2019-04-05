@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class BbvaSessionHandler implements SessionHandler {
+
     private final BbvaApiClient apiClient;
     private final SessionStorage sessionStorage;
 

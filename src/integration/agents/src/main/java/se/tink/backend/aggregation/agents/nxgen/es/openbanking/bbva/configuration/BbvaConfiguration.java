@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class BbvaConfiguration implements ClientConfiguration {
+
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(BbvaConfiguration.class);
     @JsonProperty private String clientId;

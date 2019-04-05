@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class PaginationEntity {
+
     private Integer page;
     private Integer numPages;
     private Integer pageSize;

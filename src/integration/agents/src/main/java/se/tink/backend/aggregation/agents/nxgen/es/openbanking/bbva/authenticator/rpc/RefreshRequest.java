@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstant
 import se.tink.backend.aggregation.nxgen.http.Form;
 
 public class RefreshRequest {
+
     private String refreshToken;
 
     public RefreshRequest(String refreshToken) {

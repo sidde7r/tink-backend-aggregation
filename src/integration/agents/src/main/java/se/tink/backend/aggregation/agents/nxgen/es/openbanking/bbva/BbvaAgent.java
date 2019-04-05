@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class BbvaAgent extends NextGenerationAgent {
+
     private final BbvaApiClient apiClient;
 
     public BbvaAgent(

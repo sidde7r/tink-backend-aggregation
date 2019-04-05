@@ -24,6 +24,7 @@ import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import tink.org.apache.http.HttpHeaders;
 
 public final class BbvaApiClient {
+
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
     private final PersistentStorage persistentStorage;

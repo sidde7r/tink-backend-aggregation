@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ResultEntity {
+
     private Integer code;
     private String info;
 }

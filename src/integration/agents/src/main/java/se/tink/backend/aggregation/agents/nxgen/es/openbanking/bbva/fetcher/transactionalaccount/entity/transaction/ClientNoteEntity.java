@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ClientNoteEntity {
+
     private String text;
     private String date;
 }

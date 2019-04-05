@@ -10,12 +10,9 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountTransactionEntity {
+
     private String id;
     private String operationDate;
-
-    @JsonFormat(pattern = Formats.TRANSACTION_DATE_FORMAT)
-    private Date valueDate;
-
     private double amount;
     private String currency;
     private String description;
@@ -23,6 +20,9 @@ public class AccountTransactionEntity {
     private SubCategoryEntity subCategory;
     private List<ClientNoteEntity> clientNotes = null;
     private List<AttachedInfoEntity> attachedInfo = null;
+
+    @JsonFormat(pattern = Formats.TRANSACTION_DATE_FORMAT)
+    private Date valueDate;
 
     public Transaction toTinkTransaction() {
         return Transaction.builder()

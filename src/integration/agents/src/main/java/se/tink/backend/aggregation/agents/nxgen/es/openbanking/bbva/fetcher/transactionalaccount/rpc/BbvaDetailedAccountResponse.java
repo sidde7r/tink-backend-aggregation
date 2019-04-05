@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class BbvaDetailedAccountResponse {
+
     private ResultEntity result;
     private DetailedDataEntity data;
 

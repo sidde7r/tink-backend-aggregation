@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class NavigationLinksEntity {
+
     private NavigationLinkEntity firstPage;
     private NavigationLinkEntity lastPage;
     private NavigationLinkEntity next;

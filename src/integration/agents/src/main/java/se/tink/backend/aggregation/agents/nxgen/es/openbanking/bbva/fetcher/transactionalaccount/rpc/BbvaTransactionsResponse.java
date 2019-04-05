@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class BbvaTransactionsResponse implements PaginatorResponse {
+
     private ResultEntity result;
     private TransactionDataEntity data;
     private PaginationEntity pagination;

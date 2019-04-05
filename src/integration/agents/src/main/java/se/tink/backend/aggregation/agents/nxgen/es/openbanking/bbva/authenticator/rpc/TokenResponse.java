@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 
 @JsonObject
 public class TokenResponse {
+
     @JsonProperty("access_token")
     private String accessToken;
 

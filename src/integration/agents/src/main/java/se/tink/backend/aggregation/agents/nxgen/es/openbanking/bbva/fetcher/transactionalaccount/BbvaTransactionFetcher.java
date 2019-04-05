@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 
 public class BbvaTransactionFetcher implements TransactionPagePaginator<TransactionalAccount> {
+
     private final BbvaApiClient apiClient;
 
     public BbvaTransactionFetcher(BbvaApiClient apiClient) {

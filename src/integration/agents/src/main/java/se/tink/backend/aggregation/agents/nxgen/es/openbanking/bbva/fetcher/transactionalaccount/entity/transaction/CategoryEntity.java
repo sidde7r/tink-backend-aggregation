@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CategoryEntity {
+
     private Integer id;
     private String name;
 }

@@ -4,6 +4,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class DetailedDataEntity {
+
     private AccountEntity account;
 
     public AccountEntity getAccount() {

@@ -13,6 +13,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 @JsonObject
 public class BbvaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
+
     private final BbvaApiClient apiClient;
 
     public BbvaTransactionalAccountFetcher(BbvaApiClient apiClient) {

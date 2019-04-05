@@ -9,6 +9,7 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountEntity {
+
     private String id;
     private String alias;
     private String type;

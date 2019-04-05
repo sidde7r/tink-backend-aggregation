@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 
 public class BbvaAuthenticator implements OAuth2Authenticator {
+
     private final BbvaApiClient apiClient;
 
     public BbvaAuthenticator(BbvaApiClient apiClient) {

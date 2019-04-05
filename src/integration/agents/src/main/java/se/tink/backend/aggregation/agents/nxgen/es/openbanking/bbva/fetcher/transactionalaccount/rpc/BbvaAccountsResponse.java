@@ -6,6 +6,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BbvaAccountsResponse {
+
     private ResultEntity result;
     private AccountDataEntity data;
 
