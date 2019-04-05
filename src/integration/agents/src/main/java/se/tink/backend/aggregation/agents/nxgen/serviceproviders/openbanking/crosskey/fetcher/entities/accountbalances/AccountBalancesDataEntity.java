@@ -10,10 +10,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountBalancesDataEntity {
 
-    private List<AccountBalanceEntity> balance;
+    private List<AccountBalanceEntity> balances;
 
-    public List<AccountBalanceEntity> getBalance() {
-        return balance;
+    public List<AccountBalanceEntity> getBalances() {
+        return balances;
     }
 
     public AccountBalanceEntity getInterimAvailableBalance(){
