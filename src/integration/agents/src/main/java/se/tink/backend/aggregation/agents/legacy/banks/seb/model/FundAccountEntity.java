@@ -147,7 +147,7 @@ public class FundAccountEntity {
         account.setAccountNumber(getAccountNumber());
         account.setBankId(getAccountNumber());
         account.setBalance(getDisposableIncome());
-        account.setName(getName());
+        account.setName(getAccountType());
         account.setType(AccountTypes.INVESTMENT);
 
         return account;
