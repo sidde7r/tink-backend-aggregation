@@ -152,7 +152,7 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                                                 "Destination must SortCodeIdentifier.",
                                                 TransferExecutionException.EndUserMessage
                                                         .INVALID_DESTINATION));
-
+        // TODO: Enable this code when payee:read scope is granted by Starling
 //        final PayeeEntity payee =
 //                getPayeeForAccount(destinationIdentifier)
 //                        .orElseThrow(
