@@ -59,7 +59,7 @@ public class CardEntity {
                 .setAccountNumber(getMaskedCardNumber())
                 .setName(contract.getProductName())
                 .setHolderName(new HolderName(getNameOnCard()))
-                .setBankIdentifier(contract.getCardAccountId())
+                .setBankIdentifier(contract.getId())
                 .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_ID, getId())
                 .putInTemporaryStorage(SebKortConstants.StorageKey.CARD_CONTRACT_ID, contract.getId());
 

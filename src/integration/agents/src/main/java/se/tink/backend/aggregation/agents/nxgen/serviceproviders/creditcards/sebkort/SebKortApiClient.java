@@ -65,24 +65,11 @@ public class SebKortApiClient {
                         SebKortConstants.DATE_FORMAT.format(toDate));
     }
 
-    public TransactionsResponse fetchTransactionsForAccountId(
-            String cardAccountId, Date fromDate, Date toDate) {
-        return fetchTransactionsFor(fromDate, toDate)
-                .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
-                .get(TransactionsResponse.class);
-    }
-
     public TransactionsResponse fetchTransactionsForContractId(
             String cardContractId, Date fromDate, Date toDate) {
         return fetchTransactionsFor(fromDate, toDate)
                 .queryParam(SebKortConstants.QueryKey.CARD_CONTRACT_ID, cardContractId)
                 .get(TransactionsResponse.class);
-    }
-
-    public ReservationsResponse fetchReservationsForAccountId(String cardAccountId) {
-        return createRequestInSession(SebKortConstants.Urls.SEBKORT_RESERVATIONS)
-                .queryParam(SebKortConstants.QueryKey.CARD_ACCOUNT_ID, cardAccountId)
-                .get(ReservationsResponse.class);
     }
 
     public ReservationsResponse fetchReservationsForContractId(String cardContractId) {
