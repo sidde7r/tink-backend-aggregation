@@ -152,7 +152,8 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                                                 "Destination must SortCodeIdentifier.",
                                                 TransferExecutionException.EndUserMessage
                                                         .INVALID_DESTINATION));
-        // TODO: Enable this code when payee:read scope is granted by Starling
+        // TODO: Temporary disabling payee check as we miss proper permission for starling to access the endpoint with payees
+        // TODO: This should be uncommented after creating successful recording of app2app flow for Starling transders
 //        final PayeeEntity payee =
 //                getPayeeForAccount(destinationIdentifier)
 //                        .orElseThrow(
