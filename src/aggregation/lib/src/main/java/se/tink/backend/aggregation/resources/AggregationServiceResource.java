@@ -9,6 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.api.AggregationService;
 import se.tink.backend.aggregation.api.WhitelistedTransferRequest;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
@@ -16,26 +17,25 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.CreateCredentialsRequest;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
-import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.backend.aggregation.workers.AgentWorker;
 import se.tink.backend.aggregation.workers.AgentWorkerOperation;
-import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.backend.aggregation.workers.AgentWorkerOperationFactory;
+import se.tink.backend.aggregation.workers.AgentWorkerRefreshOperationCreatorWrapper;
 import se.tink.backend.aggregation.workers.ratelimit.DefaultProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.OverridingProviderRateLimiterFactory;
 import se.tink.backend.aggregation.workers.ratelimit.ProviderRateLimiterFactory;
-import se.tink.libraries.queue.QueueProducer;
+import se.tink.libraries.credentials.service.CreateCredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshInformationRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
+import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.libraries.draining.ApplicationDrainMode;
 import se.tink.libraries.http.utils.HttpResponseHelper;
+import se.tink.libraries.queue.QueueProducer;
 
 @Path("/aggregation")
 public class AggregationServiceResource implements AggregationService {
@@ -50,8 +50,11 @@ public class AggregationServiceResource implements AggregationService {
     public static Logger logger = LoggerFactory.getLogger(AggregationServiceResource.class);
 
     @Inject
-    public AggregationServiceResource(AgentWorker agentWorker, QueueProducer producer,
-            AgentWorkerOperationFactory agentWorkerOperationFactory, SupplementalInformationController supplementalInformationController,
+    public AggregationServiceResource(
+            AgentWorker agentWorker,
+            QueueProducer producer,
+            AgentWorkerOperationFactory agentWorkerOperationFactory,
+            SupplementalInformationController supplementalInformationController,
             ApplicationDrainMode applicationDrainMode) {
         this.agentWorker = agentWorker;
         this.agentWorkerCommandFactory = agentWorkerOperationFactory;

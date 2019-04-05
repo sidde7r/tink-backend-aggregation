@@ -100,4 +100,8 @@ public class ControllerWrapper {
     public Response updateCredentialSensitive(Credentials credentials, String sensitiveData) {
         return client.updateCredentialSensitive(configuration, credentials, sensitiveData);
     }
+
+    public Response checkConnectivity() {
+        return client.checkConnectivity(configuration);
+    }
 }
