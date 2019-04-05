@@ -152,19 +152,20 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                                                 "Destination must SortCodeIdentifier.",
                                                 TransferExecutionException.EndUserMessage
                                                         .INVALID_DESTINATION));
-
-        final PayeeEntity payee =
-                getPayeeForAccount(destinationIdentifier)
-                        .orElseThrow(
-                                () ->
-                                        getTransferException(
-                                                "Could not find payee with the specified account.",
-                                                TransferExecutionException.EndUserMessage
-                                                        .INVALID_DESTINATION));
+        // TODO: Temporary disabling payee check as we miss proper permission for starling to access the endpoint with payees
+        // TODO: This should be uncommented after creating successful recording of app2app flow for Starling transders
+//        final PayeeEntity payee =
+//                getPayeeForAccount(destinationIdentifier)
+//                        .orElseThrow(
+//                                () ->
+//                                        getTransferException(
+//                                                "Could not find payee with the specified account.",
+//                                                TransferExecutionException.EndUserMessage
+//                                                        .INVALID_DESTINATION));
 
         return PaymentRecipient.builder()
                 .setDestinationAccount(destinationIdentifier)
-                .setPayeeName(payee.getPayeeName())
+//                .setPayeeName(payee.getPayeeName())
                 .setCountryCode(COUNTRY_CODE)
                 .setPayeeType(INDIVIDUAL)
                 .build();
