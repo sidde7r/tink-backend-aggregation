@@ -3,7 +3,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 import java.util.Arrays;
 import java.util.Date;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Encryption;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.HeaderKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.OIDCValues;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.UrlParameters;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.accessconsents.AccessConsentRequest;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.accessconsents.AccessConsentResponse;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.entities.accessconsents.RequestDataEntity;
@@ -23,6 +31,7 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -44,187 +53,139 @@ public class CrosskeyBaseApiClient {
         this.persistentStorage = persistentStorage;
     }
 
+    private RequestBuilder createRequest(URL url) {
+        return client.request(url)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+    }
+
+    private RequestBuilder createRequestInSession(URL url) {
+        return createRequest(url)
+                .addBearerToken(getTokenFromSession())
+                .header(HeaderKeys.X_API_KEY, persistentStorage.get(StorageKeys.CLIENT_SECRET))
+                .header(
+                        HeaderKeys.X_FAPI_FINANCIAL_ID,
+                        persistentStorage.get(StorageKeys.X_FAPI_FINANCIAL_ID));
+    }
+
+    private RequestBuilder createAuthorizationRequest(
+            InitialTokenResponse clientCredentials, URL url) {
+        return createRequest(url)
+                .addBearerToken(clientCredentials.toTinkToken())
+                .header(HeaderKeys.X_API_KEY, persistentStorage.get(StorageKeys.CLIENT_SECRET))
+                .header(
+                        HeaderKeys.X_FAPI_FINANCIAL_ID,
+                        persistentStorage.get(StorageKeys.X_FAPI_FINANCIAL_ID));
+    }
+
+    private RequestBuilder createTokenRequest(URL url) {
+        return client.request(url)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
+                .queryParam(QueryKeys.CLIENT_ID, persistentStorage.get(StorageKeys.CLIENT_ID));
+    }
+
     public URL getAuthorizeUrl(String state) {
+        final InitialTokenResponse clientCredentials = getInitialTokenResponse();
+        final AccessConsentResponse accessConsentResponse = getAccessConsent(clientCredentials);
 
-        InitialTokenResponse clientCredentials = getInitialTokenResponse();
-        AccessConsentResponse accessConsentResponse = createAccessConsent(clientCredentials);
+        sessionStorage.put(StorageKeys.CONSENT, accessConsentResponse);
 
-        sessionStorage.put(CrosskeyBaseConstants.StorageKeys.CONSENT, accessConsentResponse);
-
-        JWTHeader jwtHeader =
-                new JWTHeader(
-                        CrosskeyBaseConstants.OIDCValues.ALG, CrosskeyBaseConstants.OIDCValues.TYP);
-
-        JWTAuthPayload jwtAuthPayload =
+        final JWTHeader jwtHeader = new JWTHeader(OIDCValues.ALG, OIDCValues.TYP);
+        final JWTAuthPayload jwtAuthPayload =
                 new JWTAuthPayload(
-                        CrosskeyBaseConstants.OIDCValues.SCOPE,
+                        OIDCValues.SCOPE,
                         new IdTokenClaim(
-                                CrosskeyBaseConstants.OIDCValues.TOKEN_ID_PREFIX
+                                OIDCValues.TOKEN_ID_PREFIX
                                         + accessConsentResponse.getData().getConsentId(),
                                 false),
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_ID),
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.REDIRECT_URI),
+                        persistentStorage.get(StorageKeys.CLIENT_ID),
+                        persistentStorage.get(StorageKeys.REDIRECT_URI),
                         state,
                         state,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_ID));
+                        persistentStorage.get(StorageKeys.CLIENT_ID));
+        final String oidcRequest =
+                JWTUtils.constructOIDCRequestObject(
+                        jwtHeader,
+                        jwtAuthPayload,
+                        persistentStorage.get(StorageKeys.KEY_PATH),
+                        Encryption.KEY_ALGORITHM);
 
-        return client.request(
-                        new URL(
-                                persistentStorage.get(
-                                                CrosskeyBaseConstants.StorageKeys.BASE_AUTH_URL)
-                                        + CrosskeyBaseConstants.Urls.OAUTH))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_API_KEY,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET))
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.REQUEST,
-                        JWTUtils.constructOIDCRequestObject(
-                                jwtHeader,
-                                jwtAuthPayload,
-                                persistentStorage.get(CrosskeyBaseConstants.StorageKeys.KEY_PATH),
-                                CrosskeyBaseConstants.Encryption.KEY_ALGORITHM))
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.RESPONSE_TYPE,
-                        CrosskeyBaseConstants.QueryValues.RESPONSE_TYPE)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.CLIENT_ID,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_ID))
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.REDIRECT_URI,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.REDIRECT_URI))
-                .queryParam(CrosskeyBaseConstants.QueryKeys.STATE, state)
-                .queryParam(CrosskeyBaseConstants.QueryKeys.NONCE, state)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.SCOPE,
-                        CrosskeyBaseConstants.QueryValues.SCOPE_OPENID)
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_AUTH_URL) + Urls.OAUTH);
+
+        return client.request(url)
+                .header(HeaderKeys.X_API_KEY, persistentStorage.get(StorageKeys.CLIENT_SECRET))
+                .queryParam(QueryKeys.REQUEST, oidcRequest)
+                .queryParam(QueryKeys.RESPONSE_TYPE, QueryValues.RESPONSE_TYPE)
+                .queryParam(QueryKeys.CLIENT_ID, persistentStorage.get(StorageKeys.CLIENT_ID))
+                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
+                .queryParam(QueryKeys.STATE, state)
+                .queryParam(QueryKeys.NONCE, state)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE_OPENID)
                 .getUrl();
     }
 
     private InitialTokenResponse getInitialTokenResponse() {
-        return client.request(
-                        new URL(
-                                persistentStorage.get(
-                                                CrosskeyBaseConstants.StorageKeys.BASE_API_URL)
-                                        + CrosskeyBaseConstants.Urls.TOKEN))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_API_KEY,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET))
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.GRANT_TYPE,
-                        CrosskeyBaseConstants.QueryValues.CLIENT_CREDENTIALS)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.SCOPE,
-                        CrosskeyBaseConstants.QueryValues.SCOPE)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.CLIENT_ID,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_ID))
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_API_URL) + Urls.TOKEN);
+
+        return createTokenRequest(url)
+                .header(HeaderKeys.X_API_KEY, persistentStorage.get(StorageKeys.CLIENT_SECRET))
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.CLIENT_CREDENTIALS)
+                .queryParam(QueryKeys.SCOPE, QueryValues.SCOPE)
                 .post(InitialTokenResponse.class);
     }
 
-    private AccessConsentResponse createAccessConsent(InitialTokenResponse clientCredentials) {
-        AccessConsentRequest accessConsentRequest =
+    private AccessConsentResponse getAccessConsent(InitialTokenResponse clientCredentials) {
+        final AccessConsentRequest accessConsentRequest =
                 new AccessConsentRequest(
                         new RequestDataEntity(
-                                "",
-                                Arrays.asList(CrosskeyBaseConstants.OIDCValues.CONSENT_PERMISSIONS),
-                                "",
-                                ""),
+                                "", Arrays.asList(OIDCValues.CONSENT_PERMISSIONS), "", ""),
                         new RiskEntity());
 
-        return client.request(
-                        new URL(
-                                persistentStorage.get(
-                                                CrosskeyBaseConstants.StorageKeys.BASE_API_URL)
-                                        + CrosskeyBaseConstants.Urls.ACCOUNT_ACCESS_CONSENTS))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.AUTHORIZATION,
-                        CrosskeyBaseConstants.HeaderValues.AUTHORIZATION_BEARER_PREFIX
-                                + clientCredentials.getAccessToken())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_API_KEY,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_FAPI_FINANCIAL_ID,
-                        persistentStorage.get(StorageKeys.X_FAPI_FINANCIAL_ID))
+        final URL url =
+                new URL(
+                        persistentStorage.get(StorageKeys.BASE_API_URL)
+                                + Urls.ACCOUNT_ACCESS_CONSENTS);
+
+        return createAuthorizationRequest(clientCredentials, url)
                 .post(AccessConsentResponse.class, accessConsentRequest);
     }
 
     public OAuth2Token getToken(String code) {
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_API_URL) + Urls.TOKEN);
 
-        return client.request(
-                        new URL(
-                                persistentStorage.get(
-                                                CrosskeyBaseConstants.StorageKeys.BASE_API_URL)
-                                        + CrosskeyBaseConstants.Urls.TOKEN))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.GRANT_TYPE,
-                        CrosskeyBaseConstants.QueryValues.AUTHORIZATION_CODE)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.REDIRECT_URI,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.REDIRECT_URI))
-                .queryParam(CrosskeyBaseConstants.QueryKeys.CODE, code)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.CLIENT_ID,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_ID))
+        return createTokenRequest(url)
+                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.AUTHORIZATION_CODE)
+                .queryParam(QueryKeys.CODE, code)
                 .post(TokenResponse.class)
                 .toTinkToken();
     }
 
     public CrosskeyAccountsResponse fetchAccounts() {
-        return client.request(
-                        new URL(
-                                persistentStorage.get(
-                                                CrosskeyBaseConstants.StorageKeys.BASE_API_URL)
-                                        + CrosskeyBaseConstants.Urls.ACCOUNTS))
-                .addBearerToken(getTokenFromSession())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_API_KEY,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_FAPI_FINANCIAL_ID,
-                        persistentStorage.get(StorageKeys.X_FAPI_FINANCIAL_ID))
-                .get(CrosskeyAccountsResponse.class);
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_API_URL) + Urls.ACCOUNTS);
+
+        return createRequestInSession(url).get(CrosskeyAccountsResponse.class);
     }
 
     public CrosskeyAccountBalancesResponse fetchAccountBalances(String accountId) {
-        return client.request(
-                        new URL(
-                                        persistentStorage.get(
-                                                        CrosskeyBaseConstants.StorageKeys
-                                                                .BASE_API_URL)
-                                                + CrosskeyBaseConstants.Urls.ACCOUNT_BALANCES)
-                                .parameter(
-                                        CrosskeyBaseConstants.UrlParameters.ACCOUNT_ID, accountId))
-                .addBearerToken(getTokenFromSession())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_API_KEY,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_FAPI_FINANCIAL_ID,
-                        persistentStorage.get(StorageKeys.X_FAPI_FINANCIAL_ID))
-                .get(CrosskeyAccountBalancesResponse.class);
+        final URL url =
+                new URL(persistentStorage.get(StorageKeys.BASE_API_URL) + Urls.ACCOUNT_BALANCES)
+                        .parameter(UrlParameters.ACCOUNT_ID, accountId);
+
+        return createRequestInSession(url).get(CrosskeyAccountBalancesResponse.class);
     }
 
     public PaginatorResponse fetchCreditCardTransactions(
             CreditCardAccount account, Date fromDate, Date toDate) {
+        final AccessConsentResponse accessConsentFromSession = getAccessConsentFromSession();
 
-        AccessConsentResponse accessConsentFromSession = getAccessConsentFromSession();
-
-        fromDate =
+        final Date restrictedFromDate =
                 DateUtils.getRestrictedDate(
                         fromDate,
                         accessConsentFromSession.getData().getTransactionFromDateTime(),
                         Date::after);
-        toDate =
+        final Date restrictedToDate =
                 DateUtils.getRestrictedDate(
                         toDate,
                         accessConsentFromSession.getData().getTransactionToDateTime(),
@@ -241,15 +202,15 @@ public class CrosskeyBaseApiClient {
 
     public PaginatorResponse fetchTransactionalAccountTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
+        final AccessConsentResponse accessConsentFromSession = getAccessConsentFromSession();
 
-        AccessConsentResponse accessConsentFromSession = getAccessConsentFromSession();
-
-        fromDate =
+        final Date restrictedFromDate =
                 DateUtils.getRestrictedDate(
                         fromDate,
                         accessConsentFromSession.getData().getTransactionFromDateTime(),
                         Date::after);
-        toDate =
+
+        final Date restrictedToDate =
                 DateUtils.getRestrictedDate(
                         toDate,
                         accessConsentFromSession.getData().getTransactionToDateTime(),
@@ -265,90 +226,45 @@ public class CrosskeyBaseApiClient {
 
     private CrosskeyTransactionsResponse getTransactionsResponse(
             String apiIdentifier, Date fromDate, Date toDate) {
-        return client.request(
-                        new URL(
-                                        persistentStorage.get(
-                                                        CrosskeyBaseConstants.StorageKeys
-                                                                .BASE_API_URL)
-                                                + CrosskeyBaseConstants.Urls.ACCOUNT_TRANSACTIONS)
-                                .parameter(
-                                        CrosskeyBaseConstants.UrlParameters.ACCOUNT_ID,
-                                        apiIdentifier))
-                .addBearerToken(getTokenFromSession())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_API_KEY,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_FAPI_FINANCIAL_ID,
-                        persistentStorage.get(StorageKeys.X_FAPI_FINANCIAL_ID))
+        final URL url =
+                new URL(persistentStorage.get(StorageKeys.BASE_API_URL) + Urls.ACCOUNT_TRANSACTIONS)
+                        .parameter(UrlParameters.ACCOUNT_ID, apiIdentifier);
+
+        return createRequestInSession(url)
                 .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.FROM_BOOKING_DATE_TIME,
-                        DateUtils.formatDateTime(
-                                fromDate,
-                                CrosskeyBaseConstants.Format.TIMESTAMP,
-                                CrosskeyBaseConstants.Format.TIMEZONE))
+                        QueryKeys.FROM_BOOKING_DATE_TIME,
+                        DateUtils.formatDateTime(fromDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.TO_BOOKING_DATE_TIME,
-                        DateUtils.formatDateTime(
-                                toDate,
-                                CrosskeyBaseConstants.Format.TIMESTAMP,
-                                CrosskeyBaseConstants.Format.TIMEZONE))
+                        QueryKeys.TO_BOOKING_DATE_TIME,
+                        DateUtils.formatDateTime(toDate, Format.TIMESTAMP, Format.TIMEZONE))
                 .get(CrosskeyTransactionsResponse.class);
     }
 
     private AccessConsentResponse getConsent(
             InitialTokenResponse clientCredentials, String consentId) {
+        final URL url =
+                new URL(
+                                persistentStorage.get(StorageKeys.BASE_API_URL)
+                                        + Urls.ACCOUNT_ACCESS_CONSENT)
+                        .parameter(UrlParameters.CONSENT_ID, consentId);
 
-        return client.request(
-                        new URL(
-                                        persistentStorage.get(
-                                                        CrosskeyBaseConstants.StorageKeys
-                                                                .BASE_API_URL)
-                                                + CrosskeyBaseConstants.Urls.ACCOUNT_ACCESS_CONSENT)
-                                .parameter(
-                                        CrosskeyBaseConstants.UrlParameters.CONSENT_ID, consentId))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.AUTHORIZATION,
-                        CrosskeyBaseConstants.HeaderValues.AUTHORIZATION_BEARER_PREFIX
-                                + clientCredentials.getAccessToken())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_API_KEY,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_SECRET))
-                .header(
-                        CrosskeyBaseConstants.HeaderKeys.X_FAPI_FINANCIAL_ID,
-                        persistentStorage.get(StorageKeys.X_FAPI_FINANCIAL_ID))
-                .get(AccessConsentResponse.class);
+        return createAuthorizationRequest(clientCredentials, url).get(AccessConsentResponse.class);
     }
 
     public OAuth2Token getRefreshToken(String refreshToken) {
-        return client.request(
-                        new URL(
-                                persistentStorage.get(
-                                                CrosskeyBaseConstants.StorageKeys.BASE_API_URL)
-                                        + CrosskeyBaseConstants.Urls.TOKEN))
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.GRANT_TYPE,
-                        CrosskeyBaseConstants.QueryValues.REFRESH_TOKEN)
-                .queryParam(CrosskeyBaseConstants.QueryKeys.REFRESH_TOKEN, refreshToken)
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.REDIRECT_URI,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.REDIRECT_URI))
-                .queryParam(
-                        CrosskeyBaseConstants.QueryKeys.CLIENT_ID,
-                        persistentStorage.get(CrosskeyBaseConstants.StorageKeys.CLIENT_ID))
+        final URL url = new URL(persistentStorage.get(StorageKeys.BASE_API_URL) + Urls.TOKEN);
+
+        return createTokenRequest(url)
+                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
+                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.REFRESH_TOKEN)
+                .queryParam(QueryKeys.REFRESH_TOKEN, refreshToken)
                 .post(TokenResponse.class)
                 .toTinkToken();
     }
 
     private OAuth2Token getTokenFromSession() {
         return sessionStorage
-                .get(CrosskeyBaseConstants.StorageKeys.TOKEN, OAuth2Token.class)
+                .get(StorageKeys.TOKEN, OAuth2Token.class)
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
@@ -356,12 +272,12 @@ public class CrosskeyBaseApiClient {
     }
 
     public void setTokenToSession(OAuth2Token accessToken) {
-        sessionStorage.put(CrosskeyBaseConstants.StorageKeys.TOKEN, accessToken);
+        sessionStorage.put(StorageKeys.TOKEN, accessToken);
     }
 
     private AccessConsentResponse getAccessConsentFromSession() {
         return sessionStorage
-                .get(CrosskeyBaseConstants.StorageKeys.CONSENT, AccessConsentResponse.class)
+                .get(StorageKeys.CONSENT, AccessConsentResponse.class)
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(

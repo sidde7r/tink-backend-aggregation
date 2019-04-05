@@ -90,10 +90,6 @@ public abstract class CrosskeyBaseConstants {
         };
     }
 
-    public static class HeaderValues {
-        public static final String AUTHORIZATION_BEARER_PREFIX = "Bearer ";
-    }
-
     public static class UrlParameters {
         public static final String ACCOUNT_ID = "accountId";
         public static final String CONSENT_ID = "consentId";
