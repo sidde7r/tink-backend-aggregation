@@ -5,6 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import se.tink.libraries.api.annotations.Team;
 import se.tink.libraries.api.annotations.TeamOwnership;
 
@@ -14,6 +15,6 @@ public interface MonitoringService {
     @GET
     @Path("connectivity/{clusterId}")
     @TeamOwnership(Team.INTEGRATION)
-    @Produces(MediaType.TEXT_PLAIN)
-    String checkConnectivity(@PathParam("clusterId") String clusterId);
+    @Produces(MediaType.APPLICATION_JSON)
+    Response checkConnectivity(@PathParam("clusterId") String clusterId);
 }

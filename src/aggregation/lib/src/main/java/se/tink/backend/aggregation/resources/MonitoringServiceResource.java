@@ -16,12 +16,12 @@ public class MonitoringServiceResource implements MonitoringService {
     }
 
     @Override
-    public String checkConnectivity(String clusterId) {
+    public Response checkConnectivity(String clusterId) {
         try {
             clusterConnectivityController.checkConnectivity(clusterId);
         } catch (AggregationControllerNotReachable e) {
             HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
         }
-        return "OK";
+        return HttpResponseHelper.ok();
     }
 }
