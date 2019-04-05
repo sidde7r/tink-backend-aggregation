@@ -24,9 +24,9 @@ public class AccountEntity {
                 .setUniqueIdentifier(iban)
                 .setAccountNumber(iban)
                 .setBalance(getBalance())
+                .setAlias(name)
                 .addAccountIdentifier(new IbanIdentifier(iban))
                 .addHolderName(name)
-                .setAlias(name)
                 .setApiIdentifier(resourceId)
                 .build();
     }
