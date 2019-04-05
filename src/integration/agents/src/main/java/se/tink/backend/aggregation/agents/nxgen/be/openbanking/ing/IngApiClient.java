@@ -87,7 +87,7 @@ public final class IngApiClient {
         System.out.println(state);
         final TokenResponse applicationTokenResponse = getApplicationAccessToken();
 
-        setApplicationTokenToSession(applicationTokenResponse.getToken());
+        setApplicationTokenToSession(applicationTokenResponse.toTinkToken());
 
         return new URL(getAuthorizationUrl(applicationTokenResponse).getLocation());
     }
@@ -143,7 +143,7 @@ public final class IngApiClient {
                         .toString();
 
         return buildRequestWithSignature(reqPath, Signature.HTTP_METHOD_GET, FormValues.EMPTY)
-                .addBearerToken(tokenResponse.getToken())
+                .addBearerToken(tokenResponse.toTinkToken())
                 .get(AuthorizationUrl.class);
     }
 
@@ -152,7 +152,7 @@ public final class IngApiClient {
                 .addBearerToken(getApplicationTokenFromSession())
                 .body(payload, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class)
-                .getToken();
+                .toTinkToken();
     }
 
     private RequestBuilder buildRequestWithSignature(

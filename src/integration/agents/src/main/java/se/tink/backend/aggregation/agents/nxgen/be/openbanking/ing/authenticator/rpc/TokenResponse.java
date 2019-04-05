@@ -24,7 +24,7 @@ public class TokenResponse {
 
     private String scope;
 
-    public OAuth2Token getToken() {
+    public OAuth2Token toTinkToken() {
         return OAuth2Token.create(
                 tokenType, accessToken, refreshToken, expiresIn, refreshTokenExpiresIn);
     }
