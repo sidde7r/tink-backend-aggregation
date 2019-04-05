@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.provider.configuration.storage.module;
 
 import org.junit.Before;
 import org.junit.Test;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 
 import java.io.IOException;
 import java.util.Map;
@@ -20,7 +20,7 @@ public class ProviderFileModuleTest {
 
     @Test
     public void loadProviderConfigurationFromJsonTest() throws Exception{
-        Map<String, ProviderConfiguration> map = module.loadProviderConfigurationFromJson();
+        Map<String, ProviderConfigurationStorage> map = module.loadProviderConfigurationFromJson();
         assertThat(map).isNotNull();
         assertThat(map).isNotEmpty();
     }
@@ -43,7 +43,7 @@ public class ProviderFileModuleTest {
 
     @Test
     public void whenProvideAgentCapabilities_ensureNotEmpty() throws IOException {
-        Map<String, Set<ProviderConfiguration.Capability>> agentCapabilities = module.provideAgentCapabilities();
+        Map<String, Set<ProviderConfigurationStorage.Capability>> agentCapabilities = module.provideAgentCapabilities();
         assertThat(agentCapabilities).isNotEmpty();
     }
 }

@@ -18,7 +18,7 @@ public class ProviderConfigurationByCluster {
     private Set<String> enabledMarkets;
 
     // provider name, provider configuration
-    private Map<String, ProviderConfiguration> providerConfigurations;
+    private Map<String, ProviderConfigurationStorage> providerConfigurations;
 
     // We do these procumptations once because they are expensive.
     // For all enabled providers
@@ -26,9 +26,9 @@ public class ProviderConfigurationByCluster {
     public ProviderConfigurationByCluster(
             String clusterId,
             Set<String> enabledProviders,
-            Map<String, ProviderConfiguration> providerConfigurationOverrides,
-            Map<String, ProviderConfiguration> allProviderConfiguration,
-            Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
+            Map<String, ProviderConfigurationStorage> providerConfigurationOverrides,
+            Map<String, ProviderConfigurationStorage> allProviderConfiguration,
+            Map<String, Set<ProviderConfigurationStorage.Capability>> capabilitiesByAgentClass) {
 
         this.providerConfigurations = selectProviderConfigurations(clusterId, enabledProviders,
                 providerConfigurationOverrides, allProviderConfiguration, capabilitiesByAgentClass);
@@ -36,40 +36,40 @@ public class ProviderConfigurationByCluster {
         this.enabledMarkets = getEnabledMarkets(providerConfigurations.values());
     }
 
-    private static Map<String, ProviderConfiguration> selectProviderConfigurations(String clusterId,
+    private static Map<String, ProviderConfigurationStorage> selectProviderConfigurations(String clusterId,
             Set<String> enabledProviders,
-            Map<String, ProviderConfiguration> providerConfigurationOverrides,
-            Map<String, ProviderConfiguration> allProviderConfiguration,
-            Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
+            Map<String, ProviderConfigurationStorage> providerConfigurationOverrides,
+            Map<String, ProviderConfigurationStorage> allProviderConfiguration,
+            Map<String, Set<ProviderConfigurationStorage.Capability>> capabilitiesByAgentClass) {
 
-        Map<String, ProviderConfiguration> providerConfigurations = Maps.newHashMap();
+        Map<String, ProviderConfigurationStorage> providerConfigurations = Maps.newHashMap();
         enabledProviders.forEach(
                 providerName -> {
-                    ProviderConfiguration providerConfiguration = getProviderConfiguration(
+                    ProviderConfigurationStorage providerConfigurationStorage = getProviderConfiguration(
                             providerName, providerConfigurationOverrides, allProviderConfiguration);
 
-                    if (providerConfiguration == null) {
+                    if (providerConfigurationStorage == null) {
                         logger.error("Could not find configuration for enabled provider {} and cluster {}",
                                 providerName, clusterId);
                         return;
                     }
 
                     // Get capabilities from agent instead of provider configuration
-                    providerConfiguration.setCapabilities(
+                    providerConfigurationStorage.setCapabilities(
                             capabilitiesByAgentClass.getOrDefault(
-                                    providerConfiguration.getClassName(),
+                                    providerConfigurationStorage.getClassName(),
                                     Collections.emptySet()));
 
-                    providerConfigurations.put(providerName, providerConfiguration);
+                    providerConfigurations.put(providerName, providerConfigurationStorage);
                 }
         );
 
         return providerConfigurations;
     }
 
-    private static ProviderConfiguration getProviderConfiguration(String providerName,
-            Map<String, ProviderConfiguration> providerConfigurationOverrides,
-            Map<String, ProviderConfiguration> allProviderConfiguration) {
+    private static ProviderConfigurationStorage getProviderConfiguration(String providerName,
+            Map<String, ProviderConfigurationStorage> providerConfigurationOverrides,
+            Map<String, ProviderConfigurationStorage> allProviderConfiguration) {
 
         if (providerConfigurationOverrides.containsKey(providerName)) {
             return providerConfigurationOverrides.get(providerName);
@@ -78,9 +78,9 @@ public class ProviderConfigurationByCluster {
         return allProviderConfiguration.get(providerName);
     }
 
-    private static Set<String> getEnabledMarkets(Collection<ProviderConfiguration> providerConfigurations) {
-        return providerConfigurations.stream()
-                .map(ProviderConfiguration::getMarket)
+    private static Set<String> getEnabledMarkets(Collection<ProviderConfigurationStorage> providerConfigurationStorages) {
+        return providerConfigurationStorages.stream()
+                .map(ProviderConfigurationStorage::getMarket)
                 .collect(Collectors.toSet());
     }
 
@@ -89,11 +89,11 @@ public class ProviderConfigurationByCluster {
     }
 
     // return a new map, so the original remains unaltered, in case of any alterations.
-    public Map<String, ProviderConfiguration> getProviderConfigurations() {
+    public Map<String, ProviderConfigurationStorage> getProviderConfigurations() {
         return Maps.newHashMap(this.providerConfigurations);
     }
 
-    public ProviderConfiguration getProviderConfiguration(String providerName) {
+    public ProviderConfigurationStorage getProviderConfiguration(String providerName) {
         return providerConfigurations.get(providerName);
     }
 }

@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.provider.configuration.storage.converter;
 
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 import se.tink.libraries.provider.enums.ProviderStatuses;
 
 import java.util.Collection;
@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 public class StorageProviderConfigurationConverter {
 
     public static List<ProviderConfigurationCore> convert(
-            Collection<ProviderConfiguration> providerConfiguration,
+            Collection<ProviderConfigurationStorage> providerConfigurationStorage,
             Map<String, ProviderStatuses> providerStatusesMap) {
-        return providerConfiguration
+        return providerConfigurationStorage
                 .stream()
                 .map(p -> StorageProviderConfigurationConverter
                         .convert(p, getProviderStatusIfExists(providerStatusesMap, p)))
@@ -24,48 +24,48 @@ public class StorageProviderConfigurationConverter {
 
     private static Optional<ProviderStatuses> getProviderStatusIfExists(
             Map<String, ProviderStatuses> providerStatusesMap,
-            ProviderConfiguration providerConfiguration) {
-        return Optional.ofNullable(providerStatusesMap.get(providerConfiguration.getName()));
+            ProviderConfigurationStorage providerConfigurationStorage) {
+        return Optional.ofNullable(providerStatusesMap.get(providerConfigurationStorage.getName()));
     }
 
     public static ProviderConfigurationCore convert(
-            ProviderConfiguration providerConfiguration, Optional<ProviderStatuses> providerStatus) {
+            ProviderConfigurationStorage providerConfigurationStorage, Optional<ProviderStatuses> providerStatus) {
 
         ProviderConfigurationCore core =
                 new ProviderConfigurationCore();
 
         core.setAccessType(
-                convertAccessType(providerConfiguration.getAccessType())
+                convertAccessType(providerConfigurationStorage.getAccessType())
         );
-        core.setCapabilitiesSerialized(providerConfiguration.getCapabilitiesSerialized());
-        core.setClassName(providerConfiguration.getClassName());
-        core.setCredentialsType(providerConfiguration.getCredentialsType());
-        core.setCurrency(providerConfiguration.getCurrency());
-        core.setDisplayName(providerConfiguration.getDisplayName());
-        core.setFinancialInstituteId(providerConfiguration.getFinancialInstituteId());
-        core.setFinancialInstituteName(providerConfiguration.getFinancialInstituteName());
-        core.setGroupDisplayName(providerConfiguration.getGroupDisplayName());
-        core.setMarket(providerConfiguration.getMarket());
-        core.setMultiFactor(providerConfiguration.isMultiFactor());
-        core.setName(providerConfiguration.getName());
-        core.setPasswordHelpText(providerConfiguration.getPasswordHelpText());
-        core.setPayload(providerConfiguration.getPayload());
-        core.setPopular(providerConfiguration.isPopular());
-        core.setRefreshFrequency(providerConfiguration.getRefreshFrequency());
-        core.setRefreshFrequencyFactor(providerConfiguration.getRefreshFrequencyFactor());
-        core.setType(providerConfiguration.getType());
-        core.setFields(providerConfiguration.getFields());
-        core.setTransactional(providerConfiguration.isTransactional());
-        core.setDisplayDescription(providerConfiguration.getDisplayDescription());
-        core.setSupplementalFields(providerConfiguration.getSupplementalFields());
-        core.setTutorialUrl(providerConfiguration.getTutorialUrl());
+        core.setCapabilitiesSerialized(providerConfigurationStorage.getCapabilitiesSerialized());
+        core.setClassName(providerConfigurationStorage.getClassName());
+        core.setCredentialsType(providerConfigurationStorage.getCredentialsType());
+        core.setCurrency(providerConfigurationStorage.getCurrency());
+        core.setDisplayName(providerConfigurationStorage.getDisplayName());
+        core.setFinancialInstituteId(providerConfigurationStorage.getFinancialInstituteId());
+        core.setFinancialInstituteName(providerConfigurationStorage.getFinancialInstituteName());
+        core.setGroupDisplayName(providerConfigurationStorage.getGroupDisplayName());
+        core.setMarket(providerConfigurationStorage.getMarket());
+        core.setMultiFactor(providerConfigurationStorage.isMultiFactor());
+        core.setName(providerConfigurationStorage.getName());
+        core.setPasswordHelpText(providerConfigurationStorage.getPasswordHelpText());
+        core.setPayload(providerConfigurationStorage.getPayload());
+        core.setPopular(providerConfigurationStorage.isPopular());
+        core.setRefreshFrequency(providerConfigurationStorage.getRefreshFrequency());
+        core.setRefreshFrequencyFactor(providerConfigurationStorage.getRefreshFrequencyFactor());
+        core.setType(providerConfigurationStorage.getType());
+        core.setFields(providerConfigurationStorage.getFields());
+        core.setTransactional(providerConfigurationStorage.isTransactional());
+        core.setDisplayDescription(providerConfigurationStorage.getDisplayDescription());
+        core.setSupplementalFields(providerConfigurationStorage.getSupplementalFields());
+        core.setTutorialUrl(providerConfigurationStorage.getTutorialUrl());
 
         if (providerStatus.isPresent()) {
             core.setStatus(providerStatus.get());
         } else {
-            core.setStatus(providerConfiguration.getStatus());
+            core.setStatus(providerConfigurationStorage.getStatus());
         }
-        providerConfiguration.getRefreshSchedule().ifPresent(
+        providerConfigurationStorage.getRefreshSchedule().ifPresent(
                 prs -> core.setRefreshSchedule(prs)
         );
 
@@ -73,7 +73,7 @@ public class StorageProviderConfigurationConverter {
 
     }
 
-    private static ProviderConfigurationCore.AccessType convertAccessType(ProviderConfiguration.AccessType accessType) {
+    private static ProviderConfigurationCore.AccessType convertAccessType(ProviderConfigurationStorage.AccessType accessType) {
         if (accessType == null) {
             return null;
         }

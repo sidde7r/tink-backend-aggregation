@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProviderConfiguration {
+public class ProviderConfigurationStorage {
 
     public enum AccessType {
         OPEN_BANKING, OTHER
@@ -60,7 +60,7 @@ public class ProviderConfiguration {
     private String displayDescription;
     private String refreshScheduleSerialized;
 
-    public ProviderConfiguration() {
+    public ProviderConfigurationStorage() {
         setFields(Lists.<Field> newArrayList());
         setSupplementalFields(Lists.<Field> newArrayList());
     }
@@ -77,7 +77,7 @@ public class ProviderConfiguration {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        ProviderConfiguration other = (ProviderConfiguration) obj;
+        ProviderConfigurationStorage other = (ProviderConfigurationStorage) obj;
         if (name == null) {
             if (other.name != null) {
                 return false;
@@ -326,7 +326,7 @@ public class ProviderConfiguration {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(ProviderConfiguration.class).add("name", name).toString();
+        return MoreObjects.toStringHelper(ProviderConfigurationStorage.class).add("name", name).toString();
     }
 
     /**

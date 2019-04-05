@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.provider.configuration.cli.util.ProviderConfigurationComparator;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ClusterProviderListModel;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderConfigWrapper;
 import se.tink.backend.aggregation.provider.configuration.storage.module.clusterprovider.ProviderSpecificationModel;
@@ -50,23 +50,23 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
                 "generate a json of provider that contains different fields");
     }
 
-    private Map<String, List<ProviderConfiguration>> generateProviderOverride(
-            Map<String, Map<String, ProviderConfiguration>> providersFromClusterExportByMarket,
-            Map<String, Map<String, ProviderConfiguration>> providersFromSeedingFilesByMarket) {
+    private Map<String, List<ProviderConfigurationStorage>> generateProviderOverride(
+            Map<String, Map<String, ProviderConfigurationStorage>> providersFromClusterExportByMarket,
+            Map<String, Map<String, ProviderConfigurationStorage>> providersFromSeedingFilesByMarket) {
 
-        Map<String, List<ProviderConfiguration>> providerOverrideByMarket = Maps.newHashMap();
+        Map<String, List<ProviderConfigurationStorage>> providerOverrideByMarket = Maps.newHashMap();
 
-        for (Map.Entry<String, Map<String, ProviderConfiguration>> entry : providersFromClusterExportByMarket.entrySet()) {
+        for (Map.Entry<String, Map<String, ProviderConfigurationStorage>> entry : providersFromClusterExportByMarket.entrySet()) {
             String market = entry.getKey();
-            Map<String, ProviderConfiguration> providersFromCluster = entry.getValue();
-            Map<String, ProviderConfiguration> providersFromSeeding = providersFromSeedingFilesByMarket.get(market);
+            Map<String, ProviderConfigurationStorage> providersFromCluster = entry.getValue();
+            Map<String, ProviderConfigurationStorage> providersFromSeeding = providersFromSeedingFilesByMarket.get(market);
 
             if (providersFromSeeding == null || providersFromSeeding.isEmpty()) {
                 providerOverrideByMarket.put(market, new ArrayList<>(providersFromCluster.values()));
                 continue;
             }
 
-            List<ProviderConfiguration> providerOverrideOnMarket =
+            List<ProviderConfigurationStorage> providerOverrideOnMarket =
                     generateProviderOverridePerMarket(providersFromCluster, providersFromSeeding);
             log.info("different provider on market {}: {} ", market, providerOverrideOnMarket.size());
             providerOverrideByMarket.put(market, providerOverrideOnMarket);
@@ -75,14 +75,14 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
         return providerOverrideByMarket;
     }
 
-    private List<ProviderConfiguration> generateProviderOverridePerMarket(
-            Map<String, ProviderConfiguration> providersFromClusterExport,
-            Map<String, ProviderConfiguration> providersFromSeedingFiles) {
+    private List<ProviderConfigurationStorage> generateProviderOverridePerMarket(
+            Map<String, ProviderConfigurationStorage> providersFromClusterExport,
+            Map<String, ProviderConfigurationStorage> providersFromSeedingFiles) {
 
-        List<ProviderConfiguration> providerOverride = Lists.newArrayList();
+        List<ProviderConfigurationStorage> providerOverride = Lists.newArrayList();
         providersFromClusterExport.forEach(
                 (name, providerFromCluster) -> {
-                    ProviderConfiguration providerFromFile = providersFromSeedingFiles.get(name);
+                    ProviderConfigurationStorage providerFromFile = providersFromSeedingFiles.get(name);
 
                     if (providerFromFile == null) {
                         providerOverride.add(providerFromCluster);
@@ -104,13 +104,13 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
         File clusterExportFile = new File(RAW_PROVIDER_DATA_PATH);
 
         // read in a list of providers from the exported file from cluster
-        List<ProviderConfiguration> providers =
-                mapper.readValue(clusterExportFile, new TypeReference<List<ProviderConfiguration>>() {
+        List<ProviderConfigurationStorage> providers =
+                mapper.readValue(clusterExportFile, new TypeReference<List<ProviderConfigurationStorage>>() {
                 });
 
         Map<String, List<String>> availableProviders = providers.stream()
-                .collect(Collectors.groupingBy(ProviderConfiguration::getMarket,
-                        Collectors.mapping(ProviderConfiguration::getName, Collectors.toList())));
+                .collect(Collectors.groupingBy(ProviderConfigurationStorage::getMarket,
+                        Collectors.mapping(ProviderConfigurationStorage::getName, Collectors.toList())));
 
         availableProviders.forEach((m, p) -> {
             log.info("providers available in market {} : {} ", m, p.size());
@@ -119,20 +119,20 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
         return availableProviders;
     }
 
-    private Map<String, Map<String, ProviderConfiguration>> loadProvidersFromClusterExport()
+    private Map<String, Map<String, ProviderConfigurationStorage>> loadProvidersFromClusterExport()
             throws IOException {
         File clusterExportFile = new File(RAW_PROVIDER_DATA_PATH);
 
         // read in a list of providers from the exported file from cluster
-        List<ProviderConfiguration> providers =
-                mapper.readValue(clusterExportFile, new TypeReference<List<ProviderConfiguration>>() {
+        List<ProviderConfigurationStorage> providers =
+                mapper.readValue(clusterExportFile, new TypeReference<List<ProviderConfigurationStorage>>() {
                 });
 
         log.info("loaded {} providers from exported provider file ", providers.size());
 
         // map providers by market
-        Map<String, List<ProviderConfiguration>> providersByMarket =
-                providers.stream().collect(Collectors.groupingBy(ProviderConfiguration::getMarket));
+        Map<String, List<ProviderConfigurationStorage>> providersByMarket =
+                providers.stream().collect(Collectors.groupingBy(ProviderConfigurationStorage::getMarket));
 
         // in each market, map providers by name
         return providersByMarket.entrySet().stream()
@@ -140,7 +140,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
                         entry -> mapProviderConfigurationByProviderName(entry.getValue())));
     }
 
-    private Map<String, Map<String, ProviderConfiguration>> loadProvidersSeedingFilesByMarket() throws IOException {
+    private Map<String, Map<String, ProviderConfigurationStorage>> loadProvidersSeedingFilesByMarket() throws IOException {
         File directory = new File("data/seeding");
         File[] providerFiles = directory.listFiles((dir, fileName) -> fileName.matches("providers-[a-z]{2}.json"));
 
@@ -148,7 +148,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
             throw new IOException("no provider file found");
         }
 
-        Map<String, Map<String, ProviderConfiguration>> providersByMarket = Maps.newHashMap();
+        Map<String, Map<String, ProviderConfigurationStorage>> providersByMarket = Maps.newHashMap();
 
         for (File providerFile : providerFiles) {
             parseProviderConfigurationsFromSeedingFile(providerFile, providersByMarket);
@@ -158,7 +158,7 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
     }
 
     private void parseProviderConfigurationsFromSeedingFile(File providerFile,
-                                                            Map<String, Map<String, ProviderConfiguration>>
+                                                            Map<String, Map<String, ProviderConfigurationStorage>>
                                                                     providerConfigurationByMarket)
             throws IOException, IllegalStateException {
         ProviderConfigWrapper providerConfig = mapper.readValue(providerFile, ProviderConfigWrapper.class);
@@ -171,45 +171,46 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
         Preconditions.checkNotNull(currency,
                 "no currency found for provider configuration file %s", providerFile.getName());
 
-        List<ProviderConfiguration> providerConfigurations = providerConfig.getProviders();
-        log.info("loaded {} providers from provider json file {}", providerConfigurations.size(), providerFile.getName());
+        List<ProviderConfigurationStorage> providerConfigurationStorages = providerConfig.getProviders();
+        log.info("loaded {} providers from provider json file {}", providerConfigurationStorages.size(), providerFile.getName());
 
         // ensure each provider configuration uses the market and currency set for the market.
-        providerConfigurations.forEach(providerConfiguration -> {
+        providerConfigurationStorages.forEach(providerConfiguration -> {
             providerConfiguration.setMarket(market);
             providerConfiguration.setCurrency(currency);
         });
 
         // put provider map in global provider map by market
-        providerConfigurationByMarket.put(market, mapProviderConfigurationByProviderName(providerConfigurations));
+        providerConfigurationByMarket.put(market, mapProviderConfigurationByProviderName(providerConfigurationStorages));
     }
 
-    private Map<String, ProviderConfiguration> mapProviderConfigurationByProviderName(
-            List<ProviderConfiguration> providerConfigurations) {
+    private Map<String, ProviderConfigurationStorage> mapProviderConfigurationByProviderName(
+            List<ProviderConfigurationStorage> providerConfigurationStorages) {
 
-        Map<String, ProviderConfiguration> providerConfigurationByProviderName = Maps.newHashMap();
+        Map<String, ProviderConfigurationStorage> providerConfigurationByProviderName = Maps.newHashMap();
 
-        for (ProviderConfiguration providerConfiguration : providerConfigurations) {
-            String providerCapabilitySerialized = providerConfiguration.getCapabilitiesSerialized();
+        for (ProviderConfigurationStorage providerConfigurationStorage : providerConfigurationStorages) {
+            String providerCapabilitySerialized = providerConfigurationStorage.getCapabilitiesSerialized();
 
             if (providerCapabilitySerialized == null
                     || providerCapabilitySerialized.equals("null")
                     || providerCapabilitySerialized.equals("[]")) {
-                providerConfiguration.setCapabilities(Sets.newHashSet());
+                providerConfigurationStorage.setCapabilities(Sets.newHashSet());
             }
 
-            providerConfigurationByProviderName.put(providerConfiguration.getName(), providerConfiguration);
+            providerConfigurationByProviderName.put(providerConfigurationStorage.getName(),
+                    providerConfigurationStorage);
         }
 
         return providerConfigurationByProviderName;
     }
 
-    private void writeMarketOverrideToFile(Map<String, List<ProviderConfiguration>> overrideProvidersByMarket,
+    private void writeMarketOverrideToFile(Map<String, List<ProviderConfigurationStorage>> overrideProvidersByMarket,
                                            String clusterId) throws IOException {
 
-        for (Map.Entry<String, List<ProviderConfiguration>> entry : overrideProvidersByMarket.entrySet()) {
+        for (Map.Entry<String, List<ProviderConfigurationStorage>> entry : overrideProvidersByMarket.entrySet()) {
             String market = entry.getKey();
-            List<ProviderConfiguration> overrideProviders = entry.getValue();
+            List<ProviderConfigurationStorage> overrideProviders = entry.getValue();
 
             if (overrideProviders.isEmpty()) {
                 continue;
@@ -297,13 +298,13 @@ public class GenerateProviderOnClusterFilesCommand extends ConfiguredCommand<Pro
         createDirectories(AVAILABLE_PROVIDERS_PATH);
         createDirectories(OVERRIDING_PROVIDERS_PATH);
 
-        Map<String, Map<String, ProviderConfiguration>> providersFromSeedingFiles =
+        Map<String, Map<String, ProviderConfigurationStorage>> providersFromSeedingFiles =
                 loadProvidersSeedingFilesByMarket();
 
-        Map<String, Map<String, ProviderConfiguration>> providersFromClusterExport =
+        Map<String, Map<String, ProviderConfigurationStorage>> providersFromClusterExport =
                 loadProvidersFromClusterExport();
 
-        Map<String, List<ProviderConfiguration>> overrideProvidersByMarket =
+        Map<String, List<ProviderConfigurationStorage>> overrideProvidersByMarket =
                 generateProviderOverride(providersFromClusterExport, providersFromSeedingFiles);
 
         Map<String, List<String>> providersAvailableByMarket =

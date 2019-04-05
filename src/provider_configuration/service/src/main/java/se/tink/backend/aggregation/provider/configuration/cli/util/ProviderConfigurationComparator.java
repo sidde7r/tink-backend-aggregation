@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 import se.tink.libraries.field.rpc.Field;
 
 import java.util.Map;
@@ -17,13 +17,13 @@ public class ProviderConfigurationComparator {
     private static final Logger log = LoggerFactory.getLogger(ProviderConfigurationComparator.class);
     private static boolean equals = true;
 
-    public static boolean equals(final ProviderConfiguration providerConfiguration1,
-                                 final ProviderConfiguration providerConfiguration2) {
-        compareProvider(providerConfiguration1, providerConfiguration2);
+    public static boolean equals(final ProviderConfigurationStorage providerConfigurationStorage1,
+                                 final ProviderConfigurationStorage providerConfigurationStorage2) {
+        compareProvider(providerConfigurationStorage1, providerConfigurationStorage2);
         return equals;
     }
 
-    private static void compareProvider(final ProviderConfiguration localProvider, final ProviderConfiguration clusterProvider) {
+    private static void compareProvider(final ProviderConfigurationStorage localProvider, final ProviderConfigurationStorage clusterProvider) {
         final String providerName = localProvider.getName();
 
         if (!Objects.equals(localProvider.getClassName(), clusterProvider.getClassName())) {

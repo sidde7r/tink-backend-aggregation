@@ -4,9 +4,8 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 import se.tink.libraries.credentials.enums.CredentialsTypes;
 import se.tink.libraries.field.rpc.Field;
 import se.tink.libraries.pair.Pair;
@@ -26,15 +25,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ProviderConfigurationValidationTest extends ProviderConfigurationServiceTestBase {
     @Inject
-    private @Named("providerConfiguration") Map<String, ProviderConfiguration> providerConfigurationByName;
+    private @Named("providerConfiguration") Map<String, ProviderConfigurationStorage> providerConfigurationByName;
     @Inject
     private @Named("enabledProvidersOnCluster") Map<String, Set<String>> enabledProvidersOnCluster;
     @Inject
-    private @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster;
+    private @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfigurationStorage>> providerOverrideOnCluster;
     @Inject
-    private @Named("capabilitiesByAgent") Map<String, Set<ProviderConfiguration.Capability>> providerAgentCapabilities;
+    private @Named("capabilitiesByAgent") Map<String, Set<ProviderConfigurationStorage.Capability>> providerAgentCapabilities;
 
-    private static final Predicate<ProviderConfiguration> FILTER_OUT_ABSTRACT_AND_ICS_AGENTS = provider ->
+    private static final Predicate<ProviderConfigurationStorage> FILTER_OUT_ABSTRACT_AND_ICS_AGENTS = provider ->
             !provider.getName().toLowerCase().contains("abstract");
 
 
@@ -51,10 +50,10 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
 
             List<String> missingProviders = new ArrayList<>();
             providerNamesForCluster.forEach(providerName -> {
-                ProviderConfiguration providerConfigurationForCluster = getProviderConfigurationForCluster(
+                ProviderConfigurationStorage providerConfigurationStorageForCluster = getProviderConfigurationForCluster(
                         clusterId, providerName);
 
-                if (Objects.isNull(providerConfigurationForCluster)) {
+                if (Objects.isNull(providerConfigurationStorageForCluster)) {
                     missingProviders.add(providerName);
                 }
             });
@@ -69,7 +68,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
         assertThat(missingProvidersByClusterId.entrySet()).isEmpty();
     }
 
-    private ProviderConfiguration getProviderConfigurationForCluster(String clusterId, String providerName) {
+    private ProviderConfigurationStorage getProviderConfigurationForCluster(String clusterId, String providerName) {
         if (!enabledProvidersOnCluster.containsKey(clusterId)) {
             return null;
         }
@@ -106,7 +105,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                     .map(providerName -> getProviderConfigurationForCluster(clusterId, providerName))
                     .filter(Objects::nonNull)
                     .filter(providerConfiguration -> Objects.isNull(providerConfiguration.getMarket()))
-                    .map(ProviderConfiguration::getName)
+                    .map(ProviderConfigurationStorage::getName)
                     .collect(Collectors.toList());
 
             if (providersWithMarketNull.isEmpty()) {
@@ -136,7 +135,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                     .map(providerName -> getProviderConfigurationForCluster(clusterId, providerName))
                     .filter(Objects::nonNull)
                     .filter(providerConfiguration -> Objects.isNull(providerConfiguration.getCurrency()))
-                    .map(ProviderConfiguration::getName)
+                    .map(ProviderConfigurationStorage::getName)
                     .collect(Collectors.toList());
 
             if (providersWithMarketNull.isEmpty()) {
@@ -153,7 +152,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     public void verifyAllAgentCapabilitiesAreAvailableInProviderCapabilities() {
         Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
                 .filter(FILTER_OUT_ABSTRACT_AND_ICS_AGENTS)
-                .map(ProviderConfiguration::getClassName)
+                .map(ProviderConfigurationStorage::getClassName)
                 .collect(Collectors.toSet());
 
         Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
@@ -165,7 +164,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     public void verifyAllProviderCapabilitiesAreAvailableInAgentCapabilities() {
         Set<String> providerCapabilityClassNames = providerConfigurationByName.values().stream()
                 .filter(FILTER_OUT_ABSTRACT_AND_ICS_AGENTS)
-                .map(ProviderConfiguration::getClassName)
+                .map(ProviderConfigurationStorage::getClassName)
                 .collect(Collectors.toSet());
 
         Set<String> agentCapabilityClassNames = providerAgentCapabilities.keySet().stream().collect(Collectors.toSet());
@@ -174,7 +173,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     }
 
     // TODO No need to execute more than once
-    private Set<Pair<String, Pair<ProviderConfiguration, Field>>> providerRows() {
+    private Set<Pair<String, Pair<ProviderConfigurationStorage, Field>>> providerRows() {
         Function<String, Pair<String, Set<String>>> clusterToClusterAndProviderStrings =
                 clusterId ->
                         Pair.of(
@@ -182,7 +181,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
                                 enabledProvidersOnCluster.getOrDefault(
                                         clusterId, Collections.emptySet()));
 
-        Function<Pair<String, String>, Pair<String, ProviderConfiguration>> stringToProviderConfig =
+        Function<Pair<String, String>, Pair<String, ProviderConfigurationStorage>> stringToProviderConfig =
                 pair ->
                         Pair.of(
                                 pair.first,
@@ -208,7 +207,7 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     }
 
     private static List<String> collectRows(
-            Set<Pair<String, Pair<ProviderConfiguration, Field>>> triples) {
+            Set<Pair<String, Pair<ProviderConfigurationStorage, Field>>> triples) {
         return triples.stream()
                 .map(triple -> String.format("%s:%s", triple.first, triple.second.first.getName()))
                 .sorted()
@@ -216,10 +215,10 @@ public class ProviderConfigurationValidationTest extends ProviderConfigurationSe
     }
 
     /** @throws AssertionError if there exists a provider field that satisfies the predicate */
-    private void validateFields(BiPredicate<ProviderConfiguration, Field> isInvalidField) {
-        Set<Pair<String, Pair<ProviderConfiguration, Field>>> triples = providerRows();
+    private void validateFields(BiPredicate<ProviderConfigurationStorage, Field> isInvalidField) {
+        Set<Pair<String, Pair<ProviderConfigurationStorage, Field>>> triples = providerRows();
 
-        Set<Pair<String, Pair<ProviderConfiguration, Field>>> violations =
+        Set<Pair<String, Pair<ProviderConfigurationStorage, Field>>> violations =
                 triples.stream()
                         .filter(
                                 triple ->
