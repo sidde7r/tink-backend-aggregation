@@ -153,18 +153,18 @@ public class StarlingTransferExecutor implements BankTransferExecutor {
                                                 TransferExecutionException.EndUserMessage
                                                         .INVALID_DESTINATION));
 
-        final PayeeEntity payee =
-                getPayeeForAccount(destinationIdentifier)
-                        .orElseThrow(
-                                () ->
-                                        getTransferException(
-                                                "Could not find payee with the specified account.",
-                                                TransferExecutionException.EndUserMessage
-                                                        .INVALID_DESTINATION));
+//        final PayeeEntity payee =
+//                getPayeeForAccount(destinationIdentifier)
+//                        .orElseThrow(
+//                                () ->
+//                                        getTransferException(
+//                                                "Could not find payee with the specified account.",
+//                                                TransferExecutionException.EndUserMessage
+//                                                        .INVALID_DESTINATION));
 
         return PaymentRecipient.builder()
                 .setDestinationAccount(destinationIdentifier)
-                .setPayeeName(payee.getPayeeName())
+//                .setPayeeName(payee.getPayeeName())
                 .setCountryCode(COUNTRY_CODE)
                 .setPayeeType(INDIVIDUAL)
                 .build();
