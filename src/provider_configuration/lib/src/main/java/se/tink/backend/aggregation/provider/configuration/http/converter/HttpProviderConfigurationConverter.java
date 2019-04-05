@@ -18,14 +18,23 @@ public class HttpProviderConfigurationConverter {
             NON_OXFORD_CAPABILITIES::contains;
 
     public static ProviderConfigurationDTO convert(String clusterId, ProviderConfiguration providerConfiguration) {
+
         ProviderConfigurationDTO dto = new ProviderConfigurationDTO();
-        dto.setCapabilitiesSerialized(handleCapabilities(clusterId, providerConfiguration));
+
+        dto.setAccessType(
+                convertAccessType(providerConfiguration.getAccessType())
+        );
+        dto.setCapabilitiesSerialized(
+                handleCapabilities(clusterId, providerConfiguration)
+        );
         dto.setClassName(providerConfiguration.getClassName());
         dto.setCredentialsType(providerConfiguration.getCredentialsType());
         dto.setCurrency(providerConfiguration.getCurrency());
         dto.setDisplayName(providerConfiguration.getDisplayName());
         dto.setDisplayDescription(providerConfiguration.getDisplayDescription());
         dto.setFields(providerConfiguration.getFields());
+        dto.setFinancialInstituteId(providerConfiguration.getFinancialInstituteId());
+        dto.setFinancialInstituteName(providerConfiguration.getFinancialInstituteName());
         dto.setGroupDisplayName(providerConfiguration.getGroupDisplayName());
         dto.setMarket(providerConfiguration.getMarket());
         dto.setMultiFactor(providerConfiguration.isMultiFactor());
@@ -65,5 +74,15 @@ public class HttpProviderConfigurationConverter {
         }
 
         return providerConfiguration.getCapabilitiesSerialized();
+    }
+
+    private static ProviderConfigurationDTO.AccessType convertAccessType(ProviderConfiguration.AccessType accessType) {
+        if (accessType == null) {
+            return null;
+        }
+
+        return ProviderConfigurationDTO.AccessType.valueOf(
+                accessType.name()
+        );
     }
 }

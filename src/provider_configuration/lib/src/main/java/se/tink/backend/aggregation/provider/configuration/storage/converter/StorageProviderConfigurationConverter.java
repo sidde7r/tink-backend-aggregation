@@ -32,11 +32,17 @@ public class StorageProviderConfigurationConverter {
 
         se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration core =
                 new se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration();
+
+        core.setAccessType(
+                convertAccessType(providerConfiguration.getAccessType())
+        );
         core.setCapabilitiesSerialized(providerConfiguration.getCapabilitiesSerialized());
         core.setClassName(providerConfiguration.getClassName());
         core.setCredentialsType(providerConfiguration.getCredentialsType());
         core.setCurrency(providerConfiguration.getCurrency());
         core.setDisplayName(providerConfiguration.getDisplayName());
+        core.setFinancialInstituteId(providerConfiguration.getFinancialInstituteId());
+        core.setFinancialInstituteName(providerConfiguration.getFinancialInstituteName());
         core.setGroupDisplayName(providerConfiguration.getGroupDisplayName());
         core.setMarket(providerConfiguration.getMarket());
         core.setMultiFactor(providerConfiguration.isMultiFactor());
@@ -64,5 +70,15 @@ public class StorageProviderConfigurationConverter {
 
         return core;
 
+    }
+
+    private static se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration.AccessType convertAccessType(ProviderConfiguration.AccessType accessType) {
+        if (accessType == null) {
+            return null;
+        }
+
+        return se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration.AccessType.valueOf(
+                accessType.name()
+        );
     }
 }
