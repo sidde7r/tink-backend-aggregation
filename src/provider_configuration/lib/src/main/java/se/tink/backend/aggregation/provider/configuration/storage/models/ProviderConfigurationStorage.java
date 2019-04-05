@@ -21,13 +21,18 @@ import java.util.Optional;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProviderConfiguration {
+public class ProviderConfigurationStorage {
+
+    public enum AccessType {
+        OPEN_BANKING, OTHER
+    }
 
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {}
     @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {}
 
+    private AccessType accessType;
     private String capabilitiesSerialized;
     private String className;
     private CredentialsTypes credentialsType;
@@ -35,6 +40,8 @@ public class ProviderConfiguration {
     private String displayName;
     @JsonProperty("fields")
     private String fieldsSerialized;
+    private String financialInstituteId;
+    private String financialInstituteName;
     @JsonProperty("supplementalFields")
     private String supplementalFieldsSerialized;
     private String groupDisplayName;
@@ -53,7 +60,7 @@ public class ProviderConfiguration {
     private String displayDescription;
     private String refreshScheduleSerialized;
 
-    public ProviderConfiguration() {
+    public ProviderConfigurationStorage() {
         setFields(Lists.<Field> newArrayList());
         setSupplementalFields(Lists.<Field> newArrayList());
     }
@@ -70,7 +77,7 @@ public class ProviderConfiguration {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        ProviderConfiguration other = (ProviderConfiguration) obj;
+        ProviderConfigurationStorage other = (ProviderConfigurationStorage) obj;
         if (name == null) {
             if (other.name != null) {
                 return false;
@@ -79,6 +86,10 @@ public class ProviderConfiguration {
             return false;
         }
         return true;
+    }
+
+    public AccessType getAccessType() {
+        return accessType;
     }
 
     @JsonProperty("capabilities")
@@ -132,6 +143,14 @@ public class ProviderConfiguration {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public String getFinancialInstituteId() {
+        return financialInstituteId;
+    }
+
+    public String getFinancialInstituteName() {
+        return financialInstituteName;
     }
 
     public String getTutorialUrl() {
@@ -199,6 +218,11 @@ public class ProviderConfiguration {
         return transactional;
     }
 
+    public void setAccessType(
+            AccessType accessType) {
+        this.accessType = accessType;
+    }
+
     @JsonProperty("capabilities")
     public void setCapabilities(Set<Capability> capabilities) {
         if (capabilities == null) {
@@ -234,6 +258,14 @@ public class ProviderConfiguration {
 
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
+    }
+
+    public void setFinancialInstituteId(String financialInstituteId) {
+        this.financialInstituteId = financialInstituteId;
+    }
+
+    public void setFinancialInstituteName(String financialInstituteName) {
+        this.financialInstituteName = financialInstituteName;
     }
 
     public void setSupplementalFields(List<Field> fields) {
@@ -294,7 +326,7 @@ public class ProviderConfiguration {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(ProviderConfiguration.class).add("name", name).toString();
+        return MoreObjects.toStringHelper(ProviderConfigurationStorage.class).add("name", name).toString();
     }
 
     /**

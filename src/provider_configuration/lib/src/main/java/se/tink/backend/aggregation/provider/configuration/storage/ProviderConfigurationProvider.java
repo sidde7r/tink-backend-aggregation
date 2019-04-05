@@ -4,8 +4,9 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
 import se.tink.backend.aggregation.provider.configuration.storage.converter.StorageProviderConfigurationConverter;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationDAO;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderStatusConfiguration;
 import se.tink.backend.aggregation.provider.configuration.storage.repositories.ProviderStatusConfigurationRepository;
@@ -19,7 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
-    private final Map<String, ProviderConfiguration> providerConfigurationByName;
+    private final Map<String, ProviderConfigurationStorage> providerConfigurationByName;
     private final ProviderStatusConfigurationRepository providerStatusConfigurationRepository;
     private final ClusterProviderHandler clusterProviderHandler;
 
@@ -27,7 +28,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
 
     @Inject
     public ProviderConfigurationProvider(
-            @Named("providerConfiguration") Map<String, ProviderConfiguration> providerConfigurationByName,
+            @Named("providerConfiguration") Map<String, ProviderConfigurationStorage> providerConfigurationByName,
             ProviderStatusConfigurationRepository providerStatusConfigurationRepository,
             ClusterProviderHandler clusterProviderHandler) {
         this.providerConfigurationByName = providerConfigurationByName;
@@ -36,7 +37,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     }
 
     @Override
-    public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterId(
+    public List<ProviderConfigurationCore> findAllByClusterId(
             String clusterId) {
 
         if (!clusterProviderHandler.validate(clusterId)) {
@@ -44,7 +45,7 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
             return Collections.emptyList();
         }
 
-        Map<String, ProviderConfiguration> providerConfigurations = clusterProviderHandler.getProviderConfigurationForCluster(clusterId);
+        Map<String, ProviderConfigurationStorage> providerConfigurations = clusterProviderHandler.getProviderConfigurationForCluster(clusterId);
 
         Map<String, ProviderStatuses> providerStatusMap = getProviderStatusMap();
 
@@ -52,24 +53,25 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
     }
 
     @Override
-    public se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration findByClusterIdAndProviderName(
+    public ProviderConfigurationCore findByClusterIdAndProviderName(
             String clusterId, String providerName) {
 
-        ProviderConfiguration providerConfiguration = clusterProviderHandler.getProviderConfiguration(clusterId, providerName);
+        ProviderConfigurationStorage providerConfigurationStorage = clusterProviderHandler.getProviderConfiguration(clusterId, providerName);
 
-        if (Objects.isNull(providerConfiguration)){
+        if (Objects.isNull(providerConfigurationStorage)){
             log.warn("Could not find provider by name {} in cluster {} ", providerName, clusterId);
             return null;
         }
 
-        return StorageProviderConfigurationConverter.convert(providerConfiguration, getProviderStatus(providerConfiguration));
+        return StorageProviderConfigurationConverter.convert(
+                providerConfigurationStorage, getProviderStatus(providerConfigurationStorage));
     }
 
 
     // Although this is not the "optimal" way to do this operation, it doesn't seem like this functionality is used today.
     // If we are going to use it more, we can make it perform better
     @Override
-    public List<se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration> findAllByClusterIdAndMarket(
+    public List<ProviderConfigurationCore> findAllByClusterIdAndMarket(
             String clusterId, String market) {
         return findAllByClusterId(clusterId).stream()
                 .filter(providerConfiguration -> market.equalsIgnoreCase(providerConfiguration.getMarket()))
@@ -87,9 +89,9 @@ public class ProviderConfigurationProvider implements ProviderConfigurationDAO {
                 .collect(Collectors.toMap(ProviderStatusConfiguration::getProviderName, ProviderStatusConfiguration::getStatus));
     }
 
-    private Optional<ProviderStatuses> getProviderStatus(ProviderConfiguration providerConfiguration) {
+    private Optional<ProviderStatuses> getProviderStatus(ProviderConfigurationStorage providerConfigurationStorage) {
         ProviderStatusConfiguration providerStatusConfiguration = providerStatusConfigurationRepository
-                .findOne(providerConfiguration.getName());
+                .findOne(providerConfigurationStorage.getName());
 
         if (providerStatusConfiguration == null) {
             return Optional.empty();

@@ -3,17 +3,17 @@ package se.tink.backend.aggregation.provider.configuration.storage.module.cluste
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 
 import java.util.List;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProviderConfigModel {
+public class ProviderConfigWrapper {
     private String market;
     private String currency;
-    private List<ProviderConfiguration> providers;
+    private List<ProviderConfigurationStorage> providers;
 
     public String getMarket() {
         return market;
@@ -23,7 +23,7 @@ public class ProviderConfigModel {
         return currency;
     }
 
-    public List<ProviderConfiguration> getProviders() {
+    public List<ProviderConfigurationStorage> getProviders() {
         return providers;
     }
 }

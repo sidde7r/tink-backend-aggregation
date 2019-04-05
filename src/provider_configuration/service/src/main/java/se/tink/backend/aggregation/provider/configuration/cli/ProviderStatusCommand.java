@@ -7,7 +7,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 import se.tink.backend.aggregation.provider.configuration.config.ProviderServiceConfiguration;
-import se.tink.backend.aggregation.provider.configuration.core.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.core.ProviderConfigurationCore;
 import se.tink.backend.aggregation.provider.configuration.storage.ProviderConfigurationProvider;
 import se.tink.libraries.provider.enums.ProviderStatuses;
 import se.tink.libraries.cli.printutils.CliPrintUtils;
@@ -94,9 +94,9 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<Provider
         CliPrintUtils.printTable(output);
     }
 
-    private void printProviderStatus(List<ProviderConfiguration> providerConfigurationList) {
-        Map<String, ProviderStatuses> providerStatusesList = providerConfigurationList.stream()
-                .collect(Collectors.toMap(ProviderConfiguration::getName, ProviderConfiguration::getStatus));
+    private void printProviderStatus(List<ProviderConfigurationCore> providerConfigurationCoreList) {
+        Map<String, ProviderStatuses> providerStatusesList = providerConfigurationCoreList.stream()
+                .collect(Collectors.toMap(ProviderConfigurationCore::getName, ProviderConfigurationCore::getStatus));
         printProviderStatuses(providerStatusesList);
     }
 
@@ -113,13 +113,13 @@ public class ProviderStatusCommand extends ProviderConfigurationCommand<Provider
         ProviderConfigurationProvider configurationProvider = createConfigurationProvider(injector);
 
         if (namespace.getBoolean(SHOW_FIELD)){
-            List<ProviderConfiguration> providerConfigurationList ;
+            List<ProviderConfigurationCore> providerConfigurationCoreList;
             if (Objects.isNull(market)) {
-                providerConfigurationList = configurationProvider.findAllByClusterId(clusterId);
+                providerConfigurationCoreList = configurationProvider.findAllByClusterId(clusterId);
             } else {
-                providerConfigurationList = configurationProvider.findAllByClusterIdAndMarket(clusterId, market);
+                providerConfigurationCoreList = configurationProvider.findAllByClusterIdAndMarket(clusterId, market);
             }
-            printProviderStatus(providerConfigurationList);
+            printProviderStatus(providerConfigurationCoreList);
             return;
         }
 

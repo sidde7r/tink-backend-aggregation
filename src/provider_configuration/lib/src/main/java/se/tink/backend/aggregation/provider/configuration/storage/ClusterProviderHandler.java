@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfiguration;
+import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationStorage;
 import se.tink.backend.aggregation.provider.configuration.storage.models.ProviderConfigurationByCluster;
 
 public class ClusterProviderHandler {
@@ -18,20 +18,20 @@ public class ClusterProviderHandler {
     // TODO: instead of injecting in-memory objects, change to a object that holds nothing in memory, but makes the data available
     @Inject
     ClusterProviderHandler(
-            @Named("providerConfiguration") Map<String, ProviderConfiguration> providerConfigurationByName,
+            @Named("providerConfiguration") Map<String, ProviderConfigurationStorage> providerConfigurationByName,
             @Named("enabledProvidersOnCluster") Map<String, Set<String>> enabledProvidersOnCluster,
-            @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster,
-            @Named("capabilitiesByAgent") Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
+            @Named("providerOverrideOnCluster") Map<String, Map<String, ProviderConfigurationStorage>> providerOverrideOnCluster,
+            @Named("capabilitiesByAgent") Map<String, Set<ProviderConfigurationStorage.Capability>> capabilitiesByAgentClass) {
 
         this.providerConfigurationByClusterMap = generateProviderConfigurationByClusterMap(providerConfigurationByName,
                 enabledProvidersOnCluster, providerOverrideOnCluster, capabilitiesByAgentClass);
     }
 
     private static Map<String, ProviderConfigurationByCluster> generateProviderConfigurationByClusterMap(
-            Map<String, ProviderConfiguration> providerConfigurationByName,
+            Map<String, ProviderConfigurationStorage> providerConfigurationByName,
             Map<String, Set<String>> enabledProvidersOnCluster,
-            Map<String, Map<String, ProviderConfiguration>> providerOverrideOnCluster,
-            Map<String, Set<ProviderConfiguration.Capability>> capabilitiesByAgentClass) {
+            Map<String, Map<String, ProviderConfigurationStorage>> providerOverrideOnCluster,
+            Map<String, Set<ProviderConfigurationStorage.Capability>> capabilitiesByAgentClass) {
 
         Map<String, ProviderConfigurationByCluster> providerConfigurationByClusterMap = Maps.newHashMap();
         for (String clusterId : enabledProvidersOnCluster.keySet()) {
@@ -55,11 +55,11 @@ public class ClusterProviderHandler {
         return validate(clusterId) && providerConfigurationByClusterMap.get(clusterId).marketEnabled(market);
     }
 
-    public Map<String, ProviderConfiguration> getProviderConfigurationForCluster(String clusterId) {
+    public Map<String, ProviderConfigurationStorage> getProviderConfigurationForCluster(String clusterId) {
         return providerConfigurationByClusterMap.get(clusterId).getProviderConfigurations();
     }
 
-    public ProviderConfiguration getProviderConfiguration(String clusterId, String providerName) {
+    public ProviderConfigurationStorage getProviderConfiguration(String clusterId, String providerName) {
         ProviderConfigurationByCluster providerConfigurationByCluster = providerConfigurationByClusterMap.get(clusterId);
         if (Objects.isNull(providerConfigurationByCluster)) {
             return null;

@@ -20,6 +20,11 @@ import java.util.Set;
 
 // FIXME: remove all code that has JSON IGNORE
 public class ProviderConfigurationDTO {
+
+    public enum AccessType {
+        OPEN_BANKING, OTHER
+    }
+
     @SuppressWarnings("serial")
     private static class CapabilityList extends ArrayList<Capability> {
     }
@@ -28,6 +33,7 @@ public class ProviderConfigurationDTO {
     private static class FieldsList extends ArrayList<Field> {
     }
 
+    private AccessType accessType;
     private String capabilitiesSerialized;
     private String className;
     private CredentialsTypes credentialsType;
@@ -36,6 +42,8 @@ public class ProviderConfigurationDTO {
     private String displayDescription;
     @JsonProperty("fields")
     private String fieldsSerialized;
+    private String financialInstituteId;
+    private String financialInstituteName;
     @JsonProperty("supplementalFields")
     private String supplementalFieldsSerialized;
     private String groupDisplayName;
@@ -52,6 +60,10 @@ public class ProviderConfigurationDTO {
     private boolean transactional;
     private ProviderTypes type;
     private String refreshScheduleSerialized;
+
+    public AccessType getAccessType() {
+        return accessType;
+    }
 
     @JsonProperty("capabilities")
     public Set<Capability> getCapabilities() {
@@ -105,6 +117,14 @@ public class ProviderConfigurationDTO {
 
     public List<Field> getFields() {
         return SerializationUtils.deserializeFromString(fieldsSerialized, FieldsList.class);
+    }
+
+    public String getFinancialInstituteId() {
+        return financialInstituteId;
+    }
+
+    public String getFinancialInstituteName() {
+        return financialInstituteName;
     }
 
     public String getGroupDisplayName() {
@@ -163,6 +183,11 @@ public class ProviderConfigurationDTO {
         return transactional;
     }
 
+    public void setAccessType(
+            AccessType accessType) {
+        this.accessType = accessType;
+    }
+
     @JsonProperty("capabilities")
     public void setCapabilities(Set<Capability> capabilities) {
         if (capabilities == null) {
@@ -198,6 +223,14 @@ public class ProviderConfigurationDTO {
 
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
+    }
+
+    public void setFinancialInstituteId(String financialInstituteId) {
+        this.financialInstituteId = financialInstituteId;
+    }
+
+    public void setFinancialInstituteName(String financialInstituteName) {
+        this.financialInstituteName = financialInstituteName;
     }
 
     public void setGroupDisplayName(String groupDisplayName) {
