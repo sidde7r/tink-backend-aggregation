@@ -2,6 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Exceptions;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Market;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Pagination;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.authenticator.BbvaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.configuration.BbvaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.transactionalaccount.BbvaTransactionFetcher;
@@ -45,26 +49,20 @@ public final class BbvaAgent extends NextGenerationAgent {
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
-                                BbvaConstants.Market.INTEGRATION_NAME,
-                                BbvaConstants.Market.CLIENT_NAME,
+                                Market.INTEGRATION_NAME,
+                                Market.CLIENT_NAME,
                                 BbvaConfiguration.class)
                         .orElseThrow(
-                                () ->
-                                        new IllegalStateException(
-                                                BbvaConstants.Exceptions.MISSING_CONFIGURATION));
+                                () -> new IllegalStateException(Exceptions.MISSING_CONFIGURATION));
         if (!bbvaConfiguration.isValid()) {
-            throw new IllegalStateException(BbvaConstants.Exceptions.INVALID_CONFIGURATION);
+            throw new IllegalStateException(Exceptions.INVALID_CONFIGURATION);
         }
 
-        persistentStorage.put(
-                BbvaConstants.StorageKeys.BASE_AUTH_URL, bbvaConfiguration.getBaseAuthUrl());
-        persistentStorage.put(
-                BbvaConstants.StorageKeys.BASE_API_URL, bbvaConfiguration.getBaseApiUrl());
-        persistentStorage.put(BbvaConstants.StorageKeys.CLIENT_ID, bbvaConfiguration.getClientId());
-        persistentStorage.put(
-                BbvaConstants.StorageKeys.CLIENT_SECRET, bbvaConfiguration.getClientSecret());
-        persistentStorage.put(
-                BbvaConstants.StorageKeys.REDIRECT_URI, bbvaConfiguration.getRedirectUrl());
+        persistentStorage.put(StorageKeys.BASE_AUTH_URL, bbvaConfiguration.getBaseAuthUrl());
+        persistentStorage.put(StorageKeys.BASE_API_URL, bbvaConfiguration.getBaseApiUrl());
+        persistentStorage.put(StorageKeys.CLIENT_ID, bbvaConfiguration.getClientId());
+        persistentStorage.put(StorageKeys.CLIENT_SECRET, bbvaConfiguration.getClientSecret());
+        persistentStorage.put(StorageKeys.REDIRECT_URI, bbvaConfiguration.getRedirectUrl());
     }
 
     @Override
@@ -100,7 +98,7 @@ public final class BbvaAgent extends NextGenerationAgent {
                         new TransactionFetcherController<>(
                                 transactionPaginationHelper,
                                 new TransactionPagePaginationController<>(
-                                        transactionFetcher, BbvaConstants.Pagination.START_PAGE))));
+                                        transactionFetcher, Pagination.START_PAGE))));
     }
 
     @Override
