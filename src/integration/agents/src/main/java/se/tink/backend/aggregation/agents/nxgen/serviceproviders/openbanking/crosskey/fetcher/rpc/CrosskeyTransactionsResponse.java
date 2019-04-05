@@ -25,20 +25,15 @@ public class CrosskeyTransactionsResponse implements PaginatorResponse {
     private LinksEntity links;
     private MetaEntity meta;
 
-    @JsonIgnore
-    private TransactionTypeEntity transactionType;
+    @JsonIgnore private TransactionTypeEntity transactionType;
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        if (data == null) {
-            return Collections.emptyList();
-        }
-
-        return data.getTransactions()
-            .stream()
-            .filter(getTransactionFilter())
-            .map(transactionEntity -> transactionEntity.toTinkTransaction(transactionType))
-            .collect(Collectors.toList());
+        return Optional.ofNullable(data).map(TransactionDataEntity::getTransactions)
+                .orElse(Collections.emptyList()).stream()
+                .filter(getTransactionFilter())
+                .map(transactionEntity -> transactionEntity.toTinkTransaction(transactionType))
+                .collect(Collectors.toList());
     }
 
     @Override
