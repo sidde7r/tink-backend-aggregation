@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.resources;
 
 import com.google.inject.Inject;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import se.tink.backend.aggregation.api.MonitoringService;
 import se.tink.backend.aggregation.controllers.AggregationControllerNotReachable;
 import se.tink.backend.aggregation.controllers.ClusterConnectivityController;
-import se.tink.libraries.http.utils.HttpResponseHelper;
 
 public class MonitoringServiceResource implements MonitoringService {
     private ClusterConnectivityController clusterConnectivityController;
@@ -20,8 +20,8 @@ public class MonitoringServiceResource implements MonitoringService {
         try {
             clusterConnectivityController.checkConnectivity(clusterId);
         } catch (AggregationControllerNotReachable e) {
-            HttpResponseHelper.error(Response.Status.INTERNAL_SERVER_ERROR);
+            throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
         }
-        return HttpResponseHelper.ok();
+        return Response.ok().build();
     }
 }
