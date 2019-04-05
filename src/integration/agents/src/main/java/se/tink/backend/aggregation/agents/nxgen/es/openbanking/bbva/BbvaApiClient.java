@@ -17,6 +17,7 @@ import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.fetcher.tran
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
@@ -38,6 +39,21 @@ public final class BbvaApiClient {
         this.persistentStorage = persistentStorage;
     }
 
+    private RequestBuilder createTokenRequest(URL url, String grantType) {
+        return client.request(url)
+                .header(
+                        HeaderKeys.AUTHORIZATION,
+                        String.format(HeaderValues.AUTHORIZATION_RESPONSE, getBase64Credentials()))
+                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
+                .queryParam(QueryKeys.GRANT_TYPE, grantType);
+    }
+
+    private RequestBuilder createRequestInSession(URL url) {
+        return client.request(url)
+                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
+                .header(HeaderKeys.AUTHORIZATION, getHeaderFormattedTokenFromSession());
+    }
+
     public PaginatorResponse fetchTransactions(TransactionalAccount account, int page) {
         final URL url =
                 new URL(
@@ -45,9 +61,7 @@ public final class BbvaApiClient {
                                 + String.format(
                                         Urls.ACCOUNT_TRANSACTIONS, account.getApiIdentifier()));
 
-        return client.request(url)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.AUTHORIZATION, getHeaderFormattedTokenFromSession())
+        return createRequestInSession(url)
                 .queryParam(QueryKeys.PAGINATION, String.valueOf(page))
                 .get(BbvaTransactionsResponse.class);
     }
@@ -58,19 +72,13 @@ public final class BbvaApiClient {
                         persistentStorage.get(StorageKeys.BASE_API_URL)
                                 + String.format(Urls.ACCOUNT, id));
 
-        return client.request(url)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.AUTHORIZATION, getHeaderFormattedTokenFromSession())
-                .get(BbvaDetailedAccountResponse.class);
+        return createRequestInSession(url).get(BbvaDetailedAccountResponse.class);
     }
 
     public BbvaAccountsResponse fetchAccounts() {
         final URL url = new URL(persistentStorage.get(StorageKeys.BASE_API_URL) + Urls.ACCOUNTS);
 
-        return client.request(url)
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.AUTHORIZATION, getHeaderFormattedTokenFromSession())
-                .get(BbvaAccountsResponse.class);
+        return createRequestInSession(url).get(BbvaAccountsResponse.class);
     }
 
     public URL getAuthorizeUrl(String state) {
@@ -89,13 +97,8 @@ public final class BbvaApiClient {
     public OAuth2Token getToken(String code) {
         final URL url = new URL(persistentStorage.get(StorageKeys.BASE_AUTH_URL) + Urls.TOKEN);
 
-        return client.request(url)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.GRANT_TYPE)
+        return createTokenRequest(url, QueryValues.GRANT_TYPE)
                 .queryParam(QueryKeys.CODE, code)
-                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        String.format(HeaderValues.AUTHORIZATION_RESPONSE, getBase64Credentials()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .post(TokenResponse.class)
                 .toTinkToken();
@@ -105,12 +108,7 @@ public final class BbvaApiClient {
         final URL url = new URL(persistentStorage.get(StorageKeys.BASE_AUTH_URL) + Urls.TOKEN);
         final RefreshRequest refreshRequest = new RefreshRequest(refreshToken);
 
-        return client.request(url)
-                .queryParam(QueryKeys.GRANT_TYPE, QueryValues.REFRESH_TOKEN)
-                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        String.format(HeaderValues.AUTHORIZATION_RESPONSE, getBase64Credentials()))
+        return createTokenRequest(url, QueryValues.REFRESH_TOKEN)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, refreshRequest.toForm())
                 .toTinkToken();
