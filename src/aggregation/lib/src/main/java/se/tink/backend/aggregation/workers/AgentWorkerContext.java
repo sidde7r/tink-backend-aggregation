@@ -311,6 +311,12 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         account.setCredentialsId(request.getCredentials().getId());
         account.setUserId(request.getCredentials().getUserId());
 
+        // This is to handle legacy agents. Once all legacy agents are gone this can be removed.
+        // The logic of adding currency code for next gen agents is done in Account.toSystemAccount
+        if (Strings.isNullOrEmpty(account.getCurrencyCode())) {
+            account.setCurrencyCode(request.getProvider().getCurrency());
+        }
+
         se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest updateAccountRequest =
                 new se.tink.backend.aggregation.aggregationcontroller.v1.rpc.UpdateAccountRequest();
 
@@ -318,12 +324,6 @@ public class AgentWorkerContext extends AgentContext implements Managed {
         updateAccountRequest.setAccount(CoreAccountMapper.fromAggregation(account));
         updateAccountRequest.setAccountFeatures(accountFeatures);
         updateAccountRequest.setCredentialsId(request.getCredentials().getId());
-
-        // This is to handle legacy agents. Once all legacy agents are gone this can be removed.
-        // The logic of adding currency code for next gen agents is done in Account.toSystemAccount
-        if (Strings.isNullOrEmpty(account.getCurrencyCode())) {
-            account.setCurrencyCode(request.getProvider().getCurrency());
-        }
 
         Account updatedAccount;
         try {
