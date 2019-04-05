@@ -29,7 +29,7 @@ public class CustodyAccountResponse extends BaseResponse {
 
     public InvestmentAccount toInvestmentAccount(HandelsbankenSEApiClient client) {
         return InvestmentAccount.builder(custodyAccountNumber)
-                .setAccountNumber(custodyAccountNumber)
+                .setAccountNumber(getAccountNumberBasedOnInvestmentType())
                 .setName(title)
                 .setCashBalance(Amount.inSEK(0))
                 .setPortfolios(Collections.singletonList(toPortfolio(client)))
@@ -40,7 +40,7 @@ public class CustodyAccountResponse extends BaseResponse {
         return marketValue == null ? 0d : marketValue.asDouble();
     }
 
-    private String constructUniqueIdentifier() {
+    private String getAccountNumberBasedOnInvestmentType() {
         return Portfolio.Type.ISK.equals(toType()) ? iskAccountNumber : custodyAccountNumber;
     }
 
@@ -55,7 +55,7 @@ public class CustodyAccountResponse extends BaseResponse {
                         .orElse(null)
         );
         portfolio.setTotalValue(toMarketValue());
-        portfolio.setUniqueIdentifier(constructUniqueIdentifier());
+        portfolio.setUniqueIdentifier(getAccountNumberBasedOnInvestmentType());
         portfolio.setInstruments(toInstruments(client));
 
         return portfolio;
