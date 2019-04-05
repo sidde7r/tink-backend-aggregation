@@ -46,16 +46,15 @@ public class CrosskeyTransactionsResponse implements PaginatorResponse {
         return Optional.empty();
     }
 
-
     public CrosskeyTransactionsResponse setTransactionType(TransactionTypeEntity transactionType) {
         this.transactionType = transactionType;
         return this;
     }
 
-    protected Predicate<TransactionEntity> getTransactionFilter() {
-        return transactionEntity -> transactionEntity.getCreditDebitIndicator().equalsIgnoreCase(
-            transactionType.getValue());
+    private Predicate<TransactionEntity> getTransactionFilter() {
+        return transactionEntity ->
+                transactionEntity
+                        .getCreditDebitIndicator()
+                        .equalsIgnoreCase(transactionType.getValue());
     }
-
-
 }

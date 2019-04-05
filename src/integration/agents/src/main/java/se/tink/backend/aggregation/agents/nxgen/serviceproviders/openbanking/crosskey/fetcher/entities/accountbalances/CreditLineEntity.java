@@ -12,5 +12,4 @@ public class CreditLineEntity {
     private AmountEntity amount;
     private Boolean included;
     private String type;
-
 }

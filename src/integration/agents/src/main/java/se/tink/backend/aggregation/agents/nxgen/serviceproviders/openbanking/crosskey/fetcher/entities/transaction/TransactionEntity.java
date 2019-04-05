@@ -7,7 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Format;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Transactions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.common.AmountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
@@ -47,37 +48,33 @@ public class TransactionEntity {
     }
 
     public Transaction toTinkTransaction(TransactionTypeEntity transactionType) {
-
-        return transactionType == TransactionTypeEntity.DEBIT ?
-            constructTransactionalAccountTransaction() :
-            constructCreditCardTransaction();
+        return transactionType == TransactionTypeEntity.DEBIT
+                ? constructTransactionalAccountTransaction()
+                : constructCreditCardTransaction();
     }
 
     private Transaction constructCreditCardTransaction() {
-
         return CreditCardTransaction.builder()
-            .setPending(!CrosskeyBaseConstants.Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
-            .setExternalId(accountId)
-            .setDate(getBookedDate())
-            .setAmount(new Amount(amount.getCurrency(), amount.getAmount()))
-            .build();
+                .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
+                .setExternalId(accountId)
+                .setDate(getBookedDate())
+                .setAmount(new Amount(amount.getCurrency(), amount.getAmount()))
+                .build();
     }
 
     private Transaction constructTransactionalAccountTransaction() {
-
         return Transaction.builder()
-            .setPending(!CrosskeyBaseConstants.Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
-            .setExternalId(accountId)
-            .setDate(getBookedDate())
-            .setAmount(new Amount(amount.getCurrency(), amount.getAmount()))
-            .build();
+                .setPending(!Transactions.STATUS_BOOKED.equalsIgnoreCase(status))
+                .setExternalId(accountId)
+                .setDate(getBookedDate())
+                .setAmount(new Amount(amount.getCurrency(), amount.getAmount()))
+                .build();
     }
 
     @JsonIgnore
     public Date getBookedDate() {
         try {
-            return new SimpleDateFormat(CrosskeyBaseConstants.Format.TRANSACTION_TIMESTAMP)
-                .parse(bookingDateTime);
+            return new SimpleDateFormat(Format.TRANSACTION_TIMESTAMP).parse(bookingDateTime);
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }

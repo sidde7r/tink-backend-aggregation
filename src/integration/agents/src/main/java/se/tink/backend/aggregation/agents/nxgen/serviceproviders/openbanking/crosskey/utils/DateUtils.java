@@ -12,8 +12,8 @@ public final class DateUtils {
         throw new AssertionError("Suppress default constructor for noninstantiability");
     }
 
-    public static Date getRestrictedDate(Date date, Date restrictionDate,
-        BiFunction<Date, Date, Boolean> dateEvaluator) {
+    public static Date getRestrictedDate(
+            Date date, Date restrictionDate, BiFunction<Date, Date, Boolean> dateEvaluator) {
 
         return dateEvaluator.apply(date, restrictionDate) ? date : restrictionDate;
     }
@@ -24,5 +24,4 @@ public final class DateUtils {
         dateFormat.setTimeZone(timeZone);
         return dateFormat.format(date);
     }
-
 }
