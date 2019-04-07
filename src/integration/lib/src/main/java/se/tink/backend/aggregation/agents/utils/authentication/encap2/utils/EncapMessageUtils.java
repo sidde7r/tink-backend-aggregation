@@ -29,7 +29,10 @@ public class EncapMessageUtils {
     private final DeviceProfile deviceProfile;
     private final String applicationHash;
 
-    public EncapMessageUtils(EncapConfiguration configuration, EncapStorage storage, TinkHttpClient httpClient,
+    public EncapMessageUtils(
+            EncapConfiguration configuration,
+            EncapStorage storage,
+            TinkHttpClient httpClient,
             DeviceProfile deviceProfile) {
         this.configuration = configuration;
         this.storage = storage;
@@ -60,13 +63,13 @@ public class EncapMessageUtils {
 
         String otpChallenge = registrationResultEntity.getB64OtpChallenge();
 
-        String b64ChallengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
-                storage.getAuthenticationKey(),
-                otpChallenge);
+        String b64ChallengeResponse =
+                EncapCryptoUtils.computeB64ChallengeResponse(
+                        storage.getAuthenticationKey(), otpChallenge);
 
-        String b64ChallengeResponseWithoutPin = EncapCryptoUtils.computeB64ChallengeResponse(
-                storage.getAuthenticationKeyWithoutPin(),
-                otpChallenge);
+        String b64ChallengeResponseWithoutPin =
+                EncapCryptoUtils.computeB64ChallengeResponse(
+                        storage.getAuthenticationKeyWithoutPin(), otpChallenge);
 
         Map<String, String> queryPairs = new HashMap<>();
 
@@ -106,21 +109,21 @@ public class EncapMessageUtils {
         return getUrlEncodedQueryParams(queryPairs);
     }
 
-    public String buildAuthenticationMessage(IdentificationEntity identificationEntity,
-            AuthenticationMethod authenticationMethod) {
+    public String buildAuthenticationMessage(
+            IdentificationEntity identificationEntity, AuthenticationMethod authenticationMethod) {
         String otpChallenge = identificationEntity.getB64OtpChallenge();
 
         String usedAuthMethod;
         String challengeResponse;
         if (authenticationMethod == AuthenticationMethod.DEVICE_AND_PIN) {
-            challengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
-                    storage.getAuthenticationKey(),
-                    otpChallenge);
+            challengeResponse =
+                    EncapCryptoUtils.computeB64ChallengeResponse(
+                            storage.getAuthenticationKey(), otpChallenge);
             usedAuthMethod = EncapConstants.Message.DEVICE_PIN;
         } else if (authenticationMethod == AuthenticationMethod.DEVICE) {
-            challengeResponse = EncapCryptoUtils.computeB64ChallengeResponse(
-                    storage.getAuthenticationKeyWithoutPin(),
-                    otpChallenge);
+            challengeResponse =
+                    EncapCryptoUtils.computeB64ChallengeResponse(
+                            storage.getAuthenticationKeyWithoutPin(), otpChallenge);
             usedAuthMethod = EncapConstants.Message.DEVICE;
         } else {
             throw new IllegalStateException("Unknown encap authentication method.");
@@ -148,12 +151,14 @@ public class EncapMessageUtils {
         queryPairs.put("device.DeviceModel", deviceProfile.getModelNumber());
         queryPairs.put("device.DeviceName", EncapConstants.DeviceInformation.NAME);
         queryPairs.put("device.DeviceUUID", storage.getDeviceUuid());
-        queryPairs.put("device.IsRootAvailable", EncapConstants.DeviceInformation.IS_ROOT_AVAILABLE);
+        queryPairs.put(
+                "device.IsRootAvailable", EncapConstants.DeviceInformation.IS_ROOT_AVAILABLE);
         queryPairs.put("device.OperatingSystemName", deviceProfile.getOs());
         queryPairs.put("device.OperatingSystemType", deviceProfile.getOs());
         queryPairs.put("device.SignerHashes", EncapConstants.DeviceInformation.SIGNER_HASHES);
         queryPairs.put("device.SystemVersion", deviceProfile.getOsVersion());
-        queryPairs.put("device.UserInterfaceIdiom", EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
+        queryPairs.put(
+                "device.UserInterfaceIdiom", EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
     }
 
     private void populateMetaInformation(Map<String, String> queryPairs) {
@@ -163,18 +168,31 @@ public class EncapMessageUtils {
 
     private String getUrlEncodedQueryParams(Map<String, String> queryPairs) {
         Map<String, String> queryPairsWithUrlEncodedValues = Maps.newLinkedHashMap();
-        queryPairs.forEach((key,value) -> queryPairsWithUrlEncodedValues.put(key, EncodingUtils.encodeUrl(value)));
+        queryPairs.forEach(
+                (key, value) ->
+                        queryPairsWithUrlEncodedValues.put(key, EncodingUtils.encodeUrl(value)));
 
         Joiner.MapJoiner joiner = Joiner.on("&").withKeyValueSeparator("=");
         return joiner.join(queryPairsWithUrlEncodedValues);
     }
 
-    private HashMap<String, String> getCryptoRequestParams(byte[] rand16BytesKey, byte[] rand16BytesIv,
-            byte[] serverPubKeyBytes, String inputInPlainText) {
+    private HashMap<String, String> getCryptoRequestParams(
+            byte[] rand16BytesKey,
+            byte[] rand16BytesIv,
+            byte[] serverPubKeyBytes,
+            String inputInPlainText) {
         HashMap<String, String> requestParams = Maps.newHashMap();
-        requestParams.put("EMD", EncapCryptoUtils.computeEMD(rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
-        requestParams.put("EMK", EncapCryptoUtils.computeEMK(rand16BytesKey, rand16BytesIv, serverPubKeyBytes));
-        requestParams.put("MAC", EncapCryptoUtils.computeMAC(rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
+        requestParams.put(
+                "EMD",
+                EncapCryptoUtils.computeEMD(
+                        rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
+        requestParams.put(
+                "EMK",
+                EncapCryptoUtils.computeEMK(rand16BytesKey, rand16BytesIv, serverPubKeyBytes));
+        requestParams.put(
+                "MAC",
+                EncapCryptoUtils.computeMAC(
+                        rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
         requestParams.put("MPV", EncodingUtils.encodeAsBase64String("1"));
         requestParams.put("PKH", EncapCryptoUtils.computePublicKeyHash(serverPubKeyBytes));
 
@@ -184,22 +202,28 @@ public class EncapMessageUtils {
     public <T> T encryptAndSend(String plainTextMessage, Class<T> responseType) {
         byte[] key = RandomUtils.secureRandom(16);
         byte[] iv = RandomUtils.secureRandom(16);
-        byte[] pubKeyBytes = EncodingUtils.decodeBase64String(EncapConstants.B64_ELLIPTIC_CURVE_PUBLIC_KEY);
+        byte[] pubKeyBytes =
+                EncodingUtils.decodeBase64String(EncapConstants.B64_ELLIPTIC_CURVE_PUBLIC_KEY);
 
-        HashMap<String, String> cryptoRequestParams = getCryptoRequestParams(
-                key, iv, pubKeyBytes, plainTextMessage);
+        HashMap<String, String> cryptoRequestParams =
+                getCryptoRequestParams(key, iv, pubKeyBytes, plainTextMessage);
 
         RequestBody encryptionRequestBody = new RequestBody(cryptoRequestParams);
 
-        String response = httpClient.request(EncapConstants.Urls.CRYPTO_EXCHANGE)
-                .accept(MediaType.WILDCARD)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(String.class, encryptionRequestBody);
+        String response =
+                httpClient
+                        .request(EncapConstants.Urls.CRYPTO_EXCHANGE)
+                        .accept(MediaType.WILDCARD)
+                        .type(MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(String.class, encryptionRequestBody);
 
         Map<String, String> responseQueryPairs = parseResponseQuery(response);
 
-        String decryptedEMD = EncapCryptoUtils.decryptEMDResponse(key, iv, responseQueryPairs.get("EMD"));
-        boolean isVerified = EncapCryptoUtils.verifyMACValue(key, iv, decryptedEMD, responseQueryPairs.get("MAC"));
+        String decryptedEMD =
+                EncapCryptoUtils.decryptEMDResponse(key, iv, responseQueryPairs.get("EMD"));
+        boolean isVerified =
+                EncapCryptoUtils.verifyMACValue(
+                        key, iv, decryptedEMD, responseQueryPairs.get("MAC"));
 
         if (!isVerified) {
             throw new IllegalStateException("MAC authentication failed");
@@ -224,7 +248,8 @@ public class EncapMessageUtils {
         String[] pairs = responseQuery.split("&");
         for (String pair : pairs) {
             int idx = pair.indexOf("=");
-            queryPairs.put(EncodingUtils.decodeUrl(pair.substring(0, idx)).toUpperCase(),
+            queryPairs.put(
+                    EncodingUtils.decodeUrl(pair.substring(0, idx)).toUpperCase(),
                     EncodingUtils.decodeUrl(pair.substring(idx + 1)));
         }
 

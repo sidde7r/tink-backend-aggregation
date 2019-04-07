@@ -4,6 +4,6 @@ import se.tink.libraries.metrics.MetricRegistry;
 
 public interface MetricContext {
     MetricRegistry getMetricRegistry();
-    void setMetricRegistry(MetricRegistry metricRegistry);
 
+    void setMetricRegistry(MetricRegistry metricRegistry);
 }

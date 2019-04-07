@@ -13,7 +13,8 @@ public class EncapConstants {
         public static final String DEVICE_UUID = "deviceUUID";
         public static final String HARDWARE_ID = "hardwareId";
         public static final String B64_AUTHENTICATION_KEY = "b64AuthenticationKey";
-        public static final String B64_AUTHENTICATION_KEY_WITHOUT_PIN = "b64AuthenticationKeyWithoutPin";
+        public static final String B64_AUTHENTICATION_KEY_WITHOUT_PIN =
+                "b64AuthenticationKeyWithoutPin";
         public static final String B64_TOTP_KEY = "b64TotpKey";
         public static final String B64_SALT_HASH = "saltHash";
         public static final String SIGNING_KEY_PHRASE = "signingKeyPhrase";
@@ -28,7 +29,8 @@ public class EncapConstants {
         private static final String HOST = "https://bf-esb-internet.edb.com";
         private static final String SOAP_BASE = "/ws_proxy/soap";
 
-        public static final URL CRYPTO_EXCHANGE = new URL(HOST + "/samob/platform-smartdevice/client");
+        public static final URL CRYPTO_EXCHANGE =
+                new URL(HOST + "/samob/platform-smartdevice/client");
         public static final URL AUTHENTICATION_SESSION_CREATE =
                 new URL(HOST + SOAP_BASE + "/SECSMobileAuthenticationSessionCreate_V1_0Service");
         public static final URL ACTIVATION_SESSION_UPDATE =
@@ -40,8 +42,10 @@ public class EncapConstants {
     }
 
     public static final class HttpHeaders {
-        public static final String AUTHENTICATION_SESSION_CREATE = "sECSMobileAuthenticationSessionCreate_V1_0";
-        public static final String ACTIVATION_SESSION_UPDATE = "sECSMobileActivationSessionUpdate_V1_0";
+        public static final String AUTHENTICATION_SESSION_CREATE =
+                "sECSMobileAuthenticationSessionCreate_V1_0";
+        public static final String ACTIVATION_SESSION_UPDATE =
+                "sECSMobileActivationSessionUpdate_V1_0";
     }
 
     public static final class Soap {

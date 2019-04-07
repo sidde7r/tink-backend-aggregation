@@ -31,7 +31,8 @@ import se.tink.libraries.i18n.Catalog;
 
 public class SignicatBankIdAuthenticator implements Runnable {
     private static final int AUTHENTICATION_BANKID_TIMEOUT = 120;
-    private static final String AUTHENTICATION_BANKID_URL = "https://id.signicat.com/std/method/tink.se?id=sbid-inapp:default:sv&target=https%3A%2F%2Fwww.tink.se%2Fapi%2Fv1%2Fauthentication%2Fsaml";
+    private static final String AUTHENTICATION_BANKID_URL =
+            "https://id.signicat.com/std/method/tink.se?id=sbid-inapp:default:sv&target=https%3A%2F%2Fwww.tink.se%2Fapi%2Fv1%2Fauthentication%2Fsaml";
     private static final boolean DEBUG = false;
     private static final String API_KEY = "B+=3e6uSUjeThen";
     private static final Logger log = LoggerFactory.getLogger(SignicatBankIdAuthenticator.class);
@@ -42,7 +43,12 @@ public class SignicatBankIdAuthenticator implements Runnable {
     private final String userId;
     private final Catalog catalog;
 
-    public SignicatBankIdAuthenticator(String socialSecurityNumber, String userId, String credentialsId, Catalog catalog, SignicatBankIdHandler handler) {
+    public SignicatBankIdAuthenticator(
+            String socialSecurityNumber,
+            String userId,
+            String credentialsId,
+            Catalog catalog,
+            SignicatBankIdHandler handler) {
         this.socialSecurityNumber = socialSecurityNumber;
         this.userId = userId;
         this.credentialsId = credentialsId;
@@ -50,13 +56,12 @@ public class SignicatBankIdAuthenticator implements Runnable {
         this.handler = handler;
     }
 
-    public SignicatBankIdAuthenticator(String socialSecurityNumber, Catalog catalog, SignicatBankIdHandler handler) {
+    public SignicatBankIdAuthenticator(
+            String socialSecurityNumber, Catalog catalog, SignicatBankIdHandler handler) {
         this(socialSecurityNumber, null, null, catalog, handler);
     }
 
-    /**
-     * Helper method to create a Jersey client.
-     */
+    /** Helper method to create a Jersey client. */
     private static Client createClient() {
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
 
@@ -74,9 +79,7 @@ public class SignicatBankIdAuthenticator implements Runnable {
         return client;
     }
 
-    /**
-     * Helper method to create a Jersey request.
-     */
+    /** Helper method to create a Jersey request. */
     private static Builder createClientRequest(String url, Client client) {
         return client.resource(url).accept(MediaType.APPLICATION_JSON);
     }
@@ -94,24 +97,31 @@ public class SignicatBankIdAuthenticator implements Runnable {
         orderBankIdRequest.setSubject(socialSecurityNumber);
         orderBankIdRequest.setApiKey(API_KEY);
 
-        InitiateBankIdResponse initiateBankIdResponse = createClientRequest(AUTHENTICATION_BANKID_URL, client).type(
-                MediaType.APPLICATION_JSON).post(InitiateBankIdResponse.class, orderBankIdRequest);
+        InitiateBankIdResponse initiateBankIdResponse =
+                createClientRequest(AUTHENTICATION_BANKID_URL, client)
+                        .type(MediaType.APPLICATION_JSON)
+                        .post(InitiateBankIdResponse.class, orderBankIdRequest);
 
         if (initiateBankIdResponse.getError() != null) {
-            log.warn(userId, credentialsId, "BankID authentication error: " + initiateBankIdResponse.getError().getCode());
+            log.warn(
+                    userId,
+                    credentialsId,
+                    "BankID authentication error: " + initiateBankIdResponse.getError().getCode());
             switch (initiateBankIdResponse.getError().getCode()) {
-            case "ALREADY_IN_PROGRESS":
-                handler.onUpdateStatus(
-                        SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                        catalog.getString("BankID session already in progress, please try again."),
-                        null);
-                return;
-            default:
-                handler.onUpdateStatus(
-                        SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                        catalog.getString("BankID authentication failed. Please verify your Mobil BankID is OK."),
-                        null);
-                return;
+                case "ALREADY_IN_PROGRESS":
+                    handler.onUpdateStatus(
+                            SignicatBankIdStatus.AUTHENTICATION_ERROR,
+                            catalog.getString(
+                                    "BankID session already in progress, please try again."),
+                            null);
+                    return;
+                default:
+                    handler.onUpdateStatus(
+                            SignicatBankIdStatus.AUTHENTICATION_ERROR,
+                            catalog.getString(
+                                    "BankID authentication failed. Please verify your Mobil BankID is OK."),
+                            null);
+                    return;
             }
         }
 
@@ -125,18 +135,19 @@ public class SignicatBankIdAuthenticator implements Runnable {
         // Poll BankID status periodically until the process is complete.
 
         for (int i = 0; i < AUTHENTICATION_BANKID_TIMEOUT; i++) {
-            collectBankIdResponse = createClientRequest(initiateBankIdResponse.getCollectUrl(), client).type(
-                    MediaType.APPLICATION_JSON).post(CollectBankIdResponse.class, collectBankIdRequest);
+            collectBankIdResponse =
+                    createClientRequest(initiateBankIdResponse.getCollectUrl(), client)
+                            .type(MediaType.APPLICATION_JSON)
+                            .post(CollectBankIdResponse.class, collectBankIdRequest);
 
             String status = collectBankIdResponse.getProgressStatus();
 
             if (collectBankIdResponse.getError() != null) {
                 String errorCode = collectBankIdResponse.getError().getCode();
-                String logMessage = String.format(
-                        "BankID failed with progress status: %s, error status: %s and message: %s",
-                        status,
-                        errorCode,
-                        collectBankIdResponse.getError().getMessage());
+                String logMessage =
+                        String.format(
+                                "BankID failed with progress status: %s, error status: %s and message: %s",
+                                status, errorCode, collectBankIdResponse.getError().getMessage());
 
                 if (Objects.equal(errorCode, ErrorCode.CANCELLED)) {
                     log.info(userId, credentialsId, logMessage);
@@ -149,55 +160,70 @@ public class SignicatBankIdAuthenticator implements Runnable {
             }
 
             switch (status) {
-            case StatusMessage.OUTSTANDING_TRANSACTION:
-            case StatusMessage.USER_SIGN:
-            case StatusMessage.STARTED:
-                log.info(userId, credentialsId,
-                        "BankID authentication is not yet complete, with status " + status);
-                handler.onUpdateStatus(
-                        SignicatBankIdStatus.AWAITING_BANKID_AUTHENTICATION,
-                        initiateBankIdResponse.getAutoStartToken(),
-                        null);
+                case StatusMessage.OUTSTANDING_TRANSACTION:
+                case StatusMessage.USER_SIGN:
+                case StatusMessage.STARTED:
+                    log.info(
+                            userId,
+                            credentialsId,
+                            "BankID authentication is not yet complete, with status " + status);
+                    handler.onUpdateStatus(
+                            SignicatBankIdStatus.AWAITING_BANKID_AUTHENTICATION,
+                            initiateBankIdResponse.getAutoStartToken(),
+                            null);
 
-                Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
-                continue;
-            case StatusMessage.RETRY:
-            case StatusMessage.NO_CLIENT:
-                log.info(userId, credentialsId,"BankID authentication is not yet complete, with status " + status);
-                handler.onUpdateStatus(
-                        SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                        catalog.getString("BankID authentication failed. Please verify your Mobil BankID is OK."),
-                        null);
-                return;
-            case StatusMessage.COMPLETE:
-                log.info(userId, credentialsId, "BankID authentication done, with status " + status);
-                CompleteBankIdResponse completeResponse = createClientRequest(
-                        collectBankIdResponse.getCompleteUrl(), client).get(CompleteBankIdResponse.class);
+                    Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
+                    continue;
+                case StatusMessage.RETRY:
+                case StatusMessage.NO_CLIENT:
+                    log.info(
+                            userId,
+                            credentialsId,
+                            "BankID authentication is not yet complete, with status " + status);
+                    handler.onUpdateStatus(
+                            SignicatBankIdStatus.AUTHENTICATION_ERROR,
+                            catalog.getString(
+                                    "BankID authentication failed. Please verify your Mobil BankID is OK."),
+                            null);
+                    return;
+                case StatusMessage.COMPLETE:
+                    log.info(
+                            userId,
+                            credentialsId,
+                            "BankID authentication done, with status " + status);
+                    CompleteBankIdResponse completeResponse =
+                            createClientRequest(collectBankIdResponse.getCompleteUrl(), client)
+                                    .get(CompleteBankIdResponse.class);
 
-                handler.onUpdateStatus(
-                        SignicatBankIdStatus.AUTHENTICATED,
-                        null,
-                        getNationalId(completeResponse));
-                return;
-            default:
-                log.info(userId, credentialsId,
-                        "BankID authentication is not yet complete, with status " + status);
-                handler.onUpdateStatus(
-                        SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                        catalog.getString("BankID authentication failed. Please verify your Mobil BankID is OK."),
-                        null);
-                throw new RuntimeException("unknown status: " + status);
+                    handler.onUpdateStatus(
+                            SignicatBankIdStatus.AUTHENTICATED,
+                            null,
+                            getNationalId(completeResponse));
+                    return;
+                default:
+                    log.info(
+                            userId,
+                            credentialsId,
+                            "BankID authentication is not yet complete, with status " + status);
+                    handler.onUpdateStatus(
+                            SignicatBankIdStatus.AUTHENTICATION_ERROR,
+                            catalog.getString(
+                                    "BankID authentication failed. Please verify your Mobil BankID is OK."),
+                            null);
+                    throw new RuntimeException("unknown status: " + status);
             }
         }
 
         handler.onUpdateStatus(
                 SignicatBankIdStatus.AUTHENTICATION_ERROR,
-                catalog.getString("BankID authentication failed. Please verify your Mobil BankID is OK."),
+                catalog.getString(
+                        "BankID authentication failed. Please verify your Mobil BankID is OK."),
                 null);
     }
 
     /**
-     * @param completeResponse Contains a Base64 encoded SAML response, that in turn contains national ID
+     * @param completeResponse Contains a Base64 encoded SAML response, that in turn contains
+     *     national ID
      * @return national-id in SAML response (e.g. social security number in Sweden)
      */
     private static String getNationalId(CompleteBankIdResponse completeResponse) {
@@ -207,7 +233,8 @@ public class SignicatBankIdAuthenticator implements Runnable {
         XPath xpath = xpathFactory.newXPath();
 
         try {
-            return xpath.evaluate(getNationalIdXPath(),
+            return xpath.evaluate(
+                    getNationalIdXPath(),
                     new InputSource(new StringReader(new String(decodedSamlResponse))));
         } catch (XPathExpressionException e) {
             log.error("Couldn't read national id from signicat response.", e);
@@ -216,25 +243,17 @@ public class SignicatBankIdAuthenticator implements Runnable {
     }
 
     /**
-     * Ref: https://support.signicat.com/display/S2/Example+SAML+response
-     * Example:
-     * <Response>
-     *   …
-     *   <Assertion>
-     *   …
-     *     <Attribute AttributeName='national-id'>
-     *       201212121212
-     *     </Attribute>
-     *   …
-     *   </Assertion>
-     * </Response>
+     * Ref: https://support.signicat.com/display/S2/Example+SAML+response Example: <Response> …
+     * <Assertion> … <Attribute AttributeName='national-id'> 201212121212 </Attribute> …
+     * </Assertion> </Response>
      */
     private static String getNationalIdXPath() {
-        return "/" + subPathWithLocalName("Response") +
-                subPathWithLocalName("Assertion") +
-                subPathWithLocalName("AttributeStatement") +
-                subPathWithAttributeName("national-id") +
-                subPathWithLocalName("AttributeValue");
+        return "/"
+                + subPathWithLocalName("Response")
+                + subPathWithLocalName("Assertion")
+                + subPathWithLocalName("AttributeStatement")
+                + subPathWithAttributeName("national-id")
+                + subPathWithLocalName("AttributeValue");
     }
 
     private static String subPathWithLocalName(String path) {
@@ -242,6 +261,7 @@ public class SignicatBankIdAuthenticator implements Runnable {
     }
 
     private static String subPathWithAttributeName(String attributeName) {
-        return String.format("/*[local-name()='Attribute' and @AttributeName = '%s']", attributeName);
+        return String.format(
+                "/*[local-name()='Attribute' and @AttributeName = '%s']", attributeName);
     }
 }

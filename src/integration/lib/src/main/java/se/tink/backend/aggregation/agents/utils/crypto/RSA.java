@@ -1,11 +1,5 @@
 package se.tink.backend.aggregation.agents.utils.crypto;
 
-import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
@@ -24,6 +18,11 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.function.Consumer;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class RSA {
     private static final String ALGORITHM = "RSA";
@@ -53,7 +52,8 @@ public class RSA {
         return getRsaPublicKey(keySpec);
     }
 
-    public static RSAPublicKey getPublicKeyFromModulusAndExponent(byte[] modulusBytes, byte[] exponentBytes) {
+    public static RSAPublicKey getPublicKeyFromModulusAndExponent(
+            byte[] modulusBytes, byte[] exponentBytes) {
         BigInteger modulus = new BigInteger(modulusBytes);
         BigInteger publicExponent = new BigInteger(exponentBytes);
         RSAPublicKeySpec keySpec = new RSAPublicKeySpec(modulus, publicExponent);
@@ -85,7 +85,10 @@ public class RSA {
             Cipher cipher = Cipher.getInstance(cipherDefinition);
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return cipher.doFinal(data);
-        } catch (InvalidKeyException | BadPaddingException | IllegalBlockSizeException | NoSuchPaddingException
+        } catch (InvalidKeyException
+                | BadPaddingException
+                | IllegalBlockSizeException
+                | NoSuchPaddingException
                 | NoSuchAlgorithmException e) {
             throw new SecurityException(e.getMessage(), e);
         }
@@ -140,6 +143,7 @@ public class RSA {
 
     public static String pemFormatPublicKey(PublicKey publicKey) {
         String rawPublicKey = EncodingUtils.encodeAsBase64String(publicKey.getEncoded());
-        return String.format("-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", rawPublicKey);
+        return String.format(
+                "-----BEGIN PUBLIC KEY-----\n%s\n-----END PUBLIC KEY-----\n", rawPublicKey);
     }
 }

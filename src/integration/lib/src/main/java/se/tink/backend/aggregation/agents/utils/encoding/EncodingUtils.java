@@ -9,7 +9,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 public class EncodingUtils {
-    private final static Base64 base64Codec = new Base64();
+    private static final Base64 base64Codec = new Base64();
 
     public static byte[] decodeBase64String(String base64String) {
         return base64Codec.decode(base64String);

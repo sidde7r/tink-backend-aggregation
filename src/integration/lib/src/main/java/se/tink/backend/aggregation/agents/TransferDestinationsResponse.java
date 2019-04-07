@@ -28,7 +28,8 @@ public class TransferDestinationsResponse {
         mergeWithExistingDestinations(patterns);
     }
 
-    public TransferDestinationsResponse(Account account, List<TransferDestinationPattern> destinations) {
+    public TransferDestinationsResponse(
+            Account account, List<TransferDestinationPattern> destinations) {
         this(asMap(account, destinations));
     }
 
@@ -44,14 +45,21 @@ public class TransferDestinationsResponse {
         addDestinations(account, ImmutableList.of(destination));
     }
 
-    private void mergeWithExistingDestinations(Map<Account, List<TransferDestinationPattern>> destinations) {
+    private void mergeWithExistingDestinations(
+            Map<Account, List<TransferDestinationPattern>> destinations) {
         Map<Account, List<TransferDestinationPattern>> existingDestinations = this.destinations;
-        this.destinations = Stream.of(existingDestinations, destinations)
-                .map(Map::entrySet)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) ->
-                        Stream.of(a, b).flatMap(Collection::stream).collect(Collectors.toList()))
-                );
+        this.destinations =
+                Stream.of(existingDestinations, destinations)
+                        .map(Map::entrySet)
+                        .flatMap(Collection::stream)
+                        .collect(
+                                Collectors.toMap(
+                                        Map.Entry::getKey,
+                                        Map.Entry::getValue,
+                                        (a, b) ->
+                                                Stream.of(a, b)
+                                                        .flatMap(Collection::stream)
+                                                        .collect(Collectors.toList())));
         existingDestinations.clear();
     }
 
@@ -59,8 +67,8 @@ public class TransferDestinationsResponse {
         return Optional.ofNullable(destinations).orElse(Collections.emptyMap());
     }
 
-    private static Map<Account, List<TransferDestinationPattern>> asMap(Account account,
-            List<TransferDestinationPattern> destinations) {
+    private static Map<Account, List<TransferDestinationPattern>> asMap(
+            Account account, List<TransferDestinationPattern> destinations) {
         return ImmutableMap.of(account, destinations);
     }
 
@@ -71,7 +79,8 @@ public class TransferDestinationsResponse {
     public static class Builder {
         private Map<Account, List<TransferDestinationPattern>> destinations;
 
-        public Builder addTransferDestination(Account account, TransferDestinationPattern destination) {
+        public Builder addTransferDestination(
+                Account account, TransferDestinationPattern destination) {
             Preconditions.checkNotNull(account, "You must provide a account.");
             Preconditions.checkNotNull(destination, "You must provider a transfer destination.");
 
@@ -79,27 +88,30 @@ public class TransferDestinationsResponse {
                 this.destinations = new HashMap<>();
             }
 
-            List<TransferDestinationPattern> accountDestinations = this.destinations.getOrDefault(
-                    account, new ArrayList<>());
+            List<TransferDestinationPattern> accountDestinations =
+                    this.destinations.getOrDefault(account, new ArrayList<>());
             accountDestinations.add(destination);
-            
+
             this.destinations.putIfAbsent(account, accountDestinations);
 
             return this;
         }
 
-        public Builder addTransferDestinations(Account account, List<TransferDestinationPattern> destinations) {
+        public Builder addTransferDestinations(
+                Account account, List<TransferDestinationPattern> destinations) {
             destinations.forEach(destination -> addTransferDestination(account, destination));
             return this;
         }
 
-        public Builder addTransferDestinations(Map<Account, List<TransferDestinationPattern>> destinationsMap) {
+        public Builder addTransferDestinations(
+                Map<Account, List<TransferDestinationPattern>> destinationsMap) {
             destinationsMap.forEach((this::addTransferDestinations));
             return this;
         }
 
         public TransferDestinationsResponse build() {
-            TransferDestinationsResponse transferDestinationsResponse = new TransferDestinationsResponse();
+            TransferDestinationsResponse transferDestinationsResponse =
+                    new TransferDestinationsResponse();
             if (this.destinations == null) {
                 this.destinations = new HashMap<>();
             }

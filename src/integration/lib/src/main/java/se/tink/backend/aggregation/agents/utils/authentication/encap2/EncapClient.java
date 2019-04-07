@@ -35,15 +35,21 @@ public class EncapClient {
             EncapConfiguration configuration,
             DeviceProfile deviceProfile) {
 
-        this.httpClient = new TinkHttpClient(context.getAggregatorInfo(), context.getMetricRegistry(),
-                context.getLogOutputStream(), signatureKeyPair, request.getProvider());
+        this.httpClient =
+                new TinkHttpClient(
+                        context.getAggregatorInfo(),
+                        context.getMetricRegistry(),
+                        context.getLogOutputStream(),
+                        signatureKeyPair,
+                        request.getProvider());
 
         // Encap does not like it when we send our signature header.
         this.httpClient.disableSignatureRequestHeader();
 
         this.storage = new EncapStorage(persistentStorage);
         this.soapUtils = new EncapSoapUtils(configuration, storage);
-        this.messageUtils = new EncapMessageUtils(configuration, storage, httpClient, deviceProfile);
+        this.messageUtils =
+                new EncapMessageUtils(configuration, storage, httpClient, deviceProfile);
     }
 
     public DeviceRegistrationResponse registerDevice(String username, String activationCode) {
@@ -53,12 +59,16 @@ public class EncapClient {
             throw new IllegalStateException("Could not create an authenticated session.");
         }
 
-        String activationSessionId = soapGetActivationSessionId(username, activationCode)
-                .orElseThrow(() -> new IllegalStateException("Could not get activationSessionId"));
+        String activationSessionId =
+                soapGetActivationSessionId(username, activationCode)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not get activationSessionId"));
 
         String registrationMessage = messageUtils.buildRegistrationMessage();
-        RegistrationResponse registrationResponse = messageUtils.encryptAndSend(registrationMessage,
-                RegistrationResponse.class);
+        RegistrationResponse registrationResponse =
+                messageUtils.encryptAndSend(registrationMessage, RegistrationResponse.class);
         if (!registrationResponse.isValid()) {
             throw new IllegalStateException("ActivationResponse is not valid.");
         }
@@ -67,7 +77,8 @@ public class EncapClient {
         storeRegistrationResult(registrationResultEntity);
 
         String activationMessage = messageUtils.buildActivationMessage(registrationResultEntity);
-        SamlResponse samlResponse = messageUtils.encryptAndSend(activationMessage, SamlResponse.class);
+        SamlResponse samlResponse =
+                messageUtils.encryptAndSend(activationMessage, SamlResponse.class);
         if (!samlResponse.isValid()) {
             throw new IllegalStateException("SamlResponse is not valid.");
         }
@@ -79,12 +90,13 @@ public class EncapClient {
         return createDeviceRegistrationResponse(soapResponse);
     }
 
-    public DeviceAuthenticationResponse authenticateDevice(AuthenticationMethod authenticationMethod) {
+    public DeviceAuthenticationResponse authenticateDevice(
+            AuthenticationMethod authenticationMethod) {
         return authenticateDevice(authenticationMethod, null);
     }
 
-    public DeviceAuthenticationResponse authenticateDevice(AuthenticationMethod authenticationMethod,
-            @Nullable String authenticationId) {
+    public DeviceAuthenticationResponse authenticateDevice(
+            AuthenticationMethod authenticationMethod, @Nullable String authenticationId) {
         if (!storage.load()) {
             throw new IllegalStateException("Storage is not valid.");
         }
@@ -95,8 +107,8 @@ public class EncapClient {
         }
 
         String identificationMessage = messageUtils.buildIdentificationMessage(authenticationId);
-        IdentificationResponse identificationResponse = messageUtils.encryptAndSend(identificationMessage,
-                IdentificationResponse.class);
+        IdentificationResponse identificationResponse =
+                messageUtils.encryptAndSend(identificationMessage, IdentificationResponse.class);
         if (!identificationResponse.isValid()) {
             throw new IllegalStateException("IdentificationResponse is not valid.");
         }
@@ -105,9 +117,10 @@ public class EncapClient {
 
         storeIdentificationResult(identificationEntity);
 
-        String authenticationMessage = messageUtils.buildAuthenticationMessage(identificationEntity,
-                authenticationMethod);
-        SamlResponse samlResponse = messageUtils.encryptAndSend(authenticationMessage, SamlResponse.class);
+        String authenticationMessage =
+                messageUtils.buildAuthenticationMessage(identificationEntity, authenticationMethod);
+        SamlResponse samlResponse =
+                messageUtils.encryptAndSend(authenticationMessage, SamlResponse.class);
         if (!samlResponse.isValid()) {
             throw new IllegalStateException("SamlResponse is not valid.");
         }
@@ -124,11 +137,21 @@ public class EncapClient {
     }
 
     private DeviceRegistrationResponse createDeviceRegistrationResponse(String soapResponse) {
-        String securityToken = soapUtils.getSecurityToken(soapResponse)
-                .orElseThrow(() -> new IllegalStateException("Could not find securityToken in activation response."));
+        String securityToken =
+                soapUtils
+                        .getSecurityToken(soapResponse)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find securityToken in activation response."));
 
-        String samUserId = soapUtils.getSamUserId(soapResponse)
-                .orElseThrow(() -> new IllegalStateException("Could not find samUserId in activation response."));
+        String samUserId =
+                soapUtils
+                        .getSamUserId(soapResponse)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find samUserId in activation response."));
 
         storage.setSamUserId(samUserId);
 
@@ -136,11 +159,21 @@ public class EncapClient {
     }
 
     private DeviceAuthenticationResponse createDeviceAuthenticationResponse(String soapResponse) {
-        String securityToken = soapUtils.getSecurityToken(soapResponse)
-                .orElseThrow(() -> new IllegalStateException("Could not find securityToken in activation response."));
+        String securityToken =
+                soapUtils
+                        .getSecurityToken(soapResponse)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find securityToken in activation response."));
 
-        String samUserId = soapUtils.getSamUserId(soapResponse)
-                .orElseThrow(() -> new IllegalStateException("Could not find samUserId in activation response."));
+        String samUserId =
+                soapUtils
+                        .getSamUserId(soapResponse)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find samUserId in activation response."));
 
         storage.setSamUserId(samUserId);
         return new DeviceAuthenticationResponse(samUserId, securityToken, storage.getHardwareId());
@@ -169,31 +202,37 @@ public class EncapClient {
     private boolean soapCreateAuthenticatedSession(String username) {
         String dataToSend = soapUtils.buildAuthenticationSessionCreateV1Body(username);
 
-        String response = postSoapMessage(EncapConstants.Urls.AUTHENTICATION_SESSION_CREATE,
-                EncapConstants.HttpHeaders.AUTHENTICATION_SESSION_CREATE, dataToSend);
+        String response =
+                postSoapMessage(
+                        EncapConstants.Urls.AUTHENTICATION_SESSION_CREATE,
+                        EncapConstants.HttpHeaders.AUTHENTICATION_SESSION_CREATE,
+                        dataToSend);
 
         return true;
     }
 
-    private String soapActivateDevice(String username, String activationSessionId, String samlObjectB64) {
-        String dataToSend = soapUtils.buildActivationCreateV1Body(username, activationSessionId, samlObjectB64);
+    private String soapActivateDevice(
+            String username, String activationSessionId, String samlObjectB64) {
+        String dataToSend =
+                soapUtils.buildActivationCreateV1Body(username, activationSessionId, samlObjectB64);
 
-        return postSoapMessage(EncapConstants.Urls.ACTIVATION_SERVICE,
-                "\"\"", dataToSend);
+        return postSoapMessage(EncapConstants.Urls.ACTIVATION_SERVICE, "\"\"", dataToSend);
     }
 
     private String soapAuthenticateDevice(String username, String samlObjectB64) {
         String dataToSend = soapUtils.buildAuthenticationV2Body(username, samlObjectB64);
 
-        return postSoapMessage(EncapConstants.Urls.AUTHENTICATION_SERVICE,
-                "\"\"", dataToSend);
+        return postSoapMessage(EncapConstants.Urls.AUTHENTICATION_SERVICE, "\"\"", dataToSend);
     }
 
     private Optional<String> soapGetActivationSessionId(String username, String activationCode) {
         String dataToSend = soapUtils.buildActivationSessionUpdateV1Body(username, activationCode);
 
-        String response = postSoapMessage(EncapConstants.Urls.ACTIVATION_SESSION_UPDATE,
-                EncapConstants.HttpHeaders.ACTIVATION_SESSION_UPDATE, dataToSend);
+        String response =
+                postSoapMessage(
+                        EncapConstants.Urls.ACTIVATION_SESSION_UPDATE,
+                        EncapConstants.HttpHeaders.ACTIVATION_SESSION_UPDATE,
+                        dataToSend);
 
         // Todo: throw correct exception on certain error codes.
         // However, they should not happen since there is no user interaction for these steps..
@@ -201,7 +240,8 @@ public class EncapClient {
     }
 
     private String postSoapMessage(URL url, String soapAction, String body) {
-        return httpClient.request(url)
+        return httpClient
+                .request(url)
                 .header("SOAPAction", soapAction)
                 .type("text/xml; charset=utf-8")
                 .accept(MediaType.WILDCARD)

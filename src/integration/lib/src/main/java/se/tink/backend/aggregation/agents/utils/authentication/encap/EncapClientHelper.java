@@ -22,7 +22,10 @@ public class EncapClientHelper {
     private final EncapConfiguration configuration;
     public final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public EncapClientHelper(String username, String encapStorageString, PersistentStorage persistentStorage,
+    public EncapClientHelper(
+            String username,
+            String encapStorageString,
+            PersistentStorage persistentStorage,
             EncapConfiguration configuration) {
         this.username = username;
         this.persistentStorage = persistentStorage;
@@ -37,31 +40,37 @@ public class EncapClientHelper {
             encapStorage = setupEncapStorageValues();
             persistEncapStorage();
         } else {
-            encapStorage = SerializationUtils.deserializeFromString(encapStorageString,
-                    TypeReferences.MAP_OF_STRING_STRING);
+            encapStorage =
+                    SerializationUtils.deserializeFromString(
+                            encapStorageString, TypeReferences.MAP_OF_STRING_STRING);
         }
 
-        encapStorage.put(EncapConstants.Storage.APPLICATION_VERSION, configuration.getApplicationVersion());
-        encapStorage.put(EncapConstants.Storage.ENCAP_API_VERSION, configuration.getEncapApiVersion());
+        encapStorage.put(
+                EncapConstants.Storage.APPLICATION_VERSION, configuration.getApplicationVersion());
+        encapStorage.put(
+                EncapConstants.Storage.ENCAP_API_VERSION, configuration.getEncapApiVersion());
     }
 
     private Map<String, String> setupEncapStorageValues() {
         Map<String, String> storage = Maps.newHashMap();
 
-        storage.put(EncapConstants.Storage.B64_APPLICATION_HASH,
+        storage.put(
+                EncapConstants.Storage.B64_APPLICATION_HASH,
                 EncapUtils.buildApplicationHashAsB64String(configuration.getAppId()));
-        storage.put(EncapConstants.Storage.B64_DEVICE_HASH,
-                EncapUtils.buildRandom32BytesAsB64String());
+        storage.put(
+                EncapConstants.Storage.B64_DEVICE_HASH, EncapUtils.buildRandom32BytesAsB64String());
         storage.put(EncapConstants.Storage.DEVICE_UUID, UUID.randomUUID().toString());
         storage.put(EncapConstants.Storage.HARDWARE_ID, UUID.randomUUID().toString());
-        storage.put(EncapConstants.Storage.B64_AUTHENTICATION_KEY,
+        storage.put(
+                EncapConstants.Storage.B64_AUTHENTICATION_KEY,
                 EncapUtils.buildRandom32BytesAsB64String());
-        storage.put(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN,
+        storage.put(
+                EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN,
                 EncapUtils.buildRandom32BytesAsB64String());
-        storage.put(EncapConstants.Storage.B64_TOTP_KEY,
-                EncapUtils.buildRandom32BytesAsB64String());
-        storage.put(EncapConstants.Storage.B64_SALT_HASH,
-                EncapUtils.buildRandom32BytesAsB64String());
+        storage.put(
+                EncapConstants.Storage.B64_TOTP_KEY, EncapUtils.buildRandom32BytesAsB64String());
+        storage.put(
+                EncapConstants.Storage.B64_SALT_HASH, EncapUtils.buildRandom32BytesAsB64String());
 
         return storage;
     }
@@ -84,47 +93,65 @@ public class EncapClientHelper {
         ActivationResponse activationResponse = EncapUtils.parseActivationResponse(response);
         ActivationResultEntity resultEntity = activationResponse.getResult();
 
-        String b64ChallengeResponse = EncapCrypto.computeB64ChallengeResponse(
-                encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY),
-                resultEntity.getB64OtpChallenge());
+        String b64ChallengeResponse =
+                EncapCrypto.computeB64ChallengeResponse(
+                        encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY),
+                        resultEntity.getB64OtpChallenge());
 
-        String b64ChallengeResponseWithoutPin = EncapCrypto.computeB64ChallengeResponse(
-                encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN),
-                resultEntity.getB64OtpChallenge());
+        String b64ChallengeResponseWithoutPin =
+                EncapCrypto.computeB64ChallengeResponse(
+                        encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN),
+                        resultEntity.getB64OtpChallenge());
 
         encapStorage.put(EncapConstants.Storage.B64_CHALLENGE_RESPONSE, b64ChallengeResponse);
-        encapStorage.put(EncapConstants.Storage.B64_CHALLENGE_RESPONSE_WITHOUT_PIN, b64ChallengeResponseWithoutPin);
-        encapStorage.put(EncapConstants.Storage.SIGNING_KEY_PHRASE, resultEntity.getSigningKeyPhrase());
-        encapStorage.put(EncapConstants.Storage.REGISTRATION_ID, resultEntity.getRegistration().getRegistrationId());
-        encapStorage.put(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY, resultEntity.getB64ClientSaltNextKey());
-        encapStorage.put(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID,
+        encapStorage.put(
+                EncapConstants.Storage.B64_CHALLENGE_RESPONSE_WITHOUT_PIN,
+                b64ChallengeResponseWithoutPin);
+        encapStorage.put(
+                EncapConstants.Storage.SIGNING_KEY_PHRASE, resultEntity.getSigningKeyPhrase());
+        encapStorage.put(
+                EncapConstants.Storage.REGISTRATION_ID,
+                resultEntity.getRegistration().getRegistrationId());
+        encapStorage.put(
+                EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY,
+                resultEntity.getB64ClientSaltNextKey());
+        encapStorage.put(
+                EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID,
                 Integer.toString(resultEntity.getClientSaltNextKeyId()));
 
         persistEncapStorage();
     }
 
     boolean updateEncapParamsAuthentication(boolean encryptedMessageExchange, String response) {
-        AuthenticationResponse authenticationResponse = EncapUtils.parseAuthenticationResponse(response);
+        AuthenticationResponse authenticationResponse =
+                EncapUtils.parseAuthenticationResponse(response);
         if (authenticationResponse.getCode() != 0) {
             log.warn("Encap authentication failed: " + response.replaceFirst("^\\)]}'", ""));
             return false;
         }
         AuthenticationResultEntity resultEntity = authenticationResponse.getResult();
 
-        String b64ResponseCurrent = EncapCrypto.computeB64ChallengeResponse(
-                encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY),
-                resultEntity.getB64OtpChallenge());
+        String b64ResponseCurrent =
+                EncapCrypto.computeB64ChallengeResponse(
+                        encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY),
+                        resultEntity.getB64OtpChallenge());
 
         encapStorage.put(EncapConstants.Storage.B64_RESPONSE_CURRENT, b64ResponseCurrent);
-        encapStorage.put(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY, resultEntity.getB64ClientSaltNextKey());
-        encapStorage.put(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID,
+        encapStorage.put(
+                EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY,
+                resultEntity.getB64ClientSaltNextKey());
+        encapStorage.put(
+                EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID,
                 Integer.toString(resultEntity.getClientSaltNextKeyId()));
 
         if (!encryptedMessageExchange) {
-            String b64ResponseCurrentWithoutPin = EncapCrypto.computeB64ChallengeResponse(
-                    encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN),
-                    resultEntity.getB64OtpChallenge());
-            encapStorage.put(EncapConstants.Storage.B64_RESPONSE_CURRENT_WITHOUT_PIN,
+            String b64ResponseCurrentWithoutPin =
+                    EncapCrypto.computeB64ChallengeResponse(
+                            encapStorage.get(
+                                    EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN),
+                            resultEntity.getB64OtpChallenge());
+            encapStorage.put(
+                    EncapConstants.Storage.B64_RESPONSE_CURRENT_WITHOUT_PIN,
                     b64ResponseCurrentWithoutPin);
         }
 
@@ -132,13 +159,15 @@ public class EncapClientHelper {
         return true;
     }
 
-    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why they are static
+    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why
+    // they are static
     String buildAuthenticationSessionCreateV1String() {
-        String encryptedEdbCredentials = EncapCrypto.computeEncryptedEdbCredentials(
-                configuration.getCredentialsBankCodeForEdb(),
-                encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
-                configuration.getClientPrivateKeyString(),
-                configuration.getRsaPubKeyString());
+        String encryptedEdbCredentials =
+                EncapCrypto.computeEncryptedEdbCredentials(
+                        configuration.getCredentialsBankCodeForEdb(),
+                        encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
+                        configuration.getClientPrivateKeyString(),
+                        configuration.getRsaPubKeyString());
 
         return "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:SECSMobileAuthenticationSessionCreate_V1_0Service=\"http://mobileactivation.security.edb.com\" xmlns:edb=\"http://edb.com/ws/WSCommon_v21\" xsl:version=\"1.0\">"
                 + "<soap:Header>"
@@ -148,16 +177,22 @@ public class EncapClientHelper {
                 + "<edb:Function>SECSMobileAuthenticationSessionCreate_V1_0Service</edb:Function>"
                 + "<edb:Version>1.0.0</edb:Version>"
                 + "<edb:ClientContext>"
-                + String.format("<edb:userid>%s</edb:userid>", StringEscapeUtils.escapeXml(username))
-                + String.format("<edb:credentials>%s;%s</edb:credentials>",
+                + String.format(
+                        "<edb:userid>%s</edb:userid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<edb:credentials>%s;%s</edb:credentials>",
                         StringEscapeUtils.escapeXml(configuration.getSaIdentifier()),
                         StringEscapeUtils.escapeXml(encryptedEdbCredentials))
                 + "<edb:channel>MOB</edb:channel>"
-                + String.format("<edb:orgid>%s</edb:orgid>",
+                + String.format(
+                        "<edb:orgid>%s</edb:orgid>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<edb:orgunit>%s</edb:orgunit>",
+                + String.format(
+                        "<edb:orgunit>%s</edb:orgunit>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<edb:customerid>%s</edb:customerid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<edb:customerid>%s</edb:customerid>",
+                        StringEscapeUtils.escapeXml(username))
                 + "<edb:locale>en_SE</edb:locale>"
                 + "<edb:ip>192.168.0.1</edb:ip>"
                 + "</edb:ClientContext>"
@@ -166,25 +201,31 @@ public class EncapClientHelper {
                 + "<soap:Body>"
                 + "<SECSMobileAuthenticationSessionCreate_V1_0Service:SECSMobileAuthenticationSessionCreate_V1_0InputArgs>"
                 + "<SECSMobileAuthenticationSessionCreate_V1_0Service:MobileAuthenticationSessionCreateRequest>"
-                + String.format("<SECSMobileAuthenticationSessionCreate_V1_0Service:username>%s</SECSMobileAuthenticationSessionCreate_V1_0Service:username>",
+                + String.format(
+                        "<SECSMobileAuthenticationSessionCreate_V1_0Service:username>%s</SECSMobileAuthenticationSessionCreate_V1_0Service:username>",
                         StringEscapeUtils.escapeXml(username))
-                + String.format("<SECSMobileAuthenticationSessionCreate_V1_0Service:application>%s</SECSMobileAuthenticationSessionCreate_V1_0Service:application>",
+                + String.format(
+                        "<SECSMobileAuthenticationSessionCreate_V1_0Service:application>%s</SECSMobileAuthenticationSessionCreate_V1_0Service:application>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<SECSMobileAuthenticationSessionCreate_V1_0Service:hardwareid>%s</SECSMobileAuthenticationSessionCreate_V1_0Service:hardwareid>",
-                        StringEscapeUtils.escapeXml(encapStorage.get(EncapConstants.Storage.HARDWARE_ID)))
+                + String.format(
+                        "<SECSMobileAuthenticationSessionCreate_V1_0Service:hardwareid>%s</SECSMobileAuthenticationSessionCreate_V1_0Service:hardwareid>",
+                        StringEscapeUtils.escapeXml(
+                                encapStorage.get(EncapConstants.Storage.HARDWARE_ID)))
                 + "</SECSMobileAuthenticationSessionCreate_V1_0Service:MobileAuthenticationSessionCreateRequest>"
                 + "</SECSMobileAuthenticationSessionCreate_V1_0Service:SECSMobileAuthenticationSessionCreate_V1_0InputArgs>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
     }
 
-    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why they are static
+    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why
+    // they are static
     String buildActivationSessionUpdateV1String(String activationCode) {
-        String encryptedEdbCredentials = EncapCrypto.computeEncryptedEdbCredentials(
-                configuration.getCredentialsBankCodeForEdb(),
-                encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
-                configuration.getClientPrivateKeyString(),
-                configuration.getRsaPubKeyString());
+        String encryptedEdbCredentials =
+                EncapCrypto.computeEncryptedEdbCredentials(
+                        configuration.getCredentialsBankCodeForEdb(),
+                        encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
+                        configuration.getClientPrivateKeyString(),
+                        configuration.getRsaPubKeyString());
 
         return "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:SECSMobileActivationSessionUpdate_V1_0Service=\"http://mobileactivation.security.edb.com\" xmlns:edb=\"http://edb.com/ws/WSCommon_v21\" xsl:version=\"1.0\">"
                 + "<soap:Header>"
@@ -194,16 +235,22 @@ public class EncapClientHelper {
                 + "<edb:Function>SECSMobileActivationSessionUpdate_V1_0Service</edb:Function>"
                 + "<edb:Version>1.0.0</edb:Version>"
                 + "<edb:ClientContext>"
-                + String.format("<edb:userid>%s</edb:userid>", StringEscapeUtils.escapeXml(username))
-                + String.format("<edb:credentials>%s;%s</edb:credentials>",
+                + String.format(
+                        "<edb:userid>%s</edb:userid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<edb:credentials>%s;%s</edb:credentials>",
                         StringEscapeUtils.escapeXml(configuration.getSaIdentifier()),
                         StringEscapeUtils.escapeXml(encryptedEdbCredentials))
                 + "<edb:channel>MOB</edb:channel>"
-                + String.format("<edb:orgid>%s</edb:orgid>",
+                + String.format(
+                        "<edb:orgid>%s</edb:orgid>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<edb:orgunit>%s</edb:orgunit>",
+                + String.format(
+                        "<edb:orgunit>%s</edb:orgunit>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<edb:customerid>%s</edb:customerid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<edb:customerid>%s</edb:customerid>",
+                        StringEscapeUtils.escapeXml(username))
                 + "<edb:locale>en_SE</edb:locale>"
                 + "<edb:ip>192.168.0.1</edb:ip>"
                 + "</edb:ClientContext>"
@@ -212,27 +259,34 @@ public class EncapClientHelper {
                 + "<soap:Body>"
                 + "<SECSMobileActivationSessionUpdate_V1_0Service:SECSMobileActivationSessionUpdate_V1_0InputArgs>"
                 + "<SECSMobileActivationSessionUpdate_V1_0Service:MobileActivationSessionUpdateRequest>"
-                + String.format("<SECSMobileActivationSessionUpdate_V1_0Service:username>%s</SECSMobileActivationSessionUpdate_V1_0Service:username>",
+                + String.format(
+                        "<SECSMobileActivationSessionUpdate_V1_0Service:username>%s</SECSMobileActivationSessionUpdate_V1_0Service:username>",
                         StringEscapeUtils.escapeXml(username))
-                + String.format("<SECSMobileActivationSessionUpdate_V1_0Service:application>%s</SECSMobileActivationSessionUpdate_V1_0Service:application>",
+                + String.format(
+                        "<SECSMobileActivationSessionUpdate_V1_0Service:application>%s</SECSMobileActivationSessionUpdate_V1_0Service:application>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<SECSMobileActivationSessionUpdate_V1_0Service:activationcode>%s</SECSMobileActivationSessionUpdate_V1_0Service:activationcode>",
+                + String.format(
+                        "<SECSMobileActivationSessionUpdate_V1_0Service:activationcode>%s</SECSMobileActivationSessionUpdate_V1_0Service:activationcode>",
                         StringEscapeUtils.escapeXml(activationCode))
-                + String.format("<SECSMobileActivationSessionUpdate_V1_0Service:hardwareid>%s</SECSMobileActivationSessionUpdate_V1_0Service:hardwareid>",
-                        StringEscapeUtils.escapeXml(encapStorage.get(EncapConstants.Storage.HARDWARE_ID)))
+                + String.format(
+                        "<SECSMobileActivationSessionUpdate_V1_0Service:hardwareid>%s</SECSMobileActivationSessionUpdate_V1_0Service:hardwareid>",
+                        StringEscapeUtils.escapeXml(
+                                encapStorage.get(EncapConstants.Storage.HARDWARE_ID)))
                 + "</SECSMobileActivationSessionUpdate_V1_0Service:MobileActivationSessionUpdateRequest>"
                 + "</SECSMobileActivationSessionUpdate_V1_0Service:SECSMobileActivationSessionUpdate_V1_0InputArgs>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
     }
 
-    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why they are static
+    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why
+    // they are static
     String buildActivationCreateRequest(String activationSessionId, String samlObject) {
-        String encryptedEdbCredentials = EncapCrypto.computeEncryptedEdbCredentials(
-                configuration.getCredentialsBankCodeForEdb(),
-                encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
-                configuration.getClientPrivateKeyString(),
-                configuration.getRsaPubKeyString());
+        String encryptedEdbCredentials =
+                EncapCrypto.computeEncryptedEdbCredentials(
+                        configuration.getCredentialsBankCodeForEdb(),
+                        encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
+                        configuration.getClientPrivateKeyString(),
+                        configuration.getRsaPubKeyString());
 
         return "<soap:Envelope xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:n1=\"urn:sam.sec.fs.evry.com:ws:mobileactivation:v1\" xmlns:n2=\"urn:sam.sec.fs.evry.com:domain:activation:v1\" xmlns:n3=\"http://edb.com/ws/WSCommon_v21\">"
                 + "<soap:Header>"
@@ -243,15 +297,19 @@ public class EncapClientHelper {
                 + "<n3:Version>1.0.0</n3:Version>"
                 + "<n3:ClientContext>"
                 + String.format("<n3:userid>%s</n3:userid>", StringEscapeUtils.escapeXml(username))
-                + String.format("<n3:credentials>%s;%s</n3:credentials>",
+                + String.format(
+                        "<n3:credentials>%s;%s</n3:credentials>",
                         StringEscapeUtils.escapeXml(configuration.getSaIdentifier()),
                         StringEscapeUtils.escapeXml(encryptedEdbCredentials))
                 + "<n3:channel>MOB</n3:channel>"
-                + String.format("<n3:orgid>%s</n3:orgid>",
+                + String.format(
+                        "<n3:orgid>%s</n3:orgid>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<n3:orgunit>%s</n3:orgunit>",
+                + String.format(
+                        "<n3:orgunit>%s</n3:orgunit>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<n3:customerid>%s</n3:customerid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<n3:customerid>%s</n3:customerid>", StringEscapeUtils.escapeXml(username))
                 + "<n3:locale>en_SE</n3:locale>"
                 + "<n3:ip>192.168.0.1</n3:ip>"
                 + "</n3:ClientContext>"
@@ -259,22 +317,26 @@ public class EncapClientHelper {
                 + "</soap:Header>"
                 + "<soap:Body>"
                 + "<n1:mobileActivationCreateRequest>"
-                + String.format("<n2:activationSessionId>%s</n2:activationSessionId>",
+                + String.format(
+                        "<n2:activationSessionId>%s</n2:activationSessionId>",
                         StringEscapeUtils.escapeXml(activationSessionId))
-                + String.format("<n1:samlObject>%s</n1:samlObject>",
+                + String.format(
+                        "<n1:samlObject>%s</n1:samlObject>",
                         StringEscapeUtils.escapeXml(samlObject))
                 + "</n1:mobileActivationCreateRequest>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
     }
 
-    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why they are static
+    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why
+    // they are static
     String buildAuthServiceRequest(String samlObject) {
-        String encryptedEdbCredentials = EncapCrypto.computeEncryptedEdbCredentials(
-                configuration.getCredentialsBankCodeForEdb(),
-                encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
-                configuration.getClientPrivateKeyString(),
-                configuration.getRsaPubKeyString());
+        String encryptedEdbCredentials =
+                EncapCrypto.computeEncryptedEdbCredentials(
+                        configuration.getCredentialsBankCodeForEdb(),
+                        encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
+                        configuration.getClientPrivateKeyString(),
+                        configuration.getRsaPubKeyString());
 
         return "<soap:Envelope xmlns:c=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:n1=\"urn:sam.sec.fs.evry.com:ws:mobileauthentication:v1\" xmlns:n2=\"urn:sam.sec.fs.evry.com:domain:authentication:v1\" xmlns:n3=\"urn:mobile.security.fs.edb.com:domain:mobileapplication:v1\" xmlns:n4=\"http://edb.com/ws/WSCommon_v21\">"
                 + "<soap:Header>"
@@ -285,15 +347,19 @@ public class EncapClientHelper {
                 + "<n4:Version>1.0.0</n4:Version>"
                 + "<n4:ClientContext>"
                 + String.format("<n4:userid>%s</n4:userid>", StringEscapeUtils.escapeXml(username))
-                + String.format("<n4:credentials>%s;%s</n4:credentials>",
+                + String.format(
+                        "<n4:credentials>%s;%s</n4:credentials>",
                         StringEscapeUtils.escapeXml(configuration.getSaIdentifier()),
                         StringEscapeUtils.escapeXml(encryptedEdbCredentials))
                 + "<n4:channel>MOB</n4:channel>"
-                + String.format("<n4:orgid>%s</n4:orgid>",
+                + String.format(
+                        "<n4:orgid>%s</n4:orgid>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<n4:orgunit>%s</n4:orgunit>",
+                + String.format(
+                        "<n4:orgunit>%s</n4:orgunit>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<n4:customerid>%s</n4:customerid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<n4:customerid>%s</n4:customerid>", StringEscapeUtils.escapeXml(username))
                 + "<n4:locale>en_SE</n4:locale>"
                 + "<n4:ip>127.0.0.1</n4:ip>"
                 + "</n4:ClientContext>"
@@ -301,24 +367,32 @@ public class EncapClientHelper {
                 + "</soap:Header>"
                 + "<soap:Body>"
                 + "<n1:mobileAuthSessionReadRequest>"
-                + String.format("<n2:userName>%s</n2:userName>", StringEscapeUtils.escapeXml(username))
-                + String.format("<n3:applicationName>%s</n3:applicationName>",
+                + String.format(
+                        "<n2:userName>%s</n2:userName>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<n3:applicationName>%s</n3:applicationName>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<n1:hardwareId>%s</n1:hardwareId>", StringEscapeUtils.escapeXml(
-                        encapStorage.get(EncapConstants.Storage.HARDWARE_ID)))
-                + String.format("<n1:samlObject>%s</n1:samlObject>", StringEscapeUtils.escapeXml(samlObject))
+                + String.format(
+                        "<n1:hardwareId>%s</n1:hardwareId>",
+                        StringEscapeUtils.escapeXml(
+                                encapStorage.get(EncapConstants.Storage.HARDWARE_ID)))
+                + String.format(
+                        "<n1:samlObject>%s</n1:samlObject>",
+                        StringEscapeUtils.escapeXml(samlObject))
                 + "</n1:mobileAuthSessionReadRequest>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
     }
 
-    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why they are static
+    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why
+    // they are static
     String buildUserCreateRequest(String activationSessionId, String samlObject) {
-        String encryptedEdbCredentials = EncapCrypto.computeEncryptedEdbCredentials(
-                configuration.getCredentialsBankCodeForEdb(),
-                encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
-                configuration.getClientPrivateKeyString(),
-                configuration.getRsaPubKeyString());
+        String encryptedEdbCredentials =
+                EncapCrypto.computeEncryptedEdbCredentials(
+                        configuration.getCredentialsBankCodeForEdb(),
+                        encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
+                        configuration.getClientPrivateKeyString(),
+                        configuration.getRsaPubKeyString());
 
         return "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:SECSMobileUserCreate_V1_0Service=\"http://mobileactivation.security.edb.com\" xmlns:edb=\"http://edb.com/ws/WSCommon_v21\" xsl:version=\"1.0\"> \n"
                 + "<soap:Header>"
@@ -328,16 +402,22 @@ public class EncapClientHelper {
                 + "<edb:Function>SECSMobileUserCreate_V1_0Service</edb:Function>"
                 + "<edb:Version>1.0.0</edb:Version>"
                 + "<edb:ClientContext>"
-                + String.format("<edb:userid>%s</edb:userid>", StringEscapeUtils.escapeXml(username))
-                + String.format("<edb:credentials>%s;%s</edb:credentials>",
-                StringEscapeUtils.escapeXml(configuration.getSaIdentifier()),
-                StringEscapeUtils.escapeXml(encryptedEdbCredentials))
+                + String.format(
+                        "<edb:userid>%s</edb:userid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<edb:credentials>%s;%s</edb:credentials>",
+                        StringEscapeUtils.escapeXml(configuration.getSaIdentifier()),
+                        StringEscapeUtils.escapeXml(encryptedEdbCredentials))
                 + "<edb:channel>MOB</edb:channel>"
-                + String.format("<edb:orgid>%s</edb:orgid>",
-                StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<edb:orgunit>%s</edb:orgunit>",
-                StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<edb:customerid>%s</edb:customerid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<edb:orgid>%s</edb:orgid>",
+                        StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
+                + String.format(
+                        "<edb:orgunit>%s</edb:orgunit>",
+                        StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
+                + String.format(
+                        "<edb:customerid>%s</edb:customerid>",
+                        StringEscapeUtils.escapeXml(username))
                 + "<edb:locale>en_SE</edb:locale>"
                 + "<edb:ip>192.168.0.1</edb:ip>"
                 + "</edb:ClientContext>"
@@ -346,23 +426,27 @@ public class EncapClientHelper {
                 + "<soap:Body>"
                 + "<SECSMobileUserCreate_V1_0Service:SECSMobileUserCreate_V1_0InputArgs>"
                 + "<SECSMobileUserCreate_V1_0Service:MobileUserCreateRequest>"
-                + String.format("<SECSMobileUserCreate_V1_0Service:activationsession>%s</SECSMobileUserCreate_V1_0Service:activationsession>",
-                StringEscapeUtils.escapeXml(activationSessionId))
-                + String.format("<SECSMobileUserCreate_V1_0Service:samlobject>%s</SECSMobileUserCreate_V1_0Service:samlobject>",
-                StringEscapeUtils.escapeXml(samlObject))
+                + String.format(
+                        "<SECSMobileUserCreate_V1_0Service:activationsession>%s</SECSMobileUserCreate_V1_0Service:activationsession>",
+                        StringEscapeUtils.escapeXml(activationSessionId))
+                + String.format(
+                        "<SECSMobileUserCreate_V1_0Service:samlobject>%s</SECSMobileUserCreate_V1_0Service:samlobject>",
+                        StringEscapeUtils.escapeXml(samlObject))
                 + "</SECSMobileUserCreate_V1_0Service:MobileUserCreateRequest>"
                 + "</SECSMobileUserCreate_V1_0Service:SECSMobileUserCreate_V1_0InputArgs>"
                 + "</soap:Body>"
                 + "</soap:Envelope>";
     }
 
-    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why they are static
+    // Encap does not provide any wsdl so that we can "easily" generate SOAP messages, which is why
+    // they are static
     String buildAuthSessionReadRequest(String samlObject) {
-        String encryptedEdbCredentials = EncapCrypto.computeEncryptedEdbCredentials(
-                configuration.getCredentialsBankCodeForEdb(),
-                encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
-                configuration.getClientPrivateKeyString(),
-                configuration.getRsaPubKeyString());
+        String encryptedEdbCredentials =
+                EncapCrypto.computeEncryptedEdbCredentials(
+                        configuration.getCredentialsBankCodeForEdb(),
+                        encapStorage.get(EncapConstants.Storage.HARDWARE_ID),
+                        configuration.getClientPrivateKeyString(),
+                        configuration.getRsaPubKeyString());
 
         return "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:SECSMobileAuthenticationSessionRead_V1_0Service=\"http://mobileactivation.security.edb.com\" xmlns:edb=\"http://edb.com/ws/WSCommon_v21\" xsl:version=\"1.0\">"
                 + "<soap:Header>"
@@ -372,16 +456,22 @@ public class EncapClientHelper {
                 + "<edb:Function>SECSMobileAuthenticationSessionRead_V1_0Service</edb:Function>"
                 + "<edb:Version>1.0.0</edb:Version>"
                 + "<edb:ClientContext>"
-                + String.format("<edb:userid>%s</edb:userid>", StringEscapeUtils.escapeXml(username))
-                + String.format("<edb:credentials>%s;%s</edb:credentials>",
+                + String.format(
+                        "<edb:userid>%s</edb:userid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<edb:credentials>%s;%s</edb:credentials>",
                         StringEscapeUtils.escapeXml(configuration.getSaIdentifier()),
                         StringEscapeUtils.escapeXml(encryptedEdbCredentials))
                 + "<edb:channel>MOB</edb:channel>"
-                + String.format("<edb:orgid>%s</edb:orgid>",
+                + String.format(
+                        "<edb:orgid>%s</edb:orgid>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<edb:orgunit>%s</edb:orgunit>",
+                + String.format(
+                        "<edb:orgunit>%s</edb:orgunit>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<edb:customerid>%s</edb:customerid>", StringEscapeUtils.escapeXml(username))
+                + String.format(
+                        "<edb:customerid>%s</edb:customerid>",
+                        StringEscapeUtils.escapeXml(username))
                 + "<edb:locale>en_SE</edb:locale>"
                 + "<edb:ip>192.168.0.1</edb:ip>"
                 + "</edb:ClientContext>"
@@ -390,13 +480,18 @@ public class EncapClientHelper {
                 + "<soap:Body>"
                 + "<SECSMobileAuthenticationSessionRead_V1_0Service:SECSMobileAuthenticationSessionRead_V1_0InputArgs>"
                 + "<SECSMobileAuthenticationSessionRead_V1_0Service:MobileAuthenticationSessionReadRequest>"
-                + String.format("<SECSMobileAuthenticationSessionRead_V1_0Service:username>%s</SECSMobileAuthenticationSessionRead_V1_0Service:username>",
+                + String.format(
+                        "<SECSMobileAuthenticationSessionRead_V1_0Service:username>%s</SECSMobileAuthenticationSessionRead_V1_0Service:username>",
                         StringEscapeUtils.escapeXml(username))
-                + String.format("<SECSMobileAuthenticationSessionRead_V1_0Service:application>%s</SECSMobileAuthenticationSessionRead_V1_0Service:application>",
+                + String.format(
+                        "<SECSMobileAuthenticationSessionRead_V1_0Service:application>%s</SECSMobileAuthenticationSessionRead_V1_0Service:application>",
                         StringEscapeUtils.escapeXml(configuration.getCredentialsAppNameForEdb()))
-                + String.format("<SECSMobileAuthenticationSessionRead_V1_0Service:hardwareid>%s</SECSMobileAuthenticationSessionRead_V1_0Service:hardwareid>",
-                        StringEscapeUtils.escapeXml(encapStorage.get(EncapConstants.Storage.HARDWARE_ID)))
-                + String.format("<SECSMobileAuthenticationSessionRead_V1_0Service:samlobject>%s</SECSMobileAuthenticationSessionRead_V1_0Service:samlobject>",
+                + String.format(
+                        "<SECSMobileAuthenticationSessionRead_V1_0Service:hardwareid>%s</SECSMobileAuthenticationSessionRead_V1_0Service:hardwareid>",
+                        StringEscapeUtils.escapeXml(
+                                encapStorage.get(EncapConstants.Storage.HARDWARE_ID)))
+                + String.format(
+                        "<SECSMobileAuthenticationSessionRead_V1_0Service:samlobject>%s</SECSMobileAuthenticationSessionRead_V1_0Service:samlobject>",
                         StringEscapeUtils.escapeXml(samlObject))
                 + "</SECSMobileAuthenticationSessionRead_V1_0Service:MobileAuthenticationSessionReadRequest>"
                 + "</SECSMobileAuthenticationSessionRead_V1_0Service:SECSMobileAuthenticationSessionRead_V1_0InputArgs>"

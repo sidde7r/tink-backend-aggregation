@@ -40,7 +40,7 @@ public class StaticVector {
             }
 
             if (type == fieldType && (index-- == 0)) {
-                return Optional.of(Arrays.copyOfRange(vector, pos, pos+length));
+                return Optional.of(Arrays.copyOfRange(vector, pos, pos + length));
             }
 
             pos += length;
@@ -51,13 +51,12 @@ public class StaticVector {
 
     public byte[] getMandatoryField(int fieldType) {
         return getField(fieldType, 0)
-                .orElseThrow(() -> new IllegalStateException(
-                        String.format(
-                                "Could not find StaticVector field type: %d",
-                                fieldType
-                        )
-                    )
-                );
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        String.format(
+                                                "Could not find StaticVector field type: %d",
+                                                fieldType)));
     }
 
     public Optional<byte[]> getField(int fieldType) {
@@ -90,11 +89,11 @@ public class StaticVector {
                 break;
             }
 
-            if (length+pos > vector.length) {
+            if (length + pos > vector.length) {
                 break;
             }
 
-            byte[] data = Arrays.copyOfRange(vector, pos, pos+length);
+            byte[] data = Arrays.copyOfRange(vector, pos, pos + length);
 
             sb.append("type: ");
             sb.append(type);

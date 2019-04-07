@@ -19,5 +19,4 @@ public interface SupplementalRequester {
     default String requestSupplementalInformation(Credentials credentials) {
         return requestSupplementalInformation(credentials, true);
     }
-
 }

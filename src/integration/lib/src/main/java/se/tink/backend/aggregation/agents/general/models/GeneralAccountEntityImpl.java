@@ -12,8 +12,8 @@ public class GeneralAccountEntityImpl implements GeneralAccountEntity {
     private final String accountName;
     private final AccountIdentifier accountIdentifier;
 
-    private GeneralAccountEntityImpl(String bankName, String accountName,
-            AccountIdentifier accountIdentifier) {
+    private GeneralAccountEntityImpl(
+            String bankName, String accountName, AccountIdentifier accountIdentifier) {
         this.bankName = bankName;
         this.accountName = accountName;
         this.accountIdentifier = accountIdentifier;
@@ -23,13 +23,16 @@ public class GeneralAccountEntityImpl implements GeneralAccountEntity {
 
         Preconditions.checkNotNull(coreAccount, "Account cannot be null.");
 
-        Optional<AccountIdentifier> accountIdentifier = coreAccount.getIdentifiers().stream().findFirst();
+        Optional<AccountIdentifier> accountIdentifier =
+                coreAccount.getIdentifiers().stream().findFirst();
         if (!accountIdentifier.isPresent()) {
             return Optional.empty();
         }
 
         String accountName = coreAccount.getName();
-        return Optional.of(new GeneralAccountEntityImpl(EMPTY_BANK_NAME, accountName, accountIdentifier.get()));
+        return Optional.of(
+                new GeneralAccountEntityImpl(
+                        EMPTY_BANK_NAME, accountName, accountIdentifier.get()));
     }
 
     @Override

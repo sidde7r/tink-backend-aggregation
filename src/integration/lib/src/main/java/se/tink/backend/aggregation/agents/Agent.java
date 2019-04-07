@@ -7,7 +7,7 @@ public interface Agent {
     void setConfiguration(AgentsServiceConfiguration configuration);
 
     Class<? extends Agent> getAgentClass();
-    
+
     boolean login() throws Exception;
 
     void logout() throws Exception;

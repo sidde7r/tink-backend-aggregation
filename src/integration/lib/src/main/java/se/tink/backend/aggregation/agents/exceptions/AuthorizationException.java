@@ -6,10 +6,11 @@ import se.tink.libraries.i18n.LocalizableKey;
 /**
  * What is authorization?
  *
- * Authorization refers to rules that determine who is allowed to do what. E.g. Adam may be authorized to create
- * and delete databases, while Usama is only authorised to read.
+ * <p>Authorization refers to rules that determine who is allowed to do what. E.g. Adam may be
+ * authorized to create and delete databases, while Usama is only authorised to read.
  *
- * For more info see: http://stackoverflow.com/questions/6556522/authentication-versus-authorization
+ * <p>For more info see:
+ * http://stackoverflow.com/questions/6556522/authentication-versus-authorization
  */
 public class AuthorizationException extends AgentExceptionImpl {
     private final AuthorizationError error;

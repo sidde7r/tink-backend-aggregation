@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents;
 
 import com.google.common.base.Preconditions;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 
 /**
  * An exception thrown that bundles an friendly error message that can be presented to the end-user.
@@ -105,29 +105,46 @@ public class TransferExecutionException extends RuntimeException {
     }
 
     /**
-     * This is a place where we can add shared common strings that we use (or can use) for transfer errors
+     * This is a place where we can add shared common strings that we use (or can use) for transfer
+     * errors
      */
     public enum EndUserMessage implements LocalizableEnum {
-        BANKID_NO_RESPONSE(new LocalizableKey("No response from Mobile BankID. Have you opened the app?")),
-        BANKID_ANOTHER_IN_PROGRESS(new LocalizableKey("You have another BankID session in progress. Please try again.")),
+        BANKID_NO_RESPONSE(
+                new LocalizableKey("No response from Mobile BankID. Have you opened the app?")),
+        BANKID_ANOTHER_IN_PROGRESS(
+                new LocalizableKey(
+                        "You have another BankID session in progress. Please try again.")),
         BANKID_CANCELLED(new LocalizableKey("You cancelled the BankID process. Please try again.")),
         BANKID_FAILED(new LocalizableKey("The BankID authentication failed")),
         BANKID_TRANSFER_FAILED(new LocalizableKey("Failed to sign transfer with BankID")),
         SIGN_TRANSFER_FAILED(new LocalizableKey("Failed to sign transfer")),
-        CHALLENGE_NO_RESPONSE(new LocalizableKey("Transfer or payment was not signed with security token device")),
+        CHALLENGE_NO_RESPONSE(
+                new LocalizableKey(
+                        "Transfer or payment was not signed with security token device")),
         EINVOICE_MODIFY_FAILED(new LocalizableKey("Not able to update this e-invoice")),
         EINVOICE_VALIDATE_FAILED(new LocalizableKey("Could not validate e-invoice")),
         EINVOICE_NO_MATCHES(new LocalizableKey("The e-invoice could not be found at your bank")),
         EINVOICE_SIGN_FAILED(new LocalizableKey("Could not sign the e-invoice")),
-        EINVOICE_MULTIPLE_MATCHES(new LocalizableKey("Found more than one eInvoices that exactly matches the transfer")),
-        EXISTING_UNSIGNED_TRANSFERS(new LocalizableKey(
-                "You have existing unsigned transfers, please sign these in your bank's app before executing a new transfer")),
-        EXCESS_AMOUNT(new LocalizableKey("The transfer amount is larger than what is available on the account.")),
-        EXCESS_AMOUNT_FOR_BENEFICIARY(new LocalizableKey("The transfer amount will exceed the total allowed weekly limit for the beneficiary.")),
-        EXCESS_AMOUNT_AWAITING_PROCESSING(new LocalizableKey("The transfer has been sent to your bank and will be executed when funds are available")),
+        EINVOICE_MULTIPLE_MATCHES(
+                new LocalizableKey(
+                        "Found more than one eInvoices that exactly matches the transfer")),
+        EXISTING_UNSIGNED_TRANSFERS(
+                new LocalizableKey(
+                        "You have existing unsigned transfers, please sign these in your bank's app before executing a new transfer")),
+        EXCESS_AMOUNT(
+                new LocalizableKey(
+                        "The transfer amount is larger than what is available on the account.")),
+        EXCESS_AMOUNT_FOR_BENEFICIARY(
+                new LocalizableKey(
+                        "The transfer amount will exceed the total allowed weekly limit for the beneficiary.")),
+        EXCESS_AMOUNT_AWAITING_PROCESSING(
+                new LocalizableKey(
+                        "The transfer has been sent to your bank and will be executed when funds are available")),
         INVALID_DESTINATION(new LocalizableKey("Invalid destination account")),
-        INVALID_DUEDATE_NOT_BUSINESSDAY(new LocalizableKey("The payment date is not a business day")),
-        INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY(new LocalizableKey("The payment date is too soon or not a business day")),
+        INVALID_DUEDATE_NOT_BUSINESSDAY(
+                new LocalizableKey("The payment date is not a business day")),
+        INVALID_DUEDATE_TOO_SOON_OR_NOT_BUSINESSDAY(
+                new LocalizableKey("The payment date is too soon or not a business day")),
         INVALID_DESTINATION_MESSAGE(new LocalizableKey("The destination message is not valid")),
         INVALID_OCR(new LocalizableKey("The destination message is not a valid OCR reference")),
         INVALID_MESSAGE(new LocalizableKey("The message given is not valid")),
@@ -136,36 +153,61 @@ public class TransferExecutionException extends RuntimeException {
         SOURCE_NOT_FOUND(new LocalizableKey("Could not find source account")),
         NEW_RECIPIENT_FAILED(new LocalizableKey("Unable to create new recipient account")),
         NEW_RECIPIENT_NAME_ABSENT(new LocalizableKey("You must specify a recipient name")),
-        TRANSFER_MODIFY_AMOUNT(new LocalizableKey("It's not possible to modify the amount of this transfer")),
-        TRANSFER_MODIFY_DESTINATION(new LocalizableKey("It's not possible to modify the destination of this transfer")),
-        TRANSFER_MODIFY_DUEDATE(new LocalizableKey("It's not possible to modify the payment date of this transfer")),
-        TRANSFER_MODIFY_MESSAGE(new LocalizableKey("It's not possible to modify OCR/message of this transfer")),
-        TRANSFER_MODIFY_NOT_ALLOWED(new LocalizableKey("It's not possible to modify this transfer")),
-        TRANSFER_MODIFY_SOURCE_OR_DESTINATION(new LocalizableKey(
-                "It's not possible to modify the source or destination account of this transfer")),
+        TRANSFER_MODIFY_AMOUNT(
+                new LocalizableKey("It's not possible to modify the amount of this transfer")),
+        TRANSFER_MODIFY_DESTINATION(
+                new LocalizableKey("It's not possible to modify the destination of this transfer")),
+        TRANSFER_MODIFY_DUEDATE(
+                new LocalizableKey(
+                        "It's not possible to modify the payment date of this transfer")),
+        TRANSFER_MODIFY_MESSAGE(
+                new LocalizableKey("It's not possible to modify OCR/message of this transfer")),
+        TRANSFER_MODIFY_NOT_ALLOWED(
+                new LocalizableKey("It's not possible to modify this transfer")),
+        TRANSFER_MODIFY_SOURCE_OR_DESTINATION(
+                new LocalizableKey(
+                        "It's not possible to modify the source or destination account of this transfer")),
         TRANSFER_EXECUTE_FAILED(new LocalizableKey("Could not execute transfer")),
         TRANSFER_DELETE_FAILED(new LocalizableKey("Could not delete transfer")),
-        TRANSFER_CONFIRM_FAILED(new LocalizableKey("An error occurred when confirming the transfer")),
-        EINVOICE_MODIFY_AMOUNT(new LocalizableKey("It's not possible to modify the amount of this e-invoice")),
-        EINVOICE_MODIFY_DUEDATE(new LocalizableKey("It's not possible to modify the payment date of this e-invoice")),
-        EINVOICE_MODIFY_DESTINATION(new LocalizableKey(
-                "It's not possible to modify the destination account of this e-invoice")),
-        EINVOICE_MODIFY_SOURCE_MESSAGE(new LocalizableKey(
-                "It's not possible to modify the source message of this e-invoice")),
-        EINVOICE_MODIFY_DESTINATION_MESSAGE(new LocalizableKey(
-                "It's not possible to modify the destination message of this e-invoice")),
-        EINVOICE_MODIFY_SOURCE(new LocalizableKey("It's not possible to modify the source account of this e-invoice")),
-        EINVOICE_MODIFY_NOT_ALLOWED(new LocalizableKey("It's not possible to modify this e-invoice")),
+        TRANSFER_CONFIRM_FAILED(
+                new LocalizableKey("An error occurred when confirming the transfer")),
+        EINVOICE_MODIFY_AMOUNT(
+                new LocalizableKey("It's not possible to modify the amount of this e-invoice")),
+        EINVOICE_MODIFY_DUEDATE(
+                new LocalizableKey(
+                        "It's not possible to modify the payment date of this e-invoice")),
+        EINVOICE_MODIFY_DESTINATION(
+                new LocalizableKey(
+                        "It's not possible to modify the destination account of this e-invoice")),
+        EINVOICE_MODIFY_SOURCE_MESSAGE(
+                new LocalizableKey(
+                        "It's not possible to modify the source message of this e-invoice")),
+        EINVOICE_MODIFY_DESTINATION_MESSAGE(
+                new LocalizableKey(
+                        "It's not possible to modify the destination message of this e-invoice")),
+        EINVOICE_MODIFY_SOURCE(
+                new LocalizableKey(
+                        "It's not possible to modify the source account of this e-invoice")),
+        EINVOICE_MODIFY_NOT_ALLOWED(
+                new LocalizableKey("It's not possible to modify this e-invoice")),
         PAYMENT_NO_MATCHES(new LocalizableKey("The payment could not be found at your bank")),
         PAYMENT_CREATE_FAILED(new LocalizableKey("Could not create payment")),
         PAYMENT_UPDATE_FAILED(new LocalizableKey("Could not update payment")),
         PAYMENT_UPDATE_NOT_ALLOWED(new LocalizableKey("It's not possible to modify this payment")),
-        PAYMENT_UPDATE_AMOUNT(new LocalizableKey("It's not possible to modify the amount of this payment")),
-        PAYMENT_UPDATE_DESTINATION(new LocalizableKey("It's not possible to modify the destination of this payment")),
-        PAYMENT_UPDATE_SOURCE(new LocalizableKey("It's not possible to modify the source account of this payment")),
-        PAYMENT_UPDATE_DUEDATE(new LocalizableKey("It's not possible to modify the payment date of this payment")),
-        PAYMENT_UPDATE_DESTINATION_MESSAGE(new LocalizableKey("It's not possible to modify OCR/message of this payment")),
-        PAYMENT_UPDATE_SOURCE_MESSAGE(new LocalizableKey("It's not possible to modify the source message of this payment")),
+        PAYMENT_UPDATE_AMOUNT(
+                new LocalizableKey("It's not possible to modify the amount of this payment")),
+        PAYMENT_UPDATE_DESTINATION(
+                new LocalizableKey("It's not possible to modify the destination of this payment")),
+        PAYMENT_UPDATE_SOURCE(
+                new LocalizableKey(
+                        "It's not possible to modify the source account of this payment")),
+        PAYMENT_UPDATE_DUEDATE(
+                new LocalizableKey("It's not possible to modify the payment date of this payment")),
+        PAYMENT_UPDATE_DESTINATION_MESSAGE(
+                new LocalizableKey("It's not possible to modify OCR/message of this payment")),
+        PAYMENT_UPDATE_SOURCE_MESSAGE(
+                new LocalizableKey(
+                        "It's not possible to modify the source message of this payment")),
         MISSING_MESSAGE_TYPE(new LocalizableKey("Missing message type")),
         INVALID_STRUCTURED_MESSAGE(new LocalizableKey("The entered structured message is invalid"));
 
@@ -183,7 +225,9 @@ public class TransferExecutionException extends RuntimeException {
     }
 
     public enum EndUserMessageParametrized implements LocalizableParametrizedEnum {
-        INVALID_MESSAGE_WHEN_MAX_LENGTH(new LocalizableParametrizedKey("The message length exceeds maximum of {0} letters."));
+        INVALID_MESSAGE_WHEN_MAX_LENGTH(
+                new LocalizableParametrizedKey(
+                        "The message length exceeds maximum of {0} letters."));
 
         private final LocalizableParametrizedKey key;
 

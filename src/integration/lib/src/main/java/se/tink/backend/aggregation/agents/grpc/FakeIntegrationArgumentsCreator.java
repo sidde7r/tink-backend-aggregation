@@ -34,7 +34,8 @@ public class FakeIntegrationArgumentsCreator {
         provider.setType(ProviderTypes.BANK);
         provider.setCurrency("SEK");
 
-        se.tink.backend.agents.rpc.Credentials credentials = new se.tink.backend.agents.rpc.Credentials();
+        se.tink.backend.agents.rpc.Credentials credentials =
+                new se.tink.backend.agents.rpc.Credentials();
         credentials.setProviderName(provider.getName());
         credentials.setType(CredentialsTypes.PASSWORD);
         credentials.setUsername("tink");
@@ -44,120 +45,109 @@ public class FakeIntegrationArgumentsCreator {
 
         User user = new User();
 
-        CredentialsRequest credentialsRequest = new CredentialsRequest(user, provider, credentials) {
-            @Override
-            public boolean isManual() {
-                return false;
-            }
+        CredentialsRequest credentialsRequest =
+                new CredentialsRequest(user, provider, credentials) {
+                    @Override
+                    public boolean isManual() {
+                        return false;
+                    }
 
-            @Override
-            public CredentialsRequestType getType() {
-                return CredentialsRequestType.CREATE;
-            }
-        };
+                    @Override
+                    public CredentialsRequestType getType() {
+                        return CredentialsRequestType.CREATE;
+                    }
+                };
         return credentialsRequest;
     }
 
     public static AgentContext getAgentContext(MetricRegistry metricRegistry) {
 
-        AgentContext context = new AgentContext() {
-            @Override
-            public Account updateTransactions(Account account, List<Transaction> transactions) {
-                return null;
-            }
+        AgentContext context =
+                new AgentContext() {
+                    @Override
+                    public Account updateTransactions(
+                            Account account, List<Transaction> transactions) {
+                        return null;
+                    }
 
-            @Override
-            public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
+                    @Override
+                    public void cacheTransactions(
+                            @Nonnull String accountUniqueId, List<Transaction> transactions) {}
 
-            }
+                    @Override
+                    public void cacheAccount(Account account, AccountFeatures accountFeatures) {}
 
-            @Override
-            public void cacheAccount(Account account, AccountFeatures accountFeatures) {
+                    @Override
+                    public void updateStatus(CredentialsStatus status) {}
 
-            }
+                    @Override
+                    public void updateStatus(
+                            CredentialsStatus status,
+                            String statusPayload,
+                            boolean statusFromProvider) {}
 
-            @Override
-            public void updateStatus(CredentialsStatus status) {
+                    @Override
+                    public Catalog getCatalog() {
+                        return Catalog.getCatalog("sv_SE");
+                    }
 
-            }
+                    @Override
+                    public void openBankId(String autoStartToken, boolean wait) {}
 
-            @Override
-            public void updateStatus(CredentialsStatus status, String statusPayload, boolean statusFromProvider) {
+                    @Override
+                    public String requestSupplementalInformation(
+                            se.tink.backend.agents.rpc.Credentials credentials, boolean wait) {
+                        return null;
+                    }
 
-            }
+                    @Override
+                    public Optional<String> waitForSupplementalInformation(
+                            String key, long waitFor, TimeUnit unit) {
+                        return Optional.empty();
+                    }
 
-            @Override
-            public Catalog getCatalog() {
-                return Catalog.getCatalog("sv_SE");
-            }
+                    @Override
+                    public void processTransactions() {}
 
-            @Override
-            public void openBankId(String autoStartToken, boolean wait) {
+                    @Override
+                    public Account sendAccountToUpdateService(String uniqueId) {
+                        return null;
+                    }
 
-            }
+                    @Override
+                    public void updateTransferDestinationPatterns(
+                            Map<Account, List<TransferDestinationPattern>> map) {}
 
-            @Override
-            public String requestSupplementalInformation(se.tink.backend.agents.rpc.Credentials credentials,
-                    boolean wait) {
-                return null;
-            }
+                    @Override
+                    public void updateCredentialsExcludingSensitiveInformation(
+                            se.tink.backend.agents.rpc.Credentials credentials,
+                            boolean doStatusUpdate) {}
 
-            @Override
-            public Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
-                return Optional.empty();
-            }
+                    @Override
+                    public void updateFraudDetailsContent(
+                            List<FraudDetailsContent> detailsContent) {}
 
-            @Override
-            public void processTransactions() {
+                    @Override
+                    public void updateDocument(DocumentContainer container) {}
 
-            }
+                    @Override
+                    public List<Account> getUpdatedAccounts() {
+                        return null;
+                    }
 
-            @Override
-            public Account sendAccountToUpdateService(String uniqueId) {
-                return null;
-            }
+                    @Override
+                    public void updateEinvoices(List<Transfer> transfers) {}
 
-            @Override
-            public void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map) {
+                    @Override
+                    public MetricRegistry getMetricRegistry() {
+                        return metricRegistry;
+                    }
 
-            }
-
-            @Override
-            public void updateCredentialsExcludingSensitiveInformation(
-                    se.tink.backend.agents.rpc.Credentials credentials, boolean doStatusUpdate) {
-
-            }
-
-            @Override
-            public void updateFraudDetailsContent(List<FraudDetailsContent> detailsContent) {
-
-            }
-
-            @Override
-            public void updateDocument(DocumentContainer container) {
-
-            }
-
-            @Override
-            public List<Account> getUpdatedAccounts() {
-                return null;
-            }
-
-            @Override
-            public void updateEinvoices(List<Transfer> transfers) {
-
-            }
-
-            @Override
-            public MetricRegistry getMetricRegistry() {
-                return metricRegistry;
-            }
-
-            @Override
-            public Account updateAccount(String uniqueId) {
-                return null;
-            }
-        };
+                    @Override
+                    public Account updateAccount(String uniqueId) {
+                        return null;
+                    }
+                };
         return context;
     }
 }

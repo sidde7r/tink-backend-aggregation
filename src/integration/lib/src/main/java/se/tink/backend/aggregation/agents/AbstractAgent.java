@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import se.tink.backend.agents.rpc.Account;
@@ -22,10 +25,6 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 public abstract class AbstractAgent implements Agent, AgentEventListener {
     public static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
@@ -73,9 +72,7 @@ public abstract class AbstractAgent implements Agent, AgentEventListener {
         }
 
         Optional<Account> existingAccount =
-                this.request
-                        .getAccounts()
-                        .stream()
+                this.request.getAccounts().stream()
                         .filter(a -> (a.getBankId().equals(account.getBankId())))
                         .findFirst();
 
@@ -142,8 +139,10 @@ public abstract class AbstractAgent implements Agent, AgentEventListener {
             int overlappingTransactionDays =
                     Math.abs(DateUtils.getNumberOfDaysBetween(t.getDate(), certainDate));
 
-            if (transactionsBeforeCertainDate >= AgentParsingUtils.SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
-                    && overlappingTransactionDays >= AgentParsingUtils.SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
+            if (transactionsBeforeCertainDate
+                            >= AgentParsingUtils.SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
+                    && overlappingTransactionDays
+                            >= AgentParsingUtils.SAFETY_THRESHOLD_NUMBER_OF_DAYS) {
                 return true;
             }
         }

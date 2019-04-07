@@ -5,9 +5,17 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapConsta
 
 public class ActivationSecondRequestBody extends MultivaluedMapImpl {
 
-    public ActivationSecondRequestBody(String b64AuthenticationKey, String b64AuthenticationKeyWithoutPin,
-            String b64ChallengeResponse, String b64ChallengeResponseWithoutPin, String deviceHash, String deviceUUID,
-            String applicationVersion, String encapAPIVersion, String registrationId, String saltHash) {
+    public ActivationSecondRequestBody(
+            String b64AuthenticationKey,
+            String b64AuthenticationKeyWithoutPin,
+            String b64ChallengeResponse,
+            String b64ChallengeResponseWithoutPin,
+            String deviceHash,
+            String deviceUUID,
+            String applicationVersion,
+            String encapAPIVersion,
+            String registrationId,
+            String saltHash) {
 
         add("applicationId", EncapConstants.MessageInformation.APPLICATION_ID);
         add("b64AuthenticationKey", b64AuthenticationKey);
@@ -21,8 +29,7 @@ public class ActivationSecondRequestBody extends MultivaluedMapImpl {
         add("device.IsRootAvailable", EncapConstants.DeviceInformation.IS_ROOT_AVAILABLE);
         add("device.SystemName", EncapConstants.DeviceInformation.OS_NAME_AND_TYPE);
         add("device.SystemVersion", EncapConstants.DeviceInformation.SYSTEM_VERSION);
-        add("device.UserInterfaceIdiom", 
-                EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
+        add("device.UserInterfaceIdiom", EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
         add("meta.applicationVersion", applicationVersion);
         add("meta.encapAPIVersion", encapAPIVersion);
         add("operation", EncapConstants.MessageInformation.OPERATION_ACTIVATE);

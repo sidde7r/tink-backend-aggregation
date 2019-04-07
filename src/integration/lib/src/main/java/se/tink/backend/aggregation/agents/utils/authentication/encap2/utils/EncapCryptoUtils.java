@@ -17,12 +17,18 @@ import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class EncapCryptoUtils {
-    public static String computeEncryptedEdbCredentials(String bankCode, String hardwareId,
-            String clientPrivateKeyString, String rsaPubKeyString) {
+    public static String computeEncryptedEdbCredentials(
+            String bankCode,
+            String hardwareId,
+            String clientPrivateKeyString,
+            String rsaPubKeyString) {
         String plainText = bankCode + ";" + hardwareId;
         byte[] plainTextBytes = plainText.getBytes();
-        RSAPublicKey pubKey = RSA.getPubKeyFromBytes(EncodingUtils.decodeBase64String(rsaPubKeyString));
-        PrivateKey privateKey = RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(clientPrivateKeyString));
+        RSAPublicKey pubKey =
+                RSA.getPubKeyFromBytes(EncodingUtils.decodeBase64String(rsaPubKeyString));
+        PrivateKey privateKey =
+                RSA.getPrivateKeyFromBytes(
+                        EncodingUtils.decodeBase64String(clientPrivateKeyString));
 
         byte[] encryptedPlainText = RSA.encryptEcbPkcs1(pubKey, plainTextBytes);
         byte[] signature = RSA.signSha1(privateKey, plainTextBytes);
@@ -38,11 +44,13 @@ public class EncapCryptoUtils {
         return Base64.getEncoder().encodeToString(aesCbcResult);
     }
 
-    public static String computeEMK(byte[] rand16BytesKey, byte[] rand16BytesIv, byte[] serverPubKeyBytes) {
+    public static String computeEMK(
+            byte[] rand16BytesKey, byte[] rand16BytesIv, byte[] serverPubKeyBytes) {
         KeyPair ecKeyPair = EllipticCurve.generateKeyPair("sect233k1");
         PublicKey serverPublicKey = EllipticCurve.convertPEMtoPublicKey(serverPubKeyBytes);
 
-        byte[] derivedECKey = EllipticCurve.diffieHellmanDeriveKey(ecKeyPair.getPrivate(), serverPublicKey);
+        byte[] derivedECKey =
+                EllipticCurve.diffieHellmanDeriveKey(ecKeyPair.getPrivate(), serverPublicKey);
         byte[] compressedECPoint = EllipticCurve.convertPublicKeyToPoint(ecKeyPair, true);
         byte[] sha1Input = Bytes.concat(compressedECPoint, derivedECKey);
 
@@ -72,19 +80,23 @@ public class EncapCryptoUtils {
         return Base64.getEncoder().encodeToString(hash);
     }
 
-    public static String decryptEMDResponse(byte[] rand16BytesKey, byte[] rand16BytesIv, String EMDResponse) {
+    public static String decryptEMDResponse(
+            byte[] rand16BytesKey, byte[] rand16BytesIv, String EMDResponse) {
         byte[] emdResponseBinary = Base64.getDecoder().decode(EMDResponse);
         byte[] aesCbcResult = AES.decryptCbc(rand16BytesKey, rand16BytesIv, emdResponseBinary);
         return Hex.encodeHexString(aesCbcResult);
     }
 
-    public static boolean verifyMACValue(byte[] rand16BytesKey, byte[] rand16BytesIv, String decryptedEMD,
-            String MACResponse) {
-        String hashInBase64 = computeMAC(rand16BytesKey, rand16BytesIv, EncodingUtils.decodeHexString(decryptedEMD));
+    public static boolean verifyMACValue(
+            byte[] rand16BytesKey, byte[] rand16BytesIv, String decryptedEMD, String MACResponse) {
+        String hashInBase64 =
+                computeMAC(
+                        rand16BytesKey, rand16BytesIv, EncodingUtils.decodeHexString(decryptedEMD));
         return hashInBase64.equals(MACResponse);
     }
 
-    public static String computeB64ChallengeResponse(String authenticationKey, String b64OtpChallenge) {
+    public static String computeB64ChallengeResponse(
+            String authenticationKey, String b64OtpChallenge) {
         byte[] authKeyBytes = EncodingUtils.decodeBase64String(authenticationKey);
         byte[] inputDataBytes = EncodingUtils.decodeBase64String(b64OtpChallenge);
         byte[] result = AES.encryptEcbNoPadding(authKeyBytes, inputDataBytes);
@@ -98,8 +110,8 @@ public class EncapCryptoUtils {
         return sha1WithCounterRecursion(sha1CounterInput, counter, outputStream, 32);
     }
 
-    private static byte[] sha1WithCounterRecursion(byte[] input, byte[] counter, ByteArrayOutputStream outputStream,
-            int outputLen) {
+    private static byte[] sha1WithCounterRecursion(
+            byte[] input, byte[] counter, ByteArrayOutputStream outputStream, int outputLen) {
 
         byte[] sha1Res = Hash.sha1(input, counter);
 

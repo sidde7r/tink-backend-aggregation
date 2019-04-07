@@ -7,17 +7,18 @@ import com.google.common.collect.Maps;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
+import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
+import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
 
 public class TransferDestinationPatternBuilder {
 
-    private static final AggregationLogger log = new AggregationLogger(TransferDestinationPatternBuilder.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(TransferDestinationPatternBuilder.class);
 
     private Collection<Account> tinkAccounts;
     private List<? extends GeneralAccountEntity> destinationAccounts;
@@ -34,7 +35,8 @@ public class TransferDestinationPatternBuilder {
         destinationAccountIdentifier = SwedishIdentifier.class;
     }
 
-    public TransferDestinationPatternBuilder setSourceAccounts(List<? extends GeneralAccountEntity> sourceAccounts) {
+    public TransferDestinationPatternBuilder setSourceAccounts(
+            List<? extends GeneralAccountEntity> sourceAccounts) {
         this.sourceAccounts = sourceAccounts;
         return this;
     }
@@ -50,7 +52,8 @@ public class TransferDestinationPatternBuilder {
         return this;
     }
 
-    public TransferDestinationPatternBuilder matchDestinationAccountsOn(AccountIdentifier.Type destinationAccountType,
+    public TransferDestinationPatternBuilder matchDestinationAccountsOn(
+            AccountIdentifier.Type destinationAccountType,
             Class<? extends AccountIdentifier> destinationAccountIdentifier) {
 
         this.destinationAccountType = destinationAccountType;
@@ -58,7 +61,8 @@ public class TransferDestinationPatternBuilder {
         return this;
     }
 
-    public TransferDestinationPatternBuilder addMultiMatchPattern(AccountIdentifier.Type type, String pattern) {
+    public TransferDestinationPatternBuilder addMultiMatchPattern(
+            AccountIdentifier.Type type, String pattern) {
         if (multiMatchPatterns == null) {
             multiMatchPatterns = Lists.newArrayList();
         }
@@ -87,13 +91,15 @@ public class TransferDestinationPatternBuilder {
 
             if (identifier.isValid()) {
                 if (SwedbankClearingNumberUtils.isSwedbank8xxxAccountNumber(identifier)) {
-                    identifier = SwedbankClearingNumberUtils
-                            .removeZerosBetweenClearingAndAccountNumber(identifier.to(SwedishIdentifier.class));
+                    identifier =
+                            SwedbankClearingNumberUtils.removeZerosBetweenClearingAndAccountNumber(
+                                    identifier.to(SwedishIdentifier.class));
                 }
 
                 String name = gae.generalGetName();
                 String bank = gae.generalGetBank();
-                validPatterns.add(TransferDestinationPattern.createForSingleMatch(identifier, name, bank));
+                validPatterns.add(
+                        TransferDestinationPattern.createForSingleMatch(identifier, name, bank));
             } else {
                 log.warn("Found non-valid destination: " + getCallingMethod());
             }
@@ -101,16 +107,16 @@ public class TransferDestinationPatternBuilder {
 
         Map<Account, List<TransferDestinationPattern>> result = Maps.newHashMap();
         for (Account tinkAccount : tinkAccounts) {
-            AccountIdentifier identifier = tinkAccount
-                    .getIdentifier(destinationAccountType, destinationAccountIdentifier);
+            AccountIdentifier identifier =
+                    tinkAccount.getIdentifier(destinationAccountType, destinationAccountIdentifier);
 
             // Validate we can transfer from this account.
             if (identifier != null && identifier.isValid()) {
                 if (GeneralUtils.isAccountExisting(identifier, sourceAccounts)) {
 
                     // Filter away the source account from the valid destination
-                    List<TransferDestinationPattern> filtered = getValidPatternsForIdentifer(identifier,
-                            validPatterns);
+                    List<TransferDestinationPattern> filtered =
+                            getValidPatternsForIdentifer(identifier, validPatterns);
 
                     // The current tink account is a valid source account for transfers
                     result.put(tinkAccount, filtered);
@@ -130,27 +136,30 @@ public class TransferDestinationPatternBuilder {
         return msg;
     }
 
-    private List<TransferDestinationPattern> getValidPatternsForIdentifer(final AccountIdentifier identifier,
-            List<TransferDestinationPattern> validPatterns) {
+    private List<TransferDestinationPattern> getValidPatternsForIdentifer(
+            final AccountIdentifier identifier, List<TransferDestinationPattern> validPatterns) {
 
-        return Lists.newArrayList(Iterables.filter(validPatterns, pattern -> {
-            if (pattern.getType() != identifier.getType()) {
-                // Shouldn't be filtered away -- Not the same type
-                return true;
-            }
+        return Lists.newArrayList(
+                Iterables.filter(
+                        validPatterns,
+                        pattern -> {
+                            if (pattern.getType() != identifier.getType()) {
+                                // Shouldn't be filtered away -- Not the same type
+                                return true;
+                            }
 
-            if (pattern.isMatchesMultiple()) {
-                // Shouldn't be filtered away -- Matches multiple
-                return true;
-            }
+                            if (pattern.isMatchesMultiple()) {
+                                // Shouldn't be filtered away -- Matches multiple
+                                return true;
+                            }
 
-            if (!identifier.getIdentifier().equals(pattern.getPattern())) {
-                // Shouldn't be filtered away -- Not the same identifier
-                return true;
-            }
+                            if (!identifier.getIdentifier().equals(pattern.getPattern())) {
+                                // Shouldn't be filtered away -- Not the same identifier
+                                return true;
+                            }
 
-            // Filter away -- This pattern is the same as the identifier
-            return false;
-        }));
+                            // Filter away -- This pattern is the same as the identifier
+                            return false;
+                        }));
     }
 }

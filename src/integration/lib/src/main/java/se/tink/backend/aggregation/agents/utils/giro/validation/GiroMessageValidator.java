@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.utils.giro.validation;
 
-import com.google.common.base.Strings;
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import java.util.Optional;
 import se.tink.libraries.giro.validation.OcrValidationConfiguration;
 import se.tink.libraries.giro.validation.OcrValidationLevel;
@@ -9,7 +9,9 @@ import se.tink.libraries.giro.validation.OcrValidator;
 
 public class GiroMessageValidator {
     public enum AllowedType {
-        MESSAGE_OR_OCR, MESSAGE, OCR
+        MESSAGE_OR_OCR,
+        MESSAGE,
+        OCR
     }
 
     public static class ValidationResult {
@@ -86,22 +88,22 @@ public class GiroMessageValidator {
 
     private AllowedType getValidType() {
         switch (ocrValidationLevel) {
-        case NO_OCR:
-            return AllowedType.MESSAGE;
-        case OCR_1_SOFT:
-            return AllowedType.MESSAGE_OR_OCR;
-        case OCR_2_HARD:
-        case OCR_3_HARD:
-        case OCR_4_HARD:
-            return AllowedType.OCR;
-        default:
-            throw new IllegalStateException("Instantiated with an incorrect OCR type");
+            case NO_OCR:
+                return AllowedType.MESSAGE;
+            case OCR_1_SOFT:
+                return AllowedType.MESSAGE_OR_OCR;
+            case OCR_2_HARD:
+            case OCR_3_HARD:
+            case OCR_4_HARD:
+                return AllowedType.OCR;
+            default:
+                throw new IllegalStateException("Instantiated with an incorrect OCR type");
         }
     }
 
     private boolean isMessageAllowed() {
-        return Objects.equal(ocrValidationLevel, OcrValidationLevel.NO_OCR) ||
-                Objects.equal(ocrValidationLevel, OcrValidationLevel.OCR_1_SOFT);
+        return Objects.equal(ocrValidationLevel, OcrValidationLevel.NO_OCR)
+                || Objects.equal(ocrValidationLevel, OcrValidationLevel.OCR_1_SOFT);
     }
 
     private boolean isOcrAllowed() {

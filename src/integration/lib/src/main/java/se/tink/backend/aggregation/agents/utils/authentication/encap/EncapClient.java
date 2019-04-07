@@ -19,14 +19,20 @@ public class EncapClient {
     private Map<String, String> encapStorage;
     private final PersistentStorage persistentStorage;
 
-    public EncapClient(EncapConfiguration configuration, PersistentStorage persistentStorage,
-            TinkHttpClient client, boolean encryptedMessageExchange, String username) {
+    public EncapClient(
+            EncapConfiguration configuration,
+            PersistentStorage persistentStorage,
+            TinkHttpClient client,
+            boolean encryptedMessageExchange,
+            String username) {
         this.client = client;
         this.encryptedMessageExchange = encryptedMessageExchange;
         this.persistentStorage = persistentStorage;
 
         String encapStorageString = persistentStorage.get(EncapConstants.Storage.ENCAP_STORAGE);
-        encapClientHelper = new EncapClientHelper(username, encapStorageString, persistentStorage, configuration);
+        encapClientHelper =
+                new EncapClientHelper(
+                        username, encapStorageString, persistentStorage, configuration);
         encapStorage = encapClientHelper.getEncapStorage();
     }
 
@@ -46,7 +52,8 @@ public class EncapClient {
 
     public String authenticateUser() {
 
-        encapClientHelper.populateEncapStorage(persistentStorage.get(EncapConstants.Storage.ENCAP_STORAGE));
+        encapClientHelper.populateEncapStorage(
+                persistentStorage.get(EncapConstants.Storage.ENCAP_STORAGE));
         encapStorage = encapClientHelper.getEncapStorage();
         createAuthenticationSession();
         String samlObject;
@@ -56,7 +63,7 @@ public class EncapClient {
         } else {
             samlObject = executePlainTextMessageExchangeForAuthentication();
         }
-        if (samlObject == null){
+        if (samlObject == null) {
             return null;
         }
 
@@ -79,15 +86,18 @@ public class EncapClient {
     private String updateActivationSession(String activationCode) {
         String dataToSend = encapClientHelper.buildActivationSessionUpdateV1String(activationCode);
 
-        String response = postSoapMessage(EncapConstants.Urls.ACTIVATION_SESSION_UPDATE,
-                EncapConstants.HttpHeaders.ACTIVATION_SESSION_UPDATE, dataToSend);
+        String response =
+                postSoapMessage(
+                        EncapConstants.Urls.ACTIVATION_SESSION_UPDATE,
+                        EncapConstants.HttpHeaders.ACTIVATION_SESSION_UPDATE,
+                        dataToSend);
 
         return EncapUtils.getActivationSessionId(response);
     }
 
     private String executePlainTextMessageExchangeForActivation() {
-        ActivationFirstRequestBody firstRequestBody = PlainTextMessageService
-                .createActivationFirstRequestBody(encapStorage);
+        ActivationFirstRequestBody firstRequestBody =
+                PlainTextMessageService.createActivationFirstRequestBody(encapStorage);
         String responseMessage = getPlainTextRequest().post(String.class, firstRequestBody);
 
         encapClientHelper.updateEncapParamsActivation(responseMessage);
@@ -100,15 +110,16 @@ public class EncapClient {
     }
 
     private String executePlainTextMessageExchangeForAuthentication() {
-        AuthenticationFirstRequestBody firstRequestBody = PlainTextMessageService
-                .createAuthenticationFirstRequestBody(encapStorage);
+        AuthenticationFirstRequestBody firstRequestBody =
+                PlainTextMessageService.createAuthenticationFirstRequestBody(encapStorage);
         String responseMessage = getPlainTextRequest().post(String.class, firstRequestBody);
-        if (!encapClientHelper.updateEncapParamsAuthentication(encryptedMessageExchange, responseMessage)){
+        if (!encapClientHelper.updateEncapParamsAuthentication(
+                encryptedMessageExchange, responseMessage)) {
             return null;
         }
 
-        AuthenticationSecondRequestBody secondRequestBody = PlainTextMessageService
-                .createAuthenticationSecondRequestBody(encapStorage);
+        AuthenticationSecondRequestBody secondRequestBody =
+                PlainTextMessageService.createAuthenticationSecondRequestBody(encapStorage);
         responseMessage = getPlainTextRequest().post(String.class, secondRequestBody);
 
         return EncapUtils.getSamlObject(responseMessage);
@@ -116,7 +127,8 @@ public class EncapClient {
 
     private String executeEncryptedMessageExchangeForActivation() {
         String message = EncryptedMessageService.buildFirstMessageForActivation(encapStorage);
-        String decryptedResponseMessage = EncryptedMessageService.encryptAndSendMessage(client, message);
+        String decryptedResponseMessage =
+                EncryptedMessageService.encryptAndSendMessage(client, message);
 
         encapClientHelper.updateEncapParamsActivation(decryptedResponseMessage);
 
@@ -128,9 +140,11 @@ public class EncapClient {
 
     private String executeEncryptedMessageExchangeForAuthentication() {
         String message = EncryptedMessageService.buildFirstMessageForAuthentication(encapStorage);
-        String decryptedResponseMessage = EncryptedMessageService.encryptAndSendMessage(client, message);
+        String decryptedResponseMessage =
+                EncryptedMessageService.encryptAndSendMessage(client, message);
 
-        encapClientHelper.updateEncapParamsAuthentication(encryptedMessageExchange, decryptedResponseMessage);
+        encapClientHelper.updateEncapParamsAuthentication(
+                encryptedMessageExchange, decryptedResponseMessage);
 
         message = EncryptedMessageService.buildSecondMessageForAuthentication(encapStorage);
         decryptedResponseMessage = EncryptedMessageService.encryptAndSendMessage(client, message);
@@ -141,18 +155,25 @@ public class EncapClient {
     // Final SOAP request in the session creation chain (activation of new device)
     private String finishMobileActivation(String activationSessionId, String samlObject) {
         if (encryptedMessageExchange) {
-            String dataToSend = encapClientHelper.buildActivationCreateRequest(activationSessionId, samlObject);
-            String response = postSoapMessage(EncapConstants.Urls.ACTIVATION_SERVICE, "\"\"", dataToSend);
+            String dataToSend =
+                    encapClientHelper.buildActivationCreateRequest(activationSessionId, samlObject);
+            String response =
+                    postSoapMessage(EncapConstants.Urls.ACTIVATION_SERVICE, "\"\"", dataToSend);
 
-            // Returns [securityToken, samUserId]. samUserId is not currently used, saving it in case needed in future
+            // Returns [securityToken, samUserId]. samUserId is not currently used, saving it in
+            // case needed in future
             List<String> securityValuesList = EncapUtils.getSecurityValuesList(response);
             encapClientHelper.saveSamUserId(securityValuesList.get(1));
 
             return securityValuesList.get(0);
         } else {
-            String dataToSend = encapClientHelper.buildUserCreateRequest(activationSessionId, samlObject);
-            String response = postSoapMessage(EncapConstants.Urls.USER_CREATE,
-                    EncapConstants.HttpHeaders.USER_CREATE, dataToSend);
+            String dataToSend =
+                    encapClientHelper.buildUserCreateRequest(activationSessionId, samlObject);
+            String response =
+                    postSoapMessage(
+                            EncapConstants.Urls.USER_CREATE,
+                            EncapConstants.HttpHeaders.USER_CREATE,
+                            dataToSend);
 
             return EncapUtils.getSecurityToken(response);
         }
@@ -162,17 +183,22 @@ public class EncapClient {
     private String finishMobileAuthenticationService(String samlObject) {
         if (encryptedMessageExchange) {
             String dataToSend = encapClientHelper.buildAuthServiceRequest(samlObject);
-            String response = postSoapMessage(EncapConstants.Urls.AUTHENTICATION_SERVICE, "\"\"", dataToSend);
+            String response =
+                    postSoapMessage(EncapConstants.Urls.AUTHENTICATION_SERVICE, "\"\"", dataToSend);
 
-            // Returns [securityToken, samUserId]. samUserId is not currently used, saving it in case needed in future
+            // Returns [securityToken, samUserId]. samUserId is not currently used, saving it in
+            // case needed in future
             List<String> securityValuesList = EncapUtils.getSecurityValuesList(response);
             encapClientHelper.saveSamUserId(securityValuesList.get(1));
 
             return securityValuesList.get(0);
         } else {
             String dataToSend = encapClientHelper.buildAuthSessionReadRequest(samlObject);
-            String response = postSoapMessage(EncapConstants.Urls.AUTHENTICATION_SESSION_READ_SERVICE,
-                    EncapConstants.HttpHeaders.AUTHENTICATION_SESSION_READ, dataToSend);
+            String response =
+                    postSoapMessage(
+                            EncapConstants.Urls.AUTHENTICATION_SESSION_READ_SERVICE,
+                            EncapConstants.HttpHeaders.AUTHENTICATION_SESSION_READ,
+                            dataToSend);
 
             return EncapUtils.getSecurityToken(response);
         }
