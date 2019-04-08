@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.authenticator.BnpParibasFortisAuthenticator;
@@ -88,7 +89,7 @@ public final class BnpParibasFortisAgent extends NextGenerationAgent {
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                "BNP Paribas Fortis configuration missing."));
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
         persistentStorage.put(
                 StorageKeys.AUTH_BASE_URL, bnpParibasFortisConfiguration.getAuthBaseUrl());

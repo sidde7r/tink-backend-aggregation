@@ -68,4 +68,11 @@ public abstract class BnpParibasFortisConstants {
     public static class Transactions {
         public static final String PENDING_STATUS = "PDNG";
     }
+
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL =
+                "Invalid Config: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION =
+                "BNP Paribas Fortis configuration missing.";
+    }
 }
