@@ -47,9 +47,9 @@ public abstract class BbvaConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
-    public static class FormKeys {}
-
-    public static class FormValues {}
+    public static class FormKeys {
+        public static final String REFRESH_TOKEN = "refresh_token";
+    }
 
     public static class ErrorMessages {
         public static final String INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL =
@@ -69,9 +69,5 @@ public abstract class BbvaConstants {
 
     public class Formats {
         public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    }
-
-    public class BodyKeys {
-        public static final String REFRESH_TOKEN = "refresh_token";
     }
 }
