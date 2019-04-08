@@ -12,7 +12,9 @@ public class BnpPfConstants {
 
     public enum Url implements UrlEnum {
         PFMP_PREFERENCES(createUrlWithHost("/pfm-preferences/v2/pfm-preferences?tokenized=false")),
-        TRANSACTIONS(createUrlWithHost("/cash-account/account-transaction/v1/accounts/{accountId}{currency}/transactions"));
+        TRANSACTIONS(
+                createUrlWithHost(
+                        "/cash-account/account-transaction/v1/accounts/{accountId}{currency}/transactions"));
 
         private URL url;
 
@@ -84,60 +86,81 @@ public class BnpPfConstants {
 
     public enum DescriptionRule {
         ATMPOS_OR_OREMIT(
-                transaction -> transaction.matches(PMNT, CCRD, POSD)
-                        || transaction.matches(PMNT, MCRD, POSP),
-                transaction -> transaction.atmpos().isPresent() ?
-                        transaction.atmpos() : transaction.oremit()
-        ),
+                transaction ->
+                        transaction.matches(PMNT, CCRD, POSD)
+                                || transaction.matches(PMNT, MCRD, POSP),
+                transaction ->
+                        transaction.atmpos().isPresent()
+                                ? transaction.atmpos()
+                                : transaction.oremit()),
         OCNM(
-                transaction -> transaction.matches(PMNT, RCDT, ESCT)
-                        || transaction.matches(PMNT, ICDT, ESCT),
-                transaction -> transaction.ocnm()
-        ),
+                transaction ->
+                        transaction.matches(PMNT, RCDT, ESCT)
+                                || transaction.matches(PMNT, ICDT, ESCT),
+                transaction -> transaction.ocnm()),
         OCNM_OREMIT_1(
                 transaction -> transaction.matches(PMNT, RDDT, PMDD),
-                transaction -> transaction.ocnm()
-                        .map(ocnm -> (ocnm.toLowerCase().contains(AG_INSURANCE_ALPHA_CREDIT.toLowerCase())
-                                && transaction.oremit().isPresent()) ?
-                                ocnm + SEPARATOR + transaction.oremit().get() : ocnm)
-        ),
+                transaction ->
+                        transaction
+                                .ocnm()
+                                .map(
+                                        ocnm ->
+                                                (ocnm.toLowerCase()
+                                                                        .contains(
+                                                                                AG_INSURANCE_ALPHA_CREDIT
+                                                                                        .toLowerCase())
+                                                                && transaction.oremit().isPresent())
+                                                        ? ocnm
+                                                                + SEPARATOR
+                                                                + transaction.oremit().get()
+                                                        : ocnm)),
         OCNM_OREMIT_2(
                 transaction -> transaction.matches(PMNT, ICDT, STDO),
-                transaction -> transaction.ocnm()
-                        .map(ocnm -> ocnm.toLowerCase().contains(AG_INSURANCE_FORTIS.toLowerCase())
-                                && transaction.oremit().isPresent() ?
-                                ocnm + SEPARATOR + transaction.oremit().get() : ocnm)
-        ),
+                transaction ->
+                        transaction
+                                .ocnm()
+                                .map(
+                                        ocnm ->
+                                                ocnm.toLowerCase()
+                                                                        .contains(
+                                                                                AG_INSURANCE_FORTIS
+                                                                                        .toLowerCase())
+                                                                && transaction.oremit().isPresent()
+                                                        ? ocnm
+                                                                + SEPARATOR
+                                                                + transaction.oremit().get()
+                                                        : ocnm)),
         CARD_CASH_WITHDRAWAL(
                 transaction -> transaction.matches(PMNT, CCRD, CWDL),
-                transaction -> Optional.of(CASH_WITHDRAWAL
-                        + (transaction.atmpos().isPresent() ? SEPARATOR + transaction.atmpos().get() : ""))
-        ),
+                transaction ->
+                        Optional.of(
+                                CASH_WITHDRAWAL
+                                        + (transaction.atmpos().isPresent()
+                                                ? SEPARATOR + transaction.atmpos().get()
+                                                : ""))),
         OREMIT(
                 transaction -> transaction.matches(ACMT, MDOP, CHRG),
-                transaction -> transaction.oremit()
-        ),
+                transaction -> transaction.oremit()),
         BTC(
-                transaction -> transaction.matches(PMNT, MDOP, CHRG)
-                        || transaction.matches(ACMT, MCOP, INTR)
-                        || transaction.matches(SECU, SETT, SUBS),
-                transaction -> transaction.btc()
-        ),
+                transaction ->
+                        transaction.matches(PMNT, MDOP, CHRG)
+                                || transaction.matches(ACMT, MCOP, INTR)
+                                || transaction.matches(SECU, SETT, SUBS),
+                transaction -> transaction.btc()),
         CARD_CASH_DEPOSIT(
                 transaction -> transaction.matches(PMNT, CCRD, CDPT),
-                transaction -> Optional.of(CASH_DEPOSIT)
-        ),
+                transaction -> Optional.of(CASH_DEPOSIT)),
         BTC_OREMIT(
-                transaction -> transaction.matches(LDAS, MGLN, RIMB)
-                        || transaction.matches(LDAS, CSLN, RIMB)
-                        || transaction.matches(LDAS, CSLN, DDWN),
-                transaction -> join(transaction.btc(), transaction.oremit())
-        ),
+                transaction ->
+                        transaction.matches(LDAS, MGLN, RIMB)
+                                || transaction.matches(LDAS, CSLN, RIMB)
+                                || transaction.matches(LDAS, CSLN, DDWN),
+                transaction -> join(transaction.btc(), transaction.oremit())),
         OCNM_OREMIT(
-                transaction -> transaction.matches(ACMT, OPCL, ACCC)
-                        || transaction.matches(PMNT, RDDT, PRDD),
-                transaction -> join(transaction.ocnm(), transaction.oremit())
-        );
+                transaction ->
+                        transaction.matches(ACMT, OPCL, ACCC)
+                                || transaction.matches(PMNT, RDDT, PRDD),
+                transaction -> join(transaction.ocnm(), transaction.oremit()));
 
         private static String nullToEmpty(Optional<String> string) {
             return string.isPresent() ? string.get() : "";
@@ -150,7 +173,9 @@ public class BnpPfConstants {
         private final Predicate<Transaction> predicate;
         private final Function<Transaction, Optional<String>> function;
 
-        DescriptionRule(Predicate<Transaction> predicate, Function<Transaction, Optional<String>> function) {
+        DescriptionRule(
+                Predicate<Transaction> predicate,
+                Function<Transaction, Optional<String>> function) {
             this.predicate = predicate;
             this.function = function;
         }
@@ -167,18 +192,24 @@ public class BnpPfConstants {
     public enum PayloadRule {
         CASH_DEPOSIT_PAYLOAD(
                 transaction -> transaction.matches(PMNT, CCRD, CDPT),
-                transaction -> Optional.of(CASH_DEPOSIT.toUpperCase())
-        ),
+                transaction -> Optional.of(CASH_DEPOSIT.toUpperCase())),
         CASH_WITHDRAWAL_PAYLOAD(
                 transaction -> transaction.matches(PMNT, CCRD, CWDL),
-                transaction -> Optional.of(CASH_WITHDRAWAL.toUpperCase()
-                        + (transaction.atmpos().isPresent() ? SEPARATOR + transaction.atmpos()
-                        : transaction.ocnm().isPresent() ? SEPARATOR + transaction.ocnm() : "")));
+                transaction ->
+                        Optional.of(
+                                CASH_WITHDRAWAL.toUpperCase()
+                                        + (transaction.atmpos().isPresent()
+                                                ? SEPARATOR + transaction.atmpos()
+                                                : transaction.ocnm().isPresent()
+                                                        ? SEPARATOR + transaction.ocnm()
+                                                        : "")));
 
         private final Predicate<Transaction> predicate;
         private final Function<Transaction, Optional<String>> function;
 
-        PayloadRule(Predicate<Transaction> predicate, Function<Transaction, Optional<String>> function) {
+        PayloadRule(
+                Predicate<Transaction> predicate,
+                Function<Transaction, Optional<String>> function) {
             this.predicate = predicate;
             this.function = function;
         }

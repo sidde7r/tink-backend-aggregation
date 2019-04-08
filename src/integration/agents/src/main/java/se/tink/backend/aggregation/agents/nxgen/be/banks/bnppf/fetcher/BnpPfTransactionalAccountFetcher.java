@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.BnpPfApiClient;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.entities.PfmAccount;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.bnppf.rpc.FetchTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
 
-public class BnpPfTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount>,
-        TransactionFetcher<TransactionalAccount> {
+public class BnpPfTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>, TransactionFetcher<TransactionalAccount> {
 
     private final BnpPfApiClient apiClient;
 
@@ -26,8 +26,8 @@ public class BnpPfTransactionalAccountFetcher implements AccountFetcher<Transact
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        return apiClient.fetchPfmPreferences().getValue().getPfmPreference()
-                .getPfmAccounts().stream()
+        return apiClient.fetchPfmPreferences().getValue().getPfmPreference().getPfmAccounts()
+                .stream()
                 .filter(PfmAccount::getPfmOptInFlag)
                 .map(PfmAccount::toTransactionalAccount)
                 .collect(Collectors.toList());
@@ -37,8 +37,12 @@ public class BnpPfTransactionalAccountFetcher implements AccountFetcher<Transact
     public List<AggregationTransaction> fetchTransactionsFor(TransactionalAccount account) {
         String externalAccountId = account.getBankIdentifier();
 
-        Optional<PfmAccount> pfmAccount = apiClient.fetchPfmPreferences().getValue().getPfmPreference()
-                .getPfmAccountFor(externalAccountId);
+        Optional<PfmAccount> pfmAccount =
+                apiClient
+                        .fetchPfmPreferences()
+                        .getValue()
+                        .getPfmPreference()
+                        .getPfmAccountFor(externalAccountId);
 
         if (!pfmAccount.isPresent()) {
             return Collections.emptyList();
@@ -51,12 +55,17 @@ public class BnpPfTransactionalAccountFetcher implements AccountFetcher<Transact
         do {
             FetchTransactionsResponse response = apiClient.fetchTransactionsFor(accountId, key);
 
-            List<AggregationTransaction> transactionsPart = response != null && response.getData() != null ?
-                    response.getData().getTinkTransactions(externalAccountId) : Collections.emptyList();
+            List<AggregationTransaction> transactionsPart =
+                    response != null && response.getData() != null
+                            ? response.getData().getTinkTransactions(externalAccountId)
+                            : Collections.emptyList();
 
             transactionsAll.addAll(transactionsPart);
 
-            key = response != null && response.getLinks() != null ? response.getLinks().getNext() : null;
+            key =
+                    response != null && response.getLinks() != null
+                            ? response.getLinks().getNext()
+                            : null;
         } while (!Strings.isNullOrEmpty(key));
 
         return transactionsAll;
