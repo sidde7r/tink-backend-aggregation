@@ -298,7 +298,7 @@ public class CrosskeyBaseApiClient {
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        CrosskeyBaseConstants.Exceptions.MISSING_TOKEN));
+                                        ErrorMessages.MISSING_TOKEN));
     }
 
     public void setTokenToSession(OAuth2Token accessToken) {
@@ -311,6 +311,6 @@ public class CrosskeyBaseApiClient {
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
-                                        CrosskeyBaseConstants.Exceptions.MISSING_CONSENT));
+                                        ErrorMessages.MISSING_CONSENT));
     }
 }
