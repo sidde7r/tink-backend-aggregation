@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.fetcher.transactionalaccount.entity.transaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,9 +11,10 @@ public class Links {
     private Balances balances;
     private Last last;
     private Next next;
+    private Self self;
+
     @JsonProperty("parent-list")
     private ParentList parentList;
-    private Self self;
 
     public Balances getBalances() {
         return balances;

@@ -37,7 +37,7 @@ public abstract class LansforsakringarConstants {
     }
 
     public static class HeaderValues {
-        //TODO: We need to support these PSU headers in production.
+        // TODO: We need to support these PSU headers in production.
         public static final String PSU_IP_ADDRESS = "127.0.0.1";
         public static final String PSU_USER_AGENT = "Desktop Mode";
     }

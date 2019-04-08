@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.LansforsakringarAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionalAccountFetcher;
@@ -24,6 +25,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public final class LansforsakringarAgent extends NextGenerationAgent {
+
     private final LansforsakringarApiClient apiClient;
 
     public LansforsakringarAgent(
@@ -49,13 +51,9 @@ public final class LansforsakringarAgent extends NextGenerationAgent {
                                         new IllegalStateException(
                                                 "Lansforsakringar configuration missing."));
 
-        persistentStorage.put(
-                LansforsakringarConstants.StorageKeys.CLIENT_ID, lansConfiguration.getClientId());
-        persistentStorage.put(
-                LansforsakringarConstants.StorageKeys.CLIENT_SECRET,
-                lansConfiguration.getClientSecret());
-        persistentStorage.put(
-                LansforsakringarConstants.StorageKeys.CONSENT_ID, lansConfiguration.getConsentId());
+        persistentStorage.put(StorageKeys.CLIENT_ID, lansConfiguration.getClientId());
+        persistentStorage.put(StorageKeys.CLIENT_SECRET, lansConfiguration.getClientSecret());
+        persistentStorage.put(StorageKeys.CONSENT_ID, lansConfiguration.getConsentId());
     }
 
     @Override
@@ -69,7 +67,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent {
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        LansforsakringarTransactionalAccountFetcher accountFetcher =
+        final LansforsakringarTransactionalAccountFetcher accountFetcher =
                 new LansforsakringarTransactionalAccountFetcher(apiClient);
 
         return Optional.of(

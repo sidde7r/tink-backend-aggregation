@@ -14,18 +14,18 @@ public final class DeutscheBankSessionHandler implements SessionHandler {
     private final SessionStorage sessionStorage;
 
     public DeutscheBankSessionHandler(
-        DeutscheBankApiClient apiClient, SessionStorage sessionStorage) {
+            DeutscheBankApiClient apiClient, SessionStorage sessionStorage) {
         this.apiClient = apiClient;
         this.sessionStorage = sessionStorage;
     }
 
     @Override
-    public void logout() {
-    }
+    public void logout() {}
 
     @Override
     public void keepAlive() throws SessionException {
-        if (Strings.isNullOrEmpty(this.sessionStorage.get(DeutscheBankConstants.StorageKeys.TOKEN))) {
+        if (Strings.isNullOrEmpty(
+                this.sessionStorage.get(DeutscheBankConstants.StorageKeys.TOKEN))) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
     }

@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.fetcher.transactionalaccount.DeutscheBankTransactionalAccountFetcher;
@@ -31,7 +32,7 @@ public final class DeutscheBankAgent extends NextGenerationAgent {
     private final DeutscheBankApiClient apiClient;
 
     public DeutscheBankAgent(
-        CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
         apiClient = new DeutscheBankApiClient(client, sessionStorage, persistentStorage);
@@ -42,60 +43,57 @@ public final class DeutscheBankAgent extends NextGenerationAgent {
         super.setConfiguration(configuration);
 
         final DeutscheBankConfiguration deutscheBankConfiguration =
-            configuration
-                .getIntegrations()
-                .getClientConfiguration(
-                    DeutscheBankConstants.Market.INTEGRATION_NAME,
-                    DeutscheBankConstants.Market.CLIENT_NAME,
-                    DeutscheBankConfiguration.class)
-                .orElseThrow(
-                    () -> new IllegalStateException("DeutscheBank configuration missing."));
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                DeutscheBankConstants.Market.INTEGRATION_NAME,
+                                DeutscheBankConstants.Market.CLIENT_NAME,
+                                DeutscheBankConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "DeutscheBank configuration missing."));
 
+        persistentStorage.put(StorageKeys.BASE_URL, deutscheBankConfiguration.getBaseUrl());
+        persistentStorage.put(StorageKeys.CLIENT_ID, deutscheBankConfiguration.getClientId());
         persistentStorage.put(
-            DeutscheBankConstants.StorageKeys.BASE_URL, deutscheBankConfiguration.getBaseUrl());
-        persistentStorage.put(
-            DeutscheBankConstants.StorageKeys.CLIENT_ID, deutscheBankConfiguration.getClientId());
-        persistentStorage.put(
-            DeutscheBankConstants.StorageKeys.CLIENT_SECRET,
-            deutscheBankConfiguration.getClientSecret());
-        persistentStorage.put(
-            DeutscheBankConstants.StorageKeys.REDIRECT_URI,
-            deutscheBankConfiguration.getRedirectUri());
+                StorageKeys.CLIENT_SECRET, deutscheBankConfiguration.getClientSecret());
+        persistentStorage.put(StorageKeys.REDIRECT_URI, deutscheBankConfiguration.getRedirectUri());
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
-        DeutscheBankAuthenticator authenticator = new DeutscheBankAuthenticator(apiClient);
-        OAuth2AuthenticationController oAuth2AuthenticationController =
-            new OAuth2AuthenticationController(
-                persistentStorage, supplementalInformationHelper, authenticator);
+        final DeutscheBankAuthenticator authenticator = new DeutscheBankAuthenticator(apiClient);
+        final OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
+                        persistentStorage, supplementalInformationHelper, authenticator);
         return new AutoAuthenticationController(
-            request,
-            context,
-            new ThirdPartyAppAuthenticationController<>(
-                oAuth2AuthenticationController, supplementalInformationHelper),
-            oAuth2AuthenticationController);
+                request,
+                context,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
-        DeutscheBankTransactionalAccountFetcher accountFetcher =
-            new DeutscheBankTransactionalAccountFetcher(apiClient);
+            constructTransactionalAccountRefreshController() {
+        final DeutscheBankTransactionalAccountFetcher accountFetcher =
+                new DeutscheBankTransactionalAccountFetcher(apiClient);
 
         return Optional.of(
-            new TransactionalAccountRefreshController(
-                metricRefreshController,
-                updateController,
-                accountFetcher,
-                new TransactionFetcherController<>(
-                    transactionPaginationHelper,
-                    new TransactionPagePaginationController<>(
-                        accountFetcher, DeutscheBankConstants.Fetcher.START_PAGE))));
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        accountFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        accountFetcher,
+                                        DeutscheBankConstants.Fetcher.START_PAGE))));
     }
 
     @Override
@@ -120,7 +118,7 @@ public final class DeutscheBankAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
