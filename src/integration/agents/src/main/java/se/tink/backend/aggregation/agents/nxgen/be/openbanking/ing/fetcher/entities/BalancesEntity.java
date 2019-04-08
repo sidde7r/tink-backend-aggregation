@@ -11,8 +11,10 @@ public class BalancesEntity {
 
     private String balanceType;
     private BalanceAmountEntity balanceAmount;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date referenceDate;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private Date lastChangeDateTime;
 
