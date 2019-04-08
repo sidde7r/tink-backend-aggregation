@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.authenticator;
 
 import com.google.common.base.Strings;
-import java.util.Optional;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -33,6 +32,8 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.strings.StringUtils;
+
+import java.util.Optional;
 
 
 public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
@@ -355,46 +356,6 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
     }
 
     private String waitForLoginCode(String challenge) throws SupplementalInfoException {
-        return waitForSupplementalInformation(
-                createDescriptionField(
-                        catalog.getString(
-                                "1. Insert your card into the card reader and press (M1)\n"
-                                        + "2. 'CHALLENGE?' is displayed."
-                                        + "Enter []"),
-                        challenge),
-                createInputField(
-                        catalog.getString(
-                                "3. 'PIN?' is displayed.\n"
-                                        + "Enter your PIN and press (OK)\n"
-                                        + "4. The e-signature is displayed.\n"
-                                        + "Enter the e-signature")));
-    }
-
-    private String waitForSupplementalInformation(Field... fields)
-            throws SupplementalInfoException {
-        return supplementalInformationHelper.askSupplementalInformation(fields).get("e-signature");
-    }
-
-    private Field createDescriptionField(String loginText, String challenge) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(catalog.getString("Challenge"));
-        field.setValue(challenge);
-        field.setName("description");
-        field.setHelpText(loginText);
-        field.setSensitive(true);
-        field.setImmutable(true);
-        return field;
-    }
-
-    private Field createInputField(String loginText) {
-        Field field = new Field();
-        field.setMasked(false);
-        field.setDescription(catalog.getString("Input"));
-        field.setName("e-signature");
-        field.setHelpText(loginText);
-        field.setNumeric(true);
-        field.setSensitive(true);
-        return field;
+        return supplementalInformationHelper.waitForSignCodeChallengeResponse(challenge);
     }
 }
