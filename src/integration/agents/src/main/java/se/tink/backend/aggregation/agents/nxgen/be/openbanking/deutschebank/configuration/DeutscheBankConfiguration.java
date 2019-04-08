@@ -17,7 +17,7 @@ public class DeutscheBankConfiguration implements ClientConfiguration {
     public String getBaseUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(baseUrl),
-                String.format(ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base URL"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base URL"));
 
         return baseUrl;
     }
@@ -25,7 +25,7 @@ public class DeutscheBankConfiguration implements ClientConfiguration {
     public String getClientId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client ID"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
     }
@@ -34,7 +34,7 @@ public class DeutscheBankConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSecret),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client Secret"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
     }
@@ -43,7 +43,7 @@ public class DeutscheBankConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUri),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Redirect URI"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Redirect URI"));
 
         return redirectUri;
     }
