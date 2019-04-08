@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Exceptions;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Pagination;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.authenticator.BbvaAuthenticator;
@@ -52,7 +52,7 @@ public final class BbvaAgent extends NextGenerationAgent {
                                 Market.CLIENT_NAME,
                                 BbvaConfiguration.class)
                         .orElseThrow(
-                                () -> new IllegalStateException(Exceptions.MISSING_CONFIGURATION));
+                                () -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
 
         apiClient.setConfiguration(bbvaConfiguration);
     }

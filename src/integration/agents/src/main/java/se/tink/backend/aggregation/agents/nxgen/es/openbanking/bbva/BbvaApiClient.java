@@ -1,7 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import javax.ws.rs.core.MediaType;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Exceptions;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.QueryKeys;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.QueryValues;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.StorageKeys;
@@ -126,6 +126,6 @@ public final class BbvaApiClient {
     private OAuth2Token getTokenFromSession() {
         return sessionStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException(Exceptions.MISSING_TOKEN));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 }
