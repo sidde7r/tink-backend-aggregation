@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authenticator;
 
+import java.nio.charset.StandardCharsets;
+import java.security.interfaces.RSAPublicKey;
+import javax.xml.bind.DatatypeConverter;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.NordnetApiClient;
@@ -8,10 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordnet.authentic
 import se.tink.backend.aggregation.agents.utils.crypto.RSA;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
-import javax.xml.bind.DatatypeConverter;
-import java.nio.charset.StandardCharsets;
-import java.security.interfaces.RSAPublicKey;
 
 public class NordnetAuthenticator implements PasswordAuthenticator {
     private final NordnetApiClient apiClient;
