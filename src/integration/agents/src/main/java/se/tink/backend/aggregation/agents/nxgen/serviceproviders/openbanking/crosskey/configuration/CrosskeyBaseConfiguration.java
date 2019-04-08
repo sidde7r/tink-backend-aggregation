@@ -23,7 +23,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getClientId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client ID"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
     }
@@ -32,7 +32,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSecret),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client Secret"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
     }
@@ -41,7 +41,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Redirect URL"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
     }
@@ -50,7 +50,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(baseAuthUrl),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base Auth URL"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Base Auth URL"));
 
         return baseAuthUrl;
     }
@@ -59,7 +59,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(baseAPIUrl),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base API URL"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Base API URL"));
 
         return baseAPIUrl;
     }
@@ -68,7 +68,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientKeyStorePath),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        ErrorMessages.INVALID_CONFIGURATION,
                         "Client Key Store Path"));
 
         return clientKeyStorePath;
@@ -78,7 +78,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSigningKeyPath),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        ErrorMessages.INVALID_CONFIGURATION,
                         "Client Signing Key Path"));
 
         return clientSigningKeyPath;
@@ -88,7 +88,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSigningCertificatePath),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        ErrorMessages.INVALID_CONFIGURATION,
                         "Client Signing Certificate Path"));
 
         return clientSigningCertificatePath;
@@ -98,7 +98,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientKeyStorePassword),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        ErrorMessages.INVALID_CONFIGURATION,
                         "Client Key Store Password"));
 
         return clientKeyStorePassword;
@@ -108,7 +108,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(xFapiFinancialId),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        ErrorMessages.INVALID_CONFIGURATION,
                         "x-fapi-financial-id"));
 
         return xFapiFinancialId;
