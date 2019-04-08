@@ -11,7 +11,8 @@ import se.tink.backend.aggregation.nxgen.http.filter.Filter;
 public class IngHttpFilter extends Filter {
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         HttpResponse response = nextFilter(httpRequest);
         checkUnavailable(response);
         check503(response);
@@ -45,7 +46,8 @@ public class IngHttpFilter extends Filter {
     //    }
     private boolean isBankServiceErrorResponseBody(final HttpResponse httpResponse) {
         try {
-            MobileHelloResponseEntity response = httpResponse.getBody(MobileHelloResponseEntity.class);
+            MobileHelloResponseEntity response =
+                    httpResponse.getBody(MobileHelloResponseEntity.class);
             if (response.getReturnCode().equalsIgnoreCase("ok")
                     && response.getSessionData().getBalanceBeforeLogon().equalsIgnoreCase("0")
                     && response.getSessionData().getTwitterLink().equalsIgnoreCase("0")
@@ -60,7 +62,8 @@ public class IngHttpFilter extends Filter {
                 return true;
             }
         } catch (HttpClientException e) {
-            // Means we could not parse the response to the class we wanted, i.e. Not a bank serive error.
+            // Means we could not parse the response to the class we wanted, i.e. Not a bank serive
+            // error.
         }
         return false;
     }
