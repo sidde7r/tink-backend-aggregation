@@ -33,7 +33,7 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
 
     public AuthorizeResponse authorize(AuthorizeRequest authorizeRequest) {
         AuthorizeResponse res =
-                createRequest(new URL(NordeaSeConstants.Urls.AUTHORIZE))
+                createRequest(NordeaSeConstants.Urls.AUTHORIZE)
                         .post(AuthorizeResponse.class, authorizeRequest);
 
         return res;
@@ -51,7 +51,7 @@ public final class NordeaSeApiClient extends NordeaBaseApiClient {
     }
 
     public OAuth2Token getToken(GetTokenForm form) {
-        return createRequestWithTppToken(new URL(NordeaSeConstants.Urls.GET_TOKEN))
+        return createRequestWithTppToken(NordeaSeConstants.Urls.GET_TOKEN)
                 .body(form, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(GetTokenResponse.class)
                 .toTinkToken();

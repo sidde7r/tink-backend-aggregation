@@ -50,12 +50,12 @@ public class NordeaBaseApiClient {
     }
 
     private RequestBuilder createTokenRequest() {
-        return createRequest(new URL(NordeaBaseConstants.Urls.GET_TOKEN));
+        return createRequest(NordeaBaseConstants.Urls.GET_TOKEN);
     }
 
     public URL getAuthorizeUrl(String state, String country) {
         return client.request(
-                        new URL(NordeaBaseConstants.Urls.AUTHORIZE)
+                        NordeaBaseConstants.Urls.AUTHORIZE
                                 .queryParam(
                                         NordeaBaseConstants.QueryKeys.CLIENT_ID,
                                         persistentStorage.get(
@@ -90,7 +90,7 @@ public class NordeaBaseApiClient {
     }
 
     public GetAccountsResponse getAccounts() {
-        return createRequestInSession(new URL(NordeaBaseConstants.Urls.GET_ACCOUNTS))
+        return createRequestInSession(NordeaBaseConstants.Urls.GET_ACCOUNTS)
                 .get(GetAccountsResponse.class);
     }
 
@@ -98,7 +98,7 @@ public class NordeaBaseApiClient {
         URL url =
                 key != null
                         ? new URL(NordeaBaseConstants.Urls.BASE_URL + key)
-                        : new URL(NordeaBaseConstants.Urls.GET_TRANSACTIONS)
+                        : NordeaBaseConstants.Urls.GET_TRANSACTIONS
                                 .parameter(
                                         NordeaBaseConstants.IdTags.ACCOUNT_ID,
                                         account.getApiIdentifier());

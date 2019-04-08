@@ -1,16 +1,25 @@
 package se.tink.backend.aggregation.agents.nxgen.se.openbanking.nordea;
 
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class NordeaSeConstants {
     private NordeaSeConstants() {
         throw new AssertionError();
     }
+
     public static class Urls {
         public static final String BASE_URL = NordeaBaseConstants.Urls.BASE_URL;
-        public static final String AUTHORIZE = BASE_URL + "/v3/authorize-decoupled";
-        public static final String GET_CODE = AUTHORIZE + "/";
-        public static final String GET_TOKEN = AUTHORIZE + "/token";
+
+        public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
+        public static final URL GET_CODE = new URL(BASE_URL + ApiService.GET_CODE);
+        public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
+    }
+
+    public static class ApiService {
+        public static final String AUTHORIZE = "/v3/authorize-decoupled";
+        public static final String GET_CODE = "/v3/authorize-decoupled/";
+        public static final String GET_TOKEN = "/v3/authorize-decoupled/token";
     }
 
     public static class StorageKeys {

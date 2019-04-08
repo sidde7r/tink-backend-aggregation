@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.no
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class NordeaBaseConstants {
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
@@ -20,11 +21,17 @@ public final class NordeaBaseConstants {
 
     public static class Urls {
         public static final String BASE_URL = "https://api.nordeaopenbanking.com";
-        public static final String AUTHORIZE = BASE_URL + "/v3/authorize";
-        public static final String GET_TOKEN = BASE_URL + "/v3/authorize/token";
-        public static final String GET_ACCOUNTS = BASE_URL + "/v3/accounts";
-        public static final String GET_TRANSACTIONS =
-                BASE_URL + "/v3/accounts/{accountId}/transactions";
+        public static final URL AUTHORIZE = new URL(BASE_URL + ApiService.AUTHORIZE);
+        public static final URL GET_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
+        public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
+        public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
+    }
+
+    public static class ApiService {
+        public static final String AUTHORIZE = "/v3/authorize";
+        public static final String GET_TOKEN = "/v3/authorize/token";
+        public static final String GET_ACCOUNTS = "/v3/accounts";
+        public static final String GET_TRANSACTIONS = "/v3/accounts/{accountId}/transactions";
     }
 
     public static class StorageKeys {
