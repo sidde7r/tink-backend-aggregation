@@ -23,7 +23,7 @@ public class TransactionDatePaginationController<A extends Account>
     private Date fromDate;
     private Date toDate;
     private int consecutiveEmptyPages = 0;
-    private int consecutiveEmptyPagesLimit;
+    private final int consecutiveEmptyPagesLimit;
 
     public TransactionDatePaginationController(TransactionDatePaginator<A> paginator) {
         this(paginator, MAX_CONSECUTIVE_EMPTY_PAGES);
