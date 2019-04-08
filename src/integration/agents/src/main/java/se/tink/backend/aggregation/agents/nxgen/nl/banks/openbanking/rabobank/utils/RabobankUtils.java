@@ -1,9 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils;
 
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
-import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
@@ -23,6 +19,9 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.TimeZone;
 import java.util.UUID;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
+import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
+import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 
 public class RabobankUtils {
     public static String getDate() {

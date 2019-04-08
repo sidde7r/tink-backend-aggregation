@@ -95,6 +95,7 @@ public class RabobankConstants {
         public static final String CODE = "code";
         public static final String BOTH = "both";
         public static final String TRANSACTIONS_SIZE = "100";
-        public static final String SCOPES = "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
+        public static final String SCOPES =
+                "ais.balances.read ais.transactions.read-90days ais.transactions.read-history";
     }
 }

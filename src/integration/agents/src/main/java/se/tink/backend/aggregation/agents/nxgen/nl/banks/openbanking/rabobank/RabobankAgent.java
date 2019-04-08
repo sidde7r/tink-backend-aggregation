@@ -1,14 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
+import java.util.Base64;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.RabobankAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.fetcher.transactional.TransactionalAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.session.RabobankSessionHandler;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.utils.RabobankUtils;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.configuration.RabobankConfiguration;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.AutoAuthenticationController;
@@ -26,9 +28,6 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Base64;
-import java.util.Optional;
 
 public class RabobankAgent extends NextGenerationAgent {
 
@@ -49,11 +48,13 @@ public class RabobankAgent extends NextGenerationAgent {
         super.setConfiguration(configuration);
 
         final RabobankConfiguration rabobankConfiguration = new RabobankConfiguration();
-//                configuration
-//                        .getIntegrations()
-//                        .getClientConfiguration(RabobankConstants.INTEGRATION_NAME, clientName, RabobankConfiguration.class)
-//                        .orElseThrow(
-//                                () -> new IllegalStateException("Rabobank configuration missing."));
+        //                configuration
+        //                        .getIntegrations()
+        //                        .getClientConfiguration(RabobankConstants.INTEGRATION_NAME,
+        // clientName, RabobankConfiguration.class)
+        //                        .orElseThrow(
+        //                                () -> new IllegalStateException("Rabobank configuration
+        // missing."));
         if (!rabobankConfiguration.isValid()) {
             throw new IllegalStateException("Rabobank configuration is invalid.");
         }

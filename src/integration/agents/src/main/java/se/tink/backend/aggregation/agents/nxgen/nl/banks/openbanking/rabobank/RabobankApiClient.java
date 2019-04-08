@@ -1,6 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank;
 
 import com.google.api.client.util.Strings;
+import java.security.PrivateKey;
+import java.text.SimpleDateFormat;
+import java.util.Base64;
+import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.ExchangeAuthorizationCodeRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc.TokenResponse;
@@ -16,11 +20,6 @@ import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-
-import javax.ws.rs.core.MediaType;
-import java.security.PrivateKey;
-import java.text.SimpleDateFormat;
-import java.util.Base64;
 
 public class RabobankApiClient {
     private final TinkHttpClient client;

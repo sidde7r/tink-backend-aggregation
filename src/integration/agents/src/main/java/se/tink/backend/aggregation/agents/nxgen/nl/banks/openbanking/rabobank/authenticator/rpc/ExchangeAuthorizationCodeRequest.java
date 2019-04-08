@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.authenticator.rpc;
 
-import se.tink.backend.aggregation.nxgen.http.AbstractForm;
-
 import javax.annotation.Nonnull;
+import se.tink.backend.aggregation.nxgen.http.AbstractForm;
 
 public class ExchangeAuthorizationCodeRequest extends AbstractForm {
 
