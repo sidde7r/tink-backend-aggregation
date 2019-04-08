@@ -4,9 +4,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
-  private LinksDetailsEntity next;
+    private LinksDetailsEntity next;
 
-  public boolean hasMore() {
-    return next != null && next.hasMore();
-  }
+    public boolean hasMore() {
+        return next != null && next.hasMore();
+    }
 }

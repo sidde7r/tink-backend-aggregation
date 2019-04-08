@@ -11,22 +11,22 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class FetchTransactionsResponse implements PaginatorResponse {
-  private String iban;
+    private String iban;
 
-  private String bban;
+    private String bban;
 
-  private TransactionsEntity transactions;
+    private TransactionsEntity transactions;
 
-  @JsonProperty("_links")
-  private LinksEntity links;
+    @JsonProperty("_links")
+    private LinksEntity links;
 
-  @Override
-  public Collection<? extends Transaction> getTinkTransactions() {
-    return transactions.getTransactions();
-  }
+    @Override
+    public Collection<? extends Transaction> getTinkTransactions() {
+        return transactions.getTransactions();
+    }
 
-  @Override
-  public Optional<Boolean> canFetchMore() {
-    return Optional.of(links.hasMore());
-  }
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(links.hasMore());
+    }
 }
