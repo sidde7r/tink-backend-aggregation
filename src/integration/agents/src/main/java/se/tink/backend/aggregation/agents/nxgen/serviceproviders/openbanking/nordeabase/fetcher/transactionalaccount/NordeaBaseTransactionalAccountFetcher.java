@@ -9,7 +9,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 import java.util.Collection;
 
-@JsonObject
 public class NordeaBaseTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionKeyPaginator<TransactionalAccount, String> {
