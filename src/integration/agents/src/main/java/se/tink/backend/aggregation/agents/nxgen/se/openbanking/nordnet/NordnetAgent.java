@@ -51,6 +51,7 @@ public final class NordnetAgent extends NextGenerationAgent {
                                         new IllegalStateException(
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
+        apiClient.setConfiguration(nordnetConfiguration);
     }
 
     @Override
