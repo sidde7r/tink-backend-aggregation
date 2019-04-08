@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator;
 
+import java.util.UUID;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
@@ -10,8 +11,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.L
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.Digipass;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.OtpChallengeResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-
-import java.util.UUID;
 
 public final class AxaCommonAuthenticator {
     public static void authenticate(final AxaApiClient apiClient, final AxaStorage storage)

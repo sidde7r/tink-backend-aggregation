@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
+import java.util.UUID;
 import org.apache.http.HttpHeaders;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateChallengeRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateChallengeResponse;
@@ -18,8 +19,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc.Pending
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.session.rpc.PendingRequestsResponse;
 import se.tink.backend.aggregation.nxgen.http.Form;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
-
-import java.util.UUID;
 
 public final class AxaApiClient {
 

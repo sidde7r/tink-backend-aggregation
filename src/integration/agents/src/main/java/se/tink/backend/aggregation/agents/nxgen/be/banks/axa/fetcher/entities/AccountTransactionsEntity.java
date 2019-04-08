@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaTransactionsDeserializer;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.Collections;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaTransactionsDeserializer;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class AccountTransactionsEntity {

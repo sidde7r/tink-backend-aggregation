@@ -25,6 +25,7 @@ public final class InputEntity {
 
     @JsonProperty("UCRid")
     private String uCRid;
+
     private String encryptedServerNonce;
 
     private String accountNumber;

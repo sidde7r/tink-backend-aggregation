@@ -5,12 +5,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.AccountEntity;
-import se.tink.libraries.serialization.utils.SerializationUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.AccountEntity;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public final class AxaAccountsDeserializer extends JsonDeserializer<List<AccountEntity>> {
     @Override

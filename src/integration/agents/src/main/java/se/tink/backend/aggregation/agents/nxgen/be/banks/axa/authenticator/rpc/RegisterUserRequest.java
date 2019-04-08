@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc;
 
+import java.util.UUID;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.DeviceInfoEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.InputEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.UUID;
 
 @JsonObject
 public final class RegisterUserRequest {

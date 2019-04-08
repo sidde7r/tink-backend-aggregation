@@ -1,14 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc;
 
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.OutputEntity;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.AccountTransactionsEntity;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.TransactionEntity;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.libraries.amount.Amount;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -17,16 +9,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.OutputEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.AccountTransactionsEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.TransactionEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public final class GetTransactionsResponse {
     private OutputEntity output;
 
     public List<AggregationTransaction> getTransactions() {
-        return Optional.ofNullable(output)
-                .map(OutputEntity::getAccountTransactions)
-                .map(AccountTransactionsEntity::getTransactions)
-                .orElse(Collections.emptyList())
+        return Optional.ofNullable(output).map(OutputEntity::getAccountTransactions)
+                .map(AccountTransactionsEntity::getTransactions).orElse(Collections.emptyList())
                 .stream()
                 .map(GetTransactionsResponse::toTinkTransaction)
                 .collect(Collectors.toList());
