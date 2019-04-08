@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.framework.AgentIntegrationTest;
 
 @Ignore

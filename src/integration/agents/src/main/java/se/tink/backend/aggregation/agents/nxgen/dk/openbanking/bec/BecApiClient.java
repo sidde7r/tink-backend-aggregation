@@ -1,13 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec;
 
-import javax.ws.rs.core.MediaType;
-
-import com.amazonaws.codegen.model.service.Http;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
@@ -15,7 +11,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-import java.util.Collection;
+import javax.ws.rs.core.MediaType;
 import java.util.Date;
 import java.util.List;
 
@@ -49,23 +45,20 @@ public final class BecApiClient {
                 .toTinkAccounts();
     }
 
-    public PaginatorResponse getTransactions(TransactionalAccount account, Date fromDate, Date toDate) {
-        return
-                createRequest(
-                                new URL(BecConstants.Urls.GET_TRANSACTIONS)
-                                        .parameter(
-                                                BecConstants.IdTags.ACCOUNT_ID,
-                                                account.getApiIdentifier()))
-                        .queryParam(
-                                BecConstants.QueryKeys.WITH_BALANCE, BecConstants.QueryValues.TRUE)
-                        .queryParam(
-                                BecConstants.QueryKeys.BOOKING_STATUS, BecConstants.QueryValues.BOTH)
-                        .queryParam(
-                                BecConstants.QueryKeys.DATE_FROM,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
-                        .queryParam(
-                                BecConstants.QueryKeys.DATE_TO,
-                                ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
-                        .get(GetTransactionsResponse.class);
+    public PaginatorResponse getTransactions(
+            TransactionalAccount account, Date fromDate, Date toDate) {
+        return createRequest(
+                        new URL(BecConstants.Urls.GET_TRANSACTIONS)
+                                .parameter(
+                                        BecConstants.IdTags.ACCOUNT_ID, account.getApiIdentifier()))
+                .queryParam(BecConstants.QueryKeys.WITH_BALANCE, BecConstants.QueryValues.TRUE)
+                .queryParam(BecConstants.QueryKeys.BOOKING_STATUS, BecConstants.QueryValues.BOTH)
+                .queryParam(
+                        BecConstants.QueryKeys.DATE_FROM,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(fromDate))
+                .queryParam(
+                        BecConstants.QueryKeys.DATE_TO,
+                        ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate))
+                .get(GetTransactionsResponse.class);
     }
 }
