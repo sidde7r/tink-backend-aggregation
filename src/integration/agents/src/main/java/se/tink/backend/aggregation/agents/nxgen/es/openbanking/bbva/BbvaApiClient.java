@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
-import java.util.Base64;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.Exceptions;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.HeaderKeys;
@@ -41,10 +40,7 @@ public final class BbvaApiClient {
 
     private RequestBuilder createTokenRequest(URL url, String grantType) {
         return client.request(url)
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        String.format(HeaderValues.AUTHORIZATION_RESPONSE, getBase64Credentials()))
-                .queryParam(QueryKeys.REDIRECT_URI, persistentStorage.get(StorageKeys.REDIRECT_URI))
+                .addBasicAuth(clientId, clientSecret)
                 .queryParam(QueryKeys.GRANT_TYPE, grantType);
     }
 
@@ -112,15 +108,6 @@ public final class BbvaApiClient {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED)
                 .post(TokenResponse.class, refreshRequest.toForm())
                 .toTinkToken();
-    }
-
-    public String getBase64Credentials() {
-        final String credentialString =
-                persistentStorage.get(StorageKeys.CLIENT_ID)
-                        + ":"
-                        + persistentStorage.get(StorageKeys.CLIENT_SECRET);
-
-        return Base64.getEncoder().encodeToString(credentialString.getBytes());
     }
 
     public void setTokenToSession(OAuth2Token accessToken) {

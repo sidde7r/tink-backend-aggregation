@@ -47,10 +47,6 @@ public abstract class BbvaConstants {
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 
-    public static class HeaderKeys {
-        public static final String AUTHORIZATION = "Authorization";
-    }
-
     public static class HeaderValues {
         public static final String AUTHORIZATION_RESPONSE = "Basic %s";
         public static final String AUTHORIZATION = "jwt %s";
