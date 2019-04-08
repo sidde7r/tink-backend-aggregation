@@ -19,7 +19,8 @@ public enum CredentialsStatus {
     PERMANENT_ERROR,
     DELETED,
     METRIC,
-    DISABLED;
+    DISABLED,
+    SESSION_EXPIRED;
 
     public static final EnumSet<CredentialsStatus> FAILED_OPERATION_STATUSES = EnumSet.of(
     UNCHANGED, TEMPORARY_ERROR, AUTHENTICATION_ERROR);
