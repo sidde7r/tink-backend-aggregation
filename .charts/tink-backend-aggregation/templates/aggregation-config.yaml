@@ -53,7 +53,7 @@ data:
       {{- if .Values.aggregationdb }}
       url: jdbc:mysql://{{ $aggregationdb.host }}:3306/tink?{{ $jdbcParams }}
       {{- else }}
-      url: jdbc:mysql://aggregation-db.internal.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.network:3306/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+      url: jdbc:mysql://aggregation-db.internal.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.network:3306/tink?{{ $jdbcParams }}
       {{- end }}
       showSql: false
       persistenceUnitName: tink-aggregation-api
