@@ -4,7 +4,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,12 +18,10 @@ public class TransactionsEntity {
 
     public Collection<? extends Transaction> getTinkTransactions() {
         return Stream.concat(
-                        booked != null
-                                ? booked.stream().map(BookedEntity::toTinkTransaction)
-                                : Stream.empty(),
-                        pending != null
-                                ? pending.stream().map(PendingEntity::toTinkTransaction)
-                                : Stream.empty())
+                        Optional.of(booked).orElse(Collections.emptyList()).stream()
+                                .map(BookedEntity::toTinkTransaction),
+                        Optional.of(pending).orElse(Collections.emptyList()).stream()
+                                .map(PendingEntity::toTinkTransaction))
                 .collect(Collectors.toList());
     }
 }
