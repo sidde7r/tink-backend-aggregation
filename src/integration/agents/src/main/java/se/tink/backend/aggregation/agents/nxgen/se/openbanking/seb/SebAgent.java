@@ -34,7 +34,7 @@ public final class SebAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new SebApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new SebApiClient(client, sessionStorage);
     }
 
     @Override
@@ -53,12 +53,7 @@ public final class SebAgent extends NextGenerationAgent {
                                         new IllegalStateException(
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
-        persistentStorage.put(SebConstants.StorageKeys.BASE_URL, sebConfiguration.getBaseUrl());
-        persistentStorage.put(SebConstants.StorageKeys.CLIENT_ID, sebConfiguration.getClientId());
-        persistentStorage.put(
-                SebConstants.StorageKeys.CLIENT_SECRET, sebConfiguration.getClientSecret());
-        persistentStorage.put(
-                SebConstants.StorageKeys.REDIRECT_URI, sebConfiguration.getRedirectUrl());
+        apiClient.setConfiguration(sebConfiguration);
     }
 
     @Override
