@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.entities.accountbalances;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountBalancesDataEntity {
 
+    @JsonProperty("balance")
     private List<AccountBalanceEntity> balances;
 
     public List<AccountBalanceEntity> getBalances() {
