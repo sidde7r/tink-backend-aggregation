@@ -36,11 +36,6 @@ public class SbabSavingsAccountFetcher
                 .collect(Collectors.toList());
     }
 
-    public PaginatorResponse fetchTransactionsFor(TransactionalAccount account) {
-        return Optional.of(apiClient.listTransfers(account.getAccountNumber()))
-                .orElse(new TransfersResponse());
-    }
-
     @Override
     public PaginatorResponse getTransactionsFor(
             TransactionalAccount account, Date fromDate, Date toDate) {
