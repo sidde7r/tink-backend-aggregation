@@ -37,6 +37,7 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class NordnetAgent extends AbstractAgent
@@ -57,7 +58,7 @@ public class NordnetAgent extends AbstractAgent
                 new NordnetApiClient(
                         clientFactory.createClientWithRedirectHandler(
                                 context.getLogOutputStream(), NordnetApiClient.REDIRECT_STRATEGY),
-                        DEFAULT_USER_AGENT);
+                        CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     /**

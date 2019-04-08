@@ -134,6 +134,7 @@ import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.Doubles;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
@@ -659,7 +660,7 @@ public class NordeaV20Agent extends AbstractAgent
                 this.client
                         .resource(url)
                         .accept("*/*")
-                        .header("User-Agent", DEFAULT_USER_AGENT)
+                        .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                         .header("x-Request-Id", Integer.toString(requestId))
                         .header("x-Platform-Version", "8.1.3")
                         .header("x-App-Country", this.market.getMarketCode())

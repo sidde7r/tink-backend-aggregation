@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards.
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -36,7 +37,7 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
                         clientFactory.createCookieClient(context.getLogOutputStream()),
                         credentials,
                         request.getProvider().getPayload(),
-                        DEFAULT_USER_AGENT);
+                        CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     /** This constructor is used for unit tests */

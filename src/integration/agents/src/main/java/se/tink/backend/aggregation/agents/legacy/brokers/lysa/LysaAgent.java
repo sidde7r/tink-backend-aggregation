@@ -25,6 +25,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccountsExecutor {
@@ -46,7 +47,7 @@ public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccount
                 new LysaClient(
                         clientFactory.createCustomClient(
                                 context.getLogOutputStream(), clientConfig),
-                        DEFAULT_USER_AGENT);
+                        CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     @Override

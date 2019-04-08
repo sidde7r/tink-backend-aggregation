@@ -3,8 +3,8 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.filter;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.HttpHeaders;
-import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.icabanken.IcaBankenConstants;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 import se.tink.backend.aggregation.nxgen.http.HttpResponse;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
@@ -24,7 +24,7 @@ public class IcaBankenFilter extends Filter {
                 IcaBankenConstants.Headers.VALUE_API_VERSION);
         headers.add(
                 IcaBankenConstants.Headers.HEADER_APIKEY, IcaBankenConstants.Headers.VALUE_APIKEY);
-        headers.add(HttpHeaders.USER_AGENT, AbstractAgent.DEFAULT_USER_AGENT);
+        headers.add(HttpHeaders.USER_AGENT, CommonHeaders.DEFAULT_USER_AGENT);
         headers.add(
                 IcaBankenConstants.Headers.HEADER_CLIENTAPPVERSION,
                 IcaBankenConstants.Headers.VALUE_CLIENTAPPVERSION);

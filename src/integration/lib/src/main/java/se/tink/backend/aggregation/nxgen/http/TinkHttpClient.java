@@ -59,10 +59,10 @@ import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.HTTP;
 import se.tink.backend.agents.rpc.Provider;
-import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.utils.jersey.LoggingFilter;
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpClientException;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.http.filter.Filter;
@@ -122,7 +122,7 @@ public class TinkHttpClient extends Filterable<TinkHttpClient> {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private class DEFAULTS {
-        private static final String DEFAULT_USER_AGENT = AbstractAgent.DEFAULT_USER_AGENT;
+        private static final String DEFAULT_USER_AGENT = CommonHeaders.DEFAULT_USER_AGENT;
         private static final int TIMEOUT_MS = 30000;
         private static final int MAX_REDIRECTS = 10;
         private static final boolean CHUNKED_ENCODING = false;

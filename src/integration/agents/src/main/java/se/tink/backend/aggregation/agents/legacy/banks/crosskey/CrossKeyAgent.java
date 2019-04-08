@@ -28,6 +28,7 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
@@ -62,7 +63,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
                         clientFactory.createCookieClient(context.getLogOutputStream()),
                         credentials,
                         log,
-                        DEFAULT_USER_AGENT);
+                        CommonHeaders.DEFAULT_USER_AGENT);
     }
 
     /** Login functions */

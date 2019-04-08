@@ -118,6 +118,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.TransactionOrdering;
 import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
@@ -386,7 +387,7 @@ public class ICABankenAgent extends AbstractAgent
     private Builder createClientRequest(String url) {
         Builder request =
                 client.resource(url)
-                        .header("User-Agent", DEFAULT_USER_AGENT)
+                        .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                         .accept(MediaType.APPLICATION_JSON)
                         .header("ApiKey", API_KEY)
                         .header("ApiVersion", API_VERSION)

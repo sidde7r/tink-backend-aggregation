@@ -77,6 +77,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 /** Latest verified version: iOS v2.12.0 */
@@ -257,7 +258,7 @@ public class AvanzaV2Agent extends AbstractAgent
     private Builder createClientRequest(String url, String authenticationSession) {
         Builder builder =
                 client.resource(url)
-                        .header("User-Agent", DEFAULT_USER_AGENT)
+                        .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                         .accept(MediaType.APPLICATION_JSON)
                         .type(MediaType.APPLICATION_JSON);
 

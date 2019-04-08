@@ -20,7 +20,6 @@ import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public abstract class AbstractAgent extends SuperAbstractAgent {
-    public static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
 
     protected final JerseyClientFactory clientFactory;
     protected final StatusUpdater statusUpdater;

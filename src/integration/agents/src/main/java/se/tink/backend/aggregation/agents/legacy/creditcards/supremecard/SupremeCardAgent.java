@@ -45,6 +45,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.date.DateUtils;
@@ -57,7 +58,7 @@ public class SupremeCardAgent extends AbstractAgent implements DeprecatedRefresh
 
     protected Builder createClientRequest(String uri) {
         return client.resource(uri)
-                .header("User-Agent", DEFAULT_USER_AGENT)
+                .header("User-Agent", CommonHeaders.DEFAULT_USER_AGENT)
                 .accept("*/*")
                 .acceptLanguage("sv-se");
     }

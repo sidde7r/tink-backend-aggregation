@@ -32,6 +32,7 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -52,7 +53,7 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
                 new AmericanExpressV3ApiClient(
                         clientFactory.createCustomClient(context.getLogOutputStream()),
                         request.getProvider().getMarket(),
-                        DEFAULT_USER_AGENT,
+                        CommonHeaders.DEFAULT_USER_AGENT,
                         credentials);
 
         // client.addFilter(new LoggingFilter(System.out));
