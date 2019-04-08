@@ -18,7 +18,11 @@ public class ErrorResponse {
     @JsonIgnore
     public Optional<String> getErrorDescription() {
         return Optional.ofNullable(error)
-                .map(errorList -> errorList.stream().findFirst().map(ErrorEntity::getErrorDescription))
+                .map(
+                        errorList ->
+                                errorList.stream()
+                                        .findFirst()
+                                        .map(ErrorEntity::getErrorDescription))
                 .filter(Optional::isPresent)
                 .map(Optional::get);
     }

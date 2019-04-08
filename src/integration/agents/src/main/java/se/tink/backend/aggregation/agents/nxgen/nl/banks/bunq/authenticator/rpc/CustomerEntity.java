@@ -8,6 +8,7 @@ public class CustomerEntity {
     private int id;
     private String created;
     private String updated;
+
     @JsonProperty("billing_account_id")
     private Integer billingAccountId;
 

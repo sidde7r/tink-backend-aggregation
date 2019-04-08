@@ -22,9 +22,12 @@ public class BunqRequiredHeadersFilter extends Filter {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
-        TokenEntity tokenEntity = sessionStorage.get(
-                BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, TokenEntity.class).orElse(null);
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
+        TokenEntity tokenEntity =
+                sessionStorage
+                        .get(BunqConstants.StorageKeys.CLIENT_AUTH_TOKEN, TokenEntity.class)
+                        .orElse(null);
 
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add("Accept", MediaType.APPLICATION_JSON);
@@ -33,12 +36,19 @@ public class BunqRequiredHeadersFilter extends Filter {
             headers.add("Content-Type", MediaType.APPLICATION_JSON);
         }
 
-        headers.add(BunqConstants.Headers.LANGUAGE.getKey(), BunqConstants.Headers.LANGUAGE.getValue());
+        headers.add(
+                BunqConstants.Headers.LANGUAGE.getKey(), BunqConstants.Headers.LANGUAGE.getValue());
         headers.add(BunqConstants.Headers.REGION.getKey(), BunqConstants.Headers.REGION.getValue());
         headers.add(BunqConstants.Headers.REQUEST_ID.getKey(), UUIDUtils.generateUUID());
-        headers.add(BunqConstants.Headers.GEOLOCATION.getKey(), BunqConstants.Headers.GEOLOCATION.getValue());
-        headers.add(BunqConstants.Headers.CACHE_CONTROL.getKey(), BunqConstants.Headers.CACHE_CONTROL.getValue());
-        headers.add(BunqConstants.Headers.CLIENT_AUTH.getKey(), tokenEntity == null ? null : tokenEntity.getToken());
+        headers.add(
+                BunqConstants.Headers.GEOLOCATION.getKey(),
+                BunqConstants.Headers.GEOLOCATION.getValue());
+        headers.add(
+                BunqConstants.Headers.CACHE_CONTROL.getKey(),
+                BunqConstants.Headers.CACHE_CONTROL.getValue());
+        headers.add(
+                BunqConstants.Headers.CLIENT_AUTH.getKey(),
+                tokenEntity == null ? null : tokenEntity.getToken());
 
         return nextFilter(httpRequest);
     }

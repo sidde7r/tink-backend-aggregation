@@ -26,7 +26,8 @@ public class BunqSignatureHeaderFilter extends Filter {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         addSignatureHeader(httpRequest);
         return nextFilter(httpRequest);
     }
@@ -35,22 +36,29 @@ public class BunqSignatureHeaderFilter extends Filter {
 
         MultivaluedMap<String, Object> requestHeaders = httpRequest.getHeaders();
 
-        String rawHeader = httpRequest.getMethod() + " " + getPathAndQuery(httpRequest) + "\n"
-                + toSignatureFormat(BunqConstants.Headers.CACHE_CONTROL, requestHeaders)
-                + toSignatureFormat(BunqConstants.Headers.USER_AGENT.getKey(), userAgent)
-                + toSignatureFormat(BunqConstants.Headers.CLIENT_AUTH, requestHeaders)
-                + toSignatureFormat(BunqConstants.Headers.REQUEST_ID, requestHeaders)
-                + toSignatureFormat(BunqConstants.Headers.GEOLOCATION, requestHeaders)
-                + toSignatureFormat(BunqConstants.Headers.LANGUAGE, requestHeaders)
-                + toSignatureFormat(BunqConstants.Headers.REGION, requestHeaders)
-                + "\n";
-        
+        String rawHeader =
+                httpRequest.getMethod()
+                        + " "
+                        + getPathAndQuery(httpRequest)
+                        + "\n"
+                        + toSignatureFormat(BunqConstants.Headers.CACHE_CONTROL, requestHeaders)
+                        + toSignatureFormat(BunqConstants.Headers.USER_AGENT.getKey(), userAgent)
+                        + toSignatureFormat(BunqConstants.Headers.CLIENT_AUTH, requestHeaders)
+                        + toSignatureFormat(BunqConstants.Headers.REQUEST_ID, requestHeaders)
+                        + toSignatureFormat(BunqConstants.Headers.GEOLOCATION, requestHeaders)
+                        + toSignatureFormat(BunqConstants.Headers.LANGUAGE, requestHeaders)
+                        + toSignatureFormat(BunqConstants.Headers.REGION, requestHeaders)
+                        + "\n";
+
         if (httpRequest.getBody() != null) {
             rawHeader += SerializationUtils.serializeToString(httpRequest.getBody());
         }
 
-        httpRequest.getHeaders().putSingle(BunqConstants.Headers.CLIENT_SIGNATURE.getKey(),
-                getEncodedSignature(rawHeader));
+        httpRequest
+                .getHeaders()
+                .putSingle(
+                        BunqConstants.Headers.CLIENT_SIGNATURE.getKey(),
+                        getEncodedSignature(rawHeader));
     }
 
     private String getEncodedSignature(String rawHeader) {
@@ -61,8 +69,10 @@ public class BunqSignatureHeaderFilter extends Filter {
     }
 
     private PrivateKey getPrivateKey() {
-        KeyPair keyPair = SerializationUtils.deserializeKeyPair(
-                persistentStorage.get(BunqConstants.StorageKeys.DEVICE_RSA_SIGNING_KEY_PAIR));
+        KeyPair keyPair =
+                SerializationUtils.deserializeKeyPair(
+                        persistentStorage.get(
+                                BunqConstants.StorageKeys.DEVICE_RSA_SIGNING_KEY_PAIR));
         return keyPair.getPrivate();
     }
 
@@ -75,9 +85,10 @@ public class BunqSignatureHeaderFilter extends Filter {
         return query != null ? path + "?" + query : path;
     }
 
-    private String toSignatureFormat(BunqConstants.Headers headerConstant,
-            MultivaluedMap<String, Object> requestHeaders) {
-        return toSignatureFormat(headerConstant.getKey(), requestHeaders.getFirst(headerConstant.getKey()));
+    private String toSignatureFormat(
+            BunqConstants.Headers headerConstant, MultivaluedMap<String, Object> requestHeaders) {
+        return toSignatureFormat(
+                headerConstant.getKey(), requestHeaders.getFirst(headerConstant.getKey()));
     }
 
     private String toSignatureFormat(String key, Object value) {

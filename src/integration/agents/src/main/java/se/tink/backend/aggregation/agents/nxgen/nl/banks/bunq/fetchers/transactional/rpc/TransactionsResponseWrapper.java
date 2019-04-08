@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 public class TransactionsResponseWrapper implements TransactionKeyPaginatorResponse<String> {
     @JsonProperty("Response")
     private List<TransactionWrapper> response;
+
     @JsonProperty("Pagination")
     private PaginationEntity pagination;
 
@@ -27,14 +28,15 @@ public class TransactionsResponseWrapper implements TransactionKeyPaginatorRespo
 
     @JsonIgnore
     private Optional<String> getMoreTransactions() {
-        return Optional.ofNullable(pagination)
-                .map(PaginationEntity::getPreviousPage);
+        return Optional.ofNullable(pagination).map(PaginationEntity::getPreviousPage);
     }
 
     @JsonIgnore
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return response.stream().map(TransactionWrapper::toTinkTransaction).collect(Collectors.toList());
+        return response.stream()
+                .map(TransactionWrapper::toTinkTransaction)
+                .collect(Collectors.toList());
     }
 
     @JsonIgnore
