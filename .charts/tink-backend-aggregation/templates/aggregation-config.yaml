@@ -49,7 +49,11 @@ data:
       driverClass: com.mysql.jdbc.Driver
       username: {{ default "tink-aggregation" $aggregationdb.username }}
       password: MYSQL_PASSWORD # Is added via Kubernetes Secrets
+      {{- if .Values.aggregationdb }}
       url: jdbc:mysql://{{ default "aggregationdb" $aggregationdb.host }}:3306/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+      {{- else }}
+      url: jdbc:mysql://aggregation-db.internal.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.network:3306/tink?useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false
+      {{- end }}
       showSql: false
       persistenceUnitName: tink-aggregation-api
       maxPoolSize: 30
