@@ -109,11 +109,14 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
+        final Double interestRate =
+                Optional.ofNullable(loanTerms).map(LoanTermsEntity::getInterestRate).orElse(null);
+
         return LoanAccount.builder(loanNumber, Amount.inSEK(currentLoanAmount).negate())
                 .setName(loanNumber)
                 .setAccountNumber(loanNumber)
                 .setBankIdentifier(loanNumber)
-                .setInterestRate(Optional.of(loanTerms.getInterestRate()).orElse(null))
+                .setInterestRate(interestRate)
                 .setDetails(toTinkLoanDetails())
                 .build();
     }
