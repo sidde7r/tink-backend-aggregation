@@ -60,7 +60,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                         this.updateController,
                         new DanskeBankTransactionalAccountFetcher(
                                 this.credentials, this.apiClient, this.configuration),
-                        creatTransactionFetcherController()));
+                        createTransactionFetcherController()));
     }
 
     @Override
@@ -71,7 +71,7 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                         this.updateController,
                         new DanskeBankCreditCardFetcher(
                                 this.apiClient, this.configuration.getLanguageCode()),
-                        creatTransactionFetcherController()));
+                        createTransactionFetcherController()));
     }
 
     @Override
@@ -92,11 +92,11 @@ public abstract class DanskeBankAgent<MarketSpecificApiClient extends DanskeBank
                         this.updateController,
                         new DanskeBankAccountLoanFetcher(
                                 this.credentials, this.apiClient, this.configuration),
-                        creatTransactionFetcherController()));
+                        createTransactionFetcherController()));
     }
 
     private <A extends Account>
-            TransactionFetcherController<A> creatTransactionFetcherController() {
+            TransactionFetcherController<A> createTransactionFetcherController() {
         DanskeBankMultiTransactionsFetcher<A> transactionFetcher =
                 new DanskeBankMultiTransactionsFetcher<>(
                         this.apiClient, this.configuration.getLanguageCode());
