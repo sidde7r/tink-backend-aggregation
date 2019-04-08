@@ -130,6 +130,6 @@ public final class DeutscheBankApiClient {
     private OAuth2Token getTokenFromSession() {
         return sessionStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(() -> new IllegalStateException("Cannot find token!"));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 }
