@@ -1,16 +1,16 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia;
 
-import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public final class AktiaConstants {
+
+    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
+            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "Käyttötili").build();
 
     private AktiaConstants() {
         throw new AssertionError();
     }
-
-    public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-            TypeMapper.<AccountTypes>builder().put(AccountTypes.CHECKING, "Käyttötili").build();
 
     public static class Urls {
         public static final String BASE_URL = "https://api.aktia.fi";

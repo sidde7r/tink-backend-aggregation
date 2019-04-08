@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia;
 
-import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator.AktiaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.configuration.AktiaConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.AktiaTransactionalAccountFetcher;
-import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.session.AktiaSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
@@ -22,6 +20,8 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+
+import java.util.Optional;
 
 public final class AktiaAgent extends NextGenerationAgent {
     private final AktiaApiClient apiClient;
@@ -44,12 +44,15 @@ public final class AktiaAgent extends NextGenerationAgent {
                                 AktiaConstants.Market.INTEGRATION_NAME,
                                 request.getProvider().getPayload(),
                                 AktiaConfiguration.class)
-                        .orElseThrow(() -> new IllegalStateException("Akita configuration missing."));
+                        .orElseThrow(
+                                () -> new IllegalStateException("Akita configuration missing."));
 
-        persistentStorage.put(AktiaConstants.StorageKeys.CLIENT_ID, akitaConfiguration.getClientId());
-        persistentStorage.put(AktiaConstants.StorageKeys.CLIENT_SECRET, akitaConfiguration.getClientSecret());
-        persistentStorage.put(AktiaConstants.StorageKeys.CONSENT_ID, akitaConfiguration.getConsentId());
-
+        persistentStorage.put(
+                AktiaConstants.StorageKeys.CLIENT_ID, akitaConfiguration.getClientId());
+        persistentStorage.put(
+                AktiaConstants.StorageKeys.CLIENT_SECRET, akitaConfiguration.getClientSecret());
+        persistentStorage.put(
+                AktiaConstants.StorageKeys.CONSENT_ID, akitaConfiguration.getConsentId());
     }
 
     @Override
@@ -62,7 +65,7 @@ public final class AktiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
-    constructTransactionalAccountRefreshController() {
+            constructTransactionalAccountRefreshController() {
         AktiaTransactionalAccountFetcher accountFetcher =
                 new AktiaTransactionalAccountFetcher(apiClient);
 
@@ -98,13 +101,13 @@ public final class AktiaAgent extends NextGenerationAgent {
 
     @Override
     protected Optional<TransferDestinationRefreshController>
-    constructTransferDestinationRefreshController() {
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
     @Override
     protected SessionHandler constructSessionHandler() {
-        return new AktiaSessionHandler(apiClient, sessionStorage);
+        return SessionHandler.alwaysFail();
     }
 
     @Override

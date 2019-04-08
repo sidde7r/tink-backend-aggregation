@@ -1,7 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia;
 
-import javax.ws.rs.core.MediaType;
-
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
@@ -13,6 +11,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
+import javax.ws.rs.core.MediaType;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;

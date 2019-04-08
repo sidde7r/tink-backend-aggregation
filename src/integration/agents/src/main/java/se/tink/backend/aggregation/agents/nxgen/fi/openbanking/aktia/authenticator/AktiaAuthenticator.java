@@ -1,11 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.authenticator;
 
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.AktiaApiClient;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class AktiaAuthenticator implements Authenticator {
     private final AktiaApiClient apiClient;

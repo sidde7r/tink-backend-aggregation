@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia.fetcher.transactionalaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,6 +11,7 @@ public class BookedEntity {
 
     @JsonProperty("_links")
     private TransactionsLinksEntity links;
+
     private Date bookingDate;
     private String creditorName;
     private String debtorName;
