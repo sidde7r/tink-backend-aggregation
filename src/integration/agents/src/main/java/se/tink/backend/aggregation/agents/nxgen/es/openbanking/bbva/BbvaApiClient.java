@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.QueryKeys;
@@ -37,7 +38,8 @@ public final class BbvaApiClient {
     }
 
     public BbvaConfiguration getConfiguration() {
-        return configuration;
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     private RequestBuilder createTokenRequest(String url, String grantType) {
