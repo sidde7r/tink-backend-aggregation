@@ -77,7 +77,7 @@ public class DanskeBankDKAgent extends DanskeBankAgent {
                         this.updateController,
                         new DanskeBankTransactionalAccountFetcher(
                                 this.credentials, this.apiClient, this.configuration),
-                        creatTransactionFetcherController()));
+                        createTransactionFetcherController()));
     }
 
     @Override
@@ -88,10 +88,10 @@ public class DanskeBankDKAgent extends DanskeBankAgent {
                         this.updateController,
                         new DanskeBankCreditCardFetcher(
                                 this.apiClient, this.configuration.getLanguageCode()),
-                        creatTransactionFetcherController()));
+                        createTransactionFetcherController()));
     }
 
-    private TransactionFetcherController creatTransactionFetcherController() {
+    private TransactionFetcherController createTransactionFetcherController() {
         DanskeBankMultiTransactionsFetcher<? extends Account> transactionFetcher =
                 new DanskeBankMultiTransactionsFetcher<>(
                         this.apiClient, this.configuration.getLanguageCode());
