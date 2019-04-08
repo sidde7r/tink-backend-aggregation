@@ -8,6 +8,7 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 @JsonObject
 public class GetAccountsResponse {
@@ -18,6 +19,8 @@ public class GetAccountsResponse {
     private AccountsResponseEntity response;
 
     public Collection<TransactionalAccount> toTinkAccounts() {
-        return response != null ? response.toTinkAccounts() : Collections.emptyList();
+        return Optional.ofNullable(response)
+                .map(AccountsResponseEntity::toTinkAccounts)
+                .orElse(Collections.emptyList());
     }
 }

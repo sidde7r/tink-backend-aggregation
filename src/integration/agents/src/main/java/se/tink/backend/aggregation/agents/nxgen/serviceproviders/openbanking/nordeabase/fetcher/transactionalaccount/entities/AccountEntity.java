@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang.StringUtils;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.nordeabase.NordeaBaseConstants;
+import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
@@ -11,8 +12,12 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static org.apache.hadoop.ipc.Client.LOG;
+import static se.tink.backend.agents.rpc.AccountTypes.OTHER;
 
 @JsonObject
 public class AccountEntity {
@@ -58,19 +63,18 @@ public class AccountEntity {
     private String valueDatedBalance;
 
     public TransactionalAccount toTinkAccount() {
-        Optional<AccountTypes> type =
-                NordeaBaseConstants.ACCOUNT_TYPE_MAPPER.translate(accountType);
-        if (!type.isPresent()) {
-            throw new IllegalStateException("Unknown account type.");
-        }
+        final AccountTypes type =
+                NordeaBaseConstants.ACCOUNT_TYPE_MAPPER.translate(accountType).orElse(OTHER);
 
-        if (type.get().equals(AccountTypes.CHECKING)) {
-            return parseCheckingAccount();
+        switch (type) {
+            case CHECKING:
+                return parseCheckingAccount();
+            case SAVINGS:
+                return parseSavingsAccount();
+            case OTHER:
+            default:
+                throw new IllegalStateException("Unknown account type.");
         }
-        if (type.get().equals(AccountTypes.SAVINGS)) {
-            return parseSavingsAccount();
-        }
-        throw new IllegalStateException("Unknown account type.");
     }
 
     private TransactionalAccount parseSavingsAccount() {
@@ -108,18 +112,24 @@ public class AccountEntity {
     }
 
     private String getBban() {
-        Optional<AccountNumberEntity> accountNumberEntity =
-                accountNumbers.stream()
-                        .filter(acc -> StringUtils.containsIgnoreCase(acc.getType(), "bban"))
-                        .findFirst();
-        return accountNumberEntity.isPresent() ? accountNumberEntity.get().getValue() : getIban();
+        return Optional.ofNullable(accountNumbers).orElse(Collections.emptyList()).stream()
+                .filter(acc -> StringUtils.equalsIgnoreCase(acc.getType(), "bban"))
+                .findFirst()
+                .map(AccountNumberEntity::getValue)
+                .orElse(getIban());
     }
 
     private String getIban() {
-        Optional<AccountNumberEntity> accountNumberEntity =
-                accountNumbers.stream()
-                        .filter(acc -> StringUtils.containsIgnoreCase(acc.getType(), "iban"))
-                        .findFirst();
-        return accountNumberEntity.isPresent() ? accountNumberEntity.get().getValue() : "";
+        return Optional.ofNullable(accountNumbers).orElse(Collections.emptyList()).stream()
+                .filter(acc -> StringUtils.equalsIgnoreCase(acc.getType(), "iban"))
+                .findFirst()
+                .map(AccountNumberEntity::getValue)
+                .orElseThrow(
+                        () -> {
+                            LOG.info(
+                                    "Failed to fetch iban "
+                                            + LogTag.from("openbanking_base_nordea"));
+                            return new IllegalArgumentException();
+                        });
     }
 }

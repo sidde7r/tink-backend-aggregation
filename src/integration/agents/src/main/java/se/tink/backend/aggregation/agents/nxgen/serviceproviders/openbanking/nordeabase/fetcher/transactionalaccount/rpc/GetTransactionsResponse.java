@@ -21,7 +21,9 @@ public class GetTransactionsResponse implements TransactionKeyPaginatorResponse<
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return response != null ? response.toTinkTransactions() : Collections.emptyList();
+        return Optional.ofNullable(response)
+                .map(TransactionsResponseEntity::toTinkTransactions)
+                .orElse(Collections.emptyList());
     }
 
     @Override

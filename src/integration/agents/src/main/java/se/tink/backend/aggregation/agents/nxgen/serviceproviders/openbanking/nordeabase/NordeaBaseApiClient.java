@@ -14,6 +14,7 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 import javax.ws.rs.core.MediaType;
+import java.util.Optional;
 
 public class NordeaBaseApiClient {
     protected final TinkHttpClient client;
@@ -96,12 +97,12 @@ public class NordeaBaseApiClient {
 
     public GetTransactionsResponse getTransactions(TransactionalAccount account, String key) {
         URL url =
-                key != null
-                        ? new URL(NordeaBaseConstants.Urls.BASE_URL + key)
-                        : NordeaBaseConstants.Urls.GET_TRANSACTIONS
-                                .parameter(
+                Optional.ofNullable(key)
+                        .map(k -> new URL(NordeaBaseConstants.Urls.BASE_URL + k))
+                        .orElse(
+                                NordeaBaseConstants.Urls.GET_TRANSACTIONS.parameter(
                                         NordeaBaseConstants.IdTags.ACCOUNT_ID,
-                                        account.getApiIdentifier());
+                                        account.getApiIdentifier()));
 
         return createRequestInSession(url).get(GetTransactionsResponse.class);
     }
