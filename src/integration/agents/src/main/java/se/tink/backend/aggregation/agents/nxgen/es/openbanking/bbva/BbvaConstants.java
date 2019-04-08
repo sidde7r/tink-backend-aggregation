@@ -21,11 +21,6 @@ public abstract class BbvaConstants {
     }
 
     public static class StorageKeys {
-        public static final String BASE_AUTH_URL = "BASE_AUTH_URL";
-        public static final String BASE_API_URL = "BASE_API_URL";
-        public static final String CLIENT_ID = "CLIENT_ID";
-        public static final String CLIENT_SECRET = "CLIENT_SECRET";
-        public static final String REDIRECT_URI = "REDIRECT_URI";
         public static final String TOKEN = "TOKEN";
     }
 
