@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.joda.time.DateTime;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
@@ -19,17 +24,12 @@ import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyConfi
 import se.tink.backend.aggregation.agents.banks.crosskey.responses.CrossKeyLoanDetails;
 import se.tink.backend.aggregation.agents.banks.crosskey.utils.CrossKeyUtils;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -38,6 +38,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
 
     // Custom Exceptions
     private class FetchAccountsException extends Exception {}
+
     private class FetchTransactionsException extends Exception {}
 
     // Sensitive payload keys
@@ -47,22 +48,24 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     private final CrossKeyConfig config;
     private boolean hasRefreshed = false;
 
-    public CrossKeyAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+    public CrossKeyAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
             CrossKeyConfig config) {
         super(request, context);
 
         this.config = config;
         credentials = request.getCredentials();
-        apiClient = new CrossKeyApiClient(
-                clientFactory.createCookieClient(context.getLogOutputStream()),
-                credentials,
-                log,
-                DEFAULT_USER_AGENT);
+        apiClient =
+                new CrossKeyApiClient(
+                        clientFactory.createCookieClient(context.getLogOutputStream()),
+                        credentials,
+                        log,
+                        DEFAULT_USER_AGENT);
     }
 
-    /**
-     *  Login functions
-     */
+    /** Login functions */
     public boolean login() throws Exception {
         apiClient.systemStatus();
 
@@ -122,9 +125,7 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
         supplementalRequester.requestSupplementalInformation(credentials, false);
     }
 
-    /**
-     *  Refresh functions
-     */
+    /** Refresh functions */
     @Override
     public void refresh() throws Exception {
         // The refresh command will call refresh multiple times.
@@ -156,14 +157,17 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
         for (AccountResponse account : accountsResponse.getAccounts()) {
             Account tinkAccount = account.toTinkAccount(config);
 
-            AccountTypes accountType = config.getAccountType(account.getAccountGroup(), account.getUsageType());
+            AccountTypes accountType =
+                    config.getAccountType(account.getAccountGroup(), account.getUsageType());
             if (accountType == AccountTypes.LOAN) {
                 CrossKeyLoanDetails loanDetails;
                 try {
                     loanDetails = apiClient.getLoanDetails(account.getAccountId());
                 } catch (Exception e) {
                     loanDetails = null;
-                    log.warn(String.format("CrossKeyApi/getLoanDetails exception: %s", e.toString()));
+                    log.warn(
+                            String.format(
+                                    "CrossKeyApi/getLoanDetails exception: %s", e.toString()));
                 }
                 if (loanDetails == null) {
                     // something went wrong when we tried to fetch loanDetails
@@ -181,9 +185,8 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     private void refreshTransactionsFor(Account account) throws Exception {
-        List<Transaction> mostRecentTransactions = apiClient
-                .getTransactionsFor(account.getBankId(), null, null)
-                .toTinkTransactions();
+        List<Transaction> mostRecentTransactions =
+                apiClient.getTransactionsFor(account.getBankId(), null, null).toTinkTransactions();
 
         if (mostRecentTransactions.isEmpty()) {
             return;
@@ -191,36 +194,42 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
 
         List<Transaction> transactions;
 
-        if (Objects.equals(config.getPaginationType(), PaginationTypes.NONE) ||
-                isContentWithRefresh(account, mostRecentTransactions)) {
+        if (Objects.equals(config.getPaginationType(), PaginationTypes.NONE)
+                || isContentWithRefresh(account, mostRecentTransactions)) {
             // If latest transactions are enough or it's not a paged API, just update with latest
             transactions = mostRecentTransactions;
         } else {
             // The transactions we've seen in first request can be used to determine paging
-            Range<DateTime> knownTransactionsDateRange = CrossKeyUtils.getDateRange(mostRecentTransactions);
+            Range<DateTime> knownTransactionsDateRange =
+                    CrossKeyUtils.getDateRange(mostRecentTransactions);
 
-            // Throw away the latest so that we avoid duplicates. So just replace latest with paged transactions
+            // Throw away the latest so that we avoid duplicates. So just replace latest with paged
+            // transactions
             transactions = getTransactionsDatePaged(account, knownTransactionsDateRange);
         }
 
         updateTransactionsFor(account, transactions);
     }
 
-    private List<Transaction> getTransactionsDatePaged(Account account, Range<DateTime> knownTransactionsDateRange)
-            throws Exception {
+    private List<Transaction> getTransactionsDatePaged(
+            Account account, Range<DateTime> knownTransactionsDateRange) throws Exception {
         List<Transaction> transactions = Lists.newArrayList();
 
-        Range<DateTime> page = CrossKeyUtils.getFirstPage(knownTransactionsDateRange.upperEndpoint());
+        Range<DateTime> page =
+                CrossKeyUtils.getFirstPage(knownTransactionsDateRange.upperEndpoint());
         DateTime oldestKnownTransactionDate = knownTransactionsDateRange.lowerEndpoint();
 
         DateTime maxPagingDistance = DateTime.now().minusYears(2);
 
         do {
-            List<Transaction> newTransactions = apiClient
-                    .getTransactionsFor(account.getBankId(), page.lowerEndpoint(), page.upperEndpoint())
-                    .toTinkTransactions();
+            List<Transaction> newTransactions =
+                    apiClient
+                            .getTransactionsFor(
+                                    account.getBankId(), page.lowerEndpoint(), page.upperEndpoint())
+                            .toTinkTransactions();
 
-            if (newTransactions.size() == 0 && !oldestKnownTransactionDate.isBefore(page.lowerEndpoint())) {
+            if (newTransactions.size() == 0
+                    && !oldestKnownTransactionDate.isBefore(page.lowerEndpoint())) {
                 break;
             } else if (newTransactions.size() > 0) {
                 transactions.addAll(newTransactions);
@@ -238,16 +247,12 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
         return transactions;
     }
 
-    /**
-     *  Logout
-     */
+    /** Logout */
     public void logout() throws Exception {
         apiClient.logout();
     }
 
-    /**
-     *  Update context functions
-     */
+    /** Update context functions */
     private void updateCredentialsDeviceInfo(String deviceId, String deviceToken) {
         credentials.setSensitivePayload(DEVICE_ID_PAYLOAD_KEY, deviceId);
         updateCredentialsDeviceInfo(deviceToken);
@@ -269,11 +274,14 @@ public class CrossKeyAgent extends AbstractAgent implements DeprecatedRefreshExe
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
-        Optional<String> oneTimeCode = SupplementalInformationUtils.getResponseFields(supplementalInformation, "response");
+        String supplementalInformation =
+                supplementalRequester.requestSupplementalInformation(credentials, true);
+        Optional<String> oneTimeCode =
+                SupplementalInformationUtils.getResponseFields(supplementalInformation, "response");
 
         if (!oneTimeCode.isPresent()) {
-            throw LoginError.INCORRECT_CREDENTIALS.exception(CrossKeyMessage.ERR_PIN_MISSING.getKey());
+            throw LoginError.INCORRECT_CREDENTIALS.exception(
+                    CrossKeyMessage.ERR_PIN_MISSING.getKey());
         }
 
         log.info("One time code provided by the user");

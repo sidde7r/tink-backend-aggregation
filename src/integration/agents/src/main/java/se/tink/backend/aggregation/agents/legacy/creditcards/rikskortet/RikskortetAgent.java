@@ -1,6 +1,11 @@
 package se.tink.backend.aggregation.agents.creditcards.rikskortet;
 
 import com.google.common.collect.Lists;
+import java.io.File;
+import java.util.List;
+import javax.xml.ws.Binding;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.handler.Handler;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.Credentials;
@@ -22,12 +27,6 @@ import se.tink.backend.aggregation.agents.utils.soap.SOAPLoggingHandler;
 import se.tink.backend.aggregation.agents.utils.soap.SOAPUserAgentHandler;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import javax.xml.ws.Binding;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.handler.Handler;
-import java.io.File;
-import java.util.List;
 
 public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
     private static final File WSDL_FILE = new File("data/agents/rikskortet.wsdl");
@@ -57,7 +56,8 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
     private Credentials credentials;
     private AccountDetails ad;
 
-    public RikskortetAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public RikskortetAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
         userAgentHandler = new SOAPUserAgentHandler(DEFAULT_USER_AGENT);
 
@@ -80,7 +80,6 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
         }
         hasRefreshed = true;
 
-
         // Construct the account.
 
         Account account = new Account();
@@ -92,8 +91,9 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
 
         // Fetch the latest transactions.
 
-        ArrayOfTransactionDetails transactionDetails = service.getTransactions(credentials.getUsername(),
-                credentials.getPassword()).getYear();
+        ArrayOfTransactionDetails transactionDetails =
+                service.getTransactions(credentials.getUsername(), credentials.getPassword())
+                        .getYear();
 
         List<Transaction> transactions = Lists.newArrayList();
 
@@ -122,12 +122,13 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
 
         // Handle authentication errors.
         switch (ad.getErrorCode()) {
-        case 1:
-            return true;
-        case -1:
-            throw LoginError.INCORRECT_CREDENTIALS.exception();
-        default:
-            throw new IllegalStateException(String.format("Rikskortet: unknown error code: %d", ad.getErrorCode()));
+            case 1:
+                return true;
+            case -1:
+                throw LoginError.INCORRECT_CREDENTIALS.exception();
+            default:
+                throw new IllegalStateException(
+                        String.format("Rikskortet: unknown error code: %d", ad.getErrorCode()));
         }
     }
 
@@ -135,6 +136,4 @@ public class RikskortetAgent extends AbstractAgent implements DeprecatedRefreshE
     public void logout() throws Exception {
         // TODO Implement.
     }
-
-
 }

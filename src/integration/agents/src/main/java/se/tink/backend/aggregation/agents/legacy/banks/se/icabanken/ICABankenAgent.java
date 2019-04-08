@@ -723,8 +723,7 @@ public class ICABankenAgent extends AbstractAgent
 
     private List<GeneralAccountEntity> findSourceAccountsFor(
             IcaSourceType sourceType, List<AccountEntity> accountEntities) {
-        return accountEntities
-                .stream()
+        return accountEntities.stream()
                 .filter(accountEntity -> sourceType.contains(accountEntity.getValidFor()))
                 .collect(Collectors.toList());
     }
@@ -737,8 +736,7 @@ public class ICABankenAgent extends AbstractAgent
         List<GeneralAccountEntity> destinationAccounts =
                 findDestinationAccountsFor(destinationType, recipientEntities);
 
-        accountEntities
-                .stream()
+        accountEntities.stream()
                 .filter(accountEntity -> destinationType.contains(accountEntity.getValidFor()))
                 .forEach(destinationAccounts::add);
 
@@ -747,8 +745,7 @@ public class ICABankenAgent extends AbstractAgent
 
     private List<GeneralAccountEntity> findDestinationAccountsFor(
             IcaDestinationType destinationType, List<RecipientEntity> recipientEntities) {
-        return recipientEntities
-                .stream()
+        return recipientEntities.stream()
                 .filter(recipientEntity -> destinationType.contains(recipientEntity.getType()))
                 .collect(Collectors.toList());
     }
@@ -852,8 +849,7 @@ public class ICABankenAgent extends AbstractAgent
         if (page > 2) {
             return DATE_FORMAT.format(
                     java.util.Optional.<List<Transaction>>ofNullable(transactions)
-                            .orElse(ImmutableList.of())
-                            .stream()
+                            .orElse(ImmutableList.of()).stream()
                             .min(
                                     TransactionOrdering
                                             .TRANSACTION_DATE_ORDERING) // Oldest transaction.
@@ -1262,8 +1258,7 @@ public class ICABankenAgent extends AbstractAgent
             final AccountIdentifier destination) {
         List<RecipientEntity> destinationAccounts = fetchDestinationAccounts();
 
-        return destinationAccounts
-                .stream()
+        return destinationAccounts.stream()
                 .filter(
                         re ->
                                 (Objects.equal(
@@ -1276,8 +1271,7 @@ public class ICABankenAgent extends AbstractAgent
             final AccountIdentifier destination) {
         List<RecipientEntity> destinationAccounts = fetchDestinationAccounts();
 
-        return destinationAccounts
-                .stream()
+        return destinationAccounts.stream()
                 .filter(
                         re ->
                                 (Objects.equal(
@@ -1498,8 +1492,10 @@ public class ICABankenAgent extends AbstractAgent
 
                 if (response.getStatus() == 409) {
                     CollectBankIdResponseBody responseBody = bankIdResponse.getBody();
-                    String serverMessage = bankIdResponse.getResponseStatus().getServerMessage().toLowerCase();
-                    String clientMessage = bankIdResponse.getResponseStatus().getClientMessage().toLowerCase();
+                    String serverMessage =
+                            bankIdResponse.getResponseStatus().getServerMessage().toLowerCase();
+                    String clientMessage =
+                            bankIdResponse.getResponseStatus().getClientMessage().toLowerCase();
 
                     if (responseBody.isTimeOut()) {
                         throw BankIdError.TIMEOUT.exception();
@@ -1621,8 +1617,7 @@ public class ICABankenAgent extends AbstractAgent
 
     private FetchAccountsResponse fetchAccountsPerType(RefreshableItem type) {
         List<Account> accounts = new ArrayList<>();
-        getAccounts()
-                .stream()
+        getAccounts().stream()
                 .map(AccountEntity::toAccount)
                 .filter(account -> type.isAccountType(account.getType()))
                 .forEach(accounts::add);

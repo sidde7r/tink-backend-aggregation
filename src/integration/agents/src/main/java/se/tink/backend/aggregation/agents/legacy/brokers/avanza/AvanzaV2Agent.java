@@ -11,6 +11,20 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.api.client.filter.ClientFilter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 import org.eclipse.jetty.http.HttpStatus;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -64,21 +78,6 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /** Latest verified version: iOS v2.12.0 */
 public class AvanzaV2Agent extends AbstractAgent
@@ -146,7 +145,6 @@ public class AvanzaV2Agent extends AbstractAgent
             throw e;
         }
 
-
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
 
@@ -160,9 +158,9 @@ public class AvanzaV2Agent extends AbstractAgent
             try {
                 bankIdClientResponse =
                         createClientRequest(
-                                String.format(
-                                        Urls.BANK_ID_COLLECT,
-                                        initiateBankIdResponse.getTransactionId()))
+                                        String.format(
+                                                Urls.BANK_ID_COLLECT,
+                                                initiateBankIdResponse.getTransactionId()))
                                 .get(ClientResponse.class);
             } catch (UniformInterfaceException e) {
 
@@ -232,7 +230,7 @@ public class AvanzaV2Agent extends AbstractAgent
         }
 
         if (response != null && response.getStatus() == HttpStatus.SERVICE_UNAVAILABLE_503) {
-           throw BankServiceError.BANK_SIDE_FAILURE.exception();
+            throw BankServiceError.BANK_SIDE_FAILURE.exception();
         }
     }
 
@@ -353,9 +351,7 @@ public class AvanzaV2Agent extends AbstractAgent
             List<Instrument> instruments) {
         return positionAggregationEntity -> {
             String instrumentType = positionAggregationEntity.getInstrumentType();
-            positionAggregationEntity
-                    .getPositions()
-                    .stream()
+            positionAggregationEntity.getPositions().stream()
                     .filter(positionEntityHasOrderbookId())
                     .forEach(
                             mapPositionEntityToTinkInstrument(
@@ -402,9 +398,7 @@ public class AvanzaV2Agent extends AbstractAgent
                             toDate.format(DateTimeFormatter.ISO_DATE));
 
             transactions.addAll(
-                    transactionsResponse
-                            .getTransactions()
-                            .stream()
+                    transactionsResponse.getTransactions().stream()
                             .filter(transactionIsDepositOrWithdraw())
                             .map(TransactionEntity::toTinkTransaction)
                             .collect(Collectors.toList()));
@@ -606,49 +600,66 @@ public class AvanzaV2Agent extends AbstractAgent
                             bankIDAuthenticationSession -> {
                                 ensureValidBankIDSession(bankIDAuthenticationSession);
                                 accountOverview
-                                    .getAccounts()
-                                    .forEach(
-                                        accountEntity -> {
-                                            // Only tradable accounts have instruments
-                                            if (!accountEntity.isTradable()) {
-                                                return;
-                                            }
+                                        .getAccounts()
+                                        .forEach(
+                                                accountEntity -> {
+                                                    // Only tradable accounts have instruments
+                                                    if (!accountEntity.isTradable()) {
+                                                        return;
+                                                    }
 
-                                            String accountId = accountEntity.getAccountId();
+                                                    String accountId = accountEntity.getAccountId();
 
-                                            AccountDetailsEntity accountDetailsEntity =
-                                                    fetchAccountDetails(accountId, bankIDAuthenticationSession);
-                                            Account account = accountDetailsEntity.toAccount(accountEntity);
+                                                    AccountDetailsEntity accountDetailsEntity =
+                                                            fetchAccountDetails(
+                                                                    accountId,
+                                                                    bankIDAuthenticationSession);
+                                                    Account account =
+                                                            accountDetailsEntity.toAccount(
+                                                                    accountEntity);
 
-                                            PositionResponse positionResponse =
-                                                    fetchInvestmentsPositions(accountId, bankIDAuthenticationSession);
-                                            InvestmentTransactionsResponse investmentTransactionsResponse =
-                                                    fetchInvestmentTransactions(
-                                                            accountId,
-                                                            LocalDate.now().format(DateTimeFormatter.ISO_DATE),
-                                                            bankIDAuthenticationSession);
+                                                    PositionResponse positionResponse =
+                                                            fetchInvestmentsPositions(
+                                                                    accountId,
+                                                                    bankIDAuthenticationSession);
+                                                    InvestmentTransactionsResponse
+                                                            investmentTransactionsResponse =
+                                                                    fetchInvestmentTransactions(
+                                                                            accountId,
+                                                                            LocalDate.now()
+                                                                                    .format(
+                                                                                            DateTimeFormatter
+                                                                                                    .ISO_DATE),
+                                                                            bankIDAuthenticationSession);
 
-                                            Map<String, String> isinByName =
-                                                    investmentTransactionsResponse.getIsinByName();
+                                                    Map<String, String> isinByName =
+                                                            investmentTransactionsResponse
+                                                                    .getIsinByName();
 
-                                            Portfolio portfolio = positionResponse.toPortfolio();
-                                            // Add the money available for buying instruments
-                                            portfolio.setCashValue(accountDetailsEntity.getBuyingPower());
-                                            List<Instrument> instruments = Lists.newArrayList();
-                                            positionResponse
-                                                    .getInstrumentPositions()
-                                                    .forEach(
-                                                            aggregatePositionEntityWithInstrumentType(
-                                                                    bankIDAuthenticationSession,
-                                                                    isinByName,
-                                                                    instruments));
-                                            portfolio.setInstruments(instruments);
+                                                    Portfolio portfolio =
+                                                            positionResponse.toPortfolio();
+                                                    // Add the money available for buying
+                                                    // instruments
+                                                    portfolio.setCashValue(
+                                                            accountDetailsEntity.getBuyingPower());
+                                                    List<Instrument> instruments =
+                                                            Lists.newArrayList();
+                                                    positionResponse
+                                                            .getInstrumentPositions()
+                                                            .forEach(
+                                                                    aggregatePositionEntityWithInstrumentType(
+                                                                            bankIDAuthenticationSession,
+                                                                            isinByName,
+                                                                            instruments));
+                                                    portfolio.setInstruments(instruments);
 
-                                            account.setBalance(account.getBalance());
+                                                    account.setBalance(account.getBalance());
 
-                                            accounts.put(
-                                                    account, AccountFeatures.createForPortfolios(portfolio));
-                                        });
+                                                    accounts.put(
+                                                            account,
+                                                            AccountFeatures.createForPortfolios(
+                                                                    portfolio));
+                                                });
                             });
             return new FetchInvestmentAccountsResponse(accounts);
         } else {
@@ -659,6 +670,7 @@ public class AvanzaV2Agent extends AbstractAgent
             return new FetchInvestmentAccountsResponse(Collections.emptyMap());
         }
     }
+
     private FetchTransactionsResponse fetchTransactions() {
         Map<Account, List<Transaction>> transactionsMap = new HashMap<>();
         if (request.getCredentials().getType() == CredentialsTypes.MOBILE_BANKID) {
@@ -673,19 +685,30 @@ public class AvanzaV2Agent extends AbstractAgent
                                                     String accountId = accountEntity.getAccountId();
 
                                                     AccountDetailsEntity accountDetailsEntity =
-                                                            fetchAccountDetails(accountId, bankIDAuthenticationSession);
-                                                    Account account = accountDetailsEntity.toAccount(accountEntity);
+                                                            fetchAccountDetails(
+                                                                    accountId,
+                                                                    bankIDAuthenticationSession);
+                                                    Account account =
+                                                            accountDetailsEntity.toAccount(
+                                                                    accountEntity);
 
-                                                    // Hack to get the correct name for SparkontoPlus accounts.
+                                                    // Hack to get the correct name for
+                                                    // SparkontoPlus accounts.
                                                     if (Objects.equals(
-                                                            accountDetailsEntity.getAccountType(), "SparkontoPlus")) {
+                                                            accountDetailsEntity.getAccountType(),
+                                                            "SparkontoPlus")) {
                                                         account.setName(
-                                                                accountDetailsEntity.getAccountTypeName()
-                                                                        + accountEntity.getSparkontoPlusType());
+                                                                accountDetailsEntity
+                                                                                .getAccountTypeName()
+                                                                        + accountEntity
+                                                                                .getSparkontoPlusType());
                                                     }
 
                                                     List<Transaction> transactions =
-                                                            getTransactions(account, accountId, bankIDAuthenticationSession);
+                                                            getTransactions(
+                                                                    account,
+                                                                    accountId,
+                                                                    bankIDAuthenticationSession);
 
                                                     transactionsMap.put(account, transactions);
                                                 });

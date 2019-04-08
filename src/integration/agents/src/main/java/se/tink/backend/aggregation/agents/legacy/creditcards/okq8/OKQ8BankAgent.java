@@ -38,10 +38,10 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
     private boolean hasRefreshed = false;
 
     /**
-     * Since both auth is done and transcations are gathered in one single request we save response here for later
+     * Since both auth is done and transcations are gathered in one single request we save response
+     * here for later
      */
     private Optional<LoginResponse> loginResponseFromAuthenticationRequest;
-
 
     protected static Builder createClientRequest(String uri, Client client, String aggregator) {
         return client.resource(uri)
@@ -51,12 +51,13 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
                 .acceptLanguage("sv-se");
     }
 
-    public OKQ8BankAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public OKQ8BankAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         client = clientFactory.createCookieClient(context.getLogOutputStream());
         credentials = request.getCredentials();
-        loginResponseFromAuthenticationRequest =  Optional.empty();
+        loginResponseFromAuthenticationRequest = Optional.empty();
     }
 
     @Override
@@ -89,15 +90,17 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
     }
 
     private boolean isFetchAgain(LoginResponse loginResponse) {
-        return loginResponse.getAccountData() == null ||
-                loginResponse.getAccountData().getAccount() == null ||
-                loginResponse.getAccountData().getAccount().isEmpty();
+        return loginResponse.getAccountData() == null
+                || loginResponse.getAccountData().getAccount() == null
+                || loginResponse.getAccountData().getAccount().isEmpty();
     }
 
-    private LoginResponse loginAndFetchAllTransactions() throws LoginException, AuthorizationException {
+    private LoginResponse loginAndFetchAllTransactions()
+            throws LoginException, AuthorizationException {
         LoginRequest loginRequest = createLoginRequestForCredentials(credentials);
-        ClientResponse response = createClientRequest(LOGIN_URL, client, DEFAULT_USER_AGENT)
-                .post(ClientResponse.class, loginRequest);
+        ClientResponse response =
+                createClientRequest(LOGIN_URL, client, DEFAULT_USER_AGENT)
+                        .post(ClientResponse.class, loginRequest);
 
         ensureLoginSuccessful(response);
 
@@ -114,13 +117,15 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
         return loginRequest;
     }
 
-    private void ensureLoginSuccessful(ClientResponse loginResponse) throws LoginException, AuthorizationException {
+    private void ensureLoginSuccessful(ClientResponse loginResponse)
+            throws LoginException, AuthorizationException {
 
         if (loginResponse.getStatus() == HttpStatus.SC_OK) {
             return;
         }
 
-        LoginFailedResponse loginFailedResponse = loginResponse.getEntity(LoginFailedResponse.class);
+        LoginFailedResponse loginFailedResponse =
+                loginResponse.getEntity(LoginFailedResponse.class);
 
         if (loginResponse.getStatus() == HttpStatus.SC_BAD_REQUEST) {
             String errorMessage = Optional.ofNullable(loginFailedResponse.getMessage()).orElse("");
@@ -135,8 +140,11 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
         }
 
         throw new IllegalStateException(
-                String.format("#OKQ8 Login failed with status: %s Reason: %s Message: %s",
-                        loginResponse.getStatus(), loginFailedResponse.getReason(), loginFailedResponse.getMessage()));
+                String.format(
+                        "#OKQ8 Login failed with status: %s Reason: %s Message: %s",
+                        loginResponse.getStatus(),
+                        loginFailedResponse.getReason(),
+                        loginFailedResponse.getMessage()));
     }
 
     @Override
@@ -158,7 +166,8 @@ public class OKQ8BankAgent extends AbstractAgent implements DeprecatedRefreshExe
 
     private void ensureLoginDoneOnThisInstance() {
         if (!loginResponseFromAuthenticationRequest.isPresent()) {
-            throw new IllegalStateException("We should already have the entity from logging in earlier.");
+            throw new IllegalStateException(
+                    "We should already have the entity from logging in earlier.");
         }
     }
 
