@@ -12,8 +12,7 @@ public class BelfiusProductMap {
 
     private final Map<String, BelfiusProduct> accounts;
 
-    public BelfiusProductMap(
-            Map<String, BelfiusProduct> accounts) {
+    public BelfiusProductMap(Map<String, BelfiusProduct> accounts) {
         this.accounts = accounts;
     }
 

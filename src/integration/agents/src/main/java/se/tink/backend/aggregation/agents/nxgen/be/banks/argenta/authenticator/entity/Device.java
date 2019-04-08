@@ -6,12 +6,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class Device {
     String vendor;
     boolean registered;
-    String  name;
+    String name;
     String model;
     String osVersion;
     String os;
 
-    public Device(String vendor, boolean registered, String name, String model, String osVersion, String os) {
+    public Device(
+            String vendor,
+            boolean registered,
+            String name,
+            String model,
+            String osVersion,
+            String os) {
         this.vendor = vendor;
         this.registered = registered;
         this.name = name;

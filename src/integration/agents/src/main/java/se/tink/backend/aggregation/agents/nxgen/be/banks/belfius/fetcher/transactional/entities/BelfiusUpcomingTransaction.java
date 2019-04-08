@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Strings;
+import java.util.Date;
+import java.util.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.BelfiusDateDeserializer;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.BelfiusStringDeserializer;
@@ -11,9 +13,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSt
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Date;
-import java.util.Optional;
 
 @JsonObject
 public class BelfiusUpcomingTransaction {
@@ -46,13 +45,14 @@ public class BelfiusUpcomingTransaction {
     public UpcomingTransaction toTinkUpcomingTransaction() {
         Optional<Amount> amount = BelfiusStringUtils.parseStringToAmount(this.amount);
 
-        return amount.map(amount1 -> UpcomingTransaction.builder()
-                .setAmount(amount1)
-                .setDate(date)
-                .setDescription(getDescription())
-                .build())
+        return amount.map(
+                        amount1 ->
+                                UpcomingTransaction.builder()
+                                        .setAmount(amount1)
+                                        .setDate(date)
+                                        .setDescription(getDescription())
+                                        .build())
                 .orElse(null);
-
     }
 
     private String getDescription() {

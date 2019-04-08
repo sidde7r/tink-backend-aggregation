@@ -7,17 +7,20 @@ public class KeyExchangeRequest {
     private TypeValuePair appFamily;
     private TypeValuePair appKey;
 
-    private KeyExchangeRequest(TypeValuePair companyId, TypeValuePair appFamily, TypeValuePair appKey) {
+    private KeyExchangeRequest(
+            TypeValuePair companyId, TypeValuePair appFamily, TypeValuePair appKey) {
         this.companyId = companyId;
         this.appFamily = appFamily;
         this.appKey = appKey;
     }
 
-    public static KeyExchangeRequest create(TypeValuePair companyId, TypeValuePair appFamily, TypeValuePair appKey) {
+    public static KeyExchangeRequest create(
+            TypeValuePair companyId, TypeValuePair appFamily, TypeValuePair appKey) {
         return new KeyExchangeRequest(companyId, appFamily, appKey);
     }
 
-    public static KeyExchangeRequest createWithStandardTypes(String companyId, String appFamily, String appKey) {
+    public static KeyExchangeRequest createWithStandardTypes(
+            String companyId, String appFamily, String appKey) {
         return create(
                 TypeValuePair.createText(companyId),
                 TypeValuePair.createText(appFamily),

@@ -20,12 +20,12 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecut
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.pair.Pair;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class KbcBankTransferExecutor implements BankTransferExecutor {
 
@@ -202,8 +202,9 @@ public class KbcBankTransferExecutor implements BankTransferExecutor {
                 apiClient.signingChallengeUcr(signTypeId, signTypeSigningId);
         String challenge = signingChallengeUcrResponse.getChallenge().getValue();
 
-        String response = supplementalInformationHelper
-                .waitForSignForTransferChallengeResponse(challenge, signTypeSigningId);
+        String response =
+                supplementalInformationHelper.waitForSignForTransferChallengeResponse(
+                        challenge, signTypeSigningId);
         String panNr = credentials.getField(Field.Key.USERNAME);
         apiClient.signingValidationUcr(response, panNr, signTypeSigningId);
 

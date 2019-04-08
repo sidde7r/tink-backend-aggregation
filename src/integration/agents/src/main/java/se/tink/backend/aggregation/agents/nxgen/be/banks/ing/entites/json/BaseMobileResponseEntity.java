@@ -2,11 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.entites.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.List;
 import java.util.Optional;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.IngConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BaseMobileResponseEntity {
@@ -32,14 +31,16 @@ public class BaseMobileResponseEntity {
 
     @JsonIgnore
     public Optional<String> getErrorCode() {
-        return errors != null &&  errors.get(0) != null ?
-                Optional.ofNullable(errors.get(0).getCode()) : Optional.empty();
+        return errors != null && errors.get(0) != null
+                ? Optional.ofNullable(errors.get(0).getCode())
+                : Optional.empty();
     }
 
     @JsonIgnore
     public Optional<String> getErrorText() {
-        return errors != null &&  errors.get(0) != null ?
-                Optional.ofNullable(errors.get(0).getText()) : Optional.empty();
+        return errors != null && errors.get(0) != null
+                ? Optional.ofNullable(errors.get(0).getText())
+                : Optional.empty();
     }
 
     private boolean isOutOfSession() {
@@ -52,7 +53,6 @@ public class BaseMobileResponseEntity {
     }
 
     public void validateSession() {
-        if (isOutOfSession())
-            throw new IllegalStateException("Out of session");
+        if (isOutOfSession()) throw new IllegalStateException("Out of session");
     }
 }

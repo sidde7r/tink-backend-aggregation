@@ -13,7 +13,8 @@ public class BnpPfApiClient {
     }
 
     public FetchPfmPreferencesResponse fetchPfmPreferences() {
-        return client.request(BnpPfConstants.Url.PFMP_PREFERENCES.get()).get(FetchPfmPreferencesResponse.class);
+        return client.request(BnpPfConstants.Url.PFMP_PREFERENCES.get())
+                .get(FetchPfmPreferencesResponse.class);
     }
 
     public FetchTransactionsResponse fetchTransactionsFor(String accountId, String link) {
@@ -28,7 +29,8 @@ public class BnpPfApiClient {
         } else {
             return BnpPfConstants.Url.TRANSACTIONS
                     .parameter("accountId", accountId)
-                    .parameter("currency", BnpPfConstants.CURRENCY).get();
+                    .parameter("currency", BnpPfConstants.CURRENCY)
+                    .get();
         }
     }
 }

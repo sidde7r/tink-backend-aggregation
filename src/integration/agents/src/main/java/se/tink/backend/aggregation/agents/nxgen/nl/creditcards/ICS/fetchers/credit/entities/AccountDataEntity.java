@@ -6,10 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountDataEntity {
-  @JsonProperty("Account")
-  private List<AccountEntity> account;
+    @JsonProperty("Account")
+    private List<AccountEntity> account;
 
-  public List<AccountEntity> getAccount() {
-    return account;
-  }
+    public List<AccountEntity> getAccount() {
+        return account;
+    }
 }

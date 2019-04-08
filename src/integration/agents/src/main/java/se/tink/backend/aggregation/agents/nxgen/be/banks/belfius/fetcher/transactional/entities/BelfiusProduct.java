@@ -2,8 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.BelfiusHolderNameDeserializer;
@@ -11,18 +13,15 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.serializer.Belf
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.libraries.amount.Amount;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
-
-import java.util.Optional;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class BelfiusProduct implements GeneralAccountEntity{
-    
+public class BelfiusProduct implements GeneralAccountEntity {
+
     @JsonProperty("lb_orderingaccount")
     @JsonDeserialize(using = BelfiusStringDeserializer.class)
     private String orderingAccount;
@@ -64,7 +63,7 @@ public class BelfiusProduct implements GeneralAccountEntity{
     private HolderName holderName;
 
     // Fields below are added for logging purposes. Can be removed if not used.
-    //------- Logged for credit card
+    // ------- Logged for credit card
     @JsonProperty("lb_creditcardactionallowed")
     @JsonDeserialize(using = BelfiusStringDeserializer.class)
     private String creditcardActionAllowed;
@@ -97,7 +96,6 @@ public class BelfiusProduct implements GeneralAccountEntity{
         return amount.isPresent() ? amount : available;
     }
 
-
     public Amount getAvailableBalance() {
         Optional<Amount> amount = getAmount();
         Optional<Amount> available = getAvailableAmount();
@@ -111,11 +109,11 @@ public class BelfiusProduct implements GeneralAccountEntity{
 
     public boolean isTransactionalAccount() {
         switch (getAccountType()) {
-        case CHECKING:
-        case SAVINGS:
-            return true;
-        default:
-            return false;
+            case CHECKING:
+            case SAVINGS:
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -124,15 +122,20 @@ public class BelfiusProduct implements GeneralAccountEntity{
     }
 
     public TransactionalAccount toTransactionalAccount(String key) {
-        return getBalance().map(parsedAmount ->
-                TransactionalAccount.builder(getAccountType(), this.extIntAccount, parsedAmount)
-                        .setAccountNumber(this.numberAccount)
-                        .setName(this.denominationDescription)
-                        .setBankIdentifier(key)
-                        .setHolderName(this.holderName)
-                        .addIdentifier(new SepaEurIdentifier(this.numberAccount.replace(" ", "")))
-                        .build()
-        ).orElse(null);
+        return getBalance()
+                .map(
+                        parsedAmount ->
+                                TransactionalAccount.builder(
+                                                getAccountType(), this.extIntAccount, parsedAmount)
+                                        .setAccountNumber(this.numberAccount)
+                                        .setName(this.denominationDescription)
+                                        .setBankIdentifier(key)
+                                        .setHolderName(this.holderName)
+                                        .addIdentifier(
+                                                new SepaEurIdentifier(
+                                                        this.numberAccount.replace(" ", "")))
+                                        .build())
+                .orElse(null);
     }
 
     public boolean isCreditCard() {
@@ -140,15 +143,21 @@ public class BelfiusProduct implements GeneralAccountEntity{
     }
 
     public CreditCardAccount toCreditCardAccount(String key) {
-        return getAmount().flatMap(amount ->
-                parseAvailableForCreditCard().map(availableAmount ->
-                        CreditCardAccount.builder(this.numberAccount, amount, availableAmount)
-                                .setAccountNumber(this.numberAccount)
-                                .setBankIdentifier(key)
-                                .build()
-                )
-
-        ).orElse(null);
+        return getAmount()
+                .flatMap(
+                        amount ->
+                                parseAvailableForCreditCard()
+                                        .map(
+                                                availableAmount ->
+                                                        CreditCardAccount.builder(
+                                                                        this.numberAccount,
+                                                                        amount,
+                                                                        availableAmount)
+                                                                .setAccountNumber(
+                                                                        this.numberAccount)
+                                                                .setBankIdentifier(key)
+                                                                .build()))
+                .orElse(null);
     }
 
     private Optional<Amount> parseAvailableForCreditCard() {

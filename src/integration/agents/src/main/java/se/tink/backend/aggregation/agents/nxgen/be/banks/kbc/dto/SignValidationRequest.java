@@ -5,23 +5,24 @@ public class SignValidationRequest {
     private final TypeValuePair panNr;
     private final SigningRequestHeaderDto header;
 
-    private SignValidationRequest(TypeValuePair signingResponse, TypeValuePair panNr, SigningRequestHeaderDto header) {
+    private SignValidationRequest(
+            TypeValuePair signingResponse, TypeValuePair panNr, SigningRequestHeaderDto header) {
         this.signingResponse = signingResponse;
         this.panNr = panNr;
         this.header = header;
     }
 
-    public static SignValidationRequest create(TypeValuePair signingResponse, TypeValuePair panNr,
-            SigningRequestHeaderDto header) {
+    public static SignValidationRequest create(
+            TypeValuePair signingResponse, TypeValuePair panNr, SigningRequestHeaderDto header) {
         return new SignValidationRequest(signingResponse, panNr, header);
     }
 
-    public static SignValidationRequest create(String signingResponse, String panNr, String signingId) {
+    public static SignValidationRequest create(
+            String signingResponse, String panNr, String signingId) {
         return new SignValidationRequest(
                 TypeValuePair.createText(signingResponse),
                 TypeValuePair.createText(panNr),
-                SigningRequestHeaderDto.create(
-                        TypeEncodedPair.createHidden(signingId)));
+                SigningRequestHeaderDto.create(TypeEncodedPair.createHidden(signingId)));
     }
 
     public TypeValuePair getSigningResponse() {

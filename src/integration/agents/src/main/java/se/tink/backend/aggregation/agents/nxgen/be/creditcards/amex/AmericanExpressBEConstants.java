@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.creditcards.amex;
 
-
 public class AmericanExpressBEConstants {
 
     public static final String MARKET = "BE";
@@ -16,5 +15,4 @@ public class AmericanExpressBEConstants {
         public static final String LOCALE = "en_BE";
         public static final String CLIENT_VERSION = "4.5.0";
     }
-
 }

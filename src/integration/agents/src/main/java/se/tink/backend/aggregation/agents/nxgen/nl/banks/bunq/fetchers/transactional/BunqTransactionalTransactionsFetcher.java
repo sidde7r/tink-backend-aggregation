@@ -8,20 +8,24 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
-public class BunqTransactionalTransactionsFetcher implements TransactionKeyPaginator<TransactionalAccount, String> {
+public class BunqTransactionalTransactionsFetcher
+        implements TransactionKeyPaginator<TransactionalAccount, String> {
     private final SessionStorage sessionStorage;
     private final BunqApiClient apiClient;
 
-    public BunqTransactionalTransactionsFetcher(SessionStorage sessionStorage, BunqApiClient apiClient) {
+    public BunqTransactionalTransactionsFetcher(
+            SessionStorage sessionStorage, BunqApiClient apiClient) {
         this.sessionStorage = sessionStorage;
         this.apiClient = apiClient;
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
         if (Strings.isNullOrEmpty(key)) {
             return apiClient.listAccountTransactions(
-                    sessionStorage.get(BunqConstants.StorageKeys.USER_ID), account.getBankIdentifier());
+                    sessionStorage.get(BunqConstants.StorageKeys.USER_ID),
+                    account.getBankIdentifier());
         }
 
         return apiClient.listAccountTransactionsPagination(key);

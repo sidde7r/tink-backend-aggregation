@@ -58,7 +58,7 @@ public class TransactionsHistoryRequest {
             this.currency = currency;
             return this;
         }
-        
+
         public Builder setAccountNo(TypeEncValueTuple accountNo) {
             this.accountNo = accountNo;
             return this;
@@ -76,7 +76,8 @@ public class TransactionsHistoryRequest {
 
         public Builder setTransactionsQuantity(int transactionsQuantity) {
             this.transactionsQuantity =
-                    TypeValuePair.create(KbcConstants.PairTypeTypes.SHORT, String.valueOf(transactionsQuantity));
+                    TypeValuePair.create(
+                            KbcConstants.PairTypeTypes.SHORT, String.valueOf(transactionsQuantity));
             return this;
         }
 
@@ -91,8 +92,15 @@ public class TransactionsHistoryRequest {
         }
 
         public TransactionsHistoryRequest build() {
-            return new TransactionsHistoryRequest(companyNo, currency, accountNo, roleCode, repositioningKey,
-                    transactionsQuantity, searchMessage, searchAmount);
+            return new TransactionsHistoryRequest(
+                    companyNo,
+                    currency,
+                    accountNo,
+                    roleCode,
+                    repositioningKey,
+                    transactionsQuantity,
+                    searchMessage,
+                    searchAmount);
         }
     }
 }

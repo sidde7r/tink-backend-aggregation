@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import com.google.common.base.Strings;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.BelfiusAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.credit.BelfiusCreditCardFetcher;
@@ -25,8 +26,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.Optional;
-
 public class BelfiusAgent extends NextGenerationAgent {
 
     private final BelfiusApiClient apiClient;
@@ -37,7 +36,10 @@ public class BelfiusAgent extends NextGenerationAgent {
         super(request, context, signatureKeyPair);
         this.belfiusSessionStorage = new BelfiusSessionStorage(this.sessionStorage);
         this.apiClient =
-                new BelfiusApiClient(this.client, belfiusSessionStorage, getBelfiusLocale(request.getUser().getLocale()));
+                new BelfiusApiClient(
+                        this.client,
+                        belfiusSessionStorage,
+                        getBelfiusLocale(request.getUser().getLocale()));
     }
 
     @Override
@@ -78,9 +80,11 @@ public class BelfiusAgent extends NextGenerationAgent {
 
     private String getBelfiusLocale(String userLocale) {
         if (Strings.isNullOrEmpty(userLocale)) {
-            return BelfiusConstants.Request.LOCALE_DUTCH; }
+            return BelfiusConstants.Request.LOCALE_DUTCH;
+        }
         if (userLocale.toLowerCase().contains(BelfiusConstants.TINK_FRENCH)) {
-            return BelfiusConstants.Request.LOCALE_FRENCH; }
+            return BelfiusConstants.Request.LOCALE_FRENCH;
+        }
         return BelfiusConstants.Request.LOCALE_DUTCH;
     }
 
@@ -115,8 +119,7 @@ public class BelfiusAgent extends NextGenerationAgent {
             constructTransferDestinationRefreshController() {
         return Optional.of(
                 new TransferDestinationRefreshController(
-                        metricRefreshController,
-                        new BelfiusTransferDestinationFetcher(apiClient)));
+                        metricRefreshController, new BelfiusTransferDestinationFetcher(apiClient)));
     }
 
     @Override

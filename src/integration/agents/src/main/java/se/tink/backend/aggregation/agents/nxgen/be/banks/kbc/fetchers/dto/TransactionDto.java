@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.time.DateUtils;
-import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;

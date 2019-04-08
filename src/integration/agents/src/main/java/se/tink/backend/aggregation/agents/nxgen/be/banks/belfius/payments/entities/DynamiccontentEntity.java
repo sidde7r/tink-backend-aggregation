@@ -11,9 +11,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class DynamiccontentEntity {
     @JsonProperty("RP_Scenario")
     private RPScenarioEntity rPScenario;
+
     private String key;
+
     @JsonProperty("repeatedPane_BeneficiariesContacts")
     private BeneficiariesContacts repeatedPaneBeneficiariesContacts;
+
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     public String getKey() {
@@ -28,7 +31,8 @@ public class DynamiccontentEntity {
         return repeatedPaneBeneficiariesContacts;
     }
 
-    public void setRepeatedPaneBeneficiariesContacts(BeneficiariesContacts repeatedPaneBeneficiariesContacts) {
+    public void setRepeatedPaneBeneficiariesContacts(
+            BeneficiariesContacts repeatedPaneBeneficiariesContacts) {
         this.repeatedPaneBeneficiariesContacts = repeatedPaneBeneficiariesContacts;
     }
 

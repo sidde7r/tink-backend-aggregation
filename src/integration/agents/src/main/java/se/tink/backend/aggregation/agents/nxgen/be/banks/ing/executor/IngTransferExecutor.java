@@ -14,11 +14,11 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transaction
 import se.tink.backend.aggregation.agents.nxgen.be.banks.ing.fetcher.transactionalaccount.rpc.AccountsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.BankTransferExecutor;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.date.CountryDateUtils;
 
 public class IngTransferExecutor implements BankTransferExecutor {
     private final IngApiClient apiClient;
@@ -26,40 +26,63 @@ public class IngTransferExecutor implements BankTransferExecutor {
     private final IngTransferHelper ingTransferHelper;
     private final PersistentStorage persistentStorage;
 
-    public IngTransferExecutor(IngApiClient apiClient, PersistentStorage persistentStorage, IngHelper ingHelper,
+    public IngTransferExecutor(
+            IngApiClient apiClient,
+            PersistentStorage persistentStorage,
+            IngHelper ingHelper,
             IngTransferHelper ingTransferHelper) {
         this.apiClient = apiClient;
         this.persistentStorage = persistentStorage;
-        this.loginResponse = ingHelper.retrieveLoginResponse()
-                .orElseThrow(() -> new IllegalStateException(IngConstants.LogMessage.LOGIN_RESPONSE_NOT_FOUND));
+        this.loginResponse =
+                ingHelper
+                        .retrieveLoginResponse()
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                IngConstants.LogMessage.LOGIN_RESPONSE_NOT_FOUND));
         this.ingTransferHelper = ingTransferHelper;
     }
-
 
     @Override
     public Optional<String> executeTransfer(Transfer transfer) throws TransferExecutionException {
         validateDueDate(transfer.getDueDate());
 
-        AccountListEntity accounts = apiClient.fetchAccounts(loginResponse).map(AccountsResponse::getAccounts)
-                .orElseThrow(() -> new IllegalStateException(IngConstants.LogMessage.TRANSFER_ACCOUNTS_NOT_FOUND));
+        AccountListEntity accounts =
+                apiClient
+                        .fetchAccounts(loginResponse)
+                        .map(AccountsResponse::getAccounts)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                IngConstants.LogMessage
+                                                        .TRANSFER_ACCOUNTS_NOT_FOUND));
 
-        AccountEntity sourceAccount = tryFindOwnAccount(accounts, transfer.getSource())
-                .orElseThrow(() -> ingTransferHelper.buildTranslatedTransferException(
-                        TransferExecutionException.EndUserMessage.INVALID_SOURCE.getKey().get(),
-                        SignableOperationStatuses.FAILED));
+        AccountEntity sourceAccount =
+                tryFindOwnAccount(accounts, transfer.getSource())
+                        .orElseThrow(
+                                () ->
+                                        ingTransferHelper.buildTranslatedTransferException(
+                                                TransferExecutionException.EndUserMessage
+                                                        .INVALID_SOURCE
+                                                        .getKey()
+                                                        .get(),
+                                                SignableOperationStatuses.FAILED));
 
-        // For immediate transfers it is not allowed transfer amount not covered by the balance. Blocked in app.
+        // For immediate transfers it is not allowed transfer amount not covered by the balance.
+        // Blocked in app.
         if (immediateTransfer(transfer)) {
             validateAmountCoveredByBalance(sourceAccount, transfer.getAmount());
         }
 
-        Optional<AccountEntity> destinationAccount = tryFindOwnAccount(accounts, transfer.getDestination());
+        Optional<AccountEntity> destinationAccount =
+                tryFindOwnAccount(accounts, transfer.getDestination());
 
         if (destinationAccount.isPresent()) {
             new IngInternalTransferExecutor(apiClient, loginResponse, ingTransferHelper)
                     .executeInternalTransfer(transfer, sourceAccount, destinationAccount.get());
         } else {
-            new IngExternalTransferExecutor(apiClient, loginResponse, persistentStorage, ingTransferHelper)
+            new IngExternalTransferExecutor(
+                            apiClient, loginResponse, persistentStorage, ingTransferHelper)
                     .executeExternalTransfer(transfer, sourceAccount);
         }
         return Optional.empty();
@@ -72,14 +95,15 @@ public class IngTransferExecutor implements BankTransferExecutor {
     private void validateAmountCoveredByBalance(AccountEntity sourceAccount, Amount amount) {
         if (Amount.inEUR(IngHelper.parseAmountStringToDouble(sourceAccount.getBalance()))
                 .isLessThan(amount.doubleValue())) {
-            ingTransferHelper.cancelTransfer((TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get()));
+            ingTransferHelper.cancelTransfer(
+                    (TransferExecutionException.EndUserMessage.EXCESS_AMOUNT.getKey().get()));
         }
     }
 
     /**
-     * ING allows transfers on holidays if due date has not been set by user, i.e. a direct transfer. But you
-     * can't select a non business day when setting a future due date, so it has to be verified that due date
-     * is a business day if it has been supplied.
+     * ING allows transfers on holidays if due date has not been set by user, i.e. a direct
+     * transfer. But you can't select a non business day when setting a future due date, so it has
+     * to be verified that due date is a business day if it has been supplied.
      */
     private void validateDueDate(Date dueDate) {
         if (dueDate == null) {
@@ -91,15 +115,14 @@ public class IngTransferExecutor implements BankTransferExecutor {
         calendar.setTime(dueDate);
 
         if (!belgianDateUtils.isBusinessDay(calendar)) {
-            ingTransferHelper.cancelTransfer(IngConstants.EndUserMessage.DATE_MUST_BE_BUSINESS_DAY.getKey().get());
+            ingTransferHelper.cancelTransfer(
+                    IngConstants.EndUserMessage.DATE_MUST_BE_BUSINESS_DAY.getKey().get());
         }
     }
 
-    private Optional<AccountEntity> tryFindOwnAccount(AccountListEntity accounts,
-            AccountIdentifier accountIdentifier) {
-        return accounts.stream()
-                .filter(ae -> isOwnAccount(ae, accountIdentifier))
-                .findFirst();
+    private Optional<AccountEntity> tryFindOwnAccount(
+            AccountListEntity accounts, AccountIdentifier accountIdentifier) {
+        return accounts.stream().filter(ae -> isOwnAccount(ae, accountIdentifier)).findFirst();
     }
 
     private boolean isOwnAccount(AccountEntity accountEntity, AccountIdentifier accountIdentifier) {

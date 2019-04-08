@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
+import java.util.Optional;
+import java.util.UUID;
+import javax.annotation.Nonnull;
 import org.assertj.core.util.Preconditions;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.GenerateOtpChallengeResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc.LogonResponse;
@@ -9,10 +12,6 @@ import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.mo
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import javax.annotation.Nonnull;
-import java.util.Optional;
-import java.util.UUID;
 
 public final class AxaStorage {
     private final SessionStorage sessionStorage;

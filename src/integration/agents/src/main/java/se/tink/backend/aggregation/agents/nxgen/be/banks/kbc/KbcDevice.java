@@ -48,6 +48,7 @@ public class KbcDevice {
     @JsonSerialize(using = KeyPairSerializer.class)
     @JsonDeserialize(using = KeyPairDeserializer.class)
     private KeyPair ellipticCurveKeyPair;
+
     private String fingerprint;
 
     // get from server
@@ -83,7 +84,8 @@ public class KbcDevice {
     }
 
     private void generateFingerprint() {
-        fingerprint = RandomStringUtils.randomAlphanumeric(KbcConstants.Encryption.FINGERPRINT_LENGTH);
+        fingerprint =
+                RandomStringUtils.randomAlphanumeric(KbcConstants.Encryption.FINGERPRINT_LENGTH);
     }
 
     public static byte[] generateIv() {
@@ -167,20 +169,22 @@ public class KbcDevice {
     private Optional<byte[]> extractFieldName(int subsectionType) {
         Preconditions.checkNotNull(staticVector, "Static vector has not been set.");
 
-        for (int i=0; ; i++) {
-            Optional<byte[]> subSection = KbcOtpUtils.extractTlvField(staticVector, 4,
-                    StaticVectorKeys.SUBSECTION, i);
+        for (int i = 0; ; i++) {
+            Optional<byte[]> subSection =
+                    KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SUBSECTION, i);
             if (!subSection.isPresent()) {
                 return Optional.empty();
             }
 
-            int subSectionType = KbcOtpUtils.extractTlvFieldAsInt(subSection.get(), 0,
-                    StaticVectorKeys.SUBSECTION_TYPE);
+            int subSectionType =
+                    KbcOtpUtils.extractTlvFieldAsInt(
+                            subSection.get(), 0, StaticVectorKeys.SUBSECTION_TYPE);
             if (subSectionType != subsectionType) {
                 continue;
             }
 
-            return KbcOtpUtils.extractTlvField(subSection.get(), 0, StaticVectorKeys.SUBSECTION_NAME, 0);
+            return KbcOtpUtils.extractTlvField(
+                    subSection.get(), 0, StaticVectorKeys.SUBSECTION_NAME, 0);
         }
     }
 
@@ -188,21 +192,24 @@ public class KbcDevice {
         Preconditions.checkNotNull(staticVector, "Static vector has not been set.");
 
         byte[] fpHash = Hash.sha256(fingerprint);
-        long v = (fpHash[3] & 0xff) |
-                ((fpHash[2] & 0xff) << 8) |
-                ((fpHash[1] & 0xff) << 16) |
-                ((fpHash[0] & 0xff) << 24);
+        long v =
+                (fpHash[3] & 0xff)
+                        | ((fpHash[2] & 0xff) << 8)
+                        | ((fpHash[1] & 0xff) << 16)
+                        | ((fpHash[0] & 0xff) << 24);
 
         int CONSTANT = 3; // Unknown from where this value is taken from, possibly type `8` or `56`
         v = (CONSTANT + 32 * (v & 0xffffffffL)) & 0xffffffffL;
 
         long i = KbcOtpUtils.extractTlvFieldAsLong(staticVector, 4, StaticVectorKeys.INITIAL_VALUE);
-        int pow = KbcOtpUtils.extractTlvFieldAsInt(staticVector, 4, StaticVectorKeys.DIVERSIFIER_LENGTH);
-        for (int j=0; j<pow; j++) {
+        int pow =
+                KbcOtpUtils.extractTlvFieldAsInt(
+                        staticVector, 4, StaticVectorKeys.DIVERSIFIER_LENGTH);
+        for (int j = 0; j < pow; j++) {
             i *= 10;
         }
 
-        int ret = (int)(v - (v/i * i));
+        int ret = (int) (v - (v / i * i));
 
         return KbcOtpUtils.intToBytes(ret);
     }
@@ -211,10 +218,18 @@ public class KbcDevice {
         Preconditions.checkNotNull(staticVector, "Static vector has not been set.");
         Preconditions.checkNotNull(dynamicVector, "Dynamic vector has not been set.");
 
-        byte[] seed = KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SEED, 0)
-                .orElseThrow(() -> new IllegalStateException("Could not find seed in static vector."));
-        byte[] signature = KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SIGNATURE, 0)
-                .orElseThrow(() -> new IllegalStateException("Could not find signature in static vector."));
+        byte[] seed =
+                KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SEED, 0)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find seed in static vector."));
+        byte[] signature =
+                KbcOtpUtils.extractTlvField(staticVector, 4, StaticVectorKeys.SIGNATURE, 0)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find signature in static vector."));
 
         String logonId = KbcOtpUtils.calculateLogonId(dynamicVector);
 
@@ -260,13 +275,17 @@ public class KbcDevice {
 
     public String calculateDeviceCode(String challenge) {
         checkCalculateKeys();
-        String otp = internalCalculateOtp(key2, 0,
-                Collections.singletonList(EncodingUtils.decodeHexString(challenge)));
+        String otp =
+                internalCalculateOtp(
+                        key2,
+                        0,
+                        Collections.singletonList(EncodingUtils.decodeHexString(challenge)));
 
         byte[] bDiversifier = calculateDiversifier();
         String diversifier = Integer.toString(KbcOtpUtils.bytesToInt(bDiversifier));
         int diversifierLength =
-                KbcOtpUtils.extractTlvFieldAsInt(staticVector, 4, StaticVectorKeys.DIVERSIFIER_LENGTH);
+                KbcOtpUtils.extractTlvFieldAsInt(
+                        staticVector, 4, StaticVectorKeys.DIVERSIFIER_LENGTH);
         diversifier = StringUtils.leftPad(diversifier, diversifierLength, '0');
 
         // last 5 digits of the otp
@@ -280,15 +299,19 @@ public class KbcDevice {
         checkCalculateOtpKey();
         Preconditions.checkState(deviceCounter <= 99, "Device counter cannot be over 99.");
 
-        byte[] secChanFieldName = extractFieldName(SECCHAN_SUBSECTION_TYPE)
-                .orElseThrow(() -> new IllegalStateException("Could not find SECCHAN field in static vector."));
+        byte[] secChanFieldName =
+                extractFieldName(SECCHAN_SUBSECTION_TYPE)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find SECCHAN field in static vector."));
 
         // The device count must be 0-padded and always 2 bytes long (hence the 99 maximum value)
         String sDeviceCount = String.format("%02d", deviceCounter);
 
         // The total length of the secchan plaintext must be 12 (10 + 2)
-        byte[] secChanData = Bytes.concat(Arrays.copyOfRange(secChanFieldName, 0, 10),
-                sDeviceCount.getBytes());
+        byte[] secChanData =
+                Bytes.concat(Arrays.copyOfRange(secChanFieldName, 0, 10), sDeviceCount.getBytes());
 
         byte[] encryptedSecChan = AES.encryptEcbPkcs5(otpKey, secChanData);
 
@@ -307,15 +330,20 @@ public class KbcDevice {
         checkCalculateOtpKey();
         Preconditions.checkState(deviceCounter <= 99, "Device counter cannot be over 99.");
 
-        byte[] signatureFieldName = extractFieldName(SIGNATURE_SUBSECTION_TYPE)
-                .orElseThrow(() -> new IllegalStateException("Could not find SIGNATURE field in static vector."));
+        byte[] signatureFieldName =
+                extractFieldName(SIGNATURE_SUBSECTION_TYPE)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Could not find SIGNATURE field in static vector."));
 
         // The device count must be 0-padded and always 2 bytes long (hence the 99 maximum value)
         String sDeviceCount = String.format("%02d", deviceCounter);
 
         // The total length of the signature plaintext must be 12 (10 + 2)
-        byte[] signatureData = Bytes.concat(Arrays.copyOfRange(signatureFieldName, 0, 10),
-                sDeviceCount.getBytes());
+        byte[] signatureData =
+                Bytes.concat(
+                        Arrays.copyOfRange(signatureFieldName, 0, 10), sDeviceCount.getBytes());
 
         byte[] encryptedSignature = AES.encryptEcbPkcs5(otpKey, signatureData);
         byte[] dataFieldsByteArray = createDataFieldsByteArray(dataFields);
@@ -335,7 +363,8 @@ public class KbcDevice {
     }
 
     private byte[] createDataFieldsByteArray(List<String> dataFields) {
-        int dataFieldsWithoutPaddingLength = dataFields.stream().mapToInt(String::length).sum() + (dataFields.size()-1);
+        int dataFieldsWithoutPaddingLength =
+                dataFields.stream().mapToInt(String::length).sum() + (dataFields.size() - 1);
 
         int paddingSize = dataFieldsWithoutPaddingLength % 8;
         if (paddingSize > 0) {
@@ -345,11 +374,11 @@ public class KbcDevice {
 
         ByteBuffer buffer = ByteBuffer.allocate(dataFieldsByteArrayLength);
 
-        for (int i = 0; i < (dataFields.size()-1); i++) {
+        for (int i = 0; i < (dataFields.size() - 1); i++) {
             buffer.put(dataFields.get(i).toUpperCase().getBytes());
             buffer.put((byte) 0x00);
         }
-        buffer.put(dataFields.get(dataFields.size()-1).getBytes());
+        buffer.put(dataFields.get(dataFields.size() - 1).getBytes());
         for (int i = 0; i < paddingSize; i++) {
             buffer.put((byte) 0xdd);
         }
@@ -359,15 +388,18 @@ public class KbcDevice {
 
     public String calculateAuthenticationOtp(String challenge) {
         checkCalculateOtpKey();
-        return internalCalculateOtp(otpKey, otpCounter++,
+        return internalCalculateOtp(
+                otpKey,
+                otpCounter++,
                 Collections.singletonList(EncodingUtils.decodeHexString(challenge)));
     }
 
     public byte[] calculateSharedSecret(byte[] serverPublicKeyBytes) {
         ECPrivateKey clientPrivateKey = (ECPrivateKey) ellipticCurveKeyPair.getPrivate();
 
-        ECPublicKey serverPublicKey = EllipticCurve.convertPointToPublicKey(
-                Bytes.concat(new byte[] {0x04}, serverPublicKeyBytes), CURVE_NAME);
+        ECPublicKey serverPublicKey =
+                EllipticCurve.convertPointToPublicKey(
+                        Bytes.concat(new byte[] {0x04}, serverPublicKeyBytes), CURVE_NAME);
 
         return calculateSharedSecret(clientPrivateKey, serverPublicKey);
     }
@@ -395,7 +427,8 @@ public class KbcDevice {
         byte[] clientPublicKey = EllipticCurve.convertPublicKeyToPoint(ellipticCurveKeyPair, false);
         clientPublicKey = Arrays.copyOfRange(clientPublicKey, 1, clientPublicKey.length);
 
-        byte[] encryptedClientPublicKey = AES.encryptCfbSegmentationSize8NoPadding(aesKey, iv, clientPublicKey);
+        byte[] encryptedClientPublicKey =
+                AES.encryptCfbSegmentationSize8NoPadding(aesKey, iv, clientPublicKey);
         byte[] encryptedClientPublicKeyAndNonce = Bytes.concat(encryptedClientPublicKey, nonce);
 
         return EncodingUtils.encodeHexAsString(encryptedClientPublicKeyAndNonce).toUpperCase();

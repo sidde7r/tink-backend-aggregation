@@ -1,10 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
 import com.google.common.collect.ImmutableMap;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.AccountTypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class ArgentaConstants {
 
@@ -82,7 +82,6 @@ public class ArgentaConstants {
         public static final String TOO_MANY_DEVICES = "maximumaantal actieve registraties";
         public static final String AUTHENTICATION_ERROR = "de logingegevens zijn niet juist";
         public static final String ACCOUNT_BLOCKED = "is geblokkeerd";
-
     }
 
     public static class LogTags {

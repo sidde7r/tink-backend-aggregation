@@ -1,36 +1,44 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.fetchers.transactional.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.BunqPredicates;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.CheckingAccount;
 import se.tink.libraries.amount.Amount;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 @JsonObject
 public class AccountEntity {
     @JsonProperty("id")
     private String accountId;
+
     private String created;
     private String updated;
     private List<AliasEntity> alias;
     private AmountEntity balance;
     private String country;
     private String currency;
+
     @JsonProperty("daily_limit")
     private AmountEntity dailyLimit;
+
     @JsonProperty("daily_spent")
     private AmountEntity dailySpent;
+
     private String description;
+
     @JsonProperty("public_uuid")
     private String publicUuid;
+
     private String status;
+
     @JsonProperty("sub_status")
     private String subStatus;
+
     private String timeZone;
+
     @JsonProperty("overdraft_limit")
     private AmountEntity overdraftLimit;
 
@@ -97,22 +105,25 @@ public class AccountEntity {
     public Optional<CheckingAccount> toTinkCheckingAccount() {
         List<AliasEntity> aliasList = Optional.ofNullable(alias).orElse(Collections.emptyList());
 
-        Optional<String> accountIban = aliasList.stream()
-                .filter(BunqPredicates.FILTER_IBAN)
-                .findFirst()
-                .map(AliasEntity::getValue);
+        Optional<String> accountIban =
+                aliasList.stream()
+                        .filter(BunqPredicates.FILTER_IBAN)
+                        .findFirst()
+                        .map(AliasEntity::getValue);
 
-        Optional<Amount> balanceAsAmount = Optional.ofNullable(balance)
-                .map(AmountEntity::getAsTinkAmount);
+        Optional<Amount> balanceAsAmount =
+                Optional.ofNullable(balance).map(AmountEntity::getAsTinkAmount);
 
         if (!balanceAsAmount.isPresent()) {
             return Optional.empty();
         }
 
-        return accountIban.map(accountNumber -> CheckingAccount.builder(accountNumber, balanceAsAmount.get())
-                .setAccountNumber(accountNumber)
-                .setName(description)
-                .setBankIdentifier(accountId)
-                .build());
+        return accountIban.map(
+                accountNumber ->
+                        CheckingAccount.builder(accountNumber, balanceAsAmount.get())
+                                .setAccountNumber(accountNumber)
+                                .setName(description)
+                                .setBankIdentifier(accountId)
+                                .build());
     }
 }

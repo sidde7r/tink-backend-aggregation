@@ -14,8 +14,7 @@ public class DoubleSignTransferRequest extends BelfiusRequest {
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
                                         BelfiusConstants.Widget.DOUBLE_SIGN_PAYMENT),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.TRANSFER_SIGNATURE,
-                                        challenge)))
+                                        BelfiusConstants.Widget.TRANSFER_SIGNATURE, challenge)))
                 .setTransactionId(sessionId);
     }
 }

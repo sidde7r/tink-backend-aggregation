@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator;
 
+import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
@@ -20,8 +21,6 @@ import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.mo
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.Catalog;
-
-import java.util.UUID;
 
 public final class AxaManualAuthenticator implements MultiFactorAuthenticator {
 
@@ -73,7 +72,8 @@ public final class AxaManualAuthenticator implements MultiFactorAuthenticator {
 
         storage.persistBasicAuth(basicAuth);
         storage.persistClientInitialVectorInit(digipassResponse1.getClientInitialVector());
-        storage.persistEncryptedPublicKeyAndNonce(digipassResponse1.getEncryptedClientPublicKeyAndNonce());
+        storage.persistEncryptedPublicKeyAndNonce(
+                digipassResponse1.getEncryptedClientPublicKeyAndNonce());
         storage.persistDigipass(cryptoModule);
 
         final String encryptedClientPublicKeyAndNonce =

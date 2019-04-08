@@ -11,5 +11,4 @@ public class BelfiusStringDeserializer extends JsonDeserializer<String> {
     public String deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         return BelfiusTokenReader.getTextValueAndAdvanceToken(p);
     }
-
 }

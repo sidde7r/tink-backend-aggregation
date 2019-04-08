@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class BunqHashMapDeserializer {
-    public static class BunqDeserializer extends JsonDeserializer<BunqResponse<?>> implements
-            ContextualDeserializer {
+    public static class BunqDeserializer extends JsonDeserializer<BunqResponse<?>>
+            implements ContextualDeserializer {
         private static final ObjectMapper mapper = new ObjectMapper();
         private JavaType valueType;
 
         @Override
-        public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
-                throws JsonMappingException {
+        public JsonDeserializer<?> createContextual(
+                DeserializationContext ctxt, BeanProperty property) throws JsonMappingException {
             JavaType wrapperType = property.getType();
             JavaType valueType = wrapperType.containedType(0);
             BunqDeserializer deserializer = new BunqDeserializer();
@@ -55,15 +55,17 @@ public class BunqHashMapDeserializer {
             stringBuilder.append("{");
             for (int i = 0; i < names.size(); i++) {
                 String name = names.get(i);
-                stringBuilder.append("\"")
+                stringBuilder
+                        .append("\"")
                         .append(name)
                         .append("\"")
                         .append(":")
-                        .append(StreamSupport.stream(node.spliterator(), false)
-                                .map(t -> t.get(name))
-                                .filter(Objects::nonNull)
-                                .map(JsonNode::toString)
-                                .collect(Collectors.joining()));
+                        .append(
+                                StreamSupport.stream(node.spliterator(), false)
+                                        .map(t -> t.get(name))
+                                        .filter(Objects::nonNull)
+                                        .map(JsonNode::toString)
+                                        .collect(Collectors.joining()));
 
                 if (i >= names.size() - 1) {
                     break;

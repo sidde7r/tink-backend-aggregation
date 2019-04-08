@@ -12,7 +12,8 @@ public class SessionOpenedResponse extends ResponseEntity {
     private final String machineIdentifier;
     private final int heartbeatInterval;
 
-    public SessionOpenedResponse(String sessionId, String machineIdentifier, int heartbeatInterval) {
+    public SessionOpenedResponse(
+            String sessionId, String machineIdentifier, int heartbeatInterval) {
         this.sessionId = sessionId;
         this.machineIdentifier = machineIdentifier;
         this.heartbeatInterval = heartbeatInterval;

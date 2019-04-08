@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CustomerLimitEntity {
     @JsonProperty("limit_monetary_account")
     private Integer limitMonetaryAccount;
+
     @JsonProperty("limit_card_debit_maestro")
     private Integer limitCardDebitMaestro;
+
     @JsonProperty("limit_card_debit_mastercard")
     private Integer limitCardDebitMastercard;
+
     @JsonProperty("limit_card_debit_wildcard")
     private Integer limitCardDebitWildcard;
+
     @JsonProperty("limit_card_debit_replacement")
     private Integer limitCardDebitReplacement;
 

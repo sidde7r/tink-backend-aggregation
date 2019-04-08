@@ -2,19 +2,18 @@ package se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.f
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.assertj.core.util.Lists;
-import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-import se.tink.backend.aggregation.nxgen.http.URL;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.assertj.core.util.Lists;
+import se.tink.backend.aggregation.agents.nxgen.nl.banks.openbanking.rabobank.RabobankConstants;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 @JsonObject
 public class TransactionalTransactionsResponse implements PaginatorResponse {

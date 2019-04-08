@@ -10,36 +10,38 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class CreditBalanceResponse {
-  @JsonProperty("Data")
-  private BalanceDataEntity data;
+    @JsonProperty("Data")
+    private BalanceDataEntity data;
 
-  @JsonProperty("Links")
-  private LinksEntity links;
+    @JsonProperty("Links")
+    private LinksEntity links;
 
-  @JsonProperty("Meta")
-  private MetaEntity meta;
+    @JsonProperty("Meta")
+    private MetaEntity meta;
 
-  public Amount getBalance(String accountId) { // TODO: verify if there can be more than 1
-    BalanceEntity balance =
-        data.getBalance()
-            .stream()
-            .filter(balanceEntity -> balanceEntity.getAccountId().equalsIgnoreCase(accountId))
-            .findFirst()
-            .get();
-    return new Amount(
-        balance.getBalanceEntity().getCurrency(),
-        Double.parseDouble(balance.getBalanceEntity().getAmount()));
-  }
+    public Amount getBalance(String accountId) { // TODO: verify if there can be more than 1
+        BalanceEntity balance =
+                data.getBalance().stream()
+                        .filter(
+                                balanceEntity ->
+                                        balanceEntity.getAccountId().equalsIgnoreCase(accountId))
+                        .findFirst()
+                        .get();
+        return new Amount(
+                balance.getBalanceEntity().getCurrency(),
+                Double.parseDouble(balance.getBalanceEntity().getAmount()));
+    }
 
-  public Amount getAvailableCredit(String accountId) { // TODO: verify if there can be more than 1
-    BalanceEntity balance =
-        data.getBalance()
-            .stream()
-            .filter(balanceEntity -> balanceEntity.getAccountId().equalsIgnoreCase(accountId))
-            .findFirst()
-            .get();
-    return new Amount(
-        balance.getBalanceEntity().getCurrency(),
-        Double.parseDouble(balance.getBalanceEntity().getAvailableLimit()));
-  }
+    public Amount getAvailableCredit(String accountId) { // TODO: verify if there can be more than 1
+        BalanceEntity balance =
+                data.getBalance().stream()
+                        .filter(
+                                balanceEntity ->
+                                        balanceEntity.getAccountId().equalsIgnoreCase(accountId))
+                        .findFirst()
+                        .get();
+        return new Amount(
+                balance.getBalanceEntity().getCurrency(),
+                Double.parseDouble(balance.getBalanceEntity().getAvailableLimit()));
+    }
 }

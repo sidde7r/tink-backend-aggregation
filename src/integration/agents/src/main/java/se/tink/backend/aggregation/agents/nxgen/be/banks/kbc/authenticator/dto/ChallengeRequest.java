@@ -11,14 +11,15 @@ public class ChallengeRequest {
         this.language = language;
     }
 
-    public static ChallengeRequest create(TypeValuePair authenticationType, TypeValuePair language) {
+    public static ChallengeRequest create(
+            TypeValuePair authenticationType, TypeValuePair language) {
         return new ChallengeRequest(authenticationType, language);
     }
 
-    public static ChallengeRequest createWithStandardTypes(String authenticationType, String language) {
+    public static ChallengeRequest createWithStandardTypes(
+            String authenticationType, String language) {
         return create(
-                TypeValuePair.createText(authenticationType),
-                TypeValuePair.createText(language));
+                TypeValuePair.createText(authenticationType), TypeValuePair.createText(language));
     }
 
     public TypeValuePair getAuthenticationType() {
@@ -29,4 +30,3 @@ public class ChallengeRequest {
         return language;
     }
 }
-

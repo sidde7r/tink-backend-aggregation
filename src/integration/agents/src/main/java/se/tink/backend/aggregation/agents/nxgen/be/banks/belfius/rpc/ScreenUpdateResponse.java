@@ -15,8 +15,7 @@ public class ScreenUpdateResponse extends ResponseEntity {
 
     private final List<Widget> widgets;
 
-    public ScreenUpdateResponse(
-            List<Widget> widgets) {
+    public ScreenUpdateResponse(List<Widget> widgets) {
         this.widgets = widgets;
     }
 
@@ -41,15 +40,20 @@ public class ScreenUpdateResponse extends ResponseEntity {
         return response.filter(ScreenUpdateResponse.class)
                 .flatMap(r -> r.getWidgets().stream())
                 .filter(widget -> widgetId.equalsIgnoreCase(widget.getWidgetId()))
-                .findFirst().orElseThrow(
-                        () -> new IllegalStateException("Could not find widget with widgetId: " + widgetId));
+                .findFirst()
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Could not find widget with widgetId: " + widgetId));
     }
 
     public static Widget widgetContains(BelfiusResponse response, String widgetId) {
-        List<Widget> collect = response.filter(ScreenUpdateResponse.class)
-                .flatMap(r -> r.getWidgets().stream()).collect(Collectors.toList());
-        for(Widget w : collect){
-            if(w.getWidgetId().contains(widgetId)){
+        List<Widget> collect =
+                response.filter(ScreenUpdateResponse.class)
+                        .flatMap(r -> r.getWidgets().stream())
+                        .collect(Collectors.toList());
+        for (Widget w : collect) {
+            if (w.getWidgetId().contains(widgetId)) {
                 return w;
             }
         }
@@ -62,5 +66,4 @@ public class ScreenUpdateResponse extends ResponseEntity {
                 .filter(widget -> widget.getWidgetId().contains(widgetId))
                 .collect(Collectors.toList());
     }
-
 }

@@ -9,14 +9,19 @@ public class BunqConstants {
         public static final String REGISTER_DEVICE = "/v1/device-server";
         public static final String CREATE_SESSION = "/v1/session-server";
         public static final String MONETARY_ACCOUNTS = "/v1/user/{userId}/monetary-account";
-        public static final String MONETARY_ACCOUNTS_TRANSACTIONS = "/v1/user/{userId}/monetary-account/{accountId}/payment";
+        public static final String MONETARY_ACCOUNTS_TRANSACTIONS =
+                "/v1/user/{userId}/monetary-account/{accountId}/payment";
     }
 
     public enum Headers implements HeaderEnum {
-        USER_AGENT("User-Agent", "Tink (+https://www.tink.se/; noc@tink.se)"), LANGUAGE("X-Bunq-Language", "en_US"),
-        REGION("X-Bunq-Region", "nl_NL"), REQUEST_ID("X-Bunq-Client-Request-Id", null),
-        GEOLOCATION("X-Bunq-Geolocation", "0 0 0 0 000"), CACHE_CONTROL("Cache-Control", "no-cache"),
-        CLIENT_AUTH("X-Bunq-Client-Authentication", null), CLIENT_SIGNATURE("X-Bunq-Client-Signature", null);
+        USER_AGENT("User-Agent", "Tink (+https://www.tink.se/; noc@tink.se)"),
+        LANGUAGE("X-Bunq-Language", "en_US"),
+        REGION("X-Bunq-Region", "nl_NL"),
+        REQUEST_ID("X-Bunq-Client-Request-Id", null),
+        GEOLOCATION("X-Bunq-Geolocation", "0 0 0 0 000"),
+        CACHE_CONTROL("Cache-Control", "no-cache"),
+        CLIENT_AUTH("X-Bunq-Client-Authentication", null),
+        CLIENT_SIGNATURE("X-Bunq-Client-Signature", null);
 
         private final String key;
         private final String value;
@@ -60,7 +65,8 @@ public class BunqConstants {
     }
 
     public static class LogTags {
-        public static final LogTag AUTO_AUTHENTICATION_FAILED = LogTag.from("Auto authentication failed");
+        public static final LogTag AUTO_AUTHENTICATION_FAILED =
+                LogTag.from("Auto authentication failed");
     }
 
     public static final String DEVICE_NAME = "Tink";

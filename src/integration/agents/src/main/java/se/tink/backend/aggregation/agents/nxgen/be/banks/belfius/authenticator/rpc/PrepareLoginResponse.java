@@ -4,10 +4,10 @@ import org.apache.commons.lang3.StringUtils;
 import se.tink.backend.aggregation.agents.exceptions.LoginException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ScreenUpdateResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.Text;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

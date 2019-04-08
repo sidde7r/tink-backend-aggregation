@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ErrorEntity {
     @JsonProperty("error_description")
     private String errorDescription;
+
     @JsonProperty("error_description_translated")
     private String errorDescriptionTranslated;
 

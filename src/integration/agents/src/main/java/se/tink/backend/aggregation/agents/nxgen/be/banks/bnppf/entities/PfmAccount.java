@@ -41,10 +41,10 @@ public class PfmAccount {
     private String maskIban(String iban) {
         StringBuffer buffer = new StringBuffer(iban.length());
         buffer.append(iban.substring(0, 2));
-        for (int i = 0; i < iban.length()-6; i++) {
+        for (int i = 0; i < iban.length() - 6; i++) {
             buffer.append("x");
         }
-        buffer.append(iban.substring(iban.length()-4));
+        buffer.append(iban.substring(iban.length() - 4));
         return buffer.toString();
     }
 }

@@ -25,5 +25,3 @@ public class BelfiusResponse {
                 .map(r -> (T) r);
     }
 }
-
-

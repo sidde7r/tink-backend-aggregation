@@ -10,11 +10,15 @@ public class EnrollDeviceRoundOneRequest {
     private TypeValuePair agreementBankConditionsChecked;
     private TypeValuePair agreementDoccleChecked;
 
-    private EnrollDeviceRoundOneRequest(TypeValuePair agreementIsPoliticalProminentPersonChecked,
-            TypeValuePair applicationTypeCode, TypeValuePair agreementCommonReportStandardChecked,
-            TypeValuePair agreementAppConditionsChecked, TypeValuePair agreementBankConditionsChecked,
+    private EnrollDeviceRoundOneRequest(
+            TypeValuePair agreementIsPoliticalProminentPersonChecked,
+            TypeValuePair applicationTypeCode,
+            TypeValuePair agreementCommonReportStandardChecked,
+            TypeValuePair agreementAppConditionsChecked,
+            TypeValuePair agreementBankConditionsChecked,
             TypeValuePair agreementDoccleChecked) {
-        this.agreementIsPoliticalProminentPersonChecked = agreementIsPoliticalProminentPersonChecked;
+        this.agreementIsPoliticalProminentPersonChecked =
+                agreementIsPoliticalProminentPersonChecked;
         this.applicationTypeCode = applicationTypeCode;
         this.agreementCommonReportStandardChecked = agreementCommonReportStandardChecked;
         this.agreementAppConditionsChecked = agreementAppConditionsChecked;
@@ -22,18 +26,28 @@ public class EnrollDeviceRoundOneRequest {
         this.agreementDoccleChecked = agreementDoccleChecked;
     }
 
-    public static EnrollDeviceRoundOneRequest create(TypeValuePair agreementIsPoliticalProminentPersonChecked,
-            TypeValuePair applicationTypeCode, TypeValuePair agreementCommonReportStandardChecked,
-            TypeValuePair agreementAppConditionsChecked, TypeValuePair agreementBankConditionsChecked,
+    public static EnrollDeviceRoundOneRequest create(
+            TypeValuePair agreementIsPoliticalProminentPersonChecked,
+            TypeValuePair applicationTypeCode,
+            TypeValuePair agreementCommonReportStandardChecked,
+            TypeValuePair agreementAppConditionsChecked,
+            TypeValuePair agreementBankConditionsChecked,
             TypeValuePair agreementDoccleChecked) {
-        return new EnrollDeviceRoundOneRequest(agreementIsPoliticalProminentPersonChecked, applicationTypeCode,
-                agreementCommonReportStandardChecked, agreementAppConditionsChecked, agreementBankConditionsChecked,
+        return new EnrollDeviceRoundOneRequest(
+                agreementIsPoliticalProminentPersonChecked,
+                applicationTypeCode,
+                agreementCommonReportStandardChecked,
+                agreementAppConditionsChecked,
+                agreementBankConditionsChecked,
                 agreementDoccleChecked);
     }
 
-    public static EnrollDeviceRoundOneRequest createWithStandardTypes(boolean agreementIsPoliticalProminentPersonChecked,
-            String applicationTypeCode, boolean agreementCommonReportStandardChecked,
-            boolean agreementAppConditionsChecked, boolean agreementBankConditionsChecked,
+    public static EnrollDeviceRoundOneRequest createWithStandardTypes(
+            boolean agreementIsPoliticalProminentPersonChecked,
+            String applicationTypeCode,
+            boolean agreementCommonReportStandardChecked,
+            boolean agreementAppConditionsChecked,
+            boolean agreementBankConditionsChecked,
             boolean agreementDoccleChecked) {
         return create(
                 TypeValuePair.createBoolean(agreementIsPoliticalProminentPersonChecked),

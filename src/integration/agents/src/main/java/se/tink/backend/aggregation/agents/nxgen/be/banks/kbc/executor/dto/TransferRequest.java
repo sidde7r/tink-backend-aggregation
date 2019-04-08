@@ -12,17 +12,18 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTup
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto.AgreementDto;
 import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.transfer.enums.MessageType;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.SepaEurIdentifier;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.CountryDateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
+import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
+import se.tink.libraries.transfer.enums.MessageType;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonObject
 public class TransferRequest {
-    private static final ThreadSafeDateFormat FORMATTER_DUE_DATE = new ThreadSafeDateFormat("ddMMyyyy");
+    private static final ThreadSafeDateFormat FORMATTER_DUE_DATE =
+            new ThreadSafeDateFormat("ddMMyyyy");
 
     private TypeEncValueTuple principalAccountNo;
     private TypeEncValueTuple principalName;
@@ -83,7 +84,10 @@ public class TransferRequest {
 
     private static void validateAmount(Amount amount) {
         if (amount.isLessThan(KbcConstants.Transfers.MIN_AMOUNT)) {
-            cancelTransfer(KbcConstants.TransferMessageParametrized.AMOUNT_LESS_THAN_MIN.cloneWith(KbcConstants.Transfers.MIN_AMOUNT).get());
+            cancelTransfer(
+                    KbcConstants.TransferMessageParametrized.AMOUNT_LESS_THAN_MIN
+                            .cloneWith(KbcConstants.Transfers.MIN_AMOUNT)
+                            .get());
         }
     }
 
@@ -105,13 +109,19 @@ public class TransferRequest {
         }
 
         if (!belgianDateUtils.isBusinessDay(date)) {
-            cancelTransfer(TransferExecutionException.EndUserMessage.INVALID_DUEDATE_NOT_BUSINESSDAY.getKey().get());
+            cancelTransfer(
+                    TransferExecutionException.EndUserMessage.INVALID_DUEDATE_NOT_BUSINESSDAY
+                            .getKey()
+                            .get());
         }
     }
 
     private static boolean isValidReferenceFreeText(String destinationMessage) {
         if (destinationMessage.length() > KbcConstants.Transfers.MAX_MSG_LENGTH) {
-            cancelTransfer(KbcConstants.TransferMessageParametrized.MSG_LENGTH_EXCEEDS_MAX.cloneWith(KbcConstants.Transfers.MAX_MSG_LENGTH).get());
+            cancelTransfer(
+                    KbcConstants.TransferMessageParametrized.MSG_LENGTH_EXCEEDS_MAX
+                            .cloneWith(KbcConstants.Transfers.MAX_MSG_LENGTH)
+                            .get());
         }
 
         return true;
@@ -137,15 +147,21 @@ public class TransferRequest {
         return beneficiaryName.get();
     }
 
-    public static TransferRequest create(Transfer transfer, AgreementDto sourceAccount, boolean isTransferToOwnAccount) {
-        String beneficiaryAccountNo = ((SepaEurIdentifier)transfer.getDestination()).getIban();
+    public static TransferRequest create(
+            Transfer transfer, AgreementDto sourceAccount, boolean isTransferToOwnAccount) {
+        String beneficiaryAccountNo = ((SepaEurIdentifier) transfer.getDestination()).getIban();
 
         MessageType messageType = transfer.getMessageType();
         String destinationMessage = transfer.getDestinationMessage();
-        String referenceStructured = messageType == MessageType.STRUCTURED ?
-                formatStructuredReference(destinationMessage) : "";
-        String referenceFreeText = (messageType == MessageType.FREE_TEXT
-                && isValidReferenceFreeText(destinationMessage)) ? destinationMessage : "";
+        String referenceStructured =
+                messageType == MessageType.STRUCTURED
+                        ? formatStructuredReference(destinationMessage)
+                        : "";
+        String referenceFreeText =
+                (messageType == MessageType.FREE_TEXT
+                                && isValidReferenceFreeText(destinationMessage))
+                        ? destinationMessage
+                        : "";
 
         validateAmount(transfer.getAmount());
         String beneficiaryName = getValidatedBeneficiaryName(transfer);
@@ -161,14 +177,16 @@ public class TransferRequest {
                 .setPrincipalCurrencyCode(sourceAccount.getCurrency())
                 .setTransferTypeCode(KbcConstants.Transfers.TRANSFER_TYPE_CODE)
                 .setScashVersionNumber(KbcConstants.Transfers.SCASH_VERSION_NUMBER)
-                .setFunctionName(isTransferToOwnAccount ? KbcConstants.Transfers.TRANSFER_TO_OWN_ACCOUNT :
-                        KbcConstants.Transfers.TRANSFER_TO_OTHER_ACCOUNT)
+                .setFunctionName(
+                        isTransferToOwnAccount
+                                ? KbcConstants.Transfers.TRANSFER_TO_OWN_ACCOUNT
+                                : KbcConstants.Transfers.TRANSFER_TO_OTHER_ACCOUNT)
                 .setBeneficiaryName(beneficiaryName)
                 .setReferenceFreeText(referenceFreeText)
                 .build();
     }
 
-     private static void cancelTransfer(String message) throws TransferExecutionException {
+    private static void cancelTransfer(String message) throws TransferExecutionException {
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(message)
                 .setMessage(String.format("Error when executing transfer: %s", message))
@@ -210,18 +228,21 @@ public class TransferRequest {
         }
 
         public Builder setExecutionDate(String executionDate) {
-            this.executionDate = TypeValuePair.create(KbcConstants.PairTypeTypes.DATE, executionDate);
+            this.executionDate =
+                    TypeValuePair.create(KbcConstants.PairTypeTypes.DATE, executionDate);
             return this;
         }
 
         public Builder setReferenceStructured(String referenceStructured) {
             this.referenceStructured =
-                    TypeValuePair.create(KbcConstants.PairTypeTypes.REFERENCE_STRUCTURED, referenceStructured);
+                    TypeValuePair.create(
+                            KbcConstants.PairTypeTypes.REFERENCE_STRUCTURED, referenceStructured);
             return this;
         }
 
         public Builder setBeneficiaryAccountNo(String beneficiaryAccountNo) {
-            this.beneficiaryAccountNo = TypeValuePair.create(KbcConstants.PairTypeTypes.IBAN, beneficiaryAccountNo);
+            this.beneficiaryAccountNo =
+                    TypeValuePair.create(KbcConstants.PairTypeTypes.IBAN, beneficiaryAccountNo);
             return this;
         }
 
@@ -261,9 +282,20 @@ public class TransferRequest {
         }
 
         public TransferRequest build() {
-            return new TransferRequest(principalAccountNo, principalName, amount, executionDate, referenceStructured,
-                    beneficiaryAccountNo, currency, principalCurrencyCode, transferTypeCode, scashVersionNumber,
-                    functionName, beneficiaryName, referenceFreeText);
+            return new TransferRequest(
+                    principalAccountNo,
+                    principalName,
+                    amount,
+                    executionDate,
+                    referenceStructured,
+                    beneficiaryAccountNo,
+                    currency,
+                    principalCurrencyCode,
+                    transferTypeCode,
+                    scashVersionNumber,
+                    functionName,
+                    beneficiaryName,
+                    referenceFreeText);
         }
     }
 }

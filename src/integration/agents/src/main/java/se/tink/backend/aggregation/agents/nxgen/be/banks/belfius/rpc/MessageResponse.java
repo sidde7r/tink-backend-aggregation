@@ -15,7 +15,8 @@ public class MessageResponse extends ResponseEntity {
     private final String messageType;
     private final String messageTarget;
 
-    public MessageResponse(String messageContent, String messageDetail, String messageType, String messageTarget) {
+    public MessageResponse(
+            String messageContent, String messageDetail, String messageType, String messageTarget) {
         this.messageContent = messageContent;
         this.messageDetail = messageDetail;
         this.messageType = messageType;
@@ -23,9 +24,11 @@ public class MessageResponse extends ResponseEntity {
     }
 
     public static boolean isError(BelfiusResponse response) {
-        MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
-        return messageResponse != null && (messageResponse.getMessageType().equalsIgnoreCase("error")
-                                       || messageResponse.getMessageType().equalsIgnoreCase("fatal"));
+        MessageResponse messageResponse =
+                response.filter(MessageResponse.class).findFirst().orElse(null);
+        return messageResponse != null
+                && (messageResponse.getMessageType().equalsIgnoreCase("error")
+                        || messageResponse.getMessageType().equalsIgnoreCase("fatal"));
     }
 
     public static void validate(BelfiusResponse response) throws IllegalStateException {
@@ -33,7 +36,9 @@ public class MessageResponse extends ResponseEntity {
                 response.filter(MessageResponse.class).findFirst().orElse(null);
         if (erroResponse != null) {
             if (erroResponse.isWrongCredentialsMessage() // Handled in LoginResponse::validate
-                    || erroResponse.isMobileBankingDisabled()) { // Handled in PrepareLoginResponse::validate
+                    || erroResponse
+                            .isMobileBankingDisabled()) { // Handled in
+                                                          // PrepareLoginResponse::validate
                 return;
             }
             throw new IllegalStateException(erroResponse.getMessageDetail());
@@ -41,11 +46,12 @@ public class MessageResponse extends ResponseEntity {
     }
 
     public static String getErrorMessage(BelfiusResponse response) {
-        if(response == null){
+        if (response == null) {
             return "";
         }
 
-        MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
+        MessageResponse messageResponse =
+                response.filter(MessageResponse.class).findFirst().orElse(null);
         if (messageResponse == null) {
             return "";
         }
@@ -65,13 +71,14 @@ public class MessageResponse extends ResponseEntity {
 
     private boolean isMobileBankingDisabled() {
         return BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE.equalsIgnoreCase(messageType)
-                && messageDetail.contains(BelfiusConstants.ErrorCodes.MISSING_MOBILEBANKING_SUBSCRIPTION);
+                && messageDetail.contains(
+                        BelfiusConstants.ErrorCodes.MISSING_MOBILEBANKING_SUBSCRIPTION);
     }
 
     private boolean isSessionExpiredMessage() {
         return BelfiusConstants.ErrorCodes.FATAL_MESSAGE_TYPE.equalsIgnoreCase(messageType)
                 && (messageContent.contains(BelfiusConstants.ErrorCodes.SESSION_EXPIRED)
-                || messageContent.contains(BelfiusConstants.ErrorCodes.UNKNOWN_SESSION));
+                        || messageContent.contains(BelfiusConstants.ErrorCodes.UNKNOWN_SESSION));
     }
 
     public static boolean containsError(MessageResponse messageResponse) {
@@ -85,7 +92,8 @@ public class MessageResponse extends ResponseEntity {
     }
 
     public static boolean isErrorMessageIdentifier(BelfiusResponse response) {
-        MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
+        MessageResponse messageResponse =
+                response.filter(MessageResponse.class).findFirst().orElse(null);
         if (messageResponse == null) {
             return false;
         }
@@ -97,12 +105,13 @@ public class MessageResponse extends ResponseEntity {
                 || (messageTarget != null && messageTarget.equalsIgnoreCase("internal"));
     }
 
-    public static boolean findError(BelfiusResponse response, String errorCode){
-        if(response == null){
+    public static boolean findError(BelfiusResponse response, String errorCode) {
+        if (response == null) {
             return false;
         }
 
-        MessageResponse messageResponse = response.filter(MessageResponse.class).findFirst().orElse(null);
+        MessageResponse messageResponse =
+                response.filter(MessageResponse.class).findFirst().orElse(null);
         if (messageResponse == null) {
             return false;
         }
@@ -111,7 +120,7 @@ public class MessageResponse extends ResponseEntity {
         String messageDetail = messageResponse.getMessageDetail();
         return containsError(messageResponse)
                 && ((messageContent != null && (messageContent.contains(errorCode))
-                || (messageDetail != null && (messageDetail.contains(errorCode)))));
+                        || (messageDetail != null && (messageDetail.contains(errorCode)))));
     }
 
     public static boolean requireSignOfWeeklyLimit(BelfiusResponse response) {
@@ -158,5 +167,4 @@ public class MessageResponse extends ResponseEntity {
     public String getMessageType() {
         return this.messageType;
     }
-
 }

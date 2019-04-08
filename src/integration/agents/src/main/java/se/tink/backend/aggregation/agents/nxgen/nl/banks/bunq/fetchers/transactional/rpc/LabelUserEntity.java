@@ -6,9 +6,12 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class LabelUserEntity {
     private String uuid;
+
     @JsonProperty("display_name")
     private String displayName;
+
     private String country;
+
     @JsonProperty("public_nick_name")
     private String publicNickName;
 

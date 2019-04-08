@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa;
 
+import java.util.Locale;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.AxaAutoAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.AxaManualAuthenticator;
@@ -25,9 +27,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Locale;
-import java.util.Optional;
 
 public final class AxaAgent extends NextGenerationAgent {
 

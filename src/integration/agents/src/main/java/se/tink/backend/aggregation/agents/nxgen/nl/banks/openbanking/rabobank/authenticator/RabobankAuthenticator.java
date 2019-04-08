@@ -33,7 +33,8 @@ public class RabobankAuthenticator implements OAuth2Authenticator {
                         RabobankConstants.QueryValues.CODE)
                 .queryParam(RabobankConstants.QueryParams.REDIRECT_URI, getRedirectUri())
                 .queryParam(RabobankConstants.QueryParams.CLIENT_ID, getClientId())
-                .queryParam(RabobankConstants.QueryParams.SCOPE, RabobankConstants.QueryValues.SCOPES)
+                .queryParam(
+                        RabobankConstants.QueryParams.SCOPE, RabobankConstants.QueryValues.SCOPES)
                 .queryParam(RabobankConstants.QueryParams.STATE, state);
     }
 

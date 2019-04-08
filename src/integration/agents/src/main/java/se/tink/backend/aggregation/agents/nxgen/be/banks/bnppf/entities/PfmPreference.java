@@ -16,7 +16,9 @@ public class PfmPreference {
 
     public Optional<PfmAccount> getPfmAccountFor(String externalAccountId) {
         return Optional.ofNullable(pfmAccounts).orElse(Collections.emptyList()).stream()
-                .filter(pfmAccount -> externalAccountId.equalsIgnoreCase(pfmAccount.getExternalAccId()))
+                .filter(
+                        pfmAccount ->
+                                externalAccountId.equalsIgnoreCase(pfmAccount.getExternalAccId()))
                 .findFirst();
     }
 }

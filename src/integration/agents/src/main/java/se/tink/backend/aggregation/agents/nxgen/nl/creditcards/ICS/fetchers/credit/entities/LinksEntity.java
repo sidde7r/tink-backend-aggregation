@@ -5,18 +5,18 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class LinksEntity {
-  @JsonProperty("Self")
-  private String self;
+    @JsonProperty("Self")
+    private String self;
 
-  @JsonProperty("First")
-  private String first;
+    @JsonProperty("First")
+    private String first;
 
-  @JsonProperty("Prev")
-  private String prev;
+    @JsonProperty("Prev")
+    private String prev;
 
-  @JsonProperty("Next")
-  private String next;
+    @JsonProperty("Next")
+    private String next;
 
-  @JsonProperty("Last")
-  private String last;
+    @JsonProperty("Last")
+    private String last;
 }

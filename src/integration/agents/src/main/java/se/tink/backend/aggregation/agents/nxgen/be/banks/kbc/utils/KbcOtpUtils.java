@@ -32,11 +32,11 @@ public class KbcOtpUtils {
     }
 
     private static byte[] xor(byte[] a, byte[] b) {
-        Preconditions.checkArgument(a.length == b.length,
-                "Cannot XOR two different length byte arrays.");
+        Preconditions.checkArgument(
+                a.length == b.length, "Cannot XOR two different length byte arrays.");
         byte[] output = new byte[a.length];
-        for (int i=0; i<a.length; i++) {
-            output[i] = (byte)(a[i] ^ b[i]);
+        for (int i = 0; i < a.length; i++) {
+            output[i] = (byte) (a[i] ^ b[i]);
         }
         return output;
     }
@@ -75,7 +75,7 @@ public class KbcOtpUtils {
 
     public static String calculateLogonId(byte[] dynamicVector) {
         long output = 0;
-        for (int shift=0, off=4; shift!=-24; shift-=8) {
+        for (int shift = 0, off = 4; shift != -24; shift -= 8) {
             long v = dynamicVector[off++] & 0xff;
             output += (v << (shift + 16));
         }
@@ -86,8 +86,8 @@ public class KbcOtpUtils {
         Preconditions.checkArgument((data.length % 8) == 0, "Input data must be dividable 8");
 
         byte[] output = new byte[8];
-        for (int i=0; i<data.length; i+=8) {
-            byte[] block = Arrays.copyOfRange(data, i, i+8);
+        for (int i = 0; i < data.length; i += 8) {
+            byte[] block = Arrays.copyOfRange(data, i, i + 8);
 
             block = xor(block, output);
             byte[] concatenated_data = Bytes.concat(block, block);
@@ -95,8 +95,8 @@ public class KbcOtpUtils {
             byte[] ct = AES.encryptEcbNoPadding(key, concatenated_data);
 
             // combine the 16 byte block with XOR into one 8 byte block
-            for (int j=0; j<8; j++) {
-                output[j] = (byte)(ct[j] ^ ct[8+j]);
+            for (int j = 0; j < 8; j++) {
+                output[j] = (byte) (ct[j] ^ ct[8 + j]);
             }
         }
         return output;
@@ -113,13 +113,14 @@ public class KbcOtpUtils {
         byte[] output = longToBytes(v2);
 
         if ((v & 0x8000000000000000L) == 0x8000000000000000L) {
-            output[7] ^= (byte)0x1b;
+            output[7] ^= (byte) 0x1b;
         }
 
         return output;
     }
 
-    public static byte[] mashupChallenge(byte[] key, byte[] diversifier, int counter, List<byte[]> challenges) {
+    public static byte[] mashupChallenge(
+            byte[] key, byte[] diversifier, int counter, List<byte[]> challenges) {
         Preconditions.checkArgument(!challenges.isEmpty(), "Challenges were empty.");
 
         byte[] challenge0 = challenges.get(0);
@@ -134,12 +135,12 @@ public class KbcOtpUtils {
             return xor(challenge0Xored, xorKey);
         }
 
-        byte[] lastChallenge = challenges.get(challenges.size()-1);
+        byte[] lastChallenge = challenges.get(challenges.size() - 1);
         byte[] lastChallengeXored = xor(xorKey, lastChallenge);
 
         byte[] output = challenge0Xored;
 
-        for (int i=1; i<challenges.size()-1; i++) {
+        for (int i = 1; i < challenges.size() - 1; i++) {
             output = Bytes.concat(output, challenges.get(i));
         }
 
@@ -152,7 +153,8 @@ public class KbcOtpUtils {
     }
 
     public static byte[] convertOtpResponse(byte[] data) {
-        // Divide the lower and upper half (32 bit values) of the calculated response value by diminishing powers of 10.
+        // Divide the lower and upper half (32 bit values) of the calculated response value by
+        // diminishing powers of 10.
         // Merge the resulting array into one where each entry is a nibble.
 
         int l = bytesToInt(Arrays.copyOfRange(data, 0, 4));
@@ -160,14 +162,14 @@ public class KbcOtpUtils {
 
         byte[] barray = new byte[20];
         int m = 1000000000;
-        for (int i=0; i<10; i++,m/=10) {
-            barray[i] = (byte)(unsignedDiv(l, m) % 0x0a);
-            barray[i+10] = (byte)(unsignedDiv(h, m) % 0x0a);
+        for (int i = 0; i < 10; i++, m /= 10) {
+            barray[i] = (byte) (unsignedDiv(l, m) % 0x0a);
+            barray[i + 10] = (byte) (unsignedDiv(h, m) % 0x0a);
         }
 
         byte[] output = new byte[10];
-        for (int i=0,j=0; i<10; i++,j+=2) {
-            output[i] = (byte)(barray[j+1] + 16 * barray[j]);
+        for (int i = 0, j = 0; i < 10; i++, j += 2) {
+            output[i] = (byte) (barray[j + 1] + 16 * barray[j]);
         }
         return output;
     }
@@ -178,7 +180,8 @@ public class KbcOtpUtils {
     }
 
     public static byte[] wbAesEncrypt(byte[] data) {
-        KbcWhiteBoxAes kbcWhiteBoxAes = (KbcWhiteBoxAes)Native.loadLibrary(LIBRARY_FILE_PATH, KbcWhiteBoxAes.class);
+        KbcWhiteBoxAes kbcWhiteBoxAes =
+                (KbcWhiteBoxAes) Native.loadLibrary(LIBRARY_FILE_PATH, KbcWhiteBoxAes.class);
         byte[] out = new byte[16];
         kbcWhiteBoxAes.kbc_wb_aes128_encrypt(data, out);
         return out;
@@ -187,7 +190,8 @@ public class KbcOtpUtils {
     public static long extractTlvFieldAsLong(byte[] staticVector, int pos, int fieldType) {
         Optional<byte[]> bValue = extractTlvField(staticVector, pos, fieldType, 0);
         if (!bValue.isPresent()) {
-            throw new IllegalStateException(String.format("Could not find filedType %d in static vector.", fieldType));
+            throw new IllegalStateException(
+                    String.format("Could not find filedType %d in static vector.", fieldType));
         }
         return bytesToLong(bValue.get());
     }
@@ -195,12 +199,14 @@ public class KbcOtpUtils {
     public static int extractTlvFieldAsInt(byte[] staticVector, int pos, int fieldType) {
         Optional<byte[]> bValue = extractTlvField(staticVector, pos, fieldType, 0);
         if (!bValue.isPresent()) {
-            throw new IllegalStateException(String.format("Could not find filedType %d in static vector.", fieldType));
+            throw new IllegalStateException(
+                    String.format("Could not find filedType %d in static vector.", fieldType));
         }
         return bytesToInt(bValue.get());
     }
 
-    public static Optional<byte[]> extractTlvField(byte[] tlvData, int pos, int fieldType, int index) {
+    public static Optional<byte[]> extractTlvField(
+            byte[] tlvData, int pos, int fieldType, int index) {
         // The static vector is a TLV structure.
         // 1 byte type
         // 1 byte length
@@ -218,7 +224,7 @@ public class KbcOtpUtils {
             }
 
             if (type == fieldType && (index-- == 0)) {
-                return Optional.of(Arrays.copyOfRange(tlvData, pos, pos+length));
+                return Optional.of(Arrays.copyOfRange(tlvData, pos, pos + length));
             }
 
             pos += length;
@@ -229,12 +235,13 @@ public class KbcOtpUtils {
 
     public static byte[] decryptActivationMessage(byte[] key, byte[] activationMessage) {
         // 39 bytes of data
-        byte[] data = Arrays.copyOfRange(activationMessage, 15,  15 + 39);
+        byte[] data = Arrays.copyOfRange(activationMessage, 15, 15 + 39);
 
         // 8 bytes from activationMessage followed by 0 zeroes
         byte[] ctr = Bytes.concat(Arrays.copyOfRange(activationMessage, 7, 7 + 8), new byte[8]);
 
-        // The method is called `decryptActivationMessage` regardless that the operation is `encrypt`
+        // The method is called `decryptActivationMessage` regardless that the operation is
+        // `encrypt`
         return AES.encryptCtr(key, ctr, data);
     }
 
@@ -244,31 +251,31 @@ public class KbcOtpUtils {
     }
 
     public static byte[] decryptDynamicVector(byte[] key, byte[] dynamicVector) {
-        byte[] data = Arrays.copyOfRange(dynamicVector, 32, 32+16);
+        byte[] data = Arrays.copyOfRange(dynamicVector, 32, 32 + 16);
         return AES.decryptEcbNoPadding(key, data);
     }
 
     public static byte[] encryptConstantA0(byte[] key) {
-        byte[] data = new byte[] { (byte)0xa0 };
+        byte[] data = new byte[] {(byte) 0xa0};
         return AES.encryptEcbPkcs5(key, data);
     }
 
     public static String modifyDiversifier(String diversifier, String otp) {
         StringBuilder out = new StringBuilder();
-        for (int i=0; i<Math.max(diversifier.length(), otp.length()); i++) {
-            byte dc = (byte)(diversifier.charAt(i % diversifier.length()) - 0x30);
-            byte oc = (byte)(otp.charAt(i % otp.length()) - 0x30);
+        for (int i = 0; i < Math.max(diversifier.length(), otp.length()); i++) {
+            byte dc = (byte) (diversifier.charAt(i % diversifier.length()) - 0x30);
+            byte oc = (byte) (otp.charAt(i % otp.length()) - 0x30);
 
-            out.append((char)((dc + oc) % 10 + 0x30));
+            out.append((char) ((dc + oc) % 10 + 0x30));
         }
         return out.toString();
     }
 
     public static int extractDeviceCount(byte[] decryptedActivationMessage) {
-        return (int)decryptedActivationMessage[5];
+        return (int) decryptedActivationMessage[5];
     }
 
     public static byte[] extractKey4(byte[] decryptedActivationMessage) {
-        return Arrays.copyOfRange(decryptedActivationMessage, 6, 6+16);
+        return Arrays.copyOfRange(decryptedActivationMessage, 6, 6 + 16);
     }
 }

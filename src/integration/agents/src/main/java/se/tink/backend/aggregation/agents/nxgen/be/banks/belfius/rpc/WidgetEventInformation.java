@@ -69,23 +69,28 @@ public class WidgetEventInformation {
         }
     }
 
-    public static WidgetEventInformation newInputValueChangedWidgetEvent(String widgetId, String value) {
+    public static WidgetEventInformation newInputValueChangedWidgetEvent(
+            String widgetId, String value) {
         return WidgetEventInformation.builder(widgetId)
                 .setWidgetType("M_Input")
                 .setEventType("valueChanged")
-                .setTextAttribute(value).build();
+                .setTextAttribute(value)
+                .build();
     }
 
     public static WidgetEventInformation newButtonClickedWidgetEvent(String widgetId) {
         return WidgetEventInformation.builder(widgetId)
                 .setWidgetType("M_Button")
-                .setEventType("clicked").build();
+                .setEventType("clicked")
+                .build();
     }
 
-    public static WidgetEventInformation newRepeaterValueChangedWidgetEvent(String widgetId, String activeElement) {
+    public static WidgetEventInformation newRepeaterValueChangedWidgetEvent(
+            String widgetId, String activeElement) {
         return WidgetEventInformation.builder(widgetId)
                 .setWidgetType("Repeater")
                 .setEventType("valueChanged")
-                .setActiveElement(activeElement).build();
+                .setActiveElement(activeElement)
+                .build();
     }
 }

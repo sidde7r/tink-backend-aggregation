@@ -15,5 +15,4 @@ public class TimelineBERequest extends TimelineRequest {
     public void setCmlEnabled(boolean cmlEnabled) {
         this.cmlEnabled = cmlEnabled;
     }
-
 }

@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class InstallResponse {
     @JsonProperty("Id")
     private IdEntity id;
+
     @JsonProperty("Token")
     private TokenEntity token;
+
     @JsonProperty("ServerPublicKey")
     private ServerPublicKeyEntity serverPublicKey;
 

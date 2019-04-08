@@ -183,8 +183,20 @@ public class LoginSotpRequest {
         }
 
         public LoginSotpRequest build() {
-            return new LoginSotpRequest(fingerprint, osVersion, deviceId, company, os, appType, deviceType, otp,
-                    language, username, appVersion, applicationId, withTouchId);
+            return new LoginSotpRequest(
+                    fingerprint,
+                    osVersion,
+                    deviceId,
+                    company,
+                    os,
+                    appType,
+                    deviceType,
+                    otp,
+                    language,
+                    username,
+                    appVersion,
+                    applicationId,
+                    withTouchId);
         }
     }
 }

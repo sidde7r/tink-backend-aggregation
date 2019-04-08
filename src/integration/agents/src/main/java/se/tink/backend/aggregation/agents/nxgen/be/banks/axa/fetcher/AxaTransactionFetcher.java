@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher;
 
+import java.util.List;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaStorage;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc.GetTransactionsResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.TransactionFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.AggregationTransaction;
-
-import java.util.List;
 
 public final class AxaTransactionFetcher implements TransactionFetcher<TransactionalAccount> {
     private final AxaStorage storage;

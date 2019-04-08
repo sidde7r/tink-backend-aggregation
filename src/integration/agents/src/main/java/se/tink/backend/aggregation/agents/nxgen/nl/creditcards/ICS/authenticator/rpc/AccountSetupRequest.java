@@ -10,22 +10,22 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountSetupRequest {
-  @JsonProperty("Data")
-  private DataRequestEntity data = new DataRequestEntity();
+    @JsonProperty("Data")
+    private DataRequestEntity data = new DataRequestEntity();
 
-  @JsonProperty("Risk")
-  private RiskEntity risk = new RiskEntity();
+    @JsonProperty("Risk")
+    private RiskEntity risk = new RiskEntity();
 
-  public AccountSetupRequest setup(
-      List<String> permissions, Date fromDate, Date toDate, Date expirationDate) {
-    data.setPermissions(permissions);
-    data.setTransactionFromDateString(formatDate(fromDate));
-    data.setTransactionToDateString(formatDate(toDate));
-    data.setExpirationDateString(formatDate(expirationDate));
-    return this;
-  }
+    public AccountSetupRequest setup(
+            List<String> permissions, Date fromDate, Date toDate, Date expirationDate) {
+        data.setPermissions(permissions);
+        data.setTransactionFromDateString(formatDate(fromDate));
+        data.setTransactionToDateString(formatDate(toDate));
+        data.setExpirationDateString(formatDate(expirationDate));
+        return this;
+    }
 
-  private String formatDate(Date date) {
-    return new SimpleDateFormat("yyyy-MM-dd").format(date);
-  }
+    private String formatDate(Date date) {
+        return new SimpleDateFormat("yyyy-MM-dd").format(date);
+    }
 }

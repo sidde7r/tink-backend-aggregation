@@ -1,5 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.rpc;
 
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.OutputEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -9,13 +15,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccou
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.identifiers.IbanIdentifier;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @JsonObject
 public final class GetAccountsResponse {

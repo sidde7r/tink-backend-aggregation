@@ -39,55 +39,74 @@ public class BunqApiClient {
     }
 
     public InstallResponse installation(PublicKey publicKey) {
-        InstallResponseWrapper response = client.request(getUrl(BunqConstants.Url.INSTALLATION))
-                .post(InstallResponseWrapper.class, InstallationRequest.createFromKey(
-                        RSA.pemFormatPublicKey(publicKey)));
+        InstallResponseWrapper response =
+                client.request(getUrl(BunqConstants.Url.INSTALLATION))
+                        .post(
+                                InstallResponseWrapper.class,
+                                InstallationRequest.createFromKey(
+                                        RSA.pemFormatPublicKey(publicKey)));
 
         return Optional.ofNullable(response.getResponse())
                 .map(BunqResponse::getResponseBody)
-                .orElseThrow(() -> new IllegalStateException("Could not deserialize InstallResponse"));
+                .orElseThrow(
+                        () -> new IllegalStateException("Could not deserialize InstallResponse"));
     }
 
     public RegisterDeviceResponse registerDevice(String apiKey, String aggregatorIdentifier) {
-        String aggregatorName = Strings.isNullOrEmpty(aggregatorIdentifier) ?
-                BunqConstants.DEVICE_NAME :
-                aggregatorIdentifier;
+        String aggregatorName =
+                Strings.isNullOrEmpty(aggregatorIdentifier)
+                        ? BunqConstants.DEVICE_NAME
+                        : aggregatorIdentifier;
 
-        RegisterDeviceResponseWrapper response = client.request(getUrl(BunqConstants.Url.REGISTER_DEVICE))
-                .post(RegisterDeviceResponseWrapper.class, RegisterDeviceRequest.createFromApiKey(aggregatorName, apiKey));
+        RegisterDeviceResponseWrapper response =
+                client.request(getUrl(BunqConstants.Url.REGISTER_DEVICE))
+                        .post(
+                                RegisterDeviceResponseWrapper.class,
+                                RegisterDeviceRequest.createFromApiKey(aggregatorName, apiKey));
 
         return Optional.ofNullable(response.getResponse())
                 .map(BunqResponse::getResponseBody)
-                .orElseThrow(() -> new IllegalStateException("Could not deserialize RegisterDeviceResponse"));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Could not deserialize RegisterDeviceResponse"));
     }
 
     public CreateSessionResponse createSession(String apiKey) {
-        CreateSessionResponseWrapper response = client.request(getUrl(BunqConstants.Url.CREATE_SESSION))
-                .post(CreateSessionResponseWrapper.class, CreateSessionRequest.createFromApiKey(apiKey));
+        CreateSessionResponseWrapper response =
+                client.request(getUrl(BunqConstants.Url.CREATE_SESSION))
+                        .post(
+                                CreateSessionResponseWrapper.class,
+                                CreateSessionRequest.createFromApiKey(apiKey));
 
         return Optional.ofNullable(response.getResponse())
                 .map(BunqResponse::getResponseBody)
-                .orElseThrow(() -> new IllegalStateException("Could not deserialize CreateSessionResponse"));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Could not deserialize CreateSessionResponse"));
     }
 
     public AccountsResponseWrapper listAccounts(String userId) {
-        return client.request(getUrl(BunqConstants.Url.MONETARY_ACCOUNTS)
-                    .parameter(BunqConstants.UrlParameterKeys.USER_ID, userId))
+        return client.request(
+                        getUrl(BunqConstants.Url.MONETARY_ACCOUNTS)
+                                .parameter(BunqConstants.UrlParameterKeys.USER_ID, userId))
                 .get(AccountsResponseWrapper.class);
     }
 
     public TransactionsResponseWrapper listAccountTransactions(String userId, String accountId) {
-        return client.request(getUrl(BunqConstants.Url.MONETARY_ACCOUNTS_TRANSACTIONS)
-                    .parameter(BunqConstants.UrlParameterKeys.USER_ID, userId)
-                    .parameter(BunqConstants.UrlParameterKeys.ACCOUNT_ID, accountId))
-                    .queryParam(BunqConstants.Pagination.TRANSACTIONS_PER_PAGE_KEY,
-                            BunqConstants.Pagination.TRANSACTIONS_PER_PAGE_VALUE)
+        return client.request(
+                        getUrl(BunqConstants.Url.MONETARY_ACCOUNTS_TRANSACTIONS)
+                                .parameter(BunqConstants.UrlParameterKeys.USER_ID, userId)
+                                .parameter(BunqConstants.UrlParameterKeys.ACCOUNT_ID, accountId))
+                .queryParam(
+                        BunqConstants.Pagination.TRANSACTIONS_PER_PAGE_KEY,
+                        BunqConstants.Pagination.TRANSACTIONS_PER_PAGE_VALUE)
                 .get(TransactionsResponseWrapper.class);
     }
 
     public TransactionsResponseWrapper listAccountTransactionsPagination(String nextPage) {
-        return client.request(getUrl(nextPage))
-                .get(TransactionsResponseWrapper.class);
+        return client.request(getUrl(nextPage)).get(TransactionsResponseWrapper.class);
     }
 
     private URL getUrl(String path) {

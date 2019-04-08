@@ -21,10 +21,12 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class BelfiusTransaction {
-    // Will match "MAESTRO-BETALING 19/02-MERCHANT NAME BE 15,00   EUR KAART NR 1234 1234 1234 1234 - LASTNAME FIRSTNAME   REF. : 123456789 VAL. 20-02
+    // Will match "MAESTRO-BETALING 19/02-MERCHANT NAME BE 15,00   EUR KAART NR 1234 1234 1234 1234
+    // - LASTNAME FIRSTNAME   REF. : 123456789 VAL. 20-02
     // Capturing "MERCHANT NAME" in one group, allowing us to parse it out.
-    private static Pattern MAESTRO_PURCHASE_FIRST_PART = Pattern.compile(
-            "^(MAESTRO-BETALING\\s*\\d\\d/\\d\\d-)(([\\w*\\s])*)(\\s\\w\\w\\s\\d\\d.*$)");
+    private static Pattern MAESTRO_PURCHASE_FIRST_PART =
+            Pattern.compile(
+                    "^(MAESTRO-BETALING\\s*\\d\\d/\\d\\d-)(([\\w*\\s])*)(\\s\\w\\w\\s\\d\\d.*$)");
 
     @JsonProperty("lb_Date")
     @JsonFormat(pattern = "dd/MM/yyyy")
@@ -92,11 +94,15 @@ public class BelfiusTransaction {
     }
 
     private String getFormattedDescription() {
-        // So far only seen Maestro purchases with an empty nameOppositeSide field, which is preferred
-        // as description since it's the merchant name without noise. For Maestro purchases we have to parse
+        // So far only seen Maestro purchases with an empty nameOppositeSide field, which is
+        // preferred
+        // as description since it's the merchant name without noise. For Maestro purchases we have
+        // to parse
         // out the merchant name.
         String trimmedDescriptionWithNewLinesRemoved = this.description.replaceAll("\\n", "");
-        Matcher matcher = MAESTRO_PURCHASE_FIRST_PART.matcher(trimmedDescriptionWithNewLinesRemoved.toUpperCase());
+        Matcher matcher =
+                MAESTRO_PURCHASE_FIRST_PART.matcher(
+                        trimmedDescriptionWithNewLinesRemoved.toUpperCase());
 
         if (matcher.matches()) {
             return matcher.group(2);
@@ -107,7 +113,8 @@ public class BelfiusTransaction {
 
     @JsonIgnore
     private RawDetails getRawDetails() {
-        if (Strings.isNullOrEmpty(this.nameOppositeSide) && Strings.isNullOrEmpty(this.description)) {
+        if (Strings.isNullOrEmpty(this.nameOppositeSide)
+                && Strings.isNullOrEmpty(this.description)) {
             return null;
         }
 
@@ -121,10 +128,14 @@ public class BelfiusTransaction {
 
         public RawDetails(String recipientAccount, String details) {
             // be kind no nulls
-            this.recipientAccount = !Strings.isNullOrEmpty(recipientAccount) ?
-                    Collections.singletonList(recipientAccount) : Collections.emptyList();
-            this.details = !Strings.isNullOrEmpty(details) ?
-                    Collections.singletonList(details) : Collections.emptyList();
+            this.recipientAccount =
+                    !Strings.isNullOrEmpty(recipientAccount)
+                            ? Collections.singletonList(recipientAccount)
+                            : Collections.emptyList();
+            this.details =
+                    !Strings.isNullOrEmpty(details)
+                            ? Collections.singletonList(details)
+                            : Collections.emptyList();
         }
     }
 

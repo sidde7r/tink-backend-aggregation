@@ -14,29 +14,29 @@ import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class CreditTransactionsResponse implements PaginatorResponse {
-  @JsonProperty("Data")
-  private CreditDataEntity data;
+    @JsonProperty("Data")
+    private CreditDataEntity data;
 
-  @JsonProperty("Links")
-  private LinksEntity links;
+    @JsonProperty("Links")
+    private LinksEntity links;
 
-  @JsonProperty("Meta")
-  private MetaEntity meta;
+    @JsonProperty("Meta")
+    private MetaEntity meta;
 
-  @Override
-  public Collection<? extends Transaction> getTinkTransactions() {
-    return data.getTransactions()
-        .stream()
-        .map(TransactionEntity::toTinkTransaction)
-        .collect(Collectors.toList());
-  }
+    @Override
+    public Collection<? extends Transaction> getTinkTransactions() {
+        return data.getTransactions().stream()
+                .map(TransactionEntity::toTinkTransaction)
+                .collect(Collectors.toList());
+    }
 
-  /**
-   * Currently ICS does not support pagination. Once they do, this should be implemented
-   * @return
-   */
-  @Override
-  public Optional<Boolean> canFetchMore() {
-    return Optional.of(false);
-  }
+    /**
+     * Currently ICS does not support pagination. Once they do, this should be implemented
+     *
+     * @return
+     */
+    @Override
+    public Optional<Boolean> canFetchMore() {
+        return Optional.of(false);
+    }
 }

@@ -15,5 +15,4 @@ public class EntityClick extends BelfiusRequest {
                                         BelfiusConstants.Widget.ENTITY_CLICK)))
                 .setSessionId(sessionId);
     }
-
 }
