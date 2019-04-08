@@ -4,25 +4,24 @@ import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
-public abstract class BBVAConstants {
+public abstract class BbvaConstants {
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
-        TypeMapper.<AccountTypes>builder()
-            .put(AccountTypes.CHECKING, "CHECKING")
-            .put(AccountTypes.CREDIT_CARD, "CREDIT")
-            .build();
+            TypeMapper.<AccountTypes>builder()
+                    .put(AccountTypes.CHECKING, "CHECKING")
+                    .put(AccountTypes.CREDIT_CARD, "CREDIT")
+                    .build();
 
     public static class Urls {
-
         public static final String OAUTH = "/token/authorize";
         public static final String TOKEN = "/token";
         public static final String ACCOUNTS = "/accounts-sbx/v1/me/accounts";
         public static final String ACCOUNT = "/accounts-sbx/v1/me/accounts/%s";
-        public static final String ACCOUNT_TRANSACTIONS = "/accounts-sbx/v1/me/accounts/%s/transactions";
+        public static final String ACCOUNT_TRANSACTIONS =
+                "/accounts-sbx/v1/me/accounts/%s/transactions";
     }
 
     public static class StorageKeys {
-
         public static final String BASE_AUTH_URL = "BASE_AUTH_URL";
         public static final String BASE_API_URL = "BASE_API_URL";
         public static final String CLIENT_ID = "CLIENT_ID";
@@ -32,7 +31,6 @@ public abstract class BBVAConstants {
     }
 
     public static class QueryKeys {
-
         public static final String CLIENT_ID = "client_id";
         public static final String RESPONSE_TYPE = "response_type";
         public static final String SCOPE = "scope";
@@ -44,7 +42,6 @@ public abstract class BBVAConstants {
     }
 
     public static class QueryValues {
-
         public static final String GRANT_TYPE = "authorization_code";
         public static final String RESPONSE_TYPE = "code";
         public static final String SCOPE = "accounts_detail_full_sbx_1 account_transactions_sbx";
@@ -52,55 +49,44 @@ public abstract class BBVAConstants {
     }
 
     public static class HeaderKeys {
-
         public static final String AUTHORIZATION = "Authorization";
     }
 
     public static class HeaderValues {
-
         public static final String AUTHORIZATION_RESPONSE = "Basic %s";
         public static final String AUTHORIZATION = "jwt %s";
     }
 
-    public static class FormKeys {
+    public static class FormKeys {}
 
-    }
-
-    public static class FormValues {
-
-    }
-
-    public class Market {
-
-        public static final String INTEGRATION_NAME = "bbva";
-        public static final String CLIENT_NAME = "tink";
-    }
+    public static class FormValues {}
 
     public static class LogTags {
-
         public static final LogTag MISSING_CONFIGURATION = LogTag.from("BBVA_MISSING_CONFIG");
     }
 
     public static class Exceptions {
-
-        public static final String MISSING_CONFIGURATION_LOG = " {} - Missing BBVA configuration: {}";
+        public static final String MISSING_CONFIGURATION_LOG =
+                " {} - Missing BBVA configuration: {}";
         public static final String MISSING_CONFIGURATION = "BBVA configuration missing.";
         public static final String INVALID_CONFIGURATION = "BBVA configuration is invalid.";
         public static final String MISSING_TOKEN = "Cannot find token!";
     }
 
-    public class Pagination {
+    public class Market {
+        public static final String INTEGRATION_NAME = "bbva";
+        public static final String CLIENT_NAME = "tink";
+    }
 
+    public class Pagination {
         public static final int START_PAGE = 1;
     }
 
     public class Formats {
-
         public static final String TRANSACTION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
     }
 
     public class BodyKeys {
-
         public static final String REFRESH_TOKEN = "refresh_token";
     }
 }
