@@ -49,6 +49,7 @@ data:
       driverClass: com.mysql.jdbc.Driver
       username: {{ default "tink-aggregation" $aggregationdb.username }}
       password: MYSQL_PASSWORD # Is added via Kubernetes Secrets
+      {{- $jdbcParams := "useLocalSessionState=true&rewriteBatchedStatements=true&useSSL=true&verifyServerCertificate=false" }}
       {{- if .Values.aggregationdb }}
       url: jdbc:mysql://{{ $aggregationdb.host }}:3306/tink?{{ $jdbcParams }}
       {{- else }}
