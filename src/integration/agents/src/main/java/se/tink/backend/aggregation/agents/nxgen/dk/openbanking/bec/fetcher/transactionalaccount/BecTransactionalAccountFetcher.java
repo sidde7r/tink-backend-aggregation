@@ -10,7 +10,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import java.util.Collection;
 import java.util.Date;
 
-@JsonObject
 public class BecTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
                 TransactionDatePaginator<TransactionalAccount> {
