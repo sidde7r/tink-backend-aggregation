@@ -21,7 +21,15 @@ spec:
           serviceName: aggregation
           servicePort: 443
         path: /
+  - host: aggregation.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+    http:
+      paths:
+      - backend:
+          serviceName: aggregation
+          servicePort: 443
+        path: /
   tls:
   - hosts:
     - aggregation2.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
+    - aggregation.{{ .Values.Environment }}.{{ .Values.Cluster }}.tink.se
     secretName: ingress-tls
