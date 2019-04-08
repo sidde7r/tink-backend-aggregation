@@ -7,8 +7,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.keycard.KeyCardInitValues;
 
-public class NemidKeyCardAuthenticationController extends NemidAuthenticationController implements
-        KeyCardAuthenticator {
+public class NemidKeyCardAuthenticationController extends NemidAuthenticationController
+        implements KeyCardAuthenticator {
 
     private static final By LOGIN_BUTTON_FORM_1 = By.cssSelector("button.Box-Button-Submit");
     private static final By CARD_NUMBER = By.cssSelector("span.otp__card-number");
@@ -17,7 +17,8 @@ public class NemidKeyCardAuthenticationController extends NemidAuthenticationCon
 
     public NemidKeyCardAuthenticationController(NemIdAuthenticator authenticator) {
         super(authenticator);
-        throw new UnsupportedOperationException("Cannot be used until step 2 can be succesfully completed");
+        throw new UnsupportedOperationException(
+                "Cannot be used until step 2 can be succesfully completed");
     }
 
     @Override
@@ -38,13 +39,11 @@ public class NemidKeyCardAuthenticationController extends NemidAuthenticationCon
     }
 
     private String collectCardId() {
-        return waitForElement(CARD_NUMBER)
-                .map(WebElement::getText)
-                .orElse(null);
+        return waitForElement(CARD_NUMBER).map(WebElement::getText).orElse(null);
     }
 
     private String collectCardIndex() {
-        return waitForElement(CARD_INDEX_CELLS)//There are multiple, we only want the first
+        return waitForElement(CARD_INDEX_CELLS) // There are multiple, we only want the first
                 .map(WebElement::getText)
                 .orElseThrow(() -> new IllegalStateException("Cannot find card index in form."));
     }
@@ -53,7 +52,10 @@ public class NemidKeyCardAuthenticationController extends NemidAuthenticationCon
     public void authenticate(String code) throws AuthenticationException, AuthorizationException {
         try {
             waitForElement(CARD_INPUT_FIELD)
-                    .orElseThrow(() -> new IllegalStateException("Cannot find input field for card code"))
+                    .orElseThrow(
+                            () ->
+                                    new IllegalStateException(
+                                            "Cannot find input field for card code"))
                     .sendKeys(code);
             clickButton(SUBMIT_BUTTON);
 
@@ -65,5 +67,4 @@ public class NemidKeyCardAuthenticationController extends NemidAuthenticationCon
             close();
         }
     }
-
 }

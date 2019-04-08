@@ -17,20 +17,20 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.nxgen.core.transaction.CreditCardTransaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.credentials.demo.DemoCredentials;
+import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.enums.SwedishGiroType;
+import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.strings.StringUtils;
-import se.tink.libraries.credentials.demo.DemoCredentials;
-import se.tink.libraries.account.AccountIdentifier;
-import se.tink.libraries.date.DateUtils;
 
 public class DemoData {
     private static final Splitter SPLITTER = Splitter.on('\t');
@@ -39,26 +39,32 @@ public class DemoData {
     public static final String FILENAME_ENDS_FOR_UNCHANGED_DATE = "ud";
     private static final int PENDING_FUTURE_TRANSACTION_CUTOFF = 31;
 
-    public static List<Transaction> readTransactionsWithRandomization(DemoCredentials demoCredentials, File file,
-            Account account, int transactionsToRandomize) throws IOException {
+    public static List<Transaction> readTransactionsWithRandomization(
+            DemoCredentials demoCredentials,
+            File file,
+            Account account,
+            int transactionsToRandomize)
+            throws IOException {
 
         List<Transaction> transactions = readTransactions(demoCredentials, file, account);
 
         Ordering<Transaction> orderingOnDate = Ordering.natural().onResultOf(Transaction::getDate);
 
-        List<Transaction> lastTransactions = orderingOnDate.greatestOf(transactions, transactionsToRandomize);
+        List<Transaction> lastTransactions =
+                orderingOnDate.greatestOf(transactions, transactionsToRandomize);
 
         for (Transaction t : lastTransactions) {
             // Add some dummy randomization
             double prevAmount = t.getAmount().getValue();
             double randAmount = Math.round(prevAmount * Math.random());
 
-            Transaction updatedTransaction = Transaction.builder()
-                    .setAmount(Amount.inSEK(randAmount))
-                    .setDate(t.getDate())
-                    .setDescription(t.getDescription())
-                    .setPending(t.isPending())
-                    .build();
+            Transaction updatedTransaction =
+                    Transaction.builder()
+                            .setAmount(Amount.inSEK(randAmount))
+                            .setDate(t.getDate())
+                            .setDescription(t.getDescription())
+                            .setPending(t.isPending())
+                            .build();
 
             transactions.remove(t);
             transactions.add(updatedTransaction);
@@ -67,8 +73,8 @@ public class DemoData {
         return transactions;
     }
 
-    public static List<Transaction> readTransactions(DemoCredentials credentials, File file,
-            Account account) throws IOException {
+    public static List<Transaction> readTransactions(
+            DemoCredentials credentials, File file, Account account) throws IOException {
         // Transaction file is not needed for loans
         if (account.getType() != null && Objects.equals(account.getType(), AccountTypes.LOAN)) {
             return Collections.emptyList();
@@ -92,19 +98,21 @@ public class DemoData {
             Transaction transaction;
 
             if (Objects.equals(transactionType, TransactionTypes.CREDIT_CARD)) {
-                transaction = CreditCardTransaction.builder()
-                        .setAmount(amount)
-                        .setDate(transactionDate)
-                        .setDescription(description)
-                        .setPending(pending)
-                        .build();
+                transaction =
+                        CreditCardTransaction.builder()
+                                .setAmount(amount)
+                                .setDate(transactionDate)
+                                .setDescription(description)
+                                .setPending(pending)
+                                .build();
             } else {
-                transaction = Transaction.builder()
-                        .setAmount(amount)
-                        .setDate(transactionDate)
-                        .setDescription(description)
-                        .setPending(pending)
-                        .build();
+                transaction =
+                        Transaction.builder()
+                                .setAmount(amount)
+                                .setDate(transactionDate)
+                                .setDescription(description)
+                                .setPending(pending)
+                                .build();
             }
 
             transactions.add(transaction);
@@ -113,8 +121,8 @@ public class DemoData {
         return transactions;
     }
 
-    public static List<UpcomingTransaction> readUpcomingTransactions(DemoCredentials credentials, Account account,
-            File file) throws IOException {
+    public static List<UpcomingTransaction> readUpcomingTransactions(
+            DemoCredentials credentials, Account account, File file) throws IOException {
         // Upcoming transactions not needed for loans & credit-cards
         if (account.getType() != null && Objects.equals(account.getType(), AccountTypes.LOAN)
                 || Objects.equals(account.getType(), AccountTypes.CREDIT_CARD)) {
@@ -128,8 +136,10 @@ public class DemoData {
             Date transactionDate = parseDate(txFields.get(0), credentials, file, today);
             TransactionTypes transactionType = parseTransactionType(txFields);
 
-            if (transactionDate.before(today) || !Objects.equals(transactionType, TransactionTypes.PAYMENT) ||
-                    DateUtils.daysBetween(today, transactionDate) >= PENDING_FUTURE_TRANSACTION_CUTOFF) {
+            if (transactionDate.before(today)
+                    || !Objects.equals(transactionType, TransactionTypes.PAYMENT)
+                    || DateUtils.daysBetween(today, transactionDate)
+                            >= PENDING_FUTURE_TRANSACTION_CUTOFF) {
                 continue;
             }
 
@@ -137,16 +147,24 @@ public class DemoData {
             Transfer upcomingTransfer = null;
 
             if (description.equals("Hyra Stockholm")) {
-                upcomingTransfer = createFakeTransfer("HSB Stockholm Ek", "1157002203", 1954, "3300308",
-                        SwedishGiroType.BG, 7, TransferType.PAYMENT);
+                upcomingTransfer =
+                        createFakeTransfer(
+                                "HSB Stockholm Ek",
+                                "1157002203",
+                                1954,
+                                "3300308",
+                                SwedishGiroType.BG,
+                                7,
+                                TransferType.PAYMENT);
             }
 
-            UpcomingTransaction upcomingTransaction = UpcomingTransaction.builder()
-                    .setAmount(Amount.inSEK(StringUtils.parseAmount(txFields.get(2))))
-                    .setDate(DateUtils.flattenTime(transactionDate))
-                    .setDescription(description)
-                    .setUpcomingTransfer(upcomingTransfer)
-                    .build();
+            UpcomingTransaction upcomingTransaction =
+                    UpcomingTransaction.builder()
+                            .setAmount(Amount.inSEK(StringUtils.parseAmount(txFields.get(2))))
+                            .setDate(DateUtils.flattenTime(transactionDate))
+                            .setDescription(description)
+                            .setUpcomingTransfer(upcomingTransfer)
+                            .build();
 
             upcomingTransactions.add(upcomingTransaction);
         }
@@ -154,14 +172,21 @@ public class DemoData {
         return upcomingTransactions;
     }
 
-    public static Transfer createFakeTransfer(String name, String ocr, double amount, String giroNumber,
-            SwedishGiroType giroType, int dueInDays, TransferType transferType) {
+    public static Transfer createFakeTransfer(
+            String name,
+            String ocr,
+            double amount,
+            String giroNumber,
+            SwedishGiroType giroType,
+            int dueInDays,
+            TransferType transferType) {
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(amount));
         transfer.setDestinationMessage(ocr);
         transfer.setSourceMessage(name);
         transfer.setType(transferType);
-        transfer.setDestination(AccountIdentifier.create(giroType.toAccountIdentifierType(), giroNumber));
+        transfer.setDestination(
+                AccountIdentifier.create(giroType.toAccountIdentifierType(), giroNumber));
         transfer.setDueDate(DateUtils.addDays(new Date(), dueInDays));
 
         return transfer;
@@ -177,14 +202,16 @@ public class DemoData {
                 .orElse(TransactionTypes.DEFAULT);
     }
 
-    private static Date parseDate(String dateField, DemoCredentials credentials, File file, Date today) {
+    private static Date parseDate(
+            String dateField, DemoCredentials credentials, File file, Date today) {
         Calendar todayCal = Calendar.getInstance();
         todayCal.setTime(today);
 
         Date transDate;
         DateTime parsedDate = new DateTime(DateUtils.parseDate(dateField));
 
-        if (credentials != null || file.getParentFile().getName().endsWith(FILENAME_ENDS_FOR_UNCHANGED_DATE)) {
+        if (credentials != null
+                || file.getParentFile().getName().endsWith(FILENAME_ENDS_FOR_UNCHANGED_DATE)) {
             transDate = parsedDate.toDate();
         } else {
             int year = todayCal.get(Calendar.YEAR);

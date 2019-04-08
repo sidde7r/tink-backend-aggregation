@@ -10,7 +10,8 @@ public class ThirdPartyAppResponseImpl implements ThirdPartyAppResponse<String> 
         this.reference = reference;
     }
 
-    public static ThirdPartyAppResponse<String> create(ThirdPartyAppStatus status, String reference) {
+    public static ThirdPartyAppResponse<String> create(
+            ThirdPartyAppStatus status, String reference) {
         return new ThirdPartyAppResponseImpl(status, reference);
     }
 

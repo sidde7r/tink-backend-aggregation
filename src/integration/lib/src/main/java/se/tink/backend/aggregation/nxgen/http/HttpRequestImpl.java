@@ -18,7 +18,8 @@ public class HttpRequestImpl implements HttpRequest {
         this(method, url, new OutBoundHeaders(), body);
     }
 
-    public HttpRequestImpl(HttpMethod method, URL url, MultivaluedMap<String, Object> headers, Object body) {
+    public HttpRequestImpl(
+            HttpMethod method, URL url, MultivaluedMap<String, Object> headers, Object body) {
         this.method = method;
         this.url = url;
         this.headers = headers;

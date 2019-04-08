@@ -8,7 +8,11 @@ import se.tink.libraries.i18n.LocalizableKey;
 
 public interface ThirdPartyAppAuthenticator<T> {
     ThirdPartyAppResponse<T> init();
-    ThirdPartyAppResponse<T> collect(T reference) throws AuthenticationException, AuthorizationException;
+
+    ThirdPartyAppResponse<T> collect(T reference)
+            throws AuthenticationException, AuthorizationException;
+
     ThirdPartyAppAuthenticationPayload getAppPayload();
+
     Optional<LocalizableKey> getUserErrorMessageFor(ThirdPartyAppStatus status);
 }

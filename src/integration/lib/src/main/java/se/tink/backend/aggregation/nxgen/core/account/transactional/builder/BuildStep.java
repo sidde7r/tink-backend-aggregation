@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional.builder;
 
+import javax.annotation.Nonnull;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
-
-import javax.annotation.Nonnull;
 
 public interface BuildStep<A extends Account, B extends BuildStep<A, B>> {
 

@@ -1,8 +1,6 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.openid.configuration;
 
 import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject

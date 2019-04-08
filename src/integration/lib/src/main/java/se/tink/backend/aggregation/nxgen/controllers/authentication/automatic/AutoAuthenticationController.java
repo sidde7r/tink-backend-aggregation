@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication.automatic;
 
 import com.google.common.base.Preconditions;
+import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
@@ -17,17 +18,17 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
 
-import java.util.Objects;
-
-
 public class AutoAuthenticationController implements TypedAuthenticator, ProgressiveAuthenticator {
     private final CredentialsRequest request;
     private final SystemUpdater systemUpdater;
     private final MultiFactorAuthenticator manualAuthenticator;
     private final AutoAuthenticator autoAuthenticator;
 
-    public AutoAuthenticationController(CredentialsRequest request, SystemUpdater systemUpdater,
-            MultiFactorAuthenticator manualAuthenticator, AutoAuthenticator autoAuthenticator) {
+    public AutoAuthenticationController(
+            CredentialsRequest request,
+            SystemUpdater systemUpdater,
+            MultiFactorAuthenticator manualAuthenticator,
+            AutoAuthenticator autoAuthenticator) {
         this.request = Preconditions.checkNotNull(request);
         this.systemUpdater = Preconditions.checkNotNull(systemUpdater);
         this.manualAuthenticator = Preconditions.checkNotNull(manualAuthenticator);
@@ -35,19 +36,27 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
     }
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws AuthenticationException, AuthorizationException {
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest)
+            throws AuthenticationException, AuthorizationException {
         try {
-            if (!forceAutoAuthentication() && (Objects.equals(manualAuthenticator.getType(), authenticationRequest.getCredentials().getType()) ||
-                    (request.isUpdate() && !Objects.equals(request.getType(), CredentialsRequestType.TRANSFER)))) {
+            if (!forceAutoAuthentication()
+                    && (Objects.equals(
+                                    manualAuthenticator.getType(),
+                                    authenticationRequest.getCredentials().getType())
+                            || (request.isUpdate()
+                                    && !Objects.equals(
+                                            request.getType(), CredentialsRequestType.TRANSFER)))) {
                 return manualProgressive(authenticationRequest);
             } else {
-                Preconditions.checkState(!Objects.equals(request.getType(), CredentialsRequestType.CREATE));
+                Preconditions.checkState(
+                        !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
                 auto(authenticationRequest.getCredentials());
                 return new AuthenticationResponse(AuthenticationStepConstants.STEP_FINALIZE, null);
             }
         } finally {
             // TODO auth: move it up layer
-            systemUpdater.updateCredentialsExcludingSensitiveInformation(authenticationRequest.getCredentials(), false);
+            systemUpdater.updateCredentialsExcludingSensitiveInformation(
+                    authenticationRequest.getCredentials(), false);
         }
     }
 
@@ -59,13 +68,18 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
 
     // TODO auth: remove the legacy authenticate and extension.
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         try {
-            if (!forceAutoAuthentication() && (Objects.equals(manualAuthenticator.getType(), credentials.getType()) ||
-                    (request.isUpdate() && !Objects.equals(request.getType(), CredentialsRequestType.TRANSFER)))) {
+            if (!forceAutoAuthentication()
+                    && (Objects.equals(manualAuthenticator.getType(), credentials.getType())
+                            || (request.isUpdate()
+                                    && !Objects.equals(
+                                            request.getType(), CredentialsRequestType.TRANSFER)))) {
                 manual(credentials);
             } else {
-                Preconditions.checkState(!Objects.equals(request.getType(), CredentialsRequestType.CREATE));
+                Preconditions.checkState(
+                        !Objects.equals(request.getType(), CredentialsRequestType.CREATE));
                 auto(credentials);
             }
         } finally {
@@ -75,8 +89,9 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
 
     // TODO: Remove this when there is support for new MultiFactor credential types.
     private boolean forceAutoAuthentication() {
-        return Objects.equals(manualAuthenticator.getType(), CredentialsTypes.PASSWORD) &&
-                !request.isUpdate() && !request.isCreate();
+        return Objects.equals(manualAuthenticator.getType(), CredentialsTypes.PASSWORD)
+                && !request.isUpdate()
+                && !request.isCreate();
     }
 
     private AuthenticationResponse manualProgressive(AuthenticationRequest authenticationRequest)
@@ -91,13 +106,15 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
         }
         try {
             // TODO auth: remove the cast
-            return ((ProgressiveAuthenticator)manualAuthenticator).authenticate(authenticationRequest);
+            return ((ProgressiveAuthenticator) manualAuthenticator)
+                    .authenticate(authenticationRequest);
         } finally {
             authenticationRequest.getCredentials().setType(CredentialsTypes.PASSWORD);
         }
     }
 
-    private void manual(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    private void manual(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         if (!request.isManual()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
@@ -110,7 +127,8 @@ public class AutoAuthenticationController implements TypedAuthenticator, Progres
         credentials.setType(CredentialsTypes.PASSWORD);
     }
 
-    private void auto(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    private void auto(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         try {
             autoAuthenticator.autoAuthenticate();
         } catch (SessionException autoException) {

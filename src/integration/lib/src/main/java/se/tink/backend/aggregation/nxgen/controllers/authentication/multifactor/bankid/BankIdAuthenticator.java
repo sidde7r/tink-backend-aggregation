@@ -9,6 +9,8 @@ import se.tink.backend.aggregation.agents.exceptions.BankServiceException;
 
 public interface BankIdAuthenticator<T> {
     T init(String ssn) throws BankIdException, BankServiceException, AuthorizationException;
+
     BankIdStatus collect(T reference) throws AuthenticationException, AuthorizationException;
+
     Optional<String> getAutostartToken();
 }

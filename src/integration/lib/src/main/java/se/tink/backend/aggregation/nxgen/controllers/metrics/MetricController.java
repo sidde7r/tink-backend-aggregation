@@ -11,17 +11,22 @@ public abstract class MetricController {
     final MetricId.MetricLabels defaultLabels;
     final Credentials credentials;
 
-    MetricController(MetricRegistry registry, Provider provider, Credentials credentials, boolean isManual,
+    MetricController(
+            MetricRegistry registry,
+            Provider provider,
+            Credentials credentials,
+            boolean isManual,
             CredentialsRequestType requestType) {
         this.registry = registry;
-        this.defaultLabels = new MetricId.MetricLabels()
-                .add("provider_type", provider.getMetricTypeName())
-                .add("provider", provider.getName())
-                .add("market", provider.getMarket())
-                .add("className", provider.getClassName())
-                .add("manual", String.valueOf(isManual))
-                .add("credential", credentials.getMetricTypeName())
-                .add("request_type", requestType.name());
+        this.defaultLabels =
+                new MetricId.MetricLabels()
+                        .add("provider_type", provider.getMetricTypeName())
+                        .add("provider", provider.getName())
+                        .add("market", provider.getMarket())
+                        .add("className", provider.getClassName())
+                        .add("manual", String.valueOf(isManual))
+                        .add("credential", credentials.getMetricTypeName())
+                        .add("request_type", requestType.name());
         this.credentials = credentials;
     }
 

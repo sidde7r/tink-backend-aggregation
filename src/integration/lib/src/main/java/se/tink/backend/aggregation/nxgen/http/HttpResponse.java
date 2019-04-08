@@ -38,11 +38,14 @@ public class HttpResponse {
      * 2. The context is accessed and read in TinkApacheHttpClient4Handler and copied to Jersey's response object.
      */
     public List<URI> getRedirects() {
-        Object o = internalResponse.getProperties().getOrDefault(DefaultRedirectStrategy.REDIRECT_LOCATIONS, null);
+        Object o =
+                internalResponse
+                        .getProperties()
+                        .getOrDefault(DefaultRedirectStrategy.REDIRECT_LOCATIONS, null);
         if (o == null || !(o instanceof RedirectLocations)) {
             return new ArrayList<>();
         }
-        return ((RedirectLocations)o).getAll();
+        return ((RedirectLocations) o).getAll();
     }
 
     /**
@@ -66,8 +69,8 @@ public class HttpResponse {
     /**
      * Checks if there is a body available.
      *
-     * reset() is called on getEntityInputStream() before check is done. This is because hasEntity()
-     * returns false when we receive "exceptions", i.e. http status >= 400 otherwise.
+     * <p>reset() is called on getEntityInputStream() before check is done. This is because
+     * hasEntity() returns false when we receive "exceptions", i.e. http status >= 400 otherwise.
      * Should IOException be thrown during reset(), false is returned.
      *
      * @return true if there is a body present in the response.
@@ -92,14 +95,12 @@ public class HttpResponse {
 
     /**
      * Get the body of the response.
-     * <p>
-     * If the body is not an instance of Closeable then the body
-     * input stream is closed.
+     *
+     * <p>If the body is not an instance of Closeable then the body input stream is closed.
      *
      * @param <T> the type of the response.
      * @param c the type of the body.
      * @return an instance of the type <code>c</code>.
-     *
      * @throws HttpClientException if there is an error processing the response.
      * @throws HttpResponseException if the response status is 204 (No Content).
      */

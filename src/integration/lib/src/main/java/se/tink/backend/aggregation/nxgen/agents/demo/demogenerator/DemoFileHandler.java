@@ -17,7 +17,8 @@ public class DemoFileHandler {
     private final Logger logger = LoggerFactory.getLogger(DemoFileHandler.class);
 
     public DemoFileHandler(String basePath) {
-        this.generatePurchaseBase = loadGenerationBase(basePath + File.separator + generationBaseFile);
+        this.generatePurchaseBase =
+                loadGenerationBase(basePath + File.separator + generationBaseFile);
     }
 
     public List<GeneratePurchaseBase> getGeneratePurchaseBase() {
@@ -28,13 +29,14 @@ public class DemoFileHandler {
         File generationConfig = new File(path);
 
         try {
-            return mapper.readValue(generationConfig, new TypeReference<List<GeneratePurchaseBase>>(){});
+            return mapper.readValue(
+                    generationConfig, new TypeReference<List<GeneratePurchaseBase>>() {});
         } catch (IOException e) {
-            logger.info("Could not read the demo data generation base file. Verify that '%s' is present", path);
+            logger.info(
+                    "Could not read the demo data generation base file. Verify that '%s' is present",
+                    path);
         }
 
         return Collections.emptyList();
     }
-
-
 }

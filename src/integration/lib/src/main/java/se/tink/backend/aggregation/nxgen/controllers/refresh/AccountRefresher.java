@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh;
 
 import com.google.common.collect.ImmutableList;
-import se.tink.backend.aggregation.agents.models.AccountFeatures;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.metrics.MetricId;
-
 import java.util.List;
 import java.util.Map;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.aggregation.agents.models.AccountFeatures;
+import se.tink.libraries.metrics.MetricId;
 
 public interface AccountRefresher extends Refresher {
     MetricId METRIC_ID = REFRESHER_METRIC_ID.label(METRIC_ITEM_TYPE, "accounts");

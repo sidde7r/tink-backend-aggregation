@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 import java.util.List;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.models.Portfolio;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Portfolio;
 
 public class InvestmentAccount extends Account {
     public static final ImmutableList<AccountTypes> ALLOWED_ACCOUNT_TYPES =
@@ -17,12 +17,14 @@ public class InvestmentAccount extends Account {
 
     private List<Portfolio> portfolios;
 
-    private InvestmentAccount(Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder) {
+    private InvestmentAccount(
+            Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder) {
         super(builder);
         this.portfolios = builder.getPortfolios();
     }
 
-    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(String uniqueIdentifier) {
+    public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
+            String uniqueIdentifier) {
         return new DefaultInvestmentAccountsBuilder(uniqueIdentifier);
     }
 
@@ -31,8 +33,7 @@ public class InvestmentAccount extends Account {
      */
     public static Builder<InvestmentAccount, DefaultInvestmentAccountsBuilder> builder(
             String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier)
-                .setBalance(balance);
+        return builder(uniqueIdentifier).setBalance(balance);
     }
 
     public List<Portfolio> getPortfolios() {
@@ -47,7 +48,7 @@ public class InvestmentAccount extends Account {
     }
 
     public abstract static class Builder<
-            A extends InvestmentAccount, T extends InvestmentAccount.Builder<A, T>>
+                    A extends InvestmentAccount, T extends InvestmentAccount.Builder<A, T>>
             extends Account.Builder<InvestmentAccount, Builder<A, T>> {
         private List<Portfolio> portfolios;
         private Amount cashBalance = null;
@@ -87,9 +88,7 @@ public class InvestmentAccount extends Account {
             }
         }
 
-        /**
-         * @deprecated Use {@link #setCashBalance(Amount)} instead
-         */
+        /** @deprecated Use {@link #setCashBalance(Amount)} instead */
         @Override
         @Deprecated
         public Builder<A, T> setBalance(Amount balance) {

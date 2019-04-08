@@ -31,8 +31,6 @@ public class JsonWebKeySet {
 
     @JsonIgnore
     public List<PublicKey> getAllKeys() {
-        return keys.stream()
-                .map(JsonWebKey::getPublicKey)
-                .collect(Collectors.toList());
+        return keys.stream().map(JsonWebKey::getPublicKey).collect(Collectors.toList());
     }
 }

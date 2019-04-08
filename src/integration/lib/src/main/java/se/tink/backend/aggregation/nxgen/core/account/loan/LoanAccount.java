@@ -20,8 +20,7 @@ public class LoanAccount extends Account {
     }
 
     public static Builder<?, ?> builder(String uniqueIdentifier, Amount balance) {
-        return builder(uniqueIdentifier)
-                .setBalance(balance);
+        return builder(uniqueIdentifier).setBalance(balance);
     }
 
     private static Amount ensureNegativeSign(Amount amount) {
@@ -94,8 +93,8 @@ public class LoanAccount extends Account {
             return this.details != null
                     ? this.details
                     : LoanDetails.builder(LoanDetails.Type.DERIVE_FROM_NAME)
-                    .setLoanNumber(getAccountNumber())
-                    .build();
+                            .setLoanNumber(getAccountNumber())
+                            .build();
         }
 
         public Builder<A, T> setDetails(LoanDetails details) {

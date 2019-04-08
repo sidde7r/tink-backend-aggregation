@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -13,8 +15,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.libraries.i18n.Catalog;
 
 public class KeyCardAuthenticationController implements MultiFactorAuthenticator {
@@ -27,16 +27,21 @@ public class KeyCardAuthenticationController implements MultiFactorAuthenticator
 
     private static final String KEYCARD_VALUE_FIELD_KEY = "keyCardValue";
 
-    public KeyCardAuthenticationController(Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper, KeyCardAuthenticator authenticator) {
+    public KeyCardAuthenticationController(
+            Catalog catalog,
+            SupplementalInformationHelper supplementalInformationHelper,
+            KeyCardAuthenticator authenticator) {
         this(catalog, supplementalInformationHelper, authenticator, DEFAULT_KEY_CARD_VALUE_LENGTH);
     }
 
-    public KeyCardAuthenticationController(Catalog catalog,
+    public KeyCardAuthenticationController(
+            Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
-            KeyCardAuthenticator authenticator, int keyCardValueLength) {
+            KeyCardAuthenticator authenticator,
+            int keyCardValueLength) {
         this.catalog = Preconditions.checkNotNull(catalog);
-        this.supplementalInformationHelper = Preconditions.checkNotNull(supplementalInformationHelper);
+        this.supplementalInformationHelper =
+                Preconditions.checkNotNull(supplementalInformationHelper);
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.keyCardValueLength = keyCardValueLength;
     }
@@ -48,9 +53,13 @@ public class KeyCardAuthenticationController implements MultiFactorAuthenticator
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
-        NotImplementedException.throwIf(!Objects.equals(credentials.getType(), getType()),
-                String.format("Authentication method not implemented for CredentialsType: %s", credentials.getType()));
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
+        NotImplementedException.throwIf(
+                !Objects.equals(credentials.getType(), getType()),
+                String.format(
+                        "Authentication method not implemented for CredentialsType: %s",
+                        credentials.getType()));
 
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
@@ -61,8 +70,9 @@ public class KeyCardAuthenticationController implements MultiFactorAuthenticator
 
         KeyCardInitValues keyCardInitValues = authenticator.init(username, password);
 
-        Map<String, String> supplementalInformation = supplementalInformationHelper
-                .askSupplementalInformation(getKeyCardIndexField(keyCardInitValues), getKeyCardValueField());
+        Map<String, String> supplementalInformation =
+                supplementalInformationHelper.askSupplementalInformation(
+                        getKeyCardIndexField(keyCardInitValues), getKeyCardValueField());
 
         authenticator.authenticate(supplementalInformation.get(KEYCARD_VALUE_FIELD_KEY));
     }

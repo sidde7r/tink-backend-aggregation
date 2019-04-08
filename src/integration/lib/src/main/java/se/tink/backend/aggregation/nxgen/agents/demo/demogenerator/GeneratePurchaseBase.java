@@ -22,6 +22,5 @@ public class GeneratePurchaseBase {
         this.itemPrices = itemPrices;
     }
 
-    public GeneratePurchaseBase() {
-    }
+    public GeneratePurchaseBase() {}
 }

@@ -7,6 +7,15 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -24,16 +33,6 @@ import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.libraries.strings.StringUtils;
 import se.tink.libraries.user.rpc.User;
-
-import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 public abstract class Account {
     private static final Logger logger = LoggerFactory.getLogger(Account.class);

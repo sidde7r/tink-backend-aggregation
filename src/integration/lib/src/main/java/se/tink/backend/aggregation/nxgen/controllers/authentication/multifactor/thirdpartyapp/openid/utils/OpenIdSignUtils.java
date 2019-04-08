@@ -16,20 +16,22 @@ public class OpenIdSignUtils {
     public static Algorithm getSignatureAlgorithm(String privateKey64, String algorithm) {
 
         switch (algorithm) {
-        case RS256:
-            return Algorithm.RSA256(null, getPrivateKey(privateKey64, algorithm));
-        default:
-            throw new IllegalStateException(String.format("Algorithm %s not supported", algorithm));
+            case RS256:
+                return Algorithm.RSA256(null, getPrivateKey(privateKey64, algorithm));
+            default:
+                throw new IllegalStateException(
+                        String.format("Algorithm %s not supported", algorithm));
         }
     }
 
     public static RSAPrivateKey getPrivateKey(String key64, String algorithm) {
 
         switch (algorithm) {
-        case RS256:
-            return RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(key64));
-        default:
-            throw new IllegalStateException(String.format("Algorithm %s not supported", algorithm));
+            case RS256:
+                return RSA.getPrivateKeyFromBytes(EncodingUtils.decodeBase64String(key64));
+            default:
+                throw new IllegalStateException(
+                        String.format("Algorithm %s not supported", algorithm));
         }
     }
 }

@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer;
 
 import com.google.common.base.Preconditions;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferControllerNxgen;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.nxgen.BankTransferExecutorNxgen;
@@ -10,24 +11,28 @@ import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-import java.util.Optional;
-
 public class TransferController {
     private final PaymentExecutor paymentExecutor;
     private final BankTransferExecutor bankTransferExecutor;
     private final ApproveEInvoiceExecutor approveEInvoiceExecutor;
     private final UpdatePaymentExecutor updatePaymentExecutor;
 
-    public TransferController(PaymentExecutor paymentExecutor, BankTransferExecutor bankTransferExecutor,
-            ApproveEInvoiceExecutor approveEInvoiceExecutor, UpdatePaymentExecutor updatePaymentExecutor) {
+    public TransferController(
+            PaymentExecutor paymentExecutor,
+            BankTransferExecutor bankTransferExecutor,
+            ApproveEInvoiceExecutor approveEInvoiceExecutor,
+            UpdatePaymentExecutor updatePaymentExecutor) {
         this.paymentExecutor = paymentExecutor;
         this.bankTransferExecutor = bankTransferExecutor;
         this.approveEInvoiceExecutor = approveEInvoiceExecutor;
         this.updatePaymentExecutor = updatePaymentExecutor;
     }
 
-    public TransferController(PaymentExecutor paymentExecutor, BankTransferExecutorNxgen bankTransferExecutor,
-            ApproveEInvoiceExecutor approveEInvoiceExecutor, UpdatePaymentExecutor updatePaymentExecutor) {
+    public TransferController(
+            PaymentExecutor paymentExecutor,
+            BankTransferExecutorNxgen bankTransferExecutor,
+            ApproveEInvoiceExecutor approveEInvoiceExecutor,
+            UpdatePaymentExecutor updatePaymentExecutor) {
         this.paymentExecutor = paymentExecutor;
         this.bankTransferExecutor = new BankTransferControllerNxgen(bankTransferExecutor);
         this.approveEInvoiceExecutor = approveEInvoiceExecutor;
@@ -38,13 +43,13 @@ public class TransferController {
         Preconditions.checkNotNull(transfer);
 
         switch (transfer.getType()) {
-        case BANK_TRANSFER:
-            return executeBankTransfer(transfer);
-        case PAYMENT:
-            executePayment(transfer);
-            break;
-        default:
-            TransferExecutionException.throwIf(true);
+            case BANK_TRANSFER:
+                return executeBankTransfer(transfer);
+            case PAYMENT:
+                executePayment(transfer);
+                break;
+            default:
+                TransferExecutionException.throwIf(true);
         }
         return Optional.empty();
     }
@@ -53,14 +58,14 @@ public class TransferController {
         Preconditions.checkNotNull(transfer);
 
         switch (transfer.getType()) {
-        case EINVOICE:
-            approveEInvoice(transfer);
-            break;
-        case PAYMENT:
-            updatePayment(transfer);
-            break;
-        default:
-            TransferExecutionException.throwIf(true);
+            case EINVOICE:
+                approveEInvoice(transfer);
+                break;
+            case PAYMENT:
+                updatePayment(transfer);
+                break;
+            default:
+                TransferExecutionException.throwIf(true);
         }
     }
 
@@ -68,7 +73,7 @@ public class TransferController {
         Preconditions.checkNotNull(bankTransferExecutor);
 
         if (transfer.getSource().is(AccountIdentifier.Type.BE)
-            || transfer.getSource().is(AccountIdentifier.Type.SEPA_EUR)) {
+                || transfer.getSource().is(AccountIdentifier.Type.SEPA_EUR)) {
             validateTransferMessageType(transfer);
         }
 
@@ -96,14 +101,20 @@ public class TransferController {
     private void validateTransferMessageType(Transfer transfer) {
         if (transfer.getMessageType() == null) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(TransferExecutionException.EndUserMessage.MISSING_MESSAGE_TYPE.getKey().get())
+                    .setEndUserMessage(
+                            TransferExecutionException.EndUserMessage.MISSING_MESSAGE_TYPE
+                                    .getKey()
+                                    .get())
                     .setMessage("Message type have to be set for transfers of this type")
                     .build();
         }
 
-        if (transfer.getMessageType() == MessageType.STRUCTURED &&
-                !StructuredMessageValidator.isValidOgmVcs(transfer.getDestinationMessage())) {
-            String errorMessage = TransferExecutionException.EndUserMessage.INVALID_STRUCTURED_MESSAGE.getKey().get();
+        if (transfer.getMessageType() == MessageType.STRUCTURED
+                && !StructuredMessageValidator.isValidOgmVcs(transfer.getDestinationMessage())) {
+            String errorMessage =
+                    TransferExecutionException.EndUserMessage.INVALID_STRUCTURED_MESSAGE
+                            .getKey()
+                            .get();
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setEndUserMessage(errorMessage)
                     .setMessage(errorMessage)

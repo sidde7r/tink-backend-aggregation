@@ -6,6 +6,7 @@ public interface AccountNumberStep<S> {
 
     /**
      * Sets the account number of the account.
+     *
      * @param accountNumber The account number
      * @return The next step of the builder
      */

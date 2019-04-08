@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 import java.util.List;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoCreditCardAccount;
 import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoInvestmentAccount;
@@ -28,20 +29,17 @@ import se.tink.backend.aggregation.nxgen.controllers.session.SessionHandler;
 import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     private final NextGenerationDemoAuthenticator authenticator;
-    //TODO Requires changes when multi-currency is implemented. Will do for now
+    // TODO Requires changes when multi-currency is implemented. Will do for now
     protected final String currency;
 
-    public NextGenerationDemoAgent(CredentialsRequest request,
-            AgentContext context,
-            SignatureKeyPair signatureKeyPair) {
+    public NextGenerationDemoAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         this.authenticator = new NextGenerationDemoAuthenticator(credentials);
         this.currency = request.getProvider().getCurrency();
-
     }
 
     @Override
@@ -57,44 +55,58 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        NextGenerationDemoTransactionFetcher transactionFetcher = new NextGenerationDemoTransactionFetcher(
-                request.getAccounts(),
-                currency,
-                catalog,
-                getTransactionalAccountAccounts(),
-                getDemoSavingsAccounts());
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        NextGenerationDemoTransactionFetcher transactionFetcher =
+                new NextGenerationDemoTransactionFetcher(
+                        request.getAccounts(),
+                        currency,
+                        catalog,
+                        getTransactionalAccountAccounts(),
+                        getDemoSavingsAccounts());
 
-        return Optional.of(new TransactionalAccountRefreshController(metricRefreshController, updateController,transactionFetcher,
-                new TransactionFetcherController<>(transactionPaginationHelper, transactionFetcher)));
+        return Optional.of(
+                new TransactionalAccountRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        transactionFetcher,
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper, transactionFetcher)));
     }
 
     @Override
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-        NextGenerationDemoCreditCardFetcher transactionAndAccountFetcher = new NextGenerationDemoCreditCardFetcher(
-                request.getAccounts(),
-                currency,
-                catalog,
-                getCreditCardAccounts());
+        NextGenerationDemoCreditCardFetcher transactionAndAccountFetcher =
+                new NextGenerationDemoCreditCardFetcher(
+                        request.getAccounts(), currency, catalog, getCreditCardAccounts());
 
         return Optional.of(
-                new CreditCardRefreshController(metricRefreshController, updateController,
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
                         transactionAndAccountFetcher,
-                        new TransactionFetcherController<>(transactionPaginationHelper, transactionAndAccountFetcher)));
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper, transactionAndAccountFetcher)));
     }
 
     @Override
     protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-        return Optional.of(new InvestmentRefreshController(metricRefreshController,
-                updateController,
-                new NextGenerationDemoInvestmentFetcher(currency, getInvestmentAccounts())));
+        return Optional.of(
+                new InvestmentRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NextGenerationDemoInvestmentFetcher(
+                                currency, getInvestmentAccounts())));
     }
 
     @Override
     protected Optional<LoanRefreshController> constructLoanRefreshController() {
-        return Optional.of(new LoanRefreshController(metricRefreshController,
-                updateController,
-                new NextGenerationDemoLoanFetcher(currency, catalog, getDemoLoanAccounts())));
+        return Optional.of(
+                new LoanRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new NextGenerationDemoLoanFetcher(
+                                currency, catalog, getDemoLoanAccounts())));
     }
 
     @Override
@@ -103,7 +115,8 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 
@@ -126,5 +139,4 @@ public abstract class NextGenerationDemoAgent extends NextGenerationAgent {
     public abstract DemoTransactionAccount getTransactionalAccountAccounts();
 
     public abstract List<DemoCreditCardAccount> getCreditCardAccounts();
-
 }

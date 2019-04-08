@@ -3,6 +3,7 @@ package se.tink.backend.aggregation.nxgen.agents.demo;
 import java.util.Objects;
 import java.util.Optional;
 import org.apache.commons.lang.RandomStringUtils;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -11,10 +12,11 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.bankid.BankIdAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
-import se.tink.backend.agents.rpc.Credentials;
 
-public class NextGenerationDemoAuthenticator implements BankIdAuthenticator<String>, PasswordAuthenticator {
-    private static final AggregationLogger log = new AggregationLogger(NextGenerationDemoAuthenticator.class);
+public class NextGenerationDemoAuthenticator
+        implements BankIdAuthenticator<String>, PasswordAuthenticator {
+    private static final AggregationLogger log =
+            new AggregationLogger(NextGenerationDemoAuthenticator.class);
     private final Credentials credentials;
 
     private int attempt = 0;
@@ -55,10 +57,13 @@ public class NextGenerationDemoAuthenticator implements BankIdAuthenticator<Stri
     }
 
     @Override
-    public void authenticate(String username, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         if (!Objects.equals(password, "demo")) {
-            log.error(String.format("Could not authenticate demo credentials (fields: %s)",
-                    credentials.getFieldsSerialized()));
+            log.error(
+                    String.format(
+                            "Could not authenticate demo credentials (fields: %s)",
+                            credentials.getFieldsSerialized()));
 
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
