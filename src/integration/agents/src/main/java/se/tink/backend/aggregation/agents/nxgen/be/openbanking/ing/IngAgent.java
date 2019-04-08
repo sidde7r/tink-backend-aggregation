@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Market;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.IngAuthenticator;
@@ -54,7 +55,10 @@ public final class IngAgent extends NextGenerationAgent {
                         .getIntegrations()
                         .getClientConfiguration(
                                 Market.INTEGRATION_NAME, Market.CLIENT_NAME, IngConfiguration.class)
-                        .orElseThrow(() -> new IllegalStateException("ING configuration missing."));
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
         client.setSslClientCertificate(
                 IngUtils.readFile(ingConfiguration.getClientKeyStorePath()),
