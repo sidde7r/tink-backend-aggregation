@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.configuration;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
@@ -16,11 +15,11 @@ public class BbvaConfiguration implements ClientConfiguration {
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(BbvaConfiguration.class);
 
-    @JsonProperty private String clientId;
-    @JsonProperty private String clientSecret;
-    @JsonProperty private String redirectUrl;
-    @JsonProperty private String baseAuthUrl;
-    @JsonProperty private String baseApiUrl;
+    private String clientId;
+    private String clientSecret;
+    private String redirectUrl;
+    private String baseAuthUrl;
+    private String baseApiUrl;
 
     public String getClientId() {
         Preconditions.checkNotNull(
