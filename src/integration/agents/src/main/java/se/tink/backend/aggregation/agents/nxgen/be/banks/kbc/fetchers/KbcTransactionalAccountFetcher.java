@@ -1,6 +1,11 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers;
 
 import com.google.common.collect.Lists;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
@@ -15,19 +20,15 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+public class KbcTransactionalAccountFetcher
+        implements AccountFetcher<TransactionalAccount>,
+                TransactionKeyPaginator<TransactionalAccount, String>,
+                UpcomingTransactionFetcher<TransactionalAccount> {
 
-public class KbcTransactionalAccountFetcher  implements AccountFetcher<TransactionalAccount>,
-        TransactionKeyPaginator<TransactionalAccount, String>, UpcomingTransactionFetcher<TransactionalAccount> {
-
-    private static final AggregationLogger LOGGER = new AggregationLogger(KbcTransactionalAccountFetcher.class);
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(KbcTransactionalAccountFetcher.class);
     private static final Set<AccountTypes> SAVINGS_OR_CHECKING =
-            Collections.unmodifiableSet(EnumSet.of(AccountTypes.CHECKING,
-                    AccountTypes.SAVINGS));
+            Collections.unmodifiableSet(EnumSet.of(AccountTypes.CHECKING, AccountTypes.SAVINGS));
 
     private final KbcApiClient apiClient;
     private String userLanguage;
@@ -43,15 +44,15 @@ public class KbcTransactionalAccountFetcher  implements AccountFetcher<Transacti
                 .filter(
                         agreement ->
                                 agreement.getAccountType().isPresent()
-                                        && SAVINGS_OR_CHECKING.contains(agreement
-                                        .getAccountType()
-                                        .get()))
+                                        && SAVINGS_OR_CHECKING.contains(
+                                                agreement.getAccountType().get()))
                 .map(AgreementDto::toTransactionalAccount)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public TransactionKeyPaginatorResponse<String> getTransactionsFor(TransactionalAccount account, String key) {
+    public TransactionKeyPaginatorResponse<String> getTransactionsFor(
+            TransactionalAccount account, String key) {
         try {
             return apiClient.fetchTransactions(account.getBankIdentifier(), key, userLanguage);
         } catch (IllegalStateException e) {
@@ -63,21 +64,30 @@ public class KbcTransactionalAccountFetcher  implements AccountFetcher<Transacti
     }
 
     private boolean noTransactionsFoundForLast12Months(IllegalStateException e) {
-        return e.getMessage() != null &&
-                (e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND)
-                || e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_NL)
-                || e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_FR)
-                || e.getMessage().toLowerCase().contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_DE)
-                );
+        return e.getMessage() != null
+                && (e.getMessage()
+                                .toLowerCase()
+                                .contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND)
+                        || e.getMessage()
+                                .toLowerCase()
+                                .contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_NL)
+                        || e.getMessage()
+                                .toLowerCase()
+                                .contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_FR)
+                        || e.getMessage()
+                                .toLowerCase()
+                                .contains(KbcConstants.ErrorMessage.NO_TRANSACTIONS_FOUND_DE));
     }
 
     @Override
-    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(TransactionalAccount account) {
+    public Collection<UpcomingTransaction> fetchUpcomingTransactionsFor(
+            TransactionalAccount account) {
         Collection<UpcomingTransaction> upcomingTransactions = Lists.newArrayList();
 
         String key = null;
         do {
-            FutureTransactionsResponse response = apiClient.fetchFutureTransactions(account.getBankIdentifier(), key);
+            FutureTransactionsResponse response =
+                    apiClient.fetchFutureTransactions(account.getBankIdentifier(), key);
             upcomingTransactions.addAll(response.getUpcomingTransactions());
             key = response.hasNext() ? response.nextKey() : null;
         } while (key != null);

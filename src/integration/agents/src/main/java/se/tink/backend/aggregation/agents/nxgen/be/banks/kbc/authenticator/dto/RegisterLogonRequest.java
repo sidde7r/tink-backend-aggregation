@@ -14,8 +14,14 @@ public class RegisterLogonRequest {
     private final TypeValuePair username;
     private final TypeValuePair ucrType;
 
-    private RegisterLogonRequest(TypeValuePair captcha, TypeValuePair response, TypeValuePair saveCardNumber,
-            TypeValuePair applicationId, TypeValuePair language, TypeValuePair company, TypeValuePair username,
+    private RegisterLogonRequest(
+            TypeValuePair captcha,
+            TypeValuePair response,
+            TypeValuePair saveCardNumber,
+            TypeValuePair applicationId,
+            TypeValuePair language,
+            TypeValuePair company,
+            TypeValuePair username,
             TypeValuePair ucrType) {
         this.captcha = captcha;
         this.response = response;
@@ -73,9 +79,7 @@ public class RegisterLogonRequest {
         private TypeValuePair username;
         private TypeValuePair ucrType;
 
-        private Builder() {
-
-        }
+        private Builder() {}
 
         public Builder captcha(String captcha) {
             this.captcha = TypeValuePair.createText(captcha);
@@ -83,7 +87,8 @@ public class RegisterLogonRequest {
         }
 
         public Builder response(String response) {
-            this.response = TypeValuePair.createText(response);;
+            this.response = TypeValuePair.createText(response);
+            ;
             return this;
         }
 
@@ -93,33 +98,45 @@ public class RegisterLogonRequest {
         }
 
         public Builder applicationId(String applicationId) {
-            this.applicationId = TypeValuePair.createText(applicationId);;
+            this.applicationId = TypeValuePair.createText(applicationId);
+            ;
             return this;
         }
 
         public Builder language(String language) {
-            this.language = TypeValuePair.createText(language);;
+            this.language = TypeValuePair.createText(language);
+            ;
             return this;
         }
 
         public Builder company(String company) {
-            this.company = TypeValuePair.createText(company);;
+            this.company = TypeValuePair.createText(company);
+            ;
             return this;
         }
 
         public Builder username(String username) {
-            this.username = TypeValuePair.createText(username);;
+            this.username = TypeValuePair.createText(username);
+            ;
             return this;
         }
 
         public Builder ucrType(String ucrType) {
-            this.ucrType = TypeValuePair.createText(ucrType);;
+            this.ucrType = TypeValuePair.createText(ucrType);
+            ;
             return this;
         }
 
         public RegisterLogonRequest build() {
-            return new RegisterLogonRequest(captcha, response, saveCardNumber, applicationId, language, company,
-                    username, ucrType);
+            return new RegisterLogonRequest(
+                    captcha,
+                    response,
+                    saveCardNumber,
+                    applicationId,
+                    language,
+                    company,
+                    username,
+                    ucrType);
         }
     }
 }

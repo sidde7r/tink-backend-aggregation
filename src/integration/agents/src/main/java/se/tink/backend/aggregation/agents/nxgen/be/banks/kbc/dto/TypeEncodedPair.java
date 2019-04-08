@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TypeEncodedPair {
     @JsonProperty("T")
     private String type;
+
     @JsonProperty("E")
     private String encoded;
 
@@ -21,8 +22,7 @@ public class TypeEncodedPair {
     }
 
     // Dummy constructor to satisfy Jackson
-    public TypeEncodedPair() {
-    }
+    public TypeEncodedPair() {}
 
     private TypeEncodedPair(String type, String encoded) {
         this.type = type;

@@ -40,8 +40,7 @@ public class FutureTransactionDto {
 
     private Date parseExecutionDate() {
         try {
-            return DateUtils.parseDate(
-                    executionDate.getValue(), "ddMMyyyy");
+            return DateUtils.parseDate(executionDate.getValue(), "ddMMyyyy");
         } catch (ParseException e) {
             throw new IllegalStateException(e);
         }
@@ -49,7 +48,8 @@ public class FutureTransactionDto {
 
     @JsonIgnore
     private RawDetails getRawDetails() {
-        if (descriptionLine02 == null || com.google.common.base.Strings.isNullOrEmpty(descriptionLine02.getValue())) {
+        if (descriptionLine02 == null
+                || com.google.common.base.Strings.isNullOrEmpty(descriptionLine02.getValue())) {
             return null;
         }
 

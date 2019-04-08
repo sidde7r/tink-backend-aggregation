@@ -15,9 +15,17 @@ public class ActivationInstanceRequest {
     private final TypeValuePair challenge;
     private final TypeValuePair clientInitialVector;
 
-    private ActivationInstanceRequest(TypeValuePair logonId, TypeValuePair applicationTypeCode, TypeValuePair companyNo,
-            TypeValuePair deviceCode, TypeValuePair encryptedServerNonce, TypeValuePair applicationId,
-            TypeValuePair language, TypeValuePair applicationVersionNo, TypeValuePair deviceId, TypeValuePair challenge,
+    private ActivationInstanceRequest(
+            TypeValuePair logonId,
+            TypeValuePair applicationTypeCode,
+            TypeValuePair companyNo,
+            TypeValuePair deviceCode,
+            TypeValuePair encryptedServerNonce,
+            TypeValuePair applicationId,
+            TypeValuePair language,
+            TypeValuePair applicationVersionNo,
+            TypeValuePair deviceId,
+            TypeValuePair challenge,
             TypeValuePair clientInitialVector) {
         this.logonId = logonId;
         this.applicationTypeCode = applicationTypeCode;
@@ -148,11 +156,19 @@ public class ActivationInstanceRequest {
             return this;
         }
 
-
         public ActivationInstanceRequest build() {
-            return new ActivationInstanceRequest(logonId, applicationTypeCode, companyNo, deviceCode,
-                    encryptedServerNonce, applicationId, language,
-                    applicationVersionNo, deviceId, challenge, clientInitialVector);
+            return new ActivationInstanceRequest(
+                    logonId,
+                    applicationTypeCode,
+                    companyNo,
+                    deviceCode,
+                    encryptedServerNonce,
+                    applicationId,
+                    language,
+                    applicationVersionNo,
+                    deviceId,
+                    challenge,
+                    clientInitialVector);
         }
     }
 }

@@ -13,8 +13,7 @@ public class SignRequest {
 
     public static SignRequest createWithSigningId(String signingId) {
         return new SignRequest(
-                SigningRequestHeaderDto.create(
-                        TypeEncodedPair.createHidden(signingId)));
+                SigningRequestHeaderDto.create(TypeEncodedPair.createHidden(signingId)));
     }
 
     public SigningRequestHeaderDto getHeader() {

@@ -101,20 +101,17 @@ public class ChallengeSotpRequest {
         private TypeValuePair companyNo;
         private TypeValuePair applicationVersionNo;
 
-        public Builder setDeviceName(
-                String deviceName) {
+        public Builder setDeviceName(String deviceName) {
             this.deviceName = TypeValuePair.createText(deviceName);
             return this;
         }
 
-        public Builder setApplicationTypeCode(
-                String applicationTypeCode) {
+        public Builder setApplicationTypeCode(String applicationTypeCode) {
             this.applicationTypeCode = TypeValuePair.createText(applicationTypeCode);
             return this;
         }
 
-        public Builder setLogonId(
-                String logonId) {
+        public Builder setLogonId(String logonId) {
             this.logonId = TypeValuePair.createText(logonId);
             return this;
         }
@@ -124,20 +121,17 @@ public class ChallengeSotpRequest {
             return this;
         }
 
-        public Builder setOsVersionNo(
-                String osVersionNo) {
+        public Builder setOsVersionNo(String osVersionNo) {
             this.osVersionNo = TypeValuePair.createText(osVersionNo);
             return this;
         }
 
-        public Builder setDeviceId(
-                String deviceId) {
+        public Builder setDeviceId(String deviceId) {
             this.deviceId = TypeValuePair.createText(deviceId);
             return this;
         }
 
-        public Builder setFingerprint(
-                String fingerprint) {
+        public Builder setFingerprint(String fingerprint) {
             this.fingerprint = TypeValuePair.createText(fingerprint);
             return this;
         }
@@ -147,28 +141,34 @@ public class ChallengeSotpRequest {
             return this;
         }
 
-        public Builder setApplicationId(
-                String applicationId) {
+        public Builder setApplicationId(String applicationId) {
             this.applicationId = TypeValuePair.createText(applicationId);
             return this;
         }
 
-        public Builder setCompanyNo(
-                String companyNo) {
+        public Builder setCompanyNo(String companyNo) {
             this.companyNo = TypeValuePair.createText(companyNo);
             return this;
         }
 
-        public Builder setApplicationVersionNo(
-                String applicationVersionNo) {
+        public Builder setApplicationVersionNo(String applicationVersionNo) {
             this.applicationVersionNo = TypeValuePair.createText(applicationVersionNo);
             return this;
         }
 
         public ChallengeSotpRequest build() {
-            return new ChallengeSotpRequest(deviceName, applicationTypeCode, logonId,
-                    language, osVersionNo, deviceId,
-                    fingerprint, osType, applicationId, companyNo, applicationVersionNo);
+            return new ChallengeSotpRequest(
+                    deviceName,
+                    applicationTypeCode,
+                    logonId,
+                    language,
+                    osVersionNo,
+                    deviceId,
+                    fingerprint,
+                    osType,
+                    applicationId,
+                    companyNo,
+                    applicationVersionNo);
         }
     }
 }

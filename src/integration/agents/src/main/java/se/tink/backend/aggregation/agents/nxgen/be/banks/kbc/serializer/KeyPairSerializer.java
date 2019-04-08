@@ -10,7 +10,8 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 public class KeyPairSerializer extends JsonSerializer<KeyPair> {
 
     @Override
-    public void serialize(KeyPair keyPair, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+    public void serialize(
+            KeyPair keyPair, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
             throws IOException {
         String serializedKeyPair = SerializationUtils.serializeKeyPair(keyPair);
         jsonGenerator.writeRawValue(serializedKeyPair);

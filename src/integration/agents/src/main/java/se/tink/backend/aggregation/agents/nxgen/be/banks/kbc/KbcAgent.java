@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.util.Locale;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.authenticator.KbcAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.executor.KbcBankTransferExecutor;
@@ -25,17 +27,13 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.Locale;
-import java.util.Optional;
-
-
-
 public class KbcAgent extends NextGenerationAgent {
     private final KbcApiClient apiClient;
     private final String kbcLanguage;
     private KbcHttpFilter httpFilter;
 
-    public KbcAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public KbcAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
         kbcLanguage = getKbcLanguage(request.getUser().getLocale());
         this.apiClient = KbcApiClient.create(sessionStorage, client);
@@ -50,16 +48,17 @@ public class KbcAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        KbcAuthenticator authenticator = new KbcAuthenticator(
-                persistentStorage,
-                apiClient,
-                supplementalInformationHelper);
-        return new AutoAuthenticationController(request, systemUpdater, authenticator, authenticator);
+        KbcAuthenticator authenticator =
+                new KbcAuthenticator(persistentStorage, apiClient, supplementalInformationHelper);
+        return new AutoAuthenticationController(
+                request, systemUpdater, authenticator, authenticator);
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
-        KbcTransactionalAccountFetcher accountFetcher = new KbcTransactionalAccountFetcher(apiClient, kbcLanguage);
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        KbcTransactionalAccountFetcher accountFetcher =
+                new KbcTransactionalAccountFetcher(apiClient, kbcLanguage);
         return Optional.of(
                 new TransactionalAccountRefreshController(
                         metricRefreshController,
@@ -75,8 +74,11 @@ public class KbcAgent extends NextGenerationAgent {
     protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
         KbcCreditCardFetcher creditCardFetcher = new KbcCreditCardFetcher(apiClient);
         return Optional.of(
-                new CreditCardRefreshController(metricRefreshController, updateController,
-                        creditCardFetcher, creditCardFetcher));
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        creditCardFetcher,
+                        creditCardFetcher));
     }
 
     @Override
@@ -95,9 +97,12 @@ public class KbcAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
-        return Optional.of(new TransferDestinationRefreshController(metricRefreshController,
-                new KbcTransferDestinationFetcher(apiClient, kbcLanguage)));
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
+        return Optional.of(
+                new TransferDestinationRefreshController(
+                        metricRefreshController,
+                        new KbcTransferDestinationFetcher(apiClient, kbcLanguage)));
     }
 
     @Override
@@ -135,5 +140,4 @@ public class KbcAgent extends NextGenerationAgent {
         }
         return Locale.ENGLISH.getLanguage();
     }
-
 }

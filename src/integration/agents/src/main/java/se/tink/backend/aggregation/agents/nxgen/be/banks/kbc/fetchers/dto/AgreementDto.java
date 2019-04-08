@@ -1,25 +1,24 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.fetchers.dto;
 
+import java.beans.Transient;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 import org.assertj.core.util.Strings;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.KbcConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeEncValueTuple;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.TypeValuePair;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
-import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.beans.Transient;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
 
 @JsonObject
 public class AgreementDto implements GeneralAccountEntity {
@@ -195,7 +194,8 @@ public class AgreementDto implements GeneralAccountEntity {
                 KbcConstants.ACCOUNT_TYPE_MAPPER.translate(productTypeNr.getValue());
         if (!accountType.isPresent()) {
             if (!Strings.isNullOrEmpty(productType.getValue())
-                    && !Arrays.asList(KbcConstants.IGNORED_ACCOUNT_TYPES).contains(productTypeNr.getValue()))
+                    && !Arrays.asList(KbcConstants.IGNORED_ACCOUNT_TYPES)
+                            .contains(productTypeNr.getValue()))
                 LOGGER.infoExtraLong(
                         "account: " + SerializationUtils.serializeToString(this),
                         KbcConstants.LogTags.ACCOUNTS);
@@ -216,7 +216,9 @@ public class AgreementDto implements GeneralAccountEntity {
     }
 
     private Collection<AccountFlag> getAccountFlags() {
-        return getIsBusinessAccount() ? Collections.singletonList(AccountFlag.BUSINESS) : Collections.emptyList();
+        return getIsBusinessAccount()
+                ? Collections.singletonList(AccountFlag.BUSINESS)
+                : Collections.emptyList();
     }
 
     private boolean getIsBusinessAccount() {
@@ -225,8 +227,8 @@ public class AgreementDto implements GeneralAccountEntity {
 
     @Override
     public AccountIdentifier generalGetAccountIdentifier() {
-        return AccountIdentifier.create(AccountIdentifier.Type.SEPA_EUR,
-                agreementNo.getValue(), agreementName.getValue());
+        return AccountIdentifier.create(
+                AccountIdentifier.Type.SEPA_EUR, agreementNo.getValue(), agreementName.getValue());
     }
 
     @Override

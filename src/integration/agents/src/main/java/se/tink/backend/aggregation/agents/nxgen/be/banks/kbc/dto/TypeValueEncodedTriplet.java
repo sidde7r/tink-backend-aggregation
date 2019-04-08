@@ -8,14 +8,15 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TypeValueEncodedTriplet {
     @JsonProperty("V")
     private String value;
+
     @JsonProperty("E")
     private String encoded;
+
     @JsonProperty("T")
     private String type;
 
     // Dummy constructor to satisfy Jackson
-    public TypeValueEncodedTriplet() {
-    }
+    public TypeValueEncodedTriplet() {}
 
     @JsonIgnore
     private TypeValueEncodedTriplet(String value, String encoded, String type) {

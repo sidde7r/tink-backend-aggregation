@@ -12,8 +12,7 @@ public class EnrollDeviceRoundTwoRequest {
 
     public static EnrollDeviceRoundTwoRequest create(String signingId) {
         return new EnrollDeviceRoundTwoRequest(
-                SigningRequestHeaderDto.create(
-                        TypeEncodedPair.createHidden(signingId)));
+                SigningRequestHeaderDto.create(TypeEncodedPair.createHidden(signingId)));
     }
 
     public SigningRequestHeaderDto getHeader() {

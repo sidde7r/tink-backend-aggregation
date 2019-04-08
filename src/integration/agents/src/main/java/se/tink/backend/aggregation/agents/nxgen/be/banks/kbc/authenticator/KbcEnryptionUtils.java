@@ -17,44 +17,55 @@ public class KbcEnryptionUtils {
                 KbcConstants.Encryption.AES_KEY_LENGTH);
     }
 
-    static byte[] decryptServerPublicKey(byte[] aesKey0, ActivationLicenseResponse activationLicenseResponse) {
+    static byte[] decryptServerPublicKey(
+            byte[] aesKey0, ActivationLicenseResponse activationLicenseResponse) {
         byte[] initialVectorSession =
-                EncodingUtils.decodeHexString(activationLicenseResponse.getInitialVectorSession().getValue());
+                EncodingUtils.decodeHexString(
+                        activationLicenseResponse.getInitialVectorSession().getValue());
         byte[] encryptedServerPublicKey =
-                EncodingUtils.decodeHexString(activationLicenseResponse.getEncryptedServerPublicKey().getValue());
+                EncodingUtils.decodeHexString(
+                        activationLicenseResponse.getEncryptedServerPublicKey().getValue());
 
-        return AES.decryptCfbSegmentationSize8NoPadding(aesKey0, initialVectorSession, encryptedServerPublicKey);
+        return AES.decryptCfbSegmentationSize8NoPadding(
+                aesKey0, initialVectorSession, encryptedServerPublicKey);
     }
 
-    static byte[] decryptStaticVector(byte[] sharedSecret,
-            ActivationLicenseResponse activationLicenseResponse) {
+    static byte[] decryptStaticVector(
+            byte[] sharedSecret, ActivationLicenseResponse activationLicenseResponse) {
         byte[] initialVectorStaticVector =
-                EncodingUtils.decodeHexString(activationLicenseResponse.getInitialVectorStaticVector().getValue());
+                EncodingUtils.decodeHexString(
+                        activationLicenseResponse.getInitialVectorStaticVector().getValue());
         byte[] encryptedStaticVector =
-                EncodingUtils.decodeHexString(activationLicenseResponse.getStaticVector().getValue());
+                EncodingUtils.decodeHexString(
+                        activationLicenseResponse.getStaticVector().getValue());
 
         return AES.decryptCbc(sharedSecret, initialVectorStaticVector, encryptedStaticVector);
     }
 
-    static byte[] decryptDynamicVector(byte[] sharedSecret,
-            ActivationLicenseResponse activationLicenseResponse) {
+    static byte[] decryptDynamicVector(
+            byte[] sharedSecret, ActivationLicenseResponse activationLicenseResponse) {
         byte[] initialVectorData =
-                EncodingUtils.decodeHexString(activationLicenseResponse.getInitialVectorData().getValue());
+                EncodingUtils.decodeHexString(
+                        activationLicenseResponse.getInitialVectorData().getValue());
         byte[] encryptedData =
                 EncodingUtils.decodeHexString(activationLicenseResponse.getData().getValue());
 
         return AES.decryptCbc(sharedSecret, initialVectorData, encryptedData);
     }
 
-    static String decryptAndEncryptNonce(byte[] sharedSecret, byte[] iv,
-            ActivationLicenseResponse activationLicenseResponse) {
+    static String decryptAndEncryptNonce(
+            byte[] sharedSecret, byte[] iv, ActivationLicenseResponse activationLicenseResponse) {
         byte[] initialVectorSession =
-                EncodingUtils.decodeHexString(activationLicenseResponse.getInitialVectorSession().getValue());
+                EncodingUtils.decodeHexString(
+                        activationLicenseResponse.getInitialVectorSession().getValue());
         byte[] encryptedServerNonces =
-                EncodingUtils.decodeHexString(activationLicenseResponse.getEncryptedServerNonces().getValue());
+                EncodingUtils.decodeHexString(
+                        activationLicenseResponse.getEncryptedServerNonces().getValue());
 
-        byte[] serverNonces = AES.decryptCbc(sharedSecret, initialVectorSession, encryptedServerNonces);
-        byte[] encryptedNonce = AES.encryptCbc(sharedSecret, iv, Arrays.copyOfRange(serverNonces, 0, 4));
+        byte[] serverNonces =
+                AES.decryptCbc(sharedSecret, initialVectorSession, encryptedServerNonces);
+        byte[] encryptedNonce =
+                AES.encryptCbc(sharedSecret, iv, Arrays.copyOfRange(serverNonces, 0, 4));
 
         return EncodingUtils.encodeHexAsString(encryptedNonce).toUpperCase();
     }

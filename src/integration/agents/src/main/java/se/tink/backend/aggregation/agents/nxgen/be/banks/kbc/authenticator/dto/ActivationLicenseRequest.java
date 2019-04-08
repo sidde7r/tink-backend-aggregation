@@ -15,9 +15,16 @@ public class ActivationLicenseRequest {
     private final TypeValuePair deviceId;
     private final TypeValuePair clientInitialVector;
 
-    private ActivationLicenseRequest(TypeValuePair logonId, TypeValuePair applicationTypeCode, TypeValuePair companyNo,
-            TypeValuePair encryptedClientPublicKeyAndNonce, TypeValuePair applicationId, TypeValuePair language,
-            TypeValuePair applicationVersionNo, TypeValuePair deviceId, TypeValuePair clientInitialVector) {
+    private ActivationLicenseRequest(
+            TypeValuePair logonId,
+            TypeValuePair applicationTypeCode,
+            TypeValuePair companyNo,
+            TypeValuePair encryptedClientPublicKeyAndNonce,
+            TypeValuePair applicationId,
+            TypeValuePair language,
+            TypeValuePair applicationVersionNo,
+            TypeValuePair deviceId,
+            TypeValuePair clientInitialVector) {
         this.logonId = logonId;
         this.applicationTypeCode = applicationTypeCode;
         this.companyNo = companyNo;
@@ -96,7 +103,8 @@ public class ActivationLicenseRequest {
         }
 
         public Builder encryptedClientPublicKeyAndNonce(String encryptedClientPublicKeyAndNonce) {
-            this.encryptedClientPublicKeyAndNonce = TypeValuePair.createText(encryptedClientPublicKeyAndNonce);
+            this.encryptedClientPublicKeyAndNonce =
+                    TypeValuePair.createText(encryptedClientPublicKeyAndNonce);
             return this;
         }
 
@@ -126,8 +134,15 @@ public class ActivationLicenseRequest {
         }
 
         public ActivationLicenseRequest build() {
-            return new ActivationLicenseRequest(logonId, applicationTypeCode, companyNo,
-                    encryptedClientPublicKeyAndNonce, applicationId, language, applicationVersionNo, deviceId,
+            return new ActivationLicenseRequest(
+                    logonId,
+                    applicationTypeCode,
+                    companyNo,
+                    encryptedClientPublicKeyAndNonce,
+                    applicationId,
+                    language,
+                    applicationVersionNo,
+                    deviceId,
                     clientInitialVector);
         }
     }

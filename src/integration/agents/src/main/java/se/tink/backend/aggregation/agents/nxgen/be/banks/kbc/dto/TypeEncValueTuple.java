@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TypeEncValueTuple {
     @JsonProperty("T")
     private String type;
+
     @JsonProperty("E")
     private String enc;
+
     @JsonProperty("V")
     private String value;
 
@@ -23,5 +25,4 @@ public class TypeEncValueTuple {
     public String getValue() {
         return value;
     }
-
 }

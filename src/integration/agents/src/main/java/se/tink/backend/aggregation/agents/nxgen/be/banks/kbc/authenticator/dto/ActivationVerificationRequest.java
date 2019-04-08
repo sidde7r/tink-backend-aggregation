@@ -170,9 +170,19 @@ public class ActivationVerificationRequest {
         }
 
         public ActivationVerificationRequest build() {
-            return new ActivationVerificationRequest(logonId, applicationTypeCode, companyNo, applicationId,
-                    language, applicationVersionNo, deviceId,
-                    verificationMessage, activationMessage, osVersionNo, osType, fingerprint);
+            return new ActivationVerificationRequest(
+                    logonId,
+                    applicationTypeCode,
+                    companyNo,
+                    applicationId,
+                    language,
+                    applicationVersionNo,
+                    deviceId,
+                    verificationMessage,
+                    activationMessage,
+                    osVersionNo,
+                    osType,
+                    fingerprint);
         }
     }
 }
