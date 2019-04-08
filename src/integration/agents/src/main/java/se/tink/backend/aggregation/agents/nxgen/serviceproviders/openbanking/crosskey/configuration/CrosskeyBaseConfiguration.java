@@ -1,19 +1,13 @@
 package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 @JsonObject
 public class CrosskeyBaseConfiguration implements ClientConfiguration {
-
-    @JsonIgnore
-    private static final Logger logger = LoggerFactory.getLogger(CrosskeyBaseConfiguration.class);
 
     private String clientId;
     private String clientSecret;
