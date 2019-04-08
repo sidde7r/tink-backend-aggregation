@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq;
 
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.constants.CommonHeaders;
 import se.tink.backend.aggregation.nxgen.http.HeaderEnum;
 
 public class BunqConstants {
@@ -14,7 +15,7 @@ public class BunqConstants {
     }
 
     public enum Headers implements HeaderEnum {
-        USER_AGENT("User-Agent", "Tink (+https://www.tink.se/; noc@tink.se)"),
+        USER_AGENT("User-Agent", CommonHeaders.DEFAULT_USER_AGENT),
         LANGUAGE("X-Bunq-Language", "en_US"),
         REGION("X-Bunq-Region", "nl_NL"),
         REQUEST_ID("X-Bunq-Client-Request-Id", null),
