@@ -1,8 +1,12 @@
 package se.tink.backend.aggregation.nxgen.agents;
 
-import com.google.common.base.Strings;
 import java.security.Security;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import se.tink.backend.agents.rpc.Account;
@@ -14,7 +18,6 @@ import se.tink.backend.aggregation.agents.exceptions.payment.PaymentException;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.backend.aggregation.configuration.IntegrationsConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.constants.MarketCode;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.AuthenticationRequest;
@@ -127,38 +130,16 @@ public abstract class NextGenerationAgent extends SuperAbstractAgent
         configureHttpClient(client);
     }
 
-    protected void setMultiIpGateway(IntegrationsConfiguration integrationsConfiguration) {
-        if (Objects.isNull(integrationsConfiguration)) {
-            log.warn("Proxy-setup: integrationsConfiguration is null.");
-            return;
-        }
-
-        String proxyUri = integrationsConfiguration.getProxyUri();
-        if (Strings.isNullOrEmpty(proxyUri)) {
-            log.warn("Proxy-setup: proxyUri is null or empty.");
-            return;
-        }
-
-        // The username (userId) and password (credentialsId) are used as a key in the proxy
-        // to select the public IP address in the proxy.
-        // The values themselves does not matter, as long as the same credentialsId always
-        // is routed from the same public IP.
-        client.setProductionProxy(proxyUri, credentials.getUserId(), credentials.getId());
-        log.info("Proxy-setup: successfully attached proxy.");
-    }
-
     // TODO auth: remove the legacy login.
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
         getAuthenticator().authenticate(credentials);
-        log.info("NextGenerationAgent finished login"); // MIYAG-445
         return true;
     }
 
     @Override
     public AuthenticationResponse login(AuthenticationRequest request)
             throws AuthenticationException, AuthorizationException {
-        log.info("NextGenerationAgent entered progressive login"); // MIYAG-445
         request.setCredentials(credentials);
         return ((ProgressiveAuthenticator) getAuthenticator()).authenticate(request);
     }

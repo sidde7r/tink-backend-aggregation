@@ -12,6 +12,7 @@ import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -24,12 +25,15 @@ public abstract class AbstractAgent extends SuperAbstractAgent {
     protected final JerseyClientFactory clientFactory;
     protected final StatusUpdater statusUpdater;
     protected final FinancialDataCacher financialDataCacher;
+    protected final AggregationLogger log;
 
     protected AbstractAgent(CredentialsRequest request, AgentContext context) {
         super(request, context);
         this.statusUpdater = context;
         this.financialDataCacher = context;
         this.clientFactory = new JerseyClientFactory();
+
+        this.log = new AggregationLogger(getAgentClass());
     }
 
     /** Returns the certain date for this account (that is from when we know we have all data) */
