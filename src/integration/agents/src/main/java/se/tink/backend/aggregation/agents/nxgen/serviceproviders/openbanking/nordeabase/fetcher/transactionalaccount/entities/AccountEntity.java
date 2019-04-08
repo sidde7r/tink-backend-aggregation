@@ -13,7 +13,6 @@ import se.tink.libraries.amount.Amount;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @JsonObject
 public class AccountEntity {
