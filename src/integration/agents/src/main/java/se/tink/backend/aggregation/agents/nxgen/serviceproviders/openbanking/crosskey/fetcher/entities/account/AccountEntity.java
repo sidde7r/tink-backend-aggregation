@@ -2,14 +2,15 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 @JsonNaming(PropertyNamingStrategy.UpperCamelCaseStrategy.class)
 public class AccountEntity {
-
-    private List<AccountDetailsEntity> account;
+    private List<AccountDetailsEntity> accounts;
     private String accountId;
     private String accountSubType;
     private String accountType;
@@ -22,38 +23,26 @@ public class AccountEntity {
         return currency;
     }
 
-    public List<AccountDetailsEntity> getAccount() {
-        return account;
+    public List<AccountDetailsEntity> getAccounts() {
+        return accounts;
     }
 
     public String getAccountId() {
         return accountId;
     }
 
-//    public AccountDetailsEntity resolveUniqueIdentifier() {
-//        return getAccountDetails().isPresent() ?
-//            getAccountDetails().get() :
-//            null;
-//    }
-
-    public AccountDetailsEntity resolveAccountDetails() {
-        return
-            account.stream()
+    public Optional<AccountDetailsEntity> resolveAccountDetails() {
+        return Optional.ofNullable(accounts).orElse(Collections.emptyList()).stream()
                 .filter(AccountDetailsEntity::isIBAN)
-                .findFirst()
-                .orElseGet(() -> {
-                    return account.stream().findFirst().orElse(null);
-                });
+                .findFirst();
     }
 
     public boolean isCheckingAccount() {
-        return accountSubType.equalsIgnoreCase(
-            AccountSubtypeEntity.CURRENT_ACCOUNT.getKey());
+        return accountSubType.equalsIgnoreCase(AccountSubtypeEntity.CURRENT_ACCOUNT.getKey());
     }
 
     public boolean isCreditCardAccount() {
-        return accountSubType.equalsIgnoreCase(
-            AccountSubtypeEntity.CREDIT_CARD.getKey());
+        return accountSubType.equalsIgnoreCase(AccountSubtypeEntity.CREDIT_CARD.getKey());
     }
 
     public String getDescription() {

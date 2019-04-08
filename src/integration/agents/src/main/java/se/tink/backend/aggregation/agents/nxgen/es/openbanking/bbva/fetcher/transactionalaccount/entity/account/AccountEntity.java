@@ -33,13 +33,13 @@ public class AccountEntity {
 
     public TransactionalAccount ToTinkAccount() {
         return CheckingAccount.builder()
-            .setUniqueIdentifier(formats.getIban())
-            .setAccountNumber(number)
-            .setBalance(new Amount(currency ,balance))
-            .addAccountIdentifier(new IbanIdentifier(formats.getIban()))
-            .addAccountIdentifier(new TinkIdentifier(id))
-            .setApiIdentifier(id)
-            .setAlias(alias)
-            .build();
+                .setUniqueIdentifier(formats.getIban())
+                .setAccountNumber(number)
+                .setBalance(new Amount(currency, balance))
+                .setAlias(alias)
+                .addAccountIdentifier(new IbanIdentifier(formats.getIban()))
+                .addAccountIdentifier(new TinkIdentifier(id))
+                .setApiIdentifier(id)
+                .build();
     }
 }

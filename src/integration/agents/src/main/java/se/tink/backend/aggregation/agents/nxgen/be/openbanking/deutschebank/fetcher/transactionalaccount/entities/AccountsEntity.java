@@ -27,30 +27,32 @@ public class AccountsEntity {
 
     private TransactionalAccount toCheckingAccount(String owner) {
         return CheckingAccount.builder()
-            .setUniqueIdentifier(iban)
-            .setAccountNumber(iban)
-            .setBalance(new Amount(currencyCode, currentBalance))
-            .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, iban))
-            .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-            .addHolderName(owner)
-            .setProductName(productDescription)
-            .setApiIdentifier(iban)
-            .putInTemporaryStorage(DeutscheBankConstants.StorageKeys.ACCOUNT_ID, iban)
-            .build();
+                .setUniqueIdentifier(iban)
+                .setAccountNumber(iban)
+                .setBalance(new Amount(currencyCode, currentBalance))
+                .setAlias(iban)
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, iban))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addHolderName(owner)
+                .setProductName(productDescription)
+                .setApiIdentifier(iban)
+                .putInTemporaryStorage(DeutscheBankConstants.StorageKeys.ACCOUNT_ID, iban)
+                .build();
     }
 
     private TransactionalAccount toSavingAccount(String owner) {
         return SavingsAccount.builder()
-            .setUniqueIdentifier(iban)
-            .setAccountNumber(iban)
-            .setBalance(new Amount(currencyCode, currentBalance))
-            .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, iban))
-            .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-            .addHolderName(owner)
-            .setProductName(productDescription)
-            .setApiIdentifier(iban)
-            .putInTemporaryStorage(DeutscheBankConstants.StorageKeys.ACCOUNT_ID, iban)
-            .build();
+                .setUniqueIdentifier(iban)
+                .setAccountNumber(iban)
+                .setBalance(new Amount(currencyCode, currentBalance))
+                .setAlias(iban)
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.BE, iban))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addHolderName(owner)
+                .setProductName(productDescription)
+                .setApiIdentifier(iban)
+                .putInTemporaryStorage(DeutscheBankConstants.StorageKeys.ACCOUNT_ID, iban)
+                .build();
     }
 
     public boolean isCheckingAccount() {

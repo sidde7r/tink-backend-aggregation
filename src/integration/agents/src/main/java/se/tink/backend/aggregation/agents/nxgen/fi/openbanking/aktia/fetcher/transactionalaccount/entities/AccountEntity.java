@@ -45,9 +45,9 @@ public class AccountEntity {
                 .setUniqueIdentifier(iban)
                 .setAccountNumber(iban)
                 .setBalance(getAmount())
+                .setAlias(name)
                 .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
                 .addHolderName(getOwners())
-                .setAlias(name)
                 .setApiIdentifier(resourceId)
                 .build();
     }

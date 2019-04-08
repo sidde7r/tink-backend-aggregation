@@ -12,80 +12,80 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class AccountsEntity {
-  private String resourceId;
+    private String resourceId;
 
-  private String iban;
+    private String iban;
 
-  private String bban;
+    private String bban;
 
-  private String currency;
+    private String currency;
 
-  private OwnerNameEntity owner;
+    private OwnerNameEntity owner;
 
-  private String ownerName;
+    private String ownerName;
 
-  private List<BalancesEntity> balances;
+    private List<BalancesEntity> balances;
 
-  private String creditLine;
+    private String creditLine;
 
-  private String product;
+    private String product;
 
-  private String name;
+    private String name;
 
-  private String status;
+    private String status;
 
-  private String statusDate;
+    private String statusDate;
 
-  private String bic;
+    private String bic;
 
-  private String bicAddress;
+    private String bicAddress;
 
-  private String accountInterest;
+    private String accountInterest;
 
-  private boolean cardLinkedToTheAccount;
+    private boolean cardLinkedToTheAccount;
 
-  private boolean paymentService;
+    private boolean paymentService;
 
-  private String bankgiroNumber;
+    private String bankgiroNumber;
 
-  private OwnerNameEntity accountOwners;
+    private OwnerNameEntity accountOwners;
 
-  @JsonProperty("_links")
-  private LinksEntity links;
+    @JsonProperty("_links")
+    private LinksEntity links;
 
-  public TransactionalAccount toTinkAccount() {
-    return CheckingAccount.builder()
-        .setUniqueIdentifier(iban)
-        .setAccountNumber(bban)
-        .setBalance(getAvailableBalance())
-        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
-        .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
-        .addHolderName(getOwnerName())
-        .setAlias(getName())
-        .setApiIdentifier(bban)
-        .putInTemporaryStorage(SebConstants.StorageKeys.ACCOUNT_ID, resourceId)
-        .build();
-  }
+    public TransactionalAccount toTinkAccount() {
+        return CheckingAccount.builder()
+                .setUniqueIdentifier(iban)
+                .setAccountNumber(bban)
+                .setBalance(getAvailableBalance())
+                .setAlias(getName())
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.SE, bban))
+                .addAccountIdentifier(AccountIdentifier.create(AccountIdentifier.Type.IBAN, iban))
+                .addHolderName(getOwnerName())
+                .setApiIdentifier(bban)
+                .putInTemporaryStorage(SebConstants.StorageKeys.ACCOUNT_ID, resourceId)
+                .build();
+    }
 
-  public boolean isEnabled() {
-    return status.equalsIgnoreCase(SebConstants.Accounts.STATUS_ENABLED);
-  }
+    public boolean isEnabled() {
+        return status.equalsIgnoreCase(SebConstants.Accounts.STATUS_ENABLED);
+    }
 
-  private String getOwnerName() {
-    return Strings.isNullOrEmpty(ownerName) ? owner.getName() : ownerName;
-  }
+    private String getOwnerName() {
+        return Strings.isNullOrEmpty(ownerName) ? owner.getName() : ownerName;
+    }
 
-  private Amount getAvailableBalance() {
-    return balances != null
-        ? balances.stream()
-            .filter(BalancesEntity::isAvailableBalance)
-            .findFirst()
-            .orElse(new BalancesEntity())
-            .toAmount()
-        : BalancesEntity.Default;
-  }
+    private Amount getAvailableBalance() {
+        return balances != null
+                ? balances.stream()
+                        .filter(BalancesEntity::isAvailableBalance)
+                        .findFirst()
+                        .orElse(new BalancesEntity())
+                        .toAmount()
+                : BalancesEntity.Default;
+    }
 
-  private String getName() {
-    return Strings.isNullOrEmpty(name) ? bban : name;
-  }
+    private String getName() {
+        return Strings.isNullOrEmpty(name) ? bban : name;
+    }
 }
