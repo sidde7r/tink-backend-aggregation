@@ -10,7 +10,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
 
 import java.util.List;
-import java.util.Optional;
 
 @JsonObject
 public class AccountEntity {
@@ -27,20 +26,14 @@ public class AccountEntity {
     private String product;
     private String resourceId;
 
-    public TransactionalAccount toTinkAccount() {
-        Optional<AccountTypes> accountType = AktiaConstants.ACCOUNT_TYPE_MAPPER.translate(product);
-        if (!accountType.isPresent()) {
-            throw new IllegalStateException("Unknown account type.");
-        }
-
-        if (accountType.get().equals(AccountTypes.CHECKING)) {
-            return parseCheckingAccount();
-        }
-
-        throw new IllegalStateException("Unknown account type.");
+    public boolean isCheckingAccount() {
+        return AktiaConstants.ACCOUNT_TYPE_MAPPER
+                .translate(product)
+                .orElse(AccountTypes.OTHER)
+                .equals(AccountTypes.CHECKING);
     }
 
-    private TransactionalAccount parseCheckingAccount() {
+    public TransactionalAccount toTinkAccount() {
         return CheckingAccount.builder()
                 .setUniqueIdentifier(iban)
                 .setAccountNumber(iban)

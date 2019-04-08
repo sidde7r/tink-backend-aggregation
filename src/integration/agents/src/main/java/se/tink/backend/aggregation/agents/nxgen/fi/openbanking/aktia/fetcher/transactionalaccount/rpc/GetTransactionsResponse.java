@@ -17,7 +17,9 @@ public class GetTransactionsResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions.toTinkTransactions();
+        return Optional.ofNullable(transactions)
+                .orElse(new TransactionsEntity())
+                .toTinkTransactions();
     }
 
     @Override
