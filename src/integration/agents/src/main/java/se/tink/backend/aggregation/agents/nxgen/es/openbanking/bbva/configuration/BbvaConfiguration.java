@@ -2,13 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.configurati
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.api.client.util.Strings;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants;
+import se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva.BbvaConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
@@ -17,6 +15,7 @@ public class BbvaConfiguration implements ClientConfiguration {
 
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(BbvaConfiguration.class);
+
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
     @JsonProperty private String redirectUrl;
@@ -24,60 +23,46 @@ public class BbvaConfiguration implements ClientConfiguration {
     @JsonProperty private String baseApiUrl;
 
     public String getClientId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientId),
+                String.format(ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client ID"));
+
         return clientId;
     }
 
     public String getClientSecret() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSecret),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client Secret"));
+
         return clientSecret;
     }
 
     public String getRedirectUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Redirect URL"));
+
         return redirectUrl;
     }
 
     public String getBaseAuthUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseAuthUrl),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base Auth URL"));
+
         return baseAuthUrl;
     }
 
     public String getBaseApiUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseApiUrl),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base API URL"));
+
         return baseApiUrl;
-    }
-
-    public boolean isValid() {
-        if (!Strings.isNullOrEmpty(clientId)
-                && !Strings.isNullOrEmpty(clientSecret)
-                && !Strings.isNullOrEmpty(redirectUrl)
-                && !Strings.isNullOrEmpty(baseAuthUrl)
-                && !Strings.isNullOrEmpty(baseApiUrl)) {
-            return true;
-        } else {
-            final List<String> list = new ArrayList<>();
-
-            if (Strings.isNullOrEmpty(clientId)) {
-                list.add("clientId");
-            }
-
-            if (Strings.isNullOrEmpty(clientSecret)) {
-                list.add("clientSecret");
-            }
-
-            if (Strings.isNullOrEmpty(redirectUrl)) {
-                list.add("redirectUrl");
-            }
-
-            if (Strings.isNullOrEmpty(baseAuthUrl)) {
-                list.add("baseAuthUrl");
-            }
-
-            if (Strings.isNullOrEmpty(baseApiUrl)) {
-                list.add("baseApiUrl");
-            }
-
-            logger.error(
-                    BbvaConstants.Exceptions.MISSING_CONFIGURATION_LOG,
-                    BbvaConstants.LogTags.MISSING_CONFIGURATION,
-                    Arrays.toString(list.toArray()));
-            return false;
-        }
     }
 }

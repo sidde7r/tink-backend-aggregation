@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.es.openbanking.bbva;
 
 import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 
 public abstract class BbvaConstants {
@@ -61,15 +60,13 @@ public abstract class BbvaConstants {
 
     public static class FormValues {}
 
-    public static class LogTags {
-        public static final LogTag MISSING_CONFIGURATION = LogTag.from("BBVA_MISSING_CONFIG");
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL =
+                "Invalid Config: %s cannot be empty or null";
     }
 
     public static class Exceptions {
-        public static final String MISSING_CONFIGURATION_LOG =
-                " {} - Missing BBVA configuration: {}";
         public static final String MISSING_CONFIGURATION = "BBVA configuration missing.";
-        public static final String INVALID_CONFIGURATION = "BBVA configuration is invalid.";
         public static final String MISSING_TOKEN = "Cannot find token!";
     }
 

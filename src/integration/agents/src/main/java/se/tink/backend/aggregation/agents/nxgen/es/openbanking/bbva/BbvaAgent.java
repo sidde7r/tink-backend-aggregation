@@ -54,9 +54,6 @@ public final class BbvaAgent extends NextGenerationAgent {
                                 BbvaConfiguration.class)
                         .orElseThrow(
                                 () -> new IllegalStateException(Exceptions.MISSING_CONFIGURATION));
-        if (!bbvaConfiguration.isValid()) {
-            throw new IllegalStateException(Exceptions.INVALID_CONFIGURATION);
-        }
 
         persistentStorage.put(StorageKeys.BASE_AUTH_URL, bbvaConfiguration.getBaseAuthUrl());
         persistentStorage.put(StorageKeys.BASE_API_URL, bbvaConfiguration.getBaseApiUrl());
