@@ -9,14 +9,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Some of the objects here are not used by Aggregation at all, but are still needed until the Aggregation API has been
@@ -28,47 +25,9 @@ import java.util.Set;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Provider implements Cloneable {
     @SuppressWarnings("serial")
-    private static class CapabilityList extends ArrayList<Capability> {
-    }
-
-    @SuppressWarnings("serial")
     private static class FieldsList extends ArrayList<Field> {
     }
 
-    public Provider(String capabilitiesSerialized, String className,
-            CredentialsTypes credentialsType, String currency, String displayName, String email,
-            String fieldsSerialized, List<Field> supplementalFields, String groupDisplayName, String market,
-            boolean multiFactor, String name, String passwordHelpText, String payload, String phone, boolean popular,
-            double refreshFrequency, double refreshFrequencyFactor, ProviderStatuses status, boolean transactional,
-            ProviderTypes type, String url, String tutorialUrl, String displayDescription) {
-        this.capabilitiesSerialized = capabilitiesSerialized;
-        this.className = className;
-        this.credentialsType = credentialsType;
-        this.currency = currency;
-        this.displayName = displayName;
-        this.email = email;
-        this.fieldsSerialized = fieldsSerialized;
-        this.setSupplementalFields(supplementalFields);
-        this.groupDisplayName = groupDisplayName;
-        this.market = market;
-        this.multiFactor = multiFactor;
-        this.name = name;
-        this.passwordHelpText = passwordHelpText;
-        this.payload = payload;
-        this.phone = phone;
-        this.popular = popular;
-        this.refreshFrequency = refreshFrequency;
-        this.refreshFrequencyFactor = refreshFrequencyFactor;
-        this.status = status;
-        this.transactional = transactional;
-        this.type = type;
-        this.url = url;
-        this.tutorialUrl = tutorialUrl;
-        this.displayDescription = displayDescription;
-    }
-
-    // Capabilities of the providers - Format: ["TRANSFERS","MORTGAGE_AGGREGATION"]
-    private String capabilitiesSerialized;
     // Where in the aggregation structure the agent is placed - Format: banks.se.alandsbanken.AlandsBankenAgent
     private String className;
     private CredentialsTypes credentialsType;
@@ -76,50 +35,18 @@ public class Provider implements Cloneable {
     private String currency;
     // Name displayed in the app. I.e. Swedbank.
     private String displayName;
-    @Deprecated
-    private String email;
-
     @JsonProperty("fields")
     // See Field object (Aggregation).
     private String fieldsSerialized;
-
     // See Field object (Aggregation).
     private FieldsList supplementalFields;
-    // In the list of all providers this is where the provider will be put.
-    // I.e. All Swedbank agent is found under the group Swedbank.
-    private String groupDisplayName;
     private String market;
-    // True if this provider uses multifactor authentication - Mainly used on main for fraud stuff (ID koll)
-    private boolean multiFactor;
     private String name;
-    // Displayed in the view when adding a new credential.
-    private String passwordHelpText;
     // Used if we need anything special for this provider.
     // Like the service provider SDC where there is a four character number that gives part of the host URL.
     private String payload;
-    @Deprecated
-    private String phone;
-    // If true the provider will be displayed above the list of all providers.
-    private boolean popular;
-
-    @JsonIgnore
-    // How many times per day the provider is automatically refreshed
-    private double refreshFrequency;
-
-    @JsonIgnore
-    // 0 <= x <= 1 - The factor of the refreshFrequency (obviously...)
-    private double refreshFrequencyFactor;
-
     private ProviderStatuses status;
-    // True if the providers has transactions - I.e. False for CSN which only display the balance of the loan.
-    private boolean transactional;
     private ProviderTypes type;
-    @Deprecated
-    private String url;
-    // URL to tutorial how to add the specific credential
-    private String tutorialUrl;
-    // Displayed under the provider name in the app when adding a new credential.
-    private String displayDescription;
 
     public Provider() {
         setFields(Lists.newArrayList());
@@ -166,20 +93,6 @@ public class Provider implements Cloneable {
         return (field != null ? field.getDescription() : null);
     }
 
-    @JsonProperty("capabilities")
-    public Set<Capability> getCapabilities() {
-        if (Strings.isNullOrEmpty(capabilitiesSerialized)) {
-            return Sets.newHashSet();
-        }
-
-        return Sets.newConcurrentHashSet(
-                SerializationUtils.deserializeFromString(capabilitiesSerialized, CapabilityList.class));
-    }
-
-    public String getCapabilitiesSerialized() {
-        return capabilitiesSerialized;
-    }
-
     public String getClassName() {
         return className;
     }
@@ -194,14 +107,6 @@ public class Provider implements Cloneable {
 
     public String getDisplayName() {
         return displayName;
-    }
-
-    public String getDisplayDescription() {
-        return displayDescription;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     private Field getField(final String name) {
@@ -228,10 +133,6 @@ public class Provider implements Cloneable {
         return supplementalFields;
     }
 
-    public String getGroupDisplayName() {
-        return groupDisplayName;
-    }
-
     public String getMarket() {
         return market;
     }
@@ -246,10 +147,6 @@ public class Provider implements Cloneable {
         Field field = getField(Field.Key.PASSWORD);
 
         return (field != null ? field.getDescription() : null);
-    }
-
-    public String getPasswordHelpText() {
-        return passwordHelpText;
     }
 
     @Deprecated
@@ -280,28 +177,12 @@ public class Provider implements Cloneable {
         return payload;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public double getRefreshFrequency() {
-        return refreshFrequency;
-    }
-
-    public double getRefreshFrequencyFactor() {
-        return refreshFrequencyFactor;
-    }
-
     public ProviderStatuses getStatus() {
         return status;
     }
 
     public ProviderTypes getType() {
         return type;
-    }
-
-    public String getUrl() {
-        return url;
     }
 
     @Deprecated
@@ -337,31 +218,6 @@ public class Provider implements Cloneable {
         return result;
     }
 
-    public boolean isMultiFactor() {
-        return multiFactor;
-    }
-
-    public boolean isPopular() {
-        return popular;
-    }
-
-    public boolean isTransactional() {
-        return transactional;
-    }
-
-    @JsonProperty("capabilities")
-    public void setCapabilities(Set<Capability> capabilities) {
-        if (capabilities == null) {
-            this.capabilitiesSerialized = null;
-        }
-
-        this.capabilitiesSerialized = SerializationUtils.serializeToString(capabilities);
-    }
-
-    public void setCapabilitiesSerialized(String capabilitiesSerialized) {
-        this.capabilitiesSerialized = capabilitiesSerialized;
-    }
-
     public void setClassName(String className) {
         this.className = className;
     }
@@ -378,10 +234,6 @@ public class Provider implements Cloneable {
         this.displayName = displayName;
     }
 
-    public void setDisplayDescription(String displayDescription) {
-        this.displayDescription = displayDescription;
-    }
-
     public void setFields(List<Field> fields) {
         this.fieldsSerialized = SerializationUtils.serializeToString(fields);
     }
@@ -391,48 +243,20 @@ public class Provider implements Cloneable {
         supplementalFields.addAll(fields);
     }
 
-    public void setGroupDisplayName(String groupDisplayName) {
-        this.groupDisplayName = groupDisplayName;
-    }
-
     public void setMarket(String market) {
         this.market = market;
-    }
-
-    public void setMultiFactor(boolean multiFactor) {
-        this.multiFactor = multiFactor;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setPasswordHelpText(String passwordHelpText) {
-        this.passwordHelpText = passwordHelpText;
-    }
-
     public void setPayload(String payload) {
         this.payload = payload;
     }
 
-    public void setPopular(boolean popular) {
-        this.popular = popular;
-    }
-
-    public void setRefreshFrequency(double refreshFrequency) {
-        this.refreshFrequency = refreshFrequency;
-    }
-
-    public void setRefreshFrequencyFactor(double refreshFrequencyFactor) {
-        this.refreshFrequencyFactor = refreshFrequencyFactor;
-    }
-
     public void setStatus(ProviderStatuses status) {
         this.status = status;
-    }
-
-    public void setTransactional(boolean transactional) {
-        this.transactional = transactional;
     }
 
     public void setType(ProviderTypes type) {
@@ -442,14 +266,6 @@ public class Provider implements Cloneable {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(Provider.class).add("name", name).toString();
-    }
-
-    public String getTutorialUrl() {
-        return tutorialUrl;
-    }
-
-    public void setTutorialUrl(String tutorialUrl) {
-        this.tutorialUrl = tutorialUrl;
     }
 
     /**
