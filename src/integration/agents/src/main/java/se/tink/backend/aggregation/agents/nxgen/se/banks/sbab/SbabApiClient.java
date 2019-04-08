@@ -4,8 +4,8 @@ import java.util.Date;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.QueryKey;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.QueryKeys;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Uris;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.AccessTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.rpc.AccessTokenResponse;
@@ -42,7 +42,7 @@ public final class SbabApiClient {
 
     private Environment getEnvironment() {
         return persistentStorage
-                .get(StorageKey.ENVIRONMENT, Environment.class)
+                .get(StorageKeys.ENVIRONMENT, Environment.class)
                 .orElseThrow(
                         () ->
                                 new IllegalStateException(
@@ -64,17 +64,17 @@ public final class SbabApiClient {
 
         switch (environment) {
             case SANDBOX:
-                final String accessToken = sessionStorage.get(StorageKey.ACCESS_TOKEN);
+                final String accessToken = sessionStorage.get(StorageKeys.ACCESS_TOKEN);
                 token = OAuth2Token.createBearer(accessToken, null, 1600);
 
                 return createRequest(uri).addBearerToken(token);
             default:
-                final String username = persistentStorage.get(StorageKey.BASIC_AUTH_USERNAME);
-                final String password = persistentStorage.get(StorageKey.BASIC_AUTH_PASSWORD);
+                final String username = persistentStorage.get(StorageKeys.BASIC_AUTH_USERNAME);
+                final String password = persistentStorage.get(StorageKeys.BASIC_AUTH_PASSWORD);
 
                 token =
                         sessionStorage
-                                .get(StorageKey.OAUTH2_TOKEN, OAuth2Token.class)
+                                .get(StorageKeys.OAUTH2_TOKEN, OAuth2Token.class)
                                 .orElseThrow(
                                         () ->
                                                 new IllegalStateException(
@@ -134,8 +134,8 @@ public final class SbabApiClient {
         final String endDate = ThreadSafeDateFormat.FORMATTER_DAILY.format(toDate);
         final URL uri =
                 new URL(Uris.LIST_TRANSFERS(accountNumber))
-                        .queryParam(QueryKey.START_DATE, startDate)
-                        .queryParam(QueryKey.END_DATE, endDate);
+                        .queryParam(QueryKeys.START_DATE, startDate)
+                        .queryParam(QueryKeys.END_DATE, endDate);
 
         return createRequestInSession(uri.toString()).get(TransfersResponse.class);
     }

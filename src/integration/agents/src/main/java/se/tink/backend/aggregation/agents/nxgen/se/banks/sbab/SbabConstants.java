@@ -129,12 +129,12 @@ public abstract class SbabConstants {
 
     public static class LogTags {}
 
-    public static class QueryKey {
+    public static class QueryKeys {
         public static final String START_DATE = "startDate";
         public static final String END_DATE = "endDate";
     }
 
-    public static class StorageKey {
+    public static class StorageKeys {
         public static final String ENVIRONMENT = "environment";
         public static final String BASIC_AUTH_USERNAME = "basic_auth_username";
         public static final String BASIC_AUTH_PASSWORD = "basic_auth_password";

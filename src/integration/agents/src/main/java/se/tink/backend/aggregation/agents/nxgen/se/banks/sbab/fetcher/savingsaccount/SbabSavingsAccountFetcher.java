@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabApiClient;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.rpc.TransfersResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -41,7 +41,7 @@ public class SbabSavingsAccountFetcher
             TransactionalAccount account, Date fromDate, Date toDate) {
         final boolean shouldFetchMore =
                 persistentStorage
-                        .get(StorageKey.ENVIRONMENT, Environment.class)
+                        .get(StorageKeys.ENVIRONMENT, Environment.class)
                         // Only run once for sandbox because of no pagination
                         .map(env -> env != Environment.SANDBOX)
                         .orElseThrow(
