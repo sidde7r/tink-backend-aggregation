@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.DeutscheBankConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.authenticator.DeutscheBankAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.deutschebank.configuration.DeutscheBankConfiguration;
@@ -52,7 +53,7 @@ public final class DeutscheBankAgent extends NextGenerationAgent {
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(
-                                                "DeutscheBank configuration missing."));
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
         persistentStorage.put(StorageKeys.BASE_URL, deutscheBankConfiguration.getBaseUrl());
         persistentStorage.put(StorageKeys.CLIENT_ID, deutscheBankConfiguration.getClientId());
