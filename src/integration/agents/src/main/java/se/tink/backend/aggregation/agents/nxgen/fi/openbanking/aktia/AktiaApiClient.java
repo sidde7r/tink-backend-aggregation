@@ -51,7 +51,7 @@ public final class AktiaApiClient {
     }
 
     public List<TransactionalAccount> getAccounts() {
-        return createRequestInSession(new URL(AktiaConstants.Urls.GET_ACCOUNTS))
+        return createRequestInSession(AktiaConstants.Urls.GET_ACCOUNTS)
                 .queryParam(AktiaConstants.QueryKeys.WITH_BALANCE, AktiaConstants.QueryValues.TRUE)
                 .get(GetAccountsResponse.class)
                 .toTinkAccounts();
@@ -60,7 +60,7 @@ public final class AktiaApiClient {
     public PaginatorResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         return createRequestInSession(
-                        new URL(AktiaConstants.Urls.GET_TRANSACTIONS)
+                        AktiaConstants.Urls.GET_TRANSACTIONS
                                 .parameter(
                                         AktiaConstants.IdTags.ACCOUNT_ID,
                                         account.getApiIdentifier()))

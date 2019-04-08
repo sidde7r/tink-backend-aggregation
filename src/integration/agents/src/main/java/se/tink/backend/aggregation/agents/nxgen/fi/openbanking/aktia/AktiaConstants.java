@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.fi.openbanking.aktia;
 
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
+import se.tink.backend.aggregation.nxgen.http.URL;
 
 public final class AktiaConstants {
 
@@ -14,10 +15,15 @@ public final class AktiaConstants {
 
     public static class Urls {
         public static final String BASE_URL = "https://api.aktia.fi";
-        public static final String GET_ACCOUNTS =
-                BASE_URL + "/api/openbanking/sandbox/psd2/ais/v1/accounts";
+
+        public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
+        public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
+    }
+
+    public static class ApiService {
+        public static final String GET_ACCOUNTS = "/api/openbanking/sandbox/psd2/ais/v1/accounts";
         public static final String GET_TRANSACTIONS =
-                BASE_URL + "/api/openbanking/sandbox/psd2/ais/v1/accounts/{accountId}/transactions";
+                "/api/openbanking/sandbox/psd2/ais/v1/accounts/{accountId}/transactions";
     }
 
     public static class StorageKeys {
