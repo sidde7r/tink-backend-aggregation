@@ -39,7 +39,7 @@ public final class BecApiClient {
     }
 
     public List<TransactionalAccount> getAccounts() {
-        return createRequest(new URL(BecConstants.Urls.GET_ACCOUNTS))
+        return createRequest(BecConstants.Urls.GET_ACCOUNTS)
                 .queryParam(BecConstants.QueryKeys.WITH_BALANCE, BecConstants.QueryValues.TRUE)
                 .get(GetAccountsResponse.class)
                 .toTinkAccounts();
@@ -48,10 +48,8 @@ public final class BecApiClient {
     public PaginatorResponse getTransactions(
             TransactionalAccount account, Date fromDate, Date toDate) {
         return createRequest(
-                        new URL(BecConstants.Urls.GET_TRANSACTIONS)
-                                .parameter(
-                                        BecConstants.IdTags.ACCOUNT_ID, account.getApiIdentifier()))
-                .queryParam(BecConstants.QueryKeys.WITH_BALANCE, BecConstants.QueryValues.TRUE)
+                        BecConstants.Urls.GET_TRANSACTIONS.parameter(
+                                BecConstants.IdTags.ACCOUNT_ID, account.getApiIdentifier()))
                 .queryParam(BecConstants.QueryKeys.BOOKING_STATUS, BecConstants.QueryValues.BOTH)
                 .queryParam(
                         BecConstants.QueryKeys.DATE_FROM,

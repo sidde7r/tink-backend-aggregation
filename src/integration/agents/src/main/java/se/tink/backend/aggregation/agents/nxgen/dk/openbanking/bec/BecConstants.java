@@ -1,12 +1,20 @@
 package se.tink.backend.aggregation.agents.nxgen.dk.openbanking.bec;
 
+import se.tink.backend.aggregation.nxgen.http.URL;
+
 public abstract class BecConstants {
 
     public static class Urls {
         public static final String BASE_URL = "https://api.sandbox.openbanking.bec.dk";
-        public static final String GET_ACCOUNTS = BASE_URL + "/bg/openbanking/v1/accounts";
+
+        public static final URL GET_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
+        public static final URL GET_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
+    }
+
+    public static class ApiService {
+        public static final String GET_ACCOUNTS = "/bg/openbanking/v1/accounts";
         public static final String GET_TRANSACTIONS =
-                BASE_URL + "/bg/openbanking/v1/accounts/{accountId}/transactions";
+                "/bg/openbanking/v1/accounts/{accountId}/transactions";
     }
 
     public static class StorageKeys {
