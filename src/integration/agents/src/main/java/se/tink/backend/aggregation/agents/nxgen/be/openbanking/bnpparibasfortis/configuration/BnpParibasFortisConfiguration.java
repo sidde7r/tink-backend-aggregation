@@ -22,7 +22,7 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(clientId),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages
-                                .INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                                .INVALID_CONFIGURATION,
                         "Client ID"));
 
         return clientId;
@@ -33,7 +33,7 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(clientSecret),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages
-                                .INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                                .INVALID_CONFIGURATION,
                         "Client secret"));
 
         return clientSecret;
@@ -44,7 +44,7 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(redirectUri),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages
-                                .INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                                .INVALID_CONFIGURATION,
                         "Redirect URI"));
 
         return redirectUri;
@@ -55,7 +55,7 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(authBaseUrl),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages
-                                .INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                                .INVALID_CONFIGURATION,
                         "Auth Base URL"));
 
         return authBaseUrl;
@@ -66,7 +66,7 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(apiBaseUrl),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages
-                                .INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                                .INVALID_CONFIGURATION,
                         "API Base URL"));
 
         return apiBaseUrl;
@@ -77,7 +77,7 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(organisationId),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages
-                                .INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                                .INVALID_CONFIGURATION,
                         "Organisation ID"));
 
         return organisationId;
@@ -88,7 +88,7 @@ public class BnpParibasFortisConfiguration implements ClientConfiguration {
                 Strings.emptyToNull(openbankStetVersion),
                 String.format(
                         BnpParibasFortisConstants.ErrorMessages
-                                .INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                                .INVALID_CONFIGURATION,
                         "Openbank Stet Version"));
 
         return openbankStetVersion;
