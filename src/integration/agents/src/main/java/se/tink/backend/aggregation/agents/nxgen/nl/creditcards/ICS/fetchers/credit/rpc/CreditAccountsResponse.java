@@ -8,24 +8,24 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CreditAccountsResponse {
-  @JsonProperty("Data")
-  private AccountDataEntity data;
+    @JsonProperty("Data")
+    private AccountDataEntity data;
 
-  @JsonProperty("Links")
-  private LinksEntity links;
+    @JsonProperty("Links")
+    private LinksEntity links;
 
-  @JsonProperty("Meta")
-  private MetaEntity meta;
+    @JsonProperty("Meta")
+    private MetaEntity meta;
 
-  public AccountDataEntity getData() {
-    return data;
-  }
+    public AccountDataEntity getData() {
+        return data;
+    }
 
-  public LinksEntity getLinks() {
-    return links;
-  }
+    public LinksEntity getLinks() {
+        return links;
+    }
 
-  public MetaEntity getMeta() {
-    return meta;
-  }
+    public MetaEntity getMeta() {
+        return meta;
+    }
 }

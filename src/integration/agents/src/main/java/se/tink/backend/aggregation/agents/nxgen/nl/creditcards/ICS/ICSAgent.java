@@ -29,109 +29,110 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ICSAgent extends NextGenerationAgent {
 
-  private final ICSApiClient icsApiClient;
-  private final String clientName;
-  private final String redirectUri;
+    private final ICSApiClient icsApiClient;
+    private final String clientName;
+    private final String redirectUri;
 
-  public ICSAgent(
-      CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
-    super(request, context, signatureKeyPair);
-    clientName = request.getProvider().getPayload().split(" ")[0];
-    redirectUri = request.getProvider().getPayload().split(" ")[1];
-    icsApiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
-  }
+    public ICSAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+        super(request, context, signatureKeyPair);
+        clientName = request.getProvider().getPayload().split(" ")[0];
+        redirectUri = request.getProvider().getPayload().split(" ")[1];
+        icsApiClient = new ICSApiClient(client, sessionStorage, persistentStorage, redirectUri);
+    }
 
-  @Override
-  protected void configureHttpClient(TinkHttpClient client) {
-    client.disableSignatureRequestHeader();
-  }
+    @Override
+    protected void configureHttpClient(TinkHttpClient client) {
+        client.disableSignatureRequestHeader();
+    }
 
-  @Override
-  public void setConfiguration(AgentsServiceConfiguration configuration) {
-    super.setConfiguration(configuration);
+    @Override
+    public void setConfiguration(AgentsServiceConfiguration configuration) {
+        super.setConfiguration(configuration);
 
-    ICSConfiguration icsConfiguration =
-            configuration
-                    .getIntegrations()
-                    .getClientConfiguration(ICSConstants.INTEGRATION_NAME, clientName, ICSConfiguration.class)
-                    .orElseThrow(
-                            () ->
-                                    new IllegalStateException(
-                                            String.format(
-                                                    "No ICS client configured for name: %s",
-                                                    clientName)));
+        ICSConfiguration icsConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                ICSConstants.INTEGRATION_NAME, clientName, ICSConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                String.format(
+                                                        "No ICS client configured for name: %s",
+                                                        clientName)));
 
-    client.setSslClientCertificate(
-        EncodingUtils.decodeBase64String(icsConfiguration.getClientSSLCertificate()), "");
-    client.trustRootCaCertificate(
-        EncodingUtils.decodeBase64String(icsConfiguration.getRootCACertificate()),
-        icsConfiguration.getRootCAPassword());
+        client.setSslClientCertificate(
+                EncodingUtils.decodeBase64String(icsConfiguration.getClientSSLCertificate()), "");
+        client.trustRootCaCertificate(
+                EncodingUtils.decodeBase64String(icsConfiguration.getRootCACertificate()),
+                icsConfiguration.getRootCAPassword());
 
-    persistentStorage.put(ICSConstants.Storage.ICS_CONFIGURATION, icsConfiguration);
-  }
+        persistentStorage.put(ICSConstants.Storage.ICS_CONFIGURATION, icsConfiguration);
+    }
 
-  @Override
-  protected Authenticator constructAuthenticator() {
-    ICSOAuthAuthenticator authenticator = new ICSOAuthAuthenticator(icsApiClient);
-    OAuth2AuthenticationController oAuth2AuthenticationController =
-        new OAuth2AuthenticationController(
-            persistentStorage, supplementalInformationHelper, authenticator);
-    return new AutoAuthenticationController(
-        request,
-        systemUpdater,
-        new ThirdPartyAppAuthenticationController<>(
-            oAuth2AuthenticationController, supplementalInformationHelper),
-        oAuth2AuthenticationController);
-  }
+    @Override
+    protected Authenticator constructAuthenticator() {
+        ICSOAuthAuthenticator authenticator = new ICSOAuthAuthenticator(icsApiClient);
+        OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
+                        persistentStorage, supplementalInformationHelper, authenticator);
+        return new AutoAuthenticationController(
+                request,
+                systemUpdater,
+                new ThirdPartyAppAuthenticationController<>(
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
+    }
 
-  @Override
-  protected Optional<TransactionalAccountRefreshController>
-      constructTransactionalAccountRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
-    return Optional.of(
-        new CreditCardRefreshController(
-            metricRefreshController,
-            updateController,
-            new ICSAccountFetcher(icsApiClient),
-            new TransactionFetcherController<>(
-                transactionPaginationHelper,
-                new TransactionPagePaginationController<>(
-                    new ICSCreditCardFetcher(icsApiClient), 0),
-                null)));
-  }
+    @Override
+    protected Optional<CreditCardRefreshController> constructCreditCardRefreshController() {
+        return Optional.of(
+                new CreditCardRefreshController(
+                        metricRefreshController,
+                        updateController,
+                        new ICSAccountFetcher(icsApiClient),
+                        new TransactionFetcherController<>(
+                                transactionPaginationHelper,
+                                new TransactionPagePaginationController<>(
+                                        new ICSCreditCardFetcher(icsApiClient), 0),
+                                null)));
+    }
 
-  @Override
-  protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<InvestmentRefreshController> constructInvestmentRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected Optional<LoanRefreshController> constructLoanRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<LoanRefreshController> constructLoanRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<EInvoiceRefreshController> constructEInvoiceRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected Optional<TransferDestinationRefreshController>
-      constructTransferDestinationRefreshController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
+        return Optional.empty();
+    }
 
-  @Override
-  protected SessionHandler constructSessionHandler() {
-    return new ICSSessionHandler();
-  }
+    @Override
+    protected SessionHandler constructSessionHandler() {
+        return new ICSSessionHandler();
+    }
 
-  @Override
-  protected Optional<TransferController> constructTransferController() {
-    return Optional.empty();
-  }
+    @Override
+    protected Optional<TransferController> constructTransferController() {
+        return Optional.empty();
+    }
 }

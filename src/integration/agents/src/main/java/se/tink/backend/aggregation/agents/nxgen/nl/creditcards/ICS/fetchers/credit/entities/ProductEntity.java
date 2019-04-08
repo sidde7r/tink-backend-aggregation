@@ -5,17 +5,17 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class ProductEntity {
-  @JsonProperty("ProductName")
-  private String productName;
+    @JsonProperty("ProductName")
+    private String productName;
 
-  @JsonProperty("ProductImage")
-  private String productImage;
+    @JsonProperty("ProductImage")
+    private String productImage;
 
-  public String getProductName() {
-    return productName;
-  }
+    public String getProductName() {
+        return productName;
+    }
 
-  public String getProductImage() {
-    return productImage;
-  }
+    public String getProductImage() {
+        return productImage;
+    }
 }
