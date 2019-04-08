@@ -13,11 +13,6 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Some of the objects here are not used by Aggregation at all, but are still needed until the Aggregation API has been
- * reworked. This is because users of the Aggregation API currently expects to get the same data back as it sends away
- * in the "enrichment" process.
- */
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
