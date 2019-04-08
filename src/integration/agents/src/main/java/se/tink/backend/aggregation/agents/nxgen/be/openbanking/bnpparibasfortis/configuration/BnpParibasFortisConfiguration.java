@@ -1,6 +1,5 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.configuration;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.bnpparibasfortis.BnpParibasFortisConstants;
@@ -10,13 +9,13 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 @JsonObject
 public class BnpParibasFortisConfiguration implements ClientConfiguration {
 
-    @JsonProperty private String clientId;
-    @JsonProperty private String clientSecret;
-    @JsonProperty private String redirectUri;
-    @JsonProperty private String authBaseUrl;
-    @JsonProperty private String apiBaseUrl;
-    @JsonProperty private String organisationId;
-    @JsonProperty private String openbankStetVersion;
+    private String clientId;
+    private String clientSecret;
+    private String redirectUri;
+    private String authBaseUrl;
+    private String apiBaseUrl;
+    private String organisationId;
+    private String openbankStetVersion;
 
     public String getClientId() {
         Preconditions.checkNotNull(
