@@ -15,8 +15,7 @@ public class SignBeneficiaryRequest extends BelfiusRequest {
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
                                         BelfiusConstants.Widget.UPGRADE_BENEFICIARIES),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.BENEFICIARY_SIGNATURE,
-                                        challenge)))
+                                        BelfiusConstants.Widget.BENEFICIARY_SIGNATURE, challenge)))
                 .setTransactionId(BelfiusSecurityUtils.generateBeneficiaryId());
     }
 }

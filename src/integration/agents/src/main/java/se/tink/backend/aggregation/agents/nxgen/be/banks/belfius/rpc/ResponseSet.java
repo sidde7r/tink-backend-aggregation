@@ -14,13 +14,26 @@ public class ResponseSet {
     private int requestCounter;
     private String applicationId;
 
-    @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include= JsonTypeInfo.As.WRAPPER_OBJECT, defaultImpl = Void.class)
+    @JsonTypeInfo(
+            use = JsonTypeInfo.Id.NAME,
+            include = JsonTypeInfo.As.WRAPPER_OBJECT,
+            defaultImpl = Void.class)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value=SessionOpenedResponse.class, name= BelfiusConstants.Response.SESSION_OPENED),
-            @JsonSubTypes.Type(value=ScreenUpdateResponse.class, name= BelfiusConstants.Response.SCREEN_UPDATE),
-            @JsonSubTypes.Type(value=ExecuteMethodResponse.class, name= BelfiusConstants.Response.EXECUTE_METHOD_RESPONSE),
-            @JsonSubTypes.Type(value=MessageResponse.class, name= BelfiusConstants.Response.MESSAGE_RESPONSE),
-            @JsonSubTypes.Type(value=TechnicalResponse.class, name= BelfiusConstants.Response.TECHNICAL_RESPONSE)
+        @JsonSubTypes.Type(
+                value = SessionOpenedResponse.class,
+                name = BelfiusConstants.Response.SESSION_OPENED),
+        @JsonSubTypes.Type(
+                value = ScreenUpdateResponse.class,
+                name = BelfiusConstants.Response.SCREEN_UPDATE),
+        @JsonSubTypes.Type(
+                value = ExecuteMethodResponse.class,
+                name = BelfiusConstants.Response.EXECUTE_METHOD_RESPONSE),
+        @JsonSubTypes.Type(
+                value = MessageResponse.class,
+                name = BelfiusConstants.Response.MESSAGE_RESPONSE),
+        @JsonSubTypes.Type(
+                value = TechnicalResponse.class,
+                name = BelfiusConstants.Response.TECHNICAL_RESPONSE)
     })
     private List<ResponseEntity> responses;
 

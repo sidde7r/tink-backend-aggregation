@@ -13,8 +13,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ContentListEntity {
     @JsonProperty("staticcontent")
     private StaticcontentEntity staticcontent;
+
     @JsonProperty("dynamiccontent")
     private List<DynamiccontentEntity> dynamiccontent;
+
     private String type;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -64,9 +66,12 @@ public class ContentListEntity {
             return "";
         }
 
-        Optional<DynamiccontentEntity> optional = dynamiccontent.stream()
-                .filter(dynamiccontentEntity -> !dynamiccontentEntity.getSignType().equals(""))
-                .findFirst();
+        Optional<DynamiccontentEntity> optional =
+                dynamiccontent.stream()
+                        .filter(
+                                dynamiccontentEntity ->
+                                        !dynamiccontentEntity.getSignType().equals(""))
+                        .findFirst();
         return optional.isPresent() ? optional.get().getSignType() : "";
     }
 }

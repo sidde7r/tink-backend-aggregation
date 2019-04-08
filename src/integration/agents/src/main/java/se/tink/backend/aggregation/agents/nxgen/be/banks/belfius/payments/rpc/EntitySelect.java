@@ -9,10 +9,10 @@ public class EntitySelect extends BelfiusRequest {
     public static BelfiusRequest.Builder create(String sessionId) {
         return BelfiusRequest.builder()
                 .setRetry(false)
-                .setRequests(WidgetEventsRequest
-                        .create(WidgetEventInformation.newRepeaterValueChangedWidgetEvent(
-                                BelfiusConstants.Widget.ENTITY_SWITCHER, "1")))
+                .setRequests(
+                        WidgetEventsRequest.create(
+                                WidgetEventInformation.newRepeaterValueChangedWidgetEvent(
+                                        BelfiusConstants.Widget.ENTITY_SWITCHER, "1")))
                 .setSessionId(sessionId);
     }
-
 }

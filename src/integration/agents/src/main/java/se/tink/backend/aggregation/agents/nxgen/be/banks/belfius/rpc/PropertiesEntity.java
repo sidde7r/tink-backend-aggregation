@@ -15,25 +15,24 @@ public class PropertiesEntity {
         return text;
     }
 
-    public boolean cardReaderAllowed(){
+    public boolean cardReaderAllowed() {
         return text.equals("Y");
     }
 
-    public String getChallenge(){
-        if(text == null)
-            return "";
-        return text;}
+    public String getChallenge() {
+        if (text == null) return "";
+        return text;
+    }
 
-    public boolean signOk(){
+    public boolean signOk() {
         return text.equals("Y");
     }
 
-    public String getSignType(){
+    public String getSignType() {
         return contentList == null ? "" : contentList.getSignType();
     }
 
-    public List<BeneficiariesContacts> getBeneficiaries(){
+    public List<BeneficiariesContacts> getBeneficiaries() {
         return contentList == null ? Collections.emptyList() : contentList.getBeneficiaries();
     }
-
 }

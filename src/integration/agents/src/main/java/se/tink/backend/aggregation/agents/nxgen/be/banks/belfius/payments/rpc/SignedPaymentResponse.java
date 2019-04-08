@@ -14,8 +14,7 @@ public class SignedPaymentResponse {
                                 WidgetEventInformation.newButtonClickedWidgetEvent(
                                         BelfiusConstants.Widget.SIGN_PAYMENT_BUTTON),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.TRANSFER_SIGNATURE,
-                                        challenge)))
+                                        BelfiusConstants.Widget.TRANSFER_SIGNATURE, challenge)))
                 .setTransactionId(sessionId);
     }
 }

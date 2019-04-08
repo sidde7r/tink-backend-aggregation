@@ -16,5 +16,4 @@ public class AppRules extends BelfiusRequest {
                                         BelfiusConstants.Widget.APP_RULES)))
                 .setSessionId(sessionId);
     }
-
 }

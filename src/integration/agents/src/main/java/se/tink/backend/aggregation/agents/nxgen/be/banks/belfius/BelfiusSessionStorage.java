@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import com.google.common.base.Strings;
-import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
-
 import java.util.Optional;
+import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public class BelfiusSessionStorage {
 
@@ -32,7 +31,8 @@ public class BelfiusSessionStorage {
     public void incrementRequestCounter() {
         if (containsSessionData()) {
             int requestCounter = Integer.valueOf(getRequestCounter()) + 1;
-            this.sessionStorage.put(BelfiusConstants.Storage.REQUEST_COUNTER, String.valueOf(requestCounter));
+            this.sessionStorage.put(
+                    BelfiusConstants.Storage.REQUEST_COUNTER, String.valueOf(requestCounter));
         }
     }
 
@@ -41,13 +41,15 @@ public class BelfiusSessionStorage {
     }
 
     public String getMachineIdentifier() {
-        return Optional.ofNullable(this.sessionStorage.get(
-                BelfiusConstants.Storage.MACHINE_IDENTIFIER)).orElse("XXX");
+        return Optional.ofNullable(
+                        this.sessionStorage.get(BelfiusConstants.Storage.MACHINE_IDENTIFIER))
+                .orElse("XXX");
     }
 
     public String getRequestCounter() {
-        return Optional.ofNullable(this.sessionStorage.get(
-                BelfiusConstants.Storage.REQUEST_COUNTER)).orElse("1");
+        return Optional.ofNullable(
+                        this.sessionStorage.get(BelfiusConstants.Storage.REQUEST_COUNTER))
+                .orElse("1");
     }
 
     public String getChallenge() {

@@ -208,5 +208,4 @@ public class BeneficiariesContacts implements GeneralAccountEntity {
     public String generalGetName() {
         return mlbName.getText();
     }
-
 }

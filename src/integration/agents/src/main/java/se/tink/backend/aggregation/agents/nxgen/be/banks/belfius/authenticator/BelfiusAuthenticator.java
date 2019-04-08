@@ -1,6 +1,7 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator;
 
 import com.google.common.base.Strings;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -16,7 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.automatic.Au
 import se.tink.backend.aggregation.nxgen.controllers.authentication.password.PasswordAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenticator {
 
@@ -40,12 +40,14 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
     }
 
     @Override
-    public void authenticate(String panNumber, String password) throws AuthenticationException, AuthorizationException {
+    public void authenticate(String panNumber, String password)
+            throws AuthenticationException, AuthorizationException {
         panNumber = BelfiusStringUtils.formatPanNumber(panNumber);
 
         String deviceToken = persistentStorage.get(BelfiusConstants.Storage.DEVICE_TOKEN);
 
-        if (deviceToken == null || !isDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken))) {
+        if (deviceToken == null
+                || !isDeviceRegistered(panNumber, BelfiusSecurityUtils.hash(deviceToken))) {
             deviceToken = BelfiusSecurityUtils.generateDeviceToken();
             registerDevice(panNumber, deviceToken);
         }
@@ -59,7 +61,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
         String password = credentials.getField(Field.Key.PASSWORD);
         String deviceToken = persistentStorage.get(BelfiusConstants.Storage.DEVICE_TOKEN);
 
-        if (Strings.isNullOrEmpty(panNumber) || Strings.isNullOrEmpty(password) || Strings.isNullOrEmpty(deviceToken)) {
+        if (Strings.isNullOrEmpty(panNumber)
+                || Strings.isNullOrEmpty(password)
+                || Strings.isNullOrEmpty(deviceToken)) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
 
@@ -109,8 +113,9 @@ public class BelfiusAuthenticator implements PasswordAuthenticator, AutoAuthenti
 
         String deviceTokenHashed = BelfiusSecurityUtils.hash(deviceToken);
         String deviceTokenHashedIosComparison = BelfiusSecurityUtils.hash(deviceTokenHashed);
-        String signature = BelfiusSecurityUtils.createSignature(
-                challenge, deviceToken, panNumber, contractNumber, password);
+        String signature =
+                BelfiusSecurityUtils.createSignature(
+                        challenge, deviceToken, panNumber, contractNumber, password);
 
         apiClient.login(deviceTokenHashed, deviceTokenHashedIosComparison, signature);
     }

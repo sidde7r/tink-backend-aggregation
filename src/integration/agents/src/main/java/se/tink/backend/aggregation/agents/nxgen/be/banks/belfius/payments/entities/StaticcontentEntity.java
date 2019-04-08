@@ -3,5 +3,4 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.payments.entit
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class StaticcontentEntity {
-}
+public class StaticcontentEntity {}

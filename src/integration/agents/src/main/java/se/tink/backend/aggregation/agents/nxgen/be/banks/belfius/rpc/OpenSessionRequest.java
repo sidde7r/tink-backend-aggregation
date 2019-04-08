@@ -15,12 +15,16 @@ public class OpenSessionRequest extends RequestEntity {
     public static class Attributes {
         @JsonProperty(BelfiusConstants.Request.Session.Attribute.APPLICATION)
         private String application;
+
         @JsonProperty(BelfiusConstants.Request.Session.Attribute.VERSION_KIND_APP)
         private String versionKindApp;
+
         @JsonProperty(BelfiusConstants.Request.Session.Attribute.PLATFORM)
         private String platform;
+
         @JsonProperty(BelfiusConstants.Request.Session.Attribute.TYPE_DEVICE)
         private String typeDevice;
+
         @JsonProperty(BelfiusConstants.Request.Session.Attribute.APP_RELEASE)
         private String appRelease;
 

@@ -15,5 +15,4 @@ public class GetSigningProtocolRequest {
                                         BelfiusConstants.Widget.GET_SIGNING_PROTOCOL)))
                 .setSessionId(sessionId);
     }
-
 }

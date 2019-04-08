@@ -16,12 +16,16 @@ public class StartFlowRequest extends RequestEntity {
     public static class Attributes {
         @JsonProperty("bt_AppRelease")
         private String appRelease;
+
         @JsonProperty("bt_Platform")
         private String platform;
+
         @JsonProperty("bt_VersionKindApp")
         private String versionKindApp;
+
         @JsonProperty("bt_TypeDevice")
         private String typeDevice;
+
         @JsonProperty("bt_Application")
         private String application;
 

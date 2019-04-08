@@ -1,21 +1,23 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius;
 
 import com.google.common.collect.ImmutableMap;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class BelfiusConstants {
 
-    public static final ImmutableMap<String, String> HEADERS = ImmutableMap.<String, String>builder()
-            .put("User-Agent", "I/PHONE/BDM/08120/PRD")
-            .build();
-    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES = ImmutableMap.<String, AccountTypes>builder()
-            .put("A0", AccountTypes.CHECKING)
-            .put("B0", AccountTypes.SAVINGS)
-            .put("H0", AccountTypes.PENSION)
-            .put("F0", AccountTypes.CREDIT_CARD)
-            .build();
+    public static final ImmutableMap<String, String> HEADERS =
+            ImmutableMap.<String, String>builder()
+                    .put("User-Agent", "I/PHONE/BDM/08120/PRD")
+                    .build();
+    public static final ImmutableMap<String, AccountTypes> ACCOUNT_TYPES =
+            ImmutableMap.<String, AccountTypes>builder()
+                    .put("A0", AccountTypes.CHECKING)
+                    .put("B0", AccountTypes.SAVINGS)
+                    .put("H0", AccountTypes.PENSION)
+                    .put("F0", AccountTypes.CREDIT_CARD)
+                    .build();
     public static final String TRANSACTION_BANK_NAME = "Belfius Belgium";
     public static final int MAX_NUMBER_OF_TRANSACTION_PAGES = 100;
     public static final int FIRST_TRANSACTION_PAGE = 0;
@@ -29,11 +31,19 @@ public class BelfiusConstants {
     public static final class Url {
         private static final String BASE = "https://m.belfius.be/";
 
-        static final URL GEPA_RENDERING_URL = new URL(BASE
-                + "F2CRenderingMobile/GEPARendering/machineIdentifier={" + UrlParameter.MACHINE_IDENTIFIER + "}");
+        static final URL GEPA_RENDERING_URL =
+                new URL(
+                        BASE
+                                + "F2CRenderingMobile/GEPARendering/machineIdentifier={"
+                                + UrlParameter.MACHINE_IDENTIFIER
+                                + "}");
 
-        static final URL GEPA_SERVICE_URL = new URL(BASE
-                + "F2CRenderingMobile/GEPAService/machineIdentifier={" + UrlParameter.MACHINE_IDENTIFIER + "}");
+        static final URL GEPA_SERVICE_URL =
+                new URL(
+                        BASE
+                                + "F2CRenderingMobile/GEPAService/machineIdentifier={"
+                                + UrlParameter.MACHINE_IDENTIFIER
+                                + "}");
     }
 
     public static class Storage {
@@ -55,12 +65,14 @@ public class BelfiusConstants {
     public static final class Widget {
         // LoginRequest
         public static final String VERSION_KIND_APP = "Container@reuse_LoginPw@minp_VersionKindApp";
-        public static final String DEVICE_TOKEN_HASHED = "Container@reuse_LoginPw@inp_deviceTokenHashed";
-        public static final String DEVICE_TOKEN_HASHED_IOS_COMPARISON
-                = "Container@reuse_LoginPw@inp_deviceTokenHashedIosComparison";
+        public static final String DEVICE_TOKEN_HASHED =
+                "Container@reuse_LoginPw@inp_deviceTokenHashed";
+        public static final String DEVICE_TOKEN_HASHED_IOS_COMPARISON =
+                "Container@reuse_LoginPw@inp_deviceTokenHashedIosComparison";
         public static final String SIGNATURE = "Container@reuse_LoginPw@inp_signature";
         public static final String IS_GUEST = "Container@reuse_LoginPw@minp_IsGuest";
-        public static final String TYPE_LOGON_DEVICE = "Container@reuse_LoginPw@minp_TypeLogonDevice";
+        public static final String TYPE_LOGON_DEVICE =
+                "Container@reuse_LoginPw@minp_TypeLogonDevice";
         public static final String CODE_SDK = "Container@reuse_LoginPw@minp_CodeSDK";
         public static final String DEV_T = "Container@reuse_LoginPw@minp_dev_t";
         public static final String ROOT = "Container@reuse_LoginPw@minp_root";
@@ -80,28 +92,31 @@ public class BelfiusConstants {
         public static final String AUTHENTICATE = "Container@reuse_LoginPw@btn_authenticate";
 
         // AuthenticateWithCodeRequest
-        public static final String IWS_LOGIN_AUTHENTIFICATION = "Container@reuse_IWSLogin@btn_Authentification";
+        public static final String IWS_LOGIN_AUTHENTIFICATION =
+                "Container@reuse_IWSLogin@btn_Authentification";
         public static final String IWS_LOGIN_SIGNATURE = "Container@reuse_IWSLogin@inp_signature";
 
         // PrepareAuthenticationRequest
         public static final String SECURITY_TYPE = "Container@b_SecurityType";
         public static final String PAN = "Container@inp_Pan";
         public static final String LOGIN_IWS = "Container@b_LoginIWS";
-        public static final String IWS_LOGIN_PREPARE_AUTHENTIFICATION
-                = "Container@reuse_IWSLogin@btn_Prepare_Authentification";
-        public static final String IWS_LOGIN_SIGNATURE_CHALLENGE
-                = "Container@reuse_IWSLogin@reuse_signature@lb_Challenge";
+        public static final String IWS_LOGIN_PREPARE_AUTHENTIFICATION =
+                "Container@reuse_IWSLogin@btn_Prepare_Authentification";
+        public static final String IWS_LOGIN_SIGNATURE_CHALLENGE =
+                "Container@reuse_IWSLogin@reuse_signature@lb_Challenge";
 
         // PrepareDeviceRegistrationRequest
         public static final String DEVICE_REGISTRATION = "Container@b_DeviceRegistation";
-        public static final String DEVICE_REGISTRATION_PREPARE_REGISTRATION
-                = "Container@reuse_DeviceRegistrationGeneric@btn_PrepareRegistration";
-        public static final String DEVICE_REGISTRATION_DEV_TOKEN
-                = "Container@reuse_DeviceRegistrationGeneric@inp_dev_token";
-        public static final String DEVICE_REGISTRATION_BRAND = "Container@reuse_DeviceRegistrationGeneric@inp_brand";
-        public static final String DEVICE_REGISTRATION_MODEL = "Container@reuse_DeviceRegistrationGeneric@inp_model";
-        public static final String DEVICE_REGISTRATION_SIGNATURE_CHALLENGE
-                = "Container@reuse_DeviceRegistrationGeneric@reuse_signature@lb_Challenge";
+        public static final String DEVICE_REGISTRATION_PREPARE_REGISTRATION =
+                "Container@reuse_DeviceRegistrationGeneric@btn_PrepareRegistration";
+        public static final String DEVICE_REGISTRATION_DEV_TOKEN =
+                "Container@reuse_DeviceRegistrationGeneric@inp_dev_token";
+        public static final String DEVICE_REGISTRATION_BRAND =
+                "Container@reuse_DeviceRegistrationGeneric@inp_brand";
+        public static final String DEVICE_REGISTRATION_MODEL =
+                "Container@reuse_DeviceRegistrationGeneric@inp_model";
+        public static final String DEVICE_REGISTRATION_SIGNATURE_CHALLENGE =
+                "Container@reuse_DeviceRegistrationGeneric@reuse_signature@lb_Challenge";
 
         // PrepareLoginRequest
         public static final String CARD_NR = "Container@minp_CardNr";
@@ -110,19 +125,21 @@ public class BelfiusConstants {
         public static final String LOGIN_PW_CONTRACT = "Container@reuse_LoginPw@lb_contract";
 
         // RegisterDeviceRequest
-        public static final String DEVICE_REGISTRATION_REGISTER
-                = "Container@reuse_DeviceRegistrationGeneric@btn_Register";
-        public static final String DEVICE_REGISTRATION_SIGNATURE
-                = "Container@reuse_DeviceRegistrationGeneric@inp_signature";
+        public static final String DEVICE_REGISTRATION_REGISTER =
+                "Container@reuse_DeviceRegistrationGeneric@btn_Register";
+        public static final String DEVICE_REGISTRATION_SIGNATURE =
+                "Container@reuse_DeviceRegistrationGeneric@inp_signature";
 
         // FetchProductsRequest
         public static final String PRODUCT_LIST_LOAD = "Container@b_ProductList_Load";
-        public static final String PRODUCT_LIST_REPEATER_DETAIL = "Container@reuse_ProductList@repeater_detail";
+        public static final String PRODUCT_LIST_REPEATER_DETAIL =
+                "Container@reuse_ProductList@repeater_detail";
 
         // FetchTransactionsRequest
         public static final String HISTORY_SEARCH = "Container@b_History_Search";
         public static final String HISTORY_FIND = "Container@reuse_History@btn_Find";
-        public static final String HISTORY_TYPE_TRANSACTIONS = "Container@reuse_History@inp_type_transactions";
+        public static final String HISTORY_TYPE_TRANSACTIONS =
+                "Container@reuse_History@inp_type_transactions";
         public static final String HISTORY_CURRENCY = "Container@reuse_History@inp_Currency";
         public static final String HISTORY_DATE_FROM = "Container@reuse_History@inp_datefrom";
         public static final String HISTORY_DATE_TO = "Container@reuse_History@inp_dateto";
@@ -133,9 +150,12 @@ public class BelfiusConstants {
         // FetchUpcomingTransactionsRequest
         public static final String UPCOMING_TRANSACTIONS = "Container@reuse_Pending@rep_pending";
         public static final String UPCOMING_TRANSACTIONS_BUTTON_PENDING = "Container@b_Pending";
-        public static final String UPCOMING_TRANSACTIONS_BUTTON_FIND = "Container@reuse_Pending@btn_Find";
-        public static final String UPCOMING_TRANSACTIONS_HAS_NEXT = "Container@reuse_Pending@lb_hasNext";
-        public static final String UPCOMING_TRANSACTIONS_BTN_NEXT = "Container@reuse_Pending@btn_Next";
+        public static final String UPCOMING_TRANSACTIONS_BUTTON_FIND =
+                "Container@reuse_Pending@btn_Find";
+        public static final String UPCOMING_TRANSACTIONS_HAS_NEXT =
+                "Container@reuse_Pending@lb_hasNext";
+        public static final String UPCOMING_TRANSACTIONS_BTN_NEXT =
+                "Container@reuse_Pending@btn_Next";
 
         // Payments
         public static final String TRANSFER_INIT = "Container@b_Transfer";
@@ -146,77 +166,100 @@ public class BelfiusConstants {
         public static final String RECIPIENT_NAME = "Container@reuse_transfer@inp_benefname";
         public static final String RECIPIENT_COUNTRY = "Container@reuse_transfer@inp_country";
         public static final String RECIPIENT_MESSAGE = "Container@reuse_transfer@inp_communication";
-        public static final String USE_STRUCTURED_MESSAGE = "Container@reuse_transfer@inp_structuredCommFlag";
+        public static final String USE_STRUCTURED_MESSAGE =
+                "Container@reuse_transfer@inp_structuredCommFlag";
         public static final String TRANSFER_AMOUNT = "Container@reuse_transfer@inp_amount";
         public static final String TRANSFER_DATE = "Container@reuse_transfer@inp_memodate";
         public static final String SHA1_CLIENT = "Container@reuse_transfer@inp_sha1_client";
 
-        //Beneficiary
+        // Beneficiary
         public static final String BENEFICIARY_MANAGEMENT = "Container@mb_BeneficiaryManagement";
-        public static final String PREPARE_UPGRADE = "Container@reuse_BeneficiaryManagement@mb_PrepareUpgrade";
-        public static final String LIST_NUMBER = "Container@reuse_BeneficiaryManagement@minp_Key1_ListNumber";
-        public static final String SEQUENCE_NUMBER = "Container@reuse_BeneficiaryManagement@minp_Key2_SequenceNumber";
+        public static final String PREPARE_UPGRADE =
+                "Container@reuse_BeneficiaryManagement@mb_PrepareUpgrade";
+        public static final String LIST_NUMBER =
+                "Container@reuse_BeneficiaryManagement@minp_Key1_ListNumber";
+        public static final String SEQUENCE_NUMBER =
+                "Container@reuse_BeneficiaryManagement@minp_Key2_SequenceNumber";
         public static final String INP_ALIAS = "Container@reuse_BeneficiaryManagement@minp_Alias";
         public static final String INP_BIC = "Container@reuse_BeneficiaryManagement@minp_Bic";
-        public static final String INP_EXT_ACC = "Container@reuse_BeneficiaryManagement@minp_Ext_Int_Account";
+        public static final String INP_EXT_ACC =
+                "Container@reuse_BeneficiaryManagement@minp_Ext_Int_Account";
         public static final String INP_AMOUNT = "Container@reuse_BeneficiaryManagement@minp_Amount";
-        public static final String INP_NAME = "ContaineownBeneficiariesForAccountr@reuse_BeneficiaryManagement@minp_Name";
+        public static final String INP_NAME =
+                "ContaineownBeneficiariesForAccountr@reuse_BeneficiaryManagement@minp_Name";
         public static final String INP_STREET = "Container@reuse_BeneficiaryManagement@minp_Street";
-        public static final String INP_HOUSE_NUMBER = "Container@reuse_BeneficiaryManagement@minp_HouseNumber";
+        public static final String INP_HOUSE_NUMBER =
+                "Container@reuse_BeneficiaryManagement@minp_HouseNumber";
         public static final String INP_ZIP = "Container@reuse_BeneficiaryManagement@minp_ZipCode";
         public static final String INP_CITY = "Container@reuse_BeneficiaryManagement@minp_City";
-        public static final String INP_COUNTRY_CODE = "Container@reuse_BeneficiaryManagement@minp_CodeCountry";
-        public static final String INP_STRUCTURED_COMMUNICATION = "Container@reuse_BeneficiaryManagement@minp_StructuredCommunication";
-        public static final String INP_COMMUNICATION = "Container@reuse_BeneficiaryManagement@minp_Communication";
-        public static final String INP_CONTACT = "Container@reuse_BeneficiaryManagement@minp_Contact";
-        public static final String GET_BENEFICIARIES = "Container@reuse_BeneficiaryManagement@mb_getBeneficiaries";
+        public static final String INP_COUNTRY_CODE =
+                "Container@reuse_BeneficiaryManagement@minp_CodeCountry";
+        public static final String INP_STRUCTURED_COMMUNICATION =
+                "Container@reuse_BeneficiaryManagement@minp_StructuredCommunication";
+        public static final String INP_COMMUNICATION =
+                "Container@reuse_BeneficiaryManagement@minp_Communication";
+        public static final String INP_CONTACT =
+                "Container@reuse_BeneficiaryManagement@minp_Contact";
+        public static final String GET_BENEFICIARIES =
+                "Container@reuse_BeneficiaryManagement@mb_getBeneficiaries";
 
-        //AppRules
+        // AppRules
         public static final String APP_RULES = "Container@b_applrules";
 
-        //DocumentSign
+        // DocumentSign
         public static final String DOCUMENT_SIGN = "Container@mb_DocumentToSign";
-        public static final String NUMBER_OF_BUNDLES = "Container@reuse_MCSS_DocumentToSign@mb_getNumberOfBundles";
+        public static final String NUMBER_OF_BUNDLES =
+                "Container@reuse_MCSS_DocumentToSign@mb_getNumberOfBundles";
 
-        //DoublePaymentRequest
+        // DoublePaymentRequest
         public static final String PAY_DOUBLE_BTN = "Container@reuse_transfer@btn_pay_double";
 
-        //EntityClick
+        // EntityClick
         public static final String ENTITY_CLICK = "Container@b_Entity";
 
-        //EntitySelect
+        // EntitySelect
         public static final String ENTITY_SWITCHER = "Container@reuse_EntitySwitcher@rep_entity";
 
-        //GetSigningProtocolRequest
-        public static final String GET_SIGNING_PROTOCOL = "Container@reuse_transfer@mb_GetSigningProtocol";
+        // GetSigningProtocolRequest
+        public static final String GET_SIGNING_PROTOCOL =
+                "Container@reuse_transfer@mb_GetSigningProtocol";
 
-        //Load Messages
+        // Load Messages
         public static final String MESSAGES = "Container@mb_Messages";
-        public static final String NUMBER_OF_MESSAGES = "Container@reuse_Messages@mb_GetNumberOfMessages";
+        public static final String NUMBER_OF_MESSAGES =
+                "Container@reuse_Messages@mb_GetNumberOfMessages";
 
-        //MenuAccess
+        // MenuAccess
         public static final String MENU_ACCESS = "Container@mb_MenuAccess";
 
-        //PrepareReaderPayment
-        public static final String PREPARE_READER_PAYMENT = "Container@reuse_transfer@btn_PreparePaymentWithReader";
+        // PrepareReaderPayment
+        public static final String PREPARE_READER_PAYMENT =
+                "Container@reuse_transfer@btn_PreparePaymentWithReader";
 
-        //SignBeneficiaryRequest
-        public static final String UPGRADE_BENEFICIARIES = "Container@reuse_BeneficiaryManagement@mb_Upgrade";
-        public static final String BENEFICIARY_SIGNATURE = "Container@reuse_BeneficiaryManagement@minp_Signature";
+        // SignBeneficiaryRequest
+        public static final String UPGRADE_BENEFICIARIES =
+                "Container@reuse_BeneficiaryManagement@mb_Upgrade";
+        public static final String BENEFICIARY_SIGNATURE =
+                "Container@reuse_BeneficiaryManagement@minp_Signature";
 
-        //SignCounters
+        // SignCounters
         public static final String SIGN_COUNTERS = "Container@mb_ToSignCounters";
-        public static final String ALL_TO_SIGN = "Container@reuse_ToSignCounter@mb_Refresh_AllToSign";
+        public static final String ALL_TO_SIGN =
+                "Container@reuse_ToSignCounter@mb_Refresh_AllToSign";
 
-        //SignedPaymentResponse
-        public static final String SIGN_PAYMENT_BUTTON = "Container@reuse_transfer@btn_Sign_Payment";
+        // SignedPaymentResponse
+        public static final String SIGN_PAYMENT_BUTTON =
+                "Container@reuse_transfer@btn_Sign_Payment";
         public static final String TRANSFER_SIGNATURE = "Container@reuse_transfer@inp_signature";
 
-        public static final String TRANSFER_SIGN_OK = "Container@reuse_transfer@lb_exec_ok_Transfer_Signed";
+        public static final String TRANSFER_SIGN_OK =
+                "Container@reuse_transfer@lb_exec_ok_Transfer_Signed";
 
-        //DoubleSign
-        public static final String DOUBLE_SIGN_PAYMENT = "Container@reuse_transfer@btn_pay_double_signed";
-        public static final String DOUBLE_CONFIRM_CLICK = "Container@reuse_transfer@mb_DoubleConfirmClicked";
+        // DoubleSign
+        public static final String DOUBLE_SIGN_PAYMENT =
+                "Container@reuse_transfer@btn_pay_double_signed";
+        public static final String DOUBLE_CONFIRM_CLICK =
+                "Container@reuse_transfer@mb_DoubleConfirmClicked";
     }
 
     public static final class Request {
@@ -237,9 +280,11 @@ public class BelfiusConstants {
         public static final String CHECK_STATUS_APPLICATION_ID = "services";
         public static final String CHECK_STATUS_EXECUTION_MODE = "sequential";
         public static final String CHECK_STATUS_METHOD_ID = "CheckStatus";
-        public static final String CHECK_STATUS_SERVICE_NAME = "gef0.gef1.gemd.Contract.diamlservice";
+        public static final String CHECK_STATUS_SERVICE_NAME =
+                "gef0.gef1.gemd.Contract.diamlservice";
 
-        public static final String START_FLOW_SERVICE_NAME = "gef0.gef1.gemd.Native_MobileFlow.diamlflow";
+        public static final String START_FLOW_SERVICE_NAME =
+                "gef0.gef1.gemd.Native_MobileFlow.diamlflow";
 
         public static class Session {
             public static class Attribute {
@@ -261,7 +306,8 @@ public class BelfiusConstants {
         public static final String RESPONSE_CHALLENGE = "lb_Challenge";
         public static final String REUSE_SIGNATURE = "reuse_signature@rep_scenarios";
         public static final String CARD_READER_ALLOWED = "mlb_CardReaderAllowed";
-        public static final String BENEFICIARY_WIDGET = "Container@reuse_BeneficiaryManagement@rep_BenefiariesContacts";
+        public static final String BENEFICIARY_WIDGET =
+                "Container@reuse_BeneficiaryManagement@rep_BenefiariesContacts";
 
         // TechnicalResponse
         public static final String TYPE_HEARTBEAT = "heartbeat";

@@ -13,8 +13,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class FetchProductsResponse extends BelfiusResponse {
 
     public Stream<Map.Entry<String, BelfiusProduct>> stream() {
-        return ScreenUpdateResponse.findWidgetOrElseThrow(this,
-                BelfiusConstants.Widget.PRODUCT_LIST_REPEATER_DETAIL)
+        return ScreenUpdateResponse.findWidgetOrElseThrow(
+                this, BelfiusConstants.Widget.PRODUCT_LIST_REPEATER_DETAIL)
                 .getProperties(BelfiusProductMap.class).getProducts().entrySet().stream();
     }
 }

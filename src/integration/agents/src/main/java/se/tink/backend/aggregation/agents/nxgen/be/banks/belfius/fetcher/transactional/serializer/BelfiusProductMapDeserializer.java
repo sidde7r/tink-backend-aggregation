@@ -19,13 +19,16 @@ public class BelfiusProductMapDeserializer extends JsonDeserializer<BelfiusProdu
         Map<String, BelfiusProduct> products = new HashMap<>();
 
         JsonNode json = jsonParser.getCodec().readTree(jsonParser);
-        json.get("contentList").get("dynamiccontent").elements().forEachRemaining(entry ->
-                        deserializeInto(products, jsonParser, entry));
+        json.get("contentList")
+                .get("dynamiccontent")
+                .elements()
+                .forEachRemaining(entry -> deserializeInto(products, jsonParser, entry));
 
         return new BelfiusProductMap(products);
     }
 
-    public void deserializeInto(Map<String, BelfiusProduct> products, JsonParser jsonParser, JsonNode entry) {
+    public void deserializeInto(
+            Map<String, BelfiusProduct> products, JsonParser jsonParser, JsonNode entry) {
         try {
             String key = entry.get("key").asText();
             JsonNode value = entry.get("repeatedPane_detail");

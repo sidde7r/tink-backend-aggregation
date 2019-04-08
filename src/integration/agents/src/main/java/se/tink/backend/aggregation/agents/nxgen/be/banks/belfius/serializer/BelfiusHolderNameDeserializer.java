@@ -12,5 +12,4 @@ public class BelfiusHolderNameDeserializer extends JsonDeserializer<HolderName> 
     public HolderName deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         return new HolderName(BelfiusTokenReader.getTextValueAndAdvanceToken(p));
     }
-
 }

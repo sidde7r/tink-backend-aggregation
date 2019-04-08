@@ -9,7 +9,7 @@ public class OpenSessionRequest extends BelfiusRequest {
     public static Builder create(String locale) {
         return BelfiusRequest.builder()
                 .setRequests(
-                        se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.OpenSessionRequest
-                                .create(locale));
+                        se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc
+                                .OpenSessionRequest.create(locale));
     }
 }
