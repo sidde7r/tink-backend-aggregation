@@ -2,6 +2,10 @@ package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 
 public final class IngConstants {
 
+    private IngConstants() {
+        throw new AssertionError();
+    }
+
     public static class Urls {
         public static final String ACCOUNTS = "/v2/accounts";
         private static final String BASE_AUTH = "/oauth2";
@@ -60,7 +64,7 @@ public final class IngConstants {
     public static class Signature {
         public static final String SIGNING_STRING = "(request-target): ";
         public static final String DATE = "date: ";
-        public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss 'GMT'";
+        public static final String DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
         public static final String TIMEZONE = "GMT";
         public static final String DIGEST = "digest: ";
         public static final String X_ING_REQUEST_ID = "x-ing-reqid: ";

@@ -27,6 +27,7 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
+import tink.org.apache.http.client.utils.DateUtils;
 
 public final class IngApiClient {
 
@@ -67,10 +68,10 @@ public final class IngApiClient {
                 new URL(reqPath)
                         .queryParam(
                                 QueryKeys.DATE_FROM,
-                                IngUtils.formatDate(fromDate, QueryValues.DATE_FORMAT))
+                                DateUtils.formatDate(fromDate, QueryValues.DATE_FORMAT))
                         .queryParam(
                                 QueryKeys.DATE_TO,
-                                IngUtils.formatDate(toDate, QueryValues.DATE_FORMAT))
+                                DateUtils.formatDate(toDate, QueryValues.DATE_FORMAT))
                         .toString();
 
         return fetchTransactions(completeReqPath);
