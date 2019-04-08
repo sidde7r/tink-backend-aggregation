@@ -8,17 +8,10 @@ import org.apache.http.cookie.Cookie;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.agents.contexts.AgentAggregatorIdentifier;
 import se.tink.backend.aggregation.agents.contexts.FinancialDataCacher;
-import se.tink.backend.aggregation.agents.contexts.MetricContext;
 import se.tink.backend.aggregation.agents.contexts.StatusUpdater;
-import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
-import se.tink.backend.aggregation.agents.contexts.SystemUpdater;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.JerseyClientFactory;
-import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.utils.CookieContainer;
 import se.tink.libraries.credentials.service.CredentialsRequest;
@@ -26,42 +19,18 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public abstract class AbstractAgent implements Agent, AgentEventListener {
+public abstract class AbstractAgent extends SuperAbstractAgent {
     public static final String DEFAULT_USER_AGENT = "Tink (+https://www.tink.se/; noc@tink.se)";
 
-    protected AgentsServiceConfiguration configuration;
     protected final JerseyClientFactory clientFactory;
-    protected final AgentContext context;
-    protected final AgentAggregatorIdentifier agentAggregatorIdentifier;
     protected final StatusUpdater statusUpdater;
-    protected final SupplementalRequester supplementalRequester;
-    protected final SystemUpdater systemUpdater;
-    protected final MetricContext metricContext;
-    protected final CredentialsRequest request;
-    protected final AggregationLogger log;
     protected final FinancialDataCacher financialDataCacher;
 
     protected AbstractAgent(CredentialsRequest request, AgentContext context) {
-        this.request = request;
-        this.context = context;
-        this.agentAggregatorIdentifier = context;
+        super(request, context);
         this.statusUpdater = context;
         this.financialDataCacher = context;
-        this.supplementalRequester = context;
-        this.systemUpdater = context;
-        this.metricContext = context;
         this.clientFactory = new JerseyClientFactory();
-
-        this.log = new AggregationLogger(getAgentClass());
-    }
-
-    public AggregatorInfo getAggregatorInfo() {
-        return agentAggregatorIdentifier.getAggregatorInfo();
-    }
-
-    @Override
-    public Class<? extends Agent> getAgentClass() {
-        return getClass();
     }
 
     /** Returns the certain date for this account (that is from when we know we have all data) */
@@ -149,20 +118,6 @@ public abstract class AbstractAgent implements Agent, AgentEventListener {
         return false;
     }
 
-    /**
-     * Default is to do nothing here, updated timestamp is set in updateService if status goes to
-     * UPDATED.
-     */
-    @Override
-    public void onUpdateCredentialsStatus() {
-        // Nothing.
-    }
-
-    @Override
-    public void setConfiguration(AgentsServiceConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
     /** Takes the cookies from the provided cookie container and add them to the client */
     protected void addSessionCookiesToClient(
             TinkApacheHttpClient4 client, CookieContainer cookieContainer) {
@@ -192,12 +147,6 @@ public abstract class AbstractAgent implements Agent, AgentEventListener {
 
     protected void clearSessionCookiesFromClient(CookieStore store) {
         store.clear();
-    }
-
-    @Override
-    public void close() {
-        // Deliberately left empty. Feel free to override for agents that need proper cleanup of
-        // resources.
     }
 
     protected void openBankID(String autostartToken) {
