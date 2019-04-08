@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.ErrorMessages;
-import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.LansforsakringarConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.authenticator.LansforsakringarAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.configuration.LansforsakringarConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.lansforsakringar.fetcher.transactionalaccount.LansforsakringarTransactionalAccountFetcher;
@@ -33,7 +32,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent {
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
 
-        apiClient = new LansforsakringarApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new LansforsakringarApiClient(client, sessionStorage);
     }
 
     @Override
@@ -52,9 +51,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent {
                                         new IllegalStateException(
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
-        persistentStorage.put(StorageKeys.CLIENT_ID, lansConfiguration.getClientId());
-        persistentStorage.put(StorageKeys.CLIENT_SECRET, lansConfiguration.getClientSecret());
-        persistentStorage.put(StorageKeys.CONSENT_ID, lansConfiguration.getConsentId());
+        apiClient.setConfiguration(lansConfiguration);
     }
 
     @Override
@@ -62,7 +59,7 @@ public final class LansforsakringarAgent extends NextGenerationAgent {
 
     @Override
     protected Authenticator constructAuthenticator() {
-        return new LansforsakringarAuthenticator(apiClient, sessionStorage, persistentStorage);
+        return new LansforsakringarAuthenticator(apiClient, sessionStorage);
     }
 
     @Override
