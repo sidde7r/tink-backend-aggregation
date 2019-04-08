@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Exceptions;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthenticator;
@@ -59,11 +60,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
                                 getClientName(),
                                 CrosskeyBaseConfiguration.class)
                         .orElseThrow(
-                                () -> new IllegalStateException(Exceptions.MISSING_CONFIGURATION));
-
-        if (!crosskeyBaseConfiguration.isValid()) {
-            throw new IllegalStateException(CrosskeyBaseConstants.Exceptions.INVALID_CONFIGURATION);
-        }
+                                () -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
 
         persistentStorage.put(
                 StorageKeys.BASE_AUTH_URL, crosskeyBaseConfiguration.getBaseAuthUrl());

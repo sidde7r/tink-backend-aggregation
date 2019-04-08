@@ -68,12 +68,15 @@ public abstract class CrosskeyBaseConstants {
     }
 
     public static class Exceptions {
-        public static final String MISSING_CONFIGURATION_LOG = " {} - Missing configuration: {}";
-        public static final String MISSING_CONFIGURATION = "Configuration missing.";
-        public static final String INVALID_CONFIGURATION = "Configuration is invalid.";
         public static final String MISSING_TOKEN = "Cannot find token!";
         public static final String MISSING_BALANCE = "No balance found";
         public static final String MISSING_CONSENT = "Consent has to be acquired first";
+    }
+
+    public static class ErrorMessages {
+        public static final String INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL =
+                "Invalid Config: %s cannot be empty or null";
+        public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 
     public static class OIDCValues {

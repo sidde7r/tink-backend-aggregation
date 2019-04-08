@@ -2,14 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.api.client.util.Strings;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants;
-import se.tink.backend.aggregation.agents.utils.log.LogTag;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 public class CrosskeyBaseConfiguration implements ClientConfiguration {
@@ -17,7 +14,6 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     @JsonIgnore
     private static final Logger logger = LoggerFactory.getLogger(CrosskeyBaseConfiguration.class);
 
-    @JsonIgnore private static final LogTag MISSING_CONFIG = LogTag.from("CROSSKEY_MISSING_CONFIG");
     @JsonProperty private String clientId;
     @JsonProperty private String clientSecret;
     @JsonProperty private String redirectUrl;
@@ -30,91 +26,96 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     @JsonProperty private String xFapiFinancialId;
 
     public String getClientId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientId),
+                String.format(ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client ID"));
+
         return clientId;
     }
 
     public String getClientSecret() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSecret),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client Secret"));
+
         return clientSecret;
     }
 
     public String getRedirectUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(redirectUrl),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Redirect URL"));
+
         return redirectUrl;
     }
 
     public String getBaseAuthUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseAuthUrl),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base Auth URL"));
+
         return baseAuthUrl;
     }
 
     public String getBaseAPIUrl() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(baseAPIUrl),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base API URL"));
+
         return baseAPIUrl;
     }
 
     public String getClientKeyStorePath() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientKeyStorePath),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        "Client Key Store Path"));
+
         return clientKeyStorePath;
     }
 
     public String getClientSigningKeyPath() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSigningKeyPath),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        "Client Signing Key Path"));
+
         return clientSigningKeyPath;
     }
 
     public String getClientSigningCertificatePath() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientSigningCertificatePath),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        "Client Signing Certificate Path"));
+
         return clientSigningCertificatePath;
     }
 
     public String getClientKeyStorePassword() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(clientKeyStorePassword),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        "Client Key Store Password"));
+
         return clientKeyStorePassword;
     }
 
     public String getXFapiFinancialId() {
+        Preconditions.checkNotNull(
+                Strings.emptyToNull(xFapiFinancialId),
+                String.format(
+                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL,
+                        "x-fapi-financial-id"));
+
         return xFapiFinancialId;
-    }
-
-    public boolean isValid() {
-        if (!Strings.isNullOrEmpty(clientId)
-                && !Strings.isNullOrEmpty(clientSecret)
-                && !Strings.isNullOrEmpty(redirectUrl)
-                && !Strings.isNullOrEmpty(baseAuthUrl)
-                && !Strings.isNullOrEmpty(baseAPIUrl)
-                && !Strings.isNullOrEmpty(clientKeyStorePath)
-                && !Strings.isNullOrEmpty(clientKeyStorePassword)
-                && !Strings.isNullOrEmpty(xFapiFinancialId)) {
-            return true;
-        } else {
-            final List<String> list = new ArrayList<>();
-
-            if (Strings.isNullOrEmpty(clientId)) {
-                list.add("clientId");
-            }
-
-            if (Strings.isNullOrEmpty(clientSecret)) {
-                list.add("clientSecret");
-            }
-
-            if (Strings.isNullOrEmpty(redirectUrl)) {
-                list.add("redirectUrl");
-            }
-
-            if (Strings.isNullOrEmpty(baseAuthUrl)) {
-                list.add("baseAuthUrl");
-            }
-
-            if (Strings.isNullOrEmpty(clientKeyStorePath)) {
-                list.add("clientKeyStorePath");
-            }
-
-            if (Strings.isNullOrEmpty(clientKeyStorePassword)) {
-                list.add("clientKeyStorePassword");
-            }
-
-            if (Strings.isNullOrEmpty(xFapiFinancialId)) {
-                list.add("xFapiFinancialId");
-            }
-
-            logger.error(
-                    CrosskeyBaseConstants.Exceptions.MISSING_CONFIGURATION_LOG,
-                    MISSING_CONFIG,
-                    Arrays.toString(list.toArray()));
-            return false;
-        }
     }
 }
