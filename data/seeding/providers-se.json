@@ -556,7 +556,7 @@
         },
         {
             "name": "eurocard-bankid",
-            "className": "creditcards.sebkort.SEBKortAgent",
+            "className": "nxgen.se.creditcards.sebkort.eurocard.EurocardSEAgent",
             "credentialsType": "MOBILE_BANKID",
             "currency": "SEK",
             "displayName": "Eurocard",
