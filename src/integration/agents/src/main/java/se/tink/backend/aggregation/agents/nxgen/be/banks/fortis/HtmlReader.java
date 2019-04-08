@@ -25,6 +25,7 @@ public class HtmlReader extends JacksonJsonProvider {
             MediaType mediaType,
             MultivaluedMap<String, String> httpHeaders,
             InputStream entityStream) {
-        throw new IllegalStateException(String.format("Expected JSON, but MediaType:%s", mediaType.toString()));
+        throw new IllegalStateException(
+                String.format("Expected JSON, but MediaType:%s", mediaType.toString()));
     }
 }

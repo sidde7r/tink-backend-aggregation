@@ -25,8 +25,7 @@ public class TransactionValue {
     }
 
     public Collection<Transaction> toTinkTransactions() {
-        return movements
-                .stream()
+        return movements.stream()
                 .filter(transaction -> transaction.isValid())
                 .map(MovementsItem::toTinkTransaction)
                 .collect(Collectors.toList());

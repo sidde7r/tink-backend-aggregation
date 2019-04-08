@@ -34,7 +34,6 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.strings.StringUtils;
 
-
 public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthenticator {
 
     private final Catalog catalog;
@@ -91,7 +90,7 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         String challenge = apiClient.fetchChallenges(challangeRequest);
 
         String loginCode = waitForLoginCode(challenge);
-        if(Strings.isNullOrEmpty(loginCode) || !StringUtils.isNumeric(loginCode)) {
+        if (Strings.isNullOrEmpty(loginCode) || !StringUtils.isNumeric(loginCode)) {
             throw LoginError.INCORRECT_CHALLENGE_RESPONSE.exception();
         }
 
@@ -232,10 +231,8 @@ public class FortisAuthenticator implements MultiFactorAuthenticator, AutoAuthen
         }
 
         if (!Strings.isNullOrEmpty(userInfoResponse.getValue().getUserData().getMuidCode())
-                && !FortisConstants.ERRORCODE.MUID_OK.equalsIgnoreCase(userInfoResponse
-                .getValue()
-                .getUserData()
-                .getMuidCode())) {
+                && !FortisConstants.ERRORCODE.MUID_OK.equalsIgnoreCase(
+                        userInfoResponse.getValue().getUserData().getMuidCode())) {
             LOGGER.warnExtraLong(
                     String.format(
                             "muidcode %s, daysPasswordStillValid %s",

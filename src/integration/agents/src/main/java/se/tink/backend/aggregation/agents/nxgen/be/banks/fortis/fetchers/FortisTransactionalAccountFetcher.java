@@ -2,6 +2,8 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc.TransactionsResponse;
@@ -15,9 +17,6 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.core.transaction.UpcomingTransaction;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class FortisTransactionalAccountFetcher
         implements AccountFetcher<TransactionalAccount>,
