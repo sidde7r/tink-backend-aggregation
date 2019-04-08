@@ -10,5 +10,4 @@ public class BankTransactionCodeEntity {
 
     private String code;
     private String subCode;
-
 }

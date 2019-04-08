@@ -10,5 +10,4 @@ public class ProprietaryBankTransactionCodeEntity {
 
     private String code;
     private String issuer;
-
 }

@@ -13,5 +13,4 @@ public class LinksEntity {
     private String next;
     private String prev;
     private String self;
-
 }

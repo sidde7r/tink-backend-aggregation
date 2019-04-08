@@ -12,5 +12,4 @@ public class CardInstrumentEntity {
     private String cardSchemeName;
     private String identification;
     private String name;
-
 }

@@ -16,5 +16,4 @@ public class CurrencyExchangeEntity {
     private String sourceCurrency;
     private String targetCurrency;
     private String unitCurrency;
-
 }

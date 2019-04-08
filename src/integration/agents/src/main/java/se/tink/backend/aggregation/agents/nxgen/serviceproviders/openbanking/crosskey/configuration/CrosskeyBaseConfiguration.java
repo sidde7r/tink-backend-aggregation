@@ -14,26 +14,20 @@ import se.tink.backend.aggregation.configuration.ClientConfiguration;
 
 public class CrosskeyBaseConfiguration implements ClientConfiguration {
 
-    @JsonProperty
-    private String clientId;
-    @JsonProperty
-    private String clientSecret;
-    @JsonProperty
-    private String redirectUrl;
-    @JsonProperty
-    private String baseAuthUrl;
-    @JsonProperty
-    private String baseAPIUrl;
-    @JsonProperty
-    private String clientKeyStorePath;
-    @JsonProperty
-    private String clientKeyStorePassword;
-    @JsonProperty
-    private String clientSigningKeyPath;
-    @JsonProperty
-    private String clientSigningCertificatePath;
-    @JsonProperty
-    private String xFapiFinancialId;
+    @JsonIgnore
+    private static final Logger logger = LoggerFactory.getLogger(CrosskeyBaseConfiguration.class);
+
+    @JsonIgnore private static final LogTag MISSING_CONFIG = LogTag.from("CROSSKEY_MISSING_CONFIG");
+    @JsonProperty private String clientId;
+    @JsonProperty private String clientSecret;
+    @JsonProperty private String redirectUrl;
+    @JsonProperty private String baseAuthUrl;
+    @JsonProperty private String baseAPIUrl;
+    @JsonProperty private String clientKeyStorePath;
+    @JsonProperty private String clientKeyStorePassword;
+    @JsonProperty private String clientSigningKeyPath;
+    @JsonProperty private String clientSigningCertificatePath;
+    @JsonProperty private String xFapiFinancialId;
 
     public String getClientId() {
         return clientId;
@@ -75,21 +69,15 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         return xFapiFinancialId;
     }
 
-    @JsonIgnore
-    private static final Logger logger = LoggerFactory.getLogger(CrosskeyBaseConfiguration.class);
-
-    @JsonIgnore
-    private static final LogTag MISSING_CONFIG = LogTag.from("CROSSKEY_MISSING_CONFIG");
-
     public boolean isValid() {
         if (!Strings.isNullOrEmpty(clientId)
-            && !Strings.isNullOrEmpty(clientSecret)
-            && !Strings.isNullOrEmpty(redirectUrl)
-            && !Strings.isNullOrEmpty(baseAuthUrl)
-            && !Strings.isNullOrEmpty(baseAPIUrl)
-            && !Strings.isNullOrEmpty(clientKeyStorePath)
-            && !Strings.isNullOrEmpty(clientKeyStorePassword)
-            && !Strings.isNullOrEmpty(xFapiFinancialId)) {
+                && !Strings.isNullOrEmpty(clientSecret)
+                && !Strings.isNullOrEmpty(redirectUrl)
+                && !Strings.isNullOrEmpty(baseAuthUrl)
+                && !Strings.isNullOrEmpty(baseAPIUrl)
+                && !Strings.isNullOrEmpty(clientKeyStorePath)
+                && !Strings.isNullOrEmpty(clientKeyStorePassword)
+                && !Strings.isNullOrEmpty(xFapiFinancialId)) {
             return true;
         } else {
             final List<String> list = new ArrayList<>();
@@ -123,11 +111,10 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
             }
 
             logger.error(
-                CrosskeyBaseConstants.Exceptions.MISSING_CONFIGURATION_LOG,
-                MISSING_CONFIG,
-                Arrays.toString(list.toArray()));
+                    CrosskeyBaseConstants.Exceptions.MISSING_CONFIGURATION_LOG,
+                    MISSING_CONFIG,
+                    Arrays.toString(list.toArray()));
             return false;
         }
-
     }
 }
