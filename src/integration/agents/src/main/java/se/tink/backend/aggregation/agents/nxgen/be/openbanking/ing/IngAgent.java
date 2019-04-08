@@ -4,7 +4,6 @@ import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.Market;
-import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.IngAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.configuration.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.IngAccountsFetcher;
@@ -40,10 +39,7 @@ public final class IngAgent extends NextGenerationAgent {
 
         apiClient =
                 new IngApiClient(
-                        client,
-                        sessionStorage,
-                        persistentStorage,
-                        request.getProvider().getMarket().toLowerCase());
+                        client, sessionStorage, request.getProvider().getMarket().toLowerCase());
     }
 
     @Override
@@ -60,18 +56,10 @@ public final class IngAgent extends NextGenerationAgent {
                                         new IllegalStateException(
                                                 ErrorMessages.MISSING_CONFIGURATION));
 
+        apiClient.setConfiguration(ingConfiguration);
         client.setSslClientCertificate(
                 IngUtils.readFile(ingConfiguration.getClientKeyStorePath()),
                 ingConfiguration.getClientKeyStorePassword());
-
-        persistentStorage.put(StorageKeys.BASE_URL, ingConfiguration.getBaseUrl());
-        persistentStorage.put(StorageKeys.CLIENT_ID, ingConfiguration.getClientId());
-        persistentStorage.put(
-                StorageKeys.CLIENT_SIGNING_KEY_PATH, ingConfiguration.getClientSigningKeyPath());
-        persistentStorage.put(
-                StorageKeys.CLIENT_SIGNING_CERTIFICATE_PATH,
-                ingConfiguration.getClientSigningCertificatePath());
-        persistentStorage.put(StorageKeys.REDIRECT_URL, ingConfiguration.getRedirectUrl());
     }
 
     @Override
