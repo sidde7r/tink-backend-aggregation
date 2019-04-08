@@ -7,8 +7,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.CaseFormat;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
@@ -53,46 +51,6 @@ public class Provider implements Cloneable {
         setSupplementalFields(Lists.newArrayList());
     }
 
-    @Override
-    public Provider clone() {
-        try {
-            return (Provider) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        // Generated using Eclipse
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Provider other = (Provider) obj;
-        if (name == null) {
-            if (other.name != null) {
-                return false;
-            }
-        } else if (!name.equals(other.name)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Deprecated
-    @JsonProperty
-    public String getAdditionalInformationCaption() {
-        Field field = getField(Field.Key.ADDITIONAL_INFORMATION);
-
-        return (field != null ? field.getDescription() : null);
-    }
-
     public String getClassName() {
         return className;
     }
@@ -107,22 +65,6 @@ public class Provider implements Cloneable {
 
     public String getDisplayName() {
         return displayName;
-    }
-
-    private Field getField(final String name) {
-        List<Field> fields = getFields();
-
-        if (fields == null || fields.size() == 0) {
-            return null;
-        }
-
-        Field field = fields.stream().filter(f -> Objects.equal(f.getName(), name)).findFirst().orElse(null);
-
-        return field;
-    }
-
-    private Field getField(final Field.Key key) {
-        return getField(key.getFieldKey());
     }
 
     public List<Field> getFields() {
@@ -141,38 +83,6 @@ public class Provider implements Cloneable {
         return name;
     }
 
-    @Deprecated
-    @JsonProperty
-    public String getPasswordCaption() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        return (field != null ? field.getDescription() : null);
-    }
-
-    @Deprecated
-    @JsonProperty
-    public boolean getPasswordIsPIN() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        if (field == null) {
-            return false;
-        }
-
-        if (Objects.equal("PIN-kod", field.getDescription())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Deprecated
-    @JsonProperty
-    public int getPasswordLength() {
-        Field field = getField(Field.Key.PASSWORD);
-
-        return ((field != null && field.getMaxLength() != null) ? field.getMaxLength() : 0);
-    }
-
     public String getPayload() {
         return payload;
     }
@@ -183,39 +93,6 @@ public class Provider implements Cloneable {
 
     public ProviderTypes getType() {
         return type;
-    }
-
-    @Deprecated
-    @JsonProperty
-    public String getUsernameCaption() {
-        Field field = getField(Field.Key.USERNAME);
-
-        return (field != null ? field.getDescription() : null);
-    }
-
-    @Deprecated
-    @JsonProperty
-    public boolean getUsernameIsPersonnummer() {
-        Field field = getField(Field.Key.USERNAME);
-
-        if (field == null) {
-            return false;
-        }
-
-        if (Objects.equal(field.getHint(), "ÅÅÅÅMMDDNNNN") || Objects.equal(field.getHint(), "ÅÅMMDDNNNN")) {
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        // Generated using Eclipse
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
     }
 
     public void setClassName(String className) {
@@ -261,11 +138,6 @@ public class Provider implements Cloneable {
 
     public void setType(ProviderTypes type) {
         this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(Provider.class).add("name", name).toString();
     }
 
     /**
