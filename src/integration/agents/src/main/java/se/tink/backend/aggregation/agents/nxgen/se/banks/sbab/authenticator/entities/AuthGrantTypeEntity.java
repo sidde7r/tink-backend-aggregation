@@ -9,4 +9,6 @@ public enum AuthGrantTypeEntity {
     CLIENT_CREDENTIALS,
     @JsonProperty("pending_authorization_code")
     PENDING_AUTHORIZATION_CODE,
+    @JsonProperty("refresh_token")
+    REFRESH_TOKEN,
 }

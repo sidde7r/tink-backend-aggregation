@@ -114,9 +114,7 @@ public final class URL {
      * @return a URL object with the query parameter
      */
     public URL queryParam(String key, String value) {
-        return Optional.of(toQueryString(key, value))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        return toQueryString(key, value)
                 .map(this::prependQueryIfPresent)
                 .map(s -> new URL(url, s))
                 .orElse(this);

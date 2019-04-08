@@ -2,11 +2,13 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Environment;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabAuthenticator;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.SbabSandboxAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.configuration.SbabConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.loan.SbabLoanFetcher;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccount.SbabTransactionalAccountFetcher;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.SbabSavingsAccountFetcher;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.session.SbabSessionHandler;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
@@ -58,29 +60,42 @@ public class SbabAgent extends NextGenerationAgent {
                                                         "No SBAB client configured for name: %s",
                                                         clientName)));
 
-        persistentStorage.put(StorageKey.ENVIRONMENT, config.getEnvironment());
-        persistentStorage.put(StorageKey.BASIC_AUTH_USERNAME, config.getBasicAuthUsername());
-        persistentStorage.put(StorageKey.BASIC_AUTH_PASSWORD, config.getBasicAuthPassword());
-        persistentStorage.put(StorageKey.CLIENT_ID, config.getClientId());
-        persistentStorage.put(StorageKey.REDIRECT_URI, config.getRedirectUri());
-        sessionStorage.put(StorageKey.ACCESS_TOKEN, config.getAccessToken());
+        persistentStorage.put(StorageKeys.ENVIRONMENT, config.getEnvironment());
+        persistentStorage.put(StorageKeys.BASIC_AUTH_USERNAME, config.getBasicAuthUsername());
+        persistentStorage.put(StorageKeys.BASIC_AUTH_PASSWORD, config.getBasicAuthPassword());
+        persistentStorage.put(StorageKeys.CLIENT_ID, config.getClientId());
+        persistentStorage.put(StorageKeys.REDIRECT_URI, config.getRedirectUri());
+        sessionStorage.put(StorageKeys.ACCESS_TOKEN, config.getAccessToken());
     }
 
     @Override
     protected Authenticator constructAuthenticator() {
+        final Environment environment =
+                persistentStorage
+                        .get(StorageKeys.ENVIRONMENT, Environment.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "No SBAB environment is set in persistent storage."));
+
+        if (environment == Environment.SANDBOX) {
+            return new SbabSandboxAuthenticator();
+        }
+
         return new ThirdPartyAppAuthenticationController<>(
-                new OAuth2AuthenticationController(
-                        persistentStorage,
-                        supplementalInformationHelper,
-                        new SbabAuthenticator(apiClient, sessionStorage, persistentStorage)),
-                supplementalInformationHelper);
+            new OAuth2AuthenticationController(
+                persistentStorage,
+                supplementalInformationHelper,
+                new SbabAuthenticator(
+                    apiClient, sessionStorage, persistentStorage)),
+            supplementalInformationHelper);
     }
 
     @Override
     protected Optional<TransactionalAccountRefreshController>
             constructTransactionalAccountRefreshController() {
-        final SbabTransactionalAccountFetcher fetcher =
-                new SbabTransactionalAccountFetcher(apiClient);
+        final SbabSavingsAccountFetcher fetcher =
+                new SbabSavingsAccountFetcher(apiClient, persistentStorage);
 
         return Optional.of(
                 new TransactionalAccountRefreshController(

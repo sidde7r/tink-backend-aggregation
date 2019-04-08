@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccount.entities.CustomerPropertiesEntity;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.entities.CustomerPropertiesEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanDetails;
@@ -109,11 +109,14 @@ public class LoanEntity {
 
     @JsonIgnore
     public LoanAccount toTinkLoanAccount() {
+        final Double interestRate =
+                Optional.ofNullable(loanTerms).map(LoanTermsEntity::getInterestRate).orElse(null);
+
         return LoanAccount.builder(loanNumber, Amount.inSEK(currentLoanAmount).negate())
                 .setName(loanNumber)
                 .setAccountNumber(loanNumber)
                 .setBankIdentifier(loanNumber)
-                .setInterestRate(Optional.of(loanTerms.getInterestRate()).orElse(null))
+                .setInterestRate(interestRate)
                 .setDetails(toTinkLoanDetails())
                 .build();
     }
