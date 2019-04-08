@@ -51,7 +51,7 @@ public final class BbvaApiClient {
     private RequestBuilder createRequestInSession(URL url) {
         return client.request(url)
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON)
-                .header(HeaderKeys.AUTHORIZATION, getHeaderFormattedTokenFromSession());
+                .addBearerToken(getTokenFromSession());
     }
 
     public PaginatorResponse fetchTransactions(TransactionalAccount account, int page) {
@@ -131,9 +131,5 @@ public final class BbvaApiClient {
         return sessionStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
                 .orElseThrow(() -> new IllegalStateException(Exceptions.MISSING_TOKEN));
-    }
-
-    private String getHeaderFormattedTokenFromSession() {
-        return String.format(HeaderValues.AUTHORIZATION, getTokenFromSession().getAccessToken());
     }
 }
