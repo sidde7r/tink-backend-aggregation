@@ -2,6 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb;
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
+import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.SebConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.authenticator.SebAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.configuration.SebConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.se.openbanking.seb.fetcher.transactionalaccount.SebTransactionalAccountFetcher;
@@ -40,14 +41,17 @@ public final class SebAgent extends NextGenerationAgent {
   public void setConfiguration(final AgentsServiceConfiguration configuration) {
     super.setConfiguration(configuration);
 
-    final SebConfiguration sebConfiguration =
-        configuration
-            .getIntegrations()
-            .getClientConfiguration(
-                SebConstants.Market.INTEGRATION_NAME,
-                SebConstants.Market.CLIENT_NAME,
-                SebConfiguration.class)
-            .orElseThrow(() -> new IllegalStateException("SEB configuration missing."));
+        final SebConfiguration sebConfiguration =
+                configuration
+                        .getIntegrations()
+                        .getClientConfiguration(
+                                SebConstants.Market.INTEGRATION_NAME,
+                                SebConstants.Market.CLIENT_NAME,
+                                SebConfiguration.class)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
     persistentStorage.put(SebConstants.StorageKeys.BASE_URL, sebConfiguration.getBaseUrl());
     persistentStorage.put(SebConstants.StorageKeys.CLIENT_ID, sebConfiguration.getClientId());
