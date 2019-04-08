@@ -18,7 +18,7 @@ public class BbvaConfiguration implements ClientConfiguration {
     public String getClientId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientId),
-                String.format(ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client ID"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client ID"));
 
         return clientId;
     }
@@ -27,7 +27,7 @@ public class BbvaConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSecret),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Client Secret"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
     }
@@ -36,7 +36,7 @@ public class BbvaConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Redirect URL"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
     }
@@ -45,7 +45,7 @@ public class BbvaConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(baseAuthUrl),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base Auth URL"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Base Auth URL"));
 
         return baseAuthUrl;
     }
@@ -54,7 +54,7 @@ public class BbvaConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(baseApiUrl),
                 String.format(
-                        ErrorMessages.INVALID_CONFIG_CANNOT_BE_EMPTY_OR_NULL, "Base API URL"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Base API URL"));
 
         return baseApiUrl;
     }
