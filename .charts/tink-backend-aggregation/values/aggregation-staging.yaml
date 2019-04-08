@@ -1,5 +1,5 @@
 aggregationdb:
-  host: aggregation-20180615075316658100000003.chuxbkxjm8ld.eu-west-1.rds.amazonaws.com
+  host: aggregation-db.internal.staging.aggregation.tink.network
 
 coordinationHosts: 10.89.60.29:2181
 

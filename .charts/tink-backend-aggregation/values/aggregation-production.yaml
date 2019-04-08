@@ -9,7 +9,7 @@ nodeZones:
 - "eu-west-1a"
 
 aggregationdb:
-  host: aggregation-20180326162307651700000003.cn1ms2m3gdpa.eu-west-1.rds.amazonaws.com
+  host: aggregation-db.internal.staging.aggregation.tink.network
 
 coordinationHosts: 10.88.54.160:2181,10.88.66.231:2181,10.88.85.63:2181
 
