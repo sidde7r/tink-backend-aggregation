@@ -57,9 +57,7 @@ public abstract class AbstractAgentTest<T extends Agent> extends AbstractConfigu
     }
 
     protected Provider constructProvider() {
-        Provider provider = new Provider();
-        provider.setCapabilities(Collections.singleton(Provider.Capability.TRANSFERS));
-        return provider;
+        return new Provider();
     }
 
     protected List<String> constructFeatureFlags() {

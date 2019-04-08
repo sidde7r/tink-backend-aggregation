@@ -135,21 +135,6 @@ public class Provider implements Cloneable {
         this.type = type;
     }
 
-    /**
-     * Used on providers to indicate different tasks it can handle in terms of agents, since it's not possible now in
-     * main to know if an agent implements an interface e.g. TransferExecutor.
-     */
-    public enum Capability {
-        TRANSFERS,              // backwards compatibility
-        MORTGAGE_AGGREGATION,   // backwards compatibility
-        CHECKING_ACCOUNTS,
-        SAVINGS_ACCOUNTS,
-        CREDIT_CARDS,
-        LOANS,
-        INVESTMENTS,
-        PAYMENTS
-    }
-
     @JsonIgnore
     public String getMetricTypeName() {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_UNDERSCORE, getType().name());
