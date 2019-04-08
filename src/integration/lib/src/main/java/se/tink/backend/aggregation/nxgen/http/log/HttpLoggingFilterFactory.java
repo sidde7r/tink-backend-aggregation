@@ -10,9 +10,9 @@ import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
 import se.tink.backend.aggregation.utils.StringMasker;
 
 /**
- * The reason for this abstraction is that a single filter instance cannot be attached to multiple clients. Thus we need
- * to be able to construct same kind of instances of filters on demand when attaching to clients. This helps out storing
- * that info and removing them when done.
+ * The reason for this abstraction is that a single filter instance cannot be attached to multiple
+ * clients. Thus we need to be able to construct same kind of instances of filters on demand when
+ * attaching to clients. This helps out storing that info and removing them when done.
  */
 public class HttpLoggingFilterFactory implements ClientFilterFactory {
     private final AggregationLogger log;
@@ -21,7 +21,10 @@ public class HttpLoggingFilterFactory implements ClientFilterFactory {
     private final Class<? extends HttpLoggableExecutor> agentClass;
     private final Multimap<Client, ClientFilter> createdFilters;
 
-    public HttpLoggingFilterFactory(AggregationLogger log, String logTag, Iterable<StringMasker> stringMaskers,
+    public HttpLoggingFilterFactory(
+            AggregationLogger log,
+            String logTag,
+            Iterable<StringMasker> stringMaskers,
             Class<? extends HttpLoggableExecutor> agentClass) {
         this.log = log;
         this.logTag = logTag;

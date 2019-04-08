@@ -8,8 +8,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 public class FetchTransactionsResponse {
     private final Map<Account, List<Transaction>> transactions;
 
-    public FetchTransactionsResponse(
-            Map<Account, List<Transaction>> transactions) {
+    public FetchTransactionsResponse(Map<Account, List<Transaction>> transactions) {
         this.transactions = transactions;
     }
 

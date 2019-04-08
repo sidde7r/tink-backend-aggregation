@@ -16,8 +16,10 @@ public abstract class Filterable<T> {
     }
 
     public Filterable(Filterable that) {
-        // Cut the tail off of the one we copy from. This is because it is possible to add "temporary" filters
-        // to requests that we do NOT want to affect the main chain (which is attached to the client).
+        // Cut the tail off of the one we copy from. This is because it is possible to add
+        // "temporary" filters
+        // to requests that we do NOT want to affect the main chain (which is attached to the
+        // client).
         that.cutFilterTail();
         this.head = that.head;
         this.tail = that.tail;
@@ -43,30 +45,30 @@ public abstract class Filterable<T> {
         if (head == null) {
             head = filter;
             tail = filter;
-            return (T)this;
+            return (T) this;
         }
         tail.setNext(filter);
         tail = filter;
-        return (T)this;
+        return (T) this;
     }
 
     public T removeFilter(Filter filter) {
         if (head == null || filter == null) {
-            return (T)this;
+            return (T) this;
         }
 
         if (head == filter && tail == filter) {
             // This means there was only one filter. After it has been removed the list is empty.
             head = null;
             tail = null;
-            return (T)this;
+            return (T) this;
         }
 
         if (head == filter) {
             // This means that the filter we are about to remove is the first one in the chain.
             // Re-link the head.
             head = head.getNext();
-            return (T)this;
+            return (T) this;
         }
 
         for (Filter f = head; f != null; f = f.getNext()) {
@@ -83,7 +85,7 @@ public abstract class Filterable<T> {
                 break;
             }
         }
-        return (T)this;
+        return (T) this;
     }
 
     public boolean isFilterPresent(Filter filter) {

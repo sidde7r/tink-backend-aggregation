@@ -53,8 +53,9 @@ import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
- * Agent will import data from Bank Norwegian. It is only possible to have one credit-card per person at Norwegian
- * so the only Tink account that will be created right now is a credit-card account. No support for Loans.
+ * Agent will import data from Bank Norwegian. It is only possible to have one credit-card per
+ * person at Norwegian so the only Tink account that will be created right now is a credit-card
+ * account. No support for Loans.
  */
 public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
@@ -64,7 +65,6 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     private static final String CREDIT_CARD_URL = BASE_URL + "MinSida/Creditcard/";
     private static final String SAVINGS_ACCOUNTS_URL = BASE_URL + "MinSida/SavingsAccount";
     private static final String CARD_TRANSACTION_URL = CREDIT_CARD_URL + "Transactions";
-
 
     private static final int PAGINATION_MONTH_STEP = 3;
     private static final Date PAGINATION_LIMIT = new GregorianCalendar(2012, 1, 1).getTime();
@@ -85,27 +85,29 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         private static final String CORE_DOWN = "false";
     }
 
-    private static final URL TRANSACTIONS_PAGINATION_URL = new URL(BASE_URL +
-            "MyPage2/Transaction/GetTransactionsFromTo");
+    private static final URL TRANSACTIONS_PAGINATION_URL =
+            new URL(BASE_URL + "MyPage2/Transaction/GetTransactionsFromTo");
 
-    private static final String LOGIN_URL = "https://id.banknorwegian.se/std/method/"
-            + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
-            + "2fLogin%2fSignicatCallback%3fipid%3d22%26returnUrl%3d%252FMinSida";
+    private static final String LOGIN_URL =
+            "https://id.banknorwegian.se/std/method/"
+                    + "banknorwegian.se/?id=sbid-mobil-2014:default:sv&target=https%3a%2f%2fwww.banknorwegian.se%"
+                    + "2fLogin%2fSignicatCallback%3fipid%3d22%26returnUrl%3d%252FMinSida";
     private static final String COLLECT = "collect";
     private static final String ORDER = "order";
 
     private final Client client;
     private boolean hasRefreshed = false;
 
-    public NorwegianAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public NorwegianAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
-//        DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
-//        config.getProperties().put(
-//                ApacheHttpClient4Config.PROPERTY_PROXY_URI,
-//                "http://127.0.0.1:8888"
-//        );
-//        client = clientFactory.createProxyClient(context.getLogOutputStream(), config);
+        //        DefaultApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
+        //        config.getProperties().put(
+        //                ApacheHttpClient4Config.PROPERTY_PROXY_URI,
+        //                "http://127.0.0.1:8888"
+        //        );
+        //        client = clientFactory.createProxyClient(context.getLogOutputStream(), config);
 
         client = clientFactory.createCookieClient(context.getLogOutputStream());
     }
@@ -158,9 +160,10 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setSubject(credentials.getField(Field.Key.USERNAME));
 
-        OrderBankIdResponse orderBankIdResponse = client.resource(bankIdUrl + ORDER)
-                .type(MediaType.APPLICATION_JSON)
-                .post(OrderBankIdResponse.class, loginRequest);
+        OrderBankIdResponse orderBankIdResponse =
+                client.resource(bankIdUrl + ORDER)
+                        .type(MediaType.APPLICATION_JSON)
+                        .post(OrderBankIdResponse.class, loginRequest);
 
         if (orderBankIdResponse.getError() != null) {
             if (orderBankIdResponse.getError().isBankIdAlreadyInProgress()) {
@@ -168,8 +171,10 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
             }
 
             throw new IllegalStateException(
-                    String.format("#login-refactoring - Norwegian - Got with code: %s Message: %s",
-                            orderBankIdResponse.getError().getCode(), orderBankIdResponse.getError().getMessage()));
+                    String.format(
+                            "#login-refactoring - Norwegian - Got with code: %s Message: %s",
+                            orderBankIdResponse.getError().getCode(),
+                            orderBankIdResponse.getError().getMessage()));
         }
 
         // Prompt a BankId authentication client-side.
@@ -192,12 +197,15 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
         // Use the SAML created secret key to authenticate the user.
 
-        ClientResponse authenticateClientResponse = createClientRequest(formElement.attr("action"))
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).entity(ElementUtils.parseFormParameters(formElement))
-                .post(ClientResponse.class);
+        ClientResponse authenticateClientResponse =
+                createClientRequest(formElement.attr("action"))
+                        .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                        .entity(ElementUtils.parseFormParameters(formElement))
+                        .post(ClientResponse.class);
 
         // Try to access transaction page and verify that we aren't redirected
-        ClientResponse loggedInResponse = createClientRequest(CARD_TRANSACTION_URL).get(ClientResponse.class);
+        ClientResponse loggedInResponse =
+                createClientRequest(CARD_TRANSACTION_URL).get(ClientResponse.class);
 
         if (authenticateClientResponse.getStatus() == HttpStatusCodes.STATUS_CODE_OK
                 && loggedInResponse.getStatus() == HttpStatusCodes.STATUS_CODE_OK) {
@@ -206,12 +214,13 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
             throw new IllegalStateException(
                     String.format(
                             "#login-refactoring - Norwegian - Did not get status code for both authenticateClientResponse "
-                                    + "and loggedInResponse: %s, %s", authenticateClientResponse.getStatus(),
-                            loggedInResponse.getStatus()));
+                                    + "and loggedInResponse: %s, %s",
+                            authenticateClientResponse.getStatus(), loggedInResponse.getStatus()));
         }
     }
 
-    private String collectBankId(OrderBankIdResponse orderBankIdResponse, String bankIdUrl) throws BankIdException {
+    private String collectBankId(OrderBankIdResponse orderBankIdResponse, String bankIdUrl)
+            throws BankIdException {
         // Validate authentication.
 
         CollectBankIdRequest collectBankIdRequest = new CollectBankIdRequest();
@@ -222,22 +231,25 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         // Poll BankID status periodically until the process is complete.
 
         for (int i = 0; i < AUTHENTICATION_BANK_ID_RETRIES; i++) {
-            collectResponse = createClientRequest(bankIdUrl + COLLECT).type(MediaType.APPLICATION_JSON)
-                    .post(CollectBankIdResponse.class, collectBankIdRequest);
+            collectResponse =
+                    createClientRequest(bankIdUrl + COLLECT)
+                            .type(MediaType.APPLICATION_JSON)
+                            .post(CollectBankIdResponse.class, collectBankIdRequest);
 
             ErrorEntity error = collectResponse.getError();
             if (error != null) {
                 switch (error.getCode().toUpperCase()) {
-                case "CANCELLED":
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
-                case "USER_CANCEL":
-                    throw BankIdError.CANCELLED.exception();
-                case "ALREADY_IN_PROGRESS":
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
-                default:
-                    throw new IllegalStateException(
-                            String.format("#login-refactoring - Norwegian - BankId login failed with unknown error: %s",
-                                    error.getCode()));
+                    case "CANCELLED":
+                        throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                    case "USER_CANCEL":
+                        throw BankIdError.CANCELLED.exception();
+                    case "ALREADY_IN_PROGRESS":
+                        throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                    default:
+                        throw new IllegalStateException(
+                                String.format(
+                                        "#login-refactoring - Norwegian - BankId login failed with unknown error: %s",
+                                        error.getCode()));
                 }
             }
 
@@ -246,7 +258,8 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
             }
 
             // Only necessary when running locally.
-            //log.info(String.format("Awaiting BankID authentication - %s", collectResponse.getProgressStatus()));
+            // log.info(String.format("Awaiting BankID authentication - %s",
+            // collectResponse.getProgressStatus()));
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
@@ -278,7 +291,8 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     }
 
     private Optional<Account> getSavingsAccount() {
-        ClientResponse clientResponse = createClientRequest(SAVINGS_ACCOUNTS_URL).get(ClientResponse.class);
+        ClientResponse clientResponse =
+                createClientRequest(SAVINGS_ACCOUNTS_URL).get(ClientResponse.class);
 
         if (clientResponse.getStatus() != HttpStatusCodes.STATUS_CODE_OK) {
             return Optional.empty();
@@ -286,13 +300,15 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
 
         String savingsAccountPage = clientResponse.getEntity(String.class);
 
-        Optional<String> accountNumber = SavingsAccountParsingUtils.parseSavingsAccountNumber(savingsAccountPage);
+        Optional<String> accountNumber =
+                SavingsAccountParsingUtils.parseSavingsAccountNumber(savingsAccountPage);
         if (!accountNumber.isPresent()) {
             return Optional.empty();
         }
 
         Account account = new Account();
-        account.setBalance(SavingsAccountParsingUtils.parseSavingsAccountBalance(savingsAccountPage));
+        account.setBalance(
+                SavingsAccountParsingUtils.parseSavingsAccountBalance(savingsAccountPage));
         account.setAccountNumber(accountNumber.get());
         // Only one savings account per user is allowed
         account.setBankId("NORWEGIAN_SAVINGS_ACCOUNT");
@@ -316,7 +332,6 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         pageTransactions(account, accountNumber);
     }
 
-
     private void pageTransactions(Account account, String accountNumber)
             throws ParseException, UnsupportedEncodingException {
 
@@ -326,32 +341,26 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         Date toDate = DateTime.now().toDate();
         Date fromDate = DateUtils.addMonths(toDate, -PAGINATION_MONTH_STEP);
 
-
         List<Transaction> transactions = Lists.newArrayList();
 
         // Fetch uninvoiced transactions and add to list of transactions
-        createClientRequest(
-            getFormattedRecentTransactionsUrl(encodedAccountNumber))
-            .get(TransactionListResponse.class)
-            .stream()
-            .map(TransactionEntity::toTransaction)
-            .forEach(transactions::add);
+        createClientRequest(getFormattedRecentTransactionsUrl(encodedAccountNumber))
+                .get(TransactionListResponse.class).stream()
+                .map(TransactionEntity::toTransaction)
+                .forEach(transactions::add);
 
         // Page through rest of transactions
         do {
-            createClientRequest(
-                    getFormattedPaginationUrl(encodedAccountNumber,
-                            fromDate,
-                            toDate))
-                    .get(TransactionListResponse.class)
-                    .stream()
+            createClientRequest(getFormattedPaginationUrl(encodedAccountNumber, fromDate, toDate))
+                    .get(TransactionListResponse.class).stream()
                     .map(TransactionEntity::toTransaction)
                     .forEach(transactions::add);
 
             toDate = fromDate;
             fromDate = DateUtils.addMonths(fromDate, -PAGINATION_MONTH_STEP);
 
-            // A hard limit on pagination to stop us from fetching transactions before the birth of christ in
+            // A hard limit on pagination to stop us from fetching transactions before the birth of
+            // christ in
             // the case where 'certainDate' is not set.
             if (fromDate.before(PAGINATION_LIMIT)) {
                 break;
@@ -363,26 +372,28 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
     }
 
     /**
-     * Returns request string for fetching uninvoiced transactions. This is done by omitting
-     * dates and setting the EOC query param to true.
+     * Returns request string for fetching uninvoiced transactions. This is done by omitting dates
+     * and setting the EOC query param to true.
      */
     private String getFormattedRecentTransactionsUrl(final String accountNo) {
         return TRANSACTIONS_PAGINATION_URL
-            .queryParam(QueryKeys.ACCOUNT_NUMBER, accountNo)
-            .queryParam(QueryKeys.DATE_TO, "")
-            .queryParam(QueryKeys.DATE_FROM, "")
-            .queryParam(QueryKeys.CORE_DOWN, QueryValues.CORE_DOWN)
-            .queryParam(QueryKeys.GET_LAST_DAYS, QueryValues.GET_LAST_DAYS)
-            .queryParam(QueryKeys.FROM_LAST_EOC, QueryValues.FROM_LAST_EOC_TRUE)
-            .toString();
+                .queryParam(QueryKeys.ACCOUNT_NUMBER, accountNo)
+                .queryParam(QueryKeys.DATE_TO, "")
+                .queryParam(QueryKeys.DATE_FROM, "")
+                .queryParam(QueryKeys.CORE_DOWN, QueryValues.CORE_DOWN)
+                .queryParam(QueryKeys.GET_LAST_DAYS, QueryValues.GET_LAST_DAYS)
+                .queryParam(QueryKeys.FROM_LAST_EOC, QueryValues.FROM_LAST_EOC_TRUE)
+                .toString();
     }
 
     /**
-     * Returns request string for fetching transactions through pagination, date params are set
-     * and EOC param is set to false (EOC being uninvoiced transactions).
+     * Returns request string for fetching transactions through pagination, date params are set and
+     * EOC param is set to false (EOC being uninvoiced transactions).
      */
-    private String getFormattedPaginationUrl(final String accountNo, final Date from, final Date to) {
-        return TRANSACTIONS_PAGINATION_URL.queryParam(QueryKeys.ACCOUNT_NUMBER, accountNo)
+    private String getFormattedPaginationUrl(
+            final String accountNo, final Date from, final Date to) {
+        return TRANSACTIONS_PAGINATION_URL
+                .queryParam(QueryKeys.ACCOUNT_NUMBER, accountNo)
                 .queryParam(QueryKeys.DATE_FROM, toFormattedDate(from))
                 .queryParam(QueryKeys.DATE_TO, toFormattedDate(to))
                 .queryParam(QueryKeys.CORE_DOWN, QueryValues.CORE_DOWN)
@@ -395,9 +406,10 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         return ThreadSafeDateFormat.FORMATTER_DAILY.format(date);
     }
 
-
     private WebResource.Builder createClientRequest(String url) {
-        return client.resource(url).header("User-Agent", DEFAULT_USER_AGENT).accept(MediaType.APPLICATION_JSON);
+        return client.resource(url)
+                .header("User-Agent", DEFAULT_USER_AGENT)
+                .accept(MediaType.APPLICATION_JSON);
     }
 
     @Override

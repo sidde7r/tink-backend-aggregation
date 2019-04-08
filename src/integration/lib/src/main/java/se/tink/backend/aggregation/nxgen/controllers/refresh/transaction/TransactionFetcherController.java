@@ -49,8 +49,9 @@ public class TransactionFetcherController<A extends Account> implements Transact
                 transactions.addAll(response.getTinkTransactions());
             }
 
-            if (!response.canFetchMore().orElseThrow(() ->
-                    new IllegalStateException("Pagee must indicate canFetchMore!"))) {
+            if (!response.canFetchMore()
+                    .orElseThrow(
+                            () -> new IllegalStateException("Pagee must indicate canFetchMore!"))) {
                 break;
             }
         } while (!paginationHelper.isContentWithRefresh(account, transactions));
@@ -63,7 +64,10 @@ public class TransactionFetcherController<A extends Account> implements Transact
                 .flatMap(
                         upcomingTransactionFetcher ->
                                 Optional.of(account)
-                                        .map(t -> upcomingTransactionFetcher.fetchUpcomingTransactionsFor(t)))
+                                        .map(
+                                                t ->
+                                                        upcomingTransactionFetcher
+                                                                .fetchUpcomingTransactionsFor(t)))
                 .orElseGet(Collections::emptyList);
     }
 }

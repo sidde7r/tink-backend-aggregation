@@ -56,7 +56,8 @@ public class CollectorAgent extends AbstractAgent
     private final Catalog catalog;
     private final TinkApacheHttpClient4 httpClient;
 
-    public CollectorAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public CollectorAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
@@ -68,12 +69,13 @@ public class CollectorAgent extends AbstractAgent
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
-        apiClient.setSubscriptionKey(configuration.getAggregationWorker().getCollectorSubscriptionKey());
+        apiClient.setSubscriptionKey(
+                configuration.getAggregationWorker().getCollectorSubscriptionKey());
     }
 
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
-            switch (credentials.getType()) {
+        switch (credentials.getType()) {
             case MOBILE_BANKID:
                 try {
                     authenticateWithMobileBankID(credentials.getField(Field.Key.USERNAME));
@@ -88,9 +90,10 @@ public class CollectorAgent extends AbstractAgent
                         ErrorResponse errorResponse = response.getEntity(ErrorResponse.class);
 
                         if (errorResponse.isErrorDueToRepeatedRequests()) {
-                            throw BankIdError.CANCELLED.exception(new LocalizableKey(
-                                    "Because of repeated attempts the authentication request has been" +
-                                            " cancelled. Please try again later."));
+                            throw BankIdError.CANCELLED.exception(
+                                    new LocalizableKey(
+                                            "Because of repeated attempts the authentication request has been"
+                                                    + " cancelled. Please try again later."));
                         }
                     }
 
@@ -101,7 +104,7 @@ public class CollectorAgent extends AbstractAgent
                 return autoAuthenticate(credentials);
             default:
                 throw new IllegalStateException("Authentication method not implemented");
-            }
+        }
 
         return true;
     }
@@ -115,7 +118,8 @@ public class CollectorAgent extends AbstractAgent
         try {
             log.info("Invalid access_token, request new access_token using refresh_token");
             Optional<String> refreshToken = credentials.getSensitivePayload(Field.Key.PASSWORD);
-            CollectAuthenticationResponse response = apiClient.refreshAccessToken(refreshToken.orElse(null));
+            CollectAuthenticationResponse response =
+                    apiClient.refreshAccessToken(refreshToken.orElse(null));
 
             if (response.isValid()) {
                 credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, response.getAccessToken());
@@ -147,15 +151,17 @@ public class CollectorAgent extends AbstractAgent
         openBankID();
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            Optional<CollectAuthenticationResponse> response = apiClient.collectBankId(sessionId,
-                    CollectAuthenticationResponse.class);
+            Optional<CollectAuthenticationResponse> response =
+                    apiClient.collectBankId(sessionId, CollectAuthenticationResponse.class);
 
             if (response.isPresent()) {
                 CollectAuthenticationResponse authenticationResponse = response.get();
 
                 credentials.setType(CredentialsTypes.PASSWORD);
-                credentials.setSensitivePayload(Field.Key.PASSWORD, authenticationResponse.getRefreshToken());
-                credentials.setSensitivePayload(Field.Key.ACCESS_TOKEN, authenticationResponse.getAccessToken());
+                credentials.setSensitivePayload(
+                        Field.Key.PASSWORD, authenticationResponse.getRefreshToken());
+                credentials.setSensitivePayload(
+                        Field.Key.ACCESS_TOKEN, authenticationResponse.getAccessToken());
 
                 systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
@@ -170,8 +176,7 @@ public class CollectorAgent extends AbstractAgent
     }
 
     @Override
-    public void execute(Transfer transfer)
-            throws Exception, TransferExecutionException {
+    public void execute(Transfer transfer) throws Exception, TransferExecutionException {
         switch (transfer.getType()) {
             case BANK_TRANSFER:
                 // It's only possible to withdraw money to a predefined destination account
@@ -179,7 +184,8 @@ public class CollectorAgent extends AbstractAgent
                 break;
             default:
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setMessage(String.format("execute(%s) not implemented", transfer.getType()))
+                        .setMessage(
+                                String.format("execute(%s) not implemented", transfer.getType()))
                         .setEndUserMessage("Not implemented.")
                         .build();
         }
@@ -188,8 +194,7 @@ public class CollectorAgent extends AbstractAgent
     }
 
     @Override
-    public void update(Transfer transfer)
-            throws Exception, TransferExecutionException {
+    public void update(Transfer transfer) throws Exception, TransferExecutionException {
         log.info(transfer, "Update not implemented");
     }
 
@@ -198,7 +203,9 @@ public class CollectorAgent extends AbstractAgent
 
         if (!isSelectedWithdrawalAccount(sourceAccount, transfer)) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_DESTINATION))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.INVALID_DESTINATION))
                     .setMessage("Destination doesn't match the predefined withdrawal account")
                     .build();
         }
@@ -214,13 +221,16 @@ public class CollectorAgent extends AbstractAgent
         }
 
         throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
+                .setEndUserMessage(
+                        catalog.getString(
+                                TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
                 .setMessage("Couldn't find source account")
                 .build();
     }
 
     private boolean isSelectedWithdrawalAccount(Account sourceAccount, Transfer transfer) {
-        AccountIdentifier withdrawalIdentifier = apiClient.getWithdrawalIdentifierFor(sourceAccount);
+        AccountIdentifier withdrawalIdentifier =
+                apiClient.getWithdrawalIdentifierFor(sourceAccount);
 
         return Objects.equals(withdrawalIdentifier, transfer.getDestination());
     }
@@ -264,7 +274,8 @@ public class CollectorAgent extends AbstractAgent
                 return new FetchTransferDestinationsResponse(Collections.emptyMap());
             }
 
-            TransferDestinationPattern pattern = TransferDestinationPattern.createForSingleMatch(withdrawalIdentifier);
+            TransferDestinationPattern pattern =
+                    TransferDestinationPattern.createForSingleMatch(withdrawalIdentifier);
 
             destinations.put(account, Collections.singletonList(pattern));
         }

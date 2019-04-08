@@ -8,6 +8,7 @@ import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.AbstractAgent;
@@ -26,15 +27,14 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
-import java.util.stream.Collectors;
-
 public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccountsExecutor {
     private static final int MAX_ATTEMPTS = 60;
 
     private final LysaClient client;
     private DetailsEntity details;
 
-    public LysaAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public LysaAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         // The Lysa API needs fully buffered message bodies with content length.
@@ -42,14 +42,21 @@ public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccount
         ApacheHttpClient4Config clientConfig = new DefaultApacheHttpClient4Config();
         clientConfig.getProperties().put(ApacheHttpClient4Config.PROPERTY_ENABLE_BUFFERING, true);
 
-        client = new LysaClient(clientFactory.createCustomClient(context.getLogOutputStream(), clientConfig), DEFAULT_USER_AGENT);
+        client =
+                new LysaClient(
+                        clientFactory.createCustomClient(
+                                context.getLogOutputStream(), clientConfig),
+                        DEFAULT_USER_AGENT);
     }
 
     @Override
     public FetchInvestmentAccountsResponse fetchInvestmentAccounts() {
         return new FetchInvestmentAccountsResponse(
                 details.getAccounts().stream()
-                        .collect(Collectors.toMap(AccountEntity::toAccount, a -> AccountFeatures.createEmpty())));
+                        .collect(
+                                Collectors.toMap(
+                                        AccountEntity::toAccount,
+                                        a -> AccountFeatures.createEmpty())));
     }
 
     @Override
@@ -58,13 +65,17 @@ public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccount
     }
 
     private FetchTransactionsResponse refreshInvestmentTransactions() {
-        ImmutableListMultimap<String, TransactionEntity> transactionsByExternalAccountId = Multimaps.index(
-                client.getTransactions(), TransactionEntity::getAccountId);
+        ImmutableListMultimap<String, TransactionEntity> transactionsByExternalAccountId =
+                Multimaps.index(client.getTransactions(), TransactionEntity::getAccountId);
 
-       return new FetchTransactionsResponse(details.getAccounts().stream()
-               .collect(
-                       Collectors.toMap(AccountEntity::toAccount,
-                               a -> getTransactionsForAccount(transactionsByExternalAccountId, a))));
+        return new FetchTransactionsResponse(
+                details.getAccounts().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        AccountEntity::toAccount,
+                                        a ->
+                                                getTransactionsForAccount(
+                                                        transactionsByExternalAccountId, a))));
     }
 
     private List<Transaction> getTransactionsForAccount(
@@ -72,7 +83,8 @@ public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccount
             AccountEntity accountEntity) {
         List<Transaction> transactionsForAccount = Lists.newArrayList();
 
-        for (TransactionEntity transactionEntity : transactionsByExternalAccountId.get(accountEntity.getAccountId())) {
+        for (TransactionEntity transactionEntity :
+                transactionsByExternalAccountId.get(accountEntity.getAccountId())) {
             if (!transactionEntity.isValidTransaction()) {
                 continue;
             }
@@ -85,12 +97,14 @@ public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccount
     public boolean login() throws Exception {
         Credentials credentials = request.getCredentials();
 
-        StartBankIdResponse startBankIdResponse = client.startBankId(credentials.getField(Field.Key.USERNAME));
+        StartBankIdResponse startBankIdResponse =
+                client.startBankId(credentials.getField(Field.Key.USERNAME));
 
         openBankID(startBankIdResponse.getAutostartToken());
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            PollBankIdResponse pollBankIdResponse = client.pollBankId(startBankIdResponse.getTransactionId());
+            PollBankIdResponse pollBankIdResponse =
+                    client.pollBankId(startBankIdResponse.getTransactionId());
 
             switch (pollBankIdResponse.getStatus()) {
                 case PollBankIdResponse.Status.STARTED:
@@ -110,7 +124,8 @@ public class LysaAgent extends AbstractAgent implements RefreshInvestmentAccount
                     throw BankIdError.CANCELLED.exception();
                 default:
                     throw new IllegalStateException(
-                            String.format("Unknown BankID status: %s", pollBankIdResponse.getStatus()));
+                            String.format(
+                                    "Unknown BankID status: %s", pollBankIdResponse.getStatus()));
             }
         }
 

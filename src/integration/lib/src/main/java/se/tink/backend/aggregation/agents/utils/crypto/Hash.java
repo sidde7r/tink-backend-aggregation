@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.utils.crypto;
 
-import org.apache.commons.codec.binary.Hex;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.Hex;
 
 public class Hash {
     public static String hmacSha1AsHex(byte[] key, byte[] data) {

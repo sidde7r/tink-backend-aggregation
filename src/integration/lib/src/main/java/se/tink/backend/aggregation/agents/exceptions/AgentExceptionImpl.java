@@ -11,9 +11,7 @@ public abstract class AgentExceptionImpl extends Exception implements AgentExcep
     }
 
     AgentExceptionImpl(AgentError error, LocalizableKey userMessage) {
-        super(String.format("Cause: %s.%s",
-                error.getClass().getSimpleName(),
-                error.name()));
+        super(String.format("Cause: %s.%s", error.getClass().getSimpleName(), error.name()));
 
         this.userMessage = userMessage;
     }

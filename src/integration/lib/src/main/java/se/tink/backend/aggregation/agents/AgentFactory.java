@@ -3,12 +3,12 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.base.Objects;
 import com.google.inject.Inject;
 import java.lang.reflect.Constructor;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Provider;
 import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AgentFactory {
     private AgentsServiceConfiguration configuration;
@@ -19,12 +19,14 @@ public class AgentFactory {
     }
 
     @SuppressWarnings("unchecked")
-    public static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider) throws Exception {
+    public static Class<? extends Agent> getAgentClass(Credentials credentials, Provider provider)
+            throws Exception {
         Class<? extends Agent> agentClass;
 
         // Check if this is demo account.
 
-        if (credentials.isDemoCredentials() && !Objects.equal(credentials.getType(), CredentialsTypes.FRAUD)) {
+        if (credentials.isDemoCredentials()
+                && !Objects.equal(credentials.getType(), CredentialsTypes.FRAUD)) {
             agentClass = AgentClassFactory.getAgentClass("demo.DemoAgent");
             credentials.setPassword("demo");
         } else {
@@ -35,16 +37,23 @@ public class AgentFactory {
     }
 
     public Agent create(CredentialsRequest request, AgentContext context) throws Exception {
-        Class<? extends Agent> agentClass = getAgentClass(request.getCredentials(), request.getProvider());
+        Class<? extends Agent> agentClass =
+                getAgentClass(request.getCredentials(), request.getProvider());
 
         return create(agentClass, request, context);
     }
 
-    public Agent create(Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context) throws Exception {
-        Constructor<?> agentConstructor = agentClass.getConstructor(
-                CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
-        
-        Agent agent = (Agent) agentConstructor.newInstance(request, context, configuration.getSignatureKeyPair());
+    public Agent create(
+            Class<? extends Agent> agentClass, CredentialsRequest request, AgentContext context)
+            throws Exception {
+        Constructor<?> agentConstructor =
+                agentClass.getConstructor(
+                        CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
+
+        Agent agent =
+                (Agent)
+                        agentConstructor.newInstance(
+                                request, context, configuration.getSignatureKeyPair());
         agent.setConfiguration(configuration);
 
         return agent;
@@ -55,12 +64,17 @@ public class AgentFactory {
         return AgentClassFactory.getAgentClass(className);
     }
 
-    public Agent createForIntegration(String className, CredentialsRequest request, AgentContext context) throws Exception {
+    public Agent createForIntegration(
+            String className, CredentialsRequest request, AgentContext context) throws Exception {
         Class<? extends Agent> agentClass = getAgentClass(className);
-        Constructor<?> agentConstructor = agentClass.getConstructor(
-                CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
+        Constructor<?> agentConstructor =
+                agentClass.getConstructor(
+                        CredentialsRequest.class, AgentContext.class, SignatureKeyPair.class);
 
-        Agent agent = (Agent) agentConstructor.newInstance(request, context, configuration.getSignatureKeyPair());
+        Agent agent =
+                (Agent)
+                        agentConstructor.newInstance(
+                                request, context, configuration.getSignatureKeyPair());
         agent.setConfiguration(configuration);
 
         return agent;

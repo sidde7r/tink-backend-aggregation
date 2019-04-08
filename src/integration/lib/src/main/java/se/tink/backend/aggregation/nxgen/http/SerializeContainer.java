@@ -45,7 +45,8 @@ public class SerializeContainer {
             List<HashMap<String, Object>> inputList = (List<HashMap<String, Object>>) cookies;
 
             for (HashMap<String, Object> row : inputList) {
-                BasicClientCookie cookie = new BasicClientCookie((String) row.get("name"), (String) row.get("value"));
+                BasicClientCookie cookie =
+                        new BasicClientCookie((String) row.get("name"), (String) row.get("value"));
 
                 cookie.setDomain((String) row.get("domain"));
                 cookie.setPath((String) row.get("path"));

@@ -8,11 +8,6 @@ import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientRequestAdapter;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.filter.ClientFilter;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.StringBuilderWriter;
-import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import javax.ws.rs.core.MultivaluedMap;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,6 +19,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.ws.rs.core.MultivaluedMap;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 /**
  * This is a copy of the logging filter that exist in com.sun.jersey.api.client.filter except that

@@ -8,16 +8,21 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 public class TokenResponse {
     @JsonProperty("token_type")
     private String tokenType;
+
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("refresh_token")
     private String refreshToken;
+
     @JsonProperty("expires_in")
     private int expiresIn;
+
     @JsonProperty("refresh_token_expires_in")
     private int refreshExpiresIn;
 
     public OAuth2Token toAccessToken() {
-        return OAuth2Token.create(tokenType, accessToken, refreshToken, expiresIn, refreshExpiresIn);
+        return OAuth2Token.create(
+                tokenType, accessToken, refreshToken, expiresIn, refreshExpiresIn);
     }
 }

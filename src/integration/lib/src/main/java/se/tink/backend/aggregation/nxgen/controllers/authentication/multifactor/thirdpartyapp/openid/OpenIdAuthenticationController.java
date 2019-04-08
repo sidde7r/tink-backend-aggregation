@@ -22,20 +22,23 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponse;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppResponseImpl;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.ThirdPartyAppStatus;
+import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
-import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
 import se.tink.libraries.cryptography.ECDSAUtils;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
-public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
-    private static final AggregationLogger log = new AggregationLogger(OpenIdAuthenticationController.class);
+public class OpenIdAuthenticationController
+        implements AutoAuthenticator, ThirdPartyAppAuthenticator<String> {
+    private static final AggregationLogger log =
+            new AggregationLogger(OpenIdAuthenticationController.class);
 
-    // This wait time is for the whole user authentication. Different banks have different cumbersome
+    // This wait time is for the whole user authentication. Different banks have different
+    // cumbersome
     // authentication flows.
     private static final long WAIT_FOR_MINUTES = 9;
 
@@ -53,11 +56,13 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     private final String callbackRedirectId;
 
-    public OpenIdAuthenticationController(PersistentStorage persistentStorage,
+    public OpenIdAuthenticationController(
+            PersistentStorage persistentStorage,
             SupplementalInformationHelper supplementalInformationHelper,
             OpenIdApiClient apiClient,
             OpenIdAuthenticator authenticator,
-            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair, String callbackUriId) {
+            CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair,
+            String callbackUriId) {
         this.persistentStorage = persistentStorage;
         this.supplementalInformationHelper = supplementalInformationHelper;
         this.apiClient = apiClient;
@@ -74,12 +79,14 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
     @Override
     public void autoAuthenticate() throws SessionException, BankServiceException {
-        OAuth2Token accessToken = persistentStorage.get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN,
-                OAuth2Token.class)
-                .orElseThrow(() -> {
-                    log.warn("Failed to retrieve access token.");
-                    return SessionError.SESSION_EXPIRED.exception();
-                });
+        OAuth2Token accessToken =
+                persistentStorage
+                        .get(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, OAuth2Token.class)
+                        .orElseThrow(
+                                () -> {
+                                    log.warn("Failed to retrieve access token.");
+                                    return SessionError.SESSION_EXPIRED.exception();
+                                });
 
         if (accessToken.hasAccessExpired()) {
             if (!accessToken.canRefresh()) {
@@ -87,23 +94,32 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            log.info(String.format(
-                    "Trying to refresh access token. Issued: [%s] Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
-                    new Date(accessToken.getIssuedAt() * 1000),
-                    new Date(accessToken.getAccessExpireEpoch() * 1000),
-                    !accessToken.isRefreshNullOrEmpty(),
-                    accessToken.hasRefreshExpire() ? new Date(accessToken.getRefreshExpireEpoch() * 1000) : "N/A"));
+            log.info(
+                    String.format(
+                            "Trying to refresh access token. Issued: [%s] Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
+                            new Date(accessToken.getIssuedAt() * 1000),
+                            new Date(accessToken.getAccessExpireEpoch() * 1000),
+                            !accessToken.isRefreshNullOrEmpty(),
+                            accessToken.hasRefreshExpire()
+                                    ? new Date(accessToken.getRefreshExpireEpoch() * 1000)
+                                    : "N/A"));
 
-            // Refresh token is not always present, if it's absent we fall back to the manual authentication again.
-            String refreshToken = accessToken.getRefreshToken().orElseThrow(SessionError.SESSION_EXPIRED::exception);
+            // Refresh token is not always present, if it's absent we fall back to the manual
+            // authentication again.
+            String refreshToken =
+                    accessToken
+                            .getRefreshToken()
+                            .orElseThrow(SessionError.SESSION_EXPIRED::exception);
 
             try {
 
                 accessToken = apiClient.refreshAccessToken(refreshToken);
             } catch (HttpResponseException e) {
 
-                log.info(String.format("Refresh failed: %s", e.getResponse().getBody(String.class)));
-                // This will "fix" the invalid_grant error temporarily while waiting for more log data. It might also filter some other errors.
+                log.info(
+                        String.format("Refresh failed: %s", e.getResponse().getBody(String.class)));
+                // This will "fix" the invalid_grant error temporarily while waiting for more log
+                // data. It might also filter some other errors.
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
@@ -111,11 +127,14 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            log.info(String.format(
-                    "Refresh success. New token: Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
-                    new Date(accessToken.getAccessExpireEpoch() * 1000),
-                    !accessToken.isRefreshNullOrEmpty(),
-                    accessToken.hasRefreshExpire() ? new Date(accessToken.getRefreshExpireEpoch() * 1000) : "N/A"));
+            log.info(
+                    String.format(
+                            "Refresh success. New token: Access Expires: [%s] HasRefresh: [%b] Refresh Expires: [%s]",
+                            new Date(accessToken.getAccessExpireEpoch() * 1000),
+                            !accessToken.isRefreshNullOrEmpty(),
+                            accessToken.hasRefreshExpire()
+                                    ? new Date(accessToken.getRefreshExpireEpoch() * 1000)
+                                    : "N/A"));
 
             // Store the new accessToken on the persistent storage again.
             persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
@@ -151,11 +170,13 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
         ThirdPartyAppAuthenticationPayload payload = new ThirdPartyAppAuthenticationPayload();
 
-        ThirdPartyAppAuthenticationPayload.Android androidPayload = new ThirdPartyAppAuthenticationPayload.Android();
+        ThirdPartyAppAuthenticationPayload.Android androidPayload =
+                new ThirdPartyAppAuthenticationPayload.Android();
         androidPayload.setIntent(authorizeUrl.get());
         payload.setAndroid(androidPayload);
 
-        ThirdPartyAppAuthenticationPayload.Ios iOsPayload = new ThirdPartyAppAuthenticationPayload.Ios();
+        ThirdPartyAppAuthenticationPayload.Ios iOsPayload =
+                new ThirdPartyAppAuthenticationPayload.Ios();
         iOsPayload.setAppScheme(authorizeUrl.getScheme());
         iOsPayload.setDeepLinkUrl(authorizeUrl.get());
         payload.setIos(iOsPayload);
@@ -164,24 +185,31 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     }
 
     @Override
-    public ThirdPartyAppResponse<String> collect(String reference) throws AuthenticationException,
-            AuthorizationException {
+    public ThirdPartyAppResponse<String> collect(String reference)
+            throws AuthenticationException, AuthorizationException {
 
-        Map<String, String> callbackData = supplementalInformationHelper.waitForSupplementalInformation(
-                formatSupplementalKey(pseudoId),
-                WAIT_FOR_MINUTES,
-                TimeUnit.MINUTES
-        ).orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
+        Map<String, String> callbackData =
+                supplementalInformationHelper
+                        .waitForSupplementalInformation(
+                                formatSupplementalKey(pseudoId), WAIT_FOR_MINUTES, TimeUnit.MINUTES)
+                        .orElseThrow(LoginError.INCORRECT_CREDENTIALS::exception);
 
         handleErrors(callbackData);
 
-        String code = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
-                .orElseThrow(() -> new IllegalStateException("callbackData did not contain code."));
+        String code =
+                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.CODE)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "callbackData did not contain code."));
 
         // todo: verify idToken{s_hash, c_hash}
-        // TODO: Right now many banks don't give us idToken to verify, enable when this standard is mandatory.
-        //        String idToken = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ID_TOKEN)
-        //                .orElseThrow(() -> new IllegalStateException("callbackData did not contain id_token."));
+        // TODO: Right now many banks don't give us idToken to verify, enable when this standard is
+        // mandatory.
+        //        String idToken = getCallbackElement(callbackData,
+        // OpenIdConstants.CallbackParams.ID_TOKEN)
+        //                .orElseThrow(() -> new IllegalStateException("callbackData did not contain
+        // id_token."));
 
         OAuth2Token accessToken = apiClient.exchangeAccessCode(code);
 
@@ -190,7 +218,8 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         }
 
         if (!accessToken.isBearer()) {
-            throw new IllegalStateException(String.format("Unknown token type '%s'.", accessToken.getTokenType()));
+            throw new IllegalStateException(
+                    String.format("Unknown token type '%s'.", accessToken.getTokenType()));
         }
 
         persistentStorage.put(OpenIdConstants.PersistentStorageKeys.ACCESS_TOKEN, accessToken);
@@ -200,10 +229,10 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
     }
 
     /**
-     * Introduce complex/structured data on the state
-     * The state is then passed along by the bank through the callback uri.
-     * We use this complex dataset to be able to introduce more details on the user/client.
-     * We used the Elliptic Curve algorithm in order to reduce the size of the actual JWToken signature.
+     * Introduce complex/structured data on the state The state is then passed along by the bank
+     * through the callback uri. We use this complex dataset to be able to introduce more details on
+     * the user/client. We used the Elliptic Curve algorithm in order to reduce the size of the
+     * actual JWToken signature.
      *
      * @param pseudoId
      * @return
@@ -214,18 +243,20 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
             log.info("Callback JWT not enabled, using pseudoId as state.");
             return pseudoId;
         }
-        JWTCreator.Builder jwtBuilder = JWT.create()
-                .withIssuedAt(new Date())
-                .withClaim("id", pseudoId);
+        JWTCreator.Builder jwtBuilder =
+                JWT.create().withIssuedAt(new Date()).withClaim("id", pseudoId);
 
         if (!Strings.isNullOrEmpty(callbackRedirectId)) {
             // smaller claim to be safe on the length of the state
             jwtBuilder.withClaim("redirectId", callbackRedirectId);
         }
 
-        return jwtBuilder.sign(Algorithm.ECDSA256(
-                    ECDSAUtils.getPublicKeyByPath(callbackJWTSignatureKeyPair.getPublicKeyPath()),
-                    ECDSAUtils.getPrivateKeyByPath(callbackJWTSignatureKeyPair.getPrivateKeyPath())));
+        return jwtBuilder.sign(
+                Algorithm.ECDSA256(
+                        ECDSAUtils.getPublicKeyByPath(
+                                callbackJWTSignatureKeyPair.getPublicKeyPath()),
+                        ECDSAUtils.getPrivateKeyByPath(
+                                callbackJWTSignatureKeyPair.getPrivateKeyPath())));
     }
 
     @Override
@@ -242,11 +273,12 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
         return Optional.of(value);
     }
 
-    private void handleErrors(Map<String, String> callbackData) throws AuthenticationException,
-            AuthorizationException {
-        Optional<String> error = getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR);
-        Optional<String> errorDescription = getCallbackElement(callbackData,
-                OpenIdConstants.CallbackParams.ERROR_DESCRIPTION);
+    private void handleErrors(Map<String, String> callbackData)
+            throws AuthenticationException, AuthorizationException {
+        Optional<String> error =
+                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR);
+        Optional<String> errorDescription =
+                getCallbackElement(callbackData, OpenIdConstants.CallbackParams.ERROR_DESCRIPTION);
 
         if (!error.isPresent()) {
             log.info("OpenId callback success.");
@@ -255,22 +287,20 @@ public class OpenIdAuthenticationController implements AutoAuthenticator, ThirdP
 
         String errorType = error.get();
         if (OpenIdConstants.Errors.ACCESS_DENIED.equalsIgnoreCase(errorType)) {
-            log.info(String.format("OpenId ACCESS_DENIED callback: %s",
-                    SerializationUtils.serializeToString(callbackData)));
+            log.info(
+                    String.format(
+                            "OpenId ACCESS_DENIED callback: %s",
+                            SerializationUtils.serializeToString(callbackData)));
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
         throw new IllegalStateException(
-                String.format(
-                        "Unknown error: %s:%s.",
-                        errorType,
-                        errorDescription.orElse("")
-                )
-        );
+                String.format("Unknown error: %s:%s.", errorType, errorDescription.orElse("")));
     }
 
     private String formatSupplementalKey(String key) {
-        // Ensure third party callback information does not collide with other Supplemental Information by using a
+        // Ensure third party callback information does not collide with other Supplemental
+        // Information by using a
         // prefix. This prefix is the same in MAIN.
         return String.format("tpcb_%s", key);
     }

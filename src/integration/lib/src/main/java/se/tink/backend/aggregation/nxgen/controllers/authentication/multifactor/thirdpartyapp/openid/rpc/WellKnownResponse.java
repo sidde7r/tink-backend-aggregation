@@ -16,48 +16,70 @@ import se.tink.backend.aggregation.nxgen.http.URL;
 public class WellKnownResponse {
     private String version;
     private String issuer;
+
     @JsonProperty("authorization_endpoint")
     private String authorizationEndpoint;
+
     @JsonProperty("token_endpoint")
     private String tokenEndpoint;
+
     @JsonProperty("revocation_endpoint")
     private String revocationEndpoint;
+
     @JsonProperty("jwks_uri")
     private String jwksUri;
+
     @JsonProperty("registration_endpoint")
     private String registrationEndpoint;
+
     @JsonProperty("scopes_supported")
     private List<String> scopesSupported;
+
     @JsonProperty("claims_supported")
     private List<String> claimsSupported;
+
     @JsonProperty("acr_values_supported")
     private List<String> acrValuesSupported;
+
     @JsonProperty("response_types_supported")
     private List<String> responseTypesSupported;
+
     @JsonProperty("response_modes_supported")
     private List<String> responseModesSupported;
+
     @JsonProperty("grant_types_supported")
     private List<String> grantTypesSupported;
+
     @JsonProperty("subject_types_supported")
     private List<String> subjectTypesSupported;
+
     @JsonProperty("id_token_signing_alg_values_supported")
     private Set<String> idTokenSigningAlgValuesSupported;
+
     @JsonProperty("token_endpoint_auth_methods_supported")
     private Set<String> tokenEndpointAuthMethodsSupported;
+
     @JsonProperty("token_endpoint_auth_signing_alg_values_supported")
     private Set<String> tokenEndpointAuthSigningAlgValuesSupported;
+
     @JsonProperty("claim_types_supported")
     private Set<String> claimTypesSupported;
+
     @JsonProperty("claims_parameter_supported")
     private boolean claimsParameterSupported;
+
     @JsonProperty("request_parameter_supported")
     private boolean requestParameterSupported;
+
     @JsonProperty("request_uri_parameter_supported")
     private boolean requestUriParameterSupported;
+
     @JsonProperty("request_object_signing_alg_values_supported")
     private Set<String> requestObjectSigningAlgValuesSupported;
+
     @JsonProperty("request_object_encryption_alg_values_supported")
     private Set<String> requestObjectEncryptionAlgValuesSupported;
+
     @JsonProperty("request_object_encryption_enc_values_supported")
     private Set<String> requestObjectEncryptionEncValuesSupported;
 
@@ -91,7 +113,8 @@ public class WellKnownResponse {
 
     public boolean hasResponseTypes(List<String> responseTypes) {
         // responseTypesSupported will contain, for example: <"code", "code id_token">
-        // We want to make sure that it contains any variation of, for example: "code" and "id_token", regardless
+        // We want to make sure that it contains any variation of, for example: "code" and
+        // "id_token", regardless
         // of which order they are specified ("id_token code" <> "code id_token").
         return responseTypesSupported.stream()
                 .map(s -> Arrays.asList(s.split(" ")))
@@ -154,5 +177,4 @@ public class WellKnownResponse {
     public boolean isRequestParameterSupported() {
         return requestParameterSupported;
     }
-
 }

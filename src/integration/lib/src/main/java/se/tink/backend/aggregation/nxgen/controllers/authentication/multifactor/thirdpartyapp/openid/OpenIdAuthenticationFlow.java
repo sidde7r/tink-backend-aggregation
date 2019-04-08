@@ -10,28 +10,29 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OpenIdAuthenticationFlow {
-    public static Authenticator create(CredentialsRequest request, SystemUpdater systemUpdater,
-            PersistentStorage persistentStorage, SupplementalInformationHelper supplementalInformationHelper,
-            OpenIdAuthenticator authenticator, OpenIdApiClient apiClient,
+    public static Authenticator create(
+            CredentialsRequest request,
+            SystemUpdater systemUpdater,
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
+            OpenIdAuthenticator authenticator,
+            OpenIdApiClient apiClient,
             CallbackJwtSignatureKeyPair callbackJWTSignatureKeyPair) {
 
-        OpenIdAuthenticationController openIdAuthenticationController = new OpenIdAuthenticationController(
-                persistentStorage,
-                supplementalInformationHelper,
-                apiClient,
-                authenticator,
-                callbackJWTSignatureKeyPair,
-                request.getCallbackRedirectUriId()
-        );
+        OpenIdAuthenticationController openIdAuthenticationController =
+                new OpenIdAuthenticationController(
+                        persistentStorage,
+                        supplementalInformationHelper,
+                        apiClient,
+                        authenticator,
+                        callbackJWTSignatureKeyPair,
+                        request.getCallbackRedirectUriId());
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
-                        openIdAuthenticationController,
-                        supplementalInformationHelper
-                ),
-                openIdAuthenticationController
-        );
+                        openIdAuthenticationController, supplementalInformationHelper),
+                openIdAuthenticationController);
     }
 }

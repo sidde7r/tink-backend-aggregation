@@ -5,9 +5,15 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapConsta
 
 public class AuthenticationSecondRequestBody extends MultivaluedMapImpl {
 
-    public AuthenticationSecondRequestBody(String b64ResponseCurrent, String b64ResponseCurrentWithoutPin,
-            String deviceHash, String deviceUUID, String applicationVersion, String encapAPIVersion,
-            String registrationId, String saltHash) {
+    public AuthenticationSecondRequestBody(
+            String b64ResponseCurrent,
+            String b64ResponseCurrentWithoutPin,
+            String deviceHash,
+            String deviceUUID,
+            String applicationVersion,
+            String encapAPIVersion,
+            String registrationId,
+            String saltHash) {
 
         add("applicationId", EncapConstants.MessageInformation.APPLICATION_ID);
         add("b64ResponseCurrent", b64ResponseCurrent);
@@ -19,8 +25,7 @@ public class AuthenticationSecondRequestBody extends MultivaluedMapImpl {
         add("device.IsRootAvailable", EncapConstants.DeviceInformation.IS_ROOT_AVAILABLE);
         add("device.SystemName", EncapConstants.DeviceInformation.OS_NAME_AND_TYPE);
         add("device.SystemVersion", EncapConstants.DeviceInformation.SYSTEM_VERSION);
-        add("device.UserInterfaceIdiom", 
-                EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
+        add("device.UserInterfaceIdiom", EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
         add("meta.applicationVersion", applicationVersion);
         add("meta.encapAPIVersion", encapAPIVersion);
         add("operation", EncapConstants.MessageInformation.OPERATION_AUTHENTICATE);

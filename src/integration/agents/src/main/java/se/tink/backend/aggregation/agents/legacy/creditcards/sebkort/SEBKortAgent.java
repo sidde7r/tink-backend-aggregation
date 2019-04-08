@@ -14,6 +14,9 @@ import javax.ws.rs.core.MediaType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
@@ -33,14 +36,11 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.BankIdException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
+import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jsoup.ElementUtils;
 import se.tink.backend.aggregation.agents.utils.signicat.SignicatParsingUtils;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.Catalog;
 
 public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExecutor {
@@ -52,7 +52,8 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
     }
 
     private static final int BANKID_MAX_ATTEMPTS = 80;
-    private static final String AUTHENTICATION_BANKID_URL = "https://id.signicat.com/std/method/seb?method={0}&profile=nis_cobrand&language=sv&target=https%3A%2F%2Fsecure.sebkort.com%2Fsea%2Fexternal%2FProcessSignicatResponse%3Fmethod%3D{0}%26target%3D%252Fnis%252Fm%252F{1}%252Fexternal%252FvalidateEidLogin%26prodgroup%3D{2}%26SEB_Referer%3D%252Fnis%26uname%26countryCode%3DSE";
+    private static final String AUTHENTICATION_BANKID_URL =
+            "https://id.signicat.com/std/method/seb?method={0}&profile=nis_cobrand&language=sv&target=https%3A%2F%2Fsecure.sebkort.com%2Fsea%2Fexternal%2FProcessSignicatResponse%3Fmethod%3D{0}%26target%3D%252Fnis%252Fm%252F{1}%252Fexternal%252FvalidateEidLogin%26prodgroup%3D{2}%26SEB_Referer%3D%252Fnis%26uname%26countryCode%3DSE";
     private static final String BASE_URL = "https://application.sebkort.com/nis/m/";
 
     private final Client client;
@@ -61,7 +62,8 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
     private final String product;
     private boolean hasRefreshed = false;
 
-    public SEBKortAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SEBKortAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         client = setupClient();
@@ -74,35 +76,30 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
     }
 
     private void abortOnBankIdError(String code, String message) throws BankIdException {
-        switch(code.toLowerCase()) {
-        case "already_in_progress":
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        case "cancelled":
-            // bankid cancelled due to `already_in_progress`
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        case "user_cancel":
-            throw BankIdError.CANCELLED.exception();
-        case "no_client":
-            throw BankIdError.NO_CLIENT.exception();
-        case "user_sign":
-            // this happens if `BANKID_MAX_ATTEMPTS * SEELP_TIME` is less than SEB's timeout AND the user
-            // has not yet signed the authentication (but opened BankId).
-            throw BankIdError.TIMEOUT.exception();
-        default:
-            throw new IllegalStateException(
-                    String.format(
-                            "#login-refactoring - SEBKort - Mobile Bank ID error, code %s, message %s",
-                            code,
-                            message
-                    )
-            );
+        switch (code.toLowerCase()) {
+            case "already_in_progress":
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            case "cancelled":
+                // bankid cancelled due to `already_in_progress`
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            case "user_cancel":
+                throw BankIdError.CANCELLED.exception();
+            case "no_client":
+                throw BankIdError.NO_CLIENT.exception();
+            case "user_sign":
+                // this happens if `BANKID_MAX_ATTEMPTS * SEELP_TIME` is less than SEB's timeout AND
+                // the user
+                // has not yet signed the authentication (but opened BankId).
+                throw BankIdError.TIMEOUT.exception();
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                "#login-refactoring - SEBKort - Mobile Bank ID error, code %s, message %s",
+                                code, message));
         }
     }
 
-    /**
-     * Authenticate the user using username and Mobile BankID.
-     * 
-     */
+    /** Authenticate the user using username and Mobile BankID. */
     private boolean authenticateWithMobileBankId() throws BankIdException {
         // Fetch and parse a dynamically created endpoint for making requests to.
 
@@ -112,9 +109,12 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
             bankIdMethod = "sbid-remote-ec";
         }
 
-        String authenticationUrl = Catalog.format(AUTHENTICATION_BANKID_URL, bankIdMethod, code, product);
+        String authenticationUrl =
+                Catalog.format(AUTHENTICATION_BANKID_URL, bankIdMethod, code, product);
 
-        String authenticationReponse = createClientRequest(authenticationUrl, client, DEFAULT_USER_AGENT).get(String.class);
+        String authenticationReponse =
+                createClientRequest(authenticationUrl, client, DEFAULT_USER_AGENT)
+                        .get(String.class);
 
         String bankIdUrl = SignicatParsingUtils.parseBankIdServiceUrl(authenticationReponse);
 
@@ -123,19 +123,23 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         OrderBankIdRequest orderBankIdRequest = new OrderBankIdRequest();
         orderBankIdRequest.setSubject(credentials.getUsername());
 
-        OrderBankIdResponse orderBankIdResponse = createClientRequest(bankIdUrl + "/order", client, DEFAULT_USER_AGENT).type(
-                MediaType.APPLICATION_JSON).post(OrderBankIdResponse.class, orderBankIdRequest);
+        OrderBankIdResponse orderBankIdResponse =
+                createClientRequest(bankIdUrl + "/order", client, DEFAULT_USER_AGENT)
+                        .type(MediaType.APPLICATION_JSON)
+                        .post(OrderBankIdResponse.class, orderBankIdRequest);
 
         // Check for errors during initialization
         if (orderBankIdResponse.getError() != null) {
-            abortOnBankIdError(orderBankIdResponse.getError().getCode(), orderBankIdResponse.getError().getMessage());
+            abortOnBankIdError(
+                    orderBankIdResponse.getError().getCode(),
+                    orderBankIdResponse.getError().getMessage());
         }
 
         // Prompt a BankId authentication client-side.
 
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
-        
+
         supplementalRequester.requestSupplementalInformation(credentials, false);
 
         // Validate authentication.
@@ -148,8 +152,10 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         // Poll BankID status periodically until the process is complete.
 
         for (int i = 0; i < BANKID_MAX_ATTEMPTS; i++) {
-            collectBankIdResponse = createClientRequest(bankIdUrl + "/collect", client, DEFAULT_USER_AGENT)
-                    .type(MediaType.APPLICATION_JSON).post(CollectBankIdResponse.class, collectBankIdRequest);
+            collectBankIdResponse =
+                    createClientRequest(bankIdUrl + "/collect", client, DEFAULT_USER_AGENT)
+                            .type(MediaType.APPLICATION_JSON)
+                            .post(CollectBankIdResponse.class, collectBankIdRequest);
 
             if (Objects.equal(collectBankIdResponse.getProgressStatus(), "COMPLETE")) {
                 break;
@@ -158,19 +164,21 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
             if (collectBankIdResponse.getError() != null) {
                 abortOnBankIdError(
                         collectBankIdResponse.getError().getCode(),
-                        collectBankIdResponse.getError().getMessage()
-                );
+                        collectBankIdResponse.getError().getMessage());
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
         }
 
         if (!Objects.equal(collectBankIdResponse.getProgressStatus(), "COMPLETE")) {
-            abortOnBankIdError(collectBankIdResponse.getProgressStatus(),"");
+            abortOnBankIdError(collectBankIdResponse.getProgressStatus(), "");
         }
 
-        String completeBankIdResponse = createClientRequest(collectBankIdResponse.getCompleteUrl(), client, DEFAULT_USER_AGENT).type(
-                MediaType.APPLICATION_JSON).post(String.class, collectBankIdRequest);
+        String completeBankIdResponse =
+                createClientRequest(
+                                collectBankIdResponse.getCompleteUrl(), client, DEFAULT_USER_AGENT)
+                        .type(MediaType.APPLICATION_JSON)
+                        .post(String.class, collectBankIdRequest);
 
         // Initiate the SAML request.
 
@@ -181,9 +189,11 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
 
         String endpoint = fixUrlFromSecureToApplication(formElement.attr("action"));
 
-        String samlResponse = createClientRequest(endpoint, client, DEFAULT_USER_AGENT)
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).entity(ElementUtils.parseFormParameters(formElement))
-                .post(String.class);
+        String samlResponse =
+                createClientRequest(endpoint, client, DEFAULT_USER_AGENT)
+                        .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                        .entity(ElementUtils.parseFormParameters(formElement))
+                        .post(String.class);
 
         // Use the SAML created secret key to authenticate the user.
 
@@ -192,26 +202,29 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
 
         String authenticationEndpoint = fixUrlFromSecureToApplication(formElement.attr("action"));
 
-        ClientResponse authenticateClientResponse = createClientRequest(authenticationEndpoint, client, DEFAULT_USER_AGENT)
-                .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).entity(ElementUtils.parseFormParameters(formElement))
-                .post(ClientResponse.class);
+        ClientResponse authenticateClientResponse =
+                createClientRequest(authenticationEndpoint, client, DEFAULT_USER_AGENT)
+                        .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                        .entity(ElementUtils.parseFormParameters(formElement))
+                        .post(ClientResponse.class);
 
         // Check and see if the authentication was successful.
 
         String loginRedirectUrl = authenticateClientResponse.getHeaders().getFirst("Location");
         authenticateClientResponse.close();
 
-        Preconditions.checkState(loginRedirectUrl != null && loginRedirectUrl.endsWith("validateEidLogin"));
+        Preconditions.checkState(
+                loginRedirectUrl != null && loginRedirectUrl.endsWith("validateEidLogin"));
         createClientRequest(loginRedirectUrl, client, DEFAULT_USER_AGENT).get(String.class);
         return true;
     }
 
     /**
-     * Replaces secure with application in the domain. We were getting the following when running SEBKortAgent:
-     * javax.net.ssl.SSLException: hostname in certificate didn't match:
-     *      <secure.sebkort.com> != <application.sebkort.com> OR <application.sebkort.com>
+     * Replaces secure with application in the domain. We were getting the following when running
+     * SEBKortAgent: javax.net.ssl.SSLException: hostname in certificate didn't match:
+     * <secure.sebkort.com> != <application.sebkort.com> OR <application.sebkort.com>
      *
-     * As a hackish fix we go to application.sebkort.com instead of secure.sebkort.com
+     * <p>As a hackish fix we go to application.sebkort.com instead of secure.sebkort.com
      *
      * @param url
      * @return
@@ -224,28 +237,46 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
     }
 
     private List<ContractEntity> fetchContracts() throws Exception {
-        ContractsResponse response = createClientRequest(BASE_URL + code + "/a/contracts", client, DEFAULT_USER_AGENT).get(
-                ContractsResponse.class);
+        ContractsResponse response =
+                createClientRequest(BASE_URL + code + "/a/contracts", client, DEFAULT_USER_AGENT)
+                        .get(ContractsResponse.class);
 
         return response.getBody();
     }
 
     private List<InvoiceBillingUnitEntity> fetchInvoiceBillingUnits() throws Exception {
-        InvoiceBillingUnitsResponse response = createClientRequest(BASE_URL + code + "/a/invoiceBillingUnits", client, DEFAULT_USER_AGENT)
-                .type(MediaType.APPLICATION_JSON).get(InvoiceBillingUnitsResponse.class);
+        InvoiceBillingUnitsResponse response =
+                createClientRequest(
+                                BASE_URL + code + "/a/invoiceBillingUnits",
+                                client,
+                                DEFAULT_USER_AGENT)
+                        .type(MediaType.APPLICATION_JSON)
+                        .get(InvoiceBillingUnitsResponse.class);
 
         if (response.getErrorCode() != null) {
-            warn("No invoice billing units: " + response.getErrorCode() + " " + response.getMessage());
+            warn(
+                    "No invoice billing units: "
+                            + response.getErrorCode()
+                            + " "
+                            + response.getMessage());
         }
 
         return response.getBody();
     }
 
-    private InvoiceDetailsEntity fetchInvoiceDetails(InvoiceBillingUnitEntity invoiceBillingUnit,
-            InvoiceEntity invoice) throws Exception {
-        InvoiceDetailsResponse response = createClientRequest(
-                BASE_URL + code + "/a/invoices/details/" + invoiceBillingUnit.getArrangementNumber() + "/"
-                        + invoice.getInvoiceId(), client, DEFAULT_USER_AGENT).get(InvoiceDetailsResponse.class);
+    private InvoiceDetailsEntity fetchInvoiceDetails(
+            InvoiceBillingUnitEntity invoiceBillingUnit, InvoiceEntity invoice) throws Exception {
+        InvoiceDetailsResponse response =
+                createClientRequest(
+                                BASE_URL
+                                        + code
+                                        + "/a/invoices/details/"
+                                        + invoiceBillingUnit.getArrangementNumber()
+                                        + "/"
+                                        + invoice.getInvoiceId(),
+                                client,
+                                DEFAULT_USER_AGENT)
+                        .get(InvoiceDetailsResponse.class);
 
         if ("GENERIC_VALIDATION_ERROR".equals(response.getErrorCode())) {
             throw new RetryableError(response.getErrorCode());
@@ -254,10 +285,17 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         return response.getBody();
     }
 
-    private List<InvoiceEntity> fetchInvoices(InvoiceBillingUnitEntity invoiceBillingUnit) throws Exception {
-        InvoiceBillingUnitResponse response = createClientRequest(
-                BASE_URL + code + "/a/invoices/" + invoiceBillingUnit.getArrangementNumber(), client, DEFAULT_USER_AGENT).get(
-                InvoiceBillingUnitResponse.class);
+    private List<InvoiceEntity> fetchInvoices(InvoiceBillingUnitEntity invoiceBillingUnit)
+            throws Exception {
+        InvoiceBillingUnitResponse response =
+                createClientRequest(
+                                BASE_URL
+                                        + code
+                                        + "/a/invoices/"
+                                        + invoiceBillingUnit.getArrangementNumber(),
+                                client,
+                                DEFAULT_USER_AGENT)
+                        .get(InvoiceBillingUnitResponse.class);
 
         if ("GENERIC_TECHNICAL_ERROR".equals(response.getErrorCode())) {
             throw new RetryableError(response.getErrorCode());
@@ -266,23 +304,32 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         return response.getBody();
     }
 
-    private InvoiceDetailsEntity fetchPengingTransactions(ContractEntity contractEntity) throws Exception {
-        InvoiceDetailsResponse response = createClientRequest(
-                BASE_URL + code + "/a/pendingTransactions/" + contractEntity.getContractId(), client, DEFAULT_USER_AGENT).get(
-                InvoiceDetailsResponse.class);
+    private InvoiceDetailsEntity fetchPengingTransactions(ContractEntity contractEntity)
+            throws Exception {
+        InvoiceDetailsResponse response =
+                createClientRequest(
+                                BASE_URL
+                                        + code
+                                        + "/a/pendingTransactions/"
+                                        + contractEntity.getContractId(),
+                                client,
+                                DEFAULT_USER_AGENT)
+                        .get(InvoiceDetailsResponse.class);
 
         return response.getBody();
     }
 
     /**
-     * Helper method to determine if we're content with the refresh. We fetch information for multiple accounts in a
-     * single stream of invoices, so each we must be content with all the accounts before we're done.
+     * Helper method to determine if we're content with the refresh. We fetch information for
+     * multiple accounts in a single stream of invoices, so each we must be content with all the
+     * accounts before we're done.
      *
      * @param accountsByAccountNumber
      * @param transactionsByAccountNumber
      * @return
      */
-    private boolean isContentWithRefresh(Map<String, Account> accountsByAccountNumber,
+    private boolean isContentWithRefresh(
+            Map<String, Account> accountsByAccountNumber,
             Map<String, List<Transaction>> transactionsByAccountNumber) {
         Set<String> accountNumbers = accountsByAccountNumber.keySet();
 
@@ -291,7 +338,8 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         }
 
         for (String accountNumber : accountNumbers) {
-            if (!isContentWithRefresh(accountsByAccountNumber.get(accountNumber),
+            if (!isContentWithRefresh(
+                    accountsByAccountNumber.get(accountNumber),
                     transactionsByAccountNumber.get(accountNumber))) {
                 return false;
             }
@@ -309,7 +357,8 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         }
         hasRefreshed = true;
 
-        // We are seeing spurious failures and currently don't know why this happens. Retrying a couple of times yields
+        // We are seeing spurious failures and currently don't know why this happens. Retrying a
+        // couple of times yields
         // a lower failure rate.
 
         final int MAX_TRIES = 4;
@@ -339,7 +388,8 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         List<InvoiceBillingUnitEntity> invoiceBillingUnits = fetchInvoiceBillingUnits();
 
         if (invoiceBillingUnits == null) {
-            statusUpdater.updateStatus(CredentialsStatus.UPDATED, "Det finns inga fakturor att hämta.");
+            statusUpdater.updateStatus(
+                    CredentialsStatus.UPDATED, "Det finns inga fakturor att hämta.");
             return;
         }
 
@@ -348,11 +398,13 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
 
             List<InvoiceEntity> invoices = fetchInvoices(invoiceBillingUnit);
             for (InvoiceEntity invoice : invoices) {
-                InvoiceDetailsEntity invoiceDetails = fetchInvoiceDetails(invoiceBillingUnit, invoice);
+                InvoiceDetailsEntity invoiceDetails =
+                        fetchInvoiceDetails(invoiceBillingUnit, invoice);
 
                 parser.parseInvoiceDetails(invoiceDetails);
 
-                if (isContentWithRefresh(parser.getAccountsByAccountNumber(),
+                if (isContentWithRefresh(
+                        parser.getAccountsByAccountNumber(),
                         parser.getTransactionsByAccountNumber())) {
                     break;
                 }
@@ -372,10 +424,12 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
         for (String accountNumber : accountsByAccountNumber.keySet()) {
             Account account = accountsByAccountNumber.get(accountNumber);
 
-            // Important that no RetryableError are thrown after this. Otherwise we risk have the AgentContext in an
+            // Important that no RetryableError are thrown after this. Otherwise we risk have the
+            // AgentContext in an
             // inconsistent state when we are retrying.
 
-            financialDataCacher.updateTransactions(account, parser.getTransactionsByAccountNumber().get(accountNumber));
+            financialDataCacher.updateTransactions(
+                    account, parser.getTransactionsByAccountNumber().get(accountNumber));
         }
     }
 
@@ -395,10 +449,10 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
         switch (credentials.getType()) {
-        case MOBILE_BANKID:
-            return authenticateWithMobileBankId();
-        default:
-            throw new IllegalStateException("Credentials type not supported.");
+            case MOBILE_BANKID:
+                return authenticateWithMobileBankId();
+            default:
+                throw new IllegalStateException("Credentials type not supported.");
         }
     }
 
@@ -416,7 +470,8 @@ public class SEBKortAgent extends AbstractAgent implements DeprecatedRefreshExec
      * @throws Exception
      */
     private static Builder createClientRequest(String url, Client client, String userAgent) {
-        return client.resource(url).header("User-Agent", userAgent).accept(MediaType.APPLICATION_JSON);
+        return client.resource(url)
+                .header("User-Agent", userAgent)
+                .accept(MediaType.APPLICATION_JSON);
     }
-
 }

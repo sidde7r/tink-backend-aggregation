@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.nxgen.controllers.utils;
 
-import se.tink.backend.agents.rpc.Field;
-import se.tink.backend.agents.rpc.Provider;
-import se.tink.libraries.strings.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.Field;
+import se.tink.backend.agents.rpc.Provider;
+import se.tink.libraries.strings.StringUtils;
 
 public class SupplementalInformationFormer {
 
@@ -15,8 +14,7 @@ public class SupplementalInformationFormer {
 
     public SupplementalInformationFormer(final Provider provider) {
         supplementalInformation =
-                provider.getSupplementalFields()
-                        .stream()
+                provider.getSupplementalFields().stream()
                         .collect(Collectors.toMap(Field::getName, field -> field));
     }
 

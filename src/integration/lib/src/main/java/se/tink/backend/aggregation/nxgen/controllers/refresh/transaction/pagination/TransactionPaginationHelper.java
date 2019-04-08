@@ -18,9 +18,9 @@ public class TransactionPaginationHelper {
         this.request = request;
     }
 
-    public boolean isContentWithRefresh(Account account, List<AggregationTransaction> transactions) {
-        if (transactions.size() == 0)
-            return false;
+    public boolean isContentWithRefresh(
+            Account account, List<AggregationTransaction> transactions) {
+        if (transactions.size() == 0) return false;
 
         if (request.getAccounts() == null || request.getCredentials().getUpdated() == null)
             return false;
@@ -63,26 +63,27 @@ public class TransactionPaginationHelper {
                 }
             }
 
-            int overlappingTransactionDays = Math.abs(DateUtils.getNumberOfDaysBetween(t.getDate(), certainDate.get()));
+            int overlappingTransactionDays =
+                    Math.abs(DateUtils.getNumberOfDaysBetween(t.getDate(), certainDate.get()));
 
-            if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS &&
-                    overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS)
-                return true;
+            if (transactionsBeforeCertainDate >= SAFETY_THRESHOLD_NUMBER_OF_OVERLAPS
+                    && overlappingTransactionDays >= SAFETY_THRESHOLD_NUMBER_OF_DAYS) return true;
         }
 
         return false;
     }
 
-    /**
-     * Returns the certain date for this account (that is from when we know we have all data)
-     */
+    /** Returns the certain date for this account (that is from when we know we have all data) */
     private Optional<Date> getContentWithRefreshDate(final Account account) {
         if (request.getAccounts() == null || request.getCredentials().getUpdated() == null) {
             return Optional.empty();
         }
 
         return request.getAccounts().stream()
-                .filter(a -> account.isUniqueIdentifierEqual(a.getBankId()) && a.getCertainDate() != null)
+                .filter(
+                        a ->
+                                account.isUniqueIdentifierEqual(a.getBankId())
+                                        && a.getCertainDate() != null)
                 .map(se.tink.backend.agents.rpc.Account::getCertainDate)
                 .findFirst();
     }

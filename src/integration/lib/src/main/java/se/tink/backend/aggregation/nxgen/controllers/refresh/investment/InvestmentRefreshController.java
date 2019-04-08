@@ -1,6 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.refresh.investment;
 
 import com.google.common.base.Preconditions;
+import java.util.*;
+import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshAction;
 import se.tink.backend.aggregation.nxgen.controllers.metrics.MetricRefreshController;
@@ -8,15 +10,12 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountRefresher;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.UpdateController;
 import se.tink.backend.aggregation.nxgen.core.account.investment.InvestmentAccount;
-import se.tink.backend.agents.rpc.Account;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.pair.Pair;
 
-import java.util.*;
-
 public final class InvestmentRefreshController implements AccountRefresher {
-    private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE = new MetricId.MetricLabels()
-            .add(AccountRefresher.METRIC_ACCOUNT_TYPE, "investment");
+    private static final MetricId.MetricLabels METRIC_ACCOUNT_TYPE =
+            new MetricId.MetricLabels().add(AccountRefresher.METRIC_ACCOUNT_TYPE, "investment");
 
     private final MetricRefreshController metricRefreshController;
     private final UpdateController updateController;
@@ -24,7 +23,9 @@ public final class InvestmentRefreshController implements AccountRefresher {
 
     private Collection<InvestmentAccount> investments;
 
-    public InvestmentRefreshController(MetricRefreshController metricRefreshController, UpdateController updateController,
+    public InvestmentRefreshController(
+            MetricRefreshController metricRefreshController,
+            UpdateController updateController,
             AccountFetcher<InvestmentAccount> investmentFetcher) {
         this.metricRefreshController = Preconditions.checkNotNull(metricRefreshController);
         this.updateController = Preconditions.checkNotNull(updateController);
@@ -33,8 +34,10 @@ public final class InvestmentRefreshController implements AccountRefresher {
 
     @Override
     public Map<Account, AccountFeatures> fetchAccounts() {
-        MetricRefreshAction action = metricRefreshController.buildAction(AccountRefresher.METRIC_ID
-                .label(METRIC_ACCOUNT_TYPE), AccountRefresher.METRIC_COUNTER_BUCKETS);
+        MetricRefreshAction action =
+                metricRefreshController.buildAction(
+                        AccountRefresher.METRIC_ID.label(METRIC_ACCOUNT_TYPE),
+                        AccountRefresher.METRIC_COUNTER_BUCKETS);
 
         try {
             action.start();
@@ -42,7 +45,8 @@ public final class InvestmentRefreshController implements AccountRefresher {
             Map<Account, AccountFeatures> systemAccounts = new HashMap<>();
 
             for (InvestmentAccount account : getInvestments()) {
-                Pair<Account, AccountFeatures> systemAccount = updateController.updateAccount(account);
+                Pair<Account, AccountFeatures> systemAccount =
+                        updateController.updateAccount(account);
                 if (systemAccount != null) {
                     systemAccounts.put(systemAccount.first, systemAccount.second);
                 }
@@ -61,7 +65,9 @@ public final class InvestmentRefreshController implements AccountRefresher {
 
     private Collection<InvestmentAccount> getInvestments() {
         if (investments == null) {
-            investments = Optional.ofNullable(investmentFetcher.fetchAccounts()).orElse(Collections.emptyList());
+            investments =
+                    Optional.ofNullable(investmentFetcher.fetchAccounts())
+                            .orElse(Collections.emptyList());
         }
 
         return investments;

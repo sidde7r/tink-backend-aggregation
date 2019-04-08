@@ -11,9 +11,7 @@ public abstract class AgentRuntimeExceptionImpl extends RuntimeException impleme
     }
 
     AgentRuntimeExceptionImpl(AgentBaseError error, LocalizableKey userMessage) {
-        super(String.format("Cause: %s.%s",
-                error.getClass().getSimpleName(),
-                error.name()));
+        super(String.format("Cause: %s.%s", error.getClass().getSimpleName(), error.name()));
 
         this.userMessage = userMessage;
     }

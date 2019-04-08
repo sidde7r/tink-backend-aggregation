@@ -10,22 +10,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.enums.FeatureFlags;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
-import se.tink.libraries.user.rpc.User;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
+import se.tink.libraries.enums.FeatureFlags;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.user.rpc.User;
 
 public abstract class AggregationTransaction {
-    private static final TypeReference<HashMap<String, String>> HASH_MAP_REFERENCE = new TypeReference<HashMap<String, String>>() { };
+    private static final TypeReference<HashMap<String, String>> HASH_MAP_REFERENCE =
+            new TypeReference<HashMap<String, String>>() {};
     private final Amount amount;
     private final String description;
     private final Date date;
     private final String rawDetails;
 
-    protected AggregationTransaction(Amount amount, Date date, String description, String rawDetails) {
+    protected AggregationTransaction(
+            Amount amount, Date date, String description, String rawDetails) {
         this.amount = amount;
         this.date = date;
         this.description = description;
@@ -60,9 +62,13 @@ public abstract class AggregationTransaction {
         transaction.setDate(getDate());
         transaction.setType(getType());
 
-        boolean multiCurrencyEnabled = FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(user.getFlags());
+        boolean multiCurrencyEnabled =
+                FeatureFlags.FeatureFlagGroup.MULTI_CURRENCY_FOR_POCS.isFlagInGroup(
+                        user.getFlags());
         if (!Strings.isNullOrEmpty(getRawDetails()) || multiCurrencyEnabled) {
-            transaction.setPayload(TransactionPayloadTypes.DETAILS, addCurrencyIfEligible(multiCurrencyEnabled, getRawDetails()));
+            transaction.setPayload(
+                    TransactionPayloadTypes.DETAILS,
+                    addCurrencyIfEligible(multiCurrencyEnabled, getRawDetails()));
         }
 
         return transaction;
@@ -73,11 +79,13 @@ public abstract class AggregationTransaction {
             return rawDetails;
         }
 
-        // This solution will not work for agents adding custom raw details that are not HashMap<String, String>, which
+        // This solution will not work for agents adding custom raw details that are not
+        // HashMap<String, String>, which
         // a few belgian agents does.
-        HashMap<String, String> map = !Strings.isNullOrEmpty(getRawDetails()) ?
-                SerializationUtils.deserializeFromString(rawDetails, HASH_MAP_REFERENCE) :
-                Maps.newHashMap();
+        HashMap<String, String> map =
+                !Strings.isNullOrEmpty(getRawDetails())
+                        ? SerializationUtils.deserializeFromString(rawDetails, HASH_MAP_REFERENCE)
+                        : Maps.newHashMap();
 
         if (map == null) {
             return rawDetails;
@@ -86,7 +94,7 @@ public abstract class AggregationTransaction {
         return SerializationUtils.serializeToString(map);
     }
 
-    public static abstract class Builder {
+    public abstract static class Builder {
         private Amount amount;
         private String description;
         private Date date;
@@ -134,7 +142,7 @@ public abstract class AggregationTransaction {
         public Builder setRawDetails(Object rawDetails) {
             if (rawDetails != null) {
                 if (rawDetails instanceof String) {
-                    this.rawDetails = (String)rawDetails;
+                    this.rawDetails = (String) rawDetails;
                 } else {
                     this.rawDetails = SerializationUtils.serializeToString(rawDetails);
                 }

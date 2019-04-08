@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
-import se.tink.backend.agents.rpc.Credentials;
-
 import java.util.List;
+import se.tink.backend.agents.rpc.Credentials;
 
 /**
  * In progressive authentication, carry request information such as step, userInputs and credential.

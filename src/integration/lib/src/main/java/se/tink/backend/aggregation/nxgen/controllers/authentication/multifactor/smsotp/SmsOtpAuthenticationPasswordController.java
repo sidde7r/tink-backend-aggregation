@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -12,8 +14,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.libraries.i18n.Catalog;
 
 public class SmsOtpAuthenticationPasswordController<T> implements MultiFactorAuthenticator {
@@ -25,16 +25,21 @@ public class SmsOtpAuthenticationPasswordController<T> implements MultiFactorAut
     private final SmsOtpAuthenticatorPassword<T> authenticator;
     private final int otpValueLength;
 
-    public SmsOtpAuthenticationPasswordController(Catalog catalog,
-            SupplementalInformationHelper supplementalInformationHelper, SmsOtpAuthenticatorPassword<T> authenticator) {
+    public SmsOtpAuthenticationPasswordController(
+            Catalog catalog,
+            SupplementalInformationHelper supplementalInformationHelper,
+            SmsOtpAuthenticatorPassword<T> authenticator) {
         this(catalog, supplementalInformationHelper, authenticator, DEFAULT_OTP_VALUE_LENGTH);
     }
 
-    public SmsOtpAuthenticationPasswordController(Catalog catalog,
+    public SmsOtpAuthenticationPasswordController(
+            Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
-            SmsOtpAuthenticatorPassword<T> authenticator, int otpValueLength) {
+            SmsOtpAuthenticatorPassword<T> authenticator,
+            int otpValueLength) {
         this.catalog = Preconditions.checkNotNull(catalog);
-        this.supplementalInformationHelper = Preconditions.checkNotNull(supplementalInformationHelper);
+        this.supplementalInformationHelper =
+                Preconditions.checkNotNull(supplementalInformationHelper);
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.otpValueLength = otpValueLength;
     }
@@ -46,9 +51,13 @@ public class SmsOtpAuthenticationPasswordController<T> implements MultiFactorAut
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
-        NotImplementedException.throwIf(!Objects.equals(credentials.getType(), getType()),
-                String.format("Authentication method not implemented for CredentialsType: %s", credentials.getType()));
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
+        NotImplementedException.throwIf(
+                !Objects.equals(credentials.getType(), getType()),
+                String.format(
+                        "Authentication method not implemented for CredentialsType: %s",
+                        credentials.getType()));
 
         String username = credentials.getField(Field.Key.USERNAME);
         String password = credentials.getField(Field.Key.PASSWORD);
@@ -59,8 +68,8 @@ public class SmsOtpAuthenticationPasswordController<T> implements MultiFactorAut
 
         T initValues = authenticator.init(username, password);
 
-        Map<String, String> supplementalInformation = supplementalInformationHelper
-                .askSupplementalInformation(getOtpField());
+        Map<String, String> supplementalInformation =
+                supplementalInformationHelper.askSupplementalInformation(getOtpField());
 
         authenticator.authenticate(supplementalInformation.get(OTP_VALUE_FIELD_KEY), initValues);
     }

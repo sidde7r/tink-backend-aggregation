@@ -4,15 +4,15 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.ThirdPartyAppException;
 import se.tink.backend.aggregation.agents.exceptions.errors.ThirdPartyAppError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.thirdpartyapp.payloads.ThirdPartyAppAuthenticationPayload;
+import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.libraries.i18n.LocalizableKey;
 
 public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuthenticator {
@@ -24,13 +24,16 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
     private static final int DEFAULT_MAX_ATTEMPTS = 90;
     private static final long SLEEP_SECONDS = TimeUnit.SECONDS.toSeconds(2);
 
-    public ThirdPartyAppAuthenticationController(ThirdPartyAppAuthenticator<T> authenticator,
+    public ThirdPartyAppAuthenticationController(
+            ThirdPartyAppAuthenticator<T> authenticator,
             SupplementalInformationHelper supplementalInformationHelper) {
         this(authenticator, supplementalInformationHelper, DEFAULT_MAX_ATTEMPTS);
     }
 
-    public ThirdPartyAppAuthenticationController(ThirdPartyAppAuthenticator<T> authenticator,
-            SupplementalInformationHelper supplementalInformationHelper, int maxPollAttempts) {
+    public ThirdPartyAppAuthenticationController(
+            ThirdPartyAppAuthenticator<T> authenticator,
+            SupplementalInformationHelper supplementalInformationHelper,
+            int maxPollAttempts) {
         Preconditions.checkArgument(maxPollAttempts > 0);
         this.authenticator = authenticator;
         this.supplementalInformationHelper = supplementalInformationHelper;
@@ -49,33 +52,38 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
         supplementalInformationHelper.openThirdPartyApp(payload);
     }
 
-    private ThirdPartyAppException decorateException(ThirdPartyAppStatus status, ThirdPartyAppError error) {
-        Optional<LocalizableKey> authenticatorMessage = authenticator.getUserErrorMessageFor(status);
+    private ThirdPartyAppException decorateException(
+            ThirdPartyAppStatus status, ThirdPartyAppError error) {
+        Optional<LocalizableKey> authenticatorMessage =
+                authenticator.getUserErrorMessageFor(status);
         return error.exception(authenticatorMessage.orElse(error.userMessage()));
     }
 
-    private boolean handleStatus(ThirdPartyAppStatus status) throws AuthenticationException, AuthorizationException {
-        if(status == null){
+    private boolean handleStatus(ThirdPartyAppStatus status)
+            throws AuthenticationException, AuthorizationException {
+        if (status == null) {
             throw new IllegalStateException(String.format("Status missing"));
         }
         switch (status) {
-        case WAITING:
-            return false;
-        case DONE:
-            return true;
-        case CANCELLED:
-            throw decorateException(status, ThirdPartyAppError.CANCELLED);
-        case TIMED_OUT:
-            throw decorateException(status, ThirdPartyAppError.TIMED_OUT);
-        case ALREADY_IN_PROGRESS:
-            throw decorateException(status, ThirdPartyAppError.ALREADY_IN_PROGRESS);
-        default:
-            throw new IllegalStateException(String.format("Unknown status: %s", status.toString()));
+            case WAITING:
+                return false;
+            case DONE:
+                return true;
+            case CANCELLED:
+                throw decorateException(status, ThirdPartyAppError.CANCELLED);
+            case TIMED_OUT:
+                throw decorateException(status, ThirdPartyAppError.TIMED_OUT);
+            case ALREADY_IN_PROGRESS:
+                throw decorateException(status, ThirdPartyAppError.ALREADY_IN_PROGRESS);
+            default:
+                throw new IllegalStateException(
+                        String.format("Unknown status: %s", status.toString()));
         }
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         ThirdPartyAppResponse<T> response = authenticator.init();
 
         openThirdPartyApp();
@@ -85,7 +93,8 @@ public class ThirdPartyAppAuthenticationController<T> implements MultiFactorAuth
         poll(response);
     }
 
-    private void poll(ThirdPartyAppResponse<T> response) throws AuthenticationException, AuthorizationException {
+    private void poll(ThirdPartyAppResponse<T> response)
+            throws AuthenticationException, AuthorizationException {
 
         for (int i = 0; i < maxPollAttempts; i++) {
             response = authenticator.collect(response.getReference());

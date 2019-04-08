@@ -11,8 +11,13 @@ import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.St
 import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 
 public class OtpUtils {
-    public static String calculateOtp(String fingerprint, StaticVector staticVector, byte[] otpKey,
-            int otpCounter, long epochTime, List<byte[]> challenges) {
+    public static String calculateOtp(
+            String fingerprint,
+            StaticVector staticVector,
+            byte[] otpKey,
+            int otpCounter,
+            long epochTime,
+            List<byte[]> challenges) {
 
         byte[] diversifier = FingerPrintUtils.getFingerPrintDiversifier(fingerprint, staticVector);
 
@@ -23,8 +28,8 @@ public class OtpUtils {
         return convertOtpToAscii(rawOtpResponse);
     }
 
-    public static byte[] mashupChallenge(byte[] key, byte[] diversifier, int counter, long epochTime,
-            List<byte[]> challenges) {
+    public static byte[] mashupChallenge(
+            byte[] key, byte[] diversifier, int counter, long epochTime, List<byte[]> challenges) {
         Preconditions.checkArgument(!challenges.isEmpty(), "Challenges were empty.");
 
         byte[] challenge0 = challenges.get(0);
@@ -44,12 +49,12 @@ public class OtpUtils {
             return DataUtils.xor(challenge0Xored, xorKey);
         }
 
-        byte[] lastChallenge = challenges.get(challenges.size()-1);
+        byte[] lastChallenge = challenges.get(challenges.size() - 1);
         byte[] lastChallengeXored = DataUtils.xor(xorKey, lastChallenge);
 
         byte[] output = challenge0Xored;
 
-        for (int i=1; i<challenges.size()-1; i++) {
+        for (int i = 1; i < challenges.size() - 1; i++) {
             output = Bytes.concat(output, challenges.get(i));
         }
 
@@ -76,14 +81,14 @@ public class OtpUtils {
 
         byte[] barray = new byte[20];
         int m = 1000000000;
-        for (int i=0; i<10; i++,m/=10) {
-            barray[i] = (byte)(DataUtils.unsignedDiv(l, m) % 0x0a);
-            barray[i+10] = (byte)(DataUtils.unsignedDiv(h, m) % 0x0a);
+        for (int i = 0; i < 10; i++, m /= 10) {
+            barray[i] = (byte) (DataUtils.unsignedDiv(l, m) % 0x0a);
+            barray[i + 10] = (byte) (DataUtils.unsignedDiv(h, m) % 0x0a);
         }
 
         byte[] output = new byte[10];
-        for (int i=0,j=0; i<10; i++,j+=2) {
-            output[i] = (byte)(barray[j+1] + 16 * barray[j]);
+        for (int i = 0, j = 0; i < 10; i++, j += 2) {
+            output[i] = (byte) (barray[j + 1] + 16 * barray[j]);
         }
         return output;
     }
@@ -93,22 +98,29 @@ public class OtpUtils {
         return s.substring(s.length() - 16);
     }
 
-    public static String calculateDerivationCode(String fingerprint, StaticVector staticVector, String otpResponse) {
-        byte[] diversifierBytes = FingerPrintUtils.getFingerPrintDiversifier(fingerprint, staticVector);
+    public static String calculateDerivationCode(
+            String fingerprint, StaticVector staticVector, String otpResponse) {
+        byte[] diversifierBytes =
+                FingerPrintUtils.getFingerPrintDiversifier(fingerprint, staticVector);
 
-        // Note: must use Long instead of Int even though the diversifier is only 32 bits. This is due to
+        // Note: must use Long instead of Int even though the diversifier is only 32 bits. This is
+        // due to
         // Java and the lack of unsigned ints...
         String diversifierString = Long.toString(DataUtils.bytesToLong(diversifierBytes));
 
-        Optional<Integer> diversifierLength = staticVector.getFieldAsInt(
-                DigipassConstants.StaticVectorFieldType.DIVERSIFIER_LENGTH);
+        Optional<Integer> diversifierLength =
+                staticVector.getFieldAsInt(
+                        DigipassConstants.StaticVectorFieldType.DIVERSIFIER_LENGTH);
 
         if (diversifierLength.isPresent()) {
-            diversifierString = StringUtils.leftPad(diversifierString, diversifierLength.get(), '0');
+            diversifierString =
+                    StringUtils.leftPad(diversifierString, diversifierLength.get(), '0');
         }
 
-        // Todo: read configuration from CryptoApplication if checksum is needed (not needed at the moment)
-        // In that case we must remove the last char from otpResponse and replace it with a checksum.
+        // Todo: read configuration from CryptoApplication if checksum is needed (not needed at the
+        // moment)
+        // In that case we must remove the last char from otpResponse and replace it with a
+        // checksum.
 
         String mergedDiversifier = mergeDiversifierAndOtp(diversifierString, otpResponse);
         return mergedDiversifier + otpResponse;
@@ -116,11 +128,11 @@ public class OtpUtils {
 
     private static String mergeDiversifierAndOtp(String diversifier, String otp) {
         StringBuilder out = new StringBuilder();
-        for (int i=0; i<Math.min(diversifier.length(), otp.length()); i++) {
-            byte dc = (byte)(diversifier.charAt(i % diversifier.length()) - 0x30);
-            byte oc = (byte)(otp.charAt(i % otp.length()) - 0x30);
+        for (int i = 0; i < Math.min(diversifier.length(), otp.length()); i++) {
+            byte dc = (byte) (diversifier.charAt(i % diversifier.length()) - 0x30);
+            byte oc = (byte) (otp.charAt(i % otp.length()) - 0x30);
 
-            out.append((char)((dc + oc) % 10 + 0x30));
+            out.append((char) ((dc + oc) % 10 + 0x30));
         }
         return out.toString();
     }

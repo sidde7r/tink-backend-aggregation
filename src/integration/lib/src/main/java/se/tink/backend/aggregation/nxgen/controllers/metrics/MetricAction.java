@@ -21,22 +21,19 @@ public abstract class MetricAction {
     }
 
     public void start() {
-        Preconditions.checkState(timer == null,
-                "MetricAction already in progress");
+        Preconditions.checkState(timer == null, "MetricAction already in progress");
 
         timer = registry.timer(metricId.suffix("duration")).time();
     }
 
     public void start(List<? extends Number> metricBuckets) {
-        Preconditions.checkState(timer == null,
-                "MetricAction already in progress");
+        Preconditions.checkState(timer == null, "MetricAction already in progress");
 
         timer = registry.timer(metricId.suffix("duration"), metricBuckets).time();
     }
 
     public void stop() {
-        Preconditions.checkState(timer != null,
-                "No active timer to stop");
+        Preconditions.checkState(timer != null, "No active timer to stop");
 
         timer.stop();
     }
@@ -50,12 +47,15 @@ public abstract class MetricAction {
     }
 
     private void mark(Outcome outcome) {
-        registry.meter(metricId.label("outcome", outcome.getMetricName())
-                .label("status", credentials.getStatus().name())).inc();
+        registry.meter(
+                        metricId.label("outcome", outcome.getMetricName())
+                                .label("status", credentials.getStatus().name()))
+                .inc();
     }
 
     private enum Outcome {
-        COMPLETED, FAILED;
+        COMPLETED,
+        FAILED;
 
         private String getMetricName() {
             return name().toLowerCase();

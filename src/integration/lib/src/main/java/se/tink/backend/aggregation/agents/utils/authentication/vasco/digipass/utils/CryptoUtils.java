@@ -2,17 +2,16 @@ package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.u
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Bytes;
+import java.security.KeyPair;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Arrays;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
 import se.tink.backend.aggregation.agents.utils.crypto.AES;
 import se.tink.backend.aggregation.agents.utils.crypto.EllipticCurve;
 import se.tink.backend.aggregation.agents.utils.crypto.Hash;
 import se.tink.backend.aggregation.agents.utils.crypto.KeyDerivation;
 import se.tink.backend.aggregation.agents.utils.crypto.TripleDES;
-
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.Arrays;
 
 public class CryptoUtils {
     private static final int ITERATIONS = 1024;

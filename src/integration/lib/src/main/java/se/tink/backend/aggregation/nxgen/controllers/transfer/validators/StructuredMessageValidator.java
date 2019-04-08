@@ -6,12 +6,11 @@ import se.tink.libraries.strings.StringUtils;
 public class StructuredMessageValidator {
 
     /**
-     * In Belgium, the national standard “OGM-VCS” is widely used for structured remittance information during decades.
-     * The format:
-     *  - Electronic: 12 digits (example: 010806817183);
-     *  - Visual: +++ 3 digits / 4 digits / 5 digits / +++ (example: +++010/8068/17183+++)
-     *  - Check digits: the last 2 digits as check digits (modulo 97) of the first 10 digits, but if the result is 0,
-     *    then the check digits are 97.
+     * In Belgium, the national standard “OGM-VCS” is widely used for structured remittance
+     * information during decades. The format: - Electronic: 12 digits (example: 010806817183); -
+     * Visual: +++ 3 digits / 4 digits / 5 digits / +++ (example: +++010/8068/17183+++) - Check
+     * digits: the last 2 digits as check digits (modulo 97) of the first 10 digits, but if the
+     * result is 0, then the check digits are 97.
      */
     public static boolean isValidOgmVcs(String reference) {
         if (Strings.isNullOrEmpty(reference)) {

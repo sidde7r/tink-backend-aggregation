@@ -17,17 +17,24 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class JsonWebKey {
     @JsonProperty("kty")
     private String keyType;
+
     private String use;
+
     @JsonProperty("kid")
     private String keyId;
+
     @JsonProperty("n")
     private String modulus;
+
     @JsonProperty("e")
     private String exponent;
+
     @JsonProperty("x")
     private String ecXPoint;
+
     @JsonProperty("y")
     private String ecYPoint;
+
     @JsonProperty("crv")
     private String curve;
 
@@ -69,8 +76,9 @@ public class JsonWebKey {
 
     @JsonIgnore
     private PublicKey createEcKey() {
-        if (Strings.isNullOrEmpty(ecXPoint) || Strings.isNullOrEmpty(ecYPoint) || Strings
-                .isNullOrEmpty(curve)) {
+        if (Strings.isNullOrEmpty(ecXPoint)
+                || Strings.isNullOrEmpty(ecYPoint)
+                || Strings.isNullOrEmpty(curve)) {
             throw new IllegalStateException(String.format("Invalid EC key: %s", keyId));
         }
 

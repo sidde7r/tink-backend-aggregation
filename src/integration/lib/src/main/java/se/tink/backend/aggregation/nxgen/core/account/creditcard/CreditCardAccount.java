@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.nxgen.core.account.creditcard;
 
 import com.google.common.base.Preconditions;
+import java.util.Objects;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Objects;
 
 public class CreditCardAccount extends Account {
 
@@ -73,7 +72,7 @@ public class CreditCardAccount extends Account {
     }
 
     public abstract static class Builder<
-            A extends CreditCardAccount, T extends CreditCardAccount.Builder<A, T>>
+                    A extends CreditCardAccount, T extends CreditCardAccount.Builder<A, T>>
             extends Account.Builder<A, T> {
 
         public Builder(String uniqueIdentifier) {

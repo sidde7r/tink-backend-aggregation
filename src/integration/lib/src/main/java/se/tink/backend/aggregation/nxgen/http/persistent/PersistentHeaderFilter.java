@@ -13,7 +13,8 @@ public class PersistentHeaderFilter extends Filter {
     private HashSet<Header> headers = Sets.newHashSet();
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         headers.forEach(h -> httpRequest.getHeaders().add(h.getKey(), h.getValue()));
         return nextFilter(httpRequest);
     }
@@ -39,6 +40,7 @@ public class PersistentHeaderFilter extends Filter {
     }
 
     public boolean isHeaderPresent(String key) {
-        return headers != null && headers.stream().anyMatch(header -> Objects.equals(key, header.getKey()));
+        return headers != null
+                && headers.stream().anyMatch(header -> Objects.equals(key, header.getKey()));
     }
 }

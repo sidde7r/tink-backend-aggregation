@@ -8,9 +8,7 @@ import se.tink.libraries.account.AccountIdentifier;
 public class Beneficiary extends TransferEntity {
     private String name;
 
-    private Beneficiary() {
-
-    }
+    private Beneficiary() {}
 
     public String getName() {
         return name;
@@ -41,8 +39,10 @@ public class Beneficiary extends TransferEntity {
         }
 
         public Beneficiary build() {
-            Preconditions.checkState(!Strings.isNullOrEmpty(name), "Name must not be null or empty.");
-            Preconditions.checkNotNull(accountIdentifier, "Account identifier must not be null or empty.");
+            Preconditions.checkState(
+                    !Strings.isNullOrEmpty(name), "Name must not be null or empty.");
+            Preconditions.checkNotNull(
+                    accountIdentifier, "Account identifier must not be null or empty.");
 
             Beneficiary command = new Beneficiary();
             command.name = name;

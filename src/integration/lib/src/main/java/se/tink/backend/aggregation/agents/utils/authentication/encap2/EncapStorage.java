@@ -32,7 +32,6 @@ public class EncapStorage {
     private String signingKeyPhrase;
     private String samUserId;
 
-
     public EncapStorage(PersistentStorage persistentStorage) {
         this.persistentStorage = persistentStorage;
         this.hasInitiated = false;
@@ -62,21 +61,19 @@ public class EncapStorage {
     }
 
     private boolean isValid() {
-        return !(
-                    Strings.isNullOrEmpty(deviceHash) ||
-                    Strings.isNullOrEmpty(deviceUuid) ||
-                    Strings.isNullOrEmpty(hardwareId) ||
-                    Strings.isNullOrEmpty(saltHash) ||
-                    Strings.isNullOrEmpty(username) ||
-                    Strings.isNullOrEmpty(clientSaltKeyId) ||
-                    Strings.isNullOrEmpty(clientSaltKey) ||
-                    Strings.isNullOrEmpty(registrationId) ||
-                    Strings.isNullOrEmpty(signingKeyPhrase) ||
-                    Strings.isNullOrEmpty(samUserId) ||
-                    Strings.isNullOrEmpty(authenticationKey) ||
-                    Strings.isNullOrEmpty(authenticationKeyWithoutPin) ||
-                    Strings.isNullOrEmpty(totpKey)
-        );
+        return !(Strings.isNullOrEmpty(deviceHash)
+                || Strings.isNullOrEmpty(deviceUuid)
+                || Strings.isNullOrEmpty(hardwareId)
+                || Strings.isNullOrEmpty(saltHash)
+                || Strings.isNullOrEmpty(username)
+                || Strings.isNullOrEmpty(clientSaltKeyId)
+                || Strings.isNullOrEmpty(clientSaltKey)
+                || Strings.isNullOrEmpty(registrationId)
+                || Strings.isNullOrEmpty(signingKeyPhrase)
+                || Strings.isNullOrEmpty(samUserId)
+                || Strings.isNullOrEmpty(authenticationKey)
+                || Strings.isNullOrEmpty(authenticationKeyWithoutPin)
+                || Strings.isNullOrEmpty(totpKey));
     }
 
     public boolean load() {
@@ -93,36 +90,50 @@ public class EncapStorage {
             return false;
         }
 
-        Storage storageStructure = SerializationUtils.deserializeFromString(storageData, SessionStorage.class);
+        Storage storageStructure =
+                SerializationUtils.deserializeFromString(storageData, SessionStorage.class);
         if (Objects.isNull(storageData)) {
             return false;
         }
 
-        storageStructure.get(EncapConstants.Storage.B64_DEVICE_HASH, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.B64_DEVICE_HASH, String.class)
                 .ifPresent(v -> deviceHash = v);
-        storageStructure.get(EncapConstants.Storage.DEVICE_UUID, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.DEVICE_UUID, String.class)
                 .ifPresent(v -> deviceUuid = v);
-        storageStructure.get(EncapConstants.Storage.HARDWARE_ID, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.HARDWARE_ID, String.class)
                 .ifPresent(v -> hardwareId = v);
-        storageStructure.get(EncapConstants.Storage.B64_SALT_HASH, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.B64_SALT_HASH, String.class)
                 .ifPresent(v -> saltHash = v);
-        storageStructure.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.B64_AUTHENTICATION_KEY, String.class)
                 .ifPresent(v -> authenticationKey = v);
-        storageStructure.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN, String.class)
                 .ifPresent(v -> authenticationKeyWithoutPin = v);
-        storageStructure.get(EncapConstants.Storage.B64_TOTP_KEY, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.B64_TOTP_KEY, String.class)
                 .ifPresent(v -> totpKey = v);
-        storageStructure.get(EncapConstants.Storage.USERNAME, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.USERNAME, String.class)
                 .ifPresent(v -> username = v);
-        storageStructure.get(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID, String.class)
                 .ifPresent(v -> clientSaltKeyId = v);
-        storageStructure.get(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY, String.class)
                 .ifPresent(v -> clientSaltKey = v);
-        storageStructure.get(EncapConstants.Storage.REGISTRATION_ID, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.REGISTRATION_ID, String.class)
                 .ifPresent(v -> registrationId = v);
-        storageStructure.get(EncapConstants.Storage.SIGNING_KEY_PHRASE, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.SIGNING_KEY_PHRASE, String.class)
                 .ifPresent(v -> signingKeyPhrase = v);
-        storageStructure.get(EncapConstants.Storage.SAM_USERID, String.class)
+        storageStructure
+                .get(EncapConstants.Storage.SAM_USERID, String.class)
                 .ifPresent(v -> samUserId = v);
 
         this.hasInitiated = true;
@@ -144,7 +155,9 @@ public class EncapStorage {
         storageStructure.put(EncapConstants.Storage.HARDWARE_ID, hardwareId);
         storageStructure.put(EncapConstants.Storage.B64_SALT_HASH, saltHash);
         storageStructure.put(EncapConstants.Storage.B64_AUTHENTICATION_KEY, authenticationKey);
-        storageStructure.put(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN, authenticationKeyWithoutPin);
+        storageStructure.put(
+                EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN,
+                authenticationKeyWithoutPin);
         storageStructure.put(EncapConstants.Storage.B64_TOTP_KEY, totpKey);
         storageStructure.put(EncapConstants.Storage.USERNAME, username);
         storageStructure.put(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID, clientSaltKeyId);

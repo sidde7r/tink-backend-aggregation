@@ -6,13 +6,11 @@ import java.nio.ByteBuffer;
 public class DataUtils {
     public static byte[] xor(byte[] a, byte[] b) {
         Preconditions.checkArgument(
-                a.length == b.length,
-                "Cannot XOR two different length byte arrays."
-        );
+                a.length == b.length, "Cannot XOR two different length byte arrays.");
 
         byte[] output = new byte[a.length];
-        for (int i=0; i<a.length; i++) {
-            output[i] = (byte)(a[i] ^ b[i]);
+        for (int i = 0; i < a.length; i++) {
+            output[i] = (byte) (a[i] ^ b[i]);
         }
         return output;
     }
@@ -21,8 +19,8 @@ public class DataUtils {
         Preconditions.checkArgument(data.length == 8, "The data must be exactly 8 bytes.");
 
         byte[] output = data.clone();
-        for (int i=0; i<4; i++) {
-            output[i] = (byte)(data[i] ^ data[i+4]);
+        for (int i = 0; i < 4; i++) {
+            output[i] = (byte) (data[i] ^ data[i + 4]);
         }
         return output;
     }

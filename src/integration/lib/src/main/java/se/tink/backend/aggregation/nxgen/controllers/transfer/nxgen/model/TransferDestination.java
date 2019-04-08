@@ -5,9 +5,7 @@ import se.tink.backend.aggregation.nxgen.storage.TemporaryStorage;
 import se.tink.libraries.account.AccountIdentifier;
 
 public class TransferDestination extends TransferEntity {
-    private TransferDestination() {
-
-    }
+    private TransferDestination() {}
 
     public static Builder builder() {
         return new Builder();
@@ -33,7 +31,8 @@ public class TransferDestination extends TransferEntity {
         }
 
         public TransferDestination build() {
-            Preconditions.checkNotNull(accountIdentifier, "Account identifier must not be null or empty.");
+            Preconditions.checkNotNull(
+                    accountIdentifier, "Account identifier must not be null or empty.");
 
             TransferDestination source = new TransferDestination();
             source.temporaryStorage = temporaryStorage;

@@ -1,5 +1,12 @@
 package se.tink.backend.aggregation.agents.banks;
 
+import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_ACCOUNTS;
+import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRANSACTIONS;
+import static se.tink.libraries.credentials.service.RefreshableItem.CREDITCARD_ACCOUNTS;
+import static se.tink.libraries.credentials.service.RefreshableItem.CREDITCARD_TRANSACTIONS;
+import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
+import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.http.HttpStatusCodes;
 import com.google.common.base.MoreObjects;
@@ -17,6 +24,24 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -77,38 +102,12 @@ import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
 import se.tink.libraries.strings.StringUtils;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_ACCOUNTS;
-import static se.tink.libraries.credentials.service.RefreshableItem.CHECKING_TRANSACTIONS;
-import static se.tink.libraries.credentials.service.RefreshableItem.CREDITCARD_ACCOUNTS;
-import static se.tink.libraries.credentials.service.RefreshableItem.CREDITCARD_TRANSACTIONS;
-import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_ACCOUNTS;
-import static se.tink.libraries.credentials.service.RefreshableItem.SAVING_TRANSACTIONS;
-
-public class SkandiabankenAgent extends AbstractAgent implements
-        PersistentLogin,
-        RefreshCheckingAccountsExecutor,
-        RefreshSavingsAccountsExecutor,
-        RefreshCreditCardAccountsExecutor,
-        RefreshInvestmentAccountsExecutor {
+public class SkandiabankenAgent extends AbstractAgent
+        implements PersistentLogin,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshInvestmentAccountsExecutor {
 
     private static final int MAX_PAGES_LIMIT = 150;
     private static final String BASE_URL_SECURE = "https://login.skandia.se";
@@ -132,19 +131,21 @@ public class SkandiabankenAgent extends AbstractAgent implements
     private static final int BANKID_DONE = 5;
     private static final int NUM_QR_REFRESH_RETRY_ATTEMPTS = 3;
 
-
-
     /**
      * Extract request verification token from a HTML document body.
-     * 
-     * @param html   the HTML body to extract the request verification token from.
+     *
+     * @param html the HTML body to extract the request verification token from.
      * @param formId the HTML ID of the form that holds the request verification token.
      * @return a string consisting of the request verification token.
      */
-    private static MultivaluedMap<String, String> extractRequestVerificationToken(String html, String formId) {
+    private static MultivaluedMap<String, String> extractRequestVerificationToken(
+            String html, String formId) {
         MultivaluedMap<String, String> form = new MultivaluedMapImpl();
-        String token = Jsoup.parse(html).getElementById(formId)
-                .getElementsByAttributeValue("name", "__RequestVerificationToken").attr("value");
+        String token =
+                Jsoup.parse(html)
+                        .getElementById(formId)
+                        .getElementsByAttributeValue("name", "__RequestVerificationToken")
+                        .attr("value");
 
         Preconditions.checkNotNull(token);
 
@@ -168,7 +169,8 @@ public class SkandiabankenAgent extends AbstractAgent implements
     // cache
     private Map<AccountEntity, Account> accounts;
 
-    public SkandiabankenAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SkandiabankenAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
@@ -182,32 +184,38 @@ public class SkandiabankenAgent extends AbstractAgent implements
         postData = extractRequestVerificationToken(loginPageBody, "autostartbutton-form");
         authenticateUrl = AUTHENTICATE_WITH_BANKID_AUTOSTART_URL;
 
-        AuthenticateBankIdResponse authenticateResponse = createLoginClientRequest(authenticateUrl, true)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(AuthenticateBankIdResponse.class, postData);
+        AuthenticateBankIdResponse authenticateResponse =
+                createLoginClientRequest(authenticateUrl, true)
+                        .type(MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(AuthenticateBankIdResponse.class, postData);
 
         switch (authenticateResponse.getState()) {
-        case 2:
-            // Authentication with autostarttoken
-            String autostartUrl = authenticateResponse.getAutostartUrl();
-            return Optional.of(autostartUrl.substring(autostartUrl.indexOf("=") + 1));
-        case 3:
-            // Normal authentication with BankID
-            return Optional.empty();
-        case 4:
-            // message: "En inloggning för den här personen är redan påbörjad."
-            throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        default:
-            throw new IllegalStateException(String.format("Authentication method not allowed: %s",
-                    authenticateResponse.getMessage()));
+            case 2:
+                // Authentication with autostarttoken
+                String autostartUrl = authenticateResponse.getAutostartUrl();
+                return Optional.of(autostartUrl.substring(autostartUrl.indexOf("=") + 1));
+            case 3:
+                // Normal authentication with BankID
+                return Optional.empty();
+            case 4:
+                // message: "En inloggning för den här personen är redan påbörjad."
+                throw BankIdError.ALREADY_IN_PROGRESS.exception();
+            default:
+                throw new IllegalStateException(
+                        String.format(
+                                "Authentication method not allowed: %s",
+                                authenticateResponse.getMessage()));
         }
     }
 
-    private Optional<CollectBankIdResponse> poll(MultivaluedMap<String, String> postData) throws BankIdException {
+    private Optional<CollectBankIdResponse> poll(MultivaluedMap<String, String> postData)
+            throws BankIdException {
 
         for (int i = 0; i < 30; i++) {
-            CollectBankIdResponse collectResponse = createLoginClientRequest(COLLECT_BANKID_URL, false).type(
-                    MediaType.APPLICATION_FORM_URLENCODED).post(CollectBankIdResponse.class, postData);
+            CollectBankIdResponse collectResponse =
+                    createLoginClientRequest(COLLECT_BANKID_URL, false)
+                            .type(MediaType.APPLICATION_FORM_URLENCODED)
+                            .post(CollectBankIdResponse.class, postData);
 
             if (collectResponse.getState() == BANKID_DONE) {
                 return Optional.of(collectResponse);
@@ -216,20 +224,17 @@ public class SkandiabankenAgent extends AbstractAgent implements
             if (collectResponse.getState() == BANKID_CANCELLED) {
                 String header = collectResponse.getMessage().getHeader();
                 switch (header.toLowerCase()) {
-                case "du har valt att avbryta inloggningen":
-                    throw BankIdError.CANCELLED.exception();
-                case "inloggningen har avbrutits":
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
-                case "bankid inte installerat":
-                    return Optional.empty(); // Signal retry for QR-code
-                default:
-                    throw new IllegalStateException(
-                                    String.format(
-                                            "SkandiaBanken: Unknown bankId response, header: %s, message: %s",
-                                            header,
-                                            collectResponse.getMessage().getText()
-                                    )
-                    );
+                    case "du har valt att avbryta inloggningen":
+                        throw BankIdError.CANCELLED.exception();
+                    case "inloggningen har avbrutits":
+                        throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                    case "bankid inte installerat":
+                        return Optional.empty(); // Signal retry for QR-code
+                    default:
+                        throw new IllegalStateException(
+                                String.format(
+                                        "SkandiaBanken: Unknown bankId response, header: %s, message: %s",
+                                        header, collectResponse.getMessage().getText()));
                 }
             }
 
@@ -245,11 +250,13 @@ public class SkandiabankenAgent extends AbstractAgent implements
             throws AuthenticationException, AuthorizationException {
         // Get the login method for BankID.
 
-        final String loginPageBody = createLoginClientRequest(loginMethod.getLoginUrl(), false).get(String.class);
+        final String loginPageBody =
+                createLoginClientRequest(loginMethod.getLoginUrl(), false).get(String.class);
 
         // Wait for a successful BankID authentication.
         String interAppURL = null;
-        MultivaluedMap<String, String> postData = extractRequestVerificationToken(loginPageBody, "collect-form");
+        MultivaluedMap<String, String> postData =
+                extractRequestVerificationToken(loginPageBody, "collect-form");
 
         Optional<CollectBankIdResponse> pollResult;
         int attempts = 0;
@@ -261,21 +268,25 @@ public class SkandiabankenAgent extends AbstractAgent implements
 
         } while (attempts < NUM_QR_REFRESH_RETRY_ATTEMPTS && !pollResult.isPresent());
 
-        CollectBankIdResponse collectResponse = pollResult.orElseThrow(BankIdError.TIMEOUT::exception);
+        CollectBankIdResponse collectResponse =
+                pollResult.orElseThrow(BankIdError.TIMEOUT::exception);
         interAppURL = collectResponse.getRedirectUrl();
         if (interAppURL == null) {
             throw BankIdError.TIMEOUT.exception();
         }
 
-        // This is the response from the app when a user is not a customer. There's nothing else to go on...
+        // This is the response from the app when a user is not a customer. There's nothing else to
+        // go on...
         if (interAppURL.equalsIgnoreCase("/message/")) {
             throw LoginError.NOT_CUSTOMER.exception();
         }
 
         if (interAppURL.startsWith("/login/message")) {
             fetchAndLogMessage(interAppURL);
-            throw new IllegalStateException(String.format("#login-refactoring - message %s, state %s",
-                    collectResponse.getMessage(), collectResponse.getState()));
+            throw new IllegalStateException(
+                    String.format(
+                            "#login-refactoring - message %s, state %s",
+                            collectResponse.getMessage(), collectResponse.getState()));
         }
 
         if (interAppURL.contains("otpchooser")) {
@@ -288,8 +299,10 @@ public class SkandiabankenAgent extends AbstractAgent implements
         try {
             URI interappUri = new URI(interAppURL);
             List<NameValuePair> queryParts = URLEncodedUtils.parse(interappUri, "UTF-8");
-            Optional<NameValuePair> authorizeURLKVPair = queryParts.stream().filter(
-                    input -> Objects.equal(input.getName(), "url")).findFirst();
+            Optional<NameValuePair> authorizeURLKVPair =
+                    queryParts.stream()
+                            .filter(input -> Objects.equal(input.getName(), "url"))
+                            .findFirst();
 
             if (!authorizeURLKVPair.isPresent()) {
                 String errorInfo = null;
@@ -303,14 +316,16 @@ public class SkandiabankenAgent extends AbstractAgent implements
                     }
                 }
                 throw new IllegalStateException(
-                        String.format("#login-refactoring - Login failed with info: %s",
-                        errorInfo != null ? errorInfo : "errorInfo is null"));
+                        String.format(
+                                "#login-refactoring - Login failed with info: %s",
+                                errorInfo != null ? errorInfo : "errorInfo is null"));
             }
 
             authorizeURL = authorizeURLKVPair.get().getValue();
 
         } catch (URISyntaxException e) {
-            throw new IllegalStateException(String.format("Unable to parse the inter-app URI: %s", interAppURL), e);
+            throw new IllegalStateException(
+                    String.format("Unable to parse the inter-app URI: %s", interAppURL), e);
         }
 
         // Authenticate the user.
@@ -333,8 +348,9 @@ public class SkandiabankenAgent extends AbstractAgent implements
 
         LoginResponse loginResponse = null;
         try {
-            loginResponse = createClientRequest(getBaseUrlWithCustomerOwner() + "/login").post(LoginResponse.class,
-                    params);
+            loginResponse =
+                    createClientRequest(getBaseUrlWithCustomerOwner() + "/login")
+                            .post(LoginResponse.class, params);
         } catch (ClientHandlerException che) {
             handleException(che);
         } catch (UniformInterfaceException e) {
@@ -342,22 +358,29 @@ public class SkandiabankenAgent extends AbstractAgent implements
             ErrorResponse errorResponse = e.getResponse().getEntity(ErrorResponse.class);
             int statusCode = e.getResponse().getStatus();
             // Error Codes that we have seen so far
-            // 451 => Thrown when a new account is created and user has not activated the account at SkandiaBanken
+            // 451 => Thrown when a new account is created and user has not activated the account at
+            // SkandiaBanken
             // 403 => Problem to login. More information in error message. One error message is
-            // "Den här versionen av mobila plånboken stöds inte längre. Var god uppdatera.". In that case we need to
+            // "Den här versionen av mobila plånboken stöds inte längre. Var god uppdatera.". In
+            // that case we need to
             // update the x-smartrefill-marketing-version version.
 
-            String requestParameters = MoreObjects.toStringHelper("requestData")
-                    .add("state", params.get("state"))
-                    .add("access_code", params.get("access_code"))
-                    .toString();
+            String requestParameters =
+                    MoreObjects.toStringHelper("requestData")
+                            .add("state", params.get("state"))
+                            .add("access_code", params.get("access_code"))
+                            .toString();
 
-            log.warn(String.format("Caught exception with HttpStatusCode %s while verifying access tokens: %s",
-                    statusCode, requestParameters), e);
+            log.warn(
+                    String.format(
+                            "Caught exception with HttpStatusCode %s while verifying access tokens: %s",
+                            statusCode, requestParameters),
+                    e);
 
             Preconditions.checkNotNull(errorResponse);
             throw new IllegalStateException(
-                    String.format("#login-refactoring - Skandiabanken - Login failed with message %s",
+                    String.format(
+                            "#login-refactoring - Skandiabanken - Login failed with message %s",
                             errorResponse.getMessage()));
         }
 
@@ -376,28 +399,31 @@ public class SkandiabankenAgent extends AbstractAgent implements
     }
 
     private Builder createClientRequest(String url) {
-        Builder requestBuilder = client.resource(url)
-                .header("x-smartrefill-version", "654")
-                .header("x-smartrefill-inflow", "iphone")
-                .header("x-smartrefill-device", StringUtils.hashAsUUID(request.getUser().getId()).toLowerCase())
-                .header("x-smartrefill-api-version", "2")
-                .header("x-smartrefill-company", "SKANDIABANKEN")
-                .header("x-smartrefill-country", COUNTRY_CODE)
-                .header("x-smartrefill-marketing-version", "3.1.3")
-                .header("x-smartrefill-application", "se.skandia.skandia")
-                .header("x-smartrefill-language", "sv")
-                .header("User-Agent", DEFAULT_USER_AGENT);
+        Builder requestBuilder =
+                client.resource(url)
+                        .header("x-smartrefill-version", "654")
+                        .header("x-smartrefill-inflow", "iphone")
+                        .header(
+                                "x-smartrefill-device",
+                                StringUtils.hashAsUUID(request.getUser().getId()).toLowerCase())
+                        .header("x-smartrefill-api-version", "2")
+                        .header("x-smartrefill-company", "SKANDIABANKEN")
+                        .header("x-smartrefill-country", COUNTRY_CODE)
+                        .header("x-smartrefill-marketing-version", "3.1.3")
+                        .header("x-smartrefill-application", "se.skandia.skandia")
+                        .header("x-smartrefill-language", "sv")
+                        .header("User-Agent", DEFAULT_USER_AGENT);
 
         if (customerId != null) {
-            requestBuilder = requestBuilder.header("x-smartrefill-customer", Integer.toString(customerId));
+            requestBuilder =
+                    requestBuilder.header("x-smartrefill-customer", Integer.toString(customerId));
         }
 
         return requestBuilder;
     }
 
     private Builder createLoginClientRequest(String url, boolean xhr) {
-        Builder requestBuilder = client.resource(url)
-                .header("User-Agent", DEFAULT_USER_AGENT);
+        Builder requestBuilder = client.resource(url).header("User-Agent", DEFAULT_USER_AGENT);
 
         if (xhr) {
             requestBuilder.header("X-Requested-With", "XMLHttpRequest");
@@ -406,11 +432,15 @@ public class SkandiabankenAgent extends AbstractAgent implements
         return requestBuilder;
     }
 
-    private LoginMethod extractLoginMethod(List<LoginMethod> loginMethods, final int pinLoginMethodId) {
+    private LoginMethod extractLoginMethod(
+            List<LoginMethod> loginMethods, final int pinLoginMethodId) {
         return Iterables.find(loginMethods, input -> input.getTypeOfLogin() == pinLoginMethodId);
     }
 
-    private void fetchMoreAccountTransactions(String skandiabankenAccountId, Account account, String fwdKey,
+    private void fetchMoreAccountTransactions(
+            String skandiabankenAccountId,
+            Account account,
+            String fwdKey,
             List<Transaction> accumulatedTransactions) {
 
         // First page has already been fetched, start fetching from page 2
@@ -421,19 +451,29 @@ public class SkandiabankenAgent extends AbstractAgent implements
         do {
 
             if (page > MAX_PAGES_LIMIT)
-                // Throwing an exception here to not deliver transactions back for processing. If this is an infinite
+                // Throwing an exception here to not deliver transactions back for processing. If
+                // this is an infinite
                 // loop
                 // we risk storing a bunch of duplicate transactions.
                 throw new IllegalStateException("Too many pages. Did we reach an infinite loop?");
 
-            final String accountUrl = getBaseUrlWithCustomerOwner() + "/customer/" + customerId + "/account/"
-                    + skandiabankenAccountId + "/next?fwdKey=" + fwdKey + "&page=" + page;
+            final String accountUrl =
+                    getBaseUrlWithCustomerOwner()
+                            + "/customer/"
+                            + customerId
+                            + "/account/"
+                            + skandiabankenAccountId
+                            + "/next?fwdKey="
+                            + fwdKey
+                            + "&page="
+                            + page;
             pagingRateLimiter.acquire();
             accountEntity = executeGet(accountUrl, AccountEntity.class);
 
             accumulatedTransactions.addAll(getListOfTransactions(accountEntity));
 
-            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, accumulatedTransactions);
+            statusUpdater.updateStatus(
+                    CredentialsStatus.UPDATING, account, accumulatedTransactions);
 
             // Prepare for a possible next loop.
 
@@ -445,9 +485,16 @@ public class SkandiabankenAgent extends AbstractAgent implements
         } while (!Strings.isNullOrEmpty(fwdKey) && !isContentWithRefresh);
 
         if (Strings.isNullOrEmpty(fwdKey))
-            log.debug(String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId, "Breaking due to missing fwdKey."));
+            log.debug(
+                    String.format(
+                            ACCOUNT_LOG_TEMPLATE,
+                            skandiabankenAccountId,
+                            "Breaking due to missing fwdKey."));
         if (isContentWithRefresh)
-            log.debug(String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId,
+            log.debug(
+                    String.format(
+                            ACCOUNT_LOG_TEMPLATE,
+                            skandiabankenAccountId,
                             "Breaking because we are contentWithRefresh."));
     }
 
@@ -494,8 +541,9 @@ public class SkandiabankenAgent extends AbstractAgent implements
         } else {
             // Have never seen this, but one day it might happen...
             throw new IllegalStateException(
-                    String.format("Skandiabanken - Oauth2State %s, Oauth2Accesscode %s",
-                    oauth2State == null, oauth2AccessCode == null));
+                    String.format(
+                            "Skandiabanken - Oauth2State %s, Oauth2Accesscode %s",
+                            oauth2State == null, oauth2AccessCode == null));
         }
 
         return oauth2Credentials;
@@ -503,16 +551,17 @@ public class SkandiabankenAgent extends AbstractAgent implements
 
     /**
      * Parse and convert the transactions.
-     * <p>
-     * Package-local visibility for testability.
+     *
+     * <p>Package-local visibility for testability.
      */
     static Transaction parseAccountTransaction(TransactionEntity transactionEntity) {
 
         Transaction transaction = new Transaction();
 
         // There are cases when no `date` is set. In that case we fall back to settled.
-        final String dateToUse = Optional.ofNullable(transactionEntity.getDate())
-                .orElse(transactionEntity.getSettled());
+        final String dateToUse =
+                Optional.ofNullable(transactionEntity.getDate())
+                        .orElse(transactionEntity.getSettled());
         transaction.setDate(AgentParsingUtils.parseDate(dateToUse, true));
 
         String description = transactionEntity.getMerchant();
@@ -526,11 +575,11 @@ public class SkandiabankenAgent extends AbstractAgent implements
                 description = description.substring(0, 22);
             }
         }
-        
+
         if (transactionEntity.getSettled() == null) {
             transaction.setPending(true);
         }
-            
+
         transaction.setDescription(description);
         transaction.setAmount(AgentParsingUtils.parseAmount(transactionEntity.getAmount()));
 
@@ -553,55 +602,63 @@ public class SkandiabankenAgent extends AbstractAgent implements
         if (response == null || response.getBankAccounts() == null) {
             return Collections.emptyMap();
         }
-        accounts = response.getBankAccounts().stream()
-                .filter(a -> !a.isInvestment())
-                .collect(Collectors.toMap(Function.identity(), AccountEntity::toAccount));
+        accounts =
+                response.getBankAccounts().stream()
+                        .filter(a -> !a.isInvestment())
+                        .collect(Collectors.toMap(Function.identity(), AccountEntity::toAccount));
         return accounts;
     }
 
-    private Map<Account, AccountFeatures>refreshInvestmentAccounts() {
+    private Map<Account, AccountFeatures> refreshInvestmentAccounts() {
         Map<Account, AccountFeatures> investmentAccounts = new HashMap<>();
-        String investmentsUrl = getBaseUrlWithCustomerOwner() + "/customer/" + customerId + "/investments";
-        InvestmentsResponse investmentsResponse = executeGet(investmentsUrl, InvestmentsResponse.class);
+        String investmentsUrl =
+                getBaseUrlWithCustomerOwner() + "/customer/" + customerId + "/investments";
+        InvestmentsResponse investmentsResponse =
+                executeGet(investmentsUrl, InvestmentsResponse.class);
 
-        Map<String, Account> accountById = investmentsResponse.stream().collect(Collectors.toMap(
-                InvestmentEntity::getId,
-                InvestmentEntity::toAccount));
+        Map<String, Account> accountById =
+                investmentsResponse.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        InvestmentEntity::getId, InvestmentEntity::toAccount));
 
-        Map<String, Portfolio> portfolioById = investmentsResponse.stream().collect(Collectors.toMap(
-                InvestmentEntity::getId,
-                InvestmentEntity::toPortfolio));
+        Map<String, Portfolio> portfolioById =
+                investmentsResponse.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        InvestmentEntity::getId, InvestmentEntity::toPortfolio));
 
-        accountById.forEach((id, account) -> {
-            InvestmentResponse investmentResponse = executeGet(investmentsUrl + "/" + id,
-                    InvestmentResponse.class);
+        accountById.forEach(
+                (id, account) -> {
+                    InvestmentResponse investmentResponse =
+                            executeGet(investmentsUrl + "/" + id, InvestmentResponse.class);
 
-            List<Instrument> instruments = Lists.newArrayList();
+                    List<Instrument> instruments = Lists.newArrayList();
 
-            investmentResponse.getPortfolios().stream()
-                    .map(PortfolioEntity::getHoldings)
-                    .flatMap(Collection::stream)
-                    .filter(h -> Objects.equal(FUND, h.getType()))
-                    .map(HoldingEntity::fundToInstrument)
-                    .forEach(h -> h.ifPresent(instruments::add));
+                    investmentResponse.getPortfolios().stream()
+                            .map(PortfolioEntity::getHoldings)
+                            .flatMap(Collection::stream)
+                            .filter(h -> Objects.equal(FUND, h.getType()))
+                            .map(HoldingEntity::fundToInstrument)
+                            .forEach(h -> h.ifPresent(instruments::add));
 
-            investmentResponse.getPortfolios().stream()
-                    .map(PortfolioEntity::getHoldings)
-                    .flatMap(Collection::stream)
-                    .filter(h -> Objects.equal(STOCK, h.getType()))
-                    .map(HoldingEntity::stockToInstrument)
-                    .forEach(h -> h.ifPresent(instruments::add));
+                    investmentResponse.getPortfolios().stream()
+                            .map(PortfolioEntity::getHoldings)
+                            .flatMap(Collection::stream)
+                            .filter(h -> Objects.equal(STOCK, h.getType()))
+                            .map(HoldingEntity::stockToInstrument)
+                            .forEach(h -> h.ifPresent(instruments::add));
 
-            Portfolio portfolio = portfolioById.get(id);
-            if (portfolio == null) {
-                log.error("portfolio was null");
-                return;
-            }
+                    Portfolio portfolio = portfolioById.get(id);
+                    if (portfolio == null) {
+                        log.error("portfolio was null");
+                        return;
+                    }
 
-            portfolio.setCashValue(investmentResponse.getDisposableAmount());
-            portfolio.setInstruments(instruments);
-            investmentAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
-        });
+                    portfolio.setCashValue(investmentResponse.getDisposableAmount());
+                    portfolio.setInstruments(instruments);
+                    investmentAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+                });
         return investmentAccounts;
     }
 
@@ -616,16 +673,23 @@ public class SkandiabankenAgent extends AbstractAgent implements
         Map<Account, List<Transaction>> accountTransactions = new HashMap<>();
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> accountTransactions.put(set.getValue(),
-                        updateAccountAndTransactions(set.getKey().getId(), set.getValue())));
+                .forEach(
+                        set ->
+                                accountTransactions.put(
+                                        set.getValue(),
+                                        updateAccountAndTransactions(
+                                                set.getKey().getId(), set.getValue())));
         return accountTransactions;
     }
 
-
-
-    private List<Transaction> updateAccountAndTransactions(String skandiabankenAccountId, Account account) {
-        String accountUrl = getBaseUrlWithCustomerOwner() + "/customer/" + customerId + "/account/"
-                + skandiabankenAccountId;
+    private List<Transaction> updateAccountAndTransactions(
+            String skandiabankenAccountId, Account account) {
+        String accountUrl =
+                getBaseUrlWithCustomerOwner()
+                        + "/customer/"
+                        + customerId
+                        + "/account/"
+                        + skandiabankenAccountId;
 
         pagingRateLimiter.acquire();
         AccountEntity accountEntity = executeGet(accountUrl, AccountEntity.class);
@@ -636,22 +700,35 @@ public class SkandiabankenAgent extends AbstractAgent implements
 
         final boolean isContentWithRefresh = isContentWithRefresh(account, accumulatedTransactions);
 
-        if (accumulatedTransactions.size() > 0 && !Strings.isNullOrEmpty(accountEntity.getFwdKey())
+        if (accumulatedTransactions.size() > 0
+                && !Strings.isNullOrEmpty(accountEntity.getFwdKey())
                 && !isContentWithRefresh) {
 
-            fetchMoreAccountTransactions(skandiabankenAccountId, account, accountEntity.getFwdKey(),
+            fetchMoreAccountTransactions(
+                    skandiabankenAccountId,
+                    account,
+                    accountEntity.getFwdKey(),
                     accumulatedTransactions);
         } else {
             if (accumulatedTransactions.isEmpty()) {
-                log.debug(String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId,
+                log.debug(
+                        String.format(
+                                ACCOUNT_LOG_TEMPLATE,
+                                skandiabankenAccountId,
                                 "Breaking because we found no transactions."));
             }
             if (Strings.isNullOrEmpty(accountEntity.getFwdKey())) {
                 log.debug(
-                        String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId, "Breaking due to missing fwdKey."));
+                        String.format(
+                                ACCOUNT_LOG_TEMPLATE,
+                                skandiabankenAccountId,
+                                "Breaking due to missing fwdKey."));
             }
             if (isContentWithRefresh) {
-                log.debug(String.format(ACCOUNT_LOG_TEMPLATE, skandiabankenAccountId,
+                log.debug(
+                        String.format(
+                                ACCOUNT_LOG_TEMPLATE,
+                                skandiabankenAccountId,
                                 "Breaking because we are contentWithRefresh."));
             }
         }
@@ -668,27 +745,31 @@ public class SkandiabankenAgent extends AbstractAgent implements
     private TinkApacheHttpClient4 createCircularRedirectClient() {
         BasicCookieStore cookieStore = new BasicCookieStore();
 
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectionRequestTimeout(30000)
-                .setConnectTimeout(10000)
-                .setSocketTimeout(10000)
-                .setCircularRedirectsAllowed(true)
-                .setMaxRedirects(20)
-                // .setCookieSpec(CookieSpecs.BEST_MATCH) // Not sure I need to set this?
-                .build();
+        RequestConfig requestConfig =
+                RequestConfig.custom()
+                        .setConnectionRequestTimeout(30000)
+                        .setConnectTimeout(10000)
+                        .setSocketTimeout(10000)
+                        .setCircularRedirectsAllowed(true)
+                        .setMaxRedirects(20)
+                        // .setCookieSpec(CookieSpecs.BEST_MATCH) // Not sure I need to set this?
+                        .build();
 
-        CloseableHttpClient apacheClient = HttpClientBuilder.create()
-                .setDefaultRequestConfig(requestConfig)
-                .setDefaultCookieStore(cookieStore)
-                .build();
+        CloseableHttpClient apacheClient =
+                HttpClientBuilder.create()
+                        .setDefaultRequestConfig(requestConfig)
+                        .setDefaultCookieStore(cookieStore)
+                        .build();
 
-        TinkApacheHttpClient4Handler tinkJerseyApacheHttpsClientHandler = new TinkApacheHttpClient4Handler(
-                apacheClient, cookieStore, false);
-        TinkApacheHttpClient4 tinkJerseyClient = new TinkApacheHttpClient4(tinkJerseyApacheHttpsClientHandler);
+        TinkApacheHttpClient4Handler tinkJerseyApacheHttpsClientHandler =
+                new TinkApacheHttpClient4Handler(apacheClient, cookieStore, false);
+        TinkApacheHttpClient4 tinkJerseyClient =
+                new TinkApacheHttpClient4(tinkJerseyApacheHttpsClientHandler);
 
         try {
-            tinkJerseyClient
-                    .addFilter(new LoggingFilter(new PrintStream(context.getLogOutputStream(), true, "UTF-8")));
+            tinkJerseyClient.addFilter(
+                    new LoggingFilter(
+                            new PrintStream(context.getLogOutputStream(), true, "UTF-8")));
         } catch (UnsupportedEncodingException e) {
             log.warn("Could not add buffered logging filter.");
         }
@@ -704,11 +785,13 @@ public class SkandiabankenAgent extends AbstractAgent implements
         List<LoginMethod> loginMethods = getLoginMethods();
 
         Preconditions.checkArgument(credentials.getType() == CredentialsTypes.MOBILE_BANKID);
-        LoginResponse loginResponse = authenticateWithBankId(extractLoginMethod(loginMethods, BANKID_LOGIN_METHOD_ID));
+        LoginResponse loginResponse =
+                authenticateWithBankId(extractLoginMethod(loginMethods, BANKID_LOGIN_METHOD_ID));
 
         Preconditions.checkNotNull(loginResponse);
 
-        // Make sure the user always logs in to the same login to not mistakenly suddenly get the wrong transactions.
+        // Make sure the user always logs in to the same login to not mistakenly suddenly get the
+        // wrong transactions.
         final String customerIdString = String.valueOf(loginResponse.getId());
         final String previousCustomerId = credentials.getPayload();
 
@@ -754,13 +837,13 @@ public class SkandiabankenAgent extends AbstractAgent implements
     @Override
     public void loadLoginSession() {
 
-        PersistentSession persistentSession = credentials.getPersistentSession(PersistentSession.class);
+        PersistentSession persistentSession =
+                credentials.getPersistentSession(PersistentSession.class);
 
         if (persistentSession != null) {
             this.customerId = persistentSession.getCustomerId();
             addSessionCookiesToClient(client, persistentSession);
         }
-
     }
 
     @Override
@@ -786,7 +869,8 @@ public class SkandiabankenAgent extends AbstractAgent implements
 
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        return new FetchTransactionsResponse(updateTransactionsPerAccountType(CHECKING_TRANSACTIONS));
+        return new FetchTransactionsResponse(
+                updateTransactionsPerAccountType(CHECKING_TRANSACTIONS));
     }
 
     @Override
@@ -796,7 +880,8 @@ public class SkandiabankenAgent extends AbstractAgent implements
 
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
-        return new FetchTransactionsResponse(updateTransactionsPerAccountType(CREDITCARD_TRANSACTIONS));
+        return new FetchTransactionsResponse(
+                updateTransactionsPerAccountType(CREDITCARD_TRANSACTIONS));
     }
 
     @Override
@@ -820,11 +905,15 @@ public class SkandiabankenAgent extends AbstractAgent implements
     }
 
     private enum UserMessage implements LocalizableEnum {
-        CONFIRM_BANKID(new LocalizableKey(
-                "You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once to confirm that the BankID is yours. You may then continue using BankID here.")),
-        WRONG_BANKID(new LocalizableKey("Wrong BankID signature. Did you log in with the wrong personnummer?")),
-        UNDERAGE(new LocalizableKey(
-                "Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."));
+        CONFIRM_BANKID(
+                new LocalizableKey(
+                        "You need to confirm your BankID to Skandiabanken. You do it by logging in with the Skandiabanken app once to confirm that the BankID is yours. You may then continue using BankID here.")),
+        WRONG_BANKID(
+                new LocalizableKey(
+                        "Wrong BankID signature. Did you log in with the wrong personnummer?")),
+        UNDERAGE(
+                new LocalizableKey(
+                        "Could not login to Skandiabanken. Unfortunately we don't support Skandiabanken for customers under the age of 18 years."));
 
         private LocalizableKey userMessage;
 

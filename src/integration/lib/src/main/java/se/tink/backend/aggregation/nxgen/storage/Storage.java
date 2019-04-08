@@ -7,11 +7,18 @@ import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class Storage extends HashMap<String, String> {
     public void put(String key, Object value) {
-        super.put(key, value instanceof String ? (String) value : SerializationUtils.serializeToString(value));
+        super.put(
+                key,
+                value instanceof String
+                        ? (String) value
+                        : SerializationUtils.serializeToString(value));
     }
 
     public <T> Optional<T> get(String key, TypeReference<T> valueType) {
-        T data = !containsKey(key) ? null : SerializationUtils.deserializeFromString(get(key), valueType);
+        T data =
+                !containsKey(key)
+                        ? null
+                        : SerializationUtils.deserializeFromString(get(key), valueType);
 
         return Optional.ofNullable(data);
     }
@@ -20,7 +27,10 @@ public class Storage extends HashMap<String, String> {
         if (valueType == String.class) {
             return Optional.ofNullable((T) get(key));
         }
-        T data = !containsKey(key) ? null : SerializationUtils.deserializeFromString(get(key), valueType);
+        T data =
+                !containsKey(key)
+                        ? null
+                        : SerializationUtils.deserializeFromString(get(key), valueType);
 
         return Optional.ofNullable(data);
     }

@@ -13,40 +13,47 @@ import se.tink.libraries.i18n.Catalog;
 
 public class LoanGenerator {
 
-
-    public static Collection<LoanAccount> fetchLoanAccounts(String currency, Catalog catalog, DemoLoanAccount accountDefinition) {
+    public static Collection<LoanAccount> fetchLoanAccounts(
+            String currency, Catalog catalog, DemoLoanAccount accountDefinition) {
         ArrayList<LoanAccount> loanAccounts = Lists.newArrayList();
 
         if (Objects.isNull(accountDefinition)) {
             return loanAccounts;
         }
 
-        loanAccounts.add(LoanAccount.builder(accountDefinition.getMortgageId(),
-                new Amount(currency, DemoConstants.getSekToCurrencyConverter(currency,
-                        accountDefinition.getMortgageBalance())))
-                .setAccountNumber(accountDefinition.getMortgageId())
-                .setName(catalog.getString(accountDefinition.getMortgageLoanName()))
-                .setBankIdentifier(accountDefinition.getMortgageId())
-                .setInterestRate(accountDefinition.getMortgageInterestName())
-                .setDetails(buildLoanDetails(LoanDetails.Type.MORTGAGE))
-                .build());
+        loanAccounts.add(
+                LoanAccount.builder(
+                                accountDefinition.getMortgageId(),
+                                new Amount(
+                                        currency,
+                                        DemoConstants.getSekToCurrencyConverter(
+                                                currency, accountDefinition.getMortgageBalance())))
+                        .setAccountNumber(accountDefinition.getMortgageId())
+                        .setName(catalog.getString(accountDefinition.getMortgageLoanName()))
+                        .setBankIdentifier(accountDefinition.getMortgageId())
+                        .setInterestRate(accountDefinition.getMortgageInterestName())
+                        .setDetails(buildLoanDetails(LoanDetails.Type.MORTGAGE))
+                        .build());
 
-        loanAccounts.add(LoanAccount.builder(accountDefinition.getBlancoId(),
-                new Amount(currency, DemoConstants.getSekToCurrencyConverter(currency,
-                        accountDefinition.getBlancoBalance())))
-                .setAccountNumber(accountDefinition.getBlancoId())
-                .setName(catalog.getString(accountDefinition.getBlancoLoanName()))
-                .setBankIdentifier(accountDefinition.getBlancoId())
-                .setInterestRate(accountDefinition.getBlancoInterestName())
-                .setDetails(buildLoanDetails(LoanDetails.Type.BLANCO))
-                .build());
+        loanAccounts.add(
+                LoanAccount.builder(
+                                accountDefinition.getBlancoId(),
+                                new Amount(
+                                        currency,
+                                        DemoConstants.getSekToCurrencyConverter(
+                                                currency, accountDefinition.getBlancoBalance())))
+                        .setAccountNumber(accountDefinition.getBlancoId())
+                        .setName(catalog.getString(accountDefinition.getBlancoLoanName()))
+                        .setBankIdentifier(accountDefinition.getBlancoId())
+                        .setInterestRate(accountDefinition.getBlancoInterestName())
+                        .setDetails(buildLoanDetails(LoanDetails.Type.BLANCO))
+                        .build());
 
         return loanAccounts;
     }
 
-    //TODO Add more details
+    // TODO Add more details
     private static LoanDetails buildLoanDetails(LoanDetails.Type type) {
-        return LoanDetails.builder(type)
-                .build();
+        return LoanDetails.builder(type).build();
     }
 }

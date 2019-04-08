@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
+import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -10,8 +11,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Bala
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.OtherBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
 import se.tink.libraries.amount.Amount;
-
-import javax.annotation.Nonnull;
 
 public class OtherAccount extends TransactionalAccount {
     private static final Logger LOG = LoggerFactory.getLogger(OtherAccount.class);

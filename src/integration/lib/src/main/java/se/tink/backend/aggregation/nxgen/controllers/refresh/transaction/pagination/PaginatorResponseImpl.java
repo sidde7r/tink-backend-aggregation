@@ -11,7 +11,8 @@ public class PaginatorResponseImpl implements PaginatorResponse {
     private final Collection<? extends Transaction> transactions;
     private final Boolean canFetchMore;
 
-    private PaginatorResponseImpl(Collection<? extends Transaction> transactions, Boolean canFetchMore) {
+    private PaginatorResponseImpl(
+            Collection<? extends Transaction> transactions, Boolean canFetchMore) {
         this.transactions = transactions;
         this.canFetchMore = canFetchMore;
     }
@@ -28,7 +29,8 @@ public class PaginatorResponseImpl implements PaginatorResponse {
         return new PaginatorResponseImpl(transactions, null);
     }
 
-    public static PaginatorResponse create(Collection<? extends Transaction> transactions, boolean canFetchMore) {
+    public static PaginatorResponse create(
+            Collection<? extends Transaction> transactions, boolean canFetchMore) {
         return new PaginatorResponseImpl(transactions, canFetchMore);
     }
 

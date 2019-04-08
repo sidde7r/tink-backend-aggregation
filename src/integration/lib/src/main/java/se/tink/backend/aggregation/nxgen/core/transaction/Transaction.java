@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.user.rpc.User;
 
 public class Transaction extends AggregationTransaction {
@@ -17,11 +17,17 @@ public class Transaction extends AggregationTransaction {
         this(amount, date, description, pending, null);
     }
 
-    protected Transaction(Amount amount, Date date, String description, boolean pending, String rawDetails) {
+    protected Transaction(
+            Amount amount, Date date, String description, boolean pending, String rawDetails) {
         this(amount, date, description, pending, rawDetails, null);
     }
 
-    protected Transaction(Amount amount, Date date, String description, boolean pending, String rawDetails,
+    protected Transaction(
+            Amount amount,
+            Date date,
+            String description,
+            boolean pending,
+            String rawDetails,
             String externalId) {
         super(amount, date, description, rawDetails);
         this.pending = pending;
@@ -37,7 +43,8 @@ public class Transaction extends AggregationTransaction {
     }
 
     public se.tink.backend.aggregation.agents.models.Transaction toSystemTransaction(User user) {
-        se.tink.backend.aggregation.agents.models.Transaction transaction = super.toSystemTransaction(user);
+        se.tink.backend.aggregation.agents.models.Transaction transaction =
+                super.toSystemTransaction(user);
 
         transaction.setPending(isPending());
         if (!Strings.isNullOrEmpty(getExternalId())) {
@@ -109,7 +116,12 @@ public class Transaction extends AggregationTransaction {
 
         @Override
         public Transaction build() {
-            return new Transaction(getAmount(), getDate(), getDescription(), isPending(), getRawDetails(),
+            return new Transaction(
+                    getAmount(),
+                    getDate(),
+                    getDescription(),
+                    isPending(),
+                    getRawDetails(),
                     getExternalId());
         }
     }

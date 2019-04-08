@@ -3,8 +3,6 @@ package se.tink.backend.aggregation.nxgen.core.account;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TypeMapper<V> {
     private static final Logger logger = LoggerFactory.getLogger(TypeMapper.class);
@@ -24,16 +24,14 @@ public class TypeMapper<V> {
         super();
 
         ignoredKeys =
-                builder.getIgnoredKeys()
-                        .stream()
+                builder.getIgnoredKeys().stream()
                         .map(String::toLowerCase)
                         .collect(Collectors.toSet());
 
         ImmutableMap.Builder<String, V> tmpTranslator = ImmutableMap.builder();
         for (Map.Entry<V, List<String>> entry : builder.getReversed().entrySet()) {
 
-            entry.getValue()
-                    .stream()
+            entry.getValue().stream()
                     .map(String::toLowerCase)
                     .peek(
                             key ->

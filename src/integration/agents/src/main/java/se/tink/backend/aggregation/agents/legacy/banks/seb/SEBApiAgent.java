@@ -158,56 +158,77 @@ import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
-public class SEBApiAgent extends AbstractAgent implements
-        RefreshTransferDestinationExecutor,
-        RefreshEInvoiceExecutor,
-        RefreshCheckingAccountsExecutor,
-        RefreshSavingsAccountsExecutor,
-        RefreshCreditCardAccountsExecutor,
-        RefreshLoanAccountsExecutor,
-        RefreshInvestmentAccountsExecutor,
-        PersistentLogin,
-        TransferExecutor {
+public class SEBApiAgent extends AbstractAgent
+        implements RefreshTransferDestinationExecutor,
+                RefreshEInvoiceExecutor,
+                RefreshCheckingAccountsExecutor,
+                RefreshSavingsAccountsExecutor,
+                RefreshCreditCardAccountsExecutor,
+                RefreshLoanAccountsExecutor,
+                RefreshInvestmentAccountsExecutor,
+                PersistentLogin,
+                TransferExecutor {
 
     private static final String BASE_URL = "https://mp.seb.se";
     private static final String API_URL = "/1000/ServiceFactory/PC_BANK/";
     private static final String AUTH_URL = "/nauth2/Authentication/api/v1/bid/";
 
-    private static final String INTERNAL_TRANSFER_URL = API_URL + "PC_BankKolla_Ny02Overfor03.asmx/Execute";
-    private static final String EXTERNAL_BANK_TRANSFER_URL = API_URL + "PC_BankKolla_ny01Overfor02.asmx/Execute";
-    private static final String EXTERNAL_INVOICE_TRANSFER_URL = API_URL + "PC_BankKollany01Betal_privat01.asmx/Execute";
-    private static final String EXTERNAL_TRANSFER_VERIFICATION_URL = API_URL + "PC_BankKolla11Bunt01.asmx/Execute";
-    private static final String EXTERNAL_TRANSFER_SIGN_URL = API_URL + "PC_BankSkapa11Signera01.asmx/Execute";
-    private static final String EXTERNAL_TRANSFER_SIGN_VERIFICATION_URL = API_URL + "PC_BankUtfor11Bunt01.asmx/Execute";
-    private static final String EXTERNAL_TRANSFER_UNSIGNED = API_URL + "PC_BankLista01Uppdrag01.asmx/Execute";
-    private static final String EXTERNAL_TRANSFER_UPDATE = API_URL + "PC_BankUppdatera01Bunt03.asmx/Execute";
+    private static final String INTERNAL_TRANSFER_URL =
+            API_URL + "PC_BankKolla_Ny02Overfor03.asmx/Execute";
+    private static final String EXTERNAL_BANK_TRANSFER_URL =
+            API_URL + "PC_BankKolla_ny01Overfor02.asmx/Execute";
+    private static final String EXTERNAL_INVOICE_TRANSFER_URL =
+            API_URL + "PC_BankKollany01Betal_privat01.asmx/Execute";
+    private static final String EXTERNAL_TRANSFER_VERIFICATION_URL =
+            API_URL + "PC_BankKolla11Bunt01.asmx/Execute";
+    private static final String EXTERNAL_TRANSFER_SIGN_URL =
+            API_URL + "PC_BankSkapa11Signera01.asmx/Execute";
+    private static final String EXTERNAL_TRANSFER_SIGN_VERIFICATION_URL =
+            API_URL + "PC_BankUtfor11Bunt01.asmx/Execute";
+    private static final String EXTERNAL_TRANSFER_UNSIGNED =
+            API_URL + "PC_BankLista01Uppdrag01.asmx/Execute";
+    private static final String EXTERNAL_TRANSFER_UPDATE =
+            API_URL + "PC_BankUppdatera01Bunt03.asmx/Execute";
 
     private static final String EINVOICES_URL = API_URL + "PC_BankLista11Egfaktura01.asmx/Execute";
-    private static final String EINVOICES_CHANGE_UNSIGNED_URL = API_URL + "PC_BankAndraEgfaktura01.asmx/Execute";
-    private static final String EINVOICES_ADD_UNSIGNED_URL = API_URL + "PC_BankSkickaEgfaktura01.asmx/Execute";
+    private static final String EINVOICES_CHANGE_UNSIGNED_URL =
+            API_URL + "PC_BankAndraEgfaktura01.asmx/Execute";
+    private static final String EINVOICES_ADD_UNSIGNED_URL =
+            API_URL + "PC_BankSkickaEgfaktura01.asmx/Execute";
 
     private static final String LOAN_URL = API_URL + "PC_BankLista01Laninfo_privat03.asmx/Execute";
     private static final String ACTIVATE_URL = API_URL + "PC_BankAktivera01Session01.asmx/Execute";
-    private static final String PENDING_TRANSACTIONS_URL = API_URL + "PC_BankLista01Skydd01.asmx/Execute";
-    private static final String UPCOMING_TRANSACTIONS_URL = API_URL + "PC_BankLista11Komm_uppdrag02.asmx/Execute";
+    private static final String PENDING_TRANSACTIONS_URL =
+            API_URL + "PC_BankLista01Skydd01.asmx/Execute";
+    private static final String UPCOMING_TRANSACTIONS_URL =
+            API_URL + "PC_BankLista11Komm_uppdrag02.asmx/Execute";
     private static final String LOGOUT_URL = API_URL + "PC_BankTabort01Session01.asmx/Execute";
-    private static final String ACCOUNTS_URL = API_URL + "PC_BankLista01Konton_privat01.asmx/Execute";
-    private static final String ACCOUNT_TRANSACTION_URL = API_URL + "PC_BankLista01Rorelse_ftg03.asmx/Execute";
+    private static final String ACCOUNTS_URL =
+            API_URL + "PC_BankLista01Konton_privat01.asmx/Execute";
+    private static final String ACCOUNT_TRANSACTION_URL =
+            API_URL + "PC_BankLista01Rorelse_ftg03.asmx/Execute";
     private static final String DEPOT_URL = API_URL + "PC_BankLista11Depainnehav02.asmx/Execute";
-    private static final String FUND_HOLDING_URL = API_URL + "PC_BankLista01Fond_innehav02.asmx/Execute";
-    private static final String INSURANCE_LIST_URL = API_URL + "Tl_forsakringLista11Enga01.asmx/Execute";
-    private static final String INSURANCE_DETAIL = API_URL + "PC_BankHamta11Savingsvarde01.asmx/Execute";
+    private static final String FUND_HOLDING_URL =
+            API_URL + "PC_BankLista01Fond_innehav02.asmx/Execute";
+    private static final String INSURANCE_LIST_URL =
+            API_URL + "Tl_forsakringLista11Enga01.asmx/Execute";
+    private static final String INSURANCE_DETAIL =
+            API_URL + "PC_BankHamta11Savingsvarde01.asmx/Execute";
 
     private static final String INITIATE_BANKID_URL = AUTH_URL + "auth";
     private static final String COLLECT_BANKID_STRING_FORMAT_URL = AUTH_URL + "%s";
-    private static final String INITIATE_SESSION_URL = API_URL + "PC_BankInit11Session01.asmx/Execute";
+    private static final String INITIATE_SESSION_URL =
+            API_URL + "PC_BankInit11Session01.asmx/Execute";
 
-    private static final String CREDIT_CARD_ACCOUNTS_URL = API_URL + "PC_BankLista11Kortkonto01.asmx/Execute";
-    private static final String CREDIT_CARD_TRANSACTIONS_URL = API_URL + "PC_BankLista11Fakt_korttran02.asmx/Execute";
+    private static final String CREDIT_CARD_ACCOUNTS_URL =
+            API_URL + "PC_BankLista11Kortkonto01.asmx/Execute";
+    private static final String CREDIT_CARD_TRANSACTIONS_URL =
+            API_URL + "PC_BankLista11Fakt_korttran02.asmx/Execute";
     private static final String CREDIT_CARD_TRANSACTIONS_OUTSTANDING_URL =
             API_URL + "PC_BankLista11Ofakt_korttran02.asmx/Execute";
 
-    private static final String EXTERNAL_ACCOUNTS_URL = API_URL + "PC_BankSkapa01Overfun_privat01.asmx/Execute";
+    private static final String EXTERNAL_ACCOUNTS_URL =
+            API_URL + "PC_BankSkapa01Overfun_privat01.asmx/Execute";
     private static final String EXTERNAL_PAYMENT_SOURCE_ACCOUNTS_URL =
             API_URL + "PC_BankSkapa01Betalun_privat01.asmx/Execute";
 
@@ -220,27 +241,32 @@ public class SEBApiAgent extends AbstractAgent implements
 
     private static final Joiner REGEXP_OR_JOINER = Joiner.on("|");
 
-    private static final Predicate<ExternalAccount> EXTERNALACCOUNT_IS_BG_OR_PG = externalAccount ->
-            externalAccount.isBankGiro() || externalAccount.isPostGiro();
+    private static final Predicate<ExternalAccount> EXTERNALACCOUNT_IS_BG_OR_PG =
+            externalAccount -> externalAccount.isBankGiro() || externalAccount.isPostGiro();
     private static ObjectMapper mapper = new ObjectMapper();
     // private static final String USER_AGENT =
-    // "Dalvik/1.6.0 (Linux; U; Android 4.3; Nexus 4 Build/JWR66Y) SEBapp/1.0 (os=android/4.3; app=se.seb.privatkund/5.2.1)";
+    // "Dalvik/1.6.0 (Linux; U; Android 4.3; Nexus 4 Build/JWR66Y) SEBapp/1.0 (os=android/4.3;
+    // app=se.seb.privatkund/5.2.1)";
     private static final String PASSWORD = "markeryd";
     private static final int MAX_ATTEMPTS = 90;
 
-    private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_SIGN_CANCELLED = input -> {
-        // This is the error we get when we cancel. It is assumed this corresponds to a cancelled bankid signature.
-        return Objects.equal(input.ErrorCode, "RFA6");
-    };
+    private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_SIGN_CANCELLED =
+            input -> {
+                // This is the error we get when we cancel. It is assumed this corresponds to a
+                // cancelled bankid signature.
+                return Objects.equal(input.ErrorCode, "RFA6");
+            };
 
-    private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_TIMEOUT = input -> Objects
-            .equal(input.ErrorCode, "RFA8");
+    private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_TIMEOUT =
+            input -> Objects.equal(input.ErrorCode, "RFA8");
 
-    // unused for the time being. Evaluating ignoring this error since we can still poll and succeed if bankId is signed
-    private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_ALREADY_IN_PROGRESS = input -> Objects
-            .equal(input.ErrorCode, "RFA3");
+    // unused for the time being. Evaluating ignoring this error since we can still poll and succeed
+    // if bankId is signed
+    private static final Predicate<ResultInfoMessage> ERROR_IS_BANKID_TRANSFER_ALREADY_IN_PROGRESS =
+            input -> Objects.equal(input.ErrorCode, "RFA3");
 
-    private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG = TransferMessageLengthConfig.createWithMaxLength(12);
+    private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
+            TransferMessageLengthConfig.createWithMaxLength(12);
 
     private String customerId;
     private String userId;
@@ -252,22 +278,26 @@ public class SEBApiAgent extends AbstractAgent implements
     // cache
     private Map<AccountEntity, Account> accountEntityAccountMap = null;
 
-    public SEBApiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SEBApiAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         credentials = request.getCredentials();
         client = createClient();
         catalog = context.getCatalog();
-        transferMessageFormatter = new TransferMessageFormatter(catalog,
-                TRANSFER_MESSAGE_LENGTH_CONFIG,
-                new StringNormalizerSwedish("#%*+=$@©£·…~_-/:;()&@\".,?!\'"));
-
+        transferMessageFormatter =
+                new TransferMessageFormatter(
+                        catalog,
+                        TRANSFER_MESSAGE_LENGTH_CONFIG,
+                        new StringNormalizerSwedish("#%*+=$@©£·…~_-/:;()&@\".,?!\'"));
     }
 
     /**
-     * Pass in configuration of the mortgage integration to the module, so that we can inject it into api configuration
+     * Pass in configuration of the mortgage integration to the module, so that we can inject it
+     * into api configuration
      *
-     * @param configuration AggregationServiceConfiguration guaranteed to contain integrations configuration for SEB Mortgage
+     * @param configuration AggregationServiceConfiguration guaranteed to contain integrations
+     *     configuration for SEB Mortgage
      */
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
@@ -284,15 +314,17 @@ public class SEBApiAgent extends AbstractAgent implements
         return new FetchAccountsResponse(updateAccountsPerType(RefreshableItem.SAVING_ACCOUNTS));
     }
 
-
     @Override
     public FetchTransactionsResponse fetchCheckingTransactions() {
-        return new FetchTransactionsResponse(updateTransactionsPerAccountType(RefreshableItem.CHECKING_TRANSACTIONS, customerId));
+        return new FetchTransactionsResponse(
+                updateTransactionsPerAccountType(
+                        RefreshableItem.CHECKING_TRANSACTIONS, customerId));
     }
 
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
-        return new FetchTransactionsResponse(updateTransactionsPerAccountType(RefreshableItem.SAVING_TRANSACTIONS, customerId));
+        return new FetchTransactionsResponse(
+                updateTransactionsPerAccountType(RefreshableItem.SAVING_TRANSACTIONS, customerId));
     }
 
     @Override
@@ -303,7 +335,8 @@ public class SEBApiAgent extends AbstractAgent implements
     @Override
     public FetchTransactionsResponse fetchCreditCardTransactions() {
         try {
-            return new FetchTransactionsResponse(updateCreditCardAccountsAndTransactions(request, customerId));
+            return new FetchTransactionsResponse(
+                    updateCreditCardAccountsAndTransactions(request, customerId));
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -319,7 +352,8 @@ public class SEBApiAgent extends AbstractAgent implements
         try {
             return new FetchInvestmentAccountsResponse(updateInvestmentAccounts());
         } catch (Exception e) {
-            // Don't fail the whole refresh just because we failed updating investment data but log error.
+            // Don't fail the whole refresh just because we failed updating investment data but log
+            // error.
             log.error("Caught exception while updating investment data", e);
             return new FetchInvestmentAccountsResponse(Collections.emptyMap());
         }
@@ -341,9 +375,8 @@ public class SEBApiAgent extends AbstractAgent implements
 
     @Override
     public FetchTransactionsResponse fetchLoanTransactions() {
-       return new FetchTransactionsResponse(Collections.EMPTY_MAP);
+        return new FetchTransactionsResponse(Collections.EMPTY_MAP);
     }
-
 
     @Override
     public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> accounts) {
@@ -409,17 +442,20 @@ public class SEBApiAgent extends AbstractAgent implements
             return Collections.emptyMap();
         }
 
-        insurances.forEach(insuranceEntity -> {
-            Account account = insuranceEntity.toAccount();
+        insurances.forEach(
+                insuranceEntity -> {
+                    Account account = insuranceEntity.toAccount();
 
-            Portfolio portfolio = insuranceEntity.toPortfolio();
+                    Portfolio portfolio = insuranceEntity.toPortfolio();
 
-            List<Instrument> instruments = getInsuranceInstruments(insuranceEntity.getDetailUrl());
-            portfolio.setInstruments(instruments);
-            portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
+                    List<Instrument> instruments =
+                            getInsuranceInstruments(insuranceEntity.getDetailUrl());
+                    portfolio.setInstruments(instruments);
+                    portfolio.setTotalProfit(
+                            instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
-            insuranceAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
-        });
+                    insuranceAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+                });
         return insuranceAccounts;
     }
 
@@ -430,24 +466,26 @@ public class SEBApiAgent extends AbstractAgent implements
 
         RequestWrappingEntity requestWrappingEntity = new RequestWrappingEntity();
         requestWrappingEntity.setServiceInput(
-                Collections.singletonList(
-                        new ServiceInput("DETAIL_URL", detailUrl)));
+                Collections.singletonList(new ServiceInput("DETAIL_URL", detailUrl)));
 
         InvestmentDataRequest investmentDataRequest = new InvestmentDataRequest();
         investmentDataRequest.setRequest(requestWrappingEntity);
 
-        SebResponse detailResponse = postAsJSON(INSURANCE_DETAIL, investmentDataRequest, SebResponse.class);
+        SebResponse detailResponse =
+                postAsJSON(INSURANCE_DETAIL, investmentDataRequest, SebResponse.class);
 
-        List<InsuranceHoldingEntity> holdingsEntities = detailResponse.d.VODB
-                .getInsuranceHoldingEntities();
+        List<InsuranceHoldingEntity> holdingsEntities =
+                detailResponse.d.VODB.getInsuranceHoldingEntities();
 
         List<Instrument> instruments = new ArrayList<>();
 
-        Optional.ofNullable(holdingsEntities).orElse(Collections.emptyList())
-                .forEach(holdingsEntity -> {
-                    Optional<Instrument> instrument = holdingsEntity.toInstrument();
-                    instrument.ifPresent(instruments::add);
-                });
+        Optional.ofNullable(holdingsEntities)
+                .orElse(Collections.emptyList())
+                .forEach(
+                        holdingsEntity -> {
+                            Optional<Instrument> instrument = holdingsEntity.toInstrument();
+                            instrument.ifPresent(instruments::add);
+                        });
 
         return instruments;
     }
@@ -456,40 +494,47 @@ public class SEBApiAgent extends AbstractAgent implements
         Map<Account, AccountFeatures> fundHoldings = new HashMap<>();
         RequestWrappingEntity requestWrappingEntity = new RequestWrappingEntity();
         requestWrappingEntity.setServiceInput(
-                Collections.singletonList(
-                        new ServiceInput("KUND_ID", customerId)));
+                Collections.singletonList(new ServiceInput("KUND_ID", customerId)));
         InvestmentDataRequest investmentDataRequest = new InvestmentDataRequest();
         investmentDataRequest.setRequest(requestWrappingEntity);
 
-        SebResponse sebResponse = postAsJSON(FUND_HOLDING_URL, investmentDataRequest, SebResponse.class);
-        Map<String, List<FundAccountEntity>> accountsByAccountNumber = sebResponse.d.VODB.getFundAccounts().stream()
-                .collect(Collectors.groupingBy(FundAccountEntity::getAccountNumber));
+        SebResponse sebResponse =
+                postAsJSON(FUND_HOLDING_URL, investmentDataRequest, SebResponse.class);
+        Map<String, List<FundAccountEntity>> accountsByAccountNumber =
+                sebResponse.d.VODB.getFundAccounts().stream()
+                        .collect(Collectors.groupingBy(FundAccountEntity::getAccountNumber));
 
-        accountsByAccountNumber.forEach((String key, List<FundAccountEntity> fundAccounts) -> {
-            if (fundAccounts == null) {
-                return;
-            }
+        accountsByAccountNumber.forEach(
+                (String key, List<FundAccountEntity> fundAccounts) -> {
+                    if (fundAccounts == null) {
+                        return;
+                    }
 
-            Optional<FundAccountEntity> optionalFundAccount = fundAccounts.stream().findFirst();
+                    Optional<FundAccountEntity> optionalFundAccount =
+                            fundAccounts.stream().findFirst();
 
-            if (!optionalFundAccount.isPresent()) {
-                return;
-            }
+                    if (!optionalFundAccount.isPresent()) {
+                        return;
+                    }
 
-            FundAccountEntity fundAccount = optionalFundAccount.get();
-            Account account = fundAccount.toAccount();
-            Portfolio portfolio = fundAccount.toPortfolio();
+                    FundAccountEntity fundAccount = optionalFundAccount.get();
+                    Account account = fundAccount.toAccount();
+                    Portfolio portfolio = fundAccount.toPortfolio();
 
-            List<Instrument> instruments = Lists.newArrayList();
-            fundAccounts.forEach(fundAccountEntity -> fundAccountEntity.toInstrument().ifPresent(instruments::add));
-            portfolio.setInstruments(instruments);
-            portfolio.setTotalValue(instruments.stream().mapToDouble(Instrument::getMarketValue).sum());
-            portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
+                    List<Instrument> instruments = Lists.newArrayList();
+                    fundAccounts.forEach(
+                            fundAccountEntity ->
+                                    fundAccountEntity.toInstrument().ifPresent(instruments::add));
+                    portfolio.setInstruments(instruments);
+                    portfolio.setTotalValue(
+                            instruments.stream().mapToDouble(Instrument::getMarketValue).sum());
+                    portfolio.setTotalProfit(
+                            instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
-            account.setBalance(portfolio.getTotalValue());
+                    account.setBalance(portfolio.getTotalValue());
 
-            fundHoldings.put(account, AccountFeatures.createForPortfolios(portfolio));
-        });
+                    fundHoldings.put(account, AccountFeatures.createForPortfolios(portfolio));
+                });
         return fundHoldings;
     }
 
@@ -514,49 +559,70 @@ public class SEBApiAgent extends AbstractAgent implements
             return Collections.emptyMap();
         }
 
-        List<PortfolioAccountMapperEntity> portfolioAccountMappers = response.d.VODB.getPortfolioAccountMappers();
+        List<PortfolioAccountMapperEntity> portfolioAccountMappers =
+                response.d.VODB.getPortfolioAccountMappers();
         // Important to map a depot to the correct account number
-        Map<String, String> depotIdAccountNumberMappings = portfolioAccountMappers.stream()
-                .filter(pam -> Objects.equal(KTO_FUNK_KOD_FOR_DEPOT_ID_MAPPING_TO_ACCOUNT_NUMBER, pam.getAccountCode()))
-                .collect(Collectors.toMap(
-                        PortfolioAccountMapperEntity::getDepotId,
-                        PortfolioAccountMapperEntity::getAccountNumber));
+        Map<String, String> depotIdAccountNumberMappings =
+                portfolioAccountMappers.stream()
+                        .filter(
+                                pam ->
+                                        Objects.equal(
+                                                KTO_FUNK_KOD_FOR_DEPOT_ID_MAPPING_TO_ACCOUNT_NUMBER,
+                                                pam.getAccountCode()))
+                        .collect(
+                                Collectors.toMap(
+                                        PortfolioAccountMapperEntity::getDepotId,
+                                        PortfolioAccountMapperEntity::getAccountNumber));
 
-        Map<String, List<HoldingEntity>> holdingByDepotNumber = holdings.stream()
-                .collect(Collectors.groupingBy(h -> String.valueOf(h.getDepotNumber())));
+        Map<String, List<HoldingEntity>> holdingByDepotNumber =
+                holdings.stream()
+                        .collect(Collectors.groupingBy(h -> String.valueOf(h.getDepotNumber())));
 
-        depots.forEach(depot -> {
-            String accountNumber = depotIdAccountNumberMappings.get(depot.getId());
-            String depotNumber = getDepotNumberForHolding(depot.getId());
-            if (depotNumber.isEmpty() || Strings.isNullOrEmpty(accountNumber)) {
-                return;
-            }
+        depots.forEach(
+                depot -> {
+                    String accountNumber = depotIdAccountNumberMappings.get(depot.getId());
+                    String depotNumber = getDepotNumberForHolding(depot.getId());
+                    if (depotNumber.isEmpty() || Strings.isNullOrEmpty(accountNumber)) {
+                        return;
+                    }
 
-            Account account = depot.toAccount(accountNumber);
-            Portfolio portfolio = depot.toPortfolio();
+                    Account account = depot.toAccount(accountNumber);
+                    Portfolio portfolio = depot.toPortfolio();
 
-            List<Instrument> instruments = Lists.newArrayList();
-            holdingByDepotNumber.getOrDefault(depotNumber, Collections.emptyList())
-                    .forEach(holding -> holding.toInstrument().ifPresent(instrument -> {
-                        checkPossibleFaultyParsing(holding, instrument);
-                        instruments.add(instrument);
-                    }));
-            portfolio.setInstruments(instruments);
-            portfolio.setTotalProfit(instruments.stream().mapToDouble(Instrument::getProfit).sum());
+                    List<Instrument> instruments = Lists.newArrayList();
+                    holdingByDepotNumber
+                            .getOrDefault(depotNumber, Collections.emptyList())
+                            .forEach(
+                                    holding ->
+                                            holding.toInstrument()
+                                                    .ifPresent(
+                                                            instrument -> {
+                                                                checkPossibleFaultyParsing(
+                                                                        holding, instrument);
+                                                                instruments.add(instrument);
+                                                            }));
+                    portfolio.setInstruments(instruments);
+                    portfolio.setTotalProfit(
+                            instruments.stream().mapToDouble(Instrument::getProfit).sum());
 
-            depotAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
-        });
+                    depotAccounts.put(account, AccountFeatures.createForPortfolios(portfolio));
+                });
         return depotAccounts;
     }
 
     private void checkPossibleFaultyParsing(HoldingEntity holding, Instrument instrument) {
-        Double estimatedAverageAcquisitionPrice = instrument.getMarketValue() / instrument.getQuantity();
-        if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice()) > 1) {
-            log.warn("Possibly faulty value parsing: " + SerializationUtils.serializeToString(holding));
+        Double estimatedAverageAcquisitionPrice =
+                instrument.getMarketValue() / instrument.getQuantity();
+        if (Math.abs(estimatedAverageAcquisitionPrice - instrument.getAverageAcquisitionPrice())
+                > 1) {
+            log.warn(
+                    "Possibly faulty value parsing: "
+                            + SerializationUtils.serializeToString(holding));
         }
     }
 
-    private static void attachCreditCardsToAccount(Account account, List<SebCreditCard> creditCards) {
+    private static void attachCreditCardsToAccount(
+            Account account, List<SebCreditCard> creditCards) {
         if (creditCards != null) {
             List<String> creditCardNumbers = Lists.transform(creditCards, input -> input.CARD_NO);
 
@@ -595,16 +661,19 @@ public class SEBApiAgent extends AbstractAgent implements
      * If a credit card transition is missed (i.e. new credit card number, but connected to the same credit account),
      * it has to be solved manually by the user by inactivating (NB! not excluding!) the old account.
      */
-    private static Optional<String> getBankIdForCreditCardAccount(CredentialsRequest request, Account account) {
+    private static Optional<String> getBankIdForCreditCardAccount(
+            CredentialsRequest request, Account account) {
         String bankId = null;
         Set<String> subAccounts = AccountUtils.getSubAccounts(account);
 
-        /** Without sub-accounts, the account cannot be identified.
-         *  This occurs when there haven't been any transactions on the credit card account for more than 2 months.
+        /**
+         * Without sub-accounts, the account cannot be identified. This occurs when there haven't
+         * been any transactions on the credit card account for more than 2 months.
          */
         if (subAccounts.size() > 0) {
             for (String subAccount : subAccounts) {
-                String tmpBankId = AccountUtils.getBankIdBySubAccount(request.getAccounts(), subAccount);
+                String tmpBankId =
+                        AccountUtils.getBankIdBySubAccount(request.getAccounts(), subAccount);
                 if (!Strings.isNullOrEmpty(tmpBankId)) {
                     bankId = tmpBankId;
                     break;
@@ -640,7 +709,8 @@ public class SEBApiAgent extends AbstractAgent implements
 
         if (response.d == null || response.d.VODB == null) {
             if (response.x.systemcode == 2) {
-                throw AuthorizationError.ACCOUNT_BLOCKED.exception(UserMessage.MUST_AUTHORIZE_BANKID.getKey());
+                throw AuthorizationError.ACCOUNT_BLOCKED.exception(
+                        UserMessage.MUST_AUTHORIZE_BANKID.getKey());
             } else {
                 throw new IllegalStateException(
                         String.format(
@@ -659,11 +729,11 @@ public class SEBApiAgent extends AbstractAgent implements
         InitiateBankIdRequest initiateBankIdRequest = new InitiateBankIdRequest();
         initiateBankIdRequest.setUid(credentials.getField(Field.Key.USERNAME));
         initiateBankIdRequest.setSebReferer(SEB_REFERER_BANKID_LOGIN);
-        InitiateBankIdResponse initiateBankIdResponse = resource(INITIATE_BANKID_URL)
-                .type(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(InitiateBankIdResponse.class, initiateBankIdRequest);
-
+        InitiateBankIdResponse initiateBankIdResponse =
+                resource(INITIATE_BANKID_URL)
+                        .type(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .post(InitiateBankIdResponse.class, initiateBankIdRequest);
 
         final String rfa = initiateBankIdResponse.getRfa().toLowerCase();
         final String status = initiateBankIdResponse.getStatus().toLowerCase();
@@ -672,7 +742,8 @@ public class SEBApiAgent extends AbstractAgent implements
             // noop
         } else if (Objects.equal(rfa, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS)) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
-        } else if (Objects.equal(status, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS_STATUS) && rfa.isEmpty()) {
+        } else if (Objects.equal(status, SEBBankIdLoginUtils.ALREADY_IN_PROGRESS_STATUS)
+                && rfa.isEmpty()) {
             log.warn(
                     String.format(
                             "#login-already-in-progress-empty-rfa-e0 - Rfa: %s, Status: %s, Message: %s",
@@ -692,30 +763,35 @@ public class SEBApiAgent extends AbstractAgent implements
 
     private void collectBankId(InitiateBankIdResponse bankIdResponse) throws BankIdException {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            bankIdResponse = resource(String.format(COLLECT_BANKID_STRING_FORMAT_URL,
-                    bankIdResponse.getNextRequest().getUri())).post(InitiateBankIdResponse.class);
+            bankIdResponse =
+                    resource(
+                                    String.format(
+                                            COLLECT_BANKID_STRING_FORMAT_URL,
+                                            bankIdResponse.getNextRequest().getUri()))
+                            .post(InitiateBankIdResponse.class);
 
             switch (bankIdResponse.getRfa().toLowerCase()) {
-            case SEBBankIdLoginUtils.START_BANKID:
-            case SEBBankIdLoginUtils.USER_SIGN:
-                break;
-            case SEBBankIdLoginUtils.ALREADY_IN_PROGRESS:
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
-            case SEBBankIdLoginUtils.USER_CANCELLED:
-                throw BankIdError.CANCELLED.exception();
-            case SEBBankIdLoginUtils.NO_CLIENT:
-                throw BankIdError.NO_CLIENT.exception();
-            case SEBBankIdLoginUtils.AUTHENTICATED:
-                return;
-            case SEBBankIdLoginUtils.AUTHORIZATION_REQUIRED:
-                throw BankIdError.AUTHORIZATION_REQUIRED.exception(UserMessage.MUST_AUTHORIZE_BANKID.getKey());
-            default:
-                throw new IllegalStateException(
-                        String.format(
-                                "#login-refactoring - Rfa: %s, Status: %s, Message: %s",
-                                bankIdResponse.getRfa(),
-                                bankIdResponse.getStatus(),
-                                bankIdResponse.getMessage()));
+                case SEBBankIdLoginUtils.START_BANKID:
+                case SEBBankIdLoginUtils.USER_SIGN:
+                    break;
+                case SEBBankIdLoginUtils.ALREADY_IN_PROGRESS:
+                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                case SEBBankIdLoginUtils.USER_CANCELLED:
+                    throw BankIdError.CANCELLED.exception();
+                case SEBBankIdLoginUtils.NO_CLIENT:
+                    throw BankIdError.NO_CLIENT.exception();
+                case SEBBankIdLoginUtils.AUTHENTICATED:
+                    return;
+                case SEBBankIdLoginUtils.AUTHORIZATION_REQUIRED:
+                    throw BankIdError.AUTHORIZATION_REQUIRED.exception(
+                            UserMessage.MUST_AUTHORIZE_BANKID.getKey());
+                default:
+                    throw new IllegalStateException(
+                            String.format(
+                                    "#login-refactoring - Rfa: %s, Status: %s, Message: %s",
+                                    bankIdResponse.getRfa(),
+                                    bankIdResponse.getStatus(),
+                                    bankIdResponse.getMessage()));
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
@@ -727,7 +803,8 @@ public class SEBApiAgent extends AbstractAgent implements
     private TinkApacheHttpClient4 createClient() {
         try {
             KeyStore keyStore = KeyStore.getInstance("PKCS12", "BC");
-            InputStream stream = Files.asByteSource(new File("data/agents/seb/seb.p12")).openStream();
+            InputStream stream =
+                    Files.asByteSource(new File("data/agents/seb/seb.p12")).openStream();
             keyStore.load(stream, PASSWORD.toCharArray());
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
             keyManagerFactory.init(keyStore, PASSWORD.toCharArray());
@@ -737,17 +814,19 @@ public class SEBApiAgent extends AbstractAgent implements
 
             ApacheHttpClient4Config config = new DefaultApacheHttpClient4Config();
 
-            SSLSocketFactory factory = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            SSLSocketFactory factory =
+                    new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
             ClientConnectionManager manager = new BasicClientConnectionManager();
 
             Scheme https = new Scheme("https", 443, factory);
             manager.getSchemeRegistry().register(https);
 
-            config.getProperties().put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, manager);
+            config.getProperties()
+                    .put(ApacheHttpClient4Config.PROPERTY_CONNECTION_MANAGER, manager);
 
             BasicHttpParams params = new BasicHttpParams();
-//            HttpHost proxy = new HttpHost("127.0.0.1", 8888);
-//            params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+            //            HttpHost proxy = new HttpHost("127.0.0.1", 8888);
+            //            params.setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
             config.getProperties().put(ApacheHttpClient4Config.PROPERTY_HTTP_PARAMS, params);
 
             config.getProperties().put(CoreConnectionPNames.SO_TIMEOUT, 30000);
@@ -760,7 +839,8 @@ public class SEBApiAgent extends AbstractAgent implements
     }
 
     // TODO: handle more than 20 pending
-    private List<SebTransaction> listAccountPendingTransactions(String customerId, String accountId) {
+    private List<SebTransaction> listAccountPendingTransactions(
+            String customerId, String accountId) {
         SebRequest payload = new SebRequest();
         payload.request.VODB = new VODB();
         PCBW431Z query = new PCBW431Z();
@@ -774,8 +854,8 @@ public class SEBApiAgent extends AbstractAgent implements
     }
 
     /**
-     * Requests the upcoming pending transactions for a certain account, note difference from pending.
-     * These are e.g. signed invoices
+     * Requests the upcoming pending transactions for a certain account, note difference from
+     * pending. These are e.g. signed invoices
      */
     private List<UpcomingTransactionEntity> listUpcomingTransactions(String customerId) {
         SebRequest payload = new SebRequest();
@@ -786,8 +866,7 @@ public class SEBApiAgent extends AbstractAgent implements
         SebResponse response = postAsJSON(UPCOMING_TRANSACTIONS_URL, payload, SebResponse.class);
 
         if (response.d.VODB.UpcomingTransactions != null) {
-            return FluentIterable
-                    .from(response.d.VODB.UpcomingTransactions)
+            return FluentIterable.from(response.d.VODB.UpcomingTransactions)
                     .filter(Predicates.<UpcomingTransactionEntity>notNull())
                     .toList();
         } else {
@@ -799,11 +878,13 @@ public class SEBApiAgent extends AbstractAgent implements
         SebRequest payload = new SebRequest();
         payload.request.ServiceInput.add(new ServiceInput("KUND_ID", id));
 
-        // listAccounts() is used by keepAlive() which is not allowed to throw exceptions, hence this try/catch block
+        // listAccounts() is used by keepAlive() which is not allowed to throw exceptions, hence
+        // this try/catch block
         ClientResponse response = postAsJSON(ACCOUNTS_URL, payload, ClientResponse.class);
         try {
-            if (response.getStatus() == HttpStatus.SC_OK && response.hasEntity() && response.getType()
-                    .isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
+            if (response.getStatus() == HttpStatus.SC_OK
+                    && response.hasEntity()
+                    && response.getType().isCompatible(MediaType.APPLICATION_JSON_TYPE)) {
                 SebResponse sebResponse = response.getEntity(SebResponse.class);
 
                 if (sebResponse.d != null && sebResponse.d.VODB != null) {
@@ -819,7 +900,8 @@ public class SEBApiAgent extends AbstractAgent implements
         return null;
     }
 
-    // Since we're updating investment accounts separately we don't want to update them when updating
+    // Since we're updating investment accounts separately we don't want to update them when
+    // updating
     // regular accounts.
     private List<AccountEntity> listCheckingAccounts(String id) {
         SebRequest payload = new SebRequest();
@@ -839,9 +921,10 @@ public class SEBApiAgent extends AbstractAgent implements
 
         SebResponse depotsResponse = optionalResponse.get();
 
-        Set<String> depotAccounts = depotsResponse.d.VODB.getPortfolioAccountMappers().stream()
-                .map(PortfolioAccountMapperEntity::getAccountNumber)
-                .collect(Collectors.toSet());
+        Set<String> depotAccounts =
+                depotsResponse.d.VODB.getPortfolioAccountMappers().stream()
+                        .map(PortfolioAccountMapperEntity::getAccountNumber)
+                        .collect(Collectors.toSet());
 
         return accountsResponse.d.VODB.getAccountEntities().stream()
                 .filter(a -> !depotAccounts.contains(a.KONTO_NR.trim()))
@@ -915,7 +998,8 @@ public class SEBApiAgent extends AbstractAgent implements
         return transactions;
     }
 
-    private List<Transaction> listBilledCreditCardAccountTransactions(Account account, String handle) {
+    private List<Transaction> listBilledCreditCardAccountTransactions(
+            Account account, String handle) {
 
         List<Transaction> transactions = Lists.newArrayList();
 
@@ -925,7 +1009,9 @@ public class SEBApiAgent extends AbstractAgent implements
         SebResponse response = postAsJSON(CREDIT_CARD_TRANSACTIONS_URL, payload, SebResponse.class);
 
         if (response.d != null && response.d.VODB != null && response.d.VODB.PCBW3243 != null) {
-            transactions.addAll(parseCreditCardTransactions(response.d.VODB.PCBW3243, response.d.VODB.PCBW3242));
+            transactions.addAll(
+                    parseCreditCardTransactions(
+                            response.d.VODB.PCBW3243, response.d.VODB.PCBW3242));
             attachCreditCardsToAccount(account, response.d.VODB.PCBW3242);
         }
 
@@ -956,17 +1042,21 @@ public class SEBApiAgent extends AbstractAgent implements
         return transactions;
     }
 
-    private List<Transaction> listOutstandingCreditCardAccountTransactions(Account account, String handle) {
+    private List<Transaction> listOutstandingCreditCardAccountTransactions(
+            Account account, String handle) {
 
         List<Transaction> transactions = Lists.newArrayList();
 
         SebRequest payload = new SebRequest();
         payload.request.ServiceInput.add(new ServiceInput("BILL_UNIT_HDL", handle));
 
-        SebResponse response = postAsJSON(CREDIT_CARD_TRANSACTIONS_OUTSTANDING_URL, payload, SebResponse.class);
+        SebResponse response =
+                postAsJSON(CREDIT_CARD_TRANSACTIONS_OUTSTANDING_URL, payload, SebResponse.class);
 
         if (response.d != null && response.d.VODB != null && response.d.VODB.PCBW3241 != null) {
-            transactions.addAll(parseCreditCardTransactions(response.d.VODB.PCBW3241, response.d.VODB.PCBW3242));
+            transactions.addAll(
+                    parseCreditCardTransactions(
+                            response.d.VODB.PCBW3241, response.d.VODB.PCBW3242));
             attachCreditCardsToAccount(account, response.d.VODB.PCBW3242);
         }
 
@@ -976,11 +1066,11 @@ public class SEBApiAgent extends AbstractAgent implements
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
         switch (credentials.getType()) {
-        case MOBILE_BANKID:
-            loginWithBankId();
-            break;
-        default:
-            throw new IllegalStateException("Credentials type not implemented.");
+            case MOBILE_BANKID:
+                loginWithBankId();
+                break;
+            default:
+                throw new IllegalStateException("Credentials type not implemented.");
         }
 
         initiateConnection();
@@ -995,7 +1085,8 @@ public class SEBApiAgent extends AbstractAgent implements
         return true;
     }
 
-    // Make sure the user always logs in to the same login to not mistakenly suddenly get the wrong transactions.
+    // Make sure the user always logs in to the same login to not mistakenly suddenly get the wrong
+    // transactions.
     private void checkLoggedInCustomerId(String bankCustomerId) throws LoginException {
         final String customerIdString = bankCustomerId;
         final String previousCustomerId = credentials.getPayload();
@@ -1014,40 +1105,37 @@ public class SEBApiAgent extends AbstractAgent implements
 
         try {
             resource("/logout").get(String.class);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Could not log out from SEB.", e);
         }
     }
 
     private void initiateConnection() throws AuthorizationException, AuthenticationException {
         InitiateRequest initiateRequest = new InitiateRequest();
-        initiateRequest.setRequest(
-                new UserCredentialsRequestEntity());
-        initiateRequest.getRequest().setUserCredentials(
-                new UserCredentials(credentials.getField(Field.Key.USERNAME).substring(2)));
+        initiateRequest.setRequest(new UserCredentialsRequestEntity());
+        initiateRequest
+                .getRequest()
+                .setUserCredentials(
+                        new UserCredentials(credentials.getField(Field.Key.USERNAME).substring(2)));
         SebResponse sebResponse;
         try {
-            sebResponse = postAsJSON(
-                    INITIATE_SESSION_URL,
-                    initiateRequest,
-                    SebResponse.class);
+            sebResponse = postAsJSON(INITIATE_SESSION_URL, initiateRequest, SebResponse.class);
         } catch (UniformInterfaceException e) {
             // Check if the user is younger than 18 and then throw unauthorized exception.
-            SocialSecurityNumber.Sweden ssn = new SocialSecurityNumber.Sweden(
-                    credentials.getField(Field.Key.USERNAME));
+            SocialSecurityNumber.Sweden ssn =
+                    new SocialSecurityNumber.Sweden(credentials.getField(Field.Key.USERNAME));
             if (!ssn.isValid()) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             }
 
-            if (e.getResponse().getStatus() == 403 &&
-                    ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
-                throw AuthorizationError.UNAUTHORIZED.exception(UserMessage.DO_NOT_SUPPORT_YOUTH.getKey());
+            if (e.getResponse().getStatus() == 403
+                    && ssn.getAge(LocalDate.now(ZoneId.of("CET"))) < 18) {
+                throw AuthorizationError.UNAUTHORIZED.exception(
+                        UserMessage.DO_NOT_SUPPORT_YOUTH.getKey());
             }
 
             throw e;
         }
-
 
         // It's sufficient to check that the following is fulfilled
         Preconditions.checkNotNull(sebResponse.d);
@@ -1063,7 +1151,8 @@ public class SEBApiAgent extends AbstractAgent implements
         Preconditions.checkNotNull(initResult);
     }
 
-    private List<Transaction> parseCreditCardTransaction(List<? extends SebCreditCardTransaction> transactionEntities,
+    private List<Transaction> parseCreditCardTransaction(
+            List<? extends SebCreditCardTransaction> transactionEntities,
             List<SebCreditCard> creditCardEntities) {
 
         List<Transaction> transactions = Lists.newArrayList();
@@ -1073,14 +1162,18 @@ public class SEBApiAgent extends AbstractAgent implements
             Transaction transaction = new Transaction();
             try {
 
-                // Amount. Go from minor unit (e.g. öre) to major unit (e.g. kronor) and change sign.
+                // Amount. Go from minor unit (e.g. öre) to major unit (e.g. kronor) and change
+                // sign.
                 double amount = 0;
 
                 if (transactionEntity.ADV_AMT != 0) {
-                    amount = -transactionEntity.ADV_AMT / Math.pow(10, transactionEntity.AMT_DEC_QUANT);
+                    amount =
+                            -transactionEntity.ADV_AMT
+                                    / Math.pow(10, transactionEntity.AMT_DEC_QUANT);
                 }
 
-                // Date. Use the original date (i.e. when the transaction was actually made) but fall back on accounting date.
+                // Date. Use the original date (i.e. when the transaction was actually made) but
+                // fall back on accounting date.
                 String date = transactionEntity.ORIG_AMT_DATE;
 
                 if (Strings.isNullOrEmpty(date)) {
@@ -1105,12 +1198,14 @@ public class SEBApiAgent extends AbstractAgent implements
                 transaction.setType(type);
 
                 if (!Strings.isNullOrEmpty(transactionEntity.CARD_NO)) {
-                    String cardHolder = SEBAgentUtils
-                            .getCreditCardHolder(transactionEntity.CARD_NO, creditCardEntities);
+                    String cardHolder =
+                            SEBAgentUtils.getCreditCardHolder(
+                                    transactionEntity.CARD_NO, creditCardEntities);
 
                     String subAccount;
                     if (!Strings.isNullOrEmpty(cardHolder)) {
-                        subAccount = String.format("%s (%s)", cardHolder, transactionEntity.CARD_NO);
+                        subAccount =
+                                String.format("%s (%s)", cardHolder, transactionEntity.CARD_NO);
                     } else {
                         subAccount = transactionEntity.CARD_NO;
                     }
@@ -1126,22 +1221,25 @@ public class SEBApiAgent extends AbstractAgent implements
         return transactions;
     }
 
-    private List<Transaction> parseCreditCardTransactions(List<? extends SebCreditCardTransaction> transactionEntities,
+    private List<Transaction> parseCreditCardTransactions(
+            List<? extends SebCreditCardTransaction> transactionEntities,
             List<SebCreditCard> creditCardEntities) {
 
         return parseCreditCardTransaction(transactionEntities, creditCardEntities);
     }
 
-    private List<Transaction> parsePendingTransactions(List<SebTransaction> transactionEntities, Account account) {
+    private List<Transaction> parsePendingTransactions(
+            List<SebTransaction> transactionEntities, Account account) {
         return parseTransactions(transactionEntities, account, true);
     }
 
-    private List<Transaction> parseTransactions(List<SebTransaction> transactionEntities, Account account) {
+    private List<Transaction> parseTransactions(
+            List<SebTransaction> transactionEntities, Account account) {
         return parseTransactions(transactionEntities, account, false);
     }
 
-    private List<Transaction> parseTransactions(List<SebTransaction> transactionEntities, Account account,
-            boolean pending) {
+    private List<Transaction> parseTransactions(
+            List<SebTransaction> transactionEntities, Account account, boolean pending) {
         List<Transaction> transactions = Lists.newArrayList();
         try {
             for (SebTransaction transactionEntity : transactionEntities) {
@@ -1163,8 +1261,9 @@ public class SEBApiAgent extends AbstractAgent implements
                     continue;
                 }
 
-                SEBAgentUtils.DateAndDescriptionParser parser = new SEBAgentUtils.DateAndDescriptionParser(dateString,
-                        transactionEntity.KK_TXT, transactionEntity.ROR_X_INFO);
+                SEBAgentUtils.DateAndDescriptionParser parser =
+                        new SEBAgentUtils.DateAndDescriptionParser(
+                                dateString, transactionEntity.KK_TXT, transactionEntity.ROR_X_INFO);
 
                 try {
                     parser.parse();
@@ -1178,18 +1277,27 @@ public class SEBApiAgent extends AbstractAgent implements
                 // Handle transactions made abroad differently.
                 if (transactionEntity.ROR_TYP != null && transactionEntity.ROR_X_INFO != null) {
                     // Is the transaction made abroad?
-                    if (transactionEntity.ROR_TYP.equals("5") && !transactionEntity.ROR_X_INFO.isEmpty()) {
-                        SEBAgentUtils.AbroadTransactionParser foreignParser = new SEBAgentUtils.AbroadTransactionParser(
-                                dateString,
-                                transactionEntity.ROR_X_INFO, transactionEntity.KK_TXT);
+                    if (transactionEntity.ROR_TYP.equals("5")
+                            && !transactionEntity.ROR_X_INFO.isEmpty()) {
+                        SEBAgentUtils.AbroadTransactionParser foreignParser =
+                                new SEBAgentUtils.AbroadTransactionParser(
+                                        dateString,
+                                        transactionEntity.ROR_X_INFO,
+                                        transactionEntity.KK_TXT);
                         try {
                             foreignParser.parse();
                             description = foreignParser.getDescription();
-                            t.setPayload(TransactionPayloadTypes.LOCAL_REGION, foreignParser.getRegion());
-                            t.setPayload(TransactionPayloadTypes.LOCAL_CURRENCY, foreignParser.getLocalCurrency());
-                            t.setPayload(TransactionPayloadTypes.AMOUNT_IN_LOCAL_CURRENCY,
+                            t.setPayload(
+                                    TransactionPayloadTypes.LOCAL_REGION,
+                                    foreignParser.getRegion());
+                            t.setPayload(
+                                    TransactionPayloadTypes.LOCAL_CURRENCY,
+                                    foreignParser.getLocalCurrency());
+                            t.setPayload(
+                                    TransactionPayloadTypes.AMOUNT_IN_LOCAL_CURRENCY,
                                     String.valueOf(foreignParser.getLocalAmount()));
-                            t.setPayload(TransactionPayloadTypes.EXCHANGE_RATE,
+                            t.setPayload(
+                                    TransactionPayloadTypes.EXCHANGE_RATE,
                                     String.valueOf(foreignParser.getExchangeRate()));
                         } catch (Exception e) {
                             log.error("Could not parse foreign transaction");
@@ -1235,9 +1343,10 @@ public class SEBApiAgent extends AbstractAgent implements
         account.setBankId(account.getAccountNumber());
 
         Preconditions.checkState(
-                Preconditions.checkNotNull(account.getBankId()).matches(
-                        REGEXP_OR_JOINER.join("[0-9]{11}", "[0-9a-f]{32}")),
-                "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+                Preconditions.checkNotNull(account.getBankId())
+                        .matches(REGEXP_OR_JOINER.join("[0-9]{11}", "[0-9a-f]{32}")),
+                "Unexpected account.bankid '%s'. Reformatted?",
+                account.getBankId());
 
         // Determine the account type.
 
@@ -1247,7 +1356,11 @@ public class SEBApiAgent extends AbstractAgent implements
 
         if (type == null) {
             String accountTypeDescription = accountEntity.KTOSLAG_TXT;
-            log.warn("Unknown account-product type: " + accountTypeCode + " = " + accountTypeDescription);
+            log.warn(
+                    "Unknown account-product type: "
+                            + accountTypeCode
+                            + " = "
+                            + accountTypeDescription);
             type = AccountTypes.OTHER;
         }
         account.setType(type);
@@ -1255,8 +1368,10 @@ public class SEBApiAgent extends AbstractAgent implements
         return account;
     }
 
-    private Pair<Account, List<Transaction>> updateAccountInformation(AccountEntity accountEntity, List<Transaction> upcomingAccountTransactions,
-                                          String customerId) {
+    private Pair<Account, List<Transaction>> updateAccountInformation(
+            AccountEntity accountEntity,
+            List<Transaction> upcomingAccountTransactions,
+            String customerId) {
 
         Account account = toTinkAccount(accountEntity);
 
@@ -1264,7 +1379,8 @@ public class SEBApiAgent extends AbstractAgent implements
 
         List<Transaction> transactions = Lists.newArrayList();
 
-        List<SebTransaction> pendingEntities = listAccountPendingTransactions(customerId, account.getAccountNumber());
+        List<SebTransaction> pendingEntities =
+                listAccountPendingTransactions(customerId, account.getAccountNumber());
 
         if (pendingEntities != null) {
             transactions.addAll(parsePendingTransactions(pendingEntities, account));
@@ -1274,30 +1390,37 @@ public class SEBApiAgent extends AbstractAgent implements
 
         transactions.addAll(upcomingAccountTransactions);
 
-        return new Pair<>(account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
+        return new Pair<>(
+                account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
     }
 
-    private Map<Account, List<Transaction>> updateTransactionsPerAccountType(RefreshableItem type, String customerId) {
-        // Pending transactions are returned for all accounts in one request, so do it once and send the list down
-        List<UpcomingTransactionEntity> upcomingTransactionEntities = listUpcomingTransactions(customerId);
+    private Map<Account, List<Transaction>> updateTransactionsPerAccountType(
+            RefreshableItem type, String customerId) {
+        // Pending transactions are returned for all accounts in one request, so do it once and send
+        // the list down
+        List<UpcomingTransactionEntity> upcomingTransactionEntities =
+                listUpcomingTransactions(customerId);
 
-        Map<Account, List<Transaction>> accountTransactions= new HashMap<>();
+        Map<Account, List<Transaction>> accountTransactions = new HashMap<>();
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
                 .map(Map.Entry::getKey)
-                .forEach(account -> {
-                    // Filter out upcoming transactions for each account
-                    List<Transaction> accountUpcomingTransactions = UpcomingTransactionEntity
-                            .toTransactionsForAccount(upcomingTransactionEntities, account);
-                    Pair<Account, List<Transaction>> accountListPair =
-                            updateAccountInformation(account, accountUpcomingTransactions, customerId);
-                    accountTransactions.put(accountListPair.first, accountListPair.second);
-                });
+                .forEach(
+                        account -> {
+                            // Filter out upcoming transactions for each account
+                            List<Transaction> accountUpcomingTransactions =
+                                    UpcomingTransactionEntity.toTransactionsForAccount(
+                                            upcomingTransactionEntities, account);
+                            Pair<Account, List<Transaction>> accountListPair =
+                                    updateAccountInformation(
+                                            account, accountUpcomingTransactions, customerId);
+                            accountTransactions.put(accountListPair.first, accountListPair.second);
+                        });
         return accountTransactions;
     }
 
-    private Pair<Account, List<Transaction>> updateCreditCardAccountInformation(CredentialsRequest request,
-                                                    SebCreditCardAccount accountEntity) {
+    private Pair<Account, List<Transaction>> updateCreditCardAccountInformation(
+            CredentialsRequest request, SebCreditCardAccount accountEntity) {
 
         Account account = new Account();
         account.setType(AccountTypes.CREDIT_CARD);
@@ -1307,8 +1430,8 @@ public class SEBApiAgent extends AbstractAgent implements
 
         String handle = accountEntity.BILL_UNIT_HDL;
 
-        List<Transaction> transactions = Lists
-                .newArrayList(listCreditCardAccountTransactions(account, handle));
+        List<Transaction> transactions =
+                Lists.newArrayList(listCreditCardAccountTransactions(account, handle));
 
         // Must be done after transactions has been listed
         Optional<String> bankId = getBankIdForCreditCardAccount(request, account);
@@ -1317,12 +1440,17 @@ public class SEBApiAgent extends AbstractAgent implements
             account.setBankId(bankId.get());
 
             Preconditions.checkState(
-                    Preconditions.checkNotNull(account.getBankId()).matches(
-                            REGEXP_OR_JOINER.join("[0-9a-f]{32}", "[0-9]{11}",
-                                    "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")),
-                    "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+                    Preconditions.checkNotNull(account.getBankId())
+                            .matches(
+                                    REGEXP_OR_JOINER.join(
+                                            "[0-9a-f]{32}",
+                                            "[0-9]{11}",
+                                            "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")),
+                    "Unexpected account.bankid '%s'. Reformatted?",
+                    account.getBankId());
 
-            return Pair.of(account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
+            return Pair.of(
+                    account, SEBAgentUtils.TRANSACTION_ORDERING.reverse().sortedCopy(transactions));
         }
         return null;
     }
@@ -1341,7 +1469,8 @@ public class SEBApiAgent extends AbstractAgent implements
         Account account = new Account();
         account.setType(AccountTypes.CREDIT_CARD);
         account.setName(SEBAgentUtils.getCreditCardAccountName(creditCardAccount));
-        account.setBalance(creditCardAccount.SALDO_BELOPP != 0 ? -creditCardAccount.SALDO_BELOPP : 0);
+        account.setBalance(
+                creditCardAccount.SALDO_BELOPP != 0 ? -creditCardAccount.SALDO_BELOPP : 0);
         account.setAvailableCredit(creditCardAccount.LIMIT_BELOPP - creditCardAccount.SALDO_BELOPP);
 
         String handle = creditCardAccount.BILL_UNIT_HDL;
@@ -1356,37 +1485,41 @@ public class SEBApiAgent extends AbstractAgent implements
     }
 
     private Optional<String> fetchBankIdForCreditCardAccount(Account account, String handle) {
-        /** The card number for the credit card account is specified on the transactions
-         *  for the credit card account and not on the credit card account itself.
-         *  The credit card number is used to identify which of our accounts
-         *  the fetched account belongs to. There for we need to fetch
-         *  the credit card transactions before saving the account.
+        /**
+         * The card number for the credit card account is specified on the transactions for the
+         * credit card account and not on the credit card account itself. The credit card number is
+         * used to identify which of our accounts the fetched account belongs to. There for we need
+         * to fetch the credit card transactions before saving the account.
          */
         listCreditCardAccountTransactions(account, handle);
 
         return getBankIdForCreditCardAccount(request, account);
     }
 
-    private Map<Account, List<Transaction>> updateCreditCardAccountsAndTransactions(CredentialsRequest request, String customerId) {
+    private Map<Account, List<Transaction>> updateCreditCardAccountsAndTransactions(
+            CredentialsRequest request, String customerId) {
 
         List<SebCreditCardAccount> accounts = listCreditCardAccounts(customerId);
         Map<Account, List<Transaction>> creditCardTransactions = new HashMap<>();
         for (SebCreditCardAccount account : accounts) {
-            Pair<Account, List<Transaction>> accountListPair = updateCreditCardAccountInformation(request, account);
+            Pair<Account, List<Transaction>> accountListPair =
+                    updateCreditCardAccountInformation(request, account);
             if (accountListPair != null) {
                 creditCardTransactions.put(accountListPair.first, accountListPair.second);
             }
         }
-        return  creditCardTransactions;
+        return creditCardTransactions;
     }
 
-    private Map<Account, AccountFeatures> updateLoans(String customerId) throws JsonProcessingException, ParseException {
+    private Map<Account, AccountFeatures> updateLoans(String customerId)
+            throws JsonProcessingException, ParseException {
         Map<Account, AccountFeatures> loans = new HashMap<>();
         SebRequest payload = new SebRequest();
         payload.request.ServiceInput.add(new ServiceInput("KUND_ID", customerId));
 
         // Getting a String response here just in order to put it on the LoanData object
-        // TODO: Use SebResponse instead of String here when we remove the serialized response from LoanData
+        // TODO: Use SebResponse instead of String here when we remove the serialized response from
+        // LoanData
         String responseContent = postAsJSON(LOAN_URL, payload, String.class);
 
         SebResponse response;
@@ -1415,26 +1548,32 @@ public class SEBApiAgent extends AbstractAgent implements
             // PCBW2582 is null if there are no blanco loans
             if (response.d.VODB.PCBW2582 != null) {
                 for (PCBW2582 blancoLoan : response.d.VODB.PCBW2582) {
-                    if (blancoLoan == null ) {
+                    if (blancoLoan == null) {
                         continue;
                     }
 
-                    loans.put(blancoLoan.toAccount(), AccountFeatures.createForLoan(blancoLoan.toLoan()));
+                    loans.put(
+                            blancoLoan.toAccount(),
+                            AccountFeatures.createForLoan(blancoLoan.toLoan()));
                 }
             }
         }
         return loans;
     }
 
-    public Map<Account, List<TransferDestinationPattern>>  updateTransferDestinations(List<Account> accounts) {
+    public Map<Account, List<TransferDestinationPattern>> updateTransferDestinations(
+            List<Account> accounts) {
         Map<Account, List<TransferDestinationPattern>> response = new HashMap<>();
 
         // add all transfer destinations
         response.putAll(getTransferAccountDestinations(accounts));
         // payment destinations
-        Map<Account, List<TransferDestinationPattern>>  paymentDestinations = getPaymentAccountDestinations(accounts);
-        for (Map.Entry<Account, List<TransferDestinationPattern>> entry : paymentDestinations.entrySet()) {
-            // if account exists in response, add payment destinations to already added transfer destinations
+        Map<Account, List<TransferDestinationPattern>> paymentDestinations =
+                getPaymentAccountDestinations(accounts);
+        for (Map.Entry<Account, List<TransferDestinationPattern>> entry :
+                paymentDestinations.entrySet()) {
+            // if account exists in response, add payment destinations to already added transfer
+            // destinations
             if (response.containsKey(entry.getKey())) {
                 response.get(entry.getKey()).addAll(entry.getValue());
             } else {
@@ -1446,7 +1585,8 @@ public class SEBApiAgent extends AbstractAgent implements
         return response;
     }
 
-    private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(List<Account> updatedAccounts) {
+    private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(
+            List<Account> updatedAccounts) {
         SebResponse response = getTransferAccounts(EXTERNAL_ACCOUNTS_URL);
         if (response.d == null || response.d.VODB == null) {
             log.warn("Could not retrieve external bank transfer accounts.");
@@ -1462,10 +1602,10 @@ public class SEBApiAgent extends AbstractAgent implements
 
         List<ExternalAccount> destinationAccounts = getNonNullExternalAccounts(response);
 
-        List<ExternalAccount> seAccounts = FluentIterable
-                .from(destinationAccounts)
-                .filter(Predicates.not(EXTERNALACCOUNT_IS_BG_OR_PG))
-                .toList();
+        List<ExternalAccount> seAccounts =
+                FluentIterable.from(destinationAccounts)
+                        .filter(Predicates.not(EXTERNALACCOUNT_IS_BG_OR_PG))
+                        .toList();
 
         return new TransferDestinationPatternBuilder()
                 .setSourceAccounts(accountEntities)
@@ -1475,7 +1615,8 @@ public class SEBApiAgent extends AbstractAgent implements
                 .build();
     }
 
-    private Map<Account, List<TransferDestinationPattern>> getPaymentAccountDestinations(List<Account> updatedAccounts) {
+    private Map<Account, List<TransferDestinationPattern>> getPaymentAccountDestinations(
+            List<Account> updatedAccounts) {
         SebResponse response = getTransferAccounts(EXTERNAL_PAYMENT_SOURCE_ACCOUNTS_URL);
 
         if (response.d == null || response.d.VODB == null) {
@@ -1492,10 +1633,10 @@ public class SEBApiAgent extends AbstractAgent implements
 
         List<ExternalAccount> destinationAccounts = getNonNullExternalAccounts(response);
 
-        List<ExternalAccount> bgOrPgAccounts = FluentIterable
-                .from(destinationAccounts)
-                .filter(EXTERNALACCOUNT_IS_BG_OR_PG)
-                .toList();
+        List<ExternalAccount> bgOrPgAccounts =
+                FluentIterable.from(destinationAccounts)
+                        .filter(EXTERNALACCOUNT_IS_BG_OR_PG)
+                        .toList();
 
         return new TransferDestinationPatternBuilder()
                 .setSourceAccounts(accountEntities)
@@ -1519,10 +1660,10 @@ public class SEBApiAgent extends AbstractAgent implements
         if (destinationAccounts == null) {
             destinationAccounts = Lists.newArrayList();
         } else {
-            destinationAccounts = FluentIterable
-                    .from(response.d.VODB.ExternalAccounts)
-                    .filter(Predicates.notNull())
-                    .toList();
+            destinationAccounts =
+                    FluentIterable.from(response.d.VODB.ExternalAccounts)
+                            .filter(Predicates.notNull())
+                            .toList();
         }
 
         return destinationAccounts;
@@ -1592,22 +1733,24 @@ public class SEBApiAgent extends AbstractAgent implements
     }
 
     @Override
-    public void execute(final Transfer transfer) throws Exception,
-            TransferExecutionException {
+    public void execute(final Transfer transfer) throws Exception, TransferExecutionException {
         List<AccountEntity> accounts = listAccounts(customerId);
 
         ensureIsValidSourceAccount(accounts, transfer);
 
         if (Objects.equal(transfer.getType(), TransferType.EINVOICE)) {
-            throw new IllegalStateException("Should never happen, since eInvoices are run through update call");
+            throw new IllegalStateException(
+                    "Should never happen, since eInvoices are run through update call");
         } else if (isInternalTransfer(transfer, accounts)) {
             executeInternalTransfer(transfer);
         } else {
             executeExternalTransfer(transfer);
         }
 
-        // If we don't have this sleep we could get a problem when we refresh the account after a transfer/payment.
-        // SEB are slow in adding the transactions in upcoming so the date could be missing if the refresh comes
+        // If we don't have this sleep we could get a problem when we refresh the account after a
+        // transfer/payment.
+        // SEB are slow in adding the transactions in upcoming so the date could be missing if the
+        // refresh comes
         // to fast. This would make use try to parse an a date that is an empty string.
         Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
     }
@@ -1618,30 +1761,39 @@ public class SEBApiAgent extends AbstractAgent implements
             // EInvoices are always submitted before signing as EINVOICE
             approveEInvoice(transfer);
         } else {
-            // EInvoices and payments are updated with type PAYMENT, which SEB doesn't support (they only support delete operation)
-            // This should never happen since we don't create an updatable transfer for payments or eInvoices in SEB
-            throw new IllegalStateException("Should never happen, since transfers are not updatable in SEB");
+            // EInvoices and payments are updated with type PAYMENT, which SEB doesn't support (they
+            // only support delete operation)
+            // This should never happen since we don't create an updatable transfer for payments or
+            // eInvoices in SEB
+            throw new IllegalStateException(
+                    "Should never happen, since transfers are not updatable in SEB");
         }
 
-        // If we don't have this sleep we could get a problem when we refresh the account after a transfer/payment.
-        // SEB are slow in adding the transactions in upcoming so the date could be missing if the refresh comes
+        // If we don't have this sleep we could get a problem when we refresh the account after a
+        // transfer/payment.
+        // SEB are slow in adding the transactions in upcoming so the date could be missing if the
+        // refresh comes
         // to fast. This would make use try to parse an a date that is an empty string.
         Uninterruptibles.sleepUninterruptibly(5000, TimeUnit.MILLISECONDS);
     }
 
     private void ensureIsValidSourceAccount(List<AccountEntity> accounts, Transfer transfer) {
         if (accounts == null) {
-            failTransfer(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE_NO_ENTITIES));
+            failTransfer(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.INVALID_SOURCE_NO_ENTITIES));
         }
 
         Optional<AccountEntity> sourceAccount = GeneralUtils.find(transfer.getSource(), accounts);
         if (!sourceAccount.isPresent()) {
-            failTransfer(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE));
+            failTransfer(
+                    catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE));
         }
 
         AccountIdentifier destination = transfer.getDestination();
         if (!sourceAccount.get().isAllowedToTransferTo(destination)) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE));
+            cancelTransfer(
+                    catalog.getString(TransferExecutionException.EndUserMessage.INVALID_SOURCE));
         }
     }
 
@@ -1652,9 +1804,10 @@ public class SEBApiAgent extends AbstractAgent implements
     }
 
     /**
-     * Note regarding post-execute of an eInvoice: They can only be signed once, then it will be gone if not visiting the
-     * internet bank. At the internet bank it's possible to reset the eInvoice to get it back in the eInvoice list, at
-     * which point a new execute needs to be done. (As of when this commit was created.)
+     * Note regarding post-execute of an eInvoice: They can only be signed once, then it will be
+     * gone if not visiting the internet bank. At the internet bank it's possible to reset the
+     * eInvoice to get it back in the eInvoice list, at which point a new execute needs to be done.
+     * (As of when this commit was created.)
      */
     private void approveEInvoice(Transfer transfer) throws Exception {
         ensureNoUnsignedTransfers();
@@ -1671,25 +1824,35 @@ public class SEBApiAgent extends AbstractAgent implements
         signEInvoice(matchingEInvoice);
     }
 
-    private EInvoiceListEntity fetchMatchingEInvoice(final Transfer transfer) throws TransferExecutionException {
+    private EInvoiceListEntity fetchMatchingEInvoice(final Transfer transfer)
+            throws TransferExecutionException {
 
         List<EInvoiceListEntity> eInvoiceEntities = fetchEInvoiceEntities();
 
-        Optional<EInvoiceListEntity> matchingEInvoice = eInvoiceEntities.stream().filter(input -> {
-            Transfer eInvoice = EInvoiceListEntity.TO_TRANSFER.apply(input);
-            return eInvoice != null && Objects.equal(eInvoice.getHash(), transfer.getHash());
-        }).findFirst();
+        Optional<EInvoiceListEntity> matchingEInvoice =
+                eInvoiceEntities.stream()
+                        .filter(
+                                input -> {
+                                    Transfer eInvoice = EInvoiceListEntity.TO_TRANSFER.apply(input);
+                                    return eInvoice != null
+                                            && Objects.equal(
+                                                    eInvoice.getHash(), transfer.getHash());
+                                })
+                        .findFirst();
 
         if (!matchingEInvoice.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
                     .build();
         }
 
         return matchingEInvoice.get();
     }
 
-    private static Transfer getUpdatedTransfer(Transfer transfer) throws TransferExecutionException {
+    private static Transfer getUpdatedTransfer(Transfer transfer)
+            throws TransferExecutionException {
         final Transfer updatedTransfer = getOriginalTransfer(transfer);
         // just in case source account is changed
         updatedTransfer.setSource(transfer.getSource());
@@ -1697,25 +1860,31 @@ public class SEBApiAgent extends AbstractAgent implements
         return updatedTransfer;
     }
 
-    private static Transfer getOriginalTransfer(Transfer transfer) throws TransferExecutionException {
-        Transfer originalTransfer = SerializationUtils.deserializeFromString(
-                transfer.getPayload().get(TransferPayloadType.ORIGINAL_TRANSFER), Transfer.class);
+    private static Transfer getOriginalTransfer(Transfer transfer)
+            throws TransferExecutionException {
+        Transfer originalTransfer =
+                SerializationUtils.deserializeFromString(
+                        transfer.getPayload().get(TransferPayloadType.ORIGINAL_TRANSFER),
+                        Transfer.class);
 
         if (originalTransfer == null) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("No original transfer on payload to compare with.").build();
+                    .setMessage("No original transfer on payload to compare with.")
+                    .build();
         }
 
         return originalTransfer;
     }
 
-    /**
-     * In SEB user can only change source account, date or amount, not OCR
-     */
-    private boolean isTransferModifyingEInvoice(EInvoiceListEntity eInvoiceEntity, Transfer transfer)
+    /** In SEB user can only change source account, date or amount, not OCR */
+    private boolean isTransferModifyingEInvoice(
+            EInvoiceListEntity eInvoiceEntity, Transfer transfer)
             throws TransferExecutionException {
-        if (!Objects.equal(transfer.getDestinationMessage(), eInvoiceEntity.getDestinationMessage())) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_MESSAGE));
+        if (!Objects.equal(
+                transfer.getDestinationMessage(), eInvoiceEntity.getDestinationMessage())) {
+            cancelTransfer(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.TRANSFER_MODIFY_MESSAGE));
         }
 
         Date currentDueDate;
@@ -1723,16 +1892,20 @@ public class SEBApiAgent extends AbstractAgent implements
             currentDueDate = eInvoiceEntity.getCurrentDueDate();
         } catch (ParseException e) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Could not parse the due date of the eInvoice. This should never happen.")
+                    .setMessage(
+                            "Could not parse the due date of the eInvoice. This should never happen.")
                     .build();
         }
 
-        return !Objects.equal(transfer.getSource(), eInvoiceEntity.getSource()) ||
-                !Objects.equal(DateUtils.flattenTime(transfer.getDueDate()), currentDueDate) ||
-                !Objects.equal(transfer.getAmount().toBigDecimal(), eInvoiceEntity.getCurrentAmount().toBigDecimal());
+        return !Objects.equal(transfer.getSource(), eInvoiceEntity.getSource())
+                || !Objects.equal(DateUtils.flattenTime(transfer.getDueDate()), currentDueDate)
+                || !Objects.equal(
+                        transfer.getAmount().toBigDecimal(),
+                        eInvoiceEntity.getCurrentAmount().toBigDecimal());
     }
 
-    private EInvoiceListEntity updateEInvoice(EInvoiceListEntity eInvoiceEntity, Transfer transfer) {
+    private EInvoiceListEntity updateEInvoice(
+            EInvoiceListEntity eInvoiceEntity, Transfer transfer) {
         eInvoiceEntity.setCurrentAmount(transfer.getAmount());
         eInvoiceEntity.setCurrentDueDate(transfer.getDueDate());
         eInvoiceEntity.setSource(transfer.getSource());
@@ -1740,14 +1913,17 @@ public class SEBApiAgent extends AbstractAgent implements
         SebRequest sebRequest = new SebRequest();
         sebRequest.request.VODB = new VODB();
         sebRequest.request.VODB.EInvoices = Lists.newArrayList(eInvoiceEntity);
-        SebResponse sebResponse = postAsJSON(EINVOICES_CHANGE_UNSIGNED_URL, sebRequest, SebResponse.class);
+        SebResponse sebResponse =
+                postAsJSON(EINVOICES_CHANGE_UNSIGNED_URL, sebRequest, SebResponse.class);
         abortTransferIfErrorIsPresent(sebResponse);
 
         final Transfer updatedTransfer = getUpdatedTransfer(transfer);
         EInvoiceListEntity updatedEInvoiceEntity = fetchMatchingEInvoice(updatedTransfer);
 
         if (isTransferModifyingEInvoice(updatedEInvoiceEntity, transfer)) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_FAILED));
+            cancelTransfer(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_FAILED));
         }
 
         return updatedEInvoiceEntity;
@@ -1759,13 +1935,15 @@ public class SEBApiAgent extends AbstractAgent implements
         SebRequest sebRequest = new SebRequest();
         sebRequest.request.VODB = new VODB();
         sebRequest.request.VODB.EInvoices = Lists.newArrayList(eInvoiceEntity);
-        SebResponse sebResponse = postAsJSON(EINVOICES_ADD_UNSIGNED_URL, sebRequest, SebResponse.class);
+        SebResponse sebResponse =
+                postAsJSON(EINVOICES_ADD_UNSIGNED_URL, sebRequest, SebResponse.class);
         abortTransferIfErrorIsPresent(sebResponse);
     }
 
     private void signEInvoice(EInvoiceListEntity matchingEInvoice) throws Exception {
         List<TransferListEntity> unsignedTransfers = getUnsignedTransfers();
-        Preconditions.checkArgument(unsignedTransfers.size() == 1, "Not expected number of transfers (!= 1)");
+        Preconditions.checkArgument(
+                unsignedTransfers.size() == 1, "Not expected number of transfers (!= 1)");
 
         TransferListEntity eInvoiceTransferEntity = unsignedTransfers.get(0);
 
@@ -1778,21 +1956,20 @@ public class SEBApiAgent extends AbstractAgent implements
         }
     }
 
-    /**
-     * If transfer destination not found within the user's own account we assume it's external
-     */
+    /** If transfer destination not found within the user's own account we assume it's external */
     private boolean isInternalTransfer(Transfer transfer, List<AccountEntity> accounts) {
-        Optional<AccountEntity> internalDestinationAccount = GeneralUtils.find(transfer.getDestination(), accounts);
+        Optional<AccountEntity> internalDestinationAccount =
+                GeneralUtils.find(transfer.getDestination(), accounts);
         return internalDestinationAccount.isPresent();
     }
 
-    /**
-     * Transfers between the user's own accounts doesn't need signing
-     */
+    /** Transfers between the user's own accounts doesn't need signing */
     private void executeInternalTransfer(Transfer transfer) {
-        SebTransferRequestEntity internalTransfer = SebBankTransferRequestEntity
-                .createInternalBankTransfer(transfer, customerId, transferMessageFormatter);
-        SebRequest request = SebRequest.createWithTransfer(TransferType.BANK_TRANSFER, internalTransfer);
+        SebTransferRequestEntity internalTransfer =
+                SebBankTransferRequestEntity.createInternalBankTransfer(
+                        transfer, customerId, transferMessageFormatter);
+        SebRequest request =
+                SebRequest.createWithTransfer(TransferType.BANK_TRANSFER, internalTransfer);
 
         // Don't know what this means
         request.request.ServiceInput = ImmutableList.of(new ServiceInput("SMALL_AMNT_FL", "J"));
@@ -1802,60 +1979,72 @@ public class SEBApiAgent extends AbstractAgent implements
     }
 
     /**
-     * All external transfers (bill payments and bank transfers) require signing with BankID or pin code.
+     * All external transfers (bill payments and bank transfers) require signing with BankID or pin
+     * code.
      *
-     * The external transfers are in the app put in an outbox of transfers to sign. For that reason we cannot allow
-     * the user yet to have existing payments in the outbox since that would sign this transfer + all other transfers
-     * in the outbox when executing.
+     * <p>The external transfers are in the app put in an outbox of transfers to sign. For that
+     * reason we cannot allow the user yet to have existing payments in the outbox since that would
+     * sign this transfer + all other transfers in the outbox when executing.
      */
     private void executeExternalTransfer(Transfer transfer) throws Exception {
         ensureNoUnsignedTransfers();
 
         SebTransferRequestEntity externalTransfer;
         if (isBgOrPg(transfer)) {
-            GiroMessageValidator.ValidationResult validationResult = validateBGPGTransferOrThrow(transfer);
+            GiroMessageValidator.ValidationResult validationResult =
+                    validateBGPGTransferOrThrow(transfer);
             boolean useMessageAsOcr = isDestinationMessageOcr(validationResult);
-            externalTransfer = SebInvoiceTransferRequestEntity.createInvoiceTransfer(transfer, customerId, useMessageAsOcr);
+            externalTransfer =
+                    SebInvoiceTransferRequestEntity.createInvoiceTransfer(
+                            transfer, customerId, useMessageAsOcr);
         } else {
-            externalTransfer = SebBankTransferRequestEntity.createExternalBankTransfer(transfer, customerId, transferMessageFormatter);
+            externalTransfer =
+                    SebBankTransferRequestEntity.createExternalBankTransfer(
+                            transfer, customerId, transferMessageFormatter);
         }
 
-        TransferListEntity transferQueuedUp = addSebTransferToOutbox(transfer.getType(), externalTransfer);
+        TransferListEntity transferQueuedUp =
+                addSebTransferToOutbox(transfer.getType(), externalTransfer);
         signExternalPayment(externalTransfer, transferQueuedUp);
     }
 
     private void ensureNoUnsignedTransfers() {
         if (getUnsignedTransfers().size() > 0) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS));
+            cancelTransfer(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS));
         }
     }
 
-    private boolean isDestinationMessageOcr(GiroMessageValidator.ValidationResult validationResult) {
+    private boolean isDestinationMessageOcr(
+            GiroMessageValidator.ValidationResult validationResult) {
         switch (validationResult.getAllowedType()) {
-        case MESSAGE:
-            return false;
-        case OCR:
-            return true;
-        default:
-            // TODO: What to do if we have both a valid message and valid OCR in validationResult? We just prioritize OCR for now, and if not present use message instead
-            return validationResult.getValidOcr().isPresent();
+            case MESSAGE:
+                return false;
+            case OCR:
+                return true;
+            default:
+                // TODO: What to do if we have both a valid message and valid OCR in
+                // validationResult? We just prioritize OCR for now, and if not present use message
+                // instead
+                return validationResult.getValidOcr().isPresent();
         }
     }
 
     private boolean isBgOrPg(Transfer transfer) {
         AccountIdentifier.Type destinationType = transfer.getDestination().getType();
-        return Objects.equal(destinationType, AccountIdentifier.Type.SE_BG) ||
-                Objects.equal(destinationType, AccountIdentifier.Type.SE_PG);
+        return Objects.equal(destinationType, AccountIdentifier.Type.SE_BG)
+                || Objects.equal(destinationType, AccountIdentifier.Type.SE_PG);
     }
 
-    /**
-     * Ensure we only find one entity for a given destination of the same type as the transfer.
-     */
+    /** Ensure we only find one entity for a given destination of the same type as the transfer. */
     private GiroMessageValidator.ValidationResult validateBGPGTransferOrThrow(Transfer transfer) {
         Optional<List<GiroEntity>> searchResult = findGiroEntity(transfer.getDestination());
 
         if (!searchResult.isPresent() || searchResult.get().size() != 1) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.INVALID_DESTINATION));
+            cancelTransfer(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.INVALID_DESTINATION));
         }
 
         GiroEntity giroEntity = searchResult.get().get(0);
@@ -1864,28 +2053,38 @@ public class SEBApiAgent extends AbstractAgent implements
         String destinationMessage = transfer.getDestinationMessage();
 
         if (destinationMessage.length() > 100) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessageParametrized
-                    .INVALID_MESSAGE_WHEN_MAX_LENGTH.cloneWith(100)));
+            cancelTransfer(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessageParametrized
+                                    .INVALID_MESSAGE_WHEN_MAX_LENGTH
+                                    .cloneWith(100)));
         }
 
-        GiroMessageValidator.ValidationResult validationResult = messageValidator.validate(destinationMessage);
+        GiroMessageValidator.ValidationResult validationResult =
+                messageValidator.validate(destinationMessage);
 
         boolean isValidMessage = false;
-        String errorMessage = catalog.getString(TransferExecutionException.EndUserMessage.INVALID_MESSAGE);
+        String errorMessage =
+                catalog.getString(TransferExecutionException.EndUserMessage.INVALID_MESSAGE);
 
         switch (validationResult.getAllowedType()) {
-        case MESSAGE:
-            isValidMessage = validationResult.getValidMessage().isPresent();
-            errorMessage = catalog.getString(TransferExecutionException.EndUserMessage.INVALID_DESTINATION_MESSAGE);
-            break;
-        case MESSAGE_OR_OCR:
-            isValidMessage = validationResult.getValidMessage().isPresent() ||
-                    validationResult.getValidOcr().isPresent();
-            break;
-        case OCR:
-            isValidMessage = validationResult.getValidOcr().isPresent();
-            errorMessage = catalog.getString(TransferExecutionException.EndUserMessage.INVALID_OCR);
-            break;
+            case MESSAGE:
+                isValidMessage = validationResult.getValidMessage().isPresent();
+                errorMessage =
+                        catalog.getString(
+                                TransferExecutionException.EndUserMessage
+                                        .INVALID_DESTINATION_MESSAGE);
+                break;
+            case MESSAGE_OR_OCR:
+                isValidMessage =
+                        validationResult.getValidMessage().isPresent()
+                                || validationResult.getValidOcr().isPresent();
+                break;
+            case OCR:
+                isValidMessage = validationResult.getValidOcr().isPresent();
+                errorMessage =
+                        catalog.getString(TransferExecutionException.EndUserMessage.INVALID_OCR);
+                break;
         }
 
         if (!isValidMessage) {
@@ -1916,7 +2115,8 @@ public class SEBApiAgent extends AbstractAgent implements
         }
     }
 
-    private TransferListEntity addSebTransferToOutbox(TransferType transferType, SebTransferRequestEntity externalTransfer) {
+    private TransferListEntity addSebTransferToOutbox(
+            TransferType transferType, SebTransferRequestEntity externalTransfer) {
         SebRequest createRequest = SebRequest.createWithTransfer(transferType, externalTransfer);
 
         String addTransferUrl;
@@ -1938,12 +2138,14 @@ public class SEBApiAgent extends AbstractAgent implements
         sebRequest.request.ServiceInput.add(new ServiceInput("UPPDRAG_TYP", "A"));
         sebRequest.request.ServiceInput.add(new ServiceInput("SORT_ORDER", ""));
 
-        SebResponse response = postAsJSON(EXTERNAL_TRANSFER_UNSIGNED, sebRequest, SebResponse.class);
+        SebResponse response =
+                postAsJSON(EXTERNAL_TRANSFER_UNSIGNED, sebRequest, SebResponse.class);
 
         return response.d.VODB.getTransfers();
     }
 
-    private void signExternalPayment(SebTransferRequestEntity transfer, TransferListEntity transferQueuedUp)
+    private void signExternalPayment(
+            SebTransferRequestEntity transfer, TransferListEntity transferQueuedUp)
             throws Exception {
         try {
             initSignExternalPayment();
@@ -1954,15 +2156,15 @@ public class SEBApiAgent extends AbstractAgent implements
         }
     }
 
-
-    private void deleteTransferAndThrowException(TransferListEntity transferQueuedUp, Exception initialException)
-            throws Exception {
+    private void deleteTransferAndThrowException(
+            TransferListEntity transferQueuedUp, Exception initialException) throws Exception {
         try {
             if (!deleteTransferFromOutbox(transferQueuedUp)) {
                 log.error("Could not clean up transfer!");
             }
         } catch (Exception deleteException) {
-            log.warn("Could not delete unsigned transfer from outbox but was expecting it to be possible.",
+            log.warn(
+                    "Could not delete unsigned transfer from outbox but was expecting it to be possible.",
                     deleteException);
         }
 
@@ -1974,24 +2176,32 @@ public class SEBApiAgent extends AbstractAgent implements
     }
 
     private void initSignExternalPayment() {
-        SebResponse verification = postAsJSON(EXTERNAL_TRANSFER_VERIFICATION_URL, new SebRequest(), SebResponse.class);
+        SebResponse verification =
+                postAsJSON(EXTERNAL_TRANSFER_VERIFICATION_URL, new SebRequest(), SebResponse.class);
         abortTransferIfErrorIsPresent(verification);
 
-        // Verification response includes a message that is displayed in SEB app. We don't use it in Tink.
+        // Verification response includes a message that is displayed in SEB app. We don't use it in
+        // Tink.
         if (verification.d.VODB.TransferVerification != null) {
             log.debug(verification.d.VODB.TransferVerification.SignText);
         }
 
-        SebResponse initiateSigningResponse = postAsJSON(EXTERNAL_TRANSFER_SIGN_URL, new SebRequest(), SebResponse.class);
+        SebResponse initiateSigningResponse =
+                postAsJSON(EXTERNAL_TRANSFER_SIGN_URL, new SebRequest(), SebResponse.class);
         abortTransferIfErrorIsPresent(initiateSigningResponse);
     }
 
-    private void ensureExternalPaymentSignedOrThrow(MatchableTransferRequestEntity transfer, TransferListEntity transferQueuedUp)
+    private void ensureExternalPaymentSignedOrThrow(
+            MatchableTransferRequestEntity transfer, TransferListEntity transferQueuedUp)
             throws InterruptedException {
 
         Uninterruptibles.sleepUninterruptibly(8000, TimeUnit.MILLISECONDS);
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            SebResponse response = postAsJSON(EXTERNAL_TRANSFER_SIGN_VERIFICATION_URL, new SebRequest(), SebResponse.class);
+            SebResponse response =
+                    postAsJSON(
+                            EXTERNAL_TRANSFER_SIGN_VERIFICATION_URL,
+                            new SebRequest(),
+                            SebResponse.class);
 
             if (isTransferSigned(transfer, response)) {
                 return;
@@ -2003,14 +2213,21 @@ public class SEBApiAgent extends AbstractAgent implements
             Thread.sleep(2000);
         }
 
-        cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
+        cancelTransfer(
+                catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
     }
 
-    private void abortIfTransferSignatureFailed(SebResponse response) throws TransferExecutionException {
-        if (FluentIterable.from(response.getErrors()).anyMatch(ERROR_IS_BANKID_TRANSFER_SIGN_CANCELLED)) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED));
-        } else if (FluentIterable.from(response.getErrors()).anyMatch(ERROR_IS_BANKID_TRANSFER_TIMEOUT)) {
-            cancelTransfer(catalog.getString(TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
+    private void abortIfTransferSignatureFailed(SebResponse response)
+            throws TransferExecutionException {
+        if (FluentIterable.from(response.getErrors())
+                .anyMatch(ERROR_IS_BANKID_TRANSFER_SIGN_CANCELLED)) {
+            cancelTransfer(
+                    catalog.getString(TransferExecutionException.EndUserMessage.BANKID_CANCELLED));
+        } else if (FluentIterable.from(response.getErrors())
+                .anyMatch(ERROR_IS_BANKID_TRANSFER_TIMEOUT)) {
+            cancelTransfer(
+                    catalog.getString(
+                            TransferExecutionException.EndUserMessage.BANKID_NO_RESPONSE));
         }
 
         abortTransferIfErrorIsPresent(response);
@@ -2024,7 +2241,8 @@ public class SEBApiAgent extends AbstractAgent implements
         abortTransfer(SignableOperationStatuses.CANCELLED, message);
     }
 
-    private void abortTransfer(SignableOperationStatuses status, String message) throws TransferExecutionException {
+    private void abortTransfer(SignableOperationStatuses status, String message)
+            throws TransferExecutionException {
         throw TransferExecutionException.builder(status)
                 .setEndUserMessage(message)
                 .setMessage(String.format("Error when executing transfer: %s", message))
@@ -2038,14 +2256,16 @@ public class SEBApiAgent extends AbstractAgent implements
                 .build();
     }
 
-    private boolean isTransferSigned(MatchableTransferRequestEntity transfer, SebResponse response) {
+    private boolean isTransferSigned(
+            MatchableTransferRequestEntity transfer, SebResponse response) {
         List<TransferListEntity> transferEntities = response.d.VODB.getTransfers();
 
         if (transferEntities.isEmpty()) {
             return false;
         }
 
-        // This should not happen. We will still continue since the user can still sing the transfer that we created
+        // This should not happen. We will still continue since the user can still sing the transfer
+        // that we created
         if (transferEntities.size() > 1) {
             log.error("User has signed multiple transfers");
         }
@@ -2069,13 +2289,11 @@ public class SEBApiAgent extends AbstractAgent implements
                 Arrays.asList(
                         new ServiceInput("USER_ID", customerId),
                         new ServiceInput("TIME_STAMP", transferQueuedUp.timeStampNkl),
-                        new ServiceInput("VERIF_TIME_STAMP", transferQueuedUp.timeStampNkl)
-                )
-        );
+                        new ServiceInput("VERIF_TIME_STAMP", transferQueuedUp.timeStampNkl)));
         GenericRequest deleteRequest = new GenericRequest(deleteEntity);
 
         // attempt to delete the transfer 10 times
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             postAsJSON(EXTERNAL_TRANSFER_UPDATE, deleteRequest, SebResponse.class);
             if (getUnsignedTransfers().isEmpty()) {
                 return true;
@@ -2084,7 +2302,8 @@ public class SEBApiAgent extends AbstractAgent implements
         return false;
     }
 
-    private void abortTransferIfErrorIsPresent(SebResponse sebResponse) throws TransferExecutionException {
+    private void abortTransferIfErrorIsPresent(SebResponse sebResponse)
+            throws TransferExecutionException {
         Optional<ResultInfoMessage> error = sebResponse.getFirstErrorWithErrorText();
 
         if (error.isPresent()) {
@@ -2102,31 +2321,40 @@ public class SEBApiAgent extends AbstractAgent implements
     public List<Transfer> updateEInvoices() {
         List<EInvoiceListEntity> eInvoiceEntities = fetchEInvoiceEntities();
 
-        return Lists.newArrayList(FluentIterable
-                .from(eInvoiceEntities)
-                .transform(EInvoiceListEntity.TO_TRANSFER));
+        return Lists.newArrayList(
+                FluentIterable.from(eInvoiceEntities).transform(EInvoiceListEntity.TO_TRANSFER));
     }
 
     private List<EInvoiceListEntity> fetchEInvoiceEntities() throws IllegalStateException {
         SebRequest request = SebRequest.withSEB_KUND_NR(customerId).build();
         SebResponse sebResponse = postAsJSON(EINVOICES_URL, request, SebResponse.class);
 
-        Preconditions.checkState(!sebResponse.hasErrors(),
-                String.format("Error fetching SEB eInvoices: %s" ,sebResponse.getFirstErrorMessage().orElse(null)));
+        Preconditions.checkState(
+                !sebResponse.hasErrors(),
+                String.format(
+                        "Error fetching SEB eInvoices: %s",
+                        sebResponse.getFirstErrorMessage().orElse(null)));
 
         return sebResponse.d.VODB.getEInvoices();
     }
 
     private enum UserMessage implements LocalizableEnum {
-        MUST_AUTHORIZE_BANKID(new LocalizableKey("The first time you use your mobile BankId you have to verify it with your Digipass. Login to the SEB-app with your mobile BankID to do this.")),
-        WRONG_BANKID(new LocalizableKey("Wrong BankID signature. Did you log in with the wrong personnummer?")),
-        DO_NOT_SUPPORT_YOUTH(new LocalizableKey("It looks like you have SEB Ung. Unfortunately we currently only support SEB's standard login."));
+        MUST_AUTHORIZE_BANKID(
+                new LocalizableKey(
+                        "The first time you use your mobile BankId you have to verify it with your Digipass. Login to the SEB-app with your mobile BankID to do this.")),
+        WRONG_BANKID(
+                new LocalizableKey(
+                        "Wrong BankID signature. Did you log in with the wrong personnummer?")),
+        DO_NOT_SUPPORT_YOUTH(
+                new LocalizableKey(
+                        "It looks like you have SEB Ung. Unfortunately we currently only support SEB's standard login."));
 
         private LocalizableKey userMessage;
 
         UserMessage(LocalizableKey userMessage) {
             this.userMessage = userMessage;
         }
+
         @Override
         public LocalizableKey getKey() {
             return userMessage;

@@ -2,5 +2,6 @@ package se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor
 
 public interface ThirdPartyAppResponse<T> {
     ThirdPartyAppStatus getStatus();
+
     T getReference();
 }
