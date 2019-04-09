@@ -9,7 +9,6 @@ import se.tink.libraries.user.rpc.User;
 public class AuthenticateRequest extends CredentialsRequest {
     @JsonProperty
     private boolean manual;
-    private Set<RefreshableItem> itemsToRefresh;
 
     public AuthenticateRequest() {
 
@@ -21,6 +20,8 @@ public class AuthenticateRequest extends CredentialsRequest {
         this.manual = manual;
         this.create = create;
         this.update = update;
+
+        this.getCredentials().setForceManualAuthentication(true);
     }
 
     public AuthenticateRequest(User user, Provider provider, Credentials credentials, boolean manual) {
@@ -39,13 +40,5 @@ public class AuthenticateRequest extends CredentialsRequest {
     @Override
     public boolean isManual() {
         return manual;
-    }
-
-    public Set<RefreshableItem> getItemsToRefresh() {
-        return itemsToRefresh;
-    }
-
-    public void setItemsToRefresh(Set<RefreshableItem> itemsToRefresh) {
-        this.itemsToRefresh = itemsToRefresh;
     }
 }
