@@ -15,7 +15,7 @@ public enum AccountType {
             "Efter",
             AccountTypes.CREDIT_CARD,
             "Coop MedMera Efter 1"), // For legacy reason we add a number on this hash so that it's
-                                     // separated from below EFTER
+    // separated from below EFTER
     MEDMERA_MER(8, "Mer", AccountTypes.CREDIT_CARD, "Coop MedMera Mer"),
     MEDMERA_EFTER_2(9, "Efter", AccountTypes.CREDIT_CARD, "Coop MedMera Efter");
 

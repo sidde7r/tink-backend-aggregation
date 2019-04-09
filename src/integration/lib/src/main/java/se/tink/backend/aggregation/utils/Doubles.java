@@ -6,13 +6,11 @@ public class Doubles {
 
     /**
      * Like {@link DoubleMath#fuzzyEquals(double, double, double)}, but supports nullables.
-     * 
-     * @param a
-     *            first nullable element
-     * @param b
-     *            second nullable element
-     * @param tolerance
-     *            absolute difference tolerance. See {@link DoubleMath#fuzzyEquals(double, double, double)} for details.
+     *
+     * @param a first nullable element
+     * @param b second nullable element
+     * @param tolerance absolute difference tolerance. See {@link DoubleMath#fuzzyEquals(double,
+     *     double, double)} for details.
      */
     public static boolean fuzzyEquals(Double a, Double b, double tolerance) {
         if (a == null && b == null) {

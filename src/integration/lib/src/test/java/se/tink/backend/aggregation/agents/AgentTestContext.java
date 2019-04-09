@@ -16,21 +16,21 @@ import org.apache.curator.framework.CuratorFramework;
 import org.assertj.core.util.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.api.AggregatorInfo;
-import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.libraries.documentcontainer.DocumentContainer;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.signableoperation.rpc.SignableOperation;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
+import se.tink.backend.aggregation.api.AggregatorInfo;
+import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
+import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
+import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.metrics.MetricRegistry;
+import se.tink.libraries.signableoperation.rpc.SignableOperation;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 public class AgentTestContext extends AgentContext {
     private static final Logger log = LoggerFactory.getLogger(AgentTestContext.class);
@@ -41,12 +41,12 @@ public class AgentTestContext extends AgentContext {
 
     static {
         mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z"));
-
     }
 
     private Map<String, Account> accountsByBankId = Maps.newHashMap();
     private Map<String, List<Transaction>> transactionsByAccountBankId = Maps.newHashMap();
-    private Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount = Maps.newHashMap();
+    private Map<Account, List<TransferDestinationPattern>> transferDestinationPatternsByAccount =
+            Maps.newHashMap();
     private List<FraudDetailsContent> detailsContents;
     private List<Transfer> transfers = Lists.newArrayList();
     private Credentials credentials;
@@ -93,7 +93,8 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public Optional<String> waitForSupplementalInformation(String key, long waitFor, TimeUnit unit) {
+    public Optional<String> waitForSupplementalInformation(
+            String key, long waitFor, TimeUnit unit) {
         return Optional.empty();
     }
 
@@ -123,19 +124,29 @@ public class AgentTestContext extends AgentContext {
             e.printStackTrace();
         }
 
-        log.info("Processed " + numberOfAccounts + " accounts and " + numberOfTransactions + " transactions.");
+        log.info(
+                "Processed "
+                        + numberOfAccounts
+                        + " accounts and "
+                        + numberOfTransactions
+                        + " transactions.");
     }
 
     @Override
     public String requestSupplementalInformation(Credentials credentials, boolean wait) {
-        log.info("Requesting supplemental information:" + credentials.getStatus().name() + " ("
-                + credentials.getSupplementalInformation() + ")");
+        log.info(
+                "Requesting supplemental information:"
+                        + credentials.getStatus().name()
+                        + " ("
+                        + credentials.getSupplementalInformation()
+                        + ")");
 
         if (!wait) {
             return null;
         }
 
-        return supplementalClient.request(SUPPLEMENTAL_TEST_API)
+        return supplementalClient
+                .request(SUPPLEMENTAL_TEST_API)
                 .type(MediaType.APPLICATION_JSON)
                 .post(String.class, credentials.getSupplementalInformation());
     }
@@ -145,8 +156,10 @@ public class AgentTestContext extends AgentContext {
         if (Strings.isNullOrEmpty(autoStartToken)) {
             log.info(String.format("[CredentialsId:%s]: Open BankID", credentials.getId()));
         } else {
-            log.info(String.format("[CredentialsId:%s]: Open BankID with autoStartToken: %s",
-                    credentials.getId(), autoStartToken));
+            log.info(
+                    String.format(
+                            "[CredentialsId:%s]: Open BankID with autoStartToken: %s",
+                            credentials.getId(), autoStartToken));
         }
     }
 
@@ -187,9 +200,12 @@ public class AgentTestContext extends AgentContext {
 
         for (Account account : transferDestinationPatterns.keySet()) {
             if (transferDestinationPatternsByAccount.containsKey(account)) {
-                transferDestinationPatternsByAccount.get(account).addAll(transferDestinationPatterns.get(account));
+                transferDestinationPatternsByAccount
+                        .get(account)
+                        .addAll(transferDestinationPatterns.get(account));
             } else {
-                transferDestinationPatternsByAccount.put(account, transferDestinationPatterns.get(account));
+                transferDestinationPatternsByAccount.put(
+                        account, transferDestinationPatterns.get(account));
             }
 
             log.info("\t" + account.toString());
@@ -208,7 +224,8 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void updateStatus(CredentialsStatus status, String statusPayload, boolean statusFromProvider) {
+    public void updateStatus(
+            CredentialsStatus status, String statusPayload, boolean statusFromProvider) {
         log.info("Updating status: " + status.name() + " (" + statusPayload + ")");
 
         credentials.setStatus(status);
@@ -239,16 +256,18 @@ public class AgentTestContext extends AgentContext {
 
     @Override
     public void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions) {
-        Preconditions.checkNotNull(accountUniqueId); // Necessary until we make @Nonnull throw the exception
+        Preconditions.checkNotNull(
+                accountUniqueId); // Necessary until we make @Nonnull throw the exception
         transactionsByAccountBankId.put(accountUniqueId, transactions);
     }
 
     public void updateSignableOperation(SignableOperation operation) {
-        log.info("Updating transfer status: "
-                + operation.getStatus()
-                + (Strings.isNullOrEmpty(operation.getStatusMessage()) ?
-                "" :
-                " (" + operation.getStatusMessage() + ")"));
+        log.info(
+                "Updating transfer status: "
+                        + operation.getStatus()
+                        + (Strings.isNullOrEmpty(operation.getStatusMessage())
+                                ? ""
+                                : " (" + operation.getStatusMessage() + ")"));
     }
 
     @Override
@@ -262,7 +281,8 @@ public class AgentTestContext extends AgentContext {
     }
 
     @Override
-    public void updateCredentialsExcludingSensitiveInformation(Credentials credentials, boolean doUpdateStatus) {
+    public void updateCredentialsExcludingSensitiveInformation(
+            Credentials credentials, boolean doUpdateStatus) {
         // nothing
     }
 

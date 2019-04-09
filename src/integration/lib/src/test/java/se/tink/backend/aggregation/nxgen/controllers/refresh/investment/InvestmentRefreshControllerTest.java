@@ -15,20 +15,20 @@ import se.tink.libraries.metrics.MetricId;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InvestmentRefreshControllerTest {
-    @Mock
-    private MetricRefreshController metricRefreshController;
-    @Mock
-    private UpdateController updateController;
-    @Mock
-    private AccountFetcher<InvestmentAccount> investmentFetcher;
+    @Mock private MetricRefreshController metricRefreshController;
+    @Mock private UpdateController updateController;
+    @Mock private AccountFetcher<InvestmentAccount> investmentFetcher;
     private InvestmentRefreshController investmentRefresher;
 
     @Before
     public void setup() {
-        Mockito.when(metricRefreshController.buildAction(Mockito.any(MetricId.class), Mockito.anyList()))
+        Mockito.when(
+                        metricRefreshController.buildAction(
+                                Mockito.any(MetricId.class), Mockito.anyList()))
                 .thenReturn(Mockito.mock(MetricRefreshAction.class));
-        investmentRefresher = new InvestmentRefreshController(metricRefreshController, updateController,
-                investmentFetcher);
+        investmentRefresher =
+                new InvestmentRefreshController(
+                        metricRefreshController, updateController, investmentFetcher);
     }
 
     @Test(expected = NullPointerException.class)

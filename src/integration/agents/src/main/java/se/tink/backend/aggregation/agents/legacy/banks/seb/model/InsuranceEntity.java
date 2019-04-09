@@ -33,7 +33,7 @@ public class InsuranceEntity {
     @JsonProperty("VERKS_GREN_KOD")
     private String
             accountType; // I'm really not sure what to call this, but the field value is "IPS" for
-                         // one object.
+    // one object.
 
     @JsonProperty("DETAIL_URL")
     private String detailUrl;

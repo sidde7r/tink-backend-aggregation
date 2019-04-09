@@ -32,10 +32,8 @@ public class CharacterSet {
     public CharacterSet union(Character... characters) {
         Preconditions.checkArgument(characters != null && characters.length > 0);
 
-        return new CharacterSet(ImmutableSet.<Character>builder()
-                .addAll(this.characters)
-                .add(characters)
-                .build());
+        return new CharacterSet(
+                ImmutableSet.<Character>builder().addAll(this.characters).add(characters).build());
     }
 
     public CharacterSet union(String characterString) {
@@ -49,10 +47,11 @@ public class CharacterSet {
     public CharacterSet union(CharacterSet characterSet) {
         Preconditions.checkNotNull(characterSet);
 
-        return new CharacterSet(ImmutableSet.<Character>builder()
-                .addAll(this.characters)
-                .addAll(characterSet.characters)
-                .build());
+        return new CharacterSet(
+                ImmutableSet.<Character>builder()
+                        .addAll(this.characters)
+                        .addAll(characterSet.characters)
+                        .build());
     }
 
     public ImmutableSet<Character> get() {

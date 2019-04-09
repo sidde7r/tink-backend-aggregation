@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.log;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -7,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class AggregationLoggerTest {
 
@@ -32,7 +33,9 @@ public class AggregationLoggerTest {
 
     @Test
     public void loggingExtraLong_canHandleLogTagOverLimit() {
-        message = createMessageWithSize(AggregationLogger.EXTRA_LONG_LIMIT - logTag.toString().length() + 1);
+        message =
+                createMessageWithSize(
+                        AggregationLogger.EXTRA_LONG_LIMIT - logTag.toString().length() + 1);
 
         logExtraLong();
 
@@ -103,16 +106,16 @@ public class AggregationLoggerTest {
             assertEquals(actual + " was not of expected size", expected, size);
             for (int i = 0; i < size; i++) {
                 String message = actual.get(i);
-                assertTrue("<" + message + "> does not contain expected counter.",
+                assertTrue(
+                        "<" + message + "> does not contain expected counter.",
                         message.contains(String.format("counter: %d/%d", i + 1, size)));
             }
         }
 
         public void assertIsContained(String message) {
-            assertTrue(actual + " did not contain: " + message,
-                    actual.stream().anyMatch(loggedMessage ->
-                            loggedMessage.contains(message)
-                    ));
+            assertTrue(
+                    actual + " did not contain: " + message,
+                    actual.stream().anyMatch(loggedMessage -> loggedMessage.contains(message)));
         }
     }
 }

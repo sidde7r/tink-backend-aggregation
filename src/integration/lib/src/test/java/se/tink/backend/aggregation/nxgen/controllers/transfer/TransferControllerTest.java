@@ -1,17 +1,18 @@
 package se.tink.backend.aggregation.nxgen.controllers.transfer;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import se.tink.backend.aggregation.agents.TransferExecutionException;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.transfer.enums.MessageType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.account.AccountIdentifier;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 
 public class TransferControllerTest {
     private TransferController transferControllerWithAllExecutors;
@@ -20,8 +21,7 @@ public class TransferControllerTest {
     private ApproveEInvoiceExecutor approveEInvoiceExecutor;
     private UpdatePaymentExecutor updatePaymentExecutor;
 
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    @Rule public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void setup() {
@@ -29,8 +29,12 @@ public class TransferControllerTest {
         bankTransferExecutor = mock(BankTransferExecutor.class);
         approveEInvoiceExecutor = mock(ApproveEInvoiceExecutor.class);
         updatePaymentExecutor = mock(UpdatePaymentExecutor.class);
-        transferControllerWithAllExecutors = new TransferController(paymentExecutor, bankTransferExecutor,
-                approveEInvoiceExecutor, updatePaymentExecutor);
+        transferControllerWithAllExecutors =
+                new TransferController(
+                        paymentExecutor,
+                        bankTransferExecutor,
+                        approveEInvoiceExecutor,
+                        updatePaymentExecutor);
     }
 
     private Transfer createTransfer(TransferType transferType) {
@@ -43,7 +47,8 @@ public class TransferControllerTest {
         Transfer transfer = new Transfer();
         transfer.setType(TransferType.BANK_TRANSFER);
         // Source iban is just an example that's fetched from an online website.
-        transfer.setSource(AccountIdentifier.create(AccountIdentifier.Type.SEPA_EUR, "BE68539007547034"));
+        transfer.setSource(
+                AccountIdentifier.create(AccountIdentifier.Type.SEPA_EUR, "BE68539007547034"));
         return transfer;
     }
 
@@ -61,15 +66,20 @@ public class TransferControllerTest {
     public void ensureNullPointerExceptionIsThrown_whenBankTransferExecutorIsNull() {
         BankTransferExecutor transferExecutor = null;
 
-        TransferController transferController = new TransferController(paymentExecutor, transferExecutor,
-                approveEInvoiceExecutor, updatePaymentExecutor);
+        TransferController transferController =
+                new TransferController(
+                        paymentExecutor,
+                        transferExecutor,
+                        approveEInvoiceExecutor,
+                        updatePaymentExecutor);
         transferController.execute(createTransfer(TransferType.BANK_TRANSFER));
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureNullPointerExceptionIsThrown_whenPaymentExecutorIsNull() {
-        TransferController transferController = new TransferController(null, bankTransferExecutor,
-                approveEInvoiceExecutor, updatePaymentExecutor);
+        TransferController transferController =
+                new TransferController(
+                        null, bankTransferExecutor, approveEInvoiceExecutor, updatePaymentExecutor);
 
         transferController.execute(createTransfer(TransferType.PAYMENT));
     }
@@ -81,16 +91,18 @@ public class TransferControllerTest {
 
     @Test(expected = NullPointerException.class)
     public void ensureNullPointerExceptionIsThrown_whenApproveEInvoiceExecutorIsNull() {
-        TransferController transferController = new TransferController(paymentExecutor, bankTransferExecutor,
-                null, updatePaymentExecutor);
+        TransferController transferController =
+                new TransferController(
+                        paymentExecutor, bankTransferExecutor, null, updatePaymentExecutor);
 
         transferController.update(createTransfer(TransferType.EINVOICE));
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureNullPointerExceptionIsThrown_whenUpdatePaymentExecutorIsNull() {
-        TransferController transferController = new TransferController(paymentExecutor, bankTransferExecutor,
-                approveEInvoiceExecutor, null);
+        TransferController transferController =
+                new TransferController(
+                        paymentExecutor, bankTransferExecutor, approveEInvoiceExecutor, null);
 
         transferController.update(createTransfer(TransferType.PAYMENT));
     }
@@ -101,7 +113,8 @@ public class TransferControllerTest {
     }
 
     @Test
-    public void ensureTransferExecutionExceptionIsThrown_whenSourceIsBelgianAccount_andMessageTypeIsNotSet() {
+    public void
+            ensureTransferExecutionExceptionIsThrown_whenSourceIsBelgianAccount_andMessageTypeIsNotSet() {
         expectedException.expect(TransferExecutionException.class);
         expectedException.expectMessage("Message type have to be set for transfers of this type");
 
@@ -120,14 +133,17 @@ public class TransferControllerTest {
     }
 
     @Test
-    public void ensureTransferExecutionExceptionIsThrown_whenMessageTypeIsStructuredOgmVcs_andInvalid() {
+    public void
+            ensureTransferExecutionExceptionIsThrown_whenMessageTypeIsStructuredOgmVcs_andInvalid() {
         Transfer transfer = createBelgianTransfer();
         transfer.setMessageType(MessageType.STRUCTURED);
         transfer.setDestinationMessage("+++123/4567/89101+++");
 
         expectedException.expect(TransferExecutionException.class);
         expectedException.expectMessage(
-                TransferExecutionException.EndUserMessage.INVALID_STRUCTURED_MESSAGE.getKey().get());
+                TransferExecutionException.EndUserMessage.INVALID_STRUCTURED_MESSAGE
+                        .getKey()
+                        .get());
 
         transferControllerWithAllExecutors.execute(transfer);
     }

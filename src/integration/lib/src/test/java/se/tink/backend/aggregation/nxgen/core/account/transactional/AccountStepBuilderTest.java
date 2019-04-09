@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
+import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
@@ -9,9 +11,6 @@ import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.enums.AccountFlag;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.strings.StringUtils;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 public final class AccountStepBuilderTest {
 

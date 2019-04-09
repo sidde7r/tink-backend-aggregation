@@ -43,8 +43,11 @@ public class TinkApacheHttpClient4HandlerTest {
         Mockito.when(httpResponse.getEntity()).thenReturn(httpEntity);
 
         client = Mockito.mock(HttpClient.class);
-        Mockito.when(client.execute(Mockito.any(HttpHost.class), Mockito.any(HttpUriRequest.class),
-                Mockito.any(HttpContext.class)))
+        Mockito.when(
+                        client.execute(
+                                Mockito.any(HttpHost.class),
+                                Mockito.any(HttpUriRequest.class),
+                                Mockito.any(HttpContext.class)))
                 .thenReturn(httpResponse);
     }
 

@@ -6,30 +6,25 @@ import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroCon
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AgentsServiceConfiguration {
-    @JsonProperty
-    private AbnAmroConfiguration abnAmroStaging = new AbnAmroConfiguration();
+    @JsonProperty private AbnAmroConfiguration abnAmroStaging = new AbnAmroConfiguration();
 
-    @JsonProperty
-    private AbnAmroConfiguration abnAmroProduction = new AbnAmroConfiguration();
+    @JsonProperty private AbnAmroConfiguration abnAmroProduction = new AbnAmroConfiguration();
 
-    @JsonProperty
-    private AbnAmroConfiguration abnAmro = new AbnAmroConfiguration();
+    @JsonProperty private AbnAmroConfiguration abnAmro = new AbnAmroConfiguration();
 
-    @JsonProperty
-    private IntegrationsConfiguration integrations = new IntegrationsConfiguration();
+    @JsonProperty private IntegrationsConfiguration integrations = new IntegrationsConfiguration();
 
     @JsonProperty
     private AggregationWorkerConfiguration aggregationWorker = new AggregationWorkerConfiguration();
 
-    @JsonProperty
-    private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
+    @JsonProperty private SignatureKeyPair signatureKeyPair = new SignatureKeyPair();
 
     // This key pair should only be used to create the JWT for the third party callback
     @JsonProperty
-    private CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair = new CallbackJwtSignatureKeyPair();
+    private CallbackJwtSignatureKeyPair callbackJwtSignatureKeyPair =
+            new CallbackJwtSignatureKeyPair();
 
-    @JsonProperty
-    private ExcludedDebugClusters excludedDebugClusters = new ExcludedDebugClusters();
+    @JsonProperty private ExcludedDebugClusters excludedDebugClusters = new ExcludedDebugClusters();
 
     @JsonProperty("creditsafe")
     private CreditSafeConfiguration creditSafe = new CreditSafeConfiguration();

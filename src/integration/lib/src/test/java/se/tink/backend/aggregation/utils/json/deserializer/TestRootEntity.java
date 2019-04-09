@@ -12,8 +12,7 @@ public class TestRootEntity {
     @JsonDeserialize(using = TestIdentifierMapDeserializerImpl.class)
     Map<String, TestResultEntity> entities;
 
-    public TestRootEntity() {
-    }
+    public TestRootEntity() {}
 
     public Map<String, TestResultEntity> getEntities() {
         return entities;

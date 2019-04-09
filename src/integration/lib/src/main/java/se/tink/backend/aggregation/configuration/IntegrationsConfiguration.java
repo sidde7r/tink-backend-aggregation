@@ -12,8 +12,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class IntegrationsConfiguration {
     private static final ObjectMapper OBJECT_MAPPER =
-            new ObjectMapper()
-                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private Map<String, Object> integrations = new HashMap<>();
     @JsonProperty private String proxyUri;
@@ -45,4 +44,3 @@ public class IntegrationsConfiguration {
         return proxyUri;
     }
 }
-

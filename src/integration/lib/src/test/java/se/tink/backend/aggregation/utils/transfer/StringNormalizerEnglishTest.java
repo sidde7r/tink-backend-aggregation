@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.utils.transfer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Chars;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Enclosed.class)
 public class StringNormalizerEnglishTest {
@@ -69,39 +70,44 @@ public class StringNormalizerEnglishTest {
     public static class Whitelist {
         @Test
         public void lowercaseSwedish() {
-            StringNormalizerEnglish normalizer = new StringNormalizerEnglish(
-                    Sets.newConcurrentHashSet(Chars.asList('å', 'ä', 'ö')));
+            StringNormalizerEnglish normalizer =
+                    new StringNormalizerEnglish(
+                            Sets.newConcurrentHashSet(Chars.asList('å', 'ä', 'ö')));
 
             assertThat(normalizer.normalize("test åäö ÅÄÖ")).isEqualTo("test åäö AAO");
         }
 
         @Test
         public void uppercaseSwedish() {
-            StringNormalizerEnglish normalizer = new StringNormalizerEnglish(
-                    Sets.newConcurrentHashSet(Chars.asList('Å', 'Ä', 'Ö')));
+            StringNormalizerEnglish normalizer =
+                    new StringNormalizerEnglish(
+                            Sets.newConcurrentHashSet(Chars.asList('Å', 'Ä', 'Ö')));
 
             assertThat(normalizer.normalize("test åäö ÅÄÖ")).isEqualTo("test aao ÅÄÖ");
         }
 
         @Test
         public void additionalCharacters() {
-            StringNormalizerEnglish normalizer = new StringNormalizerEnglish(
-                    Sets.newConcurrentHashSet(Chars.asList('ß', 'æ', 'Æ')));
+            StringNormalizerEnglish normalizer =
+                    new StringNormalizerEnglish(
+                            Sets.newConcurrentHashSet(Chars.asList('ß', 'æ', 'Æ')));
 
             assertThat(normalizer.normalize("ß æ Æ ø Ø")).isEqualTo("ß æ Æ o O");
         }
 
         @Test
         public void specialCharsWithoutRepresentation() {
-            StringNormalizerEnglish normalizer = new StringNormalizerEnglish(
-                    Sets.newConcurrentHashSet(Chars.asList('$', '^', '#', '')));
+            StringNormalizerEnglish normalizer =
+                    new StringNormalizerEnglish(
+                            Sets.newConcurrentHashSet(Chars.asList('$', '^', '#', '')));
 
             assertThat(normalizer.normalize("test$^#Ω Ω Ω")).isEqualTo("test$^#  ");
         }
 
         @Test
         public void getUnchangedCharactersHumanReadable_containsEnglishCharsAndWhiteList() {
-            StringNormalizerEnglish normalizer = new StringNormalizerEnglish(Sets.newHashSet('å', '#', '^'));
+            StringNormalizerEnglish normalizer =
+                    new StringNormalizerEnglish(Sets.newHashSet('å', '#', '^'));
 
             String charactersHumanReadable = normalizer.getUnchangedCharactersHumanReadable();
 

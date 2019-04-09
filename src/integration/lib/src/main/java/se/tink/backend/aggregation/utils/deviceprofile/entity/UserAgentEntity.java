@@ -10,8 +10,12 @@ public class UserAgentEntity {
     private String platformDetails;
     private String extensions;
 
-    private UserAgentEntity(String mozillaVersion, String systemAndBrowserInfo, String platform,
-            String platformDetails, String extensions) {
+    private UserAgentEntity(
+            String mozillaVersion,
+            String systemAndBrowserInfo,
+            String platform,
+            String platformDetails,
+            String extensions) {
         Preconditions.checkNotNull(mozillaVersion);
         Preconditions.checkNotNull(systemAndBrowserInfo);
         Preconditions.checkNotNull(platform);
@@ -134,8 +138,8 @@ public class UserAgentEntity {
         }
 
         public UserAgentEntity build() {
-            return new UserAgentEntity(mozillaVersion, systemAndBrowserInfo, platform, platformDetails, extensions);
+            return new UserAgentEntity(
+                    mozillaVersion, systemAndBrowserInfo, platform, platformDetails, extensions);
         }
     }
-
 }

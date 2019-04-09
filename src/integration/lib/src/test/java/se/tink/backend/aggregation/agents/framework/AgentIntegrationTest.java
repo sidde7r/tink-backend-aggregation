@@ -3,6 +3,15 @@ package se.tink.backend.aggregation.agents.framework;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,16 +48,6 @@ import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.user.rpc.UserProfile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
 public class AgentIntegrationTest extends AbstractConfigurationBase {
     private static final Logger log = LoggerFactory.getLogger(AbstractAgentTest.class);
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -74,7 +73,6 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
     private final NewAgentTestContext context;
 
-
     private final SupplementalInformationController supplementalInformationController;
 
     private AgentIntegrationTest(Builder builder) {
@@ -93,8 +91,8 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
 
         this.context = new NewAgentTestContext(user, credential, builder.getTransactionsToPrint());
 
-        this.supplementalInformationController = new SupplementalInformationController(context , credential);
-
+        this.supplementalInformationController =
+                new SupplementalInformationController(context, credential);
     }
 
     private boolean loadCredentials() {
@@ -162,7 +160,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
         return true;
     }
 
-    private void progressiveLogin(Agent agent) throws Exception{
+    private void progressiveLogin(Agent agent) throws Exception {
         AuthenticationResponse response =
                 ((ProgressiveAuthAgent) agent)
                         .login(
@@ -179,8 +177,7 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
                     ((ProgressiveAuthAgent) agent)
                             .login(
                                     new AuthenticationRequest(
-                                            response.getStep(),
-                                            new ArrayList<>(map.values())));
+                                            response.getStep(), new ArrayList<>(map.values())));
         }
     }
 
@@ -267,10 +264,12 @@ public class AgentIntegrationTest extends AbstractConfigurationBase {
             }
 
             // COB-393: We haven't yet implemented a RefreshableItem for fetching customer info,
-            // so here we fetch it so we can implement it on the agent side and print it in the agent test.
+            // so here we fetch it so we can implement it on the agent side and print it in the
+            // agent test.
             // This should be removed once it's implemented as a proper refresh item.
             if (agent instanceof NextGenerationAgent) {
-                Optional<CustomerInfo> customerInfo = ((NextGenerationAgent) agent).fetchCustomerInfo();
+                Optional<CustomerInfo> customerInfo =
+                        ((NextGenerationAgent) agent).fetchCustomerInfo();
                 customerInfo.ifPresent(context::updateCustomerInfo);
             }
         }

@@ -6,30 +6,40 @@ public class TransferMessageLengthConfig {
     private final int sourceMessageMaxLength;
 
     public static TransferMessageLengthConfig createWithMaxLength(Integer messageMaxLength) {
-        return new TransferMessageLengthConfig(messageMaxLength, messageMaxLength, messageMaxLength);
+        return new TransferMessageLengthConfig(
+                messageMaxLength, messageMaxLength, messageMaxLength);
     }
 
-    public static TransferMessageLengthConfig createWithMaxLength(Integer sourceMessageMaxLength, Integer destinationMessageMaxLength) {
-        return new TransferMessageLengthConfig(sourceMessageMaxLength, destinationMessageMaxLength,
-                destinationMessageMaxLength);
+    public static TransferMessageLengthConfig createWithMaxLength(
+            Integer sourceMessageMaxLength, Integer destinationMessageMaxLength) {
+        return new TransferMessageLengthConfig(
+                sourceMessageMaxLength, destinationMessageMaxLength, destinationMessageMaxLength);
     }
 
-    public static TransferMessageLengthConfig createWithMaxLength(Integer sourceMessageMaxLength,
-            Integer destinationMessageMaxLength, Integer betweenSameUserDestinationMessageMaxLength) {
-        return new TransferMessageLengthConfig(sourceMessageMaxLength, destinationMessageMaxLength,
+    public static TransferMessageLengthConfig createWithMaxLength(
+            Integer sourceMessageMaxLength,
+            Integer destinationMessageMaxLength,
+            Integer betweenSameUserDestinationMessageMaxLength) {
+        return new TransferMessageLengthConfig(
+                sourceMessageMaxLength,
+                destinationMessageMaxLength,
                 betweenSameUserDestinationMessageMaxLength);
     }
 
-    private TransferMessageLengthConfig(Integer sourceMessageMaxLength, Integer destinationMessageMaxLength,
+    private TransferMessageLengthConfig(
+            Integer sourceMessageMaxLength,
+            Integer destinationMessageMaxLength,
             Integer betweenSameUserDestinationMessageMaxLength) {
-        if (sourceMessageMaxLength == null || destinationMessageMaxLength == null
+        if (sourceMessageMaxLength == null
+                || destinationMessageMaxLength == null
                 || betweenSameUserDestinationMessageMaxLength == null) {
             throw new IllegalArgumentException("Null thresholds are not allowed!");
         }
 
         this.sourceMessageMaxLength = sourceMessageMaxLength;
         this.destinationMessageMaxLength = destinationMessageMaxLength;
-        this.betweenSameUserDestinationMessageMaxLength = betweenSameUserDestinationMessageMaxLength;
+        this.betweenSameUserDestinationMessageMaxLength =
+                betweenSameUserDestinationMessageMaxLength;
     }
 
     public int getDestinationMessageMaxLength(boolean isTransferBetweenSameUserAccounts) {

@@ -1,11 +1,12 @@
 package se.tink.backend.aggregation.agents;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
 public class AgentParsingUtilsTest {
@@ -38,11 +39,7 @@ public class AgentParsingUtilsTest {
     }
 
     @Test
-    @Parameters({
-            "80Â 000.00, 80000",
-            "21Â 094.60 , 21094.6",
-            "23456.78, 23456.78"
-    })
+    @Parameters({"80Â 000.00, 80000", "21Â 094.60 , 21094.6", "23456.78, 23456.78"})
     public void parseAmount(String string, double expAmount) {
         assertThat(AgentParsingUtils.parseAmount(string)).isEqualTo(expAmount);
     }

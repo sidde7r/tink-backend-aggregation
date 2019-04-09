@@ -10,7 +10,8 @@ public final class InformativeExecutor implements ValidationExecutor {
     @Override
     public void execute(final ValidationResult result) {
         final StringBuilder results = new StringBuilder();
-        for (final Map.Entry<String, ValidationSubResult> entry : result.getSubResults().entrySet()) {
+        for (final Map.Entry<String, ValidationSubResult> entry :
+                result.getSubResults().entrySet()) {
             final String prefix = entry.getValue().passed() ? "[PASS] " : "[FAIL] ";
             results.append(prefix);
             results.append(entry.getKey());
@@ -19,7 +20,7 @@ public final class InformativeExecutor implements ValidationExecutor {
                 results.append(" - ");
                 results.append(message);
             }
-                results.append("\n");
+            results.append("\n");
         }
         logger.warn("Validation result:\n\n" + results.toString());
     }

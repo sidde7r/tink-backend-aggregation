@@ -6,8 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 public class TransferMessageLengthConfigTest {
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
+    @Rule public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void expect() {
@@ -26,7 +25,8 @@ public class TransferMessageLengthConfigTest {
     }
 
     @Test
-    public void ensureExceptionIsThrown_whenDestinationMessageMaxLength_isNull_forExternalTransfer() {
+    public void
+            ensureExceptionIsThrown_whenDestinationMessageMaxLength_isNull_forExternalTransfer() {
         TransferMessageLengthConfig.createWithMaxLength(25, 12, null);
     }
 }

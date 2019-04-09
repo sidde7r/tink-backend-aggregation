@@ -1,10 +1,11 @@
 package se.tink.backend.aggregation.agents.utils.mappers;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
-import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.account.enums.AccountFlag;
-import static org.junit.Assert.assertEquals;
+import se.tink.libraries.account.rpc.Account;
 
 public class CoreAccountMapperTest {
     @Test
@@ -19,7 +20,8 @@ public class CoreAccountMapperTest {
         account.setHolderName("Thomas Alan Waits");
         account.setFlags(ImmutableList.of(AccountFlag.BUSINESS));
 
-        se.tink.backend.agents.rpc.Account aggregationAccount = CoreAccountMapper.toAggregation(account);
+        se.tink.backend.agents.rpc.Account aggregationAccount =
+                CoreAccountMapper.toAggregation(account);
 
         assertEquals("accountNumber", aggregationAccount.getAccountNumber());
         assertEquals("Thomas Alan Waits", aggregationAccount.getHolderName());
@@ -44,5 +46,4 @@ public class CoreAccountMapperTest {
         assertEquals("Thomas Alan Waits", coreAccount.getHolderName());
         assertEquals(ImmutableList.of(AccountFlag.BUSINESS), coreAccount.getFlags());
     }
-
 }

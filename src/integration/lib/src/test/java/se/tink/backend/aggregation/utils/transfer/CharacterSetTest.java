@@ -1,8 +1,9 @@
 package se.tink.backend.aggregation.utils.transfer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class CharacterSetTest {
     @Test
@@ -10,7 +11,7 @@ public class CharacterSetTest {
         CharacterSet characterSet = CharacterSet.of('a', 'b');
 
         assertThat(characterSet.get()).hasSize(2);
-        assertThat(characterSet.get()).contains('a','b');
+        assertThat(characterSet.get()).contains('a', 'b');
     }
 
     @Test
@@ -18,7 +19,7 @@ public class CharacterSetTest {
         CharacterSet characterSet = CharacterSet.of("ab");
 
         assertThat(characterSet.get()).hasSize(2);
-        assertThat(characterSet.get()).contains('a','b');
+        assertThat(characterSet.get()).contains('a', 'b');
     }
 
     @Test
@@ -36,12 +37,10 @@ public class CharacterSetTest {
 
     @Test
     public void unionWithCharacters() {
-        CharacterSet characterSet = CharacterSet
-                .of('a', 'b')
-                .union('a', 'c');
+        CharacterSet characterSet = CharacterSet.of('a', 'b').union('a', 'c');
 
         assertThat(characterSet.get()).hasSize(3);
-        assertThat(characterSet.get()).contains('a','b', 'c');
+        assertThat(characterSet.get()).contains('a', 'b', 'c');
     }
 
     @Test
@@ -52,7 +51,7 @@ public class CharacterSetTest {
         ImmutableSet<Character> union = first.union(second).get();
 
         assertThat(union).hasSize(4);
-        assertThat(union).contains('a','b', 'c', 'd');
+        assertThat(union).contains('a', 'b', 'c', 'd');
     }
 
     @Test
@@ -63,6 +62,6 @@ public class CharacterSetTest {
         ImmutableSet<Character> union = first.union(second).get();
 
         assertThat(union).hasSize(4);
-        assertThat(union).contains('a','b', 'c', 'd');
+        assertThat(union).contains('a', 'b', 'c', 'd');
     }
 }

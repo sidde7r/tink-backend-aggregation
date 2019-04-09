@@ -17,31 +17,15 @@ import java.util.Map;
 /**
  * Converts an array to map, using the given attribute as the key in the map.
  *
- * Example using 'keyAttribute = name':
+ * <p>Example using 'keyAttribute = name':
  *
- * [
- *    {
- *         "name: item_1,
- *         "content": "some_important_text"
- *     },
- *     {
- *         "name": "item_2",
- *         "content": "some_other_text"
- *     }
- * ]
+ * <p>[ { "name: item_1, "content": "some_important_text" }, { "name": "item_2", "content":
+ * "some_other_text" } ]
  *
- * Will de-serialize to:
+ * <p>Will de-serialize to:
  *
- * {
- *     "item_1": {
- *         "name": "item_1",
- *         "content": "some_important_text"
- *     },
- *     "item_2": {
- *         "name": "item_2",
- *         "content": "some_other_text"
- *     }
- * }
+ * <p>{ "item_1": { "name": "item_1", "content": "some_important_text" }, "item_2": { "name":
+ * "item_2", "content": "some_other_text" } }
  */
 // @formatter:on
 public abstract class IdentifierMapDeserializer<K, T> extends StdDeserializer<Map<K, T>> {
@@ -58,8 +42,7 @@ public abstract class IdentifierMapDeserializer<K, T> extends StdDeserializer<Ma
     }
 
     @Override
-    public Map<K, T> deserialize(JsonParser parser, DeserializationContext ctx)
-            throws IOException {
+    public Map<K, T> deserialize(JsonParser parser, DeserializationContext ctx) throws IOException {
 
         ObjectCodec codec = parser.getCodec();
         TreeNode treeNode = codec.readTree(parser);
@@ -75,13 +58,16 @@ public abstract class IdentifierMapDeserializer<K, T> extends StdDeserializer<Ma
                         K key = mapper.convertValue(node.get(keyAttribute), keyType);
                         result.put(key, codec.treeToValue(node, entityType));
                     } catch (Exception e) {
-                        throw new JsonMappingException(parser,
-                                String.format("Attribute [%s] count not deserialize to [%s]",
+                        throw new JsonMappingException(
+                                parser,
+                                String.format(
+                                        "Attribute [%s] count not deserialize to [%s]",
                                         keyAttribute, keyType.toString()));
                     }
                 } else {
-                    throw new JsonMappingException(parser, String.format("Object does not have attribute %s",
-                            keyAttribute));
+                    throw new JsonMappingException(
+                            parser,
+                            String.format("Object does not have attribute %s", keyAttribute));
                 }
             }
         } else {

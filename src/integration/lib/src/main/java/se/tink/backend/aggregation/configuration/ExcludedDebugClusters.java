@@ -4,15 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown =  true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ExcludedDebugClusters {
 
-    @JsonProperty
-    private List<String> excludedClusters;
+    @JsonProperty private List<String> excludedClusters;
 
-
-    public ExcludedDebugClusters() {
-    }
+    public ExcludedDebugClusters() {}
 
     public List<String> getExcludedClusters() {
         return excludedClusters;

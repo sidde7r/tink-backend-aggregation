@@ -59,11 +59,11 @@ public class BankPrefix {
                     .put(
                             Bank.EKOBANKEN,
                             "PGBANK") // PGBANK is partnered with Nordea. Ekobanken is partnered
-                                      // with Nordea.
+                    // with Nordea.
                     .put(
                             Bank.JAKBANKEN,
                             "PGBANK") // PGBANK is partnered with Nordea. Jakbanken is partnered
-                                      // with Nordea.
+                    // with Nordea.
                     .build();
 
     public static String fromAccountIdentifier(AccountIdentifier identifier) {

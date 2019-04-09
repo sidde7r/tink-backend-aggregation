@@ -17,9 +17,7 @@ public class JsonUtils {
 
     public static String prettyJson(Object json) {
         try {
-            return mapper
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(json);
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
         } catch (JsonProcessingException je) {
             throw new IllegalStateException(je);
         }

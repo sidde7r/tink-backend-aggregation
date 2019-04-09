@@ -3,14 +3,10 @@ package se.tink.backend.aggregation.configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CallbackJwtSignatureKeyPair {
-    @JsonProperty
-    private String privateKeyPath;
-    @JsonProperty
-    private String publicKeyPath;
+    @JsonProperty private String privateKeyPath;
+    @JsonProperty private String publicKeyPath;
 
-
-    @JsonProperty
-    private boolean isEnabled = false;
+    @JsonProperty private boolean isEnabled = false;
 
     public String getPrivateKeyPath() {
         return privateKeyPath;

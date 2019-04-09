@@ -14,7 +14,8 @@ public class Predicates {
                 return false;
             }
 
-            return Objects.equals(value, string) || Objects.equals(value.toLowerCase(), stringLowerCase);
+            return Objects.equals(value, string)
+                    || Objects.equals(value.toLowerCase(), stringLowerCase);
         };
     }
 }

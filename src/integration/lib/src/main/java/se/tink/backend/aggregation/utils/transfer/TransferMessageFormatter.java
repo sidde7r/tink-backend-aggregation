@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.utils.transfer;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import java.util.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
@@ -15,12 +15,12 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 /**
- * To be used in agents to in a common place do logic for default transfer messages. The agent injects a configuration
- * that set restriction for the formatter. Also catalog is injected since we do translation of exception containing
- * a user message.
+ * To be used in agents to in a common place do logic for default transfer messages. The agent
+ * injects a configuration that set restriction for the formatter. Also catalog is injected since we
+ * do translation of exception containing a user message.
  *
- * The normalizer is an optional, but most banks only allow for a certain charset to be used as message and at that
- * point the normalizer can be used for ensuring validity of message.
+ * <p>The normalizer is an optional, but most banks only allow for a certain charset to be used as
+ * message and at that point the normalizer can be used for ensuring validity of message.
  */
 public class TransferMessageFormatter {
     private final Catalog catalog;
@@ -50,36 +50,43 @@ public class TransferMessageFormatter {
     }
 
     /**
-     * Returns formatted source/destination message for a transfer to be commonly used in agents, since agents differ
-     * on requirements on message strings.
+     * Returns formatted source/destination message for a transfer to be commonly used in agents,
+     * since agents differ on requirements on message strings.
      *
-     * @param isTransferBetweenSameUserAccounts If the transfer source and destination belongs to same Tink user
+     * @param isTransferBetweenSameUserAccounts If the transfer source and destination belongs to
+     *     same Tink user
      * @return Source/destination message that are formatted according to configuration of agent
-     * @throws TransferMessageException When destination message doesn't apply to formatting, we throw to be able
-     * to tell the user to adjust his/her message. Though for source message (internal note) we just shorten it.
+     * @throws TransferMessageException When destination message doesn't apply to formatting, we
+     *     throw to be able to tell the user to adjust his/her message. Though for source message
+     *     (internal note) we just shorten it.
      */
     public Messages getMessages(Transfer transfer, boolean isTransferBetweenSameUserAccounts)
             throws TransferMessageException {
-        String destinationMessage = getDestinationMessage(transfer, isTransferBetweenSameUserAccounts);
+        String destinationMessage =
+                getDestinationMessage(transfer, isTransferBetweenSameUserAccounts);
         String sourceMessage = getSourceMessage(transfer);
 
         return new Messages(sourceMessage, destinationMessage);
     }
 
     /**
-     * Returns formatted destination message for a transfer to be commonly used in agents, since agents differ
-     * on requirements on message strings.
+     * Returns formatted destination message for a transfer to be commonly used in agents, since
+     * agents differ on requirements on message strings.
      *
-     * @param isTransferBetweenSameUserAccounts If the transfer source and destination belongs to same Tink user
+     * @param isTransferBetweenSameUserAccounts If the transfer source and destination belongs to
+     *     same Tink user
      * @return Destination message that is formatted according to configuration of agent
-     * @throws TransferMessageException When destination message doesn't apply to formatting, we throw to be able
-     * to tell the user to adjust his/her message.
+     * @throws TransferMessageException When destination message doesn't apply to formatting, we
+     *     throw to be able to tell the user to adjust his/her message.
      */
-    public String getDestinationMessage(Transfer transfer, boolean isTransferBetweenSameUserAccounts)
+    public String getDestinationMessage(
+            Transfer transfer, boolean isTransferBetweenSameUserAccounts)
             throws TransferMessageException {
         preconditionIsBankTransfer(transfer);
 
-        int maxLength = messageLengthConfig.getDestinationMessageMaxLength(isTransferBetweenSameUserAccounts);
+        int maxLength =
+                messageLengthConfig.getDestinationMessageMaxLength(
+                        isTransferBetweenSameUserAccounts);
         String destinationMessage = transfer.getDestinationMessage();
 
         if (transfer.isDestinationMessageGenerated()) {
@@ -88,7 +95,8 @@ public class TransferMessageFormatter {
 
         if (destinationMessage.length() > maxLength) {
             throw new TransferMessageException(
-                    catalog.getString(EndUserMessage.DESTINATION_MESSAGE_TO_LONG.cloneWith(maxLength)),
+                    catalog.getString(
+                            EndUserMessage.DESTINATION_MESSAGE_TO_LONG.cloneWith(maxLength)),
                     LogMessage.DESTINATION_MESSAGE_TO_LONG.with(transfer));
         }
 
@@ -106,8 +114,8 @@ public class TransferMessageFormatter {
     }
 
     /**
-     * Returns formatted source message for a transfer to be commonly used in agents, since agents differ
-     * on requirements on message strings.
+     * Returns formatted source message for a transfer to be commonly used in agents, since agents
+     * differ on requirements on message strings.
      *
      * @return Source message that is formatted according to configuration of agent
      */
@@ -136,11 +144,11 @@ public class TransferMessageFormatter {
     }
 
     /**
-     * Creates a set with the characters that was subject to normalization, so that we can assist the user in showing
-     * the "bad" characters.
+     * Creates a set with the characters that was subject to normalization, so that we can assist
+     * the user in showing the "bad" characters.
      *
-     * Note: The LinkedHashSet has ordering based on insertion (not on alphabetic sorting) which is most logical for the
-     * user to see when comparing the original message.
+     * <p>Note: The LinkedHashSet has ordering based on insertion (not on alphabetic sorting) which
+     * is most logical for the user to see when comparing the original message.
      */
     private LinkedHashSet<Character> getCharactersBeingNormalized(String sourceMessage) {
         if (!stringNormalizer.isPresent()) {
@@ -152,11 +160,11 @@ public class TransferMessageFormatter {
             return Sets.newLinkedHashSet();
         }
 
-        // From sourceMessage, remove all valid characters based on how the normalizedMessage looks like
+        // From sourceMessage, remove all valid characters based on how the normalizedMessage looks
+        // like
         // --> only the invalid chars are left in normalizedCharacters
-        String normalizedCharacters = CharMatcher
-                .anyOf(normalizedMessage)
-                .removeFrom(sourceMessage);
+        String normalizedCharacters =
+                CharMatcher.anyOf(normalizedMessage).removeFrom(sourceMessage);
 
         // Extract all unique characters that were normalized
         LinkedHashSet<Character> diff = Sets.newLinkedHashSet();
@@ -167,20 +175,22 @@ public class TransferMessageFormatter {
         return diff;
     }
 
-    /**
-     * Constructs exception with user message describing invalid characters used
-     */
-    private String createTransferExecutionException(Transfer transfer, Set<Character> normalizedCharacters) {
+    /** Constructs exception with user message describing invalid characters used */
+    private String createTransferExecutionException(
+            Transfer transfer, Set<Character> normalizedCharacters) {
         String prettyFormatNormalizedCharacters = prettyFormat(normalizedCharacters);
         String allowedCharacters = stringNormalizer.get().getUnchangedCharactersHumanReadable();
 
-        String logMessage = String.format(
-                LogMessage.MESSAGE_CONTAINS_INVALID_CHARACTERS.get(),
-                prettyFormatNormalizedCharacters, transfer.toString());
+        String logMessage =
+                String.format(
+                        LogMessage.MESSAGE_CONTAINS_INVALID_CHARACTERS.get(),
+                        prettyFormatNormalizedCharacters,
+                        transfer.toString());
 
-        String userMessage = catalog.getString(
-                EndUserMessage.MESSAGE_CONTAINS_INVALID_CHARACTERS.cloneWith(
-                        prettyFormatNormalizedCharacters, allowedCharacters));
+        String userMessage =
+                catalog.getString(
+                        EndUserMessage.MESSAGE_CONTAINS_INVALID_CHARACTERS.cloneWith(
+                                prettyFormatNormalizedCharacters, allowedCharacters));
 
         throw new TransferMessageException(userMessage, logMessage);
     }
@@ -203,7 +213,8 @@ public class TransferMessageFormatter {
 
     private void preconditionIsBankTransfer(Transfer transfer) {
         if (!transfer.isOfType(TransferType.BANK_TRANSFER)) {
-            throw new IllegalArgumentException("This class should only be used for transfers of type BANK_TRANSFER");
+            throw new IllegalArgumentException(
+                    "This class should only be used for transfers of type BANK_TRANSFER");
         }
     }
 
@@ -226,9 +237,15 @@ public class TransferMessageFormatter {
     }
 
     public enum EndUserMessage implements LocalizableParametrizedEnum {
-        DESTINATION_MESSAGE_TO_LONG(new LocalizableParametrizedKey("For the selected source, the destination message cannot be longer than {0} characters. Please adjust the message and try again.")),
-        SOURCE_MESSAGE_TO_LONG(new LocalizableParametrizedKey("For the selected source, the destination message cannot be longer than {0} characters. Please adjust the message and try again.")),
-        MESSAGE_CONTAINS_INVALID_CHARACTERS(new LocalizableParametrizedKey("For the selected source, messages cannot contain some of the typed characters:\n\n{0}\n\nValid characters:\n\n{1}"));
+        DESTINATION_MESSAGE_TO_LONG(
+                new LocalizableParametrizedKey(
+                        "For the selected source, the destination message cannot be longer than {0} characters. Please adjust the message and try again.")),
+        SOURCE_MESSAGE_TO_LONG(
+                new LocalizableParametrizedKey(
+                        "For the selected source, the destination message cannot be longer than {0} characters. Please adjust the message and try again.")),
+        MESSAGE_CONTAINS_INVALID_CHARACTERS(
+                new LocalizableParametrizedKey(
+                        "For the selected source, messages cannot contain some of the typed characters:\n\n{0}\n\nValid characters:\n\n{1}"));
 
         private LocalizableParametrizedKey key;
 

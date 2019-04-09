@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -13,15 +15,14 @@ import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.credentials.service.CredentialsRequestType;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 
 public class AutoAuthenticationControllerTest {
     private CredentialsRequest request = Mockito.mock(CredentialsRequest.class);
     private AgentContext context = Mockito.mock(AgentContext.class);
-    private MultiFactorAuthenticator multiFactorAuthenticator = Mockito.mock(MultiFactorAuthenticator.class);
+    private MultiFactorAuthenticator multiFactorAuthenticator =
+            Mockito.mock(MultiFactorAuthenticator.class);
     private AutoAuthenticator autoAuthenticator = Mockito.mock(AutoAuthenticator.class);
     private AutoAuthenticationController autoAuthenticationController;
 
@@ -29,8 +30,9 @@ public class AutoAuthenticationControllerTest {
 
     @Before
     public void setup() {
-        autoAuthenticationController = new AutoAuthenticationController(request, context, multiFactorAuthenticator,
-                autoAuthenticator);
+        autoAuthenticationController =
+                new AutoAuthenticationController(
+                        request, context, multiFactorAuthenticator, autoAuthenticator);
 
         Mockito.doCallRealMethod().when(credentials).setType(Mockito.any(CredentialsTypes.class));
         Mockito.when(credentials.getType()).thenCallRealMethod();
@@ -38,17 +40,17 @@ public class AutoAuthenticationControllerTest {
         Mockito.when(multiFactorAuthenticator.getType()).thenReturn(CredentialsTypes.MOBILE_BANKID);
     }
 
-    /**
-     * Instantiation tests
-     */
+    /** Instantiation tests */
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenCredentialsRequest_isNull() {
-        new AutoAuthenticationController(null, context, multiFactorAuthenticator, autoAuthenticator);
+        new AutoAuthenticationController(
+                null, context, multiFactorAuthenticator, autoAuthenticator);
     }
 
     @Test(expected = NullPointerException.class)
     public void ensureExceptionIsThrown_whenContext_isNull() {
-        new AutoAuthenticationController(request, null, multiFactorAuthenticator, autoAuthenticator);
+        new AutoAuthenticationController(
+                request, null, multiFactorAuthenticator, autoAuthenticator);
     }
 
     @Test(expected = NullPointerException.class)
@@ -61,12 +63,11 @@ public class AutoAuthenticationControllerTest {
         new AutoAuthenticationController(request, context, multiFactorAuthenticator, null);
     }
 
-    /**
-     * Manual authentication
-     */
+    /** Manual authentication */
     @Test
-    public void ensureCredentialsStatusIsReset_beforeManualAuthentication_whenCredentialsTypeIsPassword() throws
-            AuthenticationException, AuthorizationException {
+    public void
+            ensureCredentialsStatusIsReset_beforeManualAuthentication_whenCredentialsTypeIsPassword()
+                    throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.UPDATE);
         credentials.setType(CredentialsTypes.PASSWORD);
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
@@ -84,8 +85,9 @@ public class AutoAuthenticationControllerTest {
     }
 
     @Test(expected = SessionException.class)
-    public void ensureSessionExceptionIsThrown_whenRequestIsAutomatic_andManualAuthenticationIsRequired() throws
-            AuthenticationException, AuthorizationException {
+    public void
+            ensureSessionExceptionIsThrown_whenRequestIsAutomatic_andManualAuthenticationIsRequired()
+                    throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.REFRESH_INFORMATION);
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
         Mockito.when(request.isManual()).thenReturn(false);
@@ -94,8 +96,8 @@ public class AutoAuthenticationControllerTest {
     }
 
     @Test
-    public void ensureUpdateRequest_isForcedToAuthenticateManually() throws AuthenticationException,
-            AuthorizationException {
+    public void ensureUpdateRequest_isForcedToAuthenticateManually()
+            throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.UPDATE);
         credentials.setType(CredentialsTypes.PASSWORD);
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
@@ -112,8 +114,9 @@ public class AutoAuthenticationControllerTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void ensureExceptionIsThrown_whenCredentialsTypeDoesNotMatchAuthenticatorType_andRequestIsCreate() throws
-            AuthenticationException, AuthorizationException {
+    public void
+            ensureExceptionIsThrown_whenCredentialsTypeDoesNotMatchAuthenticatorType_andRequestIsCreate()
+                    throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.CREATE);
         credentials.setType(CredentialsTypes.PASSWORD);
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
@@ -122,10 +125,12 @@ public class AutoAuthenticationControllerTest {
     }
 
     @Test
-    public void ensureCredentialsType_doesNotChange_whenManualAuthentication_throwsException() throws
-            AuthenticationException, AuthorizationException {
+    public void ensureCredentialsType_doesNotChange_whenManualAuthentication_throwsException()
+            throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.CREATE);
-        Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception()).when(multiFactorAuthenticator).authenticate(credentials);
+        Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception())
+                .when(multiFactorAuthenticator)
+                .authenticate(credentials);
 
         try {
             autoAuthenticationController.authenticate(credentials);
@@ -136,13 +141,14 @@ public class AutoAuthenticationControllerTest {
             InOrder order = Mockito.inOrder(multiFactorAuthenticator, context, credentials);
             order.verify(multiFactorAuthenticator).authenticate(credentials);
             order.verify(credentials, Mockito.never()).setType(CredentialsTypes.PASSWORD);
-            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials, false);
+            order.verify(context)
+                    .updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 
     @Test(expected = SessionException.class)
-    public void ensureExceptionIsThrown_whenRequestIsAutomatic_andManualAuthenticationIsRequired() throws
-            AuthenticationException, AuthorizationException {
+    public void ensureExceptionIsThrown_whenRequestIsAutomatic_andManualAuthenticationIsRequired()
+            throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.REFRESH_INFORMATION);
         credentials.setType(CredentialsTypes.MOBILE_BANKID);
         Mockito.when(request.isManual()).thenReturn(false);
@@ -150,17 +156,17 @@ public class AutoAuthenticationControllerTest {
         autoAuthenticationController.authenticate(credentials);
     }
 
-    /**
-     * Automatic authentication
-     */
-
+    /** Automatic authentication */
     @Test
-    public void ensureExceptionIsThrownAndCredentialsTypeIsReset_whenAutoAuthenticationFails_andRequestIsAutomatic()
-            throws AuthenticationException, AuthorizationException {
+    public void
+            ensureExceptionIsThrownAndCredentialsTypeIsReset_whenAutoAuthenticationFails_andRequestIsAutomatic()
+                    throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.REFRESH_INFORMATION);
         credentials.setType(CredentialsTypes.PASSWORD);
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
-        Mockito.doThrow(SessionError.SESSION_EXPIRED.exception()).when(autoAuthenticator).autoAuthenticate();
+        Mockito.doThrow(SessionError.SESSION_EXPIRED.exception())
+                .when(autoAuthenticator)
+                .autoAuthenticate();
 
         Mockito.when(request.isManual()).thenReturn(false);
 
@@ -173,17 +179,21 @@ public class AutoAuthenticationControllerTest {
             InOrder order = Mockito.inOrder(autoAuthenticator, context, credentials);
             order.verify(autoAuthenticator).autoAuthenticate();
             order.verify(credentials).setType(multiFactorAuthenticator.getType());
-            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials, false);
+            order.verify(context)
+                    .updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 
     @Test
-    public void ensureExceptionIsThrownAndCredentialsTypeIsReset_whenAutomaticAndManualAuthenticationFails() throws
-            AuthenticationException, AuthorizationException {
+    public void
+            ensureExceptionIsThrownAndCredentialsTypeIsReset_whenAutomaticAndManualAuthenticationFails()
+                    throws AuthenticationException, AuthorizationException {
         prepareCredentialsRequest(CredentialsRequestType.REFRESH_INFORMATION);
         credentials.setType(CredentialsTypes.PASSWORD);
         Assert.assertNotEquals(multiFactorAuthenticator.getType(), credentials.getType());
-        Mockito.doThrow(SessionError.SESSION_EXPIRED.exception()).when(autoAuthenticator).autoAuthenticate();
+        Mockito.doThrow(SessionError.SESSION_EXPIRED.exception())
+                .when(autoAuthenticator)
+                .autoAuthenticate();
         Mockito.when(request.isManual()).thenReturn(true);
         Mockito.doThrow(LoginError.INCORRECT_CREDENTIALS.exception())
                 .when(multiFactorAuthenticator)
@@ -195,39 +205,40 @@ public class AutoAuthenticationControllerTest {
         } catch (LoginException e) {
             Assert.assertEquals(multiFactorAuthenticator.getType(), credentials.getType());
 
-            InOrder order = Mockito.inOrder(autoAuthenticator, multiFactorAuthenticator, context, credentials);
+            InOrder order =
+                    Mockito.inOrder(
+                            autoAuthenticator, multiFactorAuthenticator, context, credentials);
             order.verify(autoAuthenticator).autoAuthenticate();
             order.verify(multiFactorAuthenticator).authenticate(credentials);
             order.verify(credentials).setType(multiFactorAuthenticator.getType());
-            order.verify(context).updateCredentialsExcludingSensitiveInformation(credentials, false);
+            order.verify(context)
+                    .updateCredentialsExcludingSensitiveInformation(credentials, false);
         }
     }
 
-    /**
-     * Helper methods
-     */
-    private void  prepareCredentialsRequest(CredentialsRequestType type) {
+    /** Helper methods */
+    private void prepareCredentialsRequest(CredentialsRequestType type) {
         Mockito.when(request.getType()).thenReturn(type);
 
-        switch(type) {
-        case CREATE:
-            Mockito.when(request.isCreate()).thenReturn(true);
-            Mockito.when(request.isUpdate()).thenReturn(false);
-            Mockito.when(request.isManual()).thenReturn(true);
-            credentials.setType(multiFactorAuthenticator.getType());
-            break;
-        case UPDATE:
-            Mockito.when(request.isCreate()).thenReturn(false);
-            Mockito.when(request.isUpdate()).thenReturn(true);
-            Mockito.when(request.isManual()).thenReturn(true);
-            break;
-        case REFRESH_INFORMATION:
-            Mockito.when(request.isCreate()).thenReturn(false);
-            Mockito.when(request.isUpdate()).thenReturn(false);
-            break;
-        default:
-            // Nothing
-            break;
+        switch (type) {
+            case CREATE:
+                Mockito.when(request.isCreate()).thenReturn(true);
+                Mockito.when(request.isUpdate()).thenReturn(false);
+                Mockito.when(request.isManual()).thenReturn(true);
+                credentials.setType(multiFactorAuthenticator.getType());
+                break;
+            case UPDATE:
+                Mockito.when(request.isCreate()).thenReturn(false);
+                Mockito.when(request.isUpdate()).thenReturn(true);
+                Mockito.when(request.isManual()).thenReturn(true);
+                break;
+            case REFRESH_INFORMATION:
+                Mockito.when(request.isCreate()).thenReturn(false);
+                Mockito.when(request.isUpdate()).thenReturn(false);
+                break;
+            default:
+                // Nothing
+                break;
         }
     }
 }

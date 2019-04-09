@@ -51,8 +51,7 @@ public final class DuplicateTransactionFinder {
         // TODO Optimize to O(n*log(n))
         for (final Transaction transaction : transactions) {
             final Optional<Transaction> duplicate =
-                    transactions
-                            .stream()
+                    transactions.stream()
                             .filter(t -> t != transaction)
                             .filter(t -> Objects.equals(t.getDate(), transaction.getDate()))
                             .filter(

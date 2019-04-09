@@ -85,7 +85,7 @@ public class IcsAgent extends AbstractAgent implements RefreshCreditCardAccounts
     @Override
     public boolean login() throws AuthenticationException, AuthorizationException {
         return true; // We can always login since we are using a static token as authentication
-                     // towards
+        // towards
         // ABN AMRO
     }
 

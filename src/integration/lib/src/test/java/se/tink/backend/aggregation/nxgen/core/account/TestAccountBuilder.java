@@ -5,8 +5,8 @@ import org.mockito.Mockito;
 import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccount;
 import se.tink.backend.aggregation.nxgen.core.account.loan.LoanAccount;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.SavingsAccount;
-import se.tink.libraries.amount.Amount;
 import se.tink.libraries.account.AccountIdentifier;
+import se.tink.libraries.amount.Amount;
 
 public class TestAccountBuilder<T extends Account> {
     private static final String ACCOUNT_NUMBER = "0123456789";
@@ -61,7 +61,8 @@ public class TestAccountBuilder<T extends Account> {
 
     public TestAccountBuilder setAvailableCredit(Amount availableCredit) {
         if (account instanceof CreditCardAccount) {
-            Mockito.when(((CreditCardAccount) account).getAvailableCredit()).thenReturn(availableCredit);
+            Mockito.when(((CreditCardAccount) account).getAvailableCredit())
+                    .thenReturn(availableCredit);
         }
 
         return this;

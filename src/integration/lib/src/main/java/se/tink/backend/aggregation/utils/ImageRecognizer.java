@@ -17,7 +17,6 @@ public class ImageRecognizer {
     private static final ITesseract TESSERACT_INSTANCE = new Tesseract();
 
     static {
-
         TESSERACT_INSTANCE.setDatapath("data/tesseract/tessdata/");
         TESSERACT_INSTANCE.setLanguage("eng");
 
@@ -65,8 +64,11 @@ public class ImageRecognizer {
 
     // Use when image transparency causes ocr to fail
     public static String ocr(BufferedImage bufferedImage, Color fillColor) {
-        BufferedImage nonTransparentImage = new BufferedImage(bufferedImage.getWidth(),
-                bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage nonTransparentImage =
+                new BufferedImage(
+                        bufferedImage.getWidth(),
+                        bufferedImage.getHeight(),
+                        BufferedImage.TYPE_INT_RGB);
         nonTransparentImage.createGraphics().drawImage(bufferedImage, 0, 0, fillColor, null);
         return ocr(nonTransparentImage);
     }
