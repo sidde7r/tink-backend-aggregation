@@ -20,6 +20,24 @@ steps:
         image: gcr.io/tink-containers/kubernetes-generator:latest
         always-pull: true
 
+  - command: .buildkite/check-bazel-style.sh
+    plugins:
+      docker#v2.2.0:
+        image: gcr.io/tink-containers/golang:1.11
+        always-pull: true
+    branches: '!master'
+    name: ':bazel: Check BUILD style'
+    timeout_in_minutes: 10
+
+  #- command: .buildkite/check-java-style.sh
+  #  plugins:
+  #    docker-compose#v2.5.1:
+  #      run: app
+  #      config: docker/docker-compose.bazel.yml
+  #  branches: '!master'
+  #  name: ':java: Check Java style'
+  #  timeout_in_minutes: 30
+
   - wait
 
   - name: ':docker: tink-backend-aggregation'

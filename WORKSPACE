@@ -226,6 +226,12 @@ maven_jar(
 )
 
 maven_jar(
+    name = "com_google_googlejavaformat",
+    artifact = "com.google.googlejavaformat:google-java-format:1.7",
+    sha1 = "97cb6afc835d65682edc248e19170a8e4ecfe4c4"
+)
+
+maven_jar(
     name = "com_netflix_governator",
     artifact = "com.netflix.governator:governator:1.17.2",
     sha1 = "0738b9a37389339f86ad68f4d74fc59fa69e0fb6",
