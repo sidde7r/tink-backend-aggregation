@@ -22,9 +22,7 @@ public interface FinancialDataCacher {
     void cacheTransactions(@Nonnull String accountUniqueId, List<Transaction> transactions);
 
     /**
-     * Caches {@code account} and the associated {@code accountFeatures}, making {@code
-     * accountFeatures} retrievable via {@code AgentContext::getAccountFeatures} after this method
-     * has been executed.
+     * Caches {@code account} and the associated {@code accountFeatures}.
      *
      * @param account An account
      * @param accountFeatures A set of account features associated with said account
