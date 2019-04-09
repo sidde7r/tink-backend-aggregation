@@ -37,13 +37,13 @@ public final class BnpParibasFortisApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    public void setConfiguration(BnpParibasFortisConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
     public BnpParibasFortisConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(BnpParibasFortisConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(String url) {

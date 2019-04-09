@@ -37,13 +37,13 @@ public final class DeutscheBankApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    public void setConfiguration(DeutscheBankConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
     public DeutscheBankConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(DeutscheBankConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     private RequestBuilder createRequestInSession(String url) {

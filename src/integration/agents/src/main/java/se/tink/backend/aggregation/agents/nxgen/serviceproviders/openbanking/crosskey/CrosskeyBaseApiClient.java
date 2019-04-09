@@ -51,13 +51,13 @@ public class CrosskeyBaseApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    public void setConfiguration(CrosskeyBaseConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
     public CrosskeyBaseConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(CrosskeyBaseConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     private RequestBuilder createRequest(URL url) {
@@ -295,10 +295,7 @@ public class CrosskeyBaseApiClient {
     private OAuth2Token getTokenFromSession() {
         return sessionStorage
                 .get(StorageKeys.TOKEN, OAuth2Token.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        ErrorMessages.MISSING_TOKEN));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_TOKEN));
     }
 
     public void setTokenToSession(OAuth2Token accessToken) {
@@ -308,9 +305,6 @@ public class CrosskeyBaseApiClient {
     private AccessConsentResponse getAccessConsentFromSession() {
         return sessionStorage
                 .get(StorageKeys.CONSENT, AccessConsentResponse.class)
-                .orElseThrow(
-                        () ->
-                                new IllegalStateException(
-                                        ErrorMessages.MISSING_CONSENT));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONSENT));
     }
 }

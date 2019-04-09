@@ -7,8 +7,8 @@ import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class ResursBankAgent extends CrosskeyBaseAgent {
 
-    public ResursBankAgent(CredentialsRequest request, AgentContext context,
-        SignatureKeyPair signatureKeyPair) {
+    public ResursBankAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 

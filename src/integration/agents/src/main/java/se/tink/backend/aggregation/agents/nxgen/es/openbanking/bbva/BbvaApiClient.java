@@ -33,13 +33,13 @@ public final class BbvaApiClient {
         this.sessionStorage = sessionStorage;
     }
 
-    public void setConfiguration(BbvaConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
     public BbvaConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(BbvaConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     private RequestBuilder createTokenRequest(String url, String grantType) {
