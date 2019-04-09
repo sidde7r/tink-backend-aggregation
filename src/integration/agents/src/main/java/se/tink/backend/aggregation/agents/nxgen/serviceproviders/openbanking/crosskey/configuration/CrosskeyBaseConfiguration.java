@@ -31,8 +31,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getClientSecret() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSecret),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
     }
@@ -40,8 +39,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getRedirectUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUrl),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URL"));
 
         return redirectUrl;
     }
@@ -49,8 +47,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getBaseAuthUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(baseAuthUrl),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Base Auth URL"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base Auth URL"));
 
         return baseAuthUrl;
     }
@@ -58,8 +55,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getBaseAPIUrl() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(baseAPIUrl),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Base API URL"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Base API URL"));
 
         return baseAPIUrl;
     }
@@ -67,9 +63,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getClientKeyStorePath() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientKeyStorePath),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION,
-                        "Client Key Store Path"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Path"));
 
         return clientKeyStorePath;
     }
@@ -77,9 +71,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getClientSigningKeyPath() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSigningKeyPath),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION,
-                        "Client Signing Key Path"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Signing Key Path"));
 
         return clientSigningKeyPath;
     }
@@ -88,8 +80,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSigningCertificatePath),
                 String.format(
-                        ErrorMessages.INVALID_CONFIGURATION,
-                        "Client Signing Certificate Path"));
+                        ErrorMessages.INVALID_CONFIGURATION, "Client Signing Certificate Path"));
 
         return clientSigningCertificatePath;
     }
@@ -97,9 +88,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getClientKeyStorePassword() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientKeyStorePassword),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION,
-                        "Client Key Store Password"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Key Store Password"));
 
         return clientKeyStorePassword;
     }
@@ -107,9 +96,7 @@ public class CrosskeyBaseConfiguration implements ClientConfiguration {
     public String getXFapiFinancialId() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(xFapiFinancialId),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION,
-                        "x-fapi-financial-id"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "x-fapi-financial-id"));
 
         return xFapiFinancialId;
     }

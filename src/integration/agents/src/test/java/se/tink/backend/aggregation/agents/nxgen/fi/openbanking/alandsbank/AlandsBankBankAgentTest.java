@@ -12,10 +12,11 @@ public class AlandsBankBankAgentTest {
 
     @Before
     public void setup() {
-        builder = new AgentIntegrationTest.Builder("fi", "fi-alandsbanken-oauth2")
-            .expectLoggedIn(false)
-            .loadCredentialsBefore(false)
-            .saveCredentialsAfter(false);
+        builder =
+                new AgentIntegrationTest.Builder("fi", "fi-alandsbanken-oauth2")
+                        .expectLoggedIn(false)
+                        .loadCredentialsBefore(false)
+                        .saveCredentialsAfter(false);
     }
 
     @Test

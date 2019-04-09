@@ -43,13 +43,13 @@ public final class IngApiClient {
         this.market = market;
     }
 
-    public void setConfiguration(IngConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
     public IngConfiguration getConfiguration() {
         return Optional.ofNullable(configuration)
                 .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+    }
+
+    public void setConfiguration(IngConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     public FetchAccountsResponse fetchAccounts() {

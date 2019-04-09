@@ -52,7 +52,9 @@ public final class BbvaAgent extends NextGenerationAgent {
                                 Market.CLIENT_NAME,
                                 BbvaConfiguration.class)
                         .orElseThrow(
-                                () -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
+                                () ->
+                                        new IllegalStateException(
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
         apiClient.setConfiguration(bbvaConfiguration);
     }

@@ -12,9 +12,6 @@ public class RefreshRequest {
     }
 
     public String toForm() {
-        return Form.builder()
-                .put(FormKeys.REFRESH_TOKEN, refreshToken)
-                .build()
-                .serialize();
+        return Form.builder().put(FormKeys.REFRESH_TOKEN, refreshToken).build().serialize();
     }
 }

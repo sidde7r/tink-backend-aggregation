@@ -33,8 +33,7 @@ public class DeutscheBankConfiguration implements ClientConfiguration {
     public String getClientSecret() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(clientSecret),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Client Secret"));
 
         return clientSecret;
     }
@@ -42,8 +41,7 @@ public class DeutscheBankConfiguration implements ClientConfiguration {
     public String getRedirectUri() {
         Preconditions.checkNotNull(
                 Strings.emptyToNull(redirectUri),
-                String.format(
-                        ErrorMessages.INVALID_CONFIGURATION, "Redirect URI"));
+                String.format(ErrorMessages.INVALID_CONFIGURATION, "Redirect URI"));
 
         return redirectUri;
     }
