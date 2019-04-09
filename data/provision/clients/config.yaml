@@ -1,5 +1,31 @@
 clients:
-  babis-staging:
-    aggregatorIdentifier: "Babis Ab"
-  babis-production:
-    aggregatorIdentifier: "Babis AB"
+  avanza-production:
+    aggregatorIdentifier: "Avanza"
+  avanza-testing:
+    aggregatorIdentifier: "Avanza"
+  collector-testing:
+    aggregatorIdentifier: "Collector Bank"
+  collector-verified:
+    aggregatorIdentifier: "Collector Bank"
+  fintonic-testing:
+    aggregatorIdentifier: "Fintonic"
+  icaspara-production:
+    aggregatorIdentifier: "Ica Spara"
+  icaspara-test:
+    aggregatorIdentifier: "Ica Spara"
+  kbc-production:
+    aggregatorIdentifier: "KBC"
+  kbc-testing:
+    aggregatorIdentifier: "KBC"
+  lunarway-production:
+    aggregatorIdentifier: "Lunarway"
+  lunarway-test:
+    aggregatorIdentifier: "Lunarway"
+  sbab-production:
+    aggregatorIdentifier: "SBAB"
+  sbab-testing:
+    aggregatorIdentifier: "SBAB"
+  zimpler-production:
+    aggregatorIdentifier: "Zimpler"
+  zimpler-test:
+    aggregatorIdentifier: "Zimpler"
