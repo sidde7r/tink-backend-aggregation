@@ -43,7 +43,7 @@ public final class RefreshExecutorUtils {
                             RefreshInvestmentAccountsExecutor.class)
                     .build();
 
-    public static Class getRefreshExecutor(RefreshableItem item) {
+    private static Class getRefreshExecutor(RefreshableItem item) {
         return REFRESHABLEITEM_EXECUTOR_MAP.get(item);
     }
 
