@@ -5,6 +5,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.ErrorMessages;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.RequestKey;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.MonzoConstants.Urls;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.ExchangeRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.RefreshRequest;
 import se.tink.backend.aggregation.agents.nxgen.uk.openbanking.monzo.authenticator.rpc.TokenResponse;
@@ -38,30 +41,30 @@ public class MonzoApiClient {
     }
 
     public TokenResponse exchangeAuthorizationCode(ExchangeRequest body) {
-        return client.request(MonzoConstants.URL.OAUTH2_TOKEN)
+        return client.request(Urls.OAUTH2_TOKEN)
                 .body(body, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(TokenResponse.class);
     }
 
     public TokenResponse refreshAccessToken(RefreshRequest request) {
-        return client.request(MonzoConstants.URL.OAUTH2_TOKEN)
+        return client.request(Urls.OAUTH2_TOKEN)
                 .body(request, MediaType.APPLICATION_FORM_URLENCODED_TYPE)
                 .accept(MediaType.APPLICATION_JSON_TYPE)
                 .post(TokenResponse.class);
     }
 
     public AccountsResponse fetchAccounts() {
-        return client.request(MonzoConstants.URL.AIS_ACCOUNTS)
+        return client.request(Urls.AIS_ACCOUNTS)
                 .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
                 .accept(MediaType.APPLICATION_JSON)
                 .get(AccountsResponse.class);
     }
 
     public BalanceResponse fetchBalance(String accountId) {
-        return client.request(MonzoConstants.URL.AIS_BALANCE)
+        return client.request(Urls.AIS_BALANCE)
                 .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
-                .queryParam(MonzoConstants.RequestKey.ACCOUNT_ID, accountId)
+                .queryParam(RequestKey.ACCOUNT_ID, accountId)
                 .accept(MediaType.APPLICATION_JSON)
                 .get(BalanceResponse.class);
     }
@@ -69,17 +72,17 @@ public class MonzoApiClient {
     public TransactionsResponse fetchTransactions(
             String accountId, Object since, Object before, int limit) {
         final RequestBuilder builder =
-                client.request(MonzoConstants.URL.AIS_TRANSACTIONS)
+                client.request(Urls.AIS_TRANSACTIONS)
                         .header(HttpHeaders.AUTHORIZATION, this.getBearerHeaderValue())
-                        .queryParam(MonzoConstants.RequestKey.ACCOUNT_ID, accountId)
-                        .queryParam(MonzoConstants.RequestKey.LIMIT, Integer.toString(limit))
+                        .queryParam(RequestKey.ACCOUNT_ID, accountId)
+                        .queryParam(RequestKey.LIMIT, Integer.toString(limit))
                         .accept(MediaType.APPLICATION_JSON);
 
         if (since != null) {
-            builder.queryParam(MonzoConstants.RequestKey.SINCE, since.toString());
+            builder.queryParam(RequestKey.SINCE, since.toString());
         }
         if (before != null) {
-            builder.queryParam(MonzoConstants.RequestKey.BEFORE, before.toString());
+            builder.queryParam(RequestKey.BEFORE, before.toString());
         }
 
         return builder.get(TransactionsResponse.class);
@@ -88,7 +91,7 @@ public class MonzoApiClient {
     private String getBearerHeaderValue() {
         final OAuth2Token token =
                 persistentStorage
-                        .get(MonzoConstants.StorageKey.OAUTH_TOKEN, OAuth2Token.class)
+                        .get(StorageKey.OAUTH_TOKEN, OAuth2Token.class)
                         .orElseThrow(
                                 () ->
                                         new IllegalStateException(

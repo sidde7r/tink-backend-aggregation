@@ -18,7 +18,7 @@ public class MonzoConstants {
         public static final String MISSING_CONFIGURATION = "Client Configuration missing.";
     }
 
-    public class URL {
+    public class Urls {
         public static final String AUTH_MONZO_COM = "https://auth.monzo.com/";
         private static final String API_MONZO_COM = "https://api.monzo.com/";
         public static final String OAUTH2_TOKEN = API_MONZO_COM + "oauth2/token";
