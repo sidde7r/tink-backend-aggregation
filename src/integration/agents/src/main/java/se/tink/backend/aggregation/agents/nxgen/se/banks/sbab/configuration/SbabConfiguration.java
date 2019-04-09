@@ -14,7 +14,7 @@ public class SbabConfiguration implements ClientConfiguration {
     private String basicAuthUsername;
     private String basicAuthPassword;
     private String clientId;
-    private String accessToken;
+    private String sandboxAccessToken;
     private String redirectUri;
 
     public Environment getEnvironment() {
@@ -41,7 +41,7 @@ public class SbabConfiguration implements ClientConfiguration {
         return basicAuthPassword;
     }
 
-    public String getAccessToken() {
+    public String getSandboxAccessToken() {
         if (environment == Environment.SANDBOX) {
             Preconditions.checkNotNull(
                     Strings.emptyToNull(sandboxAccessToken),

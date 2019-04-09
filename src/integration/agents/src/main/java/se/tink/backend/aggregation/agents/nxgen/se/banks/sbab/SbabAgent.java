@@ -52,7 +52,7 @@ public class SbabAgent extends NextGenerationAgent {
         final SbabConfiguration config = getClientConfiguration();
 
         apiClient.setConfiguration(config);
-        sessionStorage.put(StorageKeys.ACCESS_TOKEN, config.getAccessToken());
+        sessionStorage.put(StorageKeys.ACCESS_TOKEN, config.getSandboxAccessToken());
     }
 
     public SbabConfiguration getClientConfiguration() {
