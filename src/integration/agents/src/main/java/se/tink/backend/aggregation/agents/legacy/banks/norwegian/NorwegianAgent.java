@@ -332,27 +332,45 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         pageTransactions(account, accountNumber);
     }
 
+    /**
+     * We will paginate from one day before the oldest transaction in the uninvoiced list
+     * of transactions. If there are no uninvoiced transactions we'll paginate from current
+     * date.
+     *
+     * The reason for this is that there's an overlap if we fetch uninvoiced transactions
+     * and then paginate from current date, leading to duplicate transactions.
+     */
     private void pageTransactions(Account account, String accountNumber)
             throws ParseException, UnsupportedEncodingException {
 
         final String encodedAccountNumber = URLEncoder.encode(accountNumber, "UTF-8");
 
-        // We will paginate from the current date towards the past.
-        Date toDate = DateTime.now().toDate();
-        Date fromDate = DateUtils.addMonths(toDate, -PAGINATION_MONTH_STEP);
-
         List<Transaction> transactions = Lists.newArrayList();
 
         // Fetch uninvoiced transactions and add to list of transactions
         createClientRequest(getFormattedRecentTransactionsUrl(encodedAccountNumber))
-                .get(TransactionListResponse.class).stream()
+                .get(TransactionListResponse.class)
+                .stream()
                 .map(TransactionEntity::toTransaction)
                 .forEach(transactions::add);
+
+
+        Date oldestTransactionDate = getOldestTransaction(transactions);
+
+        // Set toDate to one day before the oldest transaction in the uninvoiced transactions.
+        // Set to current date if oldestTransactionDate is null.
+        Date toDate =
+                oldestTransactionDate != null
+                        ? DateUtils.addDays(oldestTransactionDate, -1)
+                        : DateTime.now().toDate();
+
+        Date fromDate = DateUtils.addMonths(toDate, -PAGINATION_MONTH_STEP);
 
         // Page through rest of transactions
         do {
             createClientRequest(getFormattedPaginationUrl(encodedAccountNumber, fromDate, toDate))
-                    .get(TransactionListResponse.class).stream()
+                    .get(TransactionListResponse.class)
+                    .stream()
                     .map(TransactionEntity::toTransaction)
                     .forEach(transactions::add);
 
@@ -369,6 +387,13 @@ public class NorwegianAgent extends AbstractAgent implements DeprecatedRefreshEx
         } while (!isContentWithRefresh(account, transactions));
 
         financialDataCacher.updateTransactions(account, transactions);
+    }
+
+    private Date getOldestTransaction(List<Transaction> transactions) {
+        return transactions.stream()
+                .map(Transaction::getDate)
+                .min(Date::compareTo)
+                .orElse(null);
     }
 
     /**
