@@ -9,38 +9,33 @@ load(
 java_binary(
     name = "nasa",
     srcs = glob(["src/main/java/**/*.java"]),
+    data = [
+        "//data:security",
+        "//etc/nasa:development-configuration",
+    ],
     main_class = "se.tink.backend.nasa.boot.NASAService",
+    resources = glob([
+        "src/main/resources/**/*",
+    ]),
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//third_party:log-runtime",
         "//third_party:netty-runtime",
     ],
-    resources = glob([
-        "src/main/resources/**/*",
-    ]),
-    data = [
-        "//etc/nasa:development-configuration",
-        "//data:security",
-    ],
     deps = [
-        "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
-
-        "//src/libraries/serialization:serialization",
-
-        "//third_party:log",
-        "//third_party:prometheus",
+        "//src/libraries:simple-http-server",
+        "//src/libraries/serialization",
+        "//src/nasa/metrics",
+        "//third_party:com_google_code_gson_gson",
+        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:java_spark",
-
-        "//src/nasa/metrics:metrics",
-
-        "@org_apache_logging_log4j_log4j_slf4j//jar",
-
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_yaml_snakeyaml",
+        "//third_party:log",
         "//third_party:org_apache_httpcomponents_httpclient",
-        "//third_party:com_google_code_gson_gson"
+        "//third_party:org_yaml_snakeyaml",
+        "//third_party:prometheus",
+        "@org_apache_logging_log4j_log4j_slf4j//jar",
     ],
 )
 
@@ -48,39 +43,34 @@ junit_test(
     name = "nasa_test",
     srcs = glob(["src/test/java/**/*.java"]),
     data = [
-        "//etc/nasa:development-configuration",
         "//data:security",
+        "//etc/nasa:development-configuration",
     ],
     deps = [
-        "//src/libraries:simple-http-server",
         "//src/libraries:health-check-handler",
-
-        "//src/libraries/serialization:serialization",
-
-        "//third_party:log",
-        "//third_party:prometheus",
+        "//src/libraries:simple-http-server",
+        "//src/libraries/serialization",
+        "//src/nasa/metrics",
+        "//src/nasa/service:nasa",
+        "//third_party:com_google_code_gson_gson",
+        "//third_party:com_google_guava_guava",
         "//third_party:com_google_inject_guice",
         "//third_party:java_spark",
-
-        "//src/nasa/metrics:metrics",
-
-        "//third_party:com_google_guava_guava",
-        "//third_party:org_yaml_snakeyaml",
+        "//third_party:log",
         "//third_party:org_apache_httpcomponents_httpclient",
-        "//third_party:com_google_code_gson_gson",
-
         "//third_party:org_assertj_assertj_core",
-        "//src/nasa/service:nasa"
+        "//third_party:org_yaml_snakeyaml",
+        "//third_party:prometheus",
     ],
 )
 
 genrule(
     name = "renamed-deploy-jar",
     srcs = [
-        ":nasa_deploy.jar"
+        ":nasa_deploy.jar",
     ],
     outs = [
-        "service.jar"
+        "service.jar",
     ],
     cmd = "cp $(location :nasa_deploy.jar) \"$(@)\"",
     visibility = ["//visibility:public"],
@@ -106,12 +96,12 @@ pkg_tar(
 container_image(
     name = "docker",
     base = "@openjdk_jdk8//image",
+    tags = ["manual"],
     tars = [
         ":bin_tar",
         ":data_tar",
     ],
     workdir = "/usr/share/tink-backend-notifying-aggregation-service-asserter",
-    tags = ["manual"],
 )
 
 container_push(

@@ -29,3 +29,8 @@ test_suite(
         "//src/provider_configuration/lib:lib_test",
     ],
 )
+
+alias(
+    name = "format",
+    actual = "//tools/format:format-java-diff",
+)
