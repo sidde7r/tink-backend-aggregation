@@ -13,9 +13,8 @@ import se.tink.backend.aggregation.cluster.annotations.ClientContext;
 import se.tink.backend.aggregation.cluster.identification.ClientInfo;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.AuthenticateRequest;
+import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
 import se.tink.backend.aggregation.rpc.RefreshWhitelistInformationRequest;
@@ -23,7 +22,6 @@ import se.tink.backend.aggregation.rpc.SupplementInformationRequest;
 import se.tink.backend.aggregation.rpc.TransferRequest;
 import se.tink.libraries.api.annotations.Team;
 import se.tink.libraries.api.annotations.TeamOwnership;
-import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.libraries.credentials.service.RefreshInformationRequest;
 import se.tink.libraries.credentials.service.UpdateCredentialsRequest;
 import se.tink.libraries.http.annotations.auth.AllowAnonymous;
@@ -72,7 +70,7 @@ public interface AggregationService {
     @TeamOwnership(Team.INTEGRATION)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    void authenticate(AuthenticateRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
+    void authenticate(ManualAuthenticateRequest request, @ClientContext ClientInfo clientInfo) throws Exception;
 
     @POST
     @Path("transfer")

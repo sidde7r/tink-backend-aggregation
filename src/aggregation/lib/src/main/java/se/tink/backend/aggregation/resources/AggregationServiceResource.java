@@ -17,7 +17,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.queue.models.RefreshInformation;
 import se.tink.backend.aggregation.rpc.ChangeProviderRateLimitsRequest;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
-import se.tink.libraries.credentials.service.AuthenticateRequest;
+import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.CreateCredentialsRequest;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
 import se.tink.backend.aggregation.rpc.ReEncryptCredentialsRequest;
@@ -141,7 +141,7 @@ public class AggregationServiceResource implements AggregationService {
     }
 
     @Override
-    public void authenticate(final AuthenticateRequest request, ClientInfo clientInfo) throws Exception {
+    public void authenticate(final ManualAuthenticateRequest request, ClientInfo clientInfo) throws Exception {
         agentWorker.execute(agentWorkerCommandFactory.createOperationAuthenticate(request, clientInfo));
     }
 

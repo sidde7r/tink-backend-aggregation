@@ -21,7 +21,7 @@ import se.tink.backend.aggregation.controllers.SupplementalInformationController
 import se.tink.backend.aggregation.nxgen.agents.NextGenerationAgent;
 import se.tink.backend.aggregation.rpc.ConfigureWhitelistInformationRequest;
 import se.tink.backend.aggregation.workers.commands.MigrateCredentialsAndAccountsWorkerCommand;
-import se.tink.libraries.credentials.service.AuthenticateRequest;
+import se.tink.libraries.credentials.service.ManualAuthenticateRequest;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.rpc.KeepAliveRequest;
@@ -304,7 +304,7 @@ public class AgentWorkerOperationFactory {
     }
 
     public AgentWorkerOperation createOperationAuthenticate(
-            AuthenticateRequest request, ClientInfo clientInfo) {
+            ManualAuthenticateRequest request, ClientInfo clientInfo) {
 
         log.debug("Creating Authenticate operation chain for credential");
 
