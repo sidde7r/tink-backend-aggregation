@@ -2,8 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.cr
 
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Exceptions;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.StorageKeys;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.authenticator.CrosskeyBaseAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.configuration.CrosskeyBaseConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.fetcher.creditcardaccount.CreditCardAccountFetcher;
@@ -39,7 +38,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     public CrosskeyBaseAgent(
             CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
-        apiClient = new CrosskeyBaseApiClient(client, sessionStorage, persistentStorage);
+        apiClient = new CrosskeyBaseApiClient(client, sessionStorage);
     }
 
     protected abstract String getIntegrationName();
@@ -50,8 +49,7 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         super.setConfiguration(configuration);
 
-        final CrosskeyBaseConfiguration crosskeyBaseConfiguration;
-        crosskeyBaseConfiguration =
+        final CrosskeyBaseConfiguration crosskeyBaseConfiguration =
                 configuration
                         .getIntegrations()
                         .getClientConfiguration(
@@ -59,31 +57,11 @@ public abstract class CrosskeyBaseAgent extends NextGenerationAgent {
                                 getClientName(),
                                 CrosskeyBaseConfiguration.class)
                         .orElseThrow(
-                                () -> new IllegalStateException(Exceptions.MISSING_CONFIGURATION));
+                                () ->
+                                        new IllegalStateException(
+                                                ErrorMessages.MISSING_CONFIGURATION));
 
-        if (!crosskeyBaseConfiguration.isValid()) {
-            throw new IllegalStateException(CrosskeyBaseConstants.Exceptions.INVALID_CONFIGURATION);
-        }
-
-        persistentStorage.put(
-                StorageKeys.BASE_AUTH_URL, crosskeyBaseConfiguration.getBaseAuthUrl());
-        persistentStorage.put(StorageKeys.BASE_API_URL, crosskeyBaseConfiguration.getBaseAPIUrl());
-        persistentStorage.put(StorageKeys.CLIENT_ID, crosskeyBaseConfiguration.getClientId());
-        persistentStorage.put(
-                StorageKeys.CLIENT_SECRET, crosskeyBaseConfiguration.getClientSecret());
-        persistentStorage.put(StorageKeys.REDIRECT_URI, crosskeyBaseConfiguration.getRedirectUrl());
-        persistentStorage.put(
-                StorageKeys.CERTIFICATE_PATH,
-                crosskeyBaseConfiguration.getClientSigningCertificatePath());
-        persistentStorage.put(
-                StorageKeys.KEY_PATH, crosskeyBaseConfiguration.getClientSigningKeyPath());
-        persistentStorage.put(
-                StorageKeys.KEY_STORE_PWD, crosskeyBaseConfiguration.getClientKeyStorePassword());
-        persistentStorage.put(
-                StorageKeys.KEY_STORE_PATH, crosskeyBaseConfiguration.getClientKeyStorePath());
-        persistentStorage.put(
-                StorageKeys.X_FAPI_FINANCIAL_ID, crosskeyBaseConfiguration.getXFapiFinancialId());
-
+        apiClient.setConfiguration(crosskeyBaseConfiguration);
         client.setSslClientCertificate(
                 JWTUtils.readFile(crosskeyBaseConfiguration.getClientKeyStorePath()),
                 crosskeyBaseConfiguration.getClientKeyStorePassword());

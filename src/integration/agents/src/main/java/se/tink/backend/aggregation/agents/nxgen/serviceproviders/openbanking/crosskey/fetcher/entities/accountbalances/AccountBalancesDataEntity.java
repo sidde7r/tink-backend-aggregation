@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.Exceptions;
+import se.tink.backend.aggregation.agents.nxgen.serviceproviders.openbanking.crosskey.CrosskeyBaseConstants.ErrorMessages;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -24,6 +24,6 @@ public class AccountBalancesDataEntity {
         return Optional.ofNullable(balances).orElse(Collections.emptyList()).stream()
                 .filter(AccountBalanceEntity::isInterimAvailable)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException(Exceptions.MISSING_BALANCE));
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_BALANCE));
     }
 }

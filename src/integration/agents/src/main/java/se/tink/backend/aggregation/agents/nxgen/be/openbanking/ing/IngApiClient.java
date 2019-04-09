@@ -1,7 +1,9 @@
 package se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing;
 
 import java.util.Date;
+import java.util.Optional;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.ErrorMessages;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.FormValues;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.HeaderKeys;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.IngConstants.QueryKeys;
@@ -16,6 +18,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.rpc.CustomerTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.rpc.RefreshTokenRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.authenticator.rpc.TokenResponse;
+import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.configuration.IngConfiguration;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.entities.AccountEntity;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.rpc.FetchAccountsResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.openbanking.ing.fetcher.rpc.FetchBalancesResponse;
@@ -25,25 +28,28 @@ import se.tink.backend.aggregation.nxgen.core.authentication.OAuth2Token;
 import se.tink.backend.aggregation.nxgen.http.RequestBuilder;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.backend.aggregation.nxgen.http.URL;
-import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.backend.aggregation.nxgen.storage.SessionStorage;
 
 public final class IngApiClient {
 
     private final TinkHttpClient client;
     private final SessionStorage sessionStorage;
-    private final PersistentStorage persistentStorage;
     private final String market;
+    private IngConfiguration configuration;
 
-    IngApiClient(
-            TinkHttpClient client,
-            SessionStorage sessionStorage,
-            PersistentStorage persistentStorage,
-            String market) {
+    IngApiClient(TinkHttpClient client, SessionStorage sessionStorage, String market) {
         this.client = client;
         this.sessionStorage = sessionStorage;
-        this.persistentStorage = persistentStorage;
         this.market = market;
+    }
+
+    public void setConfiguration(IngConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    public IngConfiguration getConfiguration() {
+        return Optional.ofNullable(configuration)
+                .orElseThrow(() -> new IllegalStateException(ErrorMessages.MISSING_CONFIGURATION));
     }
 
     public FetchAccountsResponse fetchAccounts() {
@@ -84,7 +90,6 @@ public final class IngApiClient {
     }
 
     public URL getAuthorizeUrl(final String state) {
-        System.out.println(state);
         final TokenResponse applicationTokenResponse = getApplicationAccessToken();
 
         setApplicationTokenToSession(applicationTokenResponse.toTinkToken());
@@ -93,9 +98,9 @@ public final class IngApiClient {
     }
 
     public OAuth2Token getToken(final String code) {
-        final String payload =
-                new CustomerTokenRequest(code, persistentStorage.get(StorageKeys.REDIRECT_URL))
-                        .toData();
+        final String redirectUrl = getConfiguration().getRedirectUrl();
+
+        final String payload = new CustomerTokenRequest(code, redirectUrl).toData();
 
         return fetchToken(payload);
     }
@@ -115,29 +120,25 @@ public final class IngApiClient {
         final String date = getFormattedDate();
         final String payload = new ApplicationTokenRequest().toData();
         final String digest = generateDigest(payload);
+        final String authHeader =
+                Signature.SIGNATURE
+                        + " "
+                        + getAuthorization(
+                                Signature.HTTP_METHOD_POST, Urls.TOKEN, reqId, date, digest);
 
         return buildRequest(reqId, date, digest, Urls.TOKEN)
-                .header(
-                        HeaderKeys.AUTHORIZATION,
-                        Signature.SIGNATURE
-                                + " "
-                                + getAuthorization(
-                                        Signature.HTTP_METHOD_POST,
-                                        Urls.TOKEN,
-                                        reqId,
-                                        date,
-                                        digest))
+                .header(HeaderKeys.AUTHORIZATION, authHeader)
                 .type(MediaType.APPLICATION_FORM_URLENCODED)
                 .header(HeaderKeys.TPP_SIGNATURE_CERTIFICATE, getCertificate())
                 .post(TokenResponse.class, payload);
     }
 
     private AuthorizationUrl getAuthorizationUrl(final TokenResponse tokenResponse) {
+        final String redirectUrl = getConfiguration().getRedirectUrl();
+
         final String reqPath =
                 new URL(Urls.OAUTH)
-                        .queryParam(
-                                QueryKeys.REDIRECT_URI,
-                                persistentStorage.get(StorageKeys.REDIRECT_URL))
+                        .queryParam(QueryKeys.REDIRECT_URI, redirectUrl)
                         .queryParam(QueryKeys.SCOPE, tokenResponse.getScope())
                         .queryParam(QueryKeys.COUNTRY_CODE, market)
                         .toString();
@@ -169,7 +170,9 @@ public final class IngApiClient {
 
     private RequestBuilder buildRequest(
             final String reqId, final String date, final String digest, final String reqPath) {
-        return client.request(new URL(persistentStorage.get(StorageKeys.BASE_URL) + reqPath))
+        final String baseUrl = getConfiguration().getBaseUrl();
+
+        return client.request(baseUrl + reqPath)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HeaderKeys.DIGEST, digest)
                 .header(HeaderKeys.DATE, date)
@@ -193,9 +196,10 @@ public final class IngApiClient {
     }
 
     private String getCertificate() {
-        return new String(
-                IngUtils.readFile(
-                        persistentStorage.get(StorageKeys.CLIENT_SIGNING_CERTIFICATE_PATH)));
+        final String clientSigningCertificatePath =
+                getConfiguration().getClientSigningCertificatePath();
+
+        return new String(IngUtils.readFile(clientSigningCertificatePath));
     }
 
     private String getAuthorization(
@@ -204,9 +208,10 @@ public final class IngApiClient {
             final String xIngRequestId,
             final String date,
             final String digest) {
+        final String clientId = getConfiguration().getClientId();
+
         return new AuthorizationEntity(
-                        persistentStorage.get(StorageKeys.CLIENT_ID),
-                        getSignature(httpMethod, reqPath, xIngRequestId, date, digest))
+                        clientId, getSignature(httpMethod, reqPath, xIngRequestId, date, digest))
                 .toString();
     }
 
@@ -216,13 +221,13 @@ public final class IngApiClient {
             final String xIngRequestId,
             final String date,
             final String digest) {
+        final String clientSigningKeyPath = getConfiguration().getClientSigningKeyPath();
+
         final SignatureEntity signatureEntity =
                 new SignatureEntity(httpMethod, reqPath, date, digest, xIngRequestId);
 
         return IngUtils.generateSignature(
-                signatureEntity.toString(),
-                persistentStorage.get(StorageKeys.CLIENT_SIGNING_KEY_PATH),
-                Signature.SIGNING_ALGORITHM);
+                signatureEntity.toString(), clientSigningKeyPath, Signature.SIGNING_ALGORITHM);
     }
 
     private String generateDigest(final String data) {
