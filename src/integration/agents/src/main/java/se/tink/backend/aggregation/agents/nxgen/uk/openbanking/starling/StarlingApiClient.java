@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.uk.openbanking.starling;
 
+import java.util.Date;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import org.apache.commons.httpclient.HttpStatus;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
@@ -26,10 +29,6 @@ import se.tink.backend.aggregation.nxgen.http.exceptions.HttpResponseException;
 import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
-import java.util.Date;
 
 public class StarlingApiClient {
 
@@ -119,12 +118,16 @@ public class StarlingApiClient {
                 .put(ExecutePaymentResponse.class, paymentRequest);
     }
 
-    public TransferStatusEntity checkTransferStatus(String paymentOrderUid) {
+    public TransferStatusEntity checkTransferStatus(
+            String paymentOrderUid, OAuth2Token paymentToken) {
 
         try {
-            request(
+
+            client.request(
                             StarlingConstants.Url.GET_PAYMENT_STATUS.parameter(
                                     StarlingConstants.UrlParams.PAYMENT_ORDER_UID, paymentOrderUid))
+                    .header(HttpHeaders.AUTHORIZATION, paymentToken)
+                    .accept(MediaType.APPLICATION_JSON)
                     .get(HttpResponse.class);
 
             return TransferStatusEntity.Ok();
