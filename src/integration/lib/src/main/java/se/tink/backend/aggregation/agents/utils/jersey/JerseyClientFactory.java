@@ -4,6 +4,12 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Locale;
 import org.apache.http.ProtocolException;
 import org.apache.http.client.RedirectStrategy;
 import org.apache.http.client.config.RequestConfig;
@@ -17,13 +23,6 @@ import org.apache.http.util.TextUtils;
 import se.tink.libraries.net.AbstractJerseyClientFactory;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.net.TinkApacheHttpClient4Handler;
-
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Locale;
 
 public class JerseyClientFactory extends AbstractJerseyClientFactory {
 

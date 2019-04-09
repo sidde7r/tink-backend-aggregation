@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
@@ -12,8 +14,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationHelper;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.libraries.i18n.Catalog;
 
 public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticator {
@@ -24,11 +24,14 @@ public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticat
     private final SmsOtpAuthenticator<T> authenticator;
     private final int otpValueLength;
 
-    public SmsOtpAuthenticationController(Catalog catalog,
+    public SmsOtpAuthenticationController(
+            Catalog catalog,
             SupplementalInformationHelper supplementalInformationHelper,
-            SmsOtpAuthenticator<T> authenticator, int otpValueLength) {
+            SmsOtpAuthenticator<T> authenticator,
+            int otpValueLength) {
         this.catalog = Preconditions.checkNotNull(catalog);
-        this.supplementalInformationHelper = Preconditions.checkNotNull(supplementalInformationHelper);
+        this.supplementalInformationHelper =
+                Preconditions.checkNotNull(supplementalInformationHelper);
         this.authenticator = Preconditions.checkNotNull(authenticator);
         Preconditions.checkArgument(otpValueLength > 0);
         this.otpValueLength = otpValueLength;
@@ -41,9 +44,13 @@ public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticat
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
-        NotImplementedException.throwIf(!Objects.equals(credentials.getType(), getType()),
-                String.format("Authentication method not implemented for CredentialsType: %s", credentials.getType()));
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
+        NotImplementedException.throwIf(
+                !Objects.equals(credentials.getType(), getType()),
+                String.format(
+                        "Authentication method not implemented for CredentialsType: %s",
+                        credentials.getType()));
 
         String username = credentials.getField(Field.Key.USERNAME);
 
@@ -53,8 +60,8 @@ public class SmsOtpAuthenticationController<T> implements MultiFactorAuthenticat
 
         T initValues = authenticator.init(username);
 
-        Map<String, String> supplementalInformation = supplementalInformationHelper
-                .askSupplementalInformation(getOtpField());
+        Map<String, String> supplementalInformation =
+                supplementalInformationHelper.askSupplementalInformation(getOtpField());
 
         authenticator.authenticate(supplementalInformation.get(OTP_VALUE_FIELD_KEY), initValues);
     }

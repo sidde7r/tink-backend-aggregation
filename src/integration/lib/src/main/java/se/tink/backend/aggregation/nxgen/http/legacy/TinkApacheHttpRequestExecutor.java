@@ -31,14 +31,14 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 
 /*
-    This HttpRequestExecutor is only necessary because of bugs in the underlying libraries (jersey and apache).
-    Adding cookies to single requests will lead to multiple `Cookie` headers because apache adds cookies from
-    the internal cookieStore (which is populated by Set-Cookie directives).
+   This HttpRequestExecutor is only necessary because of bugs in the underlying libraries (jersey and apache).
+   Adding cookies to single requests will lead to multiple `Cookie` headers because apache adds cookies from
+   the internal cookieStore (which is populated by Set-Cookie directives).
 
-    The work-around is to merge all `Cookie` headers into one.
+   The work-around is to merge all `Cookie` headers into one.
 
-    (This class also removes the header `Cookie2` which is added by apache).
- */
+   (This class also removes the header `Cookie2` which is added by apache).
+*/
 public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private static final Logger log = LoggerFactory.getLogger(TinkApacheHttpRequestExecutor.class);
     private static final String SIGNATURE_HEADER_KEY = "X-Signature";
@@ -57,7 +57,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         this.signatureKeyPair = signatureKeyPair;
 
-        algorithm = Algorithm.RSA256(signatureKeyPair.getPublicKey(), signatureKeyPair.getPrivateKey());
+        algorithm =
+                Algorithm.RSA256(signatureKeyPair.getPublicKey(), signatureKeyPair.getPrivateKey());
     }
 
     public void setProxyCredentials(String username, String password) {
@@ -92,14 +93,19 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
             return;
         }
 
-        // Note: The apache version we use cannot automatically add the `Proxy-Authorization` via proxy authentication
+        // Note: The apache version we use cannot automatically add the `Proxy-Authorization` via
+        // proxy authentication
         // configuration.
-        // Remove this code once Apache has been updated to a new version where that functionality works.
-        request.addHeader("Proxy-Authorization", String.format(
-                "Basic %s",
-                Base64.getUrlEncoder().encodeToString(String.format("%s:%s", proxyUsername, proxyPassword).getBytes())
-            )
-        );
+        // Remove this code once Apache has been updated to a new version where that functionality
+        // works.
+        request.addHeader(
+                "Proxy-Authorization",
+                String.format(
+                        "Basic %s",
+                        Base64.getUrlEncoder()
+                                .encodeToString(
+                                        String.format("%s:%s", proxyUsername, proxyPassword)
+                                                .getBytes())));
     }
 
     public void disableSignatureRequestHeader() {
@@ -115,9 +121,8 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         // Remove them from the request before adding the merged value
         request.removeHeaders("Cookie");
 
-        String cookieValue = cookieHeaders.stream()
-                .map(Header::getValue)
-                .collect(Collectors.joining("; "));
+        String cookieValue =
+                cookieHeaders.stream().map(Header::getValue).collect(Collectors.joining("; "));
 
         request.addHeader("Cookie", cookieValue);
     }
@@ -129,15 +134,17 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
 
         // This header needs to be added before we fetch the headers to create the signature.
         // Note: This header can be removed if this URL is added to the JWT.
-        request.addHeader("X-Signature-Info",
+        request.addHeader(
+                "X-Signature-Info",
                 "Visit https://cdn.tink.se/aggregation-signature/how-to-verify.txt for more info.");
 
         RequestLine requestLine = request.getRequestLine();
 
-        JWTCreator.Builder jwtBuilder = JWT.create()
-                .withIssuedAt(new Date())
-                .withClaim("method", requestLine.getMethod())
-                .withClaim("uri", requestLine.getUri());
+        JWTCreator.Builder jwtBuilder =
+                JWT.create()
+                        .withIssuedAt(new Date())
+                        .withClaim("method", requestLine.getMethod())
+                        .withClaim("uri", requestLine.getUri());
 
         // Only add keyId for request where we use signatureKeyPair
         if (signatureKeyPair != null) {
@@ -147,8 +154,7 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
         getHttpHeadersHashAsBase64(request)
                 .ifPresent(hash -> jwtBuilder.withClaim("headers", hash));
 
-        getHttpBodyHashAsBase64(request)
-                .ifPresent(hash -> jwtBuilder.withClaim("body", hash));
+        getHttpBodyHashAsBase64(request).ifPresent(hash -> jwtBuilder.withClaim("body", hash));
 
         request.addHeader(SIGNATURE_HEADER_KEY, jwtBuilder.sign(algorithm));
     }
@@ -178,11 +184,12 @@ public class TinkApacheHttpRequestExecutor extends HttpRequestExecutor {
     private Optional<String> getHttpHeadersHashAsBase64(HttpRequest request) {
         Header[] allHeaders = request.getAllHeaders();
 
-        String sortedHeaders = Arrays.stream(allHeaders)
-                .filter(Objects::nonNull)
-                .map(header -> String.format("%s: %s", header.getName(), header.getValue()))
-                .sorted(String::compareTo)
-                .collect(Collectors.joining("\n"));
+        String sortedHeaders =
+                Arrays.stream(allHeaders)
+                        .filter(Objects::nonNull)
+                        .map(header -> String.format("%s: %s", header.getName(), header.getValue()))
+                        .sorted(String::compareTo)
+                        .collect(Collectors.joining("\n"));
 
         if (Strings.isNullOrEmpty(sortedHeaders)) {
             return Optional.empty();

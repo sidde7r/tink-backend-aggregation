@@ -2,6 +2,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.ing.authenticator.cont
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
@@ -17,11 +20,8 @@ import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.
 import se.tink.backend.aggregation.nxgen.controllers.utils.SupplementalInformationFormer;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
-public class IngCardReaderAuthenticationController implements MultiFactorAuthenticator, ProgressiveAuthenticator {
+public class IngCardReaderAuthenticationController
+        implements MultiFactorAuthenticator, ProgressiveAuthenticator {
     private static final String CARD_ID_FIELD = "cardId";
 
     private static final String STEP_OTP = "otp";
@@ -36,7 +36,8 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
             IngCardReaderAuthenticator authenticator,
             SupplementalInformationFormer supplementalInformationFormer) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
-        this.supplementalInformationFormer = Preconditions.checkNotNull(supplementalInformationFormer);
+        this.supplementalInformationFormer =
+                Preconditions.checkNotNull(supplementalInformationFormer);
     }
 
     @Override
@@ -77,8 +78,11 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
                 || Strings.isNullOrEmpty(otp)) {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
-        ChallengeExchangeValues challengeExchangeValues = authenticator.initEnroll(username, cardNumber, otp);
-        authenticationRequest.getCredentials().setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
+        ChallengeExchangeValues challengeExchangeValues =
+                authenticator.initEnroll(username, cardNumber, otp);
+        authenticationRequest
+                .getCredentials()
+                .setSensitivePayload(SIGN_ID, challengeExchangeValues.getSigningId());
         return new AuthenticationResponse(
                 STEP_SIGN,
                 supplementalInformationFormer.formChallengeResponseFields(
@@ -91,7 +95,8 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
                 authenticationRequest.getCredentials().getField(Field.Key.USERNAME),
                 authenticationRequest.getUserInputs().get(1),
                 authenticationRequest.getCredentials().getSensitivePayload(SIGN_ID));
-        authenticator.authenticate(authenticationRequest.getCredentials().getField(Field.Key.USERNAME));
+        authenticator.authenticate(
+                authenticationRequest.getCredentials().getField(Field.Key.USERNAME));
         return new AuthenticationResponse(AuthenticationStepConstants.STEP_FINALIZE, null);
     }
 
@@ -100,10 +105,10 @@ public class IngCardReaderAuthenticationController implements MultiFactorAuthent
         return CredentialsTypes.PASSWORD;
     }
 
-
     // TODO auth: remove when ProgressiveAuthenticator remove extension from Authenticator
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         throw new AssertionError();
     }
 }

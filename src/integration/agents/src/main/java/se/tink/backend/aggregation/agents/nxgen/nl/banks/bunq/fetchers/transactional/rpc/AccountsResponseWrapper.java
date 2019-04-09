@@ -17,8 +17,9 @@ public class AccountsResponseWrapper {
     }
 
     public List<TransactionalAccount> toTinkAccounts() {
-        List<AccountWrapper> accountWrappers = Optional.ofNullable(response)
-                .orElseThrow(() -> new IllegalStateException("Response was null"));
+        List<AccountWrapper> accountWrappers =
+                Optional.ofNullable(response)
+                        .orElseThrow(() -> new IllegalStateException("Response was null"));
 
         return accountWrappers.stream()
                 .map(AccountWrapper::toTinkAccount)

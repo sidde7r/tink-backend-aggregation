@@ -5,31 +5,31 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class BalanceEntity {
-  @JsonProperty("AccountId")
-  private String accountId;
+    @JsonProperty("AccountId")
+    private String accountId;
 
-  @JsonProperty("CreditCardBalance")
-  private CreditBalanceEntity balanceEntity;
+    @JsonProperty("CreditCardBalance")
+    private CreditBalanceEntity balanceEntity;
 
-  @JsonProperty("DateTime")
-  private String dateTime;
+    @JsonProperty("DateTime")
+    private String dateTime;
 
-  @JsonProperty("Active")
-  private boolean active;
+    @JsonProperty("Active")
+    private boolean active;
 
-  public String getAccountId() {
-    return accountId;
-  }
+    public String getAccountId() {
+        return accountId;
+    }
 
-  public CreditBalanceEntity getBalanceEntity() {
-    return balanceEntity;
-  }
+    public CreditBalanceEntity getBalanceEntity() {
+        return balanceEntity;
+    }
 
-  public String getDateTime() {
-    return dateTime;
-  }
+    public String getDateTime() {
+        return dateTime;
+    }
 
-  public boolean isActive() {
-    return active;
-  }
+    public boolean isActive() {
+        return active;
+    }
 }

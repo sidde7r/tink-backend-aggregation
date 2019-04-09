@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents;
 
 public enum BankIdStatus {
-
     DONE,
     CANCELLED,
     FAILED_UNKNOWN,
@@ -9,5 +8,4 @@ public enum BankIdStatus {
     WAITING,
     INTERRUPTED,
     NO_CLIENT
-
 }

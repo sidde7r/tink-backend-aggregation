@@ -17,6 +17,7 @@ public class SupplementalInfoException extends AuthenticationException {
         super(error, userMessage);
         this.error = error;
     }
+
     @Override
     public AgentError getError() {
         return error;

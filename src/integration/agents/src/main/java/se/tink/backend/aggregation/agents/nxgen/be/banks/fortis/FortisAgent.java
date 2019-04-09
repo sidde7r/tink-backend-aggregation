@@ -45,7 +45,8 @@ public class FortisAgent extends NextGenerationAgent {
         FortisAuthenticator authenticator =
                 new FortisAuthenticator(
                         catalog, persistentStorage, apiClient, supplementalInformationHelper);
-        return new AutoAuthenticationController(request, systemUpdater, authenticator, authenticator);
+        return new AutoAuthenticationController(
+                request, systemUpdater, authenticator, authenticator);
     }
 
     @Override

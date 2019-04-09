@@ -1,8 +1,7 @@
 package se.tink.libraries.customerinfo.countries;
 
-import se.tink.libraries.customerinfo.CustomerInfo;
-
 import java.util.Map;
+import se.tink.libraries.customerinfo.CustomerInfo;
 
 public class EsCustomerInfo extends CustomerInfo {
 
@@ -70,6 +69,17 @@ public class EsCustomerInfo extends CustomerInfo {
             map.put("passportNumber", passportNumber);
         }
         return map;
+    }
+
+    @Override
+    public String getSsn() {
+        if (nieNumber != null) {
+            return nieNumber;
+        } else if (nifNumber != null) {
+            return nifNumber;
+        } else {
+            return passportNumber;
+        }
     }
 
     public String getNieNumber() {

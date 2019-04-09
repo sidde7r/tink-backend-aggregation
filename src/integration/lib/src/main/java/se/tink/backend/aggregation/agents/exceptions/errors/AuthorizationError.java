@@ -6,7 +6,9 @@ import se.tink.libraries.i18n.LocalizableKey;
 public enum AuthorizationError implements AgentError {
     UNAUTHORIZED(new LocalizableKey("You are not authorized to use this service.")),
     NO_VALID_PROFILE(new LocalizableKey("You do not have a valid profile.")),
-    ACCOUNT_BLOCKED(new LocalizableKey("Could not login to your bank. The access could be blocked. Please activate it in your bank app or contact your bank."));
+    ACCOUNT_BLOCKED(
+            new LocalizableKey(
+                    "Could not login to your bank. The access could be blocked. Please activate it in your bank app or contact your bank."));
 
     private final LocalizableKey userMessage;
 

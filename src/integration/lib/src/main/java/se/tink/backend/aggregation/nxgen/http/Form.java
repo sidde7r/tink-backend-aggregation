@@ -1,13 +1,12 @@
 package se.tink.backend.aggregation.nxgen.http;
 
 import com.google.common.base.Preconditions;
-
-import javax.annotation.Nonnull;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
 public final class Form {
     private LinkedHashMap<String, String> parameters = new LinkedHashMap<>();
@@ -16,9 +15,7 @@ public final class Form {
     private static final String NAME_VALUE_FORMAT = "%s=%s";
 
     public String serialize() {
-        return parameters
-                .entrySet()
-                .stream()
+        return parameters.entrySet().stream()
                 .map(this::getValuePair)
                 .collect(Collectors.joining(JOINING_DELIMITER));
     }

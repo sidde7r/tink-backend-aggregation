@@ -3,7 +3,6 @@ package se.tink.backend.aggregation.agents;
 import com.google.common.collect.Maps;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
-
 import se.tink.backend.aggregation.api.AggregatorInfo;
 import se.tink.libraries.metrics.MetricRegistry;
 
@@ -15,7 +14,6 @@ public abstract class AgentContext implements CompositeAgentContext {
     private AggregatorInfo aggregatorInfo;
     private String clusterId;
     private MetricRegistry metricRegistry;
-
 
     public String getClusterId() {
         return clusterId;
@@ -73,6 +71,4 @@ public abstract class AgentContext implements CompositeAgentContext {
     public void setMetricRegistry(MetricRegistry metricRegistry) {
         this.metricRegistry = metricRegistry;
     }
-
-
 }

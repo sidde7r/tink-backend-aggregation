@@ -11,8 +11,9 @@ public class FetchProductsRequest extends BelfiusRequest {
 
     public static Builder create() {
         return BelfiusRequest.builder()
-                .setRequests(WidgetEventsRequest.create(
-                        WidgetEventInformation
-                                .newButtonClickedWidgetEvent(BelfiusConstants.Widget.PRODUCT_LIST_LOAD)));
+                .setRequests(
+                        WidgetEventsRequest.create(
+                                WidgetEventInformation.newButtonClickedWidgetEvent(
+                                        BelfiusConstants.Widget.PRODUCT_LIST_LOAD)));
     }
 }

@@ -10,18 +10,17 @@ import java.util.Optional;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class OAuth2Token {
-    @JsonIgnore
-    private static final String BEARER = "bearer";
+    @JsonIgnore private static final String BEARER = "bearer";
 
     private String tokenType;
     private String accessToken;
-    @JsonProperty
-    private String refreshToken;
+    @JsonProperty private String refreshToken;
     private long expiresInSeconds;
     private long refreshExpiresInSeconds;
     private long issuedAt;
 
-    private OAuth2Token(@JsonProperty("tokenType") String tokenType,
+    private OAuth2Token(
+            @JsonProperty("tokenType") String tokenType,
             @JsonProperty("accessToken") String accessToken,
             @JsonProperty("refreshToken") String refreshToken,
             @JsonProperty("expiresInSeconds") long expiresInSeconds,
@@ -36,52 +35,45 @@ public class OAuth2Token {
     }
 
     @JsonIgnore
-    public static OAuth2Token create(String tokenType, String accessToken, String refreshToken,
+    public static OAuth2Token create(
+            String tokenType,
+            String accessToken,
+            String refreshToken,
             long accessExpiresInSeconds) {
         return new OAuth2Token(
-                tokenType,
-                accessToken,
-                refreshToken,
-                accessExpiresInSeconds,
-                0,
-                getCurrentEpoch()
-        );
+                tokenType, accessToken, refreshToken, accessExpiresInSeconds, 0, getCurrentEpoch());
     }
 
     @JsonIgnore
-    public static OAuth2Token create(String tokenType, String accessToken, String refreshToken,
-            long accessExpiresInSeconds, long refreshExpiresInSeconds) {
+    public static OAuth2Token create(
+            String tokenType,
+            String accessToken,
+            String refreshToken,
+            long accessExpiresInSeconds,
+            long refreshExpiresInSeconds) {
         return new OAuth2Token(
                 tokenType,
                 accessToken,
                 refreshToken,
                 accessExpiresInSeconds,
                 refreshExpiresInSeconds,
-                getCurrentEpoch()
-        );
+                getCurrentEpoch());
     }
 
     @JsonIgnore
-    public static OAuth2Token createBearer(String accessToken, String refreshToken,
-            long accessExpiresInSeconds) {
-        return create(
-                BEARER,
-                accessToken,
-                refreshToken,
-                accessExpiresInSeconds
-        );
+    public static OAuth2Token createBearer(
+            String accessToken, String refreshToken, long accessExpiresInSeconds) {
+        return create(BEARER, accessToken, refreshToken, accessExpiresInSeconds);
     }
 
     @JsonIgnore
-    public static OAuth2Token createBearer(String accessToken, String refreshToken,
-            long accessExpiresInSeconds, long refreshExpiresInSeconds) {
+    public static OAuth2Token createBearer(
+            String accessToken,
+            String refreshToken,
+            long accessExpiresInSeconds,
+            long refreshExpiresInSeconds) {
         return create(
-                BEARER,
-                accessToken,
-                refreshToken,
-                accessExpiresInSeconds,
-                refreshExpiresInSeconds
-        );
+                BEARER, accessToken, refreshToken, accessExpiresInSeconds, refreshExpiresInSeconds);
     }
 
     public String getTokenType() {
@@ -110,7 +102,7 @@ public class OAuth2Token {
 
     @JsonIgnore
     private boolean hasRefreshExpired() {
-        if (refreshExpiresInSeconds == 0) {  // 0 is considered "not specified"
+        if (refreshExpiresInSeconds == 0) { // 0 is considered "not specified"
             return false;
         }
         long currentTime = getCurrentEpoch();
@@ -149,7 +141,7 @@ public class OAuth2Token {
 
     // TODO: Remove when logging is not needed
     public boolean hasRefreshExpire() {
-        return refreshExpiresInSeconds != 0;   // 0 is considered "not specified"
+        return refreshExpiresInSeconds != 0; // 0 is considered "not specified"
     }
 
     // TODO: Remove when logging is not needed

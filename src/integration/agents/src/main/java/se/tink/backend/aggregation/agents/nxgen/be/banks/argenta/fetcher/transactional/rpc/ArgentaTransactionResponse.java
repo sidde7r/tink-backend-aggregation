@@ -1,16 +1,15 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.entity.ArgentaTransaction;
-import se.tink.backend.aggregation.annotations.JsonObject;
-import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
-import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.entity.ArgentaTransaction;
+import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.pagination.PaginatorResponse;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
 @JsonObject
 public class ArgentaTransactionResponse implements PaginatorResponse {
@@ -32,8 +31,7 @@ public class ArgentaTransactionResponse implements PaginatorResponse {
 
     @Override
     public Collection<? extends Transaction> getTinkTransactions() {
-        return transactions
-                .stream()
+        return transactions.stream()
                 .map(ArgentaTransaction::toTinkTransaction)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());

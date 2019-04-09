@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities;
 
+import java.util.Optional;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.FortisConstants;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -8,8 +9,6 @@ import se.tink.backend.aggregation.nxgen.core.account.entity.HolderName;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Optional;
 
 @JsonObject
 public class ViewDetailListItem {

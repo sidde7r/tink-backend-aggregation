@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.ArgentaApiClient;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.entity.ArgentaAccount;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.rpc.ArgentaAccountResponse;
 import se.tink.backend.aggregation.nxgen.controllers.refresh.AccountFetcher;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-import se.tink.backend.agents.rpc.AccountTypes;
 
 public class ArgentaTransactionalAccountFetcher implements AccountFetcher<TransactionalAccount> {
     private final ArgentaApiClient apiClient;
@@ -31,13 +31,13 @@ public class ArgentaTransactionalAccountFetcher implements AccountFetcher<Transa
             page = response.getNextPage();
 
             List<TransactionalAccount> accountsPage =
-                    response.getAccounts()
-                            .stream()
+                    response.getAccounts().stream()
                             .map(ArgentaAccount::toTransactionalAccount)
                             .filter(
                                     account ->
                                             account.getType().equals(AccountTypes.CHECKING)
-                                                    || account.getType().equals(AccountTypes.SAVINGS))
+                                                    || account.getType()
+                                                            .equals(AccountTypes.SAVINGS))
                             .collect(Collectors.toList());
             accounts.addAll(accountsPage);
         } while (page != 0);

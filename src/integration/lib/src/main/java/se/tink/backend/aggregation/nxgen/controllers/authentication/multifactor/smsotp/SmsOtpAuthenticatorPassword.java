@@ -5,5 +5,7 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 
 public interface SmsOtpAuthenticatorPassword<T> {
     T init(String username, String password) throws AuthenticationException, AuthorizationException;
-    void authenticate(String otp, T initValues) throws AuthenticationException, AuthorizationException;
+
+    void authenticate(String otp, T initValues)
+            throws AuthenticationException, AuthorizationException;
 }

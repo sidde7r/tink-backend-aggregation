@@ -23,24 +23,29 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
     private final int bankIdPollIntervalMS;
     private boolean hasRefreshed = false;
 
-    public IkanoApiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) throws NoSuchAlgorithmException {
+    public IkanoApiAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair)
+            throws NoSuchAlgorithmException {
         super(request, context);
 
         bankIdPollIntervalMS = 2000;
         credentials = request.getCredentials();
 
-        apiClient = new IkanoApiClient(
-                clientFactory.createCookieClient(context.getLogOutputStream()),
-                credentials,
-                request.getProvider().getPayload(),
-                DEFAULT_USER_AGENT);
+        apiClient =
+                new IkanoApiClient(
+                        clientFactory.createCookieClient(context.getLogOutputStream()),
+                        credentials,
+                        request.getProvider().getPayload(),
+                        DEFAULT_USER_AGENT);
     }
 
-    /**
-     *  This constructor is used for unit tests
-     */
-    public IkanoApiAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
-            IkanoApiClient apiClient, int pollIntervalMS) {
+    /** This constructor is used for unit tests */
+    public IkanoApiAgent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
+            IkanoApiClient apiClient,
+            int pollIntervalMS) {
         super(request, context);
 
         bankIdPollIntervalMS = pollIntervalMS;
@@ -110,20 +115,30 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
 
                 while (apiClient.hasMoreTransactionHistory(account)) {
                     if (isContentWithRefresh(account, transactions)) {
-                        /** Since Ikano transactions can be unsettled for longer periods of time (3-4 weeks),
-                         *  we need to fetch more transactions than usual in order to avoid duplicates.
+                        /**
+                         * Since Ikano transactions can be unsettled for longer periods of time (3-4
+                         * weeks), we need to fetch more transactions than usual in order to avoid
+                         * duplicates.
                          */
-                        log.info(account, "Reached content with refresh date, fetching transactions one more time");
+                        log.info(
+                                account,
+                                "Reached content with refresh date, fetching transactions one more time");
                         stop = true;
                     }
 
-                    log.info(account, String.format(
-                            "fetch more transactions - current transactions size ( %s )", transactions.size()));
+                    log.info(
+                            account,
+                            String.format(
+                                    "fetch more transactions - current transactions size ( %s )",
+                                    transactions.size()));
 
                     transactions = apiClient.fetchMoreTransactionsFor(account);
 
-                    log.info(account, String.format(
-                            "fetched more transactions - new transactions size ( %s )", transactions.size()));
+                    log.info(
+                            account,
+                            String.format(
+                                    "fetched more transactions - new transactions size ( %s )",
+                                    transactions.size()));
 
                     if (stop) {
                         break;
@@ -134,15 +149,15 @@ public class IkanoApiAgent extends AbstractAgent implements DeprecatedRefreshExe
                 financialDataCacher.updateTransactions(account, transactions);
             }
         } catch (CardNotFoundException e) {
-            stopLoginAttempt("Inga kort för det angivna personnumret hittades, vänligen kontrollera personnumret och försök igen");
+            stopLoginAttempt(
+                    "Inga kort för det angivna personnumret hittades, vänligen kontrollera personnumret och försök igen");
         } catch (AccountRelationNotFoundException e) {
-            log.error("No relation between account and card were found, this SHOULD never happen", e);
+            log.error(
+                    "No relation between account and card were found, this SHOULD never happen", e);
         }
     }
 
-    public void logout() {
-
-    }
+    public void logout() {}
 
     private void openBankIdApp() {
         credentials.setSupplementalInformation(null);

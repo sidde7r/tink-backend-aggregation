@@ -10,16 +10,12 @@ public abstract class AbstractForm {
         return formBuilder.build().serialize();
     }
 
-    /**
-     * Add key-value parameter.
-     */
+    /** Add key-value parameter. */
     protected void put(@Nonnull String key, @Nonnull String value) {
         formBuilder.put(key, value);
     }
 
-    /**
-     * Add parameter without a value.
-     */
+    /** Add parameter without a value. */
     protected void put(@Nonnull String key) {
         formBuilder.put(key);
     }

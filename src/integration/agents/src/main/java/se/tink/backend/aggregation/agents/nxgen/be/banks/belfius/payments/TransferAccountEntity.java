@@ -9,7 +9,8 @@ public class TransferAccountEntity implements GeneralAccountEntity {
     private String name;
     private AccountIdentifier accountIdentifier;
 
-    public TransferAccountEntity(AccountIdentifier accountIdentifier, String bankName, String name) {
+    public TransferAccountEntity(
+            AccountIdentifier accountIdentifier, String bankName, String name) {
         this.name = name;
         this.bankName = bankName;
         this.accountIdentifier = accountIdentifier;

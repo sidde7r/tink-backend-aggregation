@@ -2,6 +2,15 @@ package se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass;
 
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.Bytes;
+import java.security.KeyPair;
+import java.security.PublicKey;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.DecryptActivationDataResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.InitializeRegistrationDataResponse;
 import se.tink.backend.aggregation.agents.utils.authentication.vasco.digipass.models.OtpChallengeResponse;
@@ -15,16 +24,6 @@ import se.tink.backend.aggregation.agents.utils.encoding.EncodingUtils;
 import se.tink.backend.aggregation.agents.utils.random.RandomUtils;
 import se.tink.libraries.serialization.TypeReferences;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-
-import java.security.KeyPair;
-import java.security.PublicKey;
-import java.time.Instant;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 public class Digipass {
     private int otpCounter = 0;

@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.nxgen.agents.demo.demogenerator;
 
+import static java.util.stream.Collectors.toList;
+
 import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -17,7 +19,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.Transactiona
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.date.DateUtils;
-import static java.util.stream.Collectors.toList;
 
 public class PurchaseHistoryGenerator {
 
@@ -26,8 +27,8 @@ public class PurchaseHistoryGenerator {
     private final DemoFileHandler demoFileHandler;
     private static final int AVEREAGE_PURCHASES_PER_DAY = 3;
 
-    //TODO: Should be persisted between refreshes. Store on disk is not an alternative
-    public PurchaseHistoryGenerator(String basePath){
+    // TODO: Should be persisted between refreshes. Store on disk is not an alternative
+    public PurchaseHistoryGenerator(String basePath) {
         this.demoFileHandler = new DemoFileHandler(basePath);
         generatePurchaseBase = this.demoFileHandler.getGeneratePurchaseBase();
         this.randomGenerator = new Random();
@@ -40,10 +41,13 @@ public class PurchaseHistoryGenerator {
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
-        return Double.parseDouble(decimalFormat.format(DemoConstants.getSekToCurrencyConverter(currency, finalPrice)));
+        return Double.parseDouble(
+                decimalFormat.format(
+                        DemoConstants.getSekToCurrencyConverter(currency, finalPrice)));
     }
 
-    private Transaction generateTransaction(GeneratePurchaseBase base, LocalDate dateCursor, String currency) {
+    private Transaction generateTransaction(
+            GeneratePurchaseBase base, LocalDate dateCursor, String currency) {
         double finalPrice = randomisePurchase(base, currency);
         return Transaction.builder()
                 .setPending(false)
@@ -53,11 +57,13 @@ public class PurchaseHistoryGenerator {
                 .build();
     }
 
-    private Collection<Transaction> generateOneDayOfTransactions(LocalDate dateCursor, String currency) {
+    private Collection<Transaction> generateOneDayOfTransactions(
+            LocalDate dateCursor, String currency) {
         ArrayList<Transaction> transactions = new ArrayList();
-        //Between one and 4 purchases per day.
+        // Between one and 4 purchases per day.
         for (int i = 0; i < randomGenerator.nextInt(3) + 1; i++) {
-            GeneratePurchaseBase base = generatePurchaseBase.get(randomGenerator.nextInt(generatePurchaseBase.size()));
+            GeneratePurchaseBase base =
+                    generatePurchaseBase.get(randomGenerator.nextInt(generatePurchaseBase.size()));
             transactions.add(generateTransaction(base, dateCursor, currency));
         }
 
@@ -75,28 +81,38 @@ public class PurchaseHistoryGenerator {
             return PaginatorResponseImpl.create(transactions, false);
         }
 
-
-        for (LocalDate dateCursor = start; dateCursor.isBefore(end); dateCursor = dateCursor.plusDays(1)) {
+        for (LocalDate dateCursor = start;
+                dateCursor.isBefore(end);
+                dateCursor = dateCursor.plusDays(1)) {
             transactions.addAll(generateOneDayOfTransactions(dateCursor, currency));
         }
 
         return PaginatorResponseImpl.create(transactions, false);
     }
 
-    //TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the account
-    public PaginatorResponse generateSavingsAccountTransactions(TransactionalAccount account, Date from, Date to) {
+    // TODO: Add nicer logic for generation of savings. Make sure to add up to the sum of the
+    // account
+    public PaginatorResponse generateSavingsAccountTransactions(
+            TransactionalAccount account, Date from, Date to) {
         int numberOfMonths = (int) DateUtils.getNumberOfMonthsBetween(from, to);
-        List<Transaction> transactions = IntStream.range(0, numberOfMonths)
-                .mapToObj(i -> Transaction.builder()
-                        .setAmount(new Amount(account.getBalance().getCurrency(),
-                                account.getBalance().getValue() / 36))
-                        .setPending(false)
-                        .setDescription("monthly savings")
-                        .setDate(DateUtils.addMonths(DateUtils.getToday(), -1)).build()
-                )
-                .collect(toList());
+        List<Transaction> transactions =
+                IntStream.range(0, numberOfMonths)
+                        .mapToObj(
+                                i ->
+                                        Transaction.builder()
+                                                .setAmount(
+                                                        new Amount(
+                                                                account.getBalance().getCurrency(),
+                                                                account.getBalance().getValue()
+                                                                        / 36))
+                                                .setPending(false)
+                                                .setDescription("monthly savings")
+                                                .setDate(
+                                                        DateUtils.addMonths(
+                                                                DateUtils.getToday(), -1))
+                                                .build())
+                        .collect(toList());
 
         return PaginatorResponseImpl.create(transactions, false);
     }
-
 }

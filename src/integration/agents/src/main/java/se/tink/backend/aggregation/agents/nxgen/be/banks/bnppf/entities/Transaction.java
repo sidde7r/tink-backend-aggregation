@@ -25,7 +25,8 @@ public class Transaction {
     private MerchantDetails merchantDetails;
 
     public Optional<String> atmpos() {
-        return Optional.ofNullable(transactionContextDetail).map(TransactionContextDetail::getAtmLocation);
+        return Optional.ofNullable(transactionContextDetail)
+                .map(TransactionContextDetail::getAtmLocation);
     }
 
     public Optional<String> oremit() {
@@ -40,7 +41,8 @@ public class Transaction {
         return Optional.ofNullable(transactionReference);
     }
 
-    public se.tink.backend.aggregation.nxgen.core.transaction.Transaction toTinkTransaction(String externalAccountId) {
+    public se.tink.backend.aggregation.nxgen.core.transaction.Transaction toTinkTransaction(
+            String externalAccountId) {
         return se.tink.backend.aggregation.nxgen.core.transaction.Transaction.builder()
                 .setAmount(getAmount())
                 .setDescription(getDescription())
@@ -60,13 +62,14 @@ public class Transaction {
     }
 
     private String getTransactionTimestampString() {
-        return transactionId.substring(transactionId.length()-27);
+        return transactionId.substring(transactionId.length() - 27);
     }
 
     private Date parseTransactionDate() {
         try {
             String transactionTimestamp = getTransactionTimestampString();
-            transactionTimestamp = transactionTimestamp.substring(0, transactionTimestamp.length()-4);
+            transactionTimestamp =
+                    transactionTimestamp.substring(0, transactionTimestamp.length() - 4);
             return DateUtils.parseDate(transactionTimestamp, "yyyy-MM-dd'T'HH:mm:ss.SSS");
         } catch (ParseException e) {
             throw new IllegalStateException(e);

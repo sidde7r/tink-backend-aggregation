@@ -5,45 +5,45 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CreditBalanceEntity {
-  @JsonProperty("Amount")
-  private String amount;
+    @JsonProperty("Amount")
+    private String amount;
 
-  @JsonProperty("Currency")
-  private String currency;
+    @JsonProperty("Currency")
+    private String currency;
 
-  @JsonProperty("AvailableLimit")
-  private String availableLimit;
+    @JsonProperty("AvailableLimit")
+    private String availableLimit;
 
-  @JsonProperty("AuthorizedBalance")
-  private String authorizedBalance;
+    @JsonProperty("AuthorizedBalance")
+    private String authorizedBalance;
 
-  @JsonProperty("CreditLimit")
-  private String creditLimit;
+    @JsonProperty("CreditLimit")
+    private String creditLimit;
 
-  @JsonProperty("Active")
-  private boolean active;
+    @JsonProperty("Active")
+    private boolean active;
 
-  public String getAmount() {
-    return amount;
-  }
+    public String getAmount() {
+        return amount;
+    }
 
-  public String getCurrency() {
-    return currency;
-  }
+    public String getCurrency() {
+        return currency;
+    }
 
-  public String getAvailableLimit() {
-    return availableLimit;
-  }
+    public String getAvailableLimit() {
+        return availableLimit;
+    }
 
-  public String getAuthorizedBalance() {
-    return authorizedBalance;
-  }
+    public String getAuthorizedBalance() {
+        return authorizedBalance;
+    }
 
-  public String getCreditLimit() {
-    return creditLimit;
-  }
+    public String getCreditLimit() {
+        return creditLimit;
+    }
 
-  public boolean isActive() {
-    return active;
-  }
+    public boolean isActive() {
+        return active;
+    }
 }

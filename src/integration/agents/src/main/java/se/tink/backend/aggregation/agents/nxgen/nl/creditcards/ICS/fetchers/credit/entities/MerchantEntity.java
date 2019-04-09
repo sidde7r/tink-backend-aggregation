@@ -5,9 +5,9 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class MerchantEntity {
-  @JsonProperty("MerchantName")
-  private String merchantName;
+    @JsonProperty("MerchantName")
+    private String merchantName;
 
-  @JsonProperty("MerchantCategoryCodeDescription")
-  private String merchantCategoryCodeDescription;
+    @JsonProperty("MerchantCategoryCodeDescription")
+    private String merchantCategoryCodeDescription;
 }

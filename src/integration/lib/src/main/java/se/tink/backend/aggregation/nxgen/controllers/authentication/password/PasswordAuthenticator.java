@@ -4,6 +4,6 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 
 public interface PasswordAuthenticator {
-    void authenticate(String username, String password) throws AuthenticationException, AuthorizationException;
+    void authenticate(String username, String password)
+            throws AuthenticationException, AuthorizationException;
 }
-

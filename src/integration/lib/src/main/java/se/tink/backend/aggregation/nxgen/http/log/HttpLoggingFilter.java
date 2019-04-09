@@ -31,7 +31,7 @@ import se.tink.backend.aggregation.utils.StringMasker;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 public class HttpLoggingFilter extends ClientFilter {
-    private final static ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private final AggregationLogger log;
     private final String logTag;
     private final Iterable<StringMasker> stringMaskers;
@@ -39,47 +39,50 @@ public class HttpLoggingFilter extends ClientFilter {
     private final MapValueMasker headerMasker;
     private static final String LOG_FORMAT = "HTTP(%s) %s@{%d:%d}=%s";
     private long requestCount;
-    private final static LogTag GENERIC_HTTP_LOGGER = LogTag.from("http_logging_filter");
+    private static final LogTag GENERIC_HTTP_LOGGER = LogTag.from("http_logging_filter");
 
-    private static final Set<String> NON_SENSITIVE_HEADER_FIELDS = ImmutableSet.of(
-            "Accept",
-            "Accept-Charset",
-            "Accept-Datetime",
-            "Accept-Encoding",
-            "Accept-Language",
-            "Accept-Ranges",
-            "Access-Control-Allow-Origin",
-            "Age",
-            "Allow",
-            "Cache-Control",
-            "Connection",
-            "Content-Encoding",
-            "Content-Language",
-            "Content-Length",
-            "Content-Type",
-            "Date",
-            "Expires",
-            "Forwarded",
-            "If-Modified-Since",
-            "If-Unmodified-Since",
-            "Host",
-            "Language",
-            "Last-Modified",
-            "Pragma",
-            "Proxy-Connection",
-            "Referer",
-            "Server",
-            "Status",
-            "Transfer-Encoding",
-            "User-Agent",
-            "Vary",
-            "Via",
-            "X-Forwarded-For",
-            "X-Forwarded-Host",
-            "X-Powered-By"
-    );
+    private static final Set<String> NON_SENSITIVE_HEADER_FIELDS =
+            ImmutableSet.of(
+                    "Accept",
+                    "Accept-Charset",
+                    "Accept-Datetime",
+                    "Accept-Encoding",
+                    "Accept-Language",
+                    "Accept-Ranges",
+                    "Access-Control-Allow-Origin",
+                    "Age",
+                    "Allow",
+                    "Cache-Control",
+                    "Connection",
+                    "Content-Encoding",
+                    "Content-Language",
+                    "Content-Length",
+                    "Content-Type",
+                    "Date",
+                    "Expires",
+                    "Forwarded",
+                    "If-Modified-Since",
+                    "If-Unmodified-Since",
+                    "Host",
+                    "Language",
+                    "Last-Modified",
+                    "Pragma",
+                    "Proxy-Connection",
+                    "Referer",
+                    "Server",
+                    "Status",
+                    "Transfer-Encoding",
+                    "User-Agent",
+                    "Vary",
+                    "Via",
+                    "X-Forwarded-For",
+                    "X-Forwarded-Host",
+                    "X-Powered-By");
 
-    public HttpLoggingFilter(AggregationLogger log, String logTag, Iterable<StringMasker> stringMaskers,
+    public HttpLoggingFilter(
+            AggregationLogger log,
+            String logTag,
+            Iterable<StringMasker> stringMaskers,
             Class<? extends HttpLoggableExecutor> agentClass) {
         this.log = log;
         this.logTag = logTag;
@@ -107,19 +110,35 @@ public class HttpLoggingFilter extends ClientFilter {
             Iterable<String> logLines = getLogLinesForEntity(logEntryJsonString);
 
             for (String logLine : logLines) {
-                log.infoExtraLong(String.format(Locale.ENGLISH, LOG_FORMAT,
-                        logTag, logEntry.getEntryType(), requestCount, lineNumber, logLine), GENERIC_HTTP_LOGGER);
+                log.infoExtraLong(
+                        String.format(
+                                Locale.ENGLISH,
+                                LOG_FORMAT,
+                                logTag,
+                                logEntry.getEntryType(),
+                                requestCount,
+                                lineNumber,
+                                logLine),
+                        GENERIC_HTTP_LOGGER);
                 lineNumber++;
             }
         } catch (IOException exception) {
-            log.error(String.format(Locale.ENGLISH, LOG_FORMAT,
-                    logTag, logEntry.getEntryType(), requestCount, lineNumber, exception.getMessage()),
+            log.error(
+                    String.format(
+                            Locale.ENGLISH,
+                            LOG_FORMAT,
+                            logTag,
+                            logEntry.getEntryType(),
+                            requestCount,
+                            lineNumber,
+                            exception.getMessage()),
                     exception);
         }
     }
 
     private Iterable<String> getLogLinesForEntity(String logEntryJsonString) {
-        // Needing to split long entities up since the log server will truncate lines that are too long
+        // Needing to split long entities up since the log server will truncate lines that are too
+        // long
         // (I've seen one line being truncated after 8179 characters).
         Splitter fixedMaxLineLengthSplitter = Splitter.fixedLength(6144);
         return fixedMaxLineLengthSplitter.split(logEntryJsonString);
@@ -190,7 +209,7 @@ public class HttpLoggingFilter extends ClientFilter {
         ByteArrayOutputStream entityInputCopy = new ByteArrayOutputStream();
         final StringBuilder entityStringBuilder = new StringBuilder();
 
-        try(InputStream entityInputStream = response.getEntityInputStream()) {
+        try (InputStream entityInputStream = response.getEntityInputStream()) {
             if (entityInputStream != null && entityInputStream.available() > 0) {
                 ReaderWriter.writeTo(entityInputStream, entityInputCopy);
 
@@ -222,7 +241,8 @@ public class HttpLoggingFilter extends ClientFilter {
         Map<String, List<String>> headerStrings = getRequestHeaderMap(clientRequest);
 
         try {
-            String maskedHeaderJson = MAPPER.writeValueAsString(headerMasker.copyAndMaskMultiValues(headerStrings));
+            String maskedHeaderJson =
+                    MAPPER.writeValueAsString(headerMasker.copyAndMaskMultiValues(headerStrings));
             return mask(maskedHeaderJson);
         } catch (IOException e) {
             return "Could not serialize header map from request";
@@ -230,15 +250,16 @@ public class HttpLoggingFilter extends ClientFilter {
     }
 
     private Map<String, List<String>> getRequestHeaderMap(ClientRequest clientRequest) {
-        ImmutableMap<String, Map.Entry<String, List<Object>>> headerMap = FluentIterable
-                .from(clientRequest.getHeaders().entrySet())
-                .uniqueIndex(Map.Entry::getKey);
+        ImmutableMap<String, Map.Entry<String, List<Object>>> headerMap =
+                FluentIterable.from(clientRequest.getHeaders().entrySet())
+                        .uniqueIndex(Map.Entry::getKey);
 
-        return Maps
-                .transformValues(headerMap, entry -> FluentIterable
-                        .from(entry.getValue())
-                        .transform(Functions.toStringFunction())
-                        .toList());
+        return Maps.transformValues(
+                headerMap,
+                entry ->
+                        FluentIterable.from(entry.getValue())
+                                .transform(Functions.toStringFunction())
+                                .toList());
     }
 
     private String getHeaderStringMasked(ClientResponse clientResponse) {
@@ -249,7 +270,8 @@ public class HttpLoggingFilter extends ClientFilter {
         Map<String, List<String>> headerStrings = getResponseHeaderMap(clientResponse);
 
         try {
-            String maskedHeaderJson = MAPPER.writeValueAsString(headerMasker.copyAndMaskMultiValues(headerStrings));
+            String maskedHeaderJson =
+                    MAPPER.writeValueAsString(headerMasker.copyAndMaskMultiValues(headerStrings));
             return mask(maskedHeaderJson);
         } catch (IOException e) {
             return "Could not serialize header map from response";
@@ -257,12 +279,11 @@ public class HttpLoggingFilter extends ClientFilter {
     }
 
     private Map<String, List<String>> getResponseHeaderMap(ClientResponse clientResponse) {
-        ImmutableMap<String, Map.Entry<String, List<String>>> headerMap = FluentIterable
-                .from(clientResponse.getHeaders().entrySet())
-                .uniqueIndex(Map.Entry::getKey);
+        ImmutableMap<String, Map.Entry<String, List<String>>> headerMap =
+                FluentIterable.from(clientResponse.getHeaders().entrySet())
+                        .uniqueIndex(Map.Entry::getKey);
 
-        return Maps
-                .transformValues(headerMap, Map.Entry::getValue);
+        return Maps.transformValues(headerMap, Map.Entry::getValue);
     }
 
     private String mask(String string) {
@@ -279,4 +300,3 @@ public class HttpLoggingFilter extends ClientFilter {
         return masked;
     }
 }
-

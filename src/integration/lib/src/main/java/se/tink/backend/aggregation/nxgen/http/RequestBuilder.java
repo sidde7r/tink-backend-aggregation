@@ -55,17 +55,13 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return url;
     }
 
-    /**
-     * @return Hashcode of request {@link URL}
-     */
+    /** @return Hashcode of request {@link URL} */
     @Override
     public int hashCode() {
         return url.hashCode();
     }
 
-    /**
-     * @return Request {@link URL} in {@link String} format.
-     */
+    /** @return Request {@link URL} in {@link String} format. */
     @Override
     public String toString() {
         return url.toString();
@@ -386,6 +382,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method that sets Content-Type header and payload of the request.
+     *
      * @param body Payload of the request.
      * @param type Predefined type defined in {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
@@ -398,6 +395,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method that sets Content-Type header and payload of the request.
+     *
      * @param body Payload of the request.
      * @param type Content type that will be translated to {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
@@ -410,6 +408,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method that sets Content-Type header of the request.
+     *
      * @param type Predefined type defined in {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -420,6 +419,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method that sets Content-Type header of the request.
+     *
      * @param type {@link String} that will be translated to {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -428,7 +428,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method that sets what types from {@link MediaType} are accepted by the server in the response. One header per {@link MediaType} will be used.
+     * Method that sets what types from {@link MediaType} are accepted by the server in the
+     * response. One header per {@link MediaType} will be used.
+     *
      * @param types Comma separated values of type {@link MediaType}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -440,7 +442,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method that sets types accepted by the server. The types does not need to be defined in {@link MediaType}.
+     * Method that sets types accepted by the server. The types does not need to be defined in
+     * {@link MediaType}.
+     *
      * @param types Comma separated values of type {@link String}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -452,7 +456,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method that sets Accept-Language headers of the request. One header per {@link Locale} will be used.
+     * Method that sets Accept-Language headers of the request. One header per {@link Locale} will
+     * be used.
+     *
      * @param locales Comma separated values of type {@link Locale}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -463,7 +469,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return this;
     }
     /**
-     * Method that sets Accept-Language header of the request. One header per {@link String} will be used.
+     * Method that sets Accept-Language header of the request. One header per {@link String} will be
+     * used.
+     *
      * @param locales Comma separated values of type {@link Locale}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -475,7 +483,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method setting Cookie header of the request. Format of the cookie is `{@param name}={@param value}`.
+     * Method setting Cookie header of the request. Format of the cookie is `{@param name}={@param
+     * value}`.
+     *
      * @param name Name of the cookie.
      * @param value Value of the cookie.
      * @return {@link RequestBuilder} for further use with fluent interface.
@@ -487,6 +497,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method setting Cookie header of the request.
+     *
      * @param cookie Properly prepared object of type {@link Cookie}.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -497,6 +508,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method to adding a customized header of the request.
+     *
      * @param name Name of the header.
      * @param value Value of the header.
      * @return {@link RequestBuilder} for further use with fluent interface.
@@ -508,6 +520,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method to adding a customized header of the request using predefined {@link HeaderEnum}.
+     *
      * @param header Value of the header.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -517,8 +530,9 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method to add customized headers to request. Each entry in map will be added as separate header,
-     * with {@link String} as key which will be used as name and {@link Object} as value.
+     * Method to add customized headers to request. Each entry in map will be added as separate
+     * header, with {@link String} as key which will be used as name and {@link Object} as value.
+     *
      * @param map {@link Map} with headers to be set on the request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -528,9 +542,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method setting customized headers on the request, in case when some headers can occur multiple times.
-     * Each entry in map will be added as separate header,
-     * with {@link String} as key which will be used as name and {@link Object} as value.
+     * Method setting customized headers on the request, in case when some headers can occur
+     * multiple times. Each entry in map will be added as separate header, with {@link String} as
+     * key which will be used as name and {@link Object} as value.
+     *
      * @param map {@link MultivaluedMap} with headers to be set on the request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -541,6 +556,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method adding query parameter to the request.
+     *
      * @param key Name of the parameter to be set on request.
      * @param value Value of the parameter to be set on request.
      * @return {@link RequestBuilder} for further use with fluent interface.
@@ -551,8 +567,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method adding query parameters to the request. Each entry in map will be added as separate query parameter,
-     * with {@link String} as key which will be used as name and {@link String} as value.
+     * Method adding query parameters to the request. Each entry in map will be added as separate
+     * query parameter, with {@link String} as key which will be used as name and {@link String} as
+     * value.
+     *
      * @param queryParams {@link Map} containing query params to be added to the request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -562,9 +580,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method setting customized headers on the request, in case when some of the quary parameters can occur multiple times.
-     * Each entry in map will be added as separate header,
-     * with {@link String} as key which will be used as name and {@link String} as value.
+     * Method setting customized headers on the request, in case when some of the quary parameters
+     * can occur multiple times. Each entry in map will be added as separate header, with {@link
+     * String} as key which will be used as name and {@link String} as value.
+     *
      * @param queryParams {@link MultivaluedMap} with query params to be set on the request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -574,8 +593,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method for overriding header value. Note that if there are multiple values associated with this {@param name}
-     * all of them will be removed and replaced with only one provider in this method.
+     * Method for overriding header value. Note that if there are multiple values associated with
+     * this {@param name} all of them will be removed and replaced with only one provider in this
+     * method.
+     *
      * @param name Name of the header which value(s) will be changed.
      * @param value New value for the header specified with {@param name}.
      * @return {@link RequestBuilder} for further use with fluent interface.
@@ -587,9 +608,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
     }
 
     /**
-     * Method setting value of `Authorization` header on the request. Format of the header value will be
-     * `Basic {@param username}:{@param password}`. Where `Basic` is a plain text while {@param username} and {@param password}
-     * are {@link Base64} encoded.
+     * Method setting value of `Authorization` header on the request. Format of the header value
+     * will be `Basic {@param username}:{@param password}`. Where `Basic` is a plain text while
+     * {@param username} and {@param password} are {@link Base64} encoded.
+     *
      * @param username Username needed for authentication.
      * @param password Password needed for authorization.
      * @return {@link RequestBuilder} for further use with fluent interface.
@@ -604,9 +626,10 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
         return header(HttpHeaders.AUTHORIZATION, value);
     }
     /**
-     * Method setting value of `Authorization` header on the request. Format of the header value will be
-     * `Basic {@param username}`. Where `Basic` is a plain text while {@param username}
-     * is {@link Base64} encoded.
+     * Method setting value of `Authorization` header on the request. Format of the header value
+     * will be `Basic {@param username}`. Where `Basic` is a plain text while {@param username} is
+     * {@link Base64} encoded.
+     *
      * @param username Username needed for authentication.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -621,6 +644,7 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     /**
      * Method setting value of `Authorization` header on the request.
+     *
      * @param token Ton of type {@link OAuth2Token} to be used for authorization of request.
      * @return {@link RequestBuilder} for further use with fluent interface.
      */
@@ -636,7 +660,8 @@ public class RequestBuilder extends Filterable<RequestBuilder> {
 
     private void addAggregatorToHeader() {
 
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(headerAggregatorIdentifier),
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(headerAggregatorIdentifier),
                 "Aggregator header identifier is null. The header should not be null");
 
         if (!headers.containsKey("X-Aggregator")) {

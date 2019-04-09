@@ -6,10 +6,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class CreditDataEntity {
-  @JsonProperty("Transaction")
-  private List<TransactionEntity> transactions;
+    @JsonProperty("Transaction")
+    private List<TransactionEntity> transactions;
 
-  public List<TransactionEntity> getTransactions() {
-    return transactions;
-  }
+    public List<TransactionEntity> getTransactions() {
+        return transactions;
+    }
 }

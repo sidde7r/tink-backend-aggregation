@@ -26,8 +26,10 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 
 public abstract class NemidAuthenticationController {
 
-    private static final AggregationLogger LOGGER = new AggregationLogger(NemidAuthenticationController.class);
-    private static final Pattern PATTERN_INCORRECT_CREDENTIALS = Pattern.compile("^incorrect (user|password).*");
+    private static final AggregationLogger LOGGER =
+            new AggregationLogger(NemidAuthenticationController.class);
+    private static final Pattern PATTERN_INCORRECT_CREDENTIALS =
+            Pattern.compile("^incorrect (user|password).*");
 
     // NemId Javascript Client Integration for mobile:
     // https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Documents/NemID%20Integration%20-%20Mobile.pdf
@@ -63,15 +65,19 @@ public abstract class NemidAuthenticationController {
 
     abstract void clickLogin();
 
-    void doLoginWith(String username, String password) throws AuthenticationException, AuthorizationException {
+    void doLoginWith(String username, String password)
+            throws AuthenticationException, AuthorizationException {
         try {
             driver = constructWebDriver();
 
-            // The base URL MUST be `https://applet.danid.dk`. This is a hack to make it work, phantomjs/selenium does
-            // not have features for this. I expect we'd have to recompile phantomjs to accommodate this feature.
+            // The base URL MUST be `https://applet.danid.dk`. This is a hack to make it work,
+            // phantomjs/selenium does
+            // not have features for this. I expect we'd have to recompile phantomjs to accommodate
+            // this feature.
             // How it works:
             //  1. Make a normal request to the base url
-            //  2. Inject JavaScript code to replace the html contents (base64 encoded in order to avoid string escaping)
+            //  2. Inject JavaScript code to replace the html contents (base64 encoded in order to
+            // avoid string escaping)
             //  3. The new contents will execute and we can go forward
 
             // 1 - normal request to base URL
@@ -80,9 +86,11 @@ public abstract class NemidAuthenticationController {
 
             // 2 - Inject javascript to do magic
 
-            String html = String.format(NemIdConstants.BASE_HTML, nemIdParameters.getNemIdElements());
+            String html =
+                    String.format(NemIdConstants.BASE_HTML, nemIdParameters.getNemIdElements());
             String b64Html = Base64.getEncoder().encodeToString(html.getBytes());
-            ((JavascriptExecutor) driver).executeScript("document.write(atob(\"" + b64Html + "\"));");
+            ((JavascriptExecutor) driver)
+                    .executeScript("document.write(atob(\"" + b64Html + "\"));");
 
             // 3 - check all javascript executions are done
             switchToIframe();
@@ -99,15 +107,18 @@ public abstract class NemidAuthenticationController {
     }
 
     void logGeneralError() {
-        logErrorUsingPhantomJS("Could not perform operation in: " + driver.getPageSource() );
+        logErrorUsingPhantomJS("Could not perform operation in: " + driver.getPageSource());
     }
 
     void clickButton(By button) {
         waitForElement(button)
-                .orElseThrow(() -> {
-                    logErrorUsingPhantomJS("[nemid] Could not find button in: " + driver.getPageSource());
-                    return new IllegalStateException("[nemid] Could not find button element " + button);
-                })
+                .orElseThrow(
+                        () -> {
+                            logErrorUsingPhantomJS(
+                                    "[nemid] Could not find button in: " + driver.getPageSource());
+                            return new IllegalStateException(
+                                    "[nemid] Could not find button element " + button);
+                        })
                 .click();
     }
 
@@ -131,7 +142,8 @@ public abstract class NemidAuthenticationController {
     }
 
     private String collectToken() throws AuthenticationException, AuthorizationException {
-        // Try to get the token/errors multiple times. It (both token or error) might not have loaded yet.
+        // Try to get the token/errors multiple times. It (both token or error) might not have
+        // loaded yet.
         driver.switchTo().defaultContent();
         for (int i = 0; i < 7; i++) {
             Optional<String> nemIdToken = getNemIdToken();
@@ -140,7 +152,8 @@ public abstract class NemidAuthenticationController {
                 return nemIdToken.get();
             }
         }
-        // We will only reach this state if we could not find the nemId token -> something went wrong in the
+        // We will only reach this state if we could not find the nemId token -> something went
+        // wrong in the
         // authentication.
         throw new IllegalStateException("[nemid] Could not find nemId token.");
     }
@@ -155,7 +168,8 @@ public abstract class NemidAuthenticationController {
 
     public void throwError(String errorText) throws LoginException {
         // Seen errors:
-        // - "Incorrect user ID or password. Enter user ID and password. Changed your password recently, perhaps?"
+        // - "Incorrect user ID or password. Enter user ID and password. Changed your password
+        // recently, perhaps?"
         // - "Incorrect password."
         String err = errorText.toLowerCase();
 
@@ -164,39 +178,52 @@ public abstract class NemidAuthenticationController {
             throw LoginError.INCORRECT_CREDENTIALS.exception();
         }
 
-        throw new IllegalStateException(String.format("[nemid] Unknown login error '%s'.", errorText));
+        throw new IllegalStateException(
+                String.format("[nemid] Unknown login error '%s'.", errorText));
     }
 
     private WebDriver constructWebDriver() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
+        capabilities.setCapability(
+                PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
                 phantomJsFile.getAbsolutePath());
 
         capabilities.setCapability(CapabilityType.TAKES_SCREENSHOT, false);
         capabilities.setCapability(CapabilityType.SUPPORTS_ALERTS, false);
 
-        String[] phantomArgs = new String[] {
-                // To allow iframe-hacking
-                "--web-security=false",
-                // No need to load images
-                "--load-images=false",
-                // For debugging, activate these:
-//                "--webdriver-loglevel=DEBUG",
-                //"--debug=true",
-//                "--proxy=127.0.0.1:8888",
-//                "--ignore-ssl-errors=true",
-//                "--webdriver-logfile=/tmp/phantomjs.log"
-        };
+        String[] phantomArgs =
+                new String[] {
+                    // To allow iframe-hacking
+                    "--web-security=false",
+                    // No need to load images
+                    "--load-images=false",
+                    // For debugging, activate these:
+                    //                "--webdriver-loglevel=DEBUG",
+                    // "--debug=true",
+                    //                "--proxy=127.0.0.1:8888",
+                    //                "--ignore-ssl-errors=true",
+                    //                "--webdriver-logfile=/tmp/phantomjs.log"
+                };
         capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, phantomArgs);
-        capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent",
-        NemIdConstants.USER_AGENT);
+        capabilities.setCapability(
+                PhantomJSDriverService.PHANTOMJS_PAGE_SETTINGS_PREFIX + "userAgent",
+                NemIdConstants.USER_AGENT);
         WebDriver thePhantom = null;
 
         try {
             thePhantom = new PhantomJSDriver(capabilities);
-            thePhantom.manage().timeouts().implicitlyWait(PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            thePhantom.manage().timeouts().pageLoadTimeout(PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            thePhantom.manage().timeouts().setScriptTimeout(PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            thePhantom
+                    .manage()
+                    .timeouts()
+                    .implicitlyWait(PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            thePhantom
+                    .manage()
+                    .timeouts()
+                    .pageLoadTimeout(PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            thePhantom
+                    .manage()
+                    .timeouts()
+                    .setScriptTimeout(PHANTOMJS_TIMEOUT_SECONDS, TimeUnit.SECONDS);
 
         } catch (Exception e) {
             LOGGER.error("Could not create PhantomJS WebDriver", e);
@@ -205,10 +232,12 @@ public abstract class NemidAuthenticationController {
         }
         return thePhantom;
     }
-    // switch to iframe AND check if rendered correctly, this is done by retrieving an element we know should be present
+    // switch to iframe AND check if rendered correctly, this is done by retrieving an element we
+    // know should be present
 
     // we use element "user name"
-    // if the element "user name" is found the iframe is rendered correctly (it renders in several steps)
+    // if the element "user name" is found the iframe is rendered correctly (it renders in several
+    // steps)
     private void switchToIframe() {
         for (int i = 0; i < 5; i++) {
             Optional<WebElement> iframeElement = waitForElement(IFRAME);
@@ -237,7 +266,8 @@ public abstract class NemidAuthenticationController {
     private static void waitSomeMillis(long waitTime) {
         try {
             Thread.sleep(waitTime);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+        }
     }
 
     private void setUserName(String username) {
@@ -249,14 +279,17 @@ public abstract class NemidAuthenticationController {
     }
 
     private void setValueToElement(String value, By xpath) {
-        WebElement element = waitForElement(xpath)
-                .orElseThrow(() -> new IllegalStateException("[nemid] Could not find element for " + xpath));
+        WebElement element =
+                waitForElement(xpath)
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "[nemid] Could not find element for " + xpath));
         element.sendKeys(value);
     }
 
     private Optional<String> getNemIdToken() {
-        Optional<WebElement> tokenElement = waitForElement(
-                NEMID_TOKEN);
+        Optional<WebElement> tokenElement = waitForElement(NEMID_TOKEN);
 
         if (!tokenElement.isPresent()) {
             return Optional.empty();
@@ -273,10 +306,11 @@ public abstract class NemidAuthenticationController {
 
         String currentUrl = driver.getCurrentUrl();
         for (int i = 0; i < 10; i++) {
-            Optional<String> filteredDomain = Optional.ofNullable(currentUrl)
-                    .map(URI::create)
-                    .map(URI::getHost)
-                    .filter(host -> baseUrl.contains(host));
+            Optional<String> filteredDomain =
+                    Optional.ofNullable(currentUrl)
+                            .map(URI::create)
+                            .map(URI::getHost)
+                            .filter(host -> baseUrl.contains(host));
             if (filteredDomain.isPresent()) {
                 return;
             }
@@ -288,12 +322,20 @@ public abstract class NemidAuthenticationController {
         // if we get here we failed to get the initial page
         LOGGER.debug("PhantomJS current(reported) URL: " + currentUrl);
         LOGGER.debug("PHANTOMJS LOGS: ");
-        driver.manage().logs().getAvailableLogTypes().forEach(logName -> {
-            LOGGER.debug(logName);
-            driver.manage().logs().get(logName).forEach(l -> LOGGER.debug(l.toString()));
-        });
+        driver.manage()
+                .logs()
+                .getAvailableLogTypes()
+                .forEach(
+                        logName -> {
+                            LOGGER.debug(logName);
+                            driver.manage()
+                                    .logs()
+                                    .get(logName)
+                                    .forEach(l -> LOGGER.debug(l.toString()));
+                        });
 
-        logErrorUsingPhantomJS("Current URL is not matching requested (did we get redirected?): " + currentUrl);
+        logErrorUsingPhantomJS(
+                "Current URL is not matching requested (did we get redirected?): " + currentUrl);
         throw new IllegalStateException("Bad URL, check protocol: " + currentUrl);
     }
 
@@ -301,10 +343,17 @@ public abstract class NemidAuthenticationController {
         // if we get here we failed to get the initial page
         LOGGER.debug("PhantomJS current(reported) URL: " + driver.getCurrentUrl());
         LOGGER.debug("PHANTOMJS LOGS: ");
-        driver.manage().logs().getAvailableLogTypes().forEach(logName -> {
-            LOGGER.debug(logName);
-            driver.manage().logs().get(logName).forEach(l -> LOGGER.debug(l.toString()));
-        });
+        driver.manage()
+                .logs()
+                .getAvailableLogTypes()
+                .forEach(
+                        logName -> {
+                            LOGGER.debug(logName);
+                            driver.manage()
+                                    .logs()
+                                    .get(logName)
+                                    .forEach(l -> LOGGER.debug(l.toString()));
+                        });
 
         LOGGER.warn(errorMessage);
     }

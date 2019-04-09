@@ -4,6 +4,4 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.I
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class IdentificationResponse extends AbstractResponse<IdentificationEntity> {
-
-}
+public class IdentificationResponse extends AbstractResponse<IdentificationEntity> {}

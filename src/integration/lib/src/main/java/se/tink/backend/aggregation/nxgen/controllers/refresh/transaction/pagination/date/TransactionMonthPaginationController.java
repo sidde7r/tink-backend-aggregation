@@ -12,9 +12,14 @@ import se.tink.backend.aggregation.nxgen.controllers.refresh.transaction.paginat
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 
-public class TransactionMonthPaginationController<A extends Account> implements TransactionPaginator<A> {
-    /** Needs to be set to 1 + 'the minimum number of months check'. On the first day of the month 3 months and 1 day will be checked. */
+public class TransactionMonthPaginationController<A extends Account>
+        implements TransactionPaginator<A> {
+    /**
+     * Needs to be set to 1 + 'the minimum number of months check'. On the first day of the month 3
+     * months and 1 day will be checked.
+     */
     private static final int MAX_CONSECUTIVE_EMPTY_PAGES = 4;
+
     protected static final int MAX_TOTAL_EMPTY_PAGES = 25;
     private final LocalDate nowInLocalDate;
     private final TransactionMonthPaginator paginator;
@@ -23,7 +28,8 @@ public class TransactionMonthPaginationController<A extends Account> implements 
     private int totalEmptyFetches = 0;
     private boolean foundSomething;
 
-    public TransactionMonthPaginationController(TransactionMonthPaginator paginator, ZoneId zoneId) {
+    public TransactionMonthPaginationController(
+            TransactionMonthPaginator paginator, ZoneId zoneId) {
         this.paginator = Preconditions.checkNotNull(paginator);
         this.nowInLocalDate = LocalDate.now(zoneId);
     }
@@ -38,8 +44,9 @@ public class TransactionMonthPaginationController<A extends Account> implements 
 
     @Override
     public PaginatorResponse fetchTransactionsFor(A account) {
-        PaginatorResponse response = paginator.getTransactionsFor(account, Year.from(dateToFetch),
-                Month.from(dateToFetch));
+        PaginatorResponse response =
+                paginator.getTransactionsFor(
+                        account, Year.from(dateToFetch), Month.from(dateToFetch));
 
         Collection<? extends Transaction> transactions = response.getTinkTransactions();
 
@@ -49,16 +56,18 @@ public class TransactionMonthPaginationController<A extends Account> implements 
             consecutiveEmptyFetches++;
             totalEmptyFetches++;
 
-            return PaginatorResponseImpl.createEmpty(foundSomething ?
-                    consecutiveEmptyFetches < MAX_CONSECUTIVE_EMPTY_PAGES :
-                    totalEmptyFetches < MAX_TOTAL_EMPTY_PAGES);
+            return PaginatorResponseImpl.createEmpty(
+                    foundSomething
+                            ? consecutiveEmptyFetches < MAX_CONSECUTIVE_EMPTY_PAGES
+                            : totalEmptyFetches < MAX_TOTAL_EMPTY_PAGES);
         }
 
         consecutiveEmptyFetches = 0;
         foundSomething = true;
 
         if (!response.canFetchMore().isPresent()) {
-            // If canFetchMore is not defined we assume we always can fetch more (until we reach an empty page).
+            // If canFetchMore is not defined we assume we always can fetch more (until we reach an
+            // empty page).
             return PaginatorResponseImpl.create(transactions, true);
         }
 

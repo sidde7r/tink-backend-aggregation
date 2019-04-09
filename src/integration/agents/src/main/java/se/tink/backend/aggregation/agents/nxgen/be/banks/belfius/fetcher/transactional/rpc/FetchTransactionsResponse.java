@@ -7,7 +7,6 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.fetcher.transac
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.MessageResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ScreenUpdateResponse;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.Text;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
@@ -26,7 +25,8 @@ public class FetchTransactionsResponse extends BelfiusResponse {
         //                {
         //                    "MessageResponse": [
         //                    {
-        //                        "messageContent": "Technische error / Erreur technique / Technical error : ticket = PRS/s6/1544775139017 [SECURITY ISSUE]"
+        //                        "messageContent": "Technische error / Erreur technique / Technical
+        // error : ticket = PRS/s6/1544775139017 [SECURITY ISSUE]"
         //                    },
         //                    {
         //                        "messageDetail": ""
@@ -52,8 +52,14 @@ public class FetchTransactionsResponse extends BelfiusResponse {
 
         return filter(ScreenUpdateResponse.class)
                 .flatMap(r -> r.getWidgets().stream())
-                .filter(widget -> BelfiusConstants.Widget.HISTORY_HIST.equalsIgnoreCase(widget.getWidgetId()))
-                .flatMap(widget -> widget.getProperties(BelfiusTransactionList.class).getTransactions().stream());
+                .filter(
+                        widget ->
+                                BelfiusConstants.Widget.HISTORY_HIST.equalsIgnoreCase(
+                                        widget.getWidgetId()))
+                .flatMap(
+                        widget ->
+                                widget.getProperties(BelfiusTransactionList.class).getTransactions()
+                                        .stream());
     }
 
     public boolean hasNext() {

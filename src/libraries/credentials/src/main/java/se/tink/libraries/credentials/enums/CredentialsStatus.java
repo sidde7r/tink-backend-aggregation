@@ -17,5 +17,6 @@ public enum CredentialsStatus {
     PERMANENT_ERROR,
     DELETED,
     METRIC,
-    DISABLED
+    DISABLED,
+    SESSION_EXPIRED
 }

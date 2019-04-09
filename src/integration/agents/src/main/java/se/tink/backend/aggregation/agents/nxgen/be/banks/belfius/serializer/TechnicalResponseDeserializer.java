@@ -18,7 +18,8 @@ public class TechnicalResponseDeserializer extends JsonDeserializer<TechnicalRes
 
         ArrayNode json = jsonParser.getCodec().readTree(jsonParser);
         String type = findValue(json, "type").asText();
-        Long remainingTimeBeforeSessionTimeout = findValue(json, "remainingTimeBeforeSessionTimeout").asLong();
+        Long remainingTimeBeforeSessionTimeout =
+                findValue(json, "remainingTimeBeforeSessionTimeout").asLong();
 
         return new TechnicalResponse(type, remainingTimeBeforeSessionTimeout);
     }

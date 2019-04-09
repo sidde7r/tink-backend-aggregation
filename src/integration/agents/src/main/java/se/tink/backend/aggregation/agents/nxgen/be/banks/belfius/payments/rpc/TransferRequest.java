@@ -9,23 +9,26 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEvent
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusStringUtils;
+import se.tink.libraries.account.identifiers.IbanIdentifier;
+import se.tink.libraries.account.identifiers.SepaEurIdentifier;
 import se.tink.libraries.amount.Amount;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.account.identifiers.SepaEurIdentifier;
-import se.tink.libraries.account.identifiers.IbanIdentifier;
 
 public class TransferRequest extends BelfiusRequest {
 
     /**
-     * Formats a Date to a String acceptable for Belfius
-     * Creates a string on the format dd\/mm\/yyyy from a date
+     * Formats a Date to a String acceptable for Belfius Creates a string on the format dd\/mm\/yyyy
+     * from a date
      *
      * @param date
      * @return a formatted date string
      */
     public static String getDateString(Date date) {
         String day = (date.getDate() > 9) ? "" + date.getDate() : "0" + date.getDate();
-        String month = ((date.getMonth() + 1) > 9) ? "" + (date.getMonth()+1) : "0" + (date.getMonth()+1);
+        String month =
+                ((date.getMonth() + 1) > 9)
+                        ? "" + (date.getMonth() + 1)
+                        : "0" + (date.getMonth() + 1);
         char special = (char) 92;
         return day + special + "/" + month + special + "/" + (date.getYear() + 1900);
     }
@@ -36,10 +39,15 @@ public class TransferRequest extends BelfiusRequest {
 
     private static String getName(Transfer transfer) {
         Optional<String> name = transfer.getDestination().getName();
-        return name.isPresent() ? name.get() : ((SepaEurIdentifier) transfer.getDestination()).getIban();
+        return name.isPresent()
+                ? name.get()
+                : ((SepaEurIdentifier) transfer.getDestination()).getIban();
     }
 
-    public static BelfiusRequest.Builder create(boolean toOwnAccount, Transfer transfer, String clientHash,
+    public static BelfiusRequest.Builder create(
+            boolean toOwnAccount,
+            Transfer transfer,
+            String clientHash,
             boolean isStructuredMessage) {
         return BelfiusRequest.builder()
                 .setRetry(false)
@@ -52,33 +60,42 @@ public class TransferRequest extends BelfiusRequest {
                                         BelfiusConstants.Widget.TRANSFER_PAY),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.ACCOUNT_INPUT,
-                                        "I" + ((SepaEurIdentifier) (transfer.getSource())).getIban()),
+                                        "I"
+                                                + ((SepaEurIdentifier) (transfer.getSource()))
+                                                        .getIban()),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.ACCOUNT_OWNER,
-                                        "I" + ((SepaEurIdentifier) transfer.getDestination()).getIban()),
+                                        "I"
+                                                + ((SepaEurIdentifier) transfer.getDestination())
+                                                        .getIban()),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.TO_OWN_ACCOUNT, toOwnAccount ? "Y" : "N"),
+                                        BelfiusConstants.Widget.TO_OWN_ACCOUNT,
+                                        toOwnAccount ? "Y" : "N"),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.RECIPIENT_NAME, getName(transfer)),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.RECIPIENT_COUNTRY,
-                                        StringUtils.substring(((IbanIdentifier)transfer.getDestination()).getIban(), 0, 2)),
+                                        StringUtils.substring(
+                                                ((IbanIdentifier) transfer.getDestination())
+                                                        .getIban(),
+                                                0,
+                                                2)),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.RECIPIENT_MESSAGE, transfer.getDestinationMessage()),
+                                        BelfiusConstants.Widget.RECIPIENT_MESSAGE,
+                                        transfer.getDestinationMessage()),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.USE_STRUCTURED_MESSAGE,
                                         isStructuredMessage ? "Y" : "N"),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
                                         BelfiusConstants.Widget.TRANSFER_AMOUNT,
-                                        getFormattedAmount(transfer.getAmount()) + " " + transfer.getAmount()
-                                                .getCurrency()),
+                                        getFormattedAmount(transfer.getAmount())
+                                                + " "
+                                                + transfer.getAmount().getCurrency()),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.TRANSFER_DATE, getDateString(transfer.getDueDate())),
+                                        BelfiusConstants.Widget.TRANSFER_DATE,
+                                        getDateString(transfer.getDueDate())),
                                 WidgetEventInformation.newInputValueChangedWidgetEvent(
-                                        BelfiusConstants.Widget.SHA1_CLIENT, clientHash)
-                        )
-                )
+                                        BelfiusConstants.Widget.SHA1_CLIENT, clientHash)))
                 .setTransactionId(BelfiusSecurityUtils.generateTransferId());
     }
-
 }

@@ -33,14 +33,18 @@ public class TokenRequestForm extends AbstractForm {
         return this;
     }
 
-    public TokenRequestForm withPrivateKeyJwt(SoftwareStatement softwareStatement,
-            WellKnownResponse wellknownConfiguration, ClientInfo clientInfo) {
+    public TokenRequestForm withPrivateKeyJwt(
+            SoftwareStatement softwareStatement,
+            WellKnownResponse wellknownConfiguration,
+            ClientInfo clientInfo) {
         this.put("client_assertion_type", OpenIdConstants.CLIENT_ASSERTION_TYPE);
-        this.put("client_assertion", ClientAssertion.create()
-                .withSoftwareStatement(softwareStatement)
-                .withWellknownConfiguration(wellknownConfiguration)
-                .withClientInfo(clientInfo)
-                .build());
+        this.put(
+                "client_assertion",
+                ClientAssertion.create()
+                        .withSoftwareStatement(softwareStatement)
+                        .withWellknownConfiguration(wellknownConfiguration)
+                        .withClientInfo(clientInfo)
+                        .build());
         return this;
     }
 

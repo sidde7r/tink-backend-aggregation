@@ -1,8 +1,8 @@
 package se.tink.backend.aggregation.nxgen.controllers.authentication;
 
 /**
- * Define init and finalize steps here.
- * To define intermediate steps, define it locally in the agent.
+ * Define init and finalize steps here. To define intermediate steps, define it locally in the
+ * agent.
  */
 public final class AuthenticationStepConstants {
 

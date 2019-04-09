@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.documentcontainer.DocumentContainer;
-import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
 import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
+import se.tink.backend.aggregation.agents.models.fraud.FraudDetailsContent;
+import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.transfer.rpc.Transfer;
 
 public interface SystemUpdater {
@@ -19,8 +19,8 @@ public interface SystemUpdater {
 
     void updateTransferDestinationPatterns(Map<Account, List<TransferDestinationPattern>> map);
 
-    void updateCredentialsExcludingSensitiveInformation(Credentials credentials,
-            boolean doStatusUpdate);
+    void updateCredentialsExcludingSensitiveInformation(
+            Credentials credentials, boolean doStatusUpdate);
 
     void updateFraudDetailsContent(List<FraudDetailsContent> detailsContent);
 

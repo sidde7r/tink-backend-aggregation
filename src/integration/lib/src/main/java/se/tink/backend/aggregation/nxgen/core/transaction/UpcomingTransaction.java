@@ -6,21 +6,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.amount.Amount;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
+import se.tink.libraries.amount.Amount;
 import se.tink.libraries.serialization.utils.SerializationUtils;
+import se.tink.libraries.transfer.rpc.Transfer;
+import se.tink.libraries.user.rpc.User;
 import se.tink.libraries.uuid.UUIDUtils;
 
 public final class UpcomingTransaction extends AggregationTransaction {
     private final Transfer upcomingTransfer;
 
-    protected UpcomingTransaction(Amount amount, Date date, String description, Transfer upcomingTransfer) {
+    protected UpcomingTransaction(
+            Amount amount, Date date, String description, Transfer upcomingTransfer) {
         this(amount, date, description, upcomingTransfer, null);
     }
 
-    protected UpcomingTransaction(Amount amount, Date date, String description, Transfer upcomingTransfer, String rawDetails) {
+    protected UpcomingTransaction(
+            Amount amount,
+            Date date,
+            String description,
+            Transfer upcomingTransfer,
+            String rawDetails) {
         super(amount, date, description, rawDetails);
         this.upcomingTransfer = upcomingTransfer;
     }
@@ -35,13 +41,17 @@ public final class UpcomingTransaction extends AggregationTransaction {
 
         transaction.setPending(true);
 
-        getUpcomingTransfer().ifPresent(transfer -> {
-            transfer.setId(UUIDUtils.fromTinkUUID(transaction.getId()));
-            transaction.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER,
-                    SerializationUtils.serializeToString(transfer));
-            transaction.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER_ID,
-                    UUIDUtils.toTinkUUID(transfer.getId()));
-        });
+        getUpcomingTransfer()
+                .ifPresent(
+                        transfer -> {
+                            transfer.setId(UUIDUtils.fromTinkUUID(transaction.getId()));
+                            transaction.setPayload(
+                                    TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER,
+                                    SerializationUtils.serializeToString(transfer));
+                            transaction.setPayload(
+                                    TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER_ID,
+                                    UUIDUtils.toTinkUUID(transfer.getId()));
+                        });
 
         return transaction;
     }
@@ -98,7 +108,8 @@ public final class UpcomingTransaction extends AggregationTransaction {
 
         @Override
         public UpcomingTransaction build() {
-            return new UpcomingTransaction(getAmount(), getDate(), getDescription(), upcomingTransfer, getRawDetails());
+            return new UpcomingTransaction(
+                    getAmount(), getDate(), getDescription(), upcomingTransfer, getRawDetails());
         }
     }
 }

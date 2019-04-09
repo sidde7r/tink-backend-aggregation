@@ -4,6 +4,4 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.R
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class RegistrationResponse extends AbstractResponse<RegistrationResultEntity> {
-
-}
+public class RegistrationResponse extends AbstractResponse<RegistrationResultEntity> {}

@@ -6,9 +6,7 @@ import se.tink.backend.aggregation.nxgen.agents.demo.data.DemoTransactionAccount
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 
-/**
- * Deterministic account generator based on user-name and provider
- */
+/** Deterministic account generator based on user-name and provider */
 public class DemoAccountDefinitionGenerator {
 
     private static String createDeterministicKey(String combination) {
@@ -21,7 +19,7 @@ public class DemoAccountDefinitionGenerator {
         }
 
         char[] deterministicKeyList = deterministicKey.toCharArray();
-        int uniqueAccountInfo =  digits;
+        int uniqueAccountInfo = digits;
         int index = 0;
 
         while (String.valueOf(uniqueAccountInfo).length() <= digits) {
@@ -33,12 +31,13 @@ public class DemoAccountDefinitionGenerator {
     }
 
     private static double generateDouble(String deterministicKey, int digits) {
-        return (double)(generateNumber(deterministicKey, digits)) / 100;
+        return (double) (generateNumber(deterministicKey, digits)) / 100;
     }
 
     private static String generateAccoutNumbers(String deterministicKey) {
-        return  ("" + generateNumber(deterministicKey, 4)) + "-" +
-                ( "" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 7));
+        return ("" + generateNumber(deterministicKey, 4))
+                + "-"
+                + ("" + generateNumber(deterministicKey, 5) + generateNumber(deterministicKey, 7));
     }
 
     public static DemoSavingsAccount getDemoSavingsAccounts(String username, String providerName) {
@@ -61,8 +60,8 @@ public class DemoAccountDefinitionGenerator {
         };
     }
 
-
-    public static DemoTransactionAccount getDemoTransactionalAccount(String username, String providerName) {
+    public static DemoTransactionAccount getDemoTransactionalAccount(
+            String username, String providerName) {
         String deterministicKey = createDeterministicKey("Transaction" + username + providerName);
         return new DemoTransactionAccount() {
             @Override
@@ -87,5 +86,4 @@ public class DemoAccountDefinitionGenerator {
             }
         };
     }
-
 }

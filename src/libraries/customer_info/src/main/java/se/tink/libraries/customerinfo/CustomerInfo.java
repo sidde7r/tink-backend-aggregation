@@ -2,7 +2,6 @@ package se.tink.libraries.customerinfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableList;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,6 +97,20 @@ public abstract class CustomerInfo {
 
         return map;
     }
+
+    @JsonIgnore
+    public String getFullName() {
+        StringBuilder fullName = new StringBuilder();
+        nameElements.stream()
+            .map(NameElement::getValue)
+            .filter(s -> s.trim().length() > 0)
+            .forEach(s -> fullName.append(" " + s.trim()));
+
+        return fullName.toString().trim();
+    }
+
+    @JsonIgnore
+    public abstract String getSsn();
 
     public List<NameElement> getNameElements() {
         return nameElements;

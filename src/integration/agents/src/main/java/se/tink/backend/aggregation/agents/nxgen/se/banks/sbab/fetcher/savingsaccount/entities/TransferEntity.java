@@ -1,12 +1,15 @@
-package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.transactionalaccount.rpc;
+package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.fetcher.savingsaccount.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 import se.tink.backend.aggregation.annotations.JsonObject;
+import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
+import se.tink.libraries.amount.Amount;
 
 @JsonObject
-public class TransferDetailsResponse {
+public class TransferEntity {
     @JsonProperty("counter_part_bank")
     private String counterPartBank;
 
@@ -26,7 +29,7 @@ public class TransferDetailsResponse {
     private String transferId;
 
     @JsonProperty("type")
-    private String type;
+    private TransferTypeEntity type;
 
     @JsonProperty("running_balance")
     private String runningBalance;
@@ -40,7 +43,7 @@ public class TransferDetailsResponse {
     private Date valueDate;
 
     @JsonProperty("status")
-    private String status;
+    private TransferStatusEntity status;
 
     @JsonProperty("counter_part_statement")
     private String counterPartStatement;
@@ -69,7 +72,7 @@ public class TransferDetailsResponse {
         return transferId;
     }
 
-    public String getType() {
+    public TransferTypeEntity getType() {
         return type;
     }
 
@@ -85,11 +88,35 @@ public class TransferDetailsResponse {
         return valueDate;
     }
 
-    public String getStatus() {
+    public TransferStatusEntity getStatus() {
         return status;
     }
 
     public String getCounterPartStatement() {
         return counterPartStatement;
+    }
+
+    @JsonIgnore
+    public Transaction toTinkTransaction() {
+        final Amount tinkAmount;
+
+        switch (type) {
+            case DEPOSIT:
+            case INTEREST_RATE:
+                tinkAmount = Amount.inSEK(amount);
+                break;
+            case WITHDRAWAL:
+            case OTHER:
+                tinkAmount = Amount.inSEK(amount).negate();
+                break;
+            default:
+                tinkAmount = Amount.inSEK(amount).negate();
+        }
+
+        return Transaction.builder()
+                .setAmount(tinkAmount)
+                .setDescription(statement)
+                .setDate(accountingDate)
+                .build();
     }
 }

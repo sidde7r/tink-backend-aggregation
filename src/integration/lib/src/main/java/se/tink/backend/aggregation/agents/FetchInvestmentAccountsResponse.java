@@ -7,8 +7,7 @@ import se.tink.backend.aggregation.agents.models.AccountFeatures;
 public class FetchInvestmentAccountsResponse {
     private final Map<Account, AccountFeatures> accounts;
 
-    public FetchInvestmentAccountsResponse(
-            Map<Account, AccountFeatures> accounts) {
+    public FetchInvestmentAccountsResponse(Map<Account, AccountFeatures> accounts) {
         this.accounts = accounts;
     }
 

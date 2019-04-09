@@ -5,5 +5,6 @@ import com.sun.jersey.api.client.filter.ClientFilter;
 
 public interface ClientFilterFactory {
     ClientFilter addClientFilter(Client client);
+
     void removeClientFilters();
 }

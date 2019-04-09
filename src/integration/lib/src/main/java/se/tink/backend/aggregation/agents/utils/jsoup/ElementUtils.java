@@ -2,10 +2,9 @@ package se.tink.backend.aggregation.agents.utils.jsoup;
 
 import com.google.common.base.Strings;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import javax.ws.rs.core.MultivaluedMap;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import javax.ws.rs.core.MultivaluedMap;
 
 public class ElementUtils {
 

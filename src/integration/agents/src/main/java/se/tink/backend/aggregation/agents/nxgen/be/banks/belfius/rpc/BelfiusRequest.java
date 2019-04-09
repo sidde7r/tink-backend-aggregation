@@ -27,10 +27,18 @@ public class BelfiusRequest {
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
     @JsonSubTypes({
-            @JsonSubTypes.Type(value = OpenSessionRequest.class, name = BelfiusConstants.Response.Attribute.OPEN_SESSION),
-            @JsonSubTypes.Type(value = WidgetEventsRequest.class, name = BelfiusConstants.Response.Attribute.WIDGET_EVENTS),
-            @JsonSubTypes.Type(value = StartFlowRequest.class, name = BelfiusConstants.Response.Attribute.START_FLOW),
-            @JsonSubTypes.Type(value = ExecuteMethodRequest.class, name = BelfiusConstants.Response.Attribute.EXECUTE_METHOD),
+        @JsonSubTypes.Type(
+                value = OpenSessionRequest.class,
+                name = BelfiusConstants.Response.Attribute.OPEN_SESSION),
+        @JsonSubTypes.Type(
+                value = WidgetEventsRequest.class,
+                name = BelfiusConstants.Response.Attribute.WIDGET_EVENTS),
+        @JsonSubTypes.Type(
+                value = StartFlowRequest.class,
+                name = BelfiusConstants.Response.Attribute.START_FLOW),
+        @JsonSubTypes.Type(
+                value = ExecuteMethodRequest.class,
+                name = BelfiusConstants.Response.Attribute.EXECUTE_METHOD),
     })
     private List<RequestEntity> requests;
 

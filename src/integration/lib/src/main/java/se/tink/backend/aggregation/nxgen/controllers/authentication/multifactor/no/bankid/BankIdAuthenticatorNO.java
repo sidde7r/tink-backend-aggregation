@@ -5,7 +5,8 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 
 public interface BankIdAuthenticatorNO {
-    String init(String nationalId, String dob, String mobilenumber) throws AuthenticationException,
-            AuthorizationException;
+    String init(String nationalId, String dob, String mobilenumber)
+            throws AuthenticationException, AuthorizationException;
+
     BankIdStatus collect() throws AuthenticationException, AuthorizationException;
 }

@@ -16,8 +16,7 @@ public class CategoryListEntity {
         return categoryList;
     }
 
-    public void setCategory(
-            List<CategoryEntity> categoryList) {
+    public void setCategory(List<CategoryEntity> categoryList) {
         this.categoryList = categoryList;
     }
 }

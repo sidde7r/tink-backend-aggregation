@@ -6,12 +6,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 @JsonObject
 public class TransactionAliasEntity {
     private String iban;
+
     @JsonProperty("is_light")
     private boolean light;
+
     @JsonProperty("display_name")
     private String displayName;
+
     @JsonProperty("label_user")
     private LabelUserEntity labelUser;
+
     private String country;
 
     public String getIban() {

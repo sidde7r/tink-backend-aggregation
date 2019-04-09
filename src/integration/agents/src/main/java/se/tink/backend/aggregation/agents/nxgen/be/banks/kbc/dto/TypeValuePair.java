@@ -9,6 +9,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class TypeValuePair {
     @JsonProperty("T")
     private String type;
+
     @JsonProperty("V")
     private String value;
 
@@ -21,8 +22,7 @@ public class TypeValuePair {
     }
 
     // Dummy constructor to satisfy Jackson
-    public TypeValuePair() {
-    }
+    public TypeValuePair() {}
 
     @JsonIgnore
     private TypeValuePair(String type, String value) {

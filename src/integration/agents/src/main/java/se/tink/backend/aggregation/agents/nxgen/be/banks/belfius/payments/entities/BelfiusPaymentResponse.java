@@ -14,5 +14,3 @@ public class BelfiusPaymentResponse extends BelfiusResponse {
         return MessageResponse.requireSignOfBeneficiaryLimit(this);
     }
 }
-
-

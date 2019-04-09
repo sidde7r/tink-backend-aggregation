@@ -1,22 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.kbc;
 
 import com.google.common.base.Preconditions;
+import java.util.Locale;
+import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.log.LogTag;
 import se.tink.backend.aggregation.nxgen.core.account.TypeMapper;
 import se.tink.backend.aggregation.nxgen.http.URL;
 import se.tink.backend.aggregation.nxgen.http.UrlEnum;
-import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.i18n.LocalizableParametrizedEnum;
 import se.tink.libraries.i18n.LocalizableParametrizedKey;
 
-import java.util.Locale;
-
 public class KbcConstants {
 
     public static final String LANGUAGE_DUTCH = "nl";
-    public static final String DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS = Locale.ENGLISH.getLanguage();
+    public static final String DEFAULT_LANGUAGE_FOR_PARSE_ERROR_TEXTS =
+            Locale.ENGLISH.getLanguage();
 
     public enum Url implements UrlEnum {
         KEY_EXCHANGE(createUrlWithHost("/SAI/A054/service/keyExchange/1")),
@@ -151,7 +151,6 @@ public class KbcConstants {
         public static final String ZERO_TWO = "02";
         public static final String ZERO_NINE = "09"; // isSigningRequired
         public static final String ZERO_TEN = "10"; // isReSigningRequired
-
     }
 
     public static class PairTypeTypes {
@@ -172,9 +171,10 @@ public class KbcConstants {
         public static final int FINGERPRINT_LENGTH = 50;
         // == End Shared stuff ==
         // == Start Device enrollment ==
-        public static final String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCbdfKIRPYp399wiG0Acu8d94x5JwCjU5"
-                + "2jEPco2pQgHcZSxE0k2nqrJmb393Wxyfr43hfdWtI4Le+beIsiNt32hTnejtprTwE94qAikTq3xO3BmTS/xZGPyWygD9QVDafYF3"
-                + "VTk3R50Ej1cBl1t1vC8fh4dl2nWKjUHSZOwup3EQIDAQAB";
+        public static final String PUBLIC_KEY =
+                "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCbdfKIRPYp399wiG0Acu8d94x5JwCjU5"
+                        + "2jEPco2pQgHcZSxE0k2nqrJmb393Wxyfr43hfdWtI4Le+beIsiNt32hTnejtprTwE94qAikTq3xO3BmTS/xZGPyWygD9QVDafYF3"
+                        + "VTk3R50Ej1cBl1t1vC8fh4dl2nWKjUHSZOwup3EQIDAQAB";
         public static final String AES_SESSION_KEY_KEY = "aesSessionKey";
 
         // == End Device enrollment ==
@@ -195,18 +195,19 @@ public class KbcConstants {
     }
 
     public static final String[] IGNORED_ACCOUNT_TYPES = {
-            "0029", // KBC-Derdenrekening
-            "0038", // KBC-Rubriekrekening
-            "1013", // KBC-Beleggersrekening
-            "2117", // KBC-Pandrekening
-            "3123", // ESOP-rekening
-            "0346", // KBC-Vermogensrekening
-            "3465", // KBC-Business Comfortrekening
-            "3637", // KBC-Business Compactrekening
-            "3774", // Compte épargne Call32 corporate KBC
-            "4012", // KBC Brussels Security Deposit Account
-            "4057", // KBC Security Deposit Account
-            "4058"}; // Compte d'épargne gar.locative KBC Brussels
+        "0029", // KBC-Derdenrekening
+        "0038", // KBC-Rubriekrekening
+        "1013", // KBC-Beleggersrekening
+        "2117", // KBC-Pandrekening
+        "3123", // ESOP-rekening
+        "0346", // KBC-Vermogensrekening
+        "3465", // KBC-Business Comfortrekening
+        "3637", // KBC-Business Compactrekening
+        "3774", // Compte épargne Call32 corporate KBC
+        "4012", // KBC Brussels Security Deposit Account
+        "4057", // KBC Security Deposit Account
+        "4058"
+    }; // Compte d'épargne gar.locative KBC Brussels
 
     public static final TypeMapper<AccountTypes> ACCOUNT_TYPE_MAPPER =
             TypeMapper.<AccountTypes>builder()
@@ -231,13 +232,13 @@ public class KbcConstants {
                             "4013", // KBC Brussels-Groeispaarrekening
                             "4019", // KBC Brussels Savings Account PRO
                             "4056") // KBC-Huurwaarborgspaarrekening
-                    .ignoreKeys(
-                            IGNORED_ACCOUNT_TYPES)
+                    .ignoreKeys(IGNORED_ACCOUNT_TYPES)
                     .build();
 
     public static final class ErrorMessage {
         // Probably safe to remove we have HeaderErrorMessage
-        public static final String INCORRECT_CARD_NUMBER = "the card number you have entered is incorrect";
+        public static final String INCORRECT_CARD_NUMBER =
+                "the card number you have entered is incorrect";
         public static final String INCORRECT_LOGIN_CODE = "you have entered the wrong login code";
 
         // Hoping the logging will log HeaderErrorMessage that can be used as replacement
@@ -248,10 +249,14 @@ public class KbcConstants {
         public static final String INCORRECT_SIGN_CODE = "your sign code is incorrect";
 
         // As of 18.10 only text messages and the generic error code 02
-        public static final String NO_TRANSACTIONS_FOUND = "no transactions in the most recent 12 months";
-        public static final String NO_TRANSACTIONS_FOUND_NL = "geen verrichtingen in de recentste 12 maanden";
-        public static final String NO_TRANSACTIONS_FOUND_FR = "aucune opération les 12 derniers mois";
-        public static final String NO_TRANSACTIONS_FOUND_DE = "keine transaktionen in den letzten 12 monaten";
+        public static final String NO_TRANSACTIONS_FOUND =
+                "no transactions in the most recent 12 months";
+        public static final String NO_TRANSACTIONS_FOUND_NL =
+                "geen verrichtingen in de recentste 12 maanden";
+        public static final String NO_TRANSACTIONS_FOUND_FR =
+                "aucune opération les 12 derniers mois";
+        public static final String NO_TRANSACTIONS_FOUND_DE =
+                "keine transaktionen in den letzten 12 monaten";
         // Only text message no header or code, we do transfers in English to ensure that
         // correctness
         public static final String ACCOUNT_HAS_INSUFFICIENT_FUNDS = "account has no funds";
@@ -269,7 +274,9 @@ public class KbcConstants {
     }
 
     public enum UserMessage implements LocalizableEnum {
-        INCORRECT_CARD_NUMBER(new LocalizableKey("The card number you have entered is incorrect. Please try again.")),
+        INCORRECT_CARD_NUMBER(
+                new LocalizableKey(
+                        "The card number you have entered is incorrect. Please try again.")),
         NOT_A_CUSTOMER(new LocalizableKey("The provided credentials are not for KBC."));
 
         private LocalizableKey userMessage;
@@ -301,10 +308,11 @@ public class KbcConstants {
         }
     }
 
-
     public enum TransferMessageParametrized implements LocalizableParametrizedEnum {
-        MSG_LENGTH_EXCEEDS_MAX(new LocalizableParametrizedKey("Reference must be max {} characters.")),
-        AMOUNT_LESS_THAN_MIN(new LocalizableParametrizedKey("Transfer amount can't be less than {}."));
+        MSG_LENGTH_EXCEEDS_MAX(
+                new LocalizableParametrizedKey("Reference must be max {} characters.")),
+        AMOUNT_LESS_THAN_MIN(
+                new LocalizableParametrizedKey("Transfer amount can't be less than {}."));
 
         private final LocalizableParametrizedKey key;
 
@@ -323,7 +331,6 @@ public class KbcConstants {
             return key.cloneWith(parameters);
         }
     }
-
 
     public static class Transfers {
         public static final double MIN_AMOUNT = 0.01;

@@ -11,13 +11,13 @@ public class StartAuthRequest {
 
     public StartAuthRequest(String cardNumber, boolean registered) {
         this.cardNumber = cardNumber;
-        this.device = new Device(
-                ArgentaConstants.Device.VENDOR,
-                registered,
-                ArgentaConstants.Device.NAME,
-                ArgentaConstants.Device.MODEL,
-                ArgentaConstants.Device.OS_VERSION,
-                ArgentaConstants.Device.OS
-        );
+        this.device =
+                new Device(
+                        ArgentaConstants.Device.VENDOR,
+                        registered,
+                        ArgentaConstants.Device.NAME,
+                        ArgentaConstants.Device.MODEL,
+                        ArgentaConstants.Device.OS_VERSION,
+                        ArgentaConstants.Device.OS);
     }
 }

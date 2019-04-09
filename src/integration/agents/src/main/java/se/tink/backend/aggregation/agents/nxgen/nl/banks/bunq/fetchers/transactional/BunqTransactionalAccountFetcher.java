@@ -19,8 +19,8 @@ public class BunqTransactionalAccountFetcher implements AccountFetcher<Transacti
 
     @Override
     public Collection<TransactionalAccount> fetchAccounts() {
-        AccountsResponseWrapper listAccounts = apiClient.listAccounts(
-                sessionStorage.get(BunqConstants.StorageKeys.USER_ID));
+        AccountsResponseWrapper listAccounts =
+                apiClient.listAccounts(sessionStorage.get(BunqConstants.StorageKeys.USER_ID));
         return listAccounts.toTinkAccounts();
     }
 }

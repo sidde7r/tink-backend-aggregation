@@ -7,11 +7,12 @@ import se.tink.libraries.account.rpc.Account;
 
 public class CoreAccountMapper {
     @VisibleForTesting
-    static TypeMap<Account, se.tink.backend.agents.rpc.Account> toAggregationTypeMap = new ModelMapper()
-            .typeMap(Account.class, se.tink.backend.agents.rpc.Account.class);
+    static TypeMap<Account, se.tink.backend.agents.rpc.Account> toAggregationTypeMap =
+            new ModelMapper().typeMap(Account.class, se.tink.backend.agents.rpc.Account.class);
+
     @VisibleForTesting
-    static TypeMap<se.tink.backend.agents.rpc.Account, Account> fromAggregationTypeMap = new ModelMapper()
-            .typeMap(se.tink.backend.agents.rpc.Account.class, Account.class);
+    static TypeMap<se.tink.backend.agents.rpc.Account, Account> fromAggregationTypeMap =
+            new ModelMapper().typeMap(se.tink.backend.agents.rpc.Account.class, Account.class);
 
     public static se.tink.backend.agents.rpc.Account toAggregation(Account account) {
         return toAggregationTypeMap.map(account);

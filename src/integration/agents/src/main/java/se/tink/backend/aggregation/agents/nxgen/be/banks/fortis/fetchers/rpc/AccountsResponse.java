@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.rpc;
 
+import java.util.Collection;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.BusinessMessageBulk;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.fortis.fetchers.entities.Value;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
-
-import java.util.Collection;
 
 @JsonObject
 public class AccountsResponse {

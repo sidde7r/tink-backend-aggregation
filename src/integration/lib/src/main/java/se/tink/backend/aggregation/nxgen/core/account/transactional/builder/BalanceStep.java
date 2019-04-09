@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional.builder;
 
-import se.tink.libraries.amount.Amount;
-
 import javax.annotation.Nonnull;
+import se.tink.libraries.amount.Amount;
 
 public interface BalanceStep<S> {
 

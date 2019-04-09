@@ -7,7 +7,8 @@ public class ExecuteExternalTransferBody extends MultivaluedMapImpl {
 
     public ExecuteExternalTransferBody(String otp) {
         add(IngConstants.Session.OTP, otp);
-        add(IngConstants.Session.ValuePairs.DSE_TYPE.getKey(),
+        add(
+                IngConstants.Session.ValuePairs.DSE_TYPE.getKey(),
                 IngConstants.Session.ValuePairs.DSE_TYPE.getValue());
     }
 }

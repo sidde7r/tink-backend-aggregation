@@ -9,24 +9,22 @@ import se.tink.backend.aggregation.nxgen.storage.PersistentStorage;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class OAuth2AuthenticationFlow {
-    public static Authenticator create(CredentialsRequest request, SystemUpdater systemUpdater,
-            PersistentStorage persistentStorage, SupplementalInformationHelper supplementalInformationHelper,
+    public static Authenticator create(
+            CredentialsRequest request,
+            SystemUpdater systemUpdater,
+            PersistentStorage persistentStorage,
+            SupplementalInformationHelper supplementalInformationHelper,
             OAuth2Authenticator authenticator) {
 
-        OAuth2AuthenticationController oAuth2AuthenticationController = new OAuth2AuthenticationController(
-                persistentStorage,
-                supplementalInformationHelper,
-                authenticator
-        );
+        OAuth2AuthenticationController oAuth2AuthenticationController =
+                new OAuth2AuthenticationController(
+                        persistentStorage, supplementalInformationHelper, authenticator);
 
         return new AutoAuthenticationController(
                 request,
                 systemUpdater,
                 new ThirdPartyAppAuthenticationController<>(
-                        oAuth2AuthenticationController,
-                        supplementalInformationHelper
-                ),
-                oAuth2AuthenticationController
-        );
+                        oAuth2AuthenticationController, supplementalInformationHelper),
+                oAuth2AuthenticationController);
     }
 }

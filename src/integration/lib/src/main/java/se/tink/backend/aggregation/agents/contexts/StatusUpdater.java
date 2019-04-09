@@ -20,7 +20,8 @@ public interface StatusUpdater {
         updateStatus(status, statusPayload, true);
     }
 
-    default void updateStatus(CredentialsStatus status, Account account, List<Transaction> transactions) {
+    default void updateStatus(
+            CredentialsStatus status, Account account, List<Transaction> transactions) {
         if (account.isExcluded()) {
             if (getTransactionCountByEnabledAccount().containsKey(account.getBankId())) {
                 getTransactionCountByEnabledAccount().remove(account.getBankId());
@@ -42,29 +43,33 @@ public interface StatusUpdater {
             numberOfTransactions += accountTransactions;
         }
 
-        return Catalog
-                .format(catalog.getString("Updating {0}..."), formatCredentialsStatusPayloadSuffix(
+        return Catalog.format(
+                catalog.getString("Updating {0}..."),
+                formatCredentialsStatusPayloadSuffix(
                         numberOfAccounts, numberOfTransactions, catalog));
     }
 
-    default String formatCredentialsStatusPayloadSuffix(long numberOfAccounts, long numberOfTransactions,
-            Catalog catalog) {
+    default String formatCredentialsStatusPayloadSuffix(
+            long numberOfAccounts, long numberOfTransactions, Catalog catalog) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append(Catalog.format(catalog.getPluralString("{0} account", "{0} accounts", numberOfAccounts),
-                numberOfAccounts));
+        builder.append(
+                Catalog.format(
+                        catalog.getPluralString("{0} account", "{0} accounts", numberOfAccounts),
+                        numberOfAccounts));
 
         if (numberOfTransactions > 0) {
             builder.append(" ");
             builder.append(catalog.getString("and"));
             builder.append(" ");
 
-            builder.append(Catalog.format(
-                    catalog.getPluralString("{0} transaction", "{0} transactions", numberOfTransactions),
-                    numberOfTransactions));
+            builder.append(
+                    Catalog.format(
+                            catalog.getPluralString(
+                                    "{0} transaction", "{0} transactions", numberOfTransactions),
+                            numberOfTransactions));
         }
 
         return builder.toString();
     }
-
 }

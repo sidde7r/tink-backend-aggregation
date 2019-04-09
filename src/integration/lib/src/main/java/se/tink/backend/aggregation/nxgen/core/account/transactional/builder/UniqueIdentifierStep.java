@@ -7,21 +7,18 @@ public interface UniqueIdentifierStep<S> {
     /**
      * Sets the unique identifier of the account.
      *
-     * An unique identifier should have the following attributes:
+     * <p>An unique identifier should have the following attributes:
      *
-     * 1. Must uniquely identify an account withing a credential.
-     * 2. Is unlikely to change if the bank updates their API or database.
+     * <p>1. Must uniquely identify an account withing a credential. 2. Is unlikely to change if the
+     * bank updates their API or database.
      *
-     * Good unique identifiers are typically:
+     * <p>Good unique identifiers are typically:
      *
-     * - IBAN
-     * - Account Number
-     * - Masked Credit Card Number
+     * <p>- IBAN - Account Number - Masked Credit Card Number
      *
-     * While bad unique identifiers are:
+     * <p>While bad unique identifiers are:
      *
-     * - Name of the account
-     * - The accounts API identifier
+     * <p>- Name of the account - The accounts API identifier
      *
      * @param uniqueIdentifier The unique identifier
      * @return The next step of the builder

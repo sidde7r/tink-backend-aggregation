@@ -35,14 +35,20 @@ public class EncapUtils {
         return EncodingUtils.encodeAsBase64String(randomBytes);
     }
 
-    static void setMetaInformation(Map<String, String> queryPairs, Map<String, String> encapStorage) {
-        queryPairs.put("meta.applicationVersion", encapStorage.get(EncapConstants.Storage.APPLICATION_VERSION));
-        queryPairs.put("meta.encapAPIVersion", encapStorage.get(EncapConstants.Storage.ENCAP_API_VERSION));
+    static void setMetaInformation(
+            Map<String, String> queryPairs, Map<String, String> encapStorage) {
+        queryPairs.put(
+                "meta.applicationVersion",
+                encapStorage.get(EncapConstants.Storage.APPLICATION_VERSION));
+        queryPairs.put(
+                "meta.encapAPIVersion", encapStorage.get(EncapConstants.Storage.ENCAP_API_VERSION));
     }
 
     static String getUrlEncodedQueryParams(Map<String, String> queryPairs) {
         Map<String, String> queryPairsWithUrlEncodedValues = Maps.newLinkedHashMap();
-        queryPairs.forEach((key,value) -> queryPairsWithUrlEncodedValues.put(key, EncodingUtils.encodeUrl(value)));
+        queryPairs.forEach(
+                (key, value) ->
+                        queryPairsWithUrlEncodedValues.put(key, EncodingUtils.encodeUrl(value)));
 
         Joiner.MapJoiner joiner = Joiner.on("&").withKeyValueSeparator("=");
         return joiner.join(queryPairsWithUrlEncodedValues);
@@ -53,7 +59,8 @@ public class EncapUtils {
         String[] pairs = responseQuery.split("&");
         for (String pair : pairs) {
             int idx = pair.indexOf("=");
-            queryPairs.put(EncodingUtils.decodeUrl(pair.substring(0, idx)).toUpperCase(),
+            queryPairs.put(
+                    EncodingUtils.decodeUrl(pair.substring(0, idx)).toUpperCase(),
                     EncodingUtils.decodeUrl(pair.substring(idx + 1)));
         }
 
@@ -80,7 +87,8 @@ public class EncapUtils {
 
     static String getSamlObjectFromResponseContent(String responseContentString) {
         Matcher matcher = AUTHENTICATION_STATEMENT_PATTERN.matcher(responseContentString);
-        Preconditions.checkState(matcher.find(), "Could not parse samlObject from responseContent.");
+        Preconditions.checkState(
+                matcher.find(), "Could not parse samlObject from responseContent.");
 
         return matcher.group(1).trim();
     }
@@ -92,34 +100,51 @@ public class EncapUtils {
 
     static String getActivationSessionId(String soapString) {
         Node node = SoapParser.getSoapBody(soapString);
-        Preconditions.checkState(node instanceof Element, "Could not parse activationSessionId from server response.");
+        Preconditions.checkState(
+                node instanceof Element,
+                "Could not parse activationSessionId from server response.");
 
         Element element = (Element) node;
-        String errorCode = element.getElementsByTagName("ns2:ErrorCode").item(0).getFirstChild().getTextContent();
+        String errorCode =
+                element.getElementsByTagName("ns2:ErrorCode")
+                        .item(0)
+                        .getFirstChild()
+                        .getTextContent();
         switch (errorCode) {
-        case SUCCEED:
-            return element.getElementsByTagName("ns11:activationsession").item(0).getFirstChild().getTextContent();
-        case INVALID_USERNAME_OR_ACTIVATION_CODE:
-            return null;
-        default:
-            String errorMessage = element.getElementsByTagName("ns2:Message").item(0).getFirstChild().getTextContent();
-            throw new IllegalStateException(String.format("Unexpected error during activation: (%s) %s ", errorCode,
-                    errorMessage));
+            case SUCCEED:
+                return element.getElementsByTagName("ns11:activationsession")
+                        .item(0)
+                        .getFirstChild()
+                        .getTextContent();
+            case INVALID_USERNAME_OR_ACTIVATION_CODE:
+                return null;
+            default:
+                String errorMessage =
+                        element.getElementsByTagName("ns2:Message")
+                                .item(0)
+                                .getFirstChild()
+                                .getTextContent();
+                throw new IllegalStateException(
+                        String.format(
+                                "Unexpected error during activation: (%s) %s ",
+                                errorCode, errorMessage));
         }
     }
-
 
     static List<String> getSecurityValuesList(String soapString) {
         List<String> valuesList = Lists.newArrayList();
         Node node = SoapParser.getSoapBody(soapString);
-        Preconditions.checkState(node instanceof Element,
+        Preconditions.checkState(
+                node instanceof Element,
                 "Could not parse security token and samUserId from server response.");
 
         Element element = (Element) node;
         Node securityTokenNode = element.getElementsByTagName("ns3:so").item(0);
         Node samUserIdNode = element.getElementsByTagName("ns3:samUserId").item(0);
-        Preconditions.checkState(securityTokenNode != null, "Could not parse security token from server response.");
-        Preconditions.checkState(samUserIdNode != null, "Could not parse samUserId from server response.");
+        Preconditions.checkState(
+                securityTokenNode != null, "Could not parse security token from server response.");
+        Preconditions.checkState(
+                samUserIdNode != null, "Could not parse samUserId from server response.");
         valuesList.add(securityTokenNode.getFirstChild().getTextContent());
         valuesList.add(samUserIdNode.getFirstChild().getTextContent());
 
@@ -128,12 +153,13 @@ public class EncapUtils {
 
     static String getSecurityToken(String soapString) {
         Node node = SoapParser.getSoapBody(soapString);
-        Preconditions.checkState(node instanceof Element,
-                "Could not parse security token from server response.");
+        Preconditions.checkState(
+                node instanceof Element, "Could not parse security token from server response.");
 
         Element element = (Element) node;
         Node securityTokenNode = element.getElementsByTagName("securityToken").item(0);
-        Preconditions.checkState(securityTokenNode != null, "Could not parse security token from server response.");
+        Preconditions.checkState(
+                securityTokenNode != null, "Could not parse security token from server response.");
 
         return securityTokenNode.getFirstChild().getTextContent();
     }

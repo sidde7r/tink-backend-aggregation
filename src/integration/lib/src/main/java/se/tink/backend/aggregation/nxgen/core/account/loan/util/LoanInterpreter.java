@@ -18,15 +18,15 @@ public abstract class LoanInterpreter implements Serializable {
     public static LoanInterpreter getInstance(MarketCode market) {
 
         switch (market) {
-        case SE:
-            return new LoanInterpreterSE();
+            case SE:
+                return new LoanInterpreterSE();
         }
 
         return new LoanInterpreterDefault();
     }
 
     public Type interpretLoanType(final String loanName) {
-        if(Strings.isNullOrEmpty(loanName)){
+        if (Strings.isNullOrEmpty(loanName)) {
             return Type.OTHER;
         }
 

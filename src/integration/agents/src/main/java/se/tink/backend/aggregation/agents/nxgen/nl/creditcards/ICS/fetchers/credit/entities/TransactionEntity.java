@@ -10,69 +10,69 @@ import se.tink.libraries.amount.Amount;
 
 @JsonObject
 public class TransactionEntity {
-  @JsonProperty("AccountId")
-  private String accountId;
+    @JsonProperty("AccountId")
+    private String accountId;
 
-  @JsonProperty("TransactionId")
-  private String transactionId;
+    @JsonProperty("TransactionId")
+    private String transactionId;
 
-  @JsonProperty("LastFourDigits")
-  private String lastFourDigits;
+    @JsonProperty("LastFourDigits")
+    private String lastFourDigits;
 
-  @JsonProperty("IndicatorExtraCard")
-  private String indicatorExtraCard;
+    @JsonProperty("IndicatorExtraCard")
+    private String indicatorExtraCard;
 
-  @JsonProperty("CountryCode")
-  private String countryCode;
+    @JsonProperty("CountryCode")
+    private String countryCode;
 
-  @JsonProperty("TransactionDate")
-  private String transactionDate;
+    @JsonProperty("TransactionDate")
+    private String transactionDate;
 
-  @JsonProperty("BillingAmount")
-  private String billingAmount;
+    @JsonProperty("BillingAmount")
+    private String billingAmount;
 
-  @JsonProperty("BillingCurrency")
-  private String billingCurrency;
+    @JsonProperty("BillingCurrency")
+    private String billingCurrency;
 
-  @JsonProperty("SourceAmount")
-  private String sourceAmount;
+    @JsonProperty("SourceAmount")
+    private String sourceAmount;
 
-  @JsonProperty("SourceCurrency")
-  private String sourceCurrency;
+    @JsonProperty("SourceCurrency")
+    private String sourceCurrency;
 
-  @JsonProperty("EmbossingName")
-  private String embossingName;
+    @JsonProperty("EmbossingName")
+    private String embossingName;
 
-  @JsonProperty("ProcessingTime")
-  private String processingTime;
+    @JsonProperty("ProcessingTime")
+    private String processingTime;
 
-  @JsonProperty("CreditDebitIndicator")
-  private String creditDebitIndicator;
+    @JsonProperty("CreditDebitIndicator")
+    private String creditDebitIndicator;
 
-  @JsonProperty("Status")
-  private String booked;
+    @JsonProperty("Status")
+    private String booked;
 
-  @JsonProperty("TransactionInformation")
-  private String transactionInformation;
+    @JsonProperty("TransactionInformation")
+    private String transactionInformation;
 
-  private Amount toTinkAmount() {
-    return new Amount(billingCurrency, Double.parseDouble(billingAmount));
-  }
-
-  private Date toTransactionDate() {
-    try {
-      return ICSConstants.Date.TRANSACTION_FORMAT.parse(transactionDate);
-    } catch (ParseException e) {
-      throw new IllegalStateException("Cannot parse date!");
+    private Amount toTinkAmount() {
+        return new Amount(billingCurrency, Double.parseDouble(billingAmount));
     }
-  }
 
-  public Transaction toTinkTransaction() {
-    return Transaction.builder()
-        .setAmount(toTinkAmount())
-        .setDescription(transactionInformation)
-        .setDate(toTransactionDate())
-        .setExternalId(transactionId)
-        .build();
-  }
+    private Date toTransactionDate() {
+        try {
+            return ICSConstants.Date.TRANSACTION_FORMAT.parse(transactionDate);
+        } catch (ParseException e) {
+            throw new IllegalStateException("Cannot parse date!");
+        }
+    }
+
+    public Transaction toTinkTransaction() {
+        return Transaction.builder()
+                .setAmount(toTinkAmount())
+                .setDescription(transactionInformation)
+                .setDate(toTransactionDate())
+                .setExternalId(transactionId)
+                .build();
+    }
 }

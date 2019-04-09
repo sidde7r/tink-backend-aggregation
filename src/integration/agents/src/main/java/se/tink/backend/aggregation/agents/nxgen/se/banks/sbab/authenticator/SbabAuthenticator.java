@@ -2,7 +2,7 @@ package se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator;
 
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabApiClient;
-import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKey;
+import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.StorageKeys;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.SbabConstants.Uris;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities.AuthGrantTypeEntity;
 import se.tink.backend.aggregation.agents.nxgen.se.banks.sbab.authenticator.entities.AuthMethodEntity;
@@ -34,13 +34,13 @@ public class SbabAuthenticator implements OAuth2Authenticator {
     public URL buildAuthorizeUrl(String state) {
         final PendingAuthCodeRequest request =
                 new PendingAuthCodeRequest()
-                        .withClientId(persistentStorage.get(StorageKey.CLIENT_ID))
+                        .withClientId(persistentStorage.get(StorageKeys.CLIENT_ID))
                         .withResponseType(AuthResponseTypeEntity.PENDING_CODE)
-                        .withRedirectUri(persistentStorage.get(StorageKey.REDIRECT_URI))
+                        .withRedirectUri(persistentStorage.get(StorageKeys.REDIRECT_URI))
                         .withScope(AuthScopeEntity.ACCOUNT_LOAN_READ)
                         .withState(state)
                         .withAuthMethod(AuthMethodEntity.MOBILE_BANKID)
-                        .withUserId(persistentStorage.get(StorageKey.USER_ID));
+                        .withUserId(persistentStorage.get(StorageKeys.USER_ID));
 
         return new URL(Uris.GET_PENDING_AUTH_CODE()).queryParams(request);
     }
@@ -51,7 +51,7 @@ public class SbabAuthenticator implements OAuth2Authenticator {
                 new AccessTokenRequest()
                         .withGrantType(AuthGrantTypeEntity.PENDING_AUTHORIZATION_CODE)
                         .withPendingCode(pendingCode)
-                        .withRedirectUri(persistentStorage.get(StorageKey.REDIRECT_URI));
+                        .withRedirectUri(persistentStorage.get(StorageKeys.REDIRECT_URI));
 
         return apiClient.getAccessToken(accessTokenRequest).toTinkToken();
     }
@@ -63,7 +63,7 @@ public class SbabAuthenticator implements OAuth2Authenticator {
 
     @Override
     public void useAccessToken(OAuth2Token oauth2token) {
-        sessionStorage.put(StorageKey.OAUTH2_TOKEN, oauth2token);
-        sessionStorage.put(StorageKey.ACCESS_TOKEN, oauth2token.getAccessToken());
+        sessionStorage.put(StorageKeys.OAUTH2_TOKEN, oauth2token);
+        sessionStorage.put(StorageKeys.ACCESS_TOKEN, oauth2token.getAccessToken());
     }
 }

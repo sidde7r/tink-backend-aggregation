@@ -102,9 +102,6 @@
     "creditcards.rikskortet.RikskortetAgent": [
         "CREDIT_CARDS"
     ],
-    "creditcards.sebkort.SEBKortAgent": [
-        "CREDIT_CARDS"
-    ],
     "nxgen.se.creditcards.sebkort.circlek.CircleKMastercardSEAgent": [
         "CREDIT_CARDS"
     ],
@@ -115,6 +112,9 @@
         "CREDIT_CARDS"
     ],
     "nxgen.se.creditcards.sebkort.djurgardskortet.DjurgardskortetMastercardAgent": [
+        "CREDIT_CARDS"
+    ],
+    "nxgen.se.creditcards.sebkort.eurocard.EurocardSEAgent": [
         "CREDIT_CARDS"
     ],
     "nxgen.se.creditcards.sebkort.finnair.FinnairMastercardSEAgent": [

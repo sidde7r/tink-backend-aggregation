@@ -7,6 +7,10 @@ import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsStatus;
 import se.tink.backend.aggregation.agents.AbstractAgent;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.DeprecatedRefreshExecutor;
@@ -26,13 +30,9 @@ import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.AuthorizationError;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankServiceError;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedRefreshExecutor {
 
@@ -43,20 +43,25 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
     private final Map<String, SubCard> subCardsByCardNumber = Maps.newHashMap();
     private boolean hasRefreshed = false;
 
-    public AmericanExpressV3Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AmericanExpressV3Agent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.credentials = request.getCredentials();
-        this.apiClient = new AmericanExpressV3ApiClient(
-                clientFactory.createCustomClient(context.getLogOutputStream()),
-                request.getProvider().getMarket(),
-                DEFAULT_USER_AGENT,
-                credentials);
+        this.apiClient =
+                new AmericanExpressV3ApiClient(
+                        clientFactory.createCustomClient(context.getLogOutputStream()),
+                        request.getProvider().getMarket(),
+                        DEFAULT_USER_AGENT,
+                        credentials);
 
         // client.addFilter(new LoggingFilter(System.out));
     }
 
-    public AmericanExpressV3Agent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair,
+    public AmericanExpressV3Agent(
+            CredentialsRequest request,
+            AgentContext context,
+            SignatureKeyPair signatureKeyPair,
             AmericanExpressV3ApiClient apiClient) {
         super(request, context);
 
@@ -106,29 +111,26 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
         log.warn(
                 String.format(
                         "#provider-error - Response error status: %d, type: %s, message: %s",
-                        response.getStatus(),
-                        response.getMessageType(),
-                        response.getMessage()
-                )
-        );
+                        response.getStatus(), response.getMessageType(), response.getMessage()));
         return true;
     }
 
-    private boolean getPendingTransactions(CardDetailsEntity cardEntity,
-            List<Transaction> transactions) throws Exception {
+    private boolean getPendingTransactions(
+            CardDetailsEntity cardEntity, List<Transaction> transactions) throws Exception {
 
         TimelineEntity timeline = apiClient.getTimeLine(cardEntity);
         if (isResponseError(timeline)) {
             // Observed errors:
             // - "Kortet har annullerats"
             // - "Det gick inte att läsa in innehållet. Försök igen senare."
-            // - "Tyvärr kan vi inte hämta dina transaktioner just nu. Försök igen om några minuter."
+            // - "Tyvärr kan vi inte hämta dina transaktioner just nu. Försök igen om några
+            // minuter."
             return false;
         }
         createSubCards(timeline.getCardList());
 
-        Map<String, String> cardNumberBySuppIndex = apiClient
-                .createCardNumberBySuppIndexMap(timeline.getCardList());
+        Map<String, String> cardNumberBySuppIndex =
+                apiClient.createCardNumberBySuppIndexMap(timeline.getCardList());
 
         Map<String, TransactionEntity> timelineTransactionsMap = timeline.getTransactionMap();
 
@@ -140,17 +142,20 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
                             continue;
                         }
 
-                        TransactionEntity transactionEntity = timelineTransactionsMap.get(timelineItem.getId());
-                        String transactionCardNumber = cardNumberBySuppIndex.get(transactionEntity.getSuppIndex());
+                        TransactionEntity transactionEntity =
+                                timelineTransactionsMap.get(timelineItem.getId());
+                        String transactionCardNumber =
+                                cardNumberBySuppIndex.get(transactionEntity.getSuppIndex());
 
                         Transaction transaction = transactionEntity.toTransaction();
                         transaction.setPending(true);
 
                         // Only add transaction if its related card number equals this card's number
-                        if (Objects.equal(transactionCardNumber, cardEntity.getCardNumberDisplay())) {
+                        if (Objects.equal(
+                                transactionCardNumber, cardEntity.getCardNumberDisplay())) {
                             transactions.add(transaction);
 
-                        // Otherwise it should be related to one of the sub cards
+                            // Otherwise it should be related to one of the sub cards
                         } else if (subCardsByCardNumber.containsKey(transactionCardNumber)) {
                             subCardsByCardNumber.get(transactionCardNumber).add(transaction);
                         }
@@ -161,7 +166,8 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
         return true;
     }
 
-    private void getTransactions(CardDetailsEntity cardEntity, List<Transaction> transactions, Account account)
+    private void getTransactions(
+            CardDetailsEntity cardEntity, List<Transaction> transactions, Account account)
             throws Exception {
 
         // Loop through the available statements.
@@ -170,10 +176,12 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
 
         for (int billingIndex = 0; billingIndex <= availableBillingPeriods; billingIndex++) {
 
-            TransactionDetailsEntity transactionDetails = apiClient.getTransactionDetails(billingIndex, cardEntity);
+            TransactionDetailsEntity transactionDetails =
+                    apiClient.getTransactionDetails(billingIndex, cardEntity);
             if (isResponseError(transactionDetails)) {
                 // Observed errors:
-                // - "Tyvärr kan vi inte hämta dina transaktioner just nu. Försök igen om några minuter."
+                // - "Tyvärr kan vi inte hämta dina transaktioner just nu. Försök igen om några
+                // minuter."
                 continue;
             }
 
@@ -181,15 +189,17 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
             // Detect the maximum available billing periods for this card.
 
             if (billingIndex == 0) {
-                for (BillingInfoDetailsEntity billingInfoDetailsEntity : transactionDetails.getBillingInfo()
-                        .getBillingInfoDetails()) {
-                    availableBillingPeriods = Math.max(availableBillingPeriods,
-                            Integer.parseInt(billingInfoDetailsEntity.getBillingIndex()));
+                for (BillingInfoDetailsEntity billingInfoDetailsEntity :
+                        transactionDetails.getBillingInfo().getBillingInfoDetails()) {
+                    availableBillingPeriods =
+                            Math.max(
+                                    availableBillingPeriods,
+                                    Integer.parseInt(billingInfoDetailsEntity.getBillingIndex()));
                 }
             }
 
-            Map<String, String> cardNumberBySuppIndex = apiClient
-                    .createCardNumberBySuppIndexMap(transactionDetails.getCardList());
+            Map<String, String> cardNumberBySuppIndex =
+                    apiClient.createCardNumberBySuppIndexMap(transactionDetails.getCardList());
 
             // Add the transactions.
 
@@ -200,14 +210,15 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
                 }
 
                 for (TransactionEntity transactionEntity : activityList.getTransactionList()) {
-                    String transactionCardNumber = cardNumberBySuppIndex.get(transactionEntity.getSuppIndex());
+                    String transactionCardNumber =
+                            cardNumberBySuppIndex.get(transactionEntity.getSuppIndex());
 
                     Transaction transaction = transactionEntity.toTransaction();
                     // Only add transaction if its related card number equals this card's number
                     if (Objects.equal(transactionCardNumber, cardEntity.getCardNumberDisplay())) {
                         transactions.add(transaction);
 
-                    // Otherwise it should be related to one of the sub cards
+                        // Otherwise it should be related to one of the sub cards
                     } else if (subCardsByCardNumber.containsKey(transactionCardNumber)) {
                         subCardsByCardNumber.get(transactionCardNumber).add(transaction);
                     }
@@ -226,12 +237,15 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
         for (CardEntity card : cardEntities) {
             String cardNumber = apiClient.productNameToCardNumber(card.getCardProductName());
 
-        // NOTE: In the nxgen, we don't track "sub-account" here, because these accounts are probably "INACTIVE",
-        // but for now, make it compliant with Account format.
-        if (!mainCardNumbers.contains(cardNumber) && !subCardsByCardNumber.containsKey(cardNumber)) {
+            // NOTE: In the nxgen, we don't track "sub-account" here, because these accounts are
+            // probably "INACTIVE",
+            // but for now, make it compliant with Account format.
+            if (!mainCardNumbers.contains(cardNumber)
+                    && !subCardsByCardNumber.containsKey(cardNumber)) {
                 Account subAccount = new Account();
                 String productName = card.getCardProductName();
-                subAccount.setAccountNumber("XXX-" + productName.substring(productName.length() - 5));
+                subAccount.setAccountNumber(
+                        "XXX-" + productName.substring(productName.length() - 5));
                 subAccount.setName(card.getCardProductName());
                 subAccount.setBankId(cardNumber.replaceAll("[^\\dA-Za-z]", ""));
                 subAccount.setType(AccountTypes.CREDIT_CARD);
@@ -295,17 +309,16 @@ public class AmericanExpressV3Agent extends AbstractAgent implements DeprecatedR
                 throw SessionError.SESSION_EXPIRED.exception();
             }
 
-            if (message.toLowerCase().contains("fel inträffade tyvärr vid laddning av innehållet")) {
+            if (message.toLowerCase()
+                    .contains("fel inträffade tyvärr vid laddning av innehållet")) {
                 throw BankServiceError.BANK_SIDE_FAILURE.exception();
             }
         }
 
         throw new IllegalStateException(
-                        String.format(
-                                "#login-refactoring - AMEXv3 - Login failed with message: (%s) %s",
-                                statusCode, message
-                        )
-                    );
+                String.format(
+                        "#login-refactoring - AMEXv3 - Login failed with message: (%s) %s",
+                        statusCode, message));
     }
 
     @Override

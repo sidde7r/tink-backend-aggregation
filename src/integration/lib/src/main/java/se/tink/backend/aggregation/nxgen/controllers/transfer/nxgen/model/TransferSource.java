@@ -7,9 +7,7 @@ import se.tink.libraries.account.AccountIdentifier;
 public class TransferSource extends TransferEntity {
     private boolean transferable;
 
-    private TransferSource() {
-
-    }
+    private TransferSource() {}
 
     public boolean isTransferable() {
         return transferable;
@@ -40,7 +38,8 @@ public class TransferSource extends TransferEntity {
         }
 
         public TransferSource build() {
-            Preconditions.checkNotNull(accountIdentifier, "Account identifier must not be null or empty.");
+            Preconditions.checkNotNull(
+                    accountIdentifier, "Account identifier must not be null or empty.");
 
             TransferSource source = new TransferSource();
             source.accountIdentifier = accountIdentifier;

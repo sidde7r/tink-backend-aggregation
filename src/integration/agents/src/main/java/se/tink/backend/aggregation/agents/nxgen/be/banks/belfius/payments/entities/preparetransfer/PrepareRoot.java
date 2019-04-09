@@ -14,13 +14,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PrepareRoot extends BelfiusResponse {
 
     public List<BeneficiariesContacts> getBeneficiaries() {
-        return ScreenUpdateResponse.streamWidgetsWithId(this, BelfiusConstants.Response.BENEFICIARY_WIDGET)
+        return ScreenUpdateResponse.streamWidgetsWithId(
+                        this, BelfiusConstants.Response.BENEFICIARY_WIDGET)
                 .flatMap(widget -> getBeneficiaries(widget).stream())
                 .collect(Collectors.toList());
     }
 
     private List<BeneficiariesContacts> getBeneficiaries(Widget widget) {
         PropertiesEntity propertiesEntity = widget.getProperties(PropertiesEntity.class);
-        return propertiesEntity != null ? propertiesEntity.getBeneficiaries() : Collections.emptyList();
+        return propertiesEntity != null
+                ? propertiesEntity.getBeneficiaries()
+                : Collections.emptyList();
     }
 }

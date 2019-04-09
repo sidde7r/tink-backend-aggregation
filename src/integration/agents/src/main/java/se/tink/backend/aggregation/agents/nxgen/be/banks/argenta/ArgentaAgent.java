@@ -1,5 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta;
 
+import static org.apache.http.client.config.CookieSpecs.IGNORE_COOKIES;
+
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.AgentContext;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.authenticator.ArgentaAuthenticator;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transactional.ArgentaTransactionalAccountFetcher;
@@ -21,10 +24,6 @@ import se.tink.backend.aggregation.nxgen.controllers.transfer.TransferController
 import se.tink.backend.aggregation.nxgen.core.account.transactional.TransactionalAccount;
 import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
-
-import java.util.Optional;
-
-import static org.apache.http.client.config.CookieSpecs.IGNORE_COOKIES;
 
 public class ArgentaAgent extends NextGenerationAgent {
 

@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PaginationEntity {
     @JsonProperty("newer_url")
     private String nextPage;
+
     @JsonProperty("older_url")
     private String previousPage;
 

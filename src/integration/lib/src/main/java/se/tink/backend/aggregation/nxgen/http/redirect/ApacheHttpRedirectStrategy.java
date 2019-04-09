@@ -26,7 +26,8 @@ public class ApacheHttpRedirectStrategy extends LaxRedirectStrategy {
     }
 
     @Override
-    public boolean isRedirected(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext)
+    public boolean isRedirected(
+            HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext)
             throws ProtocolException {
         boolean isRedirect = super.isRedirected(httpRequest, httpResponse, httpContext);
         if (!isRedirect) {

@@ -12,19 +12,27 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 
 public class EncryptedMessageService {
 
-    private static void setDeviceInformation(Map<String, String> queryPairs, Map<String, String> encapStorage) {
-        queryPairs.put("device.ApplicationHash", encapStorage.get(EncapConstants.Storage.B64_APPLICATION_HASH));
-        queryPairs.put("device.DeviceHash", encapStorage.get(EncapConstants.Storage.B64_DEVICE_HASH));
+    private static void setDeviceInformation(
+            Map<String, String> queryPairs, Map<String, String> encapStorage) {
+        queryPairs.put(
+                "device.ApplicationHash",
+                encapStorage.get(EncapConstants.Storage.B64_APPLICATION_HASH));
+        queryPairs.put(
+                "device.DeviceHash", encapStorage.get(EncapConstants.Storage.B64_DEVICE_HASH));
         queryPairs.put("device.DeviceManufacturer", EncapConstants.DeviceInformation.MANUFACTURER);
         queryPairs.put("device.DeviceModel", EncapConstants.DeviceInformation.MODEL);
         queryPairs.put("device.DeviceName", EncapConstants.DeviceInformation.NAME);
         queryPairs.put("device.DeviceUUID", encapStorage.get(EncapConstants.Storage.DEVICE_UUID));
-        queryPairs.put("device.IsRootAvailable", EncapConstants.DeviceInformation.IS_ROOT_AVAILABLE);
-        queryPairs.put("device.OperatingSystemName", EncapConstants.DeviceInformation.OS_NAME_AND_TYPE);
-        queryPairs.put("device.OperatingSystemType", EncapConstants.DeviceInformation.OS_NAME_AND_TYPE);
+        queryPairs.put(
+                "device.IsRootAvailable", EncapConstants.DeviceInformation.IS_ROOT_AVAILABLE);
+        queryPairs.put(
+                "device.OperatingSystemName", EncapConstants.DeviceInformation.OS_NAME_AND_TYPE);
+        queryPairs.put(
+                "device.OperatingSystemType", EncapConstants.DeviceInformation.OS_NAME_AND_TYPE);
         queryPairs.put("device.SignerHashes", EncapConstants.DeviceInformation.SIGNER_HASHES);
         queryPairs.put("device.SystemVersion", EncapConstants.DeviceInformation.SYSTEM_VERSION);
-        queryPairs.put("device.UserInterfaceIdiom", EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
+        queryPairs.put(
+                "device.UserInterfaceIdiom", EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
     }
 
     static String buildFirstMessageForActivation(Map<String, String> encapStorage) {
@@ -45,7 +53,9 @@ public class EncryptedMessageService {
 
         queryPairs.put("applicationId", EncapConstants.MessageInformation.APPLICATION_ID);
         queryPairs.put("clientOnly", EncapConstants.MessageInformation.CLIENT_ONLY);
-        queryPairs.put("clientSaltCurrentKeyId", encapStorage.get(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID));
+        queryPairs.put(
+                "clientSaltCurrentKeyId",
+                encapStorage.get(EncapConstants.Storage.CLIENT_SALT_CURRENT_KEY_ID));
         setDeviceInformation(queryPairs, encapStorage);
         EncapUtils.setMetaInformation(queryPairs, encapStorage);
         queryPairs.put("operation", EncapConstants.MessageInformation.OPERATION_IDENTIFY);
@@ -61,11 +71,17 @@ public class EncryptedMessageService {
 
         queryPairs.put("activatedAuthMethods", EncapConstants.MessageInformation.DEVICE_PIN);
         queryPairs.put("applicationId", EncapConstants.MessageInformation.APPLICATION_ID);
-        queryPairs.put("b64AuthenticationKey", encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY));
-        queryPairs.put("b64AuthenticationKeyWithoutPin",
+        queryPairs.put(
+                "b64AuthenticationKey",
+                encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY));
+        queryPairs.put(
+                "b64AuthenticationKeyWithoutPin",
                 encapStorage.get(EncapConstants.Storage.B64_AUTHENTICATION_KEY_WITHOUT_PIN));
-        queryPairs.put("b64ChallengeResponse", encapStorage.get(EncapConstants.Storage.B64_CHALLENGE_RESPONSE));
-        queryPairs.put("b64ChallengeResponseWithoutPin",
+        queryPairs.put(
+                "b64ChallengeResponse",
+                encapStorage.get(EncapConstants.Storage.B64_CHALLENGE_RESPONSE));
+        queryPairs.put(
+                "b64ChallengeResponseWithoutPin",
                 encapStorage.get(EncapConstants.Storage.B64_CHALLENGE_RESPONSE_WITHOUT_PIN));
         queryPairs.put("b64TotpKey", encapStorage.get(EncapConstants.Storage.B64_TOTP_KEY));
         setDeviceInformation(queryPairs, encapStorage);
@@ -82,7 +98,9 @@ public class EncryptedMessageService {
         Map<String, String> queryPairs = Maps.newLinkedHashMap();
 
         queryPairs.put("applicationId", EncapConstants.MessageInformation.APPLICATION_ID);
-        queryPairs.put("b64ResponseCurrent", encapStorage.get(EncapConstants.Storage.B64_RESPONSE_CURRENT));
+        queryPairs.put(
+                "b64ResponseCurrent",
+                encapStorage.get(EncapConstants.Storage.B64_RESPONSE_CURRENT));
         setDeviceInformation(queryPairs, encapStorage);
         queryPairs.put("hexAPNToken", EncapConstants.MessageInformation.HEX_APN_TOKEN);
         EncapUtils.setMetaInformation(queryPairs, encapStorage);
@@ -94,12 +112,20 @@ public class EncryptedMessageService {
         return EncapUtils.getUrlEncodedQueryParams(queryPairs);
     }
 
-    static private HashMap<String, String> getCryptoRequestParams(byte[] rand16BytesKey, byte[] rand16BytesIv,
-            byte[] serverPubKeyBytes, String inputInPlainText) {
+    private static HashMap<String, String> getCryptoRequestParams(
+            byte[] rand16BytesKey,
+            byte[] rand16BytesIv,
+            byte[] serverPubKeyBytes,
+            String inputInPlainText) {
         HashMap<String, String> requestParams = Maps.newHashMap();
-        requestParams.put("EMD", EncapCrypto.computeEMD(rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
-        requestParams.put("EMK", EncapCrypto.computeEMK(rand16BytesKey, rand16BytesIv, serverPubKeyBytes));
-        requestParams.put("MAC", EncapCrypto.computeMAC(rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
+        requestParams.put(
+                "EMD",
+                EncapCrypto.computeEMD(rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
+        requestParams.put(
+                "EMK", EncapCrypto.computeEMK(rand16BytesKey, rand16BytesIv, serverPubKeyBytes));
+        requestParams.put(
+                "MAC",
+                EncapCrypto.computeMAC(rand16BytesKey, rand16BytesIv, inputInPlainText.getBytes()));
         requestParams.put("MPV", EncodingUtils.encodeAsBase64String("1"));
         requestParams.put("PKH", EncapCrypto.computePublicKeyHash(serverPubKeyBytes));
 
@@ -109,22 +135,26 @@ public class EncryptedMessageService {
     static String encryptAndSendMessage(TinkHttpClient client, String plainTextMessage) {
         byte[] key = RandomUtils.secureRandom(16);
         byte[] iv = RandomUtils.secureRandom(16);
-        byte[] pubKeyBytes = EncodingUtils.decodeBase64String(EncapConstants.B64_ELLIPTIC_CURVE_PUBLIC_KEY);
+        byte[] pubKeyBytes =
+                EncodingUtils.decodeBase64String(EncapConstants.B64_ELLIPTIC_CURVE_PUBLIC_KEY);
 
-        HashMap<String, String> cryptoRequestParams = getCryptoRequestParams(
-                key, iv, pubKeyBytes, plainTextMessage);
+        HashMap<String, String> cryptoRequestParams =
+                getCryptoRequestParams(key, iv, pubKeyBytes, plainTextMessage);
 
         RequestBody encryptionRequestBody = new RequestBody(cryptoRequestParams);
 
-        String response = client.request(EncapConstants.Urls.CRYPTO_EXCHANGE)
-                .accept(MediaType.WILDCARD)
-                .type(MediaType.APPLICATION_FORM_URLENCODED)
-                .post(String.class, encryptionRequestBody);
+        String response =
+                client.request(EncapConstants.Urls.CRYPTO_EXCHANGE)
+                        .accept(MediaType.WILDCARD)
+                        .type(MediaType.APPLICATION_FORM_URLENCODED)
+                        .post(String.class, encryptionRequestBody);
 
         Map<String, String> responseQueryPairs = EncapUtils.parseResponseQuery(response);
 
-        String decryptedEMD = EncapCrypto.decryptEMDResponse(key, iv, responseQueryPairs.get("EMD"));
-        boolean isVerified = EncapCrypto.verifyMACValue(key, iv, decryptedEMD, responseQueryPairs.get("MAC"));
+        String decryptedEMD =
+                EncapCrypto.decryptEMDResponse(key, iv, responseQueryPairs.get("EMD"));
+        boolean isVerified =
+                EncapCrypto.verifyMACValue(key, iv, decryptedEMD, responseQueryPairs.get("MAC"));
 
         if (!isVerified) {
             throw new IllegalStateException("MAC authentication failed");

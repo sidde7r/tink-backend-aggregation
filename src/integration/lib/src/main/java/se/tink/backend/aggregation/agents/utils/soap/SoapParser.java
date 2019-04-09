@@ -20,7 +20,8 @@ public class SoapParser {
     private static SOAPMessage getSoapMessage(String xml) {
         try {
             MessageFactory factory = MessageFactory.newInstance();
-            final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+            final ByteArrayInputStream byteArrayInputStream =
+                    new ByteArrayInputStream(xml.getBytes("UTF-8"));
             return factory.createMessage(new MimeHeaders(), byteArrayInputStream);
         } catch (SOAPException | IOException e) {
             throw new IllegalStateException(e.getMessage(), e);

@@ -7,9 +7,8 @@ import java.security.NoSuchAlgorithmException;
 public class LaCaixaPasswordHash {
 
     private static final String HASH_ALGORITHM = "MD5";
-    private static final String PADDING = "                " +
-                                        "                " +
-                                        "                ";
+    private static final String PADDING =
+            "                " + "                " + "                ";
 
     private static final int MESSAGE_LENGTH = 64;
     private static final int COUNTER_1_VALUE = 3;
@@ -27,7 +26,6 @@ public class LaCaixaPasswordHash {
         this.seed = seed;
         this.iterations = iterations;
         this.pin = pin;
-
     }
 
     public String createOtp() {
@@ -51,13 +49,14 @@ public class LaCaixaPasswordHash {
 
         MessageDigest md = null;
 
-        try{
+        try {
 
             md = MessageDigest.getInstance(HASH_ALGORITHM);
 
-        } catch (NoSuchAlgorithmException e){
+        } catch (NoSuchAlgorithmException e) {
 
-            throw new IllegalStateException("Algorithm: (" + HASH_ALGORITHM + ") could not be found.");
+            throw new IllegalStateException(
+                    "Algorithm: (" + HASH_ALGORITHM + ") could not be found.");
         }
 
         return md.digest(md5BaseData.getBytes(StandardCharsets.UTF_8));
@@ -73,13 +72,13 @@ public class LaCaixaPasswordHash {
 
         // fold to first 4 bytes
         for (int counter1 = COUNTER_1_VALUE; counter1 >= 0; counter1--) {
-            outbuf[(int)counter1] = (byte)(foldFirst4 & 0xFF);
+            outbuf[(int) counter1] = (byte) (foldFirst4 & 0xFF);
             foldFirst4 >>= 8;
         }
 
         // fold to last 4 bytes
         for (int counter = COUNTER_2_VALUE; counter > COUNTER_1_VALUE; counter--) {
-            outbuf[(int)counter] = (byte)(foldLast4 & 0xFF);
+            outbuf[(int) counter] = (byte) (foldLast4 & 0xFF);
             foldLast4 >>= 8;
         }
 
@@ -102,12 +101,12 @@ public class LaCaixaPasswordHash {
         for (int i = 0; i < 4; i++) {
             int idx = i << 2;
 
-            long b3 = ((long)md5Sum[idx] << 24) & 0xFF000000;
-            long b2 = ((long)md5Sum[(idx | 1)] << 16) & 0xFF0000;
-            long b1 = ((long)md5Sum[(idx | 2)] << 8) & 0xFF00;
+            long b3 = ((long) md5Sum[idx] << 24) & 0xFF000000;
+            long b2 = ((long) md5Sum[(idx | 1)] << 16) & 0xFF0000;
+            long b1 = ((long) md5Sum[(idx | 2)] << 8) & 0xFF00;
             long b0 = md5Sum[(idx | 3)] & 0xFF;
 
-            dataAsInts[i] = b0+b1+b2+b3;
+            dataAsInts[i] = b0 + b1 + b2 + b3;
         }
 
         return dataAsInts;

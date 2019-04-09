@@ -3,13 +3,13 @@ package se.tink.backend.aggregation.nxgen.http.exceptions;
 import se.tink.backend.aggregation.nxgen.http.HttpRequest;
 
 /**
- * A runtime exception thrown by a client handler that signals a
- * failure to process the HTTP request or HTTP response.
+ * A runtime exception thrown by a client handler that signals a failure to process the HTTP request
+ * or HTTP response.
  *
- * (Internally wraps Jersey's `ClientHandlerException`)
+ * <p>(Internally wraps Jersey's `ClientHandlerException`)
  */
 public class HttpClientException extends RuntimeException {
-    transient private final HttpRequest request;
+    private final transient HttpRequest request;
 
     public HttpClientException(HttpRequest request) {
         this.request = request;
@@ -30,7 +30,11 @@ public class HttpClientException extends RuntimeException {
         this.request = request;
     }
 
-    public HttpClientException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
+    public HttpClientException(
+            String message,
+            Throwable cause,
+            boolean enableSuppression,
+            boolean writableStackTrace,
             HttpRequest request) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.request = request;

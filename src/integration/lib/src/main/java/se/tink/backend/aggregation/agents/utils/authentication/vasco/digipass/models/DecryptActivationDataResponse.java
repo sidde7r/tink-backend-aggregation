@@ -7,8 +7,8 @@ public class DecryptActivationDataResponse {
     private final String encryptedServerNonce;
     private final String derivationCode;
 
-    public DecryptActivationDataResponse(byte[] clientInitialVector, byte[] encryptedServerNonce,
-            String derivationCode) {
+    public DecryptActivationDataResponse(
+            byte[] clientInitialVector, byte[] encryptedServerNonce, String derivationCode) {
         this.clientInitialVector = EncodingUtils.encodeHexAsString(clientInitialVector);
         this.encryptedServerNonce = EncodingUtils.encodeHexAsString(encryptedServerNonce);
         this.derivationCode = derivationCode;

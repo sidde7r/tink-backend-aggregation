@@ -20,10 +20,12 @@ public class LoginResponse extends BelfiusResponse {
                         .getMessageType()
                         .equalsIgnoreCase(BelfiusConstants.ErrorCodes.ERROR_MESSAGE_TYPE)) {
             if (StringUtils.containsIgnoreCase(
-                    messageResponse.getMessageDetail(), BelfiusConstants.ErrorCodes.WRONG_CREDENTIALS_CODE)) {
+                    messageResponse.getMessageDetail(),
+                    BelfiusConstants.ErrorCodes.WRONG_CREDENTIALS_CODE)) {
                 throw LoginError.INCORRECT_CREDENTIALS.exception();
             } else if (StringUtils.containsIgnoreCase(
-                    messageResponse.getMessageDetail(), BelfiusConstants.ErrorCodes.ACCOUNT_BLOCKED)) {
+                    messageResponse.getMessageDetail(),
+                    BelfiusConstants.ErrorCodes.ACCOUNT_BLOCKED)) {
                 throw AuthorizationError.ACCOUNT_BLOCKED.exception();
             }
         }

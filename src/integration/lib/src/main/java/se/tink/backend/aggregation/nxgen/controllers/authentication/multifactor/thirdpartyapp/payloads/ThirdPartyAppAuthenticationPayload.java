@@ -58,17 +58,16 @@ public class ThirdPartyAppAuthenticationPayload {
 
     public static class Ios {
         /**
-         * Url to AppStore where the app can be downloaded. Example: https://itunes.apple.com/nl/app/abn-amro-mobiel-bankieren/id439728011?mt=8
+         * Url to AppStore where the app can be downloaded. Example:
+         * https://itunes.apple.com/nl/app/abn-amro-mobiel-bankieren/id439728011?mt=8
          */
-
         private String appStoreUrl;
-        /**
-         * Base scheme of the app. Example: abnamro.nl://
-         */
+        /** Base scheme of the app. Example: abnamro.nl:// */
         private String scheme;
 
         /**
-         * Url that the app should open. Can be of another scheme then app scheme. Example: nl.abnamro.signing.grip://signing?itemId=10101010101
+         * Url that the app should open. Can be of another scheme then app scheme. Example:
+         * nl.abnamro.signing.grip://signing?itemId=10101010101
          */
         private String deepLinkUrl;
 
@@ -98,18 +97,18 @@ public class ThirdPartyAppAuthenticationPayload {
     }
 
     public static class Android {
-        /**
-         * Name of the package that should be opened. Example: "com.abnamro.nl.mobile.payments"
-         */
+        /** Name of the package that should be opened. Example: "com.abnamro.nl.mobile.payments" */
         private String packageName;
 
         /**
-         * The minimum version of the package that needs to be installed. Example: 9.03.01.01 = 9030101
+         * The minimum version of the package that needs to be installed. Example: 9.03.01.01 =
+         * 9030101
          */
         private int requiredMinimumVersion;
 
         /**
-         * Url of the intent that should be opened. Example: nl.abnamro.signing.grip://signing?itemId=10101010101
+         * Url of the intent that should be opened. Example:
+         * nl.abnamro.signing.grip://signing?itemId=10101010101
          */
         private String intent;
 

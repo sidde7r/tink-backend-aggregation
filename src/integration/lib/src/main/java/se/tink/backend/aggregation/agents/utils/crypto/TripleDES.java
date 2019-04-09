@@ -51,8 +51,11 @@ public class TripleDES {
             int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue);
             return cipher.doFinal(data);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException |
-                BadPaddingException e) {
+        } catch (NoSuchPaddingException
+                | NoSuchAlgorithmException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -65,8 +68,12 @@ public class TripleDES {
             int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue, ivValue);
             return cipher.doFinal(data);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException |
-                BadPaddingException | InvalidAlgorithmParameterException e) {
+        } catch (NoSuchPaddingException
+                | NoSuchAlgorithmException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException
+                | InvalidAlgorithmParameterException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }

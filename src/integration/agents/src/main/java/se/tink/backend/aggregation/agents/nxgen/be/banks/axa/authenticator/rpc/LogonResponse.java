@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc;
 
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.ClientInfoEntity;
 import se.tink.backend.aggregation.annotations.JsonObject;
-
-import java.util.Optional;
 
 @JsonObject
 public final class LogonResponse {
@@ -23,7 +22,6 @@ public final class LogonResponse {
     }
 
     public Optional<String> getCustomerId() {
-        return Optional.ofNullable(clientInfo)
-                .map(ClientInfoEntity::getCustomerId);
+        return Optional.ofNullable(clientInfo).map(ClientInfoEntity::getCustomerId);
     }
 }

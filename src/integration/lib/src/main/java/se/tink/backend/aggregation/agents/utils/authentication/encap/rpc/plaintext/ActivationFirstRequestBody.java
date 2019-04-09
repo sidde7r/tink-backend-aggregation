@@ -5,8 +5,11 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap.EncapConsta
 
 public class ActivationFirstRequestBody extends MultivaluedMapImpl {
 
-    public ActivationFirstRequestBody(String deviceHash, String deviceUUID, String applicationVersion,
-            String encapAPIVerison ) {
+    public ActivationFirstRequestBody(
+            String deviceHash,
+            String deviceUUID,
+            String applicationVersion,
+            String encapAPIVerison) {
         add("applicationId", EncapConstants.MessageInformation.APPLICATION_ID);
         add("device.DeviceHash", deviceHash);
         add("deviceModel", EncapConstants.DeviceInformation.MODEL);
@@ -15,8 +18,7 @@ public class ActivationFirstRequestBody extends MultivaluedMapImpl {
         add("device.IsRootAvailable", EncapConstants.DeviceInformation.IS_ROOT_AVAILABLE);
         add("device.SystemName", EncapConstants.DeviceInformation.OS_NAME_AND_TYPE);
         add("device.SystemVersion", EncapConstants.DeviceInformation.SYSTEM_VERSION);
-        add("device.UserInterfaceIdiom", 
-                EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
+        add("device.UserInterfaceIdiom", EncapConstants.DeviceInformation.USER_INTERFACE_IDIOM);
         add("hexAPNToken", EncapConstants.MessageInformation.HEX_APN_TOKEN);
         add("meta.applicationVersion", applicationVersion);
         add("meta.encapAPIVersion", encapAPIVerison);

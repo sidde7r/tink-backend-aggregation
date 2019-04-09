@@ -18,7 +18,8 @@ public class EncapConstants {
                 new URL(HOST + SOAP_BASE + "/SECSMobileActivationSessionUpdate_V1_0Service");
         static final URL ACTIVATION_SERVICE =
                 new URL(HOST + SOAP_BASE + "/SECSMobileActivationService_V1_0");
-        static final URL USER_CREATE = new URL(HOST + SOAP_BASE + "/SECSMobileUserCreate_V1_0Service");
+        static final URL USER_CREATE =
+                new URL(HOST + SOAP_BASE + "/SECSMobileUserCreate_V1_0Service");
         static final URL AUTHENTICATION_SERVICE =
                 new URL(HOST + SOAP_BASE + "/SECSMobileAuthenticationService_V1_0");
         static final URL AUTHENTICATION_SESSION_READ_SERVICE =
@@ -26,10 +27,12 @@ public class EncapConstants {
     }
 
     public static final class HttpHeaders {
-        static final String AUTHENTICATION_SESSION_CREATE = "sECSMobileAuthenticationSessionCreate_V1_0";
+        static final String AUTHENTICATION_SESSION_CREATE =
+                "sECSMobileAuthenticationSessionCreate_V1_0";
         static final String ACTIVATION_SESSION_UPDATE = "sECSMobileActivationSessionUpdate_V1_0";
         static final String USER_CREATE = "sECSMobileUserCreate_V1_0";
-        static final String AUTHENTICATION_SESSION_READ = "sECSMobileAuthenticationSessionRead_V1_0";
+        static final String AUTHENTICATION_SESSION_READ =
+                "sECSMobileAuthenticationSessionRead_V1_0";
     }
 
     public static final class Storage {

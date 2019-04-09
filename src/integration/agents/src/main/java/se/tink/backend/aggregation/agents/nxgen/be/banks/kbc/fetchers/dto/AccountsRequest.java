@@ -47,7 +47,8 @@ public class AccountsRequest {
         }
 
         public Builder setIncludeReservationsIndicator(boolean includeReservationsIndicator) {
-            this.includeReservationsIndicator = TypeValuePair.createBoolean(includeReservationsIndicator);
+            this.includeReservationsIndicator =
+                    TypeValuePair.createBoolean(includeReservationsIndicator);
             return this;
         }
 
@@ -76,8 +77,13 @@ public class AccountsRequest {
         }
 
         public AccountsRequest build() {
-            return new AccountsRequest(balanceIndicator, includeReservationsIndicator, includeAgreementMakeUp,
-                    retrieveSavingsAccountsOnlyIndicator, retrieveCurrentAccountsOnlyIndicator, paymentDashboardIndicator);
+            return new AccountsRequest(
+                    balanceIndicator,
+                    includeReservationsIndicator,
+                    includeAgreementMakeUp,
+                    retrieveSavingsAccountsOnlyIndicator,
+                    retrieveCurrentAccountsOnlyIndicator,
+                    paymentDashboardIndicator);
         }
     }
 }

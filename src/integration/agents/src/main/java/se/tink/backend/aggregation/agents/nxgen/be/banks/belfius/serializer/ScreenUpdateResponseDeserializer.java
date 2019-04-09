@@ -19,8 +19,7 @@ public class ScreenUpdateResponseDeserializer extends JsonDeserializer<ScreenUpd
         List<Widget> widgets = new ArrayList<>();
 
         JsonNode json = jsonParser.getCodec().readTree(jsonParser);
-        json.elements().forEachRemaining(element ->
-                        deserializeInto(widgets, jsonParser, element));
+        json.elements().forEachRemaining(element -> deserializeInto(widgets, jsonParser, element));
 
         return new ScreenUpdateResponse(widgets);
     }

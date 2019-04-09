@@ -3,9 +3,9 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.authenticator.
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.BelfiusConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.ScreenUpdateResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.Text;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.BelfiusResponse;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.Valid;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.Widget;
 import se.tink.backend.aggregation.annotations.JsonObject;
@@ -14,8 +14,8 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class PrepareAuthenticationResponse extends BelfiusResponse {
 
     public void validate() throws AuthenticationException {
-        Widget widget = ScreenUpdateResponse.findWidget(this, BelfiusConstants.Widget.PAN)
-                .orElse(null);
+        Widget widget =
+                ScreenUpdateResponse.findWidget(this, BelfiusConstants.Widget.PAN).orElse(null);
 
         if (widget == null) {
             return;
@@ -29,8 +29,9 @@ public class PrepareAuthenticationResponse extends BelfiusResponse {
     }
 
     public String getChallenge() {
-        return ScreenUpdateResponse.findWidgetOrElseThrow(this,
-                BelfiusConstants.Widget.IWS_LOGIN_SIGNATURE_CHALLENGE)
-                .getProperties(Text.class).getText();
+        return ScreenUpdateResponse.findWidgetOrElseThrow(
+                        this, BelfiusConstants.Widget.IWS_LOGIN_SIGNATURE_CHALLENGE)
+                .getProperties(Text.class)
+                .getText();
     }
 }

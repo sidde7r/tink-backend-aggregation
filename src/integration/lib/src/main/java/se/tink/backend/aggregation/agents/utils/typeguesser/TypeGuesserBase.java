@@ -7,14 +7,17 @@ abstract class TypeGuesserBase {
     protected final ImmutableList<String> accountTypeSavingsTokens;
     protected final ImmutableList<String> accountTypeInvestmentTokens;
 
-    TypeGuesserBase(ImmutableList<String> accountTypeSavingsTokens, ImmutableList<String> accountTypeInvestmentTokens) {
+    TypeGuesserBase(
+            ImmutableList<String> accountTypeSavingsTokens,
+            ImmutableList<String> accountTypeInvestmentTokens) {
         this.accountTypeInvestmentTokens = accountTypeInvestmentTokens;
         this.accountTypeSavingsTokens = accountTypeSavingsTokens;
     }
 
     /**
-     * Guess type of account based name for a specific language.
-     * Expects Language based tokens to compare.
+     * Guess type of account based name for a specific language. Expects Language based tokens to
+     * compare.
+     *
      * @param accountName
      * @return Account type, best guess
      */

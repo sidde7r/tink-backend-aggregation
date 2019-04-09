@@ -23,7 +23,8 @@ public class BnpPfHttpFilter extends Filter {
     }
 
     @Override
-    public HttpResponse handle(HttpRequest httpRequest) throws HttpClientException, HttpResponseException {
+    public HttpResponse handle(HttpRequest httpRequest)
+            throws HttpClientException, HttpResponseException {
         MultivaluedMap<String, Object> headers = httpRequest.getHeaders();
         headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
 

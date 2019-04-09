@@ -28,7 +28,7 @@ public class BelfiusStringUtils {
                 decimalSplit[decimalSplit.length - 1].replace(",", ".");
 
         String formattedAmount = "";
-        for(String s : decimalSplit){
+        for (String s : decimalSplit) {
             formattedAmount = formattedAmount + s;
         }
 
@@ -36,9 +36,7 @@ public class BelfiusStringUtils {
     }
 
     /**
-     * Formats an amount to a string on the form
-     * xxx.xxx,dd
-     * Example: 2.312,00
+     * Formats an amount to a string on the form xxx.xxx,dd Example: 2.312,00
      *
      * @param amount
      * @return a formatted amount
@@ -49,5 +47,4 @@ public class BelfiusStringUtils {
         decimal[0] = decimal[0].replace(",", ".");
         return decimal[0] + "," + decimal[1];
     }
-
 }

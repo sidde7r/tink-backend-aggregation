@@ -27,26 +27,32 @@ public class IngHelper {
     }
 
     public void addRequestUrls(List<RequestEntity> requestsEntityList) {
-        requestsEntityList.forEach(requestEntity -> this.urlsByRequestName.put(
-                requestEntity.getName().toLowerCase(),
-                StringEscapeUtils.unescapeHtml(requestEntity.getUrl()))
-        );
+        requestsEntityList.forEach(
+                requestEntity ->
+                        this.urlsByRequestName.put(
+                                requestEntity.getName().toLowerCase(),
+                                StringEscapeUtils.unescapeHtml(requestEntity.getUrl())));
 
-        String urlsByRequestNameString = SerializationUtils.serializeToString(this.urlsByRequestName);
-        this.sessionStorage.put(IngConstants.Storage.URLS_BY_REQUEST_NAME_STORAGE, urlsByRequestNameString);
+        String urlsByRequestNameString =
+                SerializationUtils.serializeToString(this.urlsByRequestName);
+        this.sessionStorage.put(
+                IngConstants.Storage.URLS_BY_REQUEST_NAME_STORAGE, urlsByRequestNameString);
     }
 
     public String getUrl(String requestName) {
         String requestUrl = this.urlsByRequestName.get(requestName);
 
         if (Strings.isNullOrEmpty(requestUrl)) {
-            String urlsByRequestNameString = this.sessionStorage.get(IngConstants.Storage.URLS_BY_REQUEST_NAME_STORAGE);
-            this.urlsByRequestName = SerializationUtils.deserializeFromString(urlsByRequestNameString,
-                    TypeReferences.MAP_OF_STRING_STRING);
+            String urlsByRequestNameString =
+                    this.sessionStorage.get(IngConstants.Storage.URLS_BY_REQUEST_NAME_STORAGE);
+            this.urlsByRequestName =
+                    SerializationUtils.deserializeFromString(
+                            urlsByRequestNameString, TypeReferences.MAP_OF_STRING_STRING);
             requestUrl = this.urlsByRequestName.get(requestName);
         }
 
-        return Preconditions.checkNotNull(requestUrl, "%s: %s", IngConstants.LogMessage.URL_NOT_FOUND, requestName);
+        return Preconditions.checkNotNull(
+                requestUrl, "%s: %s", IngConstants.LogMessage.URL_NOT_FOUND, requestName);
     }
 
     public static Double parseAmountStringToDouble(String amount) {
@@ -70,6 +76,7 @@ public class IngHelper {
     }
 
     public Optional<LoginResponseEntity> retrieveLoginResponse() {
-        return this.sessionStorage.get(IngConstants.Storage.LOGIN_RESPONSE, LoginResponseEntity.class);
+        return this.sessionStorage.get(
+                IngConstants.Storage.LOGIN_RESPONSE, LoginResponseEntity.class);
     }
 }

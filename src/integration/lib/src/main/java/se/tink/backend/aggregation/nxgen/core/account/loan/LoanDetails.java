@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.core.account.loan.util.LoanInterpreter;
 import se.tink.libraries.amount.Amount;
-import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.libraries.date.DateUtils;
 
 public class LoanDetails {
@@ -32,9 +32,18 @@ public class LoanDetails {
         this(null, null, null, null, null, 0, null, null, null, null, false);
     }
 
-    private LoanDetails(Amount amortized, Amount monthlyAmortization, Amount initialBalance,
-            Date initialDate, String loanNumber, int numMonthsBound, Date nextDayOfTermsChange, Type type,
-            String security, List<String> applicants, boolean coApplicant) {
+    private LoanDetails(
+            Amount amortized,
+            Amount monthlyAmortization,
+            Amount initialBalance,
+            Date initialDate,
+            String loanNumber,
+            int numMonthsBound,
+            Date nextDayOfTermsChange,
+            Type type,
+            String security,
+            List<String> applicants,
+            boolean coApplicant) {
         this.amortized = amortized;
         this.monthlyAmortization = monthlyAmortization;
         this.initialBalance = initialBalance;
@@ -62,8 +71,10 @@ public class LoanDetails {
 
         if (initialBalance != null) {
             if (!Objects.equals(initialBalance.getCurrency(), account.getBalance().getCurrency())) {
-                log.warn(String.format("Detected Multiple loan currencies {balance: %s, initialBalance: %s}",
-                        account.getBalance().getCurrency(), initialBalance.getCurrency()));
+                log.warn(
+                        String.format(
+                                "Detected Multiple loan currencies {balance: %s, initialBalance: %s}",
+                                account.getBalance().getCurrency(), initialBalance.getCurrency()));
             }
 
             return initialBalance.getValue() - account.getBalance().getValue();
@@ -142,7 +153,8 @@ public class LoanDetails {
         loan.setBalance(account.getBalance().getValue());
         loan.setInterest(account.getInterestRate());
         loan.setName(account.getName());
-        loan.setLoanNumber(Strings.isNullOrEmpty(loanNumber) ? account.getAccountNumber() : loanNumber);
+        loan.setLoanNumber(
+                Strings.isNullOrEmpty(loanNumber) ? account.getAccountNumber() : loanNumber);
         loan.setAmortized(calculateAmortizedValue(account));
         loan.setMonthlyAmortization(calculateMonthlyAmortizationValue(account));
         loan.setInitialBalance(getInitialBalanceValue());
@@ -150,13 +162,15 @@ public class LoanDetails {
         loan.setNumMonthsBound(numMonthsBound);
         loan.setNextDayOfTermsChange(nextDayOfTermsChange);
 
-        Type type = Type.DERIVE_FROM_NAME.equals(getType()) ?
-                interpreter.interpretLoanType(loan.getName()) :
-                getType();
+        Type type =
+                Type.DERIVE_FROM_NAME.equals(getType())
+                        ? interpreter.interpretLoanType(loan.getName())
+                        : getType();
 
         loan.setType(type.toSystemType());
 
-        se.tink.backend.aggregation.agents.models.LoanDetails loanDetails = new se.tink.backend.aggregation.agents.models.LoanDetails();
+        se.tink.backend.aggregation.agents.models.LoanDetails loanDetails =
+                new se.tink.backend.aggregation.agents.models.LoanDetails();
         loanDetails.setLoanSecurity(security);
         loanDetails.setCoApplicant(hasCoApplicant());
         loanDetails.setApplicants(applicants);
@@ -292,16 +306,30 @@ public class LoanDetails {
         }
 
         public LoanDetails build() {
-            return new LoanDetails(getAmortized(), getMonthlyAmortization(), getInitialBalance(),
-                    getInitialDate(), getLoanNumber(), getNumMonthsBound(), getNextDayOfTermsChange(), getType(),
-                    getSecurity(), getApplicants(), hasCoApplicant());
+            return new LoanDetails(
+                    getAmortized(),
+                    getMonthlyAmortization(),
+                    getInitialBalance(),
+                    getInitialDate(),
+                    getLoanNumber(),
+                    getNumMonthsBound(),
+                    getNextDayOfTermsChange(),
+                    getType(),
+                    getSecurity(),
+                    getApplicants(),
+                    hasCoApplicant());
         }
     }
 
     public enum Type {
-        MORTGAGE(Loan.Type.MORTGAGE), BLANCO(Loan.Type.BLANCO), MEMBERSHIP(Loan.Type.MEMBERSHIP),
-        VEHICLE(Loan.Type.VEHICLE), LAND(Loan.Type.LAND), STUDENT(Loan.Type.STUDENT),
-        OTHER(Loan.Type.OTHER), DERIVE_FROM_NAME(null);
+        MORTGAGE(Loan.Type.MORTGAGE),
+        BLANCO(Loan.Type.BLANCO),
+        MEMBERSHIP(Loan.Type.MEMBERSHIP),
+        VEHICLE(Loan.Type.VEHICLE),
+        LAND(Loan.Type.LAND),
+        STUDENT(Loan.Type.STUDENT),
+        OTHER(Loan.Type.OTHER),
+        DERIVE_FROM_NAME(null);
 
         private final Loan.Type type;
 
@@ -310,9 +338,10 @@ public class LoanDetails {
         }
 
         public Loan.Type toSystemType() {
-            Preconditions.checkNotNull(type,
+            Preconditions.checkNotNull(
+                    type,
                     "System can`t accept null type. "
-                    + "Type must be set explicitly or be derived using LoanInterpreter.");
+                            + "Type must be set explicitly or be derived using LoanInterpreter.");
             return type;
         }
     }

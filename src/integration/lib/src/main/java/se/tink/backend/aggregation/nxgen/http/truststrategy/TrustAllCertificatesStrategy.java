@@ -7,7 +7,8 @@ import org.apache.http.conn.ssl.TrustStrategy;
 // good site to test this: https://badssl.com/
 public class TrustAllCertificatesStrategy implements TrustStrategy {
     @Override
-    public boolean isTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+    public boolean isTrusted(X509Certificate[] x509Certificates, String s)
+            throws CertificateException {
         return true;
     }
 }

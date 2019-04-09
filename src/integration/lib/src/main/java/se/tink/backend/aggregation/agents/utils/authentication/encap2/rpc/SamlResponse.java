@@ -4,5 +4,4 @@ import se.tink.backend.aggregation.agents.utils.authentication.encap2.entities.S
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class SamlResponse extends AbstractResponse<SamlEntity> {
-}
+public class SamlResponse extends AbstractResponse<SamlEntity> {}

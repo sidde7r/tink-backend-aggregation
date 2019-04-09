@@ -5,6 +5,8 @@ import com.google.common.base.Strings;
 import com.google.common.util.concurrent.Uninterruptibles;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.backend.agents.rpc.CredentialsTypes;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.contexts.SupplementalRequester;
@@ -12,25 +14,27 @@ import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.multifactor.MultiFactorAuthenticator;
 import se.tink.backend.aggregation.nxgen.exceptions.NotImplementedException;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.backend.agents.rpc.CredentialsTypes;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class BankIdAuthenticationController<T> implements MultiFactorAuthenticator {
     private static final int MAX_ATTEMPTS = 90;
 
-    private static final AggregationLogger log = new AggregationLogger(BankIdAuthenticationController.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(BankIdAuthenticationController.class);
     private final BankIdAuthenticator<T> authenticator;
     private final SupplementalRequester supplementalRequester;
     private final boolean waitOnBankId;
 
-    public BankIdAuthenticationController(SupplementalRequester supplementalRequester, BankIdAuthenticator<T> authenticator) {
+    public BankIdAuthenticationController(
+            SupplementalRequester supplementalRequester, BankIdAuthenticator<T> authenticator) {
         this(supplementalRequester, authenticator, false);
     }
 
-    public BankIdAuthenticationController(SupplementalRequester supplementalRequester, BankIdAuthenticator<T> authenticator,
+    public BankIdAuthenticationController(
+            SupplementalRequester supplementalRequester,
+            BankIdAuthenticator<T> authenticator,
             boolean waitOnBankId) {
         this.authenticator = Preconditions.checkNotNull(authenticator);
         this.supplementalRequester = Preconditions.checkNotNull(supplementalRequester);
@@ -43,9 +47,13 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
-        NotImplementedException.throwIf(!Objects.equals(credentials.getType(), getType()),
-                String.format("Authentication method not implemented for CredentialsType: %s", credentials.getType()));
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
+        NotImplementedException.throwIf(
+                !Objects.equals(credentials.getType(), getType()),
+                String.format(
+                        "Authentication method not implemented for CredentialsType: %s",
+                        credentials.getType()));
         String ssn = credentials.getField(Field.Key.USERNAME);
 
         if (Strings.isNullOrEmpty(ssn)) {
@@ -54,10 +62,8 @@ public class BankIdAuthenticationController<T> implements MultiFactorAuthenticat
 
         T reference = authenticator.init(ssn);
 
-        supplementalRequester.openBankId(authenticator
-                .getAutostartToken()
-                .orElse(null),
-                waitOnBankId);
+        supplementalRequester.openBankId(
+                authenticator.getAutostartToken().orElse(null), waitOnBankId);
 
         poll(reference);
     }

@@ -12,11 +12,9 @@ public class BelfiusTransactionList {
 
     private List<BelfiusTransaction> transactions;
 
-    public BelfiusTransactionList() {
-    }
+    public BelfiusTransactionList() {}
 
-    public BelfiusTransactionList(
-            List<BelfiusTransaction> transactions) {
+    public BelfiusTransactionList(List<BelfiusTransaction> transactions) {
         this.transactions = transactions;
     }
 

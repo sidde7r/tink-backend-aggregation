@@ -58,11 +58,13 @@ public class AES {
         return aesCtr(false, key, ctr, data);
     }
 
-    public static byte[] encryptGcm(byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
+    public static byte[] encryptGcm(
+            byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
         return aesGcm(true, key, iv, aad, gcmTagLength, data);
     }
 
-    public static byte[] decryptGcm(byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
+    public static byte[] decryptGcm(
+            byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
         return aesGcm(false, key, iv, aad, gcmTagLength, data);
     }
 
@@ -81,13 +83,17 @@ public class AES {
             int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue);
             return cipher.doFinal(data);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException |
-                BadPaddingException e) {
+        } catch (NoSuchPaddingException
+                | NoSuchAlgorithmException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
-    private static byte[] aesCbc(boolean encrypt, byte[] key, byte[] iv, byte[] data, String padding) {
+    private static byte[] aesCbc(
+            boolean encrypt, byte[] key, byte[] iv, byte[] data, String padding) {
         try {
             Cipher cipher = Cipher.getInstance(String.format("AES/CBC/%s", padding));
             IvParameterSpec ivValue = new IvParameterSpec(iv);
@@ -95,8 +101,12 @@ public class AES {
             int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue, ivValue);
             return cipher.doFinal(data);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException |
-                BadPaddingException | InvalidAlgorithmParameterException e) {
+        } catch (NoSuchPaddingException
+                | NoSuchAlgorithmException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException
+                | InvalidAlgorithmParameterException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
@@ -109,13 +119,18 @@ public class AES {
             int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue, ctrValue);
             return cipher.doFinal(data);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException |
-                BadPaddingException | InvalidAlgorithmParameterException e) {
+        } catch (NoSuchPaddingException
+                | NoSuchAlgorithmException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException
+                | InvalidAlgorithmParameterException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
-    private static byte[] aesGcm(boolean encrypt, byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
+    private static byte[] aesGcm(
+            boolean encrypt, byte[] key, byte[] iv, byte[] aad, int gcmTagLength, byte[] data) {
         try {
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             SecretKey keyValue = new SecretKeySpec(key, "AES");
@@ -123,18 +138,24 @@ public class AES {
             // configure gcm;
             //  - tag length in bits (which must be located at the end of the input data)
             //  - iv (which is 12 bytes long)
-            GCMParameterSpec spec = new GCMParameterSpec(gcmTagLength * 8, Arrays.copyOfRange(iv, 0, 12));
+            GCMParameterSpec spec =
+                    new GCMParameterSpec(gcmTagLength * 8, Arrays.copyOfRange(iv, 0, 12));
             int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue, spec);
             cipher.updateAAD(aad);
             return cipher.doFinal(data);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
-                InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+        } catch (NoSuchAlgorithmException
+                | NoSuchPaddingException
+                | InvalidKeyException
+                | InvalidAlgorithmParameterException
+                | IllegalBlockSizeException
+                | BadPaddingException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
 
-    private static byte[] aesCfb(boolean encrypt, byte[] key, byte[] iv, byte[] data, String padding) {
+    private static byte[] aesCfb(
+            boolean encrypt, byte[] key, byte[] iv, byte[] data, String padding) {
         try {
             final Cipher cipher = Cipher.getInstance(String.format("AES/CFB8/%s", padding));
             final IvParameterSpec ivValue = new IvParameterSpec(iv);
@@ -142,8 +163,12 @@ public class AES {
             final int opMode = encrypt ? Cipher.ENCRYPT_MODE : Cipher.DECRYPT_MODE;
             cipher.init(opMode, keyValue, ivValue);
             return cipher.doFinal(data);
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | IllegalBlockSizeException |
-                BadPaddingException | InvalidAlgorithmParameterException e) {
+        } catch (NoSuchPaddingException
+                | NoSuchAlgorithmException
+                | InvalidKeyException
+                | IllegalBlockSizeException
+                | BadPaddingException
+                | InvalidAlgorithmParameterException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }

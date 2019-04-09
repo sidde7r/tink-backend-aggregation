@@ -8,14 +8,15 @@ public class AgentClassFactory {
             "se.tink.backend.aggregation.agents";
 
     @SuppressWarnings("unchecked")
-    public static Class<? extends Agent> getAgentClass(Provider provider) throws ClassNotFoundException {
+    public static Class<? extends Agent> getAgentClass(Provider provider)
+            throws ClassNotFoundException {
         return getAgentClass(provider.getClassName());
     }
 
     @SuppressWarnings("unchecked")
-    public static Class<? extends Agent> getAgentClass(String className) throws ClassNotFoundException {
-        return (Class<? extends Agent>) Class.forName(DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + "."
-                + className);
+    public static Class<? extends Agent> getAgentClass(String className)
+            throws ClassNotFoundException {
+        return (Class<? extends Agent>)
+                Class.forName(DEFAULT_AGENT_PACKAGE_CLASS_PREFIX + "." + className);
     }
-
 }

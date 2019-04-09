@@ -1,5 +1,6 @@
 package se.tink.backend.aggregation.nxgen.core.account.transactional;
 
+import javax.annotation.Nonnull;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.nxgen.core.account.Account;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.AccountIdentifierStep;
@@ -9,8 +10,6 @@ import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.Bala
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.SavingsBuildStep;
 import se.tink.backend.aggregation.nxgen.core.account.transactional.builder.UniqueIdentifierStep;
 import se.tink.libraries.amount.Amount;
-
-import javax.annotation.Nonnull;
 
 public class SavingsAccount extends TransactionalAccount {
     private final Double interestRate;

@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.nxgen.nl.banks.bunq.authenticator;
 
 import com.google.common.base.Preconditions;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.exceptions.AuthenticationException;
 import se.tink.backend.aggregation.agents.exceptions.AuthorizationException;
 import se.tink.backend.aggregation.agents.exceptions.SessionException;
 import se.tink.backend.aggregation.agents.exceptions.errors.SessionError;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class BunqAuthenticator implements Authenticator {
@@ -14,7 +14,9 @@ public class BunqAuthenticator implements Authenticator {
     private final BunqRegistrationAuthenticator registrationAuthenticator;
     private final BunqAutoAuthenticator autoAuthenticator;
 
-    public BunqAuthenticator(CredentialsRequest request, BunqRegistrationAuthenticator registrationAuthenticator,
+    public BunqAuthenticator(
+            CredentialsRequest request,
+            BunqRegistrationAuthenticator registrationAuthenticator,
             BunqAutoAuthenticator authenticationAuthenticator) {
         this.request = Preconditions.checkNotNull(request);
         this.registrationAuthenticator = Preconditions.checkNotNull(registrationAuthenticator);
@@ -22,7 +24,8 @@ public class BunqAuthenticator implements Authenticator {
     }
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         if (request.isCreate() || request.isUpdate()) {
             registration(credentials);
         } else {
@@ -30,7 +33,8 @@ public class BunqAuthenticator implements Authenticator {
         }
     }
 
-    private void registration(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    private void registration(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         if (!request.isManual()) {
             throw SessionError.SESSION_EXPIRED.exception();
         }
@@ -38,7 +42,8 @@ public class BunqAuthenticator implements Authenticator {
         registrationAuthenticator.authenticate(credentials);
     }
 
-    private void authentication(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    private void authentication(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         try {
             autoAuthenticator.autoAuthenticate();
         } catch (SessionException autoException) {

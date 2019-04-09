@@ -6,7 +6,7 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEvent
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.rpc.WidgetEventsRequest;
 import se.tink.backend.aggregation.agents.nxgen.be.banks.belfius.utils.BelfiusSecurityUtils;
 
-public class DoubleClickPaymentRequest extends BelfiusRequest{
+public class DoubleClickPaymentRequest extends BelfiusRequest {
     public static BelfiusRequest.Builder create() {
         return BelfiusRequest.builder()
                 .setRetry(false)

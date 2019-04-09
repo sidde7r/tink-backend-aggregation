@@ -9,43 +9,63 @@ public class UserPersonEntity {
     private String created;
     private String updated;
     private String status;
+
     @JsonProperty("sub_status")
     private String subStatus;
+
     @JsonProperty("public_uuid")
     private String publicUuid;
+
     @JsonProperty("display_name")
     private String displayName;
+
     @JsonProperty("public_nick_name")
     private String publicNickName;
+
     private String language;
     private String region;
+
     @JsonProperty("session_timeout")
     private int sessionTimeout;
+
     @JsonProperty("first_name")
     private String firstName;
+
     @JsonProperty("middle_name")
     private String middleName;
+
     @JsonProperty("last_name")
     private String lastName;
+
     @JsonProperty("legal_name")
     private String legalName;
+
     @JsonProperty("date_of_birth")
     private String dateOfBirth;
+
     @JsonProperty("place_of_birth")
     private String placeOfBirth;
+
     @JsonProperty("country_of_birth")
     private String countryOfBirth;
+
     private String nationality;
     private String gender;
+
     @JsonProperty("version_terms_of_service")
     private String versionTermsOfService;
+
     @JsonProperty("document_number")
     private String documentNumber;
+
     @JsonProperty("document_type")
     private String documentType;
+
     @JsonProperty("document_country_of_issuance")
     private String documentCountryOfIssuance;
+
     private CustomerEntity customer;
+
     @JsonProperty("customer_limit")
     private CustomerLimitEntity customerLimit;
 

@@ -7,8 +7,10 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CreateSessionResponse {
     @JsonProperty("Id")
     private IdEntity id;
+
     @JsonProperty("Token")
     private TokenEntity token;
+
     @JsonProperty("UserPerson")
     private UserPersonEntity userPerson;
 

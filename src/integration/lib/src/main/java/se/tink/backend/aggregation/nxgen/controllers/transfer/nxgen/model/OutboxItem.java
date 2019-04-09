@@ -8,9 +8,7 @@ public class OutboxItem {
     private TransferEntity destination;
     private Amount amount;
 
-    private OutboxItem() {
-
-    }
+    private OutboxItem() {}
 
     public TransferSource getSource() {
         return source;
@@ -61,5 +59,4 @@ public class OutboxItem {
             return command;
         }
     }
-
 }

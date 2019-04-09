@@ -59,6 +59,6 @@ public class HttpRequestLogEntry extends HttpLogEntry {
 
     @Override
     public String getEntryType() {
-        return  ENTRY_TYPE;
+        return ENTRY_TYPE;
     }
 }

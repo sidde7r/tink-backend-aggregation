@@ -11,7 +11,8 @@ public class FutureTransactionsRequest {
     private TypeValuePair repositioningKey;
     private TypeValuePair transactionsQuantity;
 
-    public FutureTransactionsRequest(TypeValuePair currencyCode,
+    public FutureTransactionsRequest(
+            TypeValuePair currencyCode,
             TypeValuePair accountNo,
             TypeValuePair repositioningKey,
             TypeValuePair transactionsQuantity) {
@@ -48,12 +49,14 @@ public class FutureTransactionsRequest {
 
         public Builder setTransactionsQuantity(int transactionsQuantity) {
             this.transactionsQuantity =
-                    TypeValuePair.create(KbcConstants.PairTypeTypes.SHORT, String.valueOf(transactionsQuantity));
+                    TypeValuePair.create(
+                            KbcConstants.PairTypeTypes.SHORT, String.valueOf(transactionsQuantity));
             return this;
         }
 
         public FutureTransactionsRequest build() {
-            return new FutureTransactionsRequest(currencyCode, accountNo, repositioningKey, transactionsQuantity);
+            return new FutureTransactionsRequest(
+                    currencyCode, accountNo, repositioningKey, transactionsQuantity);
         }
     }
 }

@@ -8,7 +8,10 @@ import se.tink.libraries.metrics.MetricRegistry;
 public class MetricRefreshAction extends MetricAction {
     private final List<? extends Number> counterBuckets;
 
-    MetricRefreshAction(Credentials credentials, MetricRegistry registry, MetricId metricId,
+    MetricRefreshAction(
+            Credentials credentials,
+            MetricRegistry registry,
+            MetricId metricId,
             List<? extends Number> counterBuckets) {
         super(credentials, registry, metricId);
         this.counterBuckets = counterBuckets;

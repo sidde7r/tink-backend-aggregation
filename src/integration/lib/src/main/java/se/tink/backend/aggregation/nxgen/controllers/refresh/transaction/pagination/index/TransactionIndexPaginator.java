@@ -6,4 +6,3 @@ import se.tink.backend.aggregation.nxgen.core.account.Account;
 public interface TransactionIndexPaginator<A extends Account> {
     PaginatorResponse getTransactionsFor(A account, int numberOfTransactions, int startIndex);
 }
-

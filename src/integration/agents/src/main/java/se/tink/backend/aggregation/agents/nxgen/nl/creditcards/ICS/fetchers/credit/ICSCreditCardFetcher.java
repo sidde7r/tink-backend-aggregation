@@ -8,16 +8,16 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 
 public class ICSCreditCardFetcher implements TransactionPagePaginator<CreditCardAccount> {
 
-  private final ICSApiClient client;
+    private final ICSApiClient client;
 
-  public ICSCreditCardFetcher(ICSApiClient client) {
-    this.client = client;
-  }
+    public ICSCreditCardFetcher(ICSApiClient client) {
+        this.client = client;
+    }
 
-  // At this time they do not support pagination
-  @Override
-  public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
-    return this.client.getTransactions(
-        account.getFromTemporaryStorage(ICSConstants.Storage.ACCOUNT_ID));
-  }
+    // At this time they do not support pagination
+    @Override
+    public PaginatorResponse getTransactionsFor(CreditCardAccount account, int page) {
+        return this.client.getTransactions(
+                account.getFromTemporaryStorage(ICSConstants.Storage.ACCOUNT_ID));
+    }
 }

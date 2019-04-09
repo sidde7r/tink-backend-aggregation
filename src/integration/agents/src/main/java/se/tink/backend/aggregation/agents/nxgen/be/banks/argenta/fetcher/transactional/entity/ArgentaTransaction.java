@@ -2,12 +2,11 @@ package se.tink.backend.aggregation.agents.nxgen.be.banks.argenta.fetcher.transa
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
+import java.util.Date;
+import java.util.List;
 import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.aggregation.nxgen.core.transaction.Transaction;
 import se.tink.libraries.amount.Amount;
-
-import java.util.Date;
-import java.util.List;
 
 @JsonObject
 public class ArgentaTransaction {

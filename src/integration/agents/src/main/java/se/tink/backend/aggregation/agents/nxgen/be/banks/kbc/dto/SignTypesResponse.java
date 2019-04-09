@@ -25,12 +25,15 @@ public class SignTypesResponse {
 
     public String getSignTypeId(String signType) {
         return getSignTypes().stream()
-                .filter(signTypeDto ->
-                        Optional.ofNullable(signTypeDto)
-                                .map(SignTypeDto::getSignType)
-                                .map(TypeValuePair::getValue)
-                                .filter(signTypeValue -> Objects.equals(signType, signTypeValue))
-                                .isPresent())
+                .filter(
+                        signTypeDto ->
+                                Optional.ofNullable(signTypeDto)
+                                        .map(SignTypeDto::getSignType)
+                                        .map(TypeValuePair::getValue)
+                                        .filter(
+                                                signTypeValue ->
+                                                        Objects.equals(signType, signTypeValue))
+                                        .isPresent())
                 .findFirst()
                 .map(SignTypeDto::getSignTypeId)
                 .map(TypeEncodedPair::getEncoded)

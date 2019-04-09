@@ -2,7 +2,6 @@ package se.tink.backend.aggregation.nxgen.core.account.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.google.common.base.Objects;
-
 import java.util.Optional;
 
 public class HolderName {

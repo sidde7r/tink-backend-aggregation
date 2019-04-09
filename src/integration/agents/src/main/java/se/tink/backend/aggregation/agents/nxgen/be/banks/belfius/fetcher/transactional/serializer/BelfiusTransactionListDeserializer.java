@@ -19,17 +19,21 @@ public class BelfiusTransactionListDeserializer extends JsonDeserializer<Belfius
         List<BelfiusTransaction> transactions = new ArrayList<>();
 
         JsonNode json = jsonParser.getCodec().readTree(jsonParser);
-        json.get("contentList").get("dynamiccontent").elements().forEachRemaining(entry ->
-                        deserializeInto(transactions, jsonParser, entry));
+        json.get("contentList")
+                .get("dynamiccontent")
+                .elements()
+                .forEachRemaining(entry -> deserializeInto(transactions, jsonParser, entry));
 
         return new BelfiusTransactionList(transactions);
     }
 
-    public void deserializeInto(List<BelfiusTransaction> transactions, JsonParser jsonParser, JsonNode entry) {
+    public void deserializeInto(
+            List<BelfiusTransaction> transactions, JsonParser jsonParser, JsonNode entry) {
         try {
             String key = entry.get("key").asText();
             JsonNode value = entry.get("rp_hist");
-            BelfiusTransaction transaction = jsonParser.getCodec().treeToValue(value, BelfiusTransaction.class);
+            BelfiusTransaction transaction =
+                    jsonParser.getCodec().treeToValue(value, BelfiusTransaction.class);
             transactions.add(transaction);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);

@@ -1,24 +1,22 @@
 package se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.rpc;
 
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.ErrorsEntity;
-import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.OutputEntity;
-import se.tink.backend.aggregation.annotations.JsonObject;
-
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.AxaConstants;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.authenticator.entities.ErrorsEntity;
+import se.tink.backend.aggregation.agents.nxgen.be.banks.axa.entities.OutputEntity;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public final class RegisterUserResponse {
     private OutputEntity output;
 
     public Set<String> getMsgcd() {
-        return getErrorsEntity()
-                .stream()
+        return getErrorsEntity().stream()
                 .map(ErrorsEntity::getMsgCd)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
@@ -66,8 +64,7 @@ public final class RegisterUserResponse {
 
     public boolean isIncorrectResponseError() {
         final String message = AxaConstants.Response.INCORRECT_CHALLENGE_RESPONSE_SUBSTRING;
-        return getErrorsEntity()
-                .stream()
+        return getErrorsEntity().stream()
                 .map(ErrorsEntity::getMsgDetails)
                 .filter(Objects::nonNull)
                 .anyMatch(msg -> msg.contains(message));
@@ -80,8 +77,7 @@ public final class RegisterUserResponse {
 
     public boolean isIncorrectCardNumberError() {
         final String code = AxaConstants.Response.INCORRECT_CARD_NUMBER_CODE;
-        return getErrorsEntity()
-                .stream()
+        return getErrorsEntity().stream()
                 .map(ErrorsEntity::getMsgCd)
                 .filter(Objects::nonNull)
                 .anyMatch(msgcd -> msgcd.equalsIgnoreCase(code));
@@ -89,8 +85,7 @@ public final class RegisterUserResponse {
 
     public boolean isUnrecognizedBankUser() {
         final String code = AxaConstants.Response.NOT_AN_ACTIVE_BANK_USER;
-        return getErrorsEntity()
-                .stream()
+        return getErrorsEntity().stream()
                 .map(ErrorsEntity::getMsgCd)
                 .filter(Objects::nonNull)
                 .anyMatch(msgcd -> msgcd.equalsIgnoreCase(code));

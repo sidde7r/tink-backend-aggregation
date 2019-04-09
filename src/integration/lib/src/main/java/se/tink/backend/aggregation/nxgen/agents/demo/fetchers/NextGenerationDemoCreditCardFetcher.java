@@ -17,8 +17,8 @@ import se.tink.backend.aggregation.nxgen.core.account.creditcard.CreditCardAccou
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.i18n.Catalog;
 
-public class NextGenerationDemoCreditCardFetcher implements AccountFetcher<CreditCardAccount>,
-        TransactionPaginator<CreditCardAccount> {
+public class NextGenerationDemoCreditCardFetcher
+        implements AccountFetcher<CreditCardAccount>, TransactionPaginator<CreditCardAccount> {
 
     private static final String BASE_PATH = DemoConstants.BASE_PATH;
     private final List<Account> accounts;
@@ -29,7 +29,10 @@ public class NextGenerationDemoCreditCardFetcher implements AccountFetcher<Credi
     private final List<DemoCreditCardAccount> creditCardAccountDefinition;
     private final String currency;
 
-    public NextGenerationDemoCreditCardFetcher(List<Account> accounts, String currency, Catalog catalog,
+    public NextGenerationDemoCreditCardFetcher(
+            List<Account> accounts,
+            String currency,
+            Catalog catalog,
             List<DemoCreditCardAccount> creditCardAccountDefinition) {
         this.accounts = accounts;
         this.currency = currency;
@@ -40,13 +43,12 @@ public class NextGenerationDemoCreditCardFetcher implements AccountFetcher<Credi
 
     @Override
     public Collection<CreditCardAccount> fetchAccounts() {
-        return DemoAccountFactory.createCreditCardAccounts(currency, catalog, creditCardAccountDefinition);
+        return DemoAccountFactory.createCreditCardAccounts(
+                currency, catalog, creditCardAccountDefinition);
     }
 
     @Override
-    public void resetState() {
-
-    }
+    public void resetState() {}
 
     @Override
     public PaginatorResponse fetchTransactionsFor(CreditCardAccount account) {
@@ -57,13 +59,19 @@ public class NextGenerationDemoCreditCardFetcher implements AccountFetcher<Credi
     }
 
     private Date getRefreshStartDate(String accountId) {
-        Optional<Account> previouslyRefreshedAccount = accounts.stream()
-                .filter(account -> account.getAccountNumber().equals(accountId)
-                        && Objects.nonNull(account.getCertainDate()))
-                .findFirst();
+        Optional<Account> previouslyRefreshedAccount =
+                accounts.stream()
+                        .filter(
+                                account ->
+                                        account.getAccountNumber().equals(accountId)
+                                                && Objects.nonNull(account.getCertainDate()))
+                        .findFirst();
 
         return previouslyRefreshedAccount
-                .map(account -> DateUtils.addDays(account.getCertainDate(), CERTAIN_DATE_OFFSET_DAYS))
+                .map(
+                        account ->
+                                DateUtils.addDays(
+                                        account.getCertainDate(), CERTAIN_DATE_OFFSET_DAYS))
                 .orElseGet(() -> DateUtils.addYears(DateUtils.getToday(), YEARS_BACK_TO_FETCH));
     }
 }

@@ -9,7 +9,11 @@ import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
 
 public class MetricRefreshController extends MetricController {
-    public MetricRefreshController(MetricRegistry registry, Provider provider, Credentials credentials, boolean isManual,
+    public MetricRefreshController(
+            MetricRegistry registry,
+            Provider provider,
+            Credentials credentials,
+            boolean isManual,
             CredentialsRequestType requestType) {
         super(registry, provider, credentials, isManual, requestType);
     }
@@ -19,7 +23,9 @@ public class MetricRefreshController extends MetricController {
         return buildAction(metricId, Collections.emptyList());
     }
 
-    public MetricRefreshAction buildAction(MetricId metricId, List<? extends Number> counterBuckets) {
-        return new MetricRefreshAction(credentials, registry, metricId.label(defaultLabels), counterBuckets);
+    public MetricRefreshAction buildAction(
+            MetricId metricId, List<? extends Number> counterBuckets) {
+        return new MetricRefreshAction(
+                credentials, registry, metricId.label(defaultLabels), counterBuckets);
     }
 }

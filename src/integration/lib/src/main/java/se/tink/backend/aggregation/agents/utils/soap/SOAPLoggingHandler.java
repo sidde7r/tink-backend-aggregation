@@ -10,8 +10,7 @@ import javax.xml.ws.handler.soap.SOAPMessageContext;
 
 public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 
-
- // change this to redirect output if desired
+    // change this to redirect output if desired
     private static PrintStream out = System.out;
 
     public Set<QName> getHeaders() {
@@ -29,8 +28,7 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     // nothing to clean up
-    public void close(MessageContext messageContext) {
-    }
+    public void close(MessageContext messageContext) {}
 
     /*
      * Check the MESSAGE_OUTBOUND_PROPERTY in the context
@@ -40,8 +38,7 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
      * SOAPException or IOException
      */
     private void logToSystemOut(SOAPMessageContext smc) {
-        Boolean outboundProperty = (Boolean)
-            smc.get (MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+        Boolean outboundProperty = (Boolean) smc.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
 
         if (outboundProperty.booleanValue()) {
             out.println("\nOutbound message:");
@@ -52,7 +49,7 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
         SOAPMessage message = smc.getMessage();
         try {
             message.writeTo(out);
-            out.println("");   // just to add a newline
+            out.println(""); // just to add a newline
         } catch (Exception e) {
             out.println("Exception in handler: " + e);
         }

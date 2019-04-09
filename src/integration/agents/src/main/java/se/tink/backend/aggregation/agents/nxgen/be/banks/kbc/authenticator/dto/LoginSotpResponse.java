@@ -4,5 +4,4 @@ import se.tink.backend.aggregation.agents.nxgen.be.banks.kbc.dto.HeaderResponse;
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class LoginSotpResponse extends HeaderResponse {
-}
+public class LoginSotpResponse extends HeaderResponse {}

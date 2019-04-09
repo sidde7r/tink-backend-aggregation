@@ -1,15 +1,14 @@
 package se.tink.backend.aggregation.agents;
 
 import com.google.common.base.Strings;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.utils.typeguesser.TypeGuesser;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.strings.StringUtils;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Date;
 
 public final class AgentParsingUtils {
 

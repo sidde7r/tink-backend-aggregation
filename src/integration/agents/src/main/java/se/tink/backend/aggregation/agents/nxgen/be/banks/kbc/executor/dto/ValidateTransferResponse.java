@@ -24,11 +24,11 @@ public class ValidateTransferResponse extends HeaderResponse {
 
     public String getSignType() {
         switch (scenario.getValue()) {
-        case "B":
-            return KbcConstants.Predicates.SIGN_TYPE_MANUAL;
-        case "A":
-        default:
-            return KbcConstants.Predicates.SIGN_TYPE_SOTP;
+            case "B":
+                return KbcConstants.Predicates.SIGN_TYPE_MANUAL;
+            case "A":
+            default:
+                return KbcConstants.Predicates.SIGN_TYPE_SOTP;
         }
     }
 }
