@@ -26,13 +26,44 @@ spec:
             runAsUser: 65535
             runAsGroup: 65535
             fsGroup: 65535
-          containers:
-          - name: tests
-            image: gcr.io/tink-containers/tink-backend-aggregation-provisioning-cronjob:{{ .Files.Get "tink-versions/tink-backend-aggregation-provisioning-cronjob.txt" | default "latest" }}
+
+          initContainers:
+          # Script to replace placeholder passwords with the real passwords
+          - name: add-secrets-to-config
+            command:
+              - "/mnt/scripts/add-secrets.sh"
+            image: gcr.io/tink-containers/debian:stretch
             imagePullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
+            volumeMounts:
+            - name: config-scripts
+              mountPath: /mnt/scripts
+            - name: aggregation-config
+              mountPath: /mnt/aggregation-config
+            - name: agents-config
+              mountPath: /mnt/agents-config
+            - name: altered-config-volume
+              mountPath: /mnt/altered-config-volume
+            env:
+            - name: KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: aggregation-secrets
+                  key: keystore-password
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: aggregation-secrets
+                  key: aggregationdb-password
+          containers:
+          - name: tink-backend-aggregation-provisioning-cronjob
+            image: gcr.io/tink-containers/tink-backend-aggregation:{{ .Files.Get "tink-versions/tink-backend-aggregation.txt" | default "latest" }}
+            imagePullPolicy: Never
+            securityContext:
+              readOnlyRootFilesystem: true
               privileged: false
+
             command:
             - "java"
             - "-jar"
@@ -43,3 +74,24 @@ spec:
             - "/usr/share/tink-backend-aggregation/aggregation_service.jar"
             - "add-client-configuration"
             - "/etc/tink/config.yml"
+
+            volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: altered-config-volume
+              mountPath: /etc/tink
+          volumes:
+          - name: config-scripts
+            configMap:
+              name: config-scripts
+              defaultMode: 0111
+          - name: aggregation-config
+            configMap:
+              name: aggregation-config
+          - name: agents-config
+            configMap:
+              name: agents-config
+          - name: altered-config-volume
+            emptyDir: {}
+          - name: tmp
+            emptyDir: {}
