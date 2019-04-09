@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.transactionalaccount.rpc;
+package se.tink.backend.aggregation.agents.nxgen.es.banks.lacaixa.fetcher.rpc;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,7 +15,7 @@ public class UserDataResponse {
 
     // User data JSON has a ridiculous format, using this setter to avoid a tangle of classes.
     @JsonProperty("datos")
-    private void setUserData(JsonNode node){
+    private void setUserData(JsonNode node) {
 
         // Skip one level of JSON tree
         node = node.get("pair");
@@ -27,7 +27,27 @@ public class UserDataResponse {
         }
     }
 
-    public HolderName getHolderName(){
+    public HolderName getHolderName() {
         return new HolderName(dataMap.get(LaCaixaConstants.UserData.FULL_HOLDER_NAME));
+    }
+
+    public String getDNI() {
+        return dataMap.get(LaCaixaConstants.UserData.DNI);
+    }
+
+    public String getDateOfBirth() {
+        return dataMap.get(LaCaixaConstants.UserData.DATE_OF_BIRTH);
+    }
+
+    public String getFirstName() {
+        return dataMap.get(LaCaixaConstants.UserData.FIRST_NAME);
+    }
+
+    public String getFirstSurName() {
+        return dataMap.get(LaCaixaConstants.UserData.FIRST_SUR_NAME);
+    }
+
+    public String getSecondSurName() {
+        return dataMap.get(LaCaixaConstants.UserData.SECOND_SUR_NAME);
     }
 }
