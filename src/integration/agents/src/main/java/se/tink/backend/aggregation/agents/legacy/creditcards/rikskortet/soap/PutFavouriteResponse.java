@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,12 +6,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -24,33 +22,24 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "putFavouriteResult"
-})
+@XmlType(
+        name = "",
+        propOrder = {"putFavouriteResult"})
 @XmlRootElement(name = "PutFavouriteResponse")
 public class PutFavouriteResponse {
 
     @XmlElement(name = "PutFavouriteResult")
     protected boolean putFavouriteResult;
 
-    /**
-     * Gets the value of the putFavouriteResult property.
-     * 
-     */
+    /** Gets the value of the putFavouriteResult property. */
     public boolean isPutFavouriteResult() {
         return putFavouriteResult;
     }
 
-    /**
-     * Sets the value of the putFavouriteResult property.
-     * 
-     */
+    /** Sets the value of the putFavouriteResult property. */
     public void setPutFavouriteResult(boolean value) {
         this.putFavouriteResult = value;
     }
-
 }

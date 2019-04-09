@@ -17,8 +17,10 @@ public class TransactionResponse {
     private Date dueDate;
     private boolean incoming;
     private String ownNote;
+
     @JsonProperty("recieverName") // Typo in their api
     private String receiverName;
+
     private String textCode;
     private String transactionId;
 

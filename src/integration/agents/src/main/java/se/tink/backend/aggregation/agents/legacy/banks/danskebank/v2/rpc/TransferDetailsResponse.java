@@ -1,22 +1,26 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferDetailsResponse extends AbstractResponse {
     @JsonProperty("TransactionType")
     private String transactionType;
+
     @JsonProperty("UseGlobalPayment")
     private boolean useGlobalPayment;
+
     @JsonProperty("ToAccounts")
     private List<TransferAccountEntity> toAccounts;
+
     @JsonProperty("ToAccountsBankGiro")
     private List<TransferAccountEntity> toAccountsBankGiro;
+
     @JsonProperty("ToAccountsPlusGiro")
     private List<TransferAccountEntity> toAccountsPlusGiro;
+
     @JsonProperty("FromAccounts")
     private List<TransferAccountEntity> fromAccounts;
 

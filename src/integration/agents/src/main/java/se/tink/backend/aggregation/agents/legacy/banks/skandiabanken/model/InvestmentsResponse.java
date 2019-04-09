@@ -4,5 +4,4 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InvestmentsResponse extends ArrayList<InvestmentEntity> {
-}
+public class InvestmentsResponse extends ArrayList<InvestmentEntity> {}

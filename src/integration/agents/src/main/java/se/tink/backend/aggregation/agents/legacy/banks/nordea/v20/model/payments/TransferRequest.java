@@ -13,8 +13,10 @@ import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.date.DateUtils;
 
 public class TransferRequest {
-    private static final DecimalFormatSymbols DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.ENGLISH);
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00", DECIMAL_FORMAT_SYMBOLS);
+    private static final DecimalFormatSymbols DECIMAL_FORMAT_SYMBOLS =
+            new DecimalFormatSymbols(Locale.ENGLISH);
+    private static final DecimalFormat DECIMAL_FORMAT =
+            new DecimalFormat("0.00", DECIMAL_FORMAT_SYMBOLS);
 
     private CreatePaymentIn createPaymentIn;
 

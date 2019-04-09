@@ -46,5 +46,4 @@ public class LoginResponse {
     public void setSecurityToken(String securityToken) {
         this.securityToken = securityToken;
     }
-
 }

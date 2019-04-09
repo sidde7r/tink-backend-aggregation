@@ -8,8 +8,10 @@ import java.util.List;
 public class FetchStatusEntity {
     @JsonProperty("Status")
     private String status;
+
     @JsonProperty("SwrveStatus")
     private String swrveStaus;
+
     @JsonProperty("LoginMethods")
     private List<LoginMethodsEntity> loginMethods;
 
@@ -33,8 +35,7 @@ public class FetchStatusEntity {
         return loginMethods;
     }
 
-    public void setLoginMethods(
-            List<LoginMethodsEntity> loginMethods) {
+    public void setLoginMethods(List<LoginMethodsEntity> loginMethods) {
         this.loginMethods = loginMethods;
     }
 }

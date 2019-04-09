@@ -1,16 +1,16 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for derivationControl.
- * 
+ * Java class for derivationControl.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
+ *
  * <p>
+ *
  * <pre>
  * &lt;simpleType name="derivationControl">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}NMTOKEN">
@@ -22,12 +22,10 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "derivationControl")
 @XmlEnum
 public enum DerivationControl {
-
     @XmlEnumValue("substitution")
     SUBSTITUTION("substitution"),
     @XmlEnumValue("extension")
@@ -49,12 +47,11 @@ public enum DerivationControl {
     }
 
     public static DerivationControl fromValue(String v) {
-        for (DerivationControl c: DerivationControl.values()) {
+        for (DerivationControl c : DerivationControl.values()) {
             if (c.value.equals(v)) {
                 return c;
             }
         }
         throw new IllegalArgumentException(v);
     }
-
 }

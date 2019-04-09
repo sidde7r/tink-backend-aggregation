@@ -19,8 +19,6 @@ public class InitBankIdResponse {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("sessionid", sessionId)
-                .toString();
+        return MoreObjects.toStringHelper(this).add("sessionid", sessionId).toString();
     }
 }

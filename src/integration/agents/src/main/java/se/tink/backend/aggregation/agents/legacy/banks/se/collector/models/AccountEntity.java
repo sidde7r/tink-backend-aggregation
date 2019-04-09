@@ -7,8 +7,8 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.libraries.account.AccountIdentifier;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountEntity {
@@ -20,8 +20,7 @@ public class AccountEntity {
     private Date nextCapitalizationDate;
     private boolean activated;
     private DepositInfo depositInfo = new DepositInfo();
-    @JsonIgnore
-    private WithdrawalAccount withdrawalAccount = new WithdrawalAccount();
+    @JsonIgnore private WithdrawalAccount withdrawalAccount = new WithdrawalAccount();
 
     public Date getNextCapitalizationDate() {
         return nextCapitalizationDate;
@@ -128,24 +127,20 @@ public class AccountEntity {
         return account;
     }
 
-
     @JsonProperty("NextCapitalizationDate")
     public void setNextCapitalizationDateCaps(Date nextCapitalizationDate) {
         this.nextCapitalizationDate = nextCapitalizationDate;
     }
-
 
     @JsonProperty("InterestRate")
     public void setInterestRateCaps(double interestRate) {
         this.interestRate = interestRate;
     }
 
-
     @JsonProperty("AccruedInterest")
     public void setAccruedInterestCaps(double accruedInterest) {
         this.accruedInterest = accruedInterest;
     }
-
 
     @JsonProperty("AccountId")
     public void setAccountIdCaps(String accountId) {

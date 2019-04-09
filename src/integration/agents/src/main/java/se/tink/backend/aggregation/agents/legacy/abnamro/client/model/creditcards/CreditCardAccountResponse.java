@@ -11,7 +11,8 @@ public class CreditCardAccountResponse {
         return creditCardAccountList;
     }
 
-    public void setCreditCardAccountList(CreditCardAccountContainerContainerEntity creditCardAccountList) {
+    public void setCreditCardAccountList(
+            CreditCardAccountContainerContainerEntity creditCardAccountList) {
         this.creditCardAccountList = creditCardAccountList;
     }
 }

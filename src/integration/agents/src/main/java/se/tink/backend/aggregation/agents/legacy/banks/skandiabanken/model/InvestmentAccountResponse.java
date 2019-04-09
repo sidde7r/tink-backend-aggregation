@@ -38,8 +38,7 @@ public class InvestmentAccountResponse {
         return portfolios;
     }
 
-    public void setPortfolios(
-            List<PortfolioEntity> portfolios) {
+    public void setPortfolios(List<PortfolioEntity> portfolios) {
         this.portfolios = portfolios;
     }
 }

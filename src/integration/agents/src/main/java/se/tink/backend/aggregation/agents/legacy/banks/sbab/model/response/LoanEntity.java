@@ -3,10 +3,10 @@ package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import java.util.Optional;
 import com.google.common.base.Strings;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.agents.rpc.Account;
@@ -142,8 +142,8 @@ public class LoanEntity {
     }
 
     /**
-     *  Note: this logic was taken from the JavaScript code at sbab.se. That is, the loan is a mortgage if the value
-     *  laneobjekt.beteckning is present.
+     * Note: this logic was taken from the JavaScript code at sbab.se. That is, the loan is a
+     * mortgage if the value laneobjekt.beteckning is present.
      */
     private boolean isMortgage() {
         return getSecurity() != null && !Strings.isNullOrEmpty(getSecurity().getLabel());
@@ -193,7 +193,8 @@ public class LoanEntity {
             loan.setType(getLoanType());
             loan.setInterest(loanTerms.getNormalizedInterestRate());
             loan.setName(Integer.toString(getLoanNumber()));
-            // If we would change this, also change the logic for when we fetch amortization documentation
+            // If we would change this, also change the logic for when we fetch amortization
+            // documentation
             loan.setLoanNumber(Integer.toString(getLoanNumber()));
             loan.setBalance(-getAmount());
 
@@ -210,7 +211,8 @@ public class LoanEntity {
             }
 
             if (loanTerms.getInterestRateBoundPeriod() != null) {
-                Matcher matcher = NUM_MONTHS_BOUND_PATTERN.matcher(loanTerms.getInterestRateBoundPeriod());
+                Matcher matcher =
+                        NUM_MONTHS_BOUND_PATTERN.matcher(loanTerms.getInterestRateBoundPeriod());
                 if (matcher.find()) {
                     int monthsBound = Integer.parseInt(matcher.group(2));
                     loan.setNumMonthsBound(monthsBound);

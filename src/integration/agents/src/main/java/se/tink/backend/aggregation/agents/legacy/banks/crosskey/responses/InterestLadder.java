@@ -44,8 +44,6 @@ public class InterestLadder {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("interestRate", interestRate)
-                .toString();
+        return MoreObjects.toStringHelper(this).add("interestRate", interestRate).toString();
     }
 }

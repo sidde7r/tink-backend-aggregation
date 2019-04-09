@@ -13,7 +13,8 @@ import se.tink.libraries.uuid.UUIDUtils;
 
 public class DemoTransactionsGenerator {
 
-    public static List<Transaction> generateTransactions(DemoCredentials demoCredentials, Account account) {
+    public static List<Transaction> generateTransactions(
+            DemoCredentials demoCredentials, Account account) {
         // Support is only implemented for User13.
         if (Objects.equals(demoCredentials.getUsername(), DemoCredentials.USER13.getUsername())) {
             return generateIdentityEventTransactions();
@@ -27,7 +28,8 @@ public class DemoTransactionsGenerator {
 
         // Generate a baseline with one transaction per day for the last 100 days
         for (int i = 0; i < 100; i++) {
-            transactions.add(createTransaction(DateTime.now().minusDays(i), UUIDUtils.generateUUID(), -10D));
+            transactions.add(
+                    createTransaction(DateTime.now().minusDays(i), UUIDUtils.generateUUID(), -10D));
         }
 
         // Generate transactions for a double charge event
@@ -36,8 +38,11 @@ public class DemoTransactionsGenerator {
 
         // Generate transactions on the same day to trigger a frequent account activity event
         for (int i = 0; i < 10; i++) {
-            transactions.add(createTransaction(DateTime.now().minusDays(1),
-                    String.format("Frequent account activity transaction: %d", i), -100D));
+            transactions.add(
+                    createTransaction(
+                            DateTime.now().minusDays(1),
+                            String.format("Frequent account activity transaction: %d", i),
+                            -100D));
         }
 
         return transactions;

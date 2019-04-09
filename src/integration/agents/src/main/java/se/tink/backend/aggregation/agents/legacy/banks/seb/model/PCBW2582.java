@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.banks.seb.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
@@ -13,14 +13,19 @@ import se.tink.libraries.strings.StringUtils;
 public class PCBW2582 {
     @JsonProperty("ROW_ID")
     public String ROW_ID;
+
     @JsonProperty("KONTRAKTNR")
     public String KONTRAKTNR;
+
     @JsonProperty("KTOSLAG_TXT")
     public String KTOSLAG_TXT;
+
     @JsonProperty("SKULD")
     public String SKULD;
+
     @JsonProperty("RTE_SATS")
     public String RTE_SATS;
+
     @JsonProperty("DATRTEJUST")
     public String DATRTEJUST;
 

@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import se.tink.libraries.transfer.enums.TransferType;
 
@@ -9,20 +8,28 @@ import se.tink.libraries.transfer.enums.TransferType;
 public class TransferRequest {
     @JsonProperty("Amount")
     private double amount;
+
     @JsonProperty("Memo")
     private String memo;
+
     @JsonProperty("FromAccountId")
     private String fromAccountId;
+
     @JsonProperty("DueDate")
     private String dueDate;
+
     @JsonProperty("Reference")
     private String reference;
+
     @JsonProperty("Type")
     private String type;
+
     @JsonProperty("RecipientId")
     private String recipientId;
+
     @JsonProperty("RecipientAccountNumber")
     private String recipientAccountNumber;
+
     @JsonProperty("RecipientType")
     private String recipientType;
 
@@ -106,5 +113,4 @@ public class TransferRequest {
     public void setRecipientType(String recipientType) {
         this.recipientType = recipientType;
     }
-
 }

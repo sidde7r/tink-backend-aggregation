@@ -2,14 +2,14 @@ package se.tink.backend.aggregation.agents.banks.nordea.v20.model.beneficiaries;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Optional;
 import com.google.common.base.Strings;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaAgentUtils;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaHashMapDeserializer;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
-import se.tink.libraries.social.security.SocialSecurityNumber;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.BankGiroIdentifier;
@@ -17,7 +17,7 @@ import se.tink.libraries.account.identifiers.NonValidIdentifier;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
-import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.social.security.SocialSecurityNumber;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BeneficiaryEntity implements GeneralAccountEntity {
@@ -132,46 +132,56 @@ public class BeneficiaryEntity implements GeneralAccountEntity {
     }
 
     private AccountIdentifier toSwedishIdentifier(String cleanedAccountNumber) {
-        Optional<ClearingNumber.Bank> lookupBankResult = NordeaAgentUtils
-                .lookupBankFromBeneficiaryId(beneficiaryBankId);
+        Optional<ClearingNumber.Bank> lookupBankResult =
+                NordeaAgentUtils.lookupBankFromBeneficiaryId(beneficiaryBankId);
 
         if (!lookupBankResult.isPresent()) {
             log.warn(
-                    String.format("Unknown beneficiary bank id "
-                            + "(beneficiaryBankId: %s, cleanedAccountNumber: %s)",
+                    String.format(
+                            "Unknown beneficiary bank id "
+                                    + "(beneficiaryBankId: %s, cleanedAccountNumber: %s)",
                             beneficiaryBankId, cleanedAccountNumber));
-            return new SwedishIdentifier((String)null);
+            return new SwedishIdentifier((String) null);
         }
 
         if (isNordeaPersonkonto(cleanedAccountNumber, lookupBankResult.get())) {
             return new SwedishIdentifier(NORDEA_PERSONKONTO_CLEARING_NUMBER + cleanedAccountNumber);
-        } else if (isNordeaBank(lookupBankResult.get()) && !hasValidNordeaClearing(cleanedAccountNumber)) {
-            log.warn(String.format("Nordea recipient not matching clearing lookup "
-                    + "(beneficiaryBankId: %s, cleanedAccountNumber: %s)",
-                    beneficiaryBankId, cleanedAccountNumber));
+        } else if (isNordeaBank(lookupBankResult.get())
+                && !hasValidNordeaClearing(cleanedAccountNumber)) {
+            log.warn(
+                    String.format(
+                            "Nordea recipient not matching clearing lookup "
+                                    + "(beneficiaryBankId: %s, cleanedAccountNumber: %s)",
+                            beneficiaryBankId, cleanedAccountNumber));
 
-            return new SwedishIdentifier((String)null);
+            return new SwedishIdentifier((String) null);
         }
 
         return new SwedishIdentifier(cleanedAccountNumber);
     }
 
     private static boolean hasValidNordeaClearing(String cleanedAccountNumber) {
-        if (Strings.isNullOrEmpty(cleanedAccountNumber) || cleanedAccountNumber.length() < NORDEA_CLEARING_LENGTH) {
+        if (Strings.isNullOrEmpty(cleanedAccountNumber)
+                || cleanedAccountNumber.length() < NORDEA_CLEARING_LENGTH) {
             return false;
         }
 
-        String potentialNordeaClearingNumber = cleanedAccountNumber.substring(0, NORDEA_CLEARING_LENGTH);
-        Optional<ClearingNumber.Details> lookedUpClearingDetails = ClearingNumber.get(potentialNordeaClearingNumber);
+        String potentialNordeaClearingNumber =
+                cleanedAccountNumber.substring(0, NORDEA_CLEARING_LENGTH);
+        Optional<ClearingNumber.Details> lookedUpClearingDetails =
+                ClearingNumber.get(potentialNordeaClearingNumber);
 
-        return lookedUpClearingDetails.isPresent() &&
-                Objects.equals(lookedUpClearingDetails.get().getBank(), ClearingNumber.Bank.NORDEA);
+        return lookedUpClearingDetails.isPresent()
+                && Objects.equals(
+                        lookedUpClearingDetails.get().getBank(), ClearingNumber.Bank.NORDEA);
     }
 
-    private static boolean isNordeaPersonkonto(String cleanedAccountNumber, ClearingNumber.Bank lookupBankResult) {
+    private static boolean isNordeaPersonkonto(
+            String cleanedAccountNumber, ClearingNumber.Bank lookupBankResult) {
         if (!isNordeaBank(lookupBankResult)) {
             return false;
-        } else if (Strings.isNullOrEmpty(cleanedAccountNumber) || cleanedAccountNumber.length() != 10) {
+        } else if (Strings.isNullOrEmpty(cleanedAccountNumber)
+                || cleanedAccountNumber.length() != 10) {
             return false;
         }
 
@@ -179,8 +189,8 @@ public class BeneficiaryEntity implements GeneralAccountEntity {
     }
 
     private static boolean isNordeaBank(ClearingNumber.Bank lookupBankResult) {
-        return Objects.equals(lookupBankResult, ClearingNumber.Bank.NORDEA) ||
-                Objects.equals(lookupBankResult, ClearingNumber.Bank.NORDEA_PERSONKONTO);
+        return Objects.equals(lookupBankResult, ClearingNumber.Bank.NORDEA)
+                || Objects.equals(lookupBankResult, ClearingNumber.Bank.NORDEA_PERSONKONTO);
     }
 
     @Override

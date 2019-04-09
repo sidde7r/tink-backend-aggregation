@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class LoginMethodsEntity {
     @JsonProperty("Type")
     private String type;
+
     @JsonProperty("IsActive")
     private boolean active;
 

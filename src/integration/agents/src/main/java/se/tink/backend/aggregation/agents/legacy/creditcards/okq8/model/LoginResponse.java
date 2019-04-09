@@ -10,6 +10,7 @@ import se.tink.backend.aggregation.agents.models.Transaction;
 public class LoginResponse {
     @JsonProperty("account_data")
     private AccountDataEntity accountData;
+
     @JsonProperty("transactions_data")
     private List<TransactionDataEntity> transactionsData = Lists.newArrayList();
 
@@ -34,7 +35,8 @@ public class LoginResponse {
             return null;
         }
 
-        return Lists.newArrayList(Lists
-                .transform(transactionsData, TransactionDataEntity.TO_TINK_TRANSACTION_TRANSFORM));
+        return Lists.newArrayList(
+                Lists.transform(
+                        transactionsData, TransactionDataEntity.TO_TINK_TRANSACTION_TRANSFORM));
     }
 }

@@ -44,9 +44,9 @@ public class CollectEntity {
     }
 
     public boolean shouldContinuePolling() {
-        return Objects.equal(getError(), null) &&
-                (Objects.equal(progressStatus, "OUTSTANDING_TRANSACTION") ||
-                Objects.equal(progressStatus, "USER_SIGN") ||
-                Objects.equal(progressStatus, "STARTED"));
+        return Objects.equal(getError(), null)
+                && (Objects.equal(progressStatus, "OUTSTANDING_TRANSACTION")
+                        || Objects.equal(progressStatus, "USER_SIGN")
+                        || Objects.equal(progressStatus, "STARTED"));
     }
 }

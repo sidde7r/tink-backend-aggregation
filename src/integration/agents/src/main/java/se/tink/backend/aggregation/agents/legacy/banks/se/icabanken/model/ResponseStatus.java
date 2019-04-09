@@ -7,8 +7,10 @@ import java.util.Optional;
 public class ResponseStatus {
     @JsonProperty("ClientMessage")
     private String clientMessage;
+
     @JsonProperty("Code")
     private int code;
+
     @JsonProperty("ServerMessage")
     private String serverMessage;
 
@@ -31,13 +33,17 @@ public class ResponseStatus {
     public void setCode(int code) {
         this.code = code;
     }
+
     public void setServerMessage(String serverMessage) {
         this.serverMessage = serverMessage;
     }
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this).add("code", code).add("clientMessage", clientMessage)
-                .add("serverMessage", serverMessage).toString();
+        return MoreObjects.toStringHelper(this)
+                .add("code", code)
+                .add("clientMessage", clientMessage)
+                .add("serverMessage", serverMessage)
+                .toString();
     }
 }

@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import se.tink.backend.aggregation.agents.banks.nordea.NordeaHashMapSerializer;
 
-public class CreateTransferIn
-{
+public class CreateTransferIn {
     @JsonSerialize(using = NordeaHashMapSerializer.class)
     private String message;
 

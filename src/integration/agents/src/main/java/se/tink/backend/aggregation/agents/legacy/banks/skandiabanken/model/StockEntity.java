@@ -28,10 +28,8 @@ public class StockEntity {
     private String volatility;
     private String yield;
 
-    @JsonIgnore
-    private String isin;
-    @JsonIgnore
-    private String market;
+    @JsonIgnore private String isin;
+    @JsonIgnore private String market;
 
     public boolean isAllowTrade() {
         return allowTrade;
@@ -209,8 +207,10 @@ public class StockEntity {
         String[] splittedId = getId().split("_");
 
         if (splittedId.length != 3) {
-            log.warn(String.format("skandiabanken - unexpected array length, expected: %s, actual: %s - id: %s",
-                    3, splittedId.length, getId()));
+            log.warn(
+                    String.format(
+                            "skandiabanken - unexpected array length, expected: %s, actual: %s - id: %s",
+                            3, splittedId.length, getId()));
             return;
         }
 

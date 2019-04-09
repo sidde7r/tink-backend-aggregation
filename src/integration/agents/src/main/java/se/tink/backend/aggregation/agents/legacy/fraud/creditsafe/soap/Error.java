@@ -5,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ERROR complex type.
- * 
+ * Java class for ERROR complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="ERROR">
  *   &lt;complexContent>
@@ -24,31 +23,26 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ERROR", propOrder = {
-    "causeOfReject",
-    "rejectText",
-    "rejectComment"
-})
+@XmlType(
+        name = "ERROR",
+        propOrder = {"causeOfReject", "rejectText", "rejectComment"})
 public class Error {
 
     @XmlElement(name = "Cause_of_Reject")
     protected String causeOfReject;
+
     @XmlElement(name = "Reject_text")
     protected String rejectText;
+
     @XmlElement(name = "Reject_comment")
     protected String rejectComment;
 
     /**
      * Gets the value of the causeOfReject property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getCauseOfReject() {
         return causeOfReject;
@@ -56,11 +50,8 @@ public class Error {
 
     /**
      * Sets the value of the causeOfReject property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setCauseOfReject(String value) {
         this.causeOfReject = value;
@@ -68,11 +59,8 @@ public class Error {
 
     /**
      * Gets the value of the rejectText property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getRejectText() {
         return rejectText;
@@ -80,11 +68,8 @@ public class Error {
 
     /**
      * Sets the value of the rejectText property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setRejectText(String value) {
         this.rejectText = value;
@@ -92,11 +77,8 @@ public class Error {
 
     /**
      * Gets the value of the rejectComment property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getRejectComment() {
         return rejectComment;
@@ -104,14 +86,10 @@ public class Error {
 
     /**
      * Sets the value of the rejectComment property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setRejectComment(String value) {
         this.rejectComment = value;
     }
-
 }

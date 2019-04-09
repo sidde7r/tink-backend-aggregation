@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for localElement complex type.
- * 
+ * Java class for localElement complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="localElement">
  *   &lt;complexContent>
@@ -29,17 +27,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "localElement")
-@XmlSeeAlso({
-    NarrowMaxMin.class
-})
-public class LocalElement
-    extends Element
-{
-
-
-}
+@XmlSeeAlso({NarrowMaxMin.class})
+public class LocalElement extends Element {}

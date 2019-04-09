@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BankEntity {
     @JsonProperty("Id")
     private String id;
+
     @JsonProperty("Name")
     private String name;
 

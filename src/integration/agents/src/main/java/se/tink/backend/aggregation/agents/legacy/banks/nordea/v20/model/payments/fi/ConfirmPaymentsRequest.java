@@ -8,7 +8,7 @@ public class ConfirmPaymentsRequest {
     private ConfirmPaymentsIn confirmPaymentsIn;
 
     public ConfirmPaymentsRequest(String paymentId, String confirmationCode, String challenge) {
-        
+
         ConfirmPayment payment = new ConfirmPayment();
         payment.setType("Domestic");
         payment.setPaymentSubTypeExtension("FIType");

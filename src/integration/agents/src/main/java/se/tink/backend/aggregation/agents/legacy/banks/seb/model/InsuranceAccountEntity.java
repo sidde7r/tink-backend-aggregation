@@ -7,14 +7,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class InsuranceAccountEntity {
     @JsonProperty("FORS_NR")
     private String insuranceNumber;
+
     @JsonProperty("FORSTYP")
     private String insuranceType;
+
     @JsonProperty("VARDE_BELOPP")
     private Double amount;
+
     @JsonProperty("VAERDE_DATUM")
     private Long amountDate;
+
     @JsonProperty("PREMIE_BELOPP")
     private Double premium;
+
     @JsonProperty("DETAIL_URL")
     private String detailUrl;
 

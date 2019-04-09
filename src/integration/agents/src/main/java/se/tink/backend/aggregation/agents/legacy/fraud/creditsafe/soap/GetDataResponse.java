@@ -5,15 +5,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
-
 import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.Schema;
 
-
 /**
- * <p>Java class for GETDATA_RESPONSE complex type.
- * 
+ * Java class for GETDATA_RESPONSE complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="GETDATA_RESPONSE">
  *   &lt;complexContent>
@@ -40,37 +38,32 @@ import se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema.Schema
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GETDATA_RESPONSE", propOrder = {
-    "searchNumber",
-    "transactionId",
-    "error",
-    "blockName",
-    "parameters"
-})
+@XmlType(
+        name = "GETDATA_RESPONSE",
+        propOrder = {"searchNumber", "transactionId", "error", "blockName", "parameters"})
 public class GetDataResponse {
 
     @XmlElement(name = "SearchNumber")
     protected String searchNumber;
+
     @XmlElement(name = "TransactionId")
     protected String transactionId;
+
     @XmlElement(name = "Error")
     protected Error error;
+
     @XmlElement(name = "Block_Name")
     protected String blockName;
+
     @XmlElement(name = "Parameters")
     protected GetDataResponse.Parameters parameters;
 
     /**
      * Gets the value of the searchNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getSearchNumber() {
         return searchNumber;
@@ -78,11 +71,8 @@ public class GetDataResponse {
 
     /**
      * Sets the value of the searchNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setSearchNumber(String value) {
         this.searchNumber = value;
@@ -90,11 +80,8 @@ public class GetDataResponse {
 
     /**
      * Gets the value of the transactionId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getTransactionId() {
         return transactionId;
@@ -102,11 +89,8 @@ public class GetDataResponse {
 
     /**
      * Sets the value of the transactionId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setTransactionId(String value) {
         this.transactionId = value;
@@ -114,11 +98,8 @@ public class GetDataResponse {
 
     /**
      * Gets the value of the error property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Error }
-     *     
+     *
+     * @return possible object is {@link Error }
      */
     public Error getError() {
         return error;
@@ -126,11 +107,8 @@ public class GetDataResponse {
 
     /**
      * Sets the value of the error property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Error }
-     *     
+     *
+     * @param value allowed object is {@link Error }
      */
     public void setError(Error value) {
         this.error = value;
@@ -138,11 +116,8 @@ public class GetDataResponse {
 
     /**
      * Gets the value of the blockName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getBlockName() {
         return blockName;
@@ -150,11 +125,8 @@ public class GetDataResponse {
 
     /**
      * Sets the value of the blockName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setBlockName(String value) {
         this.blockName = value;
@@ -162,11 +134,8 @@ public class GetDataResponse {
 
     /**
      * Gets the value of the parameters property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link GetDataResponse.Parameters }
-     *     
+     *
+     * @return possible object is {@link GetDataResponse.Parameters }
      */
     public GetDataResponse.Parameters getParameters() {
         return parameters;
@@ -174,22 +143,18 @@ public class GetDataResponse {
 
     /**
      * Sets the value of the parameters property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link GetDataResponse.Parameters }
-     *     
+     *
+     * @param value allowed object is {@link GetDataResponse.Parameters }
      */
     public void setParameters(GetDataResponse.Parameters value) {
         this.parameters = value;
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
-     * 
+     * Java class for anonymous complex type.
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;complexContent>
@@ -202,28 +167,23 @@ public class GetDataResponse {
      *   &lt;/complexContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
      */
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "schema",
-        "any"
-    })
+    @XmlType(
+            name = "",
+            propOrder = {"schema", "any"})
     public static class Parameters {
 
         @XmlElement(namespace = "http://www.w3.org/2001/XMLSchema", required = true)
         protected Schema schema;
+
         @XmlAnyElement(lax = true)
         protected Object any;
 
         /**
          * Gets the value of the schema property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link Schema }
-         *     
+         *
+         * @return possible object is {@link Schema }
          */
         public Schema getSchema() {
             return schema;
@@ -231,11 +191,8 @@ public class GetDataResponse {
 
         /**
          * Sets the value of the schema property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Schema }
-         *     
+         *
+         * @param value allowed object is {@link Schema }
          */
         public void setSchema(Schema value) {
             this.schema = value;
@@ -243,11 +200,8 @@ public class GetDataResponse {
 
         /**
          * Gets the value of the any property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link Object }
-         *     
+         *
+         * @return possible object is {@link Object }
          */
         public Object getAny() {
             return any;
@@ -255,16 +209,11 @@ public class GetDataResponse {
 
         /**
          * Sets the value of the any property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link Object }
-         *     
+         *
+         * @param value allowed object is {@link Object }
          */
         public void setAny(Object value) {
             this.any = value;
         }
-
     }
-
 }

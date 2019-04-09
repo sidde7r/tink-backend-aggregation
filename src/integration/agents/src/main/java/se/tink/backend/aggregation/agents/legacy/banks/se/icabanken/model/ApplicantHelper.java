@@ -43,5 +43,4 @@ public class ApplicantHelper {
     public void setApplicants(List<String> applicants) {
         this.applicants = applicants;
     }
-
 }

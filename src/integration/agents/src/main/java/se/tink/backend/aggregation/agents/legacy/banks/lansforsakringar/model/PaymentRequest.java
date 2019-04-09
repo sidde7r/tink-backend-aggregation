@@ -100,16 +100,14 @@ public class PaymentRequest {
     }
 
     public String calculateHash() {
-        return String.valueOf(java.util.Objects.hash(
-                getAmountForHash(amount),
-                toBgPg,
-                reference,
-                fromAccount));
+        return String.valueOf(
+                java.util.Objects.hash(getAmountForHash(amount), toBgPg, reference, fromAccount));
     }
 
     private String getAmountForHash(double amount) {
         return new DecimalFormat(
-                FOUR_POINT_PRECISION_FORMAT_STRING, DecimalFormatSymbols.getInstance(Locale.ENGLISH))
+                        FOUR_POINT_PRECISION_FORMAT_STRING,
+                        DecimalFormatSymbols.getInstance(Locale.ENGLISH))
                 .format(amount);
     }
 }

@@ -8,6 +8,7 @@ public class AcceptEInvoiceTransferRequest {
 
     @JsonProperty("DebitAccountId")
     private String debitAccountId;
+
     @JsonProperty("InvoiceId")
     private String invoiceId;
 
@@ -26,5 +27,4 @@ public class AcceptEInvoiceTransferRequest {
     public void setInvoiceId(String invoiceId) {
         this.invoiceId = invoiceId;
     }
-
 }

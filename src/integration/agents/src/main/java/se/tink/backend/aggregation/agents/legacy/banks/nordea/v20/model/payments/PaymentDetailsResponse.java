@@ -13,8 +13,7 @@ public class PaymentDetailsResponse {
         return paymentDetailsResponseOut;
     }
 
-    public void setPaymentDetailsResponseOut(
-            PaymentDetailsResponseOut paymentDetailsResponseOut) {
+    public void setPaymentDetailsResponseOut(PaymentDetailsResponseOut paymentDetailsResponseOut) {
         this.paymentDetailsResponseOut = paymentDetailsResponseOut;
     }
 

@@ -1,16 +1,17 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2;
 
 import com.google.common.base.Objects;
-import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.AccountIdentifier.Type;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
+import se.tink.libraries.account.identifiers.se.swedbank.SwedbankClearingNumberUtils;
 
 public class DanskeBankAccountIdentifierFormatter implements AccountIdentifierFormatter {
-    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
+    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
+            new DefaultAccountIdentifierFormatter();
 
     @Override
     public String apply(AccountIdentifier identifier) {
@@ -28,17 +29,20 @@ public class DanskeBankAccountIdentifierFormatter implements AccountIdentifierFo
         ClearingNumber.Details clearing = getClearingNumberDetails(swedishIdentifier);
 
         switch (clearing.getBank()) {
-        case SWEDBANK:
-            return formatSwedbankIdentifier(swedishIdentifier);
-        case NORDEA_PERSONKONTO:
-            return swedishIdentifier.getAccountNumber(); // Nordea Personkonto should have no clearing
-        default:
-            return swedishIdentifier.getIdentifier(DEFAULT_FORMATTER);
+            case SWEDBANK:
+                return formatSwedbankIdentifier(swedishIdentifier);
+            case NORDEA_PERSONKONTO:
+                return swedishIdentifier
+                        .getAccountNumber(); // Nordea Personkonto should have no clearing
+            default:
+                return swedishIdentifier.getIdentifier(DEFAULT_FORMATTER);
         }
     }
 
     /**
-     * For 8xxxx Swedbank identifiers Danske removes fifth clearing number digit, but needs padding of account number
+     * For 8xxxx Swedbank identifiers Danske removes fifth clearing number digit, but needs padding
+     * of account number
+     *
      * @param swedishIdentifier Swedbank account identifier
      */
     private static String formatSwedbankIdentifier(SwedishIdentifier swedishIdentifier) {
@@ -46,15 +50,15 @@ public class DanskeBankAccountIdentifierFormatter implements AccountIdentifierFo
             return swedishIdentifier.getIdentifier(DEFAULT_FORMATTER);
         }
 
-        String clearingWithoutFifthDigit = getClearingWithoutFifthDigit(swedishIdentifier.getClearingNumber());
-        String paddedAccountNumber = SwedbankClearingNumberUtils
-                .padWithZerosBeforeAccountNumber(swedishIdentifier.getAccountNumber());
+        String clearingWithoutFifthDigit =
+                getClearingWithoutFifthDigit(swedishIdentifier.getClearingNumber());
+        String paddedAccountNumber =
+                SwedbankClearingNumberUtils.padWithZerosBeforeAccountNumber(
+                        swedishIdentifier.getAccountNumber());
         return clearingWithoutFifthDigit + paddedAccountNumber;
     }
 
-    /**
-     * Danske requires fifth clearing of Swedbank account identifiers to be removed
-     */
+    /** Danske requires fifth clearing of Swedbank account identifiers to be removed */
     private static String getClearingWithoutFifthDigit(String clearingNumber) {
         if (clearingNumber.length() == 5) {
             return clearingNumber.substring(0, 4);
@@ -63,7 +67,8 @@ public class DanskeBankAccountIdentifierFormatter implements AccountIdentifierFo
         }
     }
 
-    private static ClearingNumber.Details getClearingNumberDetails(SwedishIdentifier swedishIdentifier) {
+    private static ClearingNumber.Details getClearingNumberDetails(
+            SwedishIdentifier swedishIdentifier) {
         String clearingNumber = swedishIdentifier.getClearingNumber();
         return ClearingNumber.get(clearingNumber).get();
     }
@@ -80,8 +85,8 @@ public class DanskeBankAccountIdentifierFormatter implements AccountIdentifierFo
     }
 
     /**
-     * Danske bank account entities are missing the fifth clearing digit in Swedbank account numbers. Append it to
-     * the clearing.
+     * Danske bank account entities are missing the fifth clearing digit in Swedbank account
+     * numbers. Append it to the clearing.
      */
     private String parseCompleteSwedbankAccountNumber(String accountNumber) {
         if (!accountNumber.startsWith("8")) {

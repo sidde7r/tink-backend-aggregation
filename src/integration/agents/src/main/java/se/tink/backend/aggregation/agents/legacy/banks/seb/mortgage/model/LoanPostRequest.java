@@ -155,9 +155,7 @@ public class LoanPostRequest implements ApiRequest {
     private String zipCodeAndCityProperty = null;
     private String zipCodeCodebtor = null;
 
-    public LoanPostRequest() {
-
-    }
+    public LoanPostRequest() {}
 
     @JsonIgnore
     @Override
@@ -245,7 +243,7 @@ public class LoanPostRequest implements ApiRequest {
     public void setFilter(String filter) {
         this.filter = filter;
     }
-    
+
     @JsonProperty("first_name")
     public String getFirstName() {
         return firstName;
@@ -416,7 +414,7 @@ public class LoanPostRequest implements ApiRequest {
     public void setNumberOfChildrenReceivingAlimony(Integer numberOfChildrenReceivingAlimony) {
         this.numberOfChildrenReceivingAlimony = numberOfChildrenReceivingAlimony;
     }
-    
+
     @JsonProperty("number_of_other_properties")
     public Integer getNumberOfOtherProperties() {
         return numberOfOtherProperties;
@@ -1010,7 +1008,7 @@ public class LoanPostRequest implements ApiRequest {
     public void setKycEmail(String kycEmail) {
         this.kycEmail = kycEmail;
     }
-    
+
     @JsonProperty("kyc_employment_type")
     public String getKycEmploymentType() {
         return kycEmploymentType;
@@ -1019,7 +1017,7 @@ public class LoanPostRequest implements ApiRequest {
     public void setKycEmploymentType(String kycEmploymentType) {
         this.kycEmploymentType = kycEmploymentType;
     }
-    
+
     @JsonProperty("kyc_employer_company_name")
     public String getKycEmployerCompanyName() {
         return kycEmployerCompanyName;
@@ -1097,7 +1095,8 @@ public class LoanPostRequest implements ApiRequest {
         return kycAltTaxIdentificationNumberIsMissing;
     }
 
-    public void setKycAltTaxIdentificationNumberIsMissing(Boolean kycAltTaxIdentificationNumberIsMissing) {
+    public void setKycAltTaxIdentificationNumberIsMissing(
+            Boolean kycAltTaxIdentificationNumberIsMissing) {
         this.kycAltTaxIdentificationNumberIsMissing = kycAltTaxIdentificationNumberIsMissing;
     }
 
@@ -1223,7 +1222,8 @@ public class LoanPostRequest implements ApiRequest {
         return kycPersonWithHighPostInStateOwnedCompany;
     }
 
-    public void setKycPersonWithHighPostInStateOwnedCompany(Boolean kycPersonWithHighPostInStateOwnedCompany) {
+    public void setKycPersonWithHighPostInStateOwnedCompany(
+            Boolean kycPersonWithHighPostInStateOwnedCompany) {
         this.kycPersonWithHighPostInStateOwnedCompany = kycPersonWithHighPostInStateOwnedCompany;
     }
 
@@ -1232,7 +1232,8 @@ public class LoanPostRequest implements ApiRequest {
         return kycDirectorOfAnInternationalOrganization;
     }
 
-    public void setKycDirectorOfAnInternationalOrganization(Boolean kycDirectorOfAnInternationalOrganization) {
+    public void setKycDirectorOfAnInternationalOrganization(
+            Boolean kycDirectorOfAnInternationalOrganization) {
         this.kycDirectorOfAnInternationalOrganization = kycDirectorOfAnInternationalOrganization;
     }
 
@@ -1241,7 +1242,8 @@ public class LoanPostRequest implements ApiRequest {
         return kycDeputyDirectorOfAnInternOrganization;
     }
 
-    public void setKycDeputyDirectorOfAnInternOrganization(Boolean kycDeputyDirectorOfAnInternOrganization) {
+    public void setKycDeputyDirectorOfAnInternOrganization(
+            Boolean kycDeputyDirectorOfAnInternOrganization) {
         this.kycDeputyDirectorOfAnInternOrganization = kycDeputyDirectorOfAnInternOrganization;
     }
 
@@ -1250,8 +1252,10 @@ public class LoanPostRequest implements ApiRequest {
         return kycBoardMemberOfAnInternationalOrganization;
     }
 
-    public void setKycBoardMemberOfAnInternationalOrganization(Boolean kycBoardMemberOfAnInternationalOrganization) {
-        this.kycBoardMemberOfAnInternationalOrganization = kycBoardMemberOfAnInternationalOrganization;
+    public void setKycBoardMemberOfAnInternationalOrganization(
+            Boolean kycBoardMemberOfAnInternationalOrganization) {
+        this.kycBoardMemberOfAnInternationalOrganization =
+                kycBoardMemberOfAnInternationalOrganization;
     }
 
     @JsonProperty("kyc_title")
@@ -1277,7 +1281,8 @@ public class LoanPostRequest implements ApiRequest {
         return kycIMyselfAmAPoliticallyExposedPerson;
     }
 
-    public void setKycIMyselfAmAPoliticallyExposedPerson(Boolean kycIMyselfAmAPoliticallyExposedPerson) {
+    public void setKycIMyselfAmAPoliticallyExposedPerson(
+            Boolean kycIMyselfAmAPoliticallyExposedPerson) {
         this.kycIMyselfAmAPoliticallyExposedPerson = kycIMyselfAmAPoliticallyExposedPerson;
     }
 
@@ -1322,7 +1327,8 @@ public class LoanPostRequest implements ApiRequest {
         return kycChildsWifeOrHusbandPartnerOrCohabitant;
     }
 
-    public void setKycChildsWifeOrHusbandPartnerOrCohabitant(Boolean kycChildsWifeOrHusbandPartnerOrCohabitant) {
+    public void setKycChildsWifeOrHusbandPartnerOrCohabitant(
+            Boolean kycChildsWifeOrHusbandPartnerOrCohabitant) {
         this.kycChildsWifeOrHusbandPartnerOrCohabitant = kycChildsWifeOrHusbandPartnerOrCohabitant;
     }
 
@@ -1460,7 +1466,7 @@ public class LoanPostRequest implements ApiRequest {
     public void setKycAssets(Boolean kycAssets) {
         this.kycAssets = kycAssets;
     }
-    
+
     @JsonProperty("other_propertieses")
     public List<OtherProperties> getOtherPropertieses() {
         return otherPropertieses;
@@ -1469,7 +1475,7 @@ public class LoanPostRequest implements ApiRequest {
     public void setOtherPropertieses(List<OtherProperties> otherPropertieses) {
         this.otherPropertieses = otherPropertieses;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -1482,7 +1488,8 @@ public class LoanPostRequest implements ApiRequest {
         LoanPostRequest that = (LoanPostRequest) o;
 
         return Objects.equal(this.alimonyAmountPerMonth, that.alimonyAmountPerMonth)
-                && Objects.equal(this.alimonyAmountPerMonthCodebtor, that.alimonyAmountPerMonthCodebtor)
+                && Objects.equal(
+                        this.alimonyAmountPerMonthCodebtor, that.alimonyAmountPerMonthCodebtor)
                 && Objects.equal(this.allFirstNames, that.allFirstNames)
                 && Objects.equal(this.allFirstNamesCodebtor, that.allFirstNamesCodebtor)
                 && Objects.equal(this.apartmentDesignation, that.apartmentDesignation)
@@ -1499,10 +1506,12 @@ public class LoanPostRequest implements ApiRequest {
                 && Objects.equal(this.country, that.country)
                 && Objects.equal(this.countryCodebtor, that.countryCodebtor)
                 && Objects.equal(this.creditCardAndVariousDebts, that.creditCardAndVariousDebts)
-                && Objects.equal(this.creditCardAndVariousDebtsAmount, that.creditCardAndVariousDebtsAmount)
+                && Objects.equal(
+                        this.creditCardAndVariousDebtsAmount, that.creditCardAndVariousDebtsAmount)
                 && Objects.equal(this.currentNumberOfApplicants, that.currentNumberOfApplicants)
                 && Objects.equal(this.customerNumber, that.customerNumber)
-                && Objects.equal(this.deferredCapitalGainsTaxAmount, that.deferredCapitalGainsTaxAmount)
+                && Objects.equal(
+                        this.deferredCapitalGainsTaxAmount, that.deferredCapitalGainsTaxAmount)
                 && Objects.equal(this.email, that.email)
                 && Objects.equal(this.emailCodebtor, that.emailCodebtor)
                 && Objects.equal(this.employer, that.employer)
@@ -1511,7 +1520,8 @@ public class LoanPostRequest implements ApiRequest {
                 && Objects.equal(this.employmentSinceCodebtor, that.employmentSinceCodebtor)
                 && Objects.equal(this.employmentType, that.employmentType)
                 && Objects.equal(this.employmentTypeCodebtor, that.employmentTypeCodebtor)
-                && Objects.equal(this.estimatedTotalValueOfSavings, that.estimatedTotalValueOfSavings)
+                && Objects.equal(
+                        this.estimatedTotalValueOfSavings, that.estimatedTotalValueOfSavings)
                 && Objects.equal(this.filter, that.filter)
                 && Objects.equal(this.firstName, that.firstName)
                 && Objects.equal(this.firstNameCodebtor, that.firstNameCodebtor)
@@ -1526,29 +1536,37 @@ public class LoanPostRequest implements ApiRequest {
                 && Objects.equal(this.kycAltCountry, that.kycAltCountry)
                 && Objects.equal(this.kycAltFirstname, that.kycAltFirstname)
                 && Objects.equal(this.kycAltStreetAddress, that.kycAltStreetAddress)
-                && Objects.equal(this.kycAltTaxIdentificationNumber, that.kycAltTaxIdentificationNumber)
-                && Objects.equal(this.kycAltTaxIdentificationNumberIsMissing,
+                && Objects.equal(
+                        this.kycAltTaxIdentificationNumber, that.kycAltTaxIdentificationNumber)
+                && Objects.equal(
+                        this.kycAltTaxIdentificationNumberIsMissing,
                         that.kycAltTaxIdentificationNumberIsMissing)
                 && Objects.equal(this.kycAltZipCode, that.kycAltZipCode)
                 && Objects.equal(this.kycAmbassador, that.kycAmbassador)
                 && Objects.equal(this.kycAssets, that.kycAssets)
-                && Objects.equal(this.kycBoardMemberOfAnInternationalOrganization,
+                && Objects.equal(
+                        this.kycBoardMemberOfAnInternationalOrganization,
                         that.kycBoardMemberOfAnInternationalOrganization)
                 && Objects.equal(this.kycCard, that.kycCard)
                 && Objects.equal(this.kycCellPhoneNo, that.kycCellPhoneNo)
                 && Objects.equal(this.kycChild, that.kycChild)
-                && Objects.equal(this.kycChildsWifeOrHusbandPartnerOrCohabitant,
+                && Objects.equal(
+                        this.kycChildsWifeOrHusbandPartnerOrCohabitant,
                         that.kycChildsWifeOrHusbandPartnerOrCohabitant)
                 && Objects.equal(this.kycCity, that.kycCity)
                 && Objects.equal(this.kycCo, that.kycCo)
                 && Objects.equal(this.kycCountry, that.kycCountry)
-                && Objects.equal(this.kycCountryAlternativelyOrganization, that.kycCountryAlternativelyOrganization)
+                && Objects.equal(
+                        this.kycCountryAlternativelyOrganization,
+                        that.kycCountryAlternativelyOrganization)
                 && Objects.equal(this.kycCustody, that.kycCustody)
                 && Objects.equal(this.kycCustomerNumber, that.kycCustomerNumber)
-                && Objects.equal(this.kycDeputyDirectorOfAnInternOrganization,
+                && Objects.equal(
+                        this.kycDeputyDirectorOfAnInternOrganization,
                         that.kycDeputyDirectorOfAnInternOrganization)
                 && Objects.equal(this.kycDiplomaticEnvoys, that.kycDiplomaticEnvoys)
-                && Objects.equal(this.kycDirectorOfAnInternationalOrganization,
+                && Objects.equal(
+                        this.kycDirectorOfAnInternationalOrganization,
                         that.kycDirectorOfAnInternationalOrganization)
                 && Objects.equal(this.kycDirectorOfTheCentralBank, that.kycDirectorOfTheCentralBank)
                 && Objects.equal(this.kycEmail, that.kycEmail)
@@ -1559,10 +1577,12 @@ public class LoanPostRequest implements ApiRequest {
                 && Objects.equal(this.kycGiveAltPepName, that.kycGiveAltPepName)
                 && Objects.equal(this.kycGiveCountry, that.kycGiveCountry)
                 && Objects.equal(this.kycGiveReason, that.kycGiveReason)
-                && Objects.equal(this.kycHighOfficersInTheArmedForces, that.kycHighOfficersInTheArmedForces)
+                && Objects.equal(
+                        this.kycHighOfficersInTheArmedForces, that.kycHighOfficersInTheArmedForces)
                 && Objects.equal(this.kycHusbandOrWife, that.kycHusbandOrWife)
-                && Objects
-                        .equal(this.kycIMyselfAmAPoliticallyExposedPerson, that.kycIMyselfAmAPoliticallyExposedPerson)
+                && Objects.equal(
+                        this.kycIMyselfAmAPoliticallyExposedPerson,
+                        that.kycIMyselfAmAPoliticallyExposedPerson)
                 && Objects.equal(this.kycIncomeGain, that.kycIncomeGain)
                 && Objects.equal(this.kycInvestment, that.kycInvestment)
                 && Objects.equal(this.kycIsAltMailingAddress, that.kycIsAltMailingAddress)
@@ -1580,7 +1600,8 @@ public class LoanPostRequest implements ApiRequest {
                 && Objects.equal(this.kycOtherTaxResidencies, that.kycOtherTaxResidencies)
                 && Objects.equal(this.kycParent, that.kycParent)
                 && Objects.equal(this.kycPartner, that.kycPartner)
-                && Objects.equal(this.kycPersonWithHighPostInStateOwnedCompany,
+                && Objects.equal(
+                        this.kycPersonWithHighPostInStateOwnedCompany,
                         that.kycPersonWithHighPostInStateOwnedCompany)
                 && Objects.equal(this.kycPhoneNo, that.kycPhoneNo)
                 && Objects.equal(this.kycRegistreredPartner, that.kycRegistreredPartner)
@@ -1590,22 +1611,28 @@ public class LoanPostRequest implements ApiRequest {
                 && Objects.equal(this.kycSpecialAdministration, that.kycSpecialAdministration)
                 && Objects.equal(this.kycStreetAddress, that.kycStreetAddress)
                 && Objects.equal(this.kycTaxIdentificationNumber, that.kycTaxIdentificationNumber)
-                && Objects.equal(this.kycTheHeadOfStateOrGovernment, that.kycTheHeadOfStateOrGovernment)
+                && Objects.equal(
+                        this.kycTheHeadOfStateOrGovernment, that.kycTheHeadOfStateOrGovernment)
                 && Objects.equal(this.kycTitle, that.kycTitle)
                 && Objects.equal(this.kycTransactions, that.kycTransactions)
                 && Objects.equal(this.kycViceAndDeputyMinister, that.kycViceAndDeputyMinister)
                 && Objects.equal(this.kycWealthAdministration, that.kycWealthAdministration)
                 && Objects.equal(this.kycWorkPhoneNo, that.kycWorkPhoneNo)
-                && Objects.equal(this.kycZipCode, that.kycZipCode) && Objects.equal(this.lastName, that.lastName)
+                && Objects.equal(this.kycZipCode, that.kycZipCode)
+                && Objects.equal(this.lastName, that.lastName)
                 && Objects.equal(this.lastNameCodebtor, that.lastNameCodebtor)
-                && Objects.equal(this.livingSpace, that.livingSpace) && Objects.equal(this.loanAmount, that.loanAmount)
-                && Objects.equal(this.marketValue, that.marketValue) && Objects.equal(this.monthlyFee, that.monthlyFee)
+                && Objects.equal(this.livingSpace, that.livingSpace)
+                && Objects.equal(this.loanAmount, that.loanAmount)
+                && Objects.equal(this.marketValue, that.marketValue)
+                && Objects.equal(this.monthlyFee, that.monthlyFee)
                 && Objects.equal(this.monthlyGrossSalary, that.monthlyGrossSalary)
                 && Objects.equal(this.monthlyGrossSalaryCodebtor, that.monthlyGrossSalaryCodebtor)
                 && Objects.equal(this.numberOfAdults, that.numberOfAdults)
                 && Objects.equal(this.numberOfApplicants, that.numberOfApplicants)
                 && Objects.equal(this.numberOfChildren, that.numberOfChildren)
-                && Objects.equal(this.numberOfChildrenReceivingAlimony, that.numberOfChildrenReceivingAlimony)
+                && Objects.equal(
+                        this.numberOfChildrenReceivingAlimony,
+                        that.numberOfChildrenReceivingAlimony)
                 && Objects.equal(this.numberOfOtherProperties, that.numberOfOtherProperties)
                 && Objects.equal(this.numberOfRooms, that.numberOfRooms)
                 && Objects.equal(this.otherPropertieses, that.otherPropertieses)
@@ -1622,9 +1649,11 @@ public class LoanPostRequest implements ApiRequest {
                 && Objects.equal(this.streetProperty, that.streetProperty)
                 && Objects.equal(this.studentLoanAmount, that.studentLoanAmount)
                 && Objects.equal(this.studentLoanAmountCodebtor, that.studentLoanAmountCodebtor)
-                && Objects.equal(this.suretyForSomeonesLoansAmount, that.suretyForSomeonesLoansAmount)
+                && Objects.equal(
+                        this.suretyForSomeonesLoansAmount, that.suretyForSomeonesLoansAmount)
                 && Objects.equal(this.tenantCorporateNumber, that.tenantCorporateNumber)
-                && Objects.equal(this.tenantName, that.tenantName) && Objects.equal(this.workPhoneNo, that.workPhoneNo)
+                && Objects.equal(this.tenantName, that.tenantName)
+                && Objects.equal(this.workPhoneNo, that.workPhoneNo)
                 && Objects.equal(this.workPhoneNoCodebtor, that.workPhoneNoCodebtor)
                 && Objects.equal(this.zipCode, that.zipCode)
                 && Objects.equal(this.zipCodeAndCityProperty, that.zipCodeAndCityProperty)
@@ -1633,36 +1662,151 @@ public class LoanPostRequest implements ApiRequest {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(alimonyAmountPerMonth, alimonyAmountPerMonthCodebtor, allFirstNames,
-                allFirstNamesCodebtor, apartmentDesignation, approve, bankName, cadastral, cellPhoneNo,
-                cellPhoneNoCodebtor, city, cityCodebtor, co, coCodebtor, codebtorCustomerNumber, country,
-                countryCodebtor, creditCardAndVariousDebts, creditCardAndVariousDebtsAmount, currentNumberOfApplicants,
-                customerNumber, deferredCapitalGainsTaxAmount, email, emailCodebtor, employer, employerCodebtor,
-                employmentSince, employmentSinceCodebtor, employmentType, employmentTypeCodebtor,
-                estimatedTotalValueOfSavings, filter, firstName, firstNameCodebtor, hasDeferredCapitalGainsTax,
-                hasSuretyForSomeonesLoans, haveStudentLoan, haveStudentLoanCodebtor, interestRate,
-                kycAdditionalTaxResidency, kycAltCity, kycAltCo, kycAltCountry, kycAltFirstname, kycAltStreetAddress,
-                kycAltTaxIdentificationNumber, kycAltTaxIdentificationNumberIsMissing, kycAltZipCode, kycAmbassador,
-                kycAssets, kycBoardMemberOfAnInternationalOrganization, kycCard, kycCellPhoneNo, kycChild,
-                kycChildsWifeOrHusbandPartnerOrCohabitant, kycCity, kycCo, kycCountry,
-                kycCountryAlternativelyOrganization, kycCustody, kycCustomerNumber,
-                kycDeputyDirectorOfAnInternOrganization, kycDiplomaticEnvoys, kycDirectorOfAnInternationalOrganization,
-                kycDirectorOfTheCentralBank, kycEmail, kycEmployerCompanyName, kycEmploymentType, kycFinancing,
-                kycFirstname, kycGiveAltPepName, kycGiveCountry, kycGiveReason, kycHighOfficersInTheArmedForces,
-                kycHusbandOrWife, kycIMyselfAmAPoliticallyExposedPerson, kycIncomeGain, kycInvestment,
-                kycIsAltMailingAddress, kycIsPep, kycIsTaxResidentInSweden, kycIsTaxResidentInUsa,
-                kycJudgeInAnotherCourt, kycJudgeOfTheSupremeCourt, kycKnownEmployee, kycLivingEconomy, kycMep,
-                kycMiddlename, kycMinister, kycOfficialAtTheAuditOffice, kycOtherTaxResidencies, kycParent, kycPartner,
-                kycPersonWithHighPostInStateOwnedCompany, kycPhoneNo, kycRegistreredPartner, kycRiskCover, kycSavings,
-                kycSecondname, kycSpecialAdministration, kycStreetAddress, kycTaxIdentificationNumber,
-                kycTheHeadOfStateOrGovernment, kycTitle, kycTransactions, kycViceAndDeputyMinister,
-                kycWealthAdministration, kycWorkPhoneNo, kycZipCode, lastName, lastNameCodebtor, livingSpace,
-                loanAmount, marketValue, monthlyFee, monthlyGrossSalary, monthlyGrossSalaryCodebtor, numberOfAdults,
-                numberOfApplicants, numberOfChildren, numberOfChildrenReceivingAlimony, numberOfOtherProperties,
-                numberOfRooms, otherInformation, otherPropertieses, payAlimony, payAlimonyCodebtor, phoneNo,
-                phoneNoCodebtor, priceIndication, propertyType, recieveAlimony, streetAddress, streetAddressCodebtor,
-                streetProperty, studentLoanAmount, studentLoanAmountCodebtor, suretyForSomeonesLoansAmount,
-                tenantCorporateNumber, tenantName, workPhoneNo, workPhoneNoCodebtor, zipCode, zipCodeAndCityProperty,
+        return Objects.hashCode(
+                alimonyAmountPerMonth,
+                alimonyAmountPerMonthCodebtor,
+                allFirstNames,
+                allFirstNamesCodebtor,
+                apartmentDesignation,
+                approve,
+                bankName,
+                cadastral,
+                cellPhoneNo,
+                cellPhoneNoCodebtor,
+                city,
+                cityCodebtor,
+                co,
+                coCodebtor,
+                codebtorCustomerNumber,
+                country,
+                countryCodebtor,
+                creditCardAndVariousDebts,
+                creditCardAndVariousDebtsAmount,
+                currentNumberOfApplicants,
+                customerNumber,
+                deferredCapitalGainsTaxAmount,
+                email,
+                emailCodebtor,
+                employer,
+                employerCodebtor,
+                employmentSince,
+                employmentSinceCodebtor,
+                employmentType,
+                employmentTypeCodebtor,
+                estimatedTotalValueOfSavings,
+                filter,
+                firstName,
+                firstNameCodebtor,
+                hasDeferredCapitalGainsTax,
+                hasSuretyForSomeonesLoans,
+                haveStudentLoan,
+                haveStudentLoanCodebtor,
+                interestRate,
+                kycAdditionalTaxResidency,
+                kycAltCity,
+                kycAltCo,
+                kycAltCountry,
+                kycAltFirstname,
+                kycAltStreetAddress,
+                kycAltTaxIdentificationNumber,
+                kycAltTaxIdentificationNumberIsMissing,
+                kycAltZipCode,
+                kycAmbassador,
+                kycAssets,
+                kycBoardMemberOfAnInternationalOrganization,
+                kycCard,
+                kycCellPhoneNo,
+                kycChild,
+                kycChildsWifeOrHusbandPartnerOrCohabitant,
+                kycCity,
+                kycCo,
+                kycCountry,
+                kycCountryAlternativelyOrganization,
+                kycCustody,
+                kycCustomerNumber,
+                kycDeputyDirectorOfAnInternOrganization,
+                kycDiplomaticEnvoys,
+                kycDirectorOfAnInternationalOrganization,
+                kycDirectorOfTheCentralBank,
+                kycEmail,
+                kycEmployerCompanyName,
+                kycEmploymentType,
+                kycFinancing,
+                kycFirstname,
+                kycGiveAltPepName,
+                kycGiveCountry,
+                kycGiveReason,
+                kycHighOfficersInTheArmedForces,
+                kycHusbandOrWife,
+                kycIMyselfAmAPoliticallyExposedPerson,
+                kycIncomeGain,
+                kycInvestment,
+                kycIsAltMailingAddress,
+                kycIsPep,
+                kycIsTaxResidentInSweden,
+                kycIsTaxResidentInUsa,
+                kycJudgeInAnotherCourt,
+                kycJudgeOfTheSupremeCourt,
+                kycKnownEmployee,
+                kycLivingEconomy,
+                kycMep,
+                kycMiddlename,
+                kycMinister,
+                kycOfficialAtTheAuditOffice,
+                kycOtherTaxResidencies,
+                kycParent,
+                kycPartner,
+                kycPersonWithHighPostInStateOwnedCompany,
+                kycPhoneNo,
+                kycRegistreredPartner,
+                kycRiskCover,
+                kycSavings,
+                kycSecondname,
+                kycSpecialAdministration,
+                kycStreetAddress,
+                kycTaxIdentificationNumber,
+                kycTheHeadOfStateOrGovernment,
+                kycTitle,
+                kycTransactions,
+                kycViceAndDeputyMinister,
+                kycWealthAdministration,
+                kycWorkPhoneNo,
+                kycZipCode,
+                lastName,
+                lastNameCodebtor,
+                livingSpace,
+                loanAmount,
+                marketValue,
+                monthlyFee,
+                monthlyGrossSalary,
+                monthlyGrossSalaryCodebtor,
+                numberOfAdults,
+                numberOfApplicants,
+                numberOfChildren,
+                numberOfChildrenReceivingAlimony,
+                numberOfOtherProperties,
+                numberOfRooms,
+                otherInformation,
+                otherPropertieses,
+                payAlimony,
+                payAlimonyCodebtor,
+                phoneNo,
+                phoneNoCodebtor,
+                priceIndication,
+                propertyType,
+                recieveAlimony,
+                streetAddress,
+                streetAddressCodebtor,
+                streetProperty,
+                studentLoanAmount,
+                studentLoanAmountCodebtor,
+                suretyForSomeonesLoansAmount,
+                tenantCorporateNumber,
+                tenantName,
+                workPhoneNo,
+                workPhoneNoCodebtor,
+                zipCode,
+                zipCodeAndCityProperty,
                 zipCodeCodebtor);
     }
 
@@ -1715,24 +1859,34 @@ public class LoanPostRequest implements ApiRequest {
                 .add("kycAltFirstname", kycAltFirstname)
                 .add("kycAltStreetAddress", kycAltStreetAddress)
                 .add("kycAltTaxIdentificationNumber", kycAltTaxIdentificationNumber)
-                .add("kycAltTaxIdentificationNumberIsMissing", kycAltTaxIdentificationNumberIsMissing)
+                .add(
+                        "kycAltTaxIdentificationNumberIsMissing",
+                        kycAltTaxIdentificationNumberIsMissing)
                 .add("kycAltZipCode", kycAltZipCode)
                 .add("kycAmbassador", kycAmbassador)
                 .add("kycAssets", kycAssets)
-                .add("kycBoardMemberOfAnInternationalOrganization", kycBoardMemberOfAnInternationalOrganization)
+                .add(
+                        "kycBoardMemberOfAnInternationalOrganization",
+                        kycBoardMemberOfAnInternationalOrganization)
                 .add("kycCard", kycCard)
                 .add("kycCellPhoneNo", kycCellPhoneNo)
                 .add("kycChild", kycChild)
-                .add("kycChildsWifeOrHusbandPartnerOrCohabitant", kycChildsWifeOrHusbandPartnerOrCohabitant)
+                .add(
+                        "kycChildsWifeOrHusbandPartnerOrCohabitant",
+                        kycChildsWifeOrHusbandPartnerOrCohabitant)
                 .add("kycCity", kycCity)
                 .add("kycCo", kycCo)
                 .add("kycCountry", kycCountry)
                 .add("kycCountryAlternativelyOrganization", kycCountryAlternativelyOrganization)
                 .add("kycCustody", kycCustody)
                 .add("kycCustomerNumber", kycCustomerNumber)
-                .add("kycDeputyDirectorOfAnInternOrganization", kycDeputyDirectorOfAnInternOrganization)
+                .add(
+                        "kycDeputyDirectorOfAnInternOrganization",
+                        kycDeputyDirectorOfAnInternOrganization)
                 .add("kycDiplomaticEnvoys", kycDiplomaticEnvoys)
-                .add("kycDirectorOfAnInternationalOrganization", kycDirectorOfAnInternationalOrganization)
+                .add(
+                        "kycDirectorOfAnInternationalOrganization",
+                        kycDirectorOfAnInternationalOrganization)
                 .add("kycDirectorOfTheCentralBank", kycDirectorOfTheCentralBank)
                 .add("kycEmail", kycEmail)
                 .add("kycEmployerCompanyName", kycEmployerCompanyName)
@@ -1762,7 +1916,9 @@ public class LoanPostRequest implements ApiRequest {
                 .add("kycOtherTaxResidencies", kycOtherTaxResidencies)
                 .add("kycParent", kycParent)
                 .add("kycPartner", kycPartner)
-                .add("kycPersonWithHighPostInStateOwnedCompany", kycPersonWithHighPostInStateOwnedCompany)
+                .add(
+                        "kycPersonWithHighPostInStateOwnedCompany",
+                        kycPersonWithHighPostInStateOwnedCompany)
                 .add("kycPhoneNo", kycPhoneNo)
                 .add("kycRegistreredPartner", kycRegistreredPartner)
                 .add("kycRiskCover", kycRiskCover)

@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,12 +7,11 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for facet complex type.
- * 
+ * Java class for facet complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="facet">
  *   &lt;complexContent>
@@ -25,33 +23,23 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "facet")
-@XmlSeeAlso({
-    NoFixedFacet.class,
-    NumFacet.class,
-    WhiteSpace.class
-})
-public class Facet
-    extends Annotated
-{
+@XmlSeeAlso({NoFixedFacet.class, NumFacet.class, WhiteSpace.class})
+public class Facet extends Annotated {
 
     @XmlAttribute(name = "value", required = true)
     @XmlSchemaType(name = "anySimpleType")
     protected String value;
+
     @XmlAttribute(name = "fixed")
     protected Boolean fixed;
 
     /**
      * Gets the value of the value property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getValue() {
         return value;
@@ -59,11 +47,8 @@ public class Facet
 
     /**
      * Sets the value of the value property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setValue(String value) {
         this.value = value;
@@ -71,11 +56,8 @@ public class Facet
 
     /**
      * Gets the value of the fixed property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     *
+     * @return possible object is {@link Boolean }
      */
     public boolean isFixed() {
         if (fixed == null) {
@@ -87,14 +69,10 @@ public class Facet
 
     /**
      * Sets the value of the fixed property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     *
+     * @param value allowed object is {@link Boolean }
      */
     public void setFixed(Boolean value) {
         this.fixed = value;
     }
-
 }

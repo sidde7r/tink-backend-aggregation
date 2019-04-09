@@ -7,12 +7,16 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CollectBankIdResponse {
     @JsonProperty("IsAjaxResponse")
     private boolean isAjaxResponse;
+
     @JsonProperty("Message")
     private CollectMessage message;
+
     @JsonProperty("State")
     private int state;
+
     @JsonProperty("ProgressbarMessage")
     private String progressbarMessage;
+
     @JsonProperty("RedirectUrl")
     private String redirectUrl;
 
@@ -55,5 +59,4 @@ public class CollectBankIdResponse {
     public void setRedirectUrl(String redirectUrl) {
         this.redirectUrl = redirectUrl;
     }
-
 }

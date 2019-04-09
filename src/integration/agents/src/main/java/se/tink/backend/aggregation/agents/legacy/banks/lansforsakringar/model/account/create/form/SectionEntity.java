@@ -6,7 +6,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SectionEntity {
-    
+
     private String title;
     private String headerType;
     private List<QuestionEntity> questions = Lists.newArrayList();

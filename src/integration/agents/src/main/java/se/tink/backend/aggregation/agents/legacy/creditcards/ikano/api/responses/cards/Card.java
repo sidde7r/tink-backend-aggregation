@@ -2,20 +2,23 @@ package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.cards
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
-
 import java.util.Objects;
+import se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engagements.CardType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Card {
     @JsonProperty("_Expires")
     private String expiresAt;
+
     @JsonProperty("_CreditAgreement")
     private String hasCredit;
+
     @JsonProperty("_ObjectGroupCode")
     private String groupCode;
+
     @JsonProperty("_ProductCode")
     private String cardType;
+
     @JsonProperty("_State")
     private String state;
 

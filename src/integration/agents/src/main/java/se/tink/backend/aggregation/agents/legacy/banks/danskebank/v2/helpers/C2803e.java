@@ -20,13 +20,11 @@ public class C2803e {
         String a = C2809b.m12106a(this.f10327a.m12101b());
         String a2 = C2809b.m12106a(this.f10328b);
         String a3 = C2809b.m12106a(this.f10329c);
-        return String.format("%1s.%2s.%3s", new Object[] {
-                a, a2, a3
-        });
+        return String.format("%1s.%2s.%3s", new Object[] {a, a2, a3});
     }
 
-    public Map<String,String> m12069b() {
-        Map<String,String> hashMap = new HashMap<String,String>();
+    public Map<String, String> m12069b() {
+        Map<String, String> hashMap = new HashMap<String, String>();
         hashMap.put("Authorization", m12068a());
         return hashMap;
     }

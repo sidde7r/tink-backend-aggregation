@@ -16,20 +16,28 @@ public class DepotEntity {
 
     @JsonProperty("DEPA_ID")
     private String id;
+
     @JsonProperty("DEPA_BEN")
     private String name;
+
     @JsonProperty("DEPA_KORT_NAMN")
     private String shortName;
+
     @JsonProperty("KHAV")
     private String owner;
+
     @JsonProperty("DISP_BELOPP_SEK")
     private double availableAmount;
+
     @JsonProperty("DEPA_TYP_TXT")
     private String type;
+
     @JsonProperty("DEPA_TYP_KOD")
     private Integer depotTypeCode;
+
     @JsonProperty("TOT_PER_SINCE_BUY")
     private double profitInPercentage;
+
     @JsonProperty("SUM_SECURITIES_VALUE")
     private String sumOfSecurities;
 
@@ -90,7 +98,9 @@ public class DepotEntity {
     }
 
     public Double getSumOfSecurities() {
-        return sumOfSecurities == null || sumOfSecurities.isEmpty() ? 0 : StringUtils.parseAmount(sumOfSecurities);
+        return sumOfSecurities == null || sumOfSecurities.isEmpty()
+                ? 0
+                : StringUtils.parseAmount(sumOfSecurities);
     }
 
     public void setSumOfSecurities(String sumOfSecurities) {
@@ -131,19 +141,22 @@ public class DepotEntity {
 
     private Portfolio.Type getPortfolioType() {
         switch (getDepotTypeCode()) {
-        case 85:
-        case 86:
-        case 88:
-        case 91:
-        case 94:
-        case 97:
-        case 100:
-        case 112:
-        case 119:
-            return Portfolio.Type.ISK;
-        default:
-            log.info(String.format("SEB portfolio type - code: %s, type: %s", getDepotTypeCode(), getType().trim()));
-            return Portfolio.Type.OTHER;
+            case 85:
+            case 86:
+            case 88:
+            case 91:
+            case 94:
+            case 97:
+            case 100:
+            case 112:
+            case 119:
+                return Portfolio.Type.ISK;
+            default:
+                log.info(
+                        String.format(
+                                "SEB portfolio type - code: %s, type: %s",
+                                getDepotTypeCode(), getType().trim()));
+                return Portfolio.Type.OTHER;
         }
     }
 }

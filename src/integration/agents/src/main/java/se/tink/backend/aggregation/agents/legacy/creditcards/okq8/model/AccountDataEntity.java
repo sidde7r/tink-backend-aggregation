@@ -2,8 +2,8 @@ package se.tink.backend.aggregation.agents.creditcards.okq8.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import java.text.ParseException;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
@@ -13,12 +13,16 @@ import se.tink.libraries.strings.StringUtils;
 public class AccountDataEntity {
     private String account;
     private String available;
+
     @JsonProperty("card_name")
     private String cardName;
+
     private String limit;
     private String ocr;
+
     @JsonProperty("owner_name")
     private String ownerName;
+
     private String saldo;
 
     public String getAccount() {
@@ -95,8 +99,10 @@ public class AccountDataEntity {
         account.setName("OKQ8 Visa");
         account.setType(AccountTypes.CREDIT_CARD);
 
-        Preconditions.checkState(Preconditions.checkNotNull(account.getBankId()).matches("[0-9]{11}"),
-                "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+        Preconditions.checkState(
+                Preconditions.checkNotNull(account.getBankId()).matches("[0-9]{11}"),
+                "Unexpected account.bankid '%s'. Reformatted?",
+                account.getBankId());
 
         return account;
     }

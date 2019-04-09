@@ -71,5 +71,4 @@ public class Originator implements GeneralAccountEntity {
     public String generalGetName() {
         return this.name;
     }
-
 }

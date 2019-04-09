@@ -21,19 +21,18 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.libraries.account.rpc.Account;
-import se.tink.libraries.account.enums.AccountTypes;
-import se.tink.libraries.credentials.rpc.Credentials;
-import se.tink.libraries.user.rpc.User;
-import se.tink.libraries.enums.FeatureFlags;
 import se.tink.backend.aggregation.agents.abnamro.client.model.ContractEntity;
 import se.tink.backend.aggregation.agents.abnamro.client.model.RejectedContractEntity;
+import se.tink.libraries.account.enums.AccountTypes;
+import se.tink.libraries.account.rpc.Account;
+import se.tink.libraries.credentials.rpc.Credentials;
 import se.tink.libraries.strings.StringUtils;
 
 public class AbnAmroUtils {
 
     private static final Logger log = LoggerFactory.getLogger(AbnAmroUtils.class);
-    private static final ImmutableSet VALID_LOCALES = ImmutableSet.of("en_US".toLowerCase(), "nl_NL".toLowerCase());
+    private static final ImmutableSet VALID_LOCALES =
+            ImmutableSet.of("en_US".toLowerCase(), "nl_NL".toLowerCase());
 
     // This is the name of the ABN AMRO provider for Grip 3.0 and later
     public static final String ABN_AMRO_PROVIDER_NAME_V2 = "nl-abnamro";
@@ -49,8 +48,8 @@ public class AbnAmroUtils {
     public static final String ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD = "contract_number";
 
     public static boolean isAggregationCredentials(Credentials credentials) {
-        return Objects.equals(credentials.getProviderName(), ABN_AMRO_ICS_PROVIDER_NAME) ||
-                Objects.equals(credentials.getProviderName(), ABN_AMRO_PROVIDER_NAME_V2);
+        return Objects.equals(credentials.getProviderName(), ABN_AMRO_ICS_PROVIDER_NAME)
+                || Objects.equals(credentials.getProviderName(), ABN_AMRO_PROVIDER_NAME_V2);
     }
 
     // Payload keys for the external payload (in the `TransactionEntity`).
@@ -76,21 +75,21 @@ public class AbnAmroUtils {
         public static final String SUBSCRIBED = "subscribed";
     }
 
-    public static final Map<String, AccountTypes> ACCOUNT_TYPE_BY_PRODUCT_GROUP = ImmutableMap
-            .<String, AccountTypes>builder()
-            .put("PAYMENT_ACCOUNTS", AccountTypes.CHECKING)
-            .put("SAVINGS_ACCOUNTS", AccountTypes.SAVINGS)
-            .put("VARIABLE_SAVINGS_TOR_FLAT", AccountTypes.SAVINGS)
-            .put("VARIABLE_SAVINGS_TOR_BONUS", AccountTypes.SAVINGS)
-            .put("CREDIT_CARDS_PRIVATE_AND_RETAIL", AccountTypes.CREDIT_CARD)
-            .put("PAYMENT_SERVICES", AccountTypes.CREDIT_CARD)
-            .build();
+    public static final Map<String, AccountTypes> ACCOUNT_TYPE_BY_PRODUCT_GROUP =
+            ImmutableMap.<String, AccountTypes>builder()
+                    .put("PAYMENT_ACCOUNTS", AccountTypes.CHECKING)
+                    .put("SAVINGS_ACCOUNTS", AccountTypes.SAVINGS)
+                    .put("VARIABLE_SAVINGS_TOR_FLAT", AccountTypes.SAVINGS)
+                    .put("VARIABLE_SAVINGS_TOR_BONUS", AccountTypes.SAVINGS)
+                    .put("CREDIT_CARDS_PRIVATE_AND_RETAIL", AccountTypes.CREDIT_CARD)
+                    .put("PAYMENT_SERVICES", AccountTypes.CREDIT_CARD)
+                    .build();
 
-    public static final Set<String> CREDIT_CARD_PRODUCT_GROUPS = ImmutableSet
-            .<String>builder()
-            .add("CREDIT_CARDS_PRIVATE_AND_RETAIL")
-            .add("PAYMENT_SERVICES")
-            .build();
+    public static final Set<String> CREDIT_CARD_PRODUCT_GROUPS =
+            ImmutableSet.<String>builder()
+                    .add("CREDIT_CARDS_PRIVATE_AND_RETAIL")
+                    .add("PAYMENT_SERVICES")
+                    .build();
 
     public static class DescriptionKeys {
         public static String CARD_NUMBER = "kaartnummer";
@@ -103,24 +102,29 @@ public class AbnAmroUtils {
         public static String IBAN = "iban";
     }
 
-    private static Pattern DESCRIPTION_PARTS_PATTERN = Pattern
-            .compile("(?<key>[^ \\d]+): ?(?<value>.*?)(?:(?= [^ \\d]+:)|$)");
+    private static Pattern DESCRIPTION_PARTS_PATTERN =
+            Pattern.compile("(?<key>[^ \\d]+): ?(?<value>.*?)(?:(?= [^ \\d]+:)|$)");
 
-    private static Pattern DESCRIPTION_POS_TRANSACTION_PATTERN = Pattern.compile(
-            "^(?:[gb]ea( nr:\\w+)? \\d{2}.\\d{2}.\\d{2}\\/\\d{2}.\\d{2} )(?<value>.+)", Pattern.CASE_INSENSITIVE);
+    private static Pattern DESCRIPTION_POS_TRANSACTION_PATTERN =
+            Pattern.compile(
+                    "^(?:[gb]ea( nr:\\w+)? \\d{2}.\\d{2}.\\d{2}\\/\\d{2}.\\d{2} )(?<value>.+)",
+                    Pattern.CASE_INSENSITIVE);
 
     // Complement to se.tink.backend.utils.guavaimpl.Functions
     public static class Functions {
-        public static final Function<RejectedContractEntity, Long> REJECTED_CONTRACT_TO_CONTRACT_NUMBER = RejectedContractEntity::getContractNumber;
+        public static final Function<RejectedContractEntity, Long>
+                REJECTED_CONTRACT_TO_CONTRACT_NUMBER = RejectedContractEntity::getContractNumber;
     }
 
     // Complement to se.tink.backend.aggregation.utils.Predicates
     public static class Predicates {
-        public static final Predicate<ContractEntity> IS_VALID_CONTRACT_ENTITY = contractEntity -> AbnAmroAccountValidator
-                .validate(contractEntity).isValid();
+        public static final Predicate<ContractEntity> IS_VALID_CONTRACT_ENTITY =
+                contractEntity -> AbnAmroAccountValidator.validate(contractEntity).isValid();
 
-        public static final Predicate<Credentials> IS_BLOCKED = credentials -> Objects
-                .equals(AbnAmroUtils.CREDENTIALS_BLOCKED_PAYLOAD, credentials.getPayload());
+        public static final Predicate<Credentials> IS_BLOCKED =
+                credentials ->
+                        Objects.equals(
+                                AbnAmroUtils.CREDENTIALS_BLOCKED_PAYLOAD, credentials.getPayload());
     }
 
     public static boolean isValidLocale(String locale) {
@@ -147,7 +151,8 @@ public class AbnAmroUtils {
         return getDescription(descriptionParts, true);
     }
 
-    public static String getDescription(Map<String, String> descriptionParts, boolean usePaymentProvider) {
+    public static String getDescription(
+            Map<String, String> descriptionParts, boolean usePaymentProvider) {
 
         String description;
 
@@ -157,7 +162,8 @@ public class AbnAmroUtils {
         }
 
         if (usePaymentProvider) {
-            description = AbnAmroPaymentProviderUtils.getPaymentProviderDescription(descriptionParts);
+            description =
+                    AbnAmroPaymentProviderUtils.getPaymentProviderDescription(descriptionParts);
             if (description != null) {
                 return description;
             }
@@ -183,10 +189,8 @@ public class AbnAmroUtils {
             return parts;
         }
 
-        String rawDescription = Joiner
-                .on(" ").join(descriptionLines)
-                .replaceAll("\\s+", " ")
-                .trim();
+        String rawDescription =
+                Joiner.on(" ").join(descriptionLines).replaceAll("\\s+", " ").trim();
 
         Matcher posMatcher = DESCRIPTION_POS_TRANSACTION_PATTERN.matcher(rawDescription);
 
@@ -215,8 +219,8 @@ public class AbnAmroUtils {
     }
 
     /**
-     * This isn't the real credit card number but a contract number that is constructed by ABN AMRO. The 4 last digits
-     * are the same as on the actual credit card.
+     * This isn't the real credit card number but a contract number that is constructed by ABN AMRO.
+     * The 4 last digits are the same as on the actual credit card.
      */
     public static String maskCreditCardContractNumber(String accountNumber) {
         return maskCreditCardContractNumber(accountNumber, false);
@@ -251,37 +255,38 @@ public class AbnAmroUtils {
         return iban.replaceAll("(.{4})(?!$)", "$1 ");
     }
 
-    /**
-     * Return the difference between two lists of accounts based on bank id.
-     */
+    /** Return the difference between two lists of accounts based on bank id. */
     public static List<Account> getAccountDifference(List<Account> left, List<Account> right) {
 
         if (CollectionUtils.isEmpty(left)) {
             return Collections.emptyList();
         }
 
-        final Set<String> rightBankIds = right.stream().map(AbnAmroUtils::getIcsShortBankId)
-                .collect(Collectors.toSet());
+        final Set<String> rightBankIds =
+                right.stream().map(AbnAmroUtils::getIcsShortBankId).collect(Collectors.toSet());
 
-        return left.stream().filter(account -> !rightBankIds.contains(getIcsShortBankId(account)))
+        return left.stream()
+                .filter(account -> !rightBankIds.contains(getIcsShortBankId(account)))
                 .collect(Collectors.toList());
-
     }
 
     public static boolean isAbnAmroProvider(String providerName) {
-        return Objects.equals(ABN_AMRO_PROVIDER_NAME, providerName) ||
-                Objects.equals(ABN_AMRO_ICS_PROVIDER_NAME, providerName) ||
-                Objects.equals(ABN_AMRO_PROVIDER_NAME_V2, providerName);
+        return Objects.equals(ABN_AMRO_PROVIDER_NAME, providerName)
+                || Objects.equals(ABN_AMRO_ICS_PROVIDER_NAME, providerName)
+                || Objects.equals(ABN_AMRO_PROVIDER_NAME_V2, providerName);
     }
 
     public static boolean isAccountRejected(Account account) {
-        return !Strings.isNullOrEmpty(account.getPayload(InternalAccountPayloadKeys.REJECTED_REASON_CODE));
+        return !Strings.isNullOrEmpty(
+                account.getPayload(InternalAccountPayloadKeys.REJECTED_REASON_CODE));
     }
 
     public static void markAccountAsRejected(Account account, Integer rejectedReasonCode) {
         Preconditions.checkNotNull(account);
         account.putPayload(InternalAccountPayloadKeys.REJECTED_DATE, new DateTime().toString());
-        account.putPayload(InternalAccountPayloadKeys.REJECTED_REASON_CODE, String.valueOf(rejectedReasonCode));
+        account.putPayload(
+                InternalAccountPayloadKeys.REJECTED_REASON_CODE,
+                String.valueOf(rejectedReasonCode));
     }
 
     public static void markAccountAsFailed(Account account) {
@@ -308,7 +313,7 @@ public class AbnAmroUtils {
             return ccId;
         }
 
-        return ccId.substring(0, ccId.length()-ABN_AMRO_ICS_SUFFIX_LENGTH);
+        return ccId.substring(0, ccId.length() - ABN_AMRO_ICS_SUFFIX_LENGTH);
     }
 
     public static boolean isValidBcNumberFormat(String input) {
@@ -316,8 +321,10 @@ public class AbnAmroUtils {
     }
 
     public static Optional<String> getBcNumber(Credentials credentials) {
-        if (credentials == null || !Objects.equals(AbnAmroUtils.ABN_AMRO_PROVIDER_NAME_V2,
-                credentials.getProviderName()) || !isValidBcNumberFormat(credentials.getPayload())) {
+        if (credentials == null
+                || !Objects.equals(
+                        AbnAmroUtils.ABN_AMRO_PROVIDER_NAME_V2, credentials.getProviderName())
+                || !isValidBcNumberFormat(credentials.getPayload())) {
             return Optional.empty();
         }
 

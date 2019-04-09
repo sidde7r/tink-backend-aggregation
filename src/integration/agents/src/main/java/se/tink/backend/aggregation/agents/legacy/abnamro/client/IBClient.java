@@ -20,10 +20,6 @@ import java.util.stream.Collectors;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.UriBuilder;
-import se.tink.libraries.account.rpc.Account;
-import se.tink.libraries.account.enums.AccountTypes;
-import se.tink.backend.aggregation.agents.abnamro.client.rpc.AuthenticatedRequest;
-import se.tink.backend.aggregation.agents.abnamro.client.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.abnamro.client.exceptions.InternetBankingUnavailableException;
 import se.tink.backend.aggregation.agents.abnamro.client.exceptions.UnauthorizedAccessException;
 import se.tink.backend.aggregation.agents.abnamro.client.model.ContractContainer;
@@ -31,15 +27,19 @@ import se.tink.backend.aggregation.agents.abnamro.client.model.ContractEntity;
 import se.tink.backend.aggregation.agents.abnamro.client.model.ErrorEntity;
 import se.tink.backend.aggregation.agents.abnamro.client.model.ProductEntity;
 import se.tink.backend.aggregation.agents.abnamro.client.model.SessionEntity;
+import se.tink.backend.aggregation.agents.abnamro.client.rpc.AuthenticatedRequest;
+import se.tink.backend.aggregation.agents.abnamro.client.rpc.AuthenticationRequest;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.ContractsResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.ErrorResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.SessionResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.UserPreferenceResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.UserPreferences;
+import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroProductConfiguration;
 import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroProductsConfiguration;
-import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
+import se.tink.libraries.account.enums.AccountTypes;
+import se.tink.libraries.account.rpc.Account;
 import se.tink.libraries.metrics.Counter;
 import se.tink.libraries.metrics.MetricId;
 import se.tink.libraries.metrics.MetricRegistry;
@@ -47,16 +47,17 @@ import se.tink.libraries.metrics.Timer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 /**
- * In the context of ABN AMRO, the "IB" prefix stands for Internet Banking. The IB endpoints are the same as they use
- * for their Internet banking services, such as on the web or in their app.
+ * In the context of ABN AMRO, the "IB" prefix stands for Internet Banking. The IB endpoints are the
+ * same as they use for their Internet banking services, such as on the web or in their app.
  */
 public class IBClient extends Client {
 
     private static final String SERVICE_VERSION_HEADER = "x-aab-serviceversion";
     private static final String SESSION_COOKIE_NAME = "SMSession";
-    private final static Joiner COMMA_JOINER = Joiner.on(",").skipNulls();
+    private static final Joiner COMMA_JOINER = Joiner.on(",").skipNulls();
     private static final String DEFAULT_LANGUAGE = "en";
-    private static final MetricId AUTHENTICATION_OUTCOME_METRIC = MetricId.newId("ib_client_authentication_outcome");
+    private static final MetricId AUTHENTICATION_OUTCOME_METRIC =
+            MetricId.newId("ib_client_authentication_outcome");
 
     private final AbnAmroProductsConfiguration productsConfiguration;
     private final Counter authenticationErrors;
@@ -74,21 +75,26 @@ public class IBClient extends Client {
         this(IBClient.class, abnAmroConfiguration, metricRegistry);
     }
 
-    protected IBClient(Class<? extends Client> cls, AbnAmroConfiguration abnAmroConfiguration, MetricRegistry
-            metricRegistry) {
-        super(cls, abnAmroConfiguration.getTrustStoreConfiguration(),
+    protected IBClient(
+            Class<? extends Client> cls,
+            AbnAmroConfiguration abnAmroConfiguration,
+            MetricRegistry metricRegistry) {
+        super(
+                cls,
+                abnAmroConfiguration.getTrustStoreConfiguration(),
                 abnAmroConfiguration.getInternetBankingConfiguration().getHost());
 
-        this.productsConfiguration = abnAmroConfiguration.getInternetBankingConfiguration().getProducts();
+        this.productsConfiguration =
+                abnAmroConfiguration.getInternetBankingConfiguration().getProducts();
 
         this.metricRegistry = metricRegistry;
-        this.authenticationErrors = metricRegistry.meter(MetricId.newId("ib_client_authenticate_errors"));
+        this.authenticationErrors =
+                metricRegistry.meter(MetricId.newId("ib_client_authenticate_errors"));
     }
 
     private Timer getTimer(String source, String outcome) {
-        return metricRegistry.timer(AUTHENTICATION_OUTCOME_METRIC
-                .label("source", source)
-                .label("outcome", outcome));
+        return metricRegistry.timer(
+                AUTHENTICATION_OUTCOME_METRIC.label("source", source).label("outcome", outcome));
     }
 
     public boolean authenticate(AuthenticationRequest request) {
@@ -118,8 +124,10 @@ public class IBClient extends Client {
                         .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
                 return true;
             } else {
-                log.error(String.format("Customer numbers don't match. Requested %s but received %s.",
-                        request.getBcNumber(), bcNumber.get()));
+                log.error(
+                        String.format(
+                                "Customer numbers don't match. Requested %s but received %s.",
+                                request.getBcNumber(), bcNumber.get()));
                 getTimer("authenticate", "customer_mismatch")
                         .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
                 return false;
@@ -133,22 +141,27 @@ public class IBClient extends Client {
 
     public Optional<String> getCustomerNumber(String sessionToken)
             throws InternetBankingUnavailableException, UnauthorizedAccessException {
-        ClientResponse sessionClientResponse = new IBClientRequestBuilder("/session")
-                .withServiceVersion("v3")
-                .withSession(sessionToken)
-                .build()
-                .get(ClientResponse.class);
+        ClientResponse sessionClientResponse =
+                new IBClientRequestBuilder("/session")
+                        .withServiceVersion("v3")
+                        .withSession(sessionToken)
+                        .build()
+                        .get(ClientResponse.class);
 
         if (sessionClientResponse.getStatus() == Status.OK.getStatusCode()) {
-            SessionResponse sessionResponse = sessionClientResponse.getEntity(SessionResponse.class);
+            SessionResponse sessionResponse =
+                    sessionClientResponse.getEntity(SessionResponse.class);
             SessionEntity session = sessionResponse.getSession();
 
             String bcNumber = session.getRepresentedCustomer();
 
-            // This logic does not match the implementation on the clients and all sessions should have a
-            // represented customer. Will remove the below code when we are sure it isn't used. /Erik
+            // This logic does not match the implementation on the clients and all sessions should
+            // have a
+            // represented customer. Will remove the below code when we are sure it isn't used.
+            // /Erik
             if (Strings.isNullOrEmpty(bcNumber)) {
-                log.warn("Could not retrieve 'represented customer'. Fallback to 'selected customer'.");
+                log.warn(
+                        "Could not retrieve 'represented customer'. Fallback to 'selected customer'.");
                 bcNumber = session.getSelectedCustomer();
             }
 
@@ -167,16 +180,19 @@ public class IBClient extends Client {
             String status = getStatusMessage(errorResponse);
 
             throw new InternetBankingUnavailableException(
-                    String.format("Could not call session service (Status = '%s', Message = '%s').",
-                    sessionClientResponse.getStatus(), status));
+                    String.format(
+                            "Could not call session service (Status = '%s', Message = '%s').",
+                            sessionClientResponse.getStatus(), status));
         }
     }
 
-    public List<Account> getAccounts(AuthenticatedRequest request, String language, boolean cleanBankId) {
+    public List<Account> getAccounts(
+            AuthenticatedRequest request, String language, boolean cleanBankId) {
 
         AbnAmroProductConfiguration savingProducts = productsConfiguration.getSavingProducts();
         AbnAmroProductConfiguration paymentProducts = productsConfiguration.getPaymentProducts();
-        AbnAmroProductConfiguration creditCardProducts = productsConfiguration.getCreditCardProducts();
+        AbnAmroProductConfiguration creditCardProducts =
+                productsConfiguration.getCreditCardProducts();
 
         Set<Integer> productIds = Sets.newHashSet(savingProducts.getIds());
         Set<String> productGroups = Sets.newHashSet(savingProducts.getGroups());
@@ -190,28 +206,32 @@ public class IBClient extends Client {
             productGroups.addAll(creditCardProducts.getGroups());
         }
 
-        String url = UriBuilder.fromPath("/contracts")
-                .queryParam("bcNumber", request.getBcNumber())
+        String url =
+                UriBuilder.fromPath("/contracts")
+                        .queryParam("bcNumber", request.getBcNumber())
 
-                // Query filter to only return contracts owned by the customer. Used so that we don't include accounts
-                // that the customer has access to but doesn't owe (requirement from legal at ABN).
-                .queryParam("includeBCJoiningType", "PRIVATE_CJ")
+                        // Query filter to only return contracts owned by the customer. Used so that
+                        // we don't include accounts
+                        // that the customer has access to but doesn't owe (requirement from legal
+                        // at ABN).
+                        .queryParam("includeBCJoiningType", "PRIVATE_CJ")
 
-                // Filter only the products building blocks
-                .queryParam("productBuildingBlocks", COMMA_JOINER.join(productIds))
+                        // Filter only the products building blocks
+                        .queryParam("productBuildingBlocks", COMMA_JOINER.join(productIds))
 
-                // Filter product groups
-                .queryParam("productGroups", COMMA_JOINER.join(productGroups))
-                .build()
-                .toString();
+                        // Filter product groups
+                        .queryParam("productGroups", COMMA_JOINER.join(productGroups))
+                        .build()
+                        .toString();
 
         final Stopwatch watch = Stopwatch.createStarted();
-        ClientResponse clientResponse = new IBClientRequestBuilder(url)
-                .withServiceVersion("v2")
-                .withSession(request.getSessionToken())
-                .withLanguage(language)
-                .build()
-                .get(ClientResponse.class);
+        ClientResponse clientResponse =
+                new IBClientRequestBuilder(url)
+                        .withServiceVersion("v2")
+                        .withSession(request.getSessionToken())
+                        .withLanguage(language)
+                        .build()
+                        .get(ClientResponse.class);
         watch.stop();
 
         if (!hasValidContentType(clientResponse, MediaType.APPLICATION_JSON_TYPE)) {
@@ -224,8 +244,10 @@ public class IBClient extends Client {
         ContractsResponse contractsResponse = clientResponse.getEntity(ContractsResponse.class);
 
         if (contractsResponse.isError()) {
-            log.error(String.format("Could not get accounts (HttpStatus = %d, Errors = %s",
-                    clientResponse.getStatus(), contractsResponse.getErrorDetails()));
+            log.error(
+                    String.format(
+                            "Could not get accounts (HttpStatus = %d, Errors = %s",
+                            clientResponse.getStatus(), contractsResponse.getErrorDetails()));
             getTimer("getAccounts", "accounts_missing")
                     .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
             return Collections.emptyList();
@@ -243,29 +265,38 @@ public class IBClient extends Client {
     }
 
     /**
-     * Check if customer has enabled credit card in Mobile Banking. Enabled mean means that we can collect credit cards
-     * transactions. Failure of collecting the information will return false.
+     * Check if customer has enabled credit card in Mobile Banking. Enabled mean means that we can
+     * collect credit cards transactions. Failure of collecting the information will return false.
      */
     public boolean hasEnabledCreditCards(AuthenticatedRequest request) {
 
-        UserPreferences preferences = getUserPreferences(USER_PREFERENCE_IDS.CREDIT_CARDS, request.getSessionToken());
+        UserPreferences preferences =
+                getUserPreferences(USER_PREFERENCE_IDS.CREDIT_CARDS, request.getSessionToken());
 
         if (preferences == null) {
-            log.error(String.format("Could not get credit card preferences (Customer = '%s')", request.getBcNumber()));
+            log.error(
+                    String.format(
+                            "Could not get credit card preferences (Customer = '%s')",
+                            request.getBcNumber()));
             return false;
         }
 
-        Optional<Boolean> approved = preferences.getBoolean(USER_PREFERENCE_FIELDS.APPROVED_CREDIT_CARDS);
+        Optional<Boolean> approved =
+                preferences.getBoolean(USER_PREFERENCE_FIELDS.APPROVED_CREDIT_CARDS);
 
         // User preferences aren't available if the user hasn't used Mobile Banking.
         if (!approved.isPresent()) {
-            log.info(String.format("Did not find approval field (Customer = '%s', Field = '%s')",
-                    request.getBcNumber(), USER_PREFERENCE_FIELDS.APPROVED_CREDIT_CARDS));
+            log.info(
+                    String.format(
+                            "Did not find approval field (Customer = '%s', Field = '%s')",
+                            request.getBcNumber(), USER_PREFERENCE_FIELDS.APPROVED_CREDIT_CARDS));
             return false;
         }
 
-        log.info(String.format("Retrieved credit card preferences (Customer = '%s', Approved = '%s')",
-                request.getBcNumber(), approved.get()));
+        log.info(
+                String.format(
+                        "Retrieved credit card preferences (Customer = '%s', Approved = '%s')",
+                        request.getBcNumber(), approved.get()));
 
         return approved.get();
     }
@@ -282,16 +313,18 @@ public class IBClient extends Client {
 
     private List<UserPreferences> getUserPreferences(Set<String> ids, String sessionToken) {
 
-        String url = UriBuilder.fromPath("/user/preferences")
-                .queryParam("ids", COMMA_JOINER.join(ids))
-                .build()
-                .toString();
+        String url =
+                UriBuilder.fromPath("/user/preferences")
+                        .queryParam("ids", COMMA_JOINER.join(ids))
+                        .build()
+                        .toString();
 
         final Stopwatch watch = Stopwatch.createStarted();
-        ClientResponse clientResponse = new IBClientRequestBuilder(url)
-                .withSession(sessionToken)
-                .build()
-                .get(ClientResponse.class);
+        ClientResponse clientResponse =
+                new IBClientRequestBuilder(url)
+                        .withSession(sessionToken)
+                        .build()
+                        .get(ClientResponse.class);
         watch.stop();
 
         if (!hasValidContentType(clientResponse, MediaType.APPLICATION_JSON_TYPE)) {
@@ -304,8 +337,10 @@ public class IBClient extends Client {
         UserPreferenceResponse response = clientResponse.getEntity(UserPreferenceResponse.class);
 
         if (response.isError()) {
-            log.error(String.format("Could not get user preferences (HttpStatus = %d, Errors = %s",
-                    clientResponse.getStatus(), response.getErrorDetails()));
+            log.error(
+                    String.format(
+                            "Could not get user preferences (HttpStatus = %d, Errors = %s",
+                            clientResponse.getStatus(), response.getErrorDetails()));
             getTimer("getUserPreferences", "user_preferences_missing")
                     .update(watch.elapsed(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS);
             return null;
@@ -340,15 +375,19 @@ public class IBClient extends Client {
 
         if (contractEntity.getBalance() != null) {
             account.setBalance(contractEntity.getBalance().getAmount());
-            payload.put(AbnAmroUtils.InternalAccountPayloadKeys.CURRENCY,
+            payload.put(
+                    AbnAmroUtils.InternalAccountPayloadKeys.CURRENCY,
                     contractEntity.getBalance().getCurrencyCode());
         }
 
         if (Strings.isNullOrEmpty(contractEntity.getAccountNumber())) {
             account.setAccountNumber(account.getBankId());
-            payload.put(AbnAmroUtils.InternalAccountPayloadKeys.IBAN, contractEntity.getAccountNumber());
+            payload.put(
+                    AbnAmroUtils.InternalAccountPayloadKeys.IBAN,
+                    contractEntity.getAccountNumber());
         } else {
-            account.setAccountNumber(AbnAmroUtils.prettyFormatIban(contractEntity.getAccountNumber()));
+            account.setAccountNumber(
+                    AbnAmroUtils.prettyFormatIban(contractEntity.getAccountNumber()));
         }
 
         if (!payload.isEmpty()) {
@@ -402,8 +441,10 @@ public class IBClient extends Client {
             return true;
         }
 
-        log.error(String.format("Unexpected content type(Expected = '%s', Received = '%s')",
-                expected, response.getType()));
+        log.error(
+                String.format(
+                        "Unexpected content type(Expected = '%s', Received = '%s')",
+                        expected, response.getType()));
 
         return false;
     }
@@ -423,7 +464,7 @@ public class IBClient extends Client {
             this.sessionToken = sessionToken;
             return this;
         }
-        
+
         IBClientRequestBuilder withLanguage(String language) {
             this.language = language;
             return this;
@@ -435,7 +476,10 @@ public class IBClient extends Client {
         }
 
         Builder build() {
-            builder = builder.header("Accept-Language", Strings.isNullOrEmpty(language) ? DEFAULT_LANGUAGE : language);
+            builder =
+                    builder.header(
+                            "Accept-Language",
+                            Strings.isNullOrEmpty(language) ? DEFAULT_LANGUAGE : language);
 
             if (!Strings.isNullOrEmpty(serviceVersion)) {
                 builder = builder.header(SERVICE_VERSION_HEADER, serviceVersion);

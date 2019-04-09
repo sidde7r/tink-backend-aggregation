@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -33,15 +31,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "whiteSpace")
-public class WhiteSpace
-    extends Facet
-{
-
-
-}
+public class WhiteSpace extends Facet {}

@@ -8,6 +8,7 @@ import com.google.common.base.MoreObjects;
 public abstract class Response<T> {
     @JsonProperty("ResponseStatus")
     private ResponseStatus responseStatus;
+
     @JsonProperty("Body")
     private T body;
 
@@ -29,6 +30,9 @@ public abstract class Response<T> {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this).add("body", body).add("ResponseStatus", responseStatus).toString();
+        return MoreObjects.toStringHelper(this)
+                .add("body", body)
+                .add("ResponseStatus", responseStatus)
+                .toString();
     }
 }

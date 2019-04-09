@@ -23,6 +23,7 @@ public class LoanPaymentDetails {
 
     @JsonDeserialize(using = NordeaHashMapDeserializer.class)
     private String amortisation;
+
     private boolean pending;
 
     public String getDate() {

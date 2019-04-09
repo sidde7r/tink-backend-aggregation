@@ -7,6 +7,7 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class ProgressEntity {
     @JsonProperty("_ProgressCode")
     private String progressCode;
+
     @JsonProperty("_ProgressMessage")
     private String progressMessage;
 

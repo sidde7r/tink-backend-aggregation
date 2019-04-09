@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BankingServiceResponse {
-    @JsonProperty
-    private ErrorMessage errorMessage;
+    @JsonProperty private ErrorMessage errorMessage;
 
     public ErrorMessage getErrorMessage() {
         return errorMessage;

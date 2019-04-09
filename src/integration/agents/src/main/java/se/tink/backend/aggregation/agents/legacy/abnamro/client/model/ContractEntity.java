@@ -11,8 +11,10 @@ public class ContractEntity {
     private String accountNumber;
     private List<ActionEntity> actions;
     private AmountEntity balance;
+
     @JsonProperty("isBlocked")
     private boolean blocked;
+
     private String chid;
     private String concerning;
     private String contractNumber;
@@ -158,5 +160,4 @@ public class ContractEntity {
     public boolean isExpired() {
         return Objects.equals(status, STATUS_EXPIRED);
     }
-
 }

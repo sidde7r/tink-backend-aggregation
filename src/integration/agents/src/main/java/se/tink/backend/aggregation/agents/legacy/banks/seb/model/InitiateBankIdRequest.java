@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InitiateBankIdRequest {
     private String uid;
+
     @JsonProperty("SEB_Referer")
     private String sebReferer;
 

@@ -8,8 +8,7 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class IskFundEntity {
-    @JsonIgnore
-    private static final String CURRENCY = "SEK";
+    @JsonIgnore private static final String CURRENCY = "SEK";
     private String isinCode;
     private boolean sellable;
     private String administrationFee;
@@ -110,8 +109,10 @@ public class IskFundEntity {
             return Optional.empty();
         }
 
-        instrument.setAverageAcquisitionPrice(holding.getPurchaseValue() / holding.getNumberOfShares());
-        instrument.setCurrency(CURRENCY); // LF don't have a field for currency - if the add it change this
+        instrument.setAverageAcquisitionPrice(
+                holding.getPurchaseValue() / holding.getNumberOfShares());
+        instrument.setCurrency(
+                CURRENCY); // LF don't have a field for currency - if the add it change this
         instrument.setIsin(getIsinCode());
         instrument.setMarketPlace(getFund().getCompany());
         instrument.setMarketValue(holding.getTotalMarketValue());

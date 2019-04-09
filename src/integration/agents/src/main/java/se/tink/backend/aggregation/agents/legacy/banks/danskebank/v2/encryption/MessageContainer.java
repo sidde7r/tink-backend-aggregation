@@ -11,12 +11,11 @@ import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.ServiceStatusE
 public class MessageContainer {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private String message;
+
     @JsonProperty(value = "ServiceStatus", access = JsonProperty.Access.WRITE_ONLY)
     private ServiceStatusEntity serviceStatus;
 
-    public MessageContainer() {
-
-    }
+    public MessageContainer() {}
 
     public ServiceStatusEntity getServiceStatus() {
         return serviceStatus;
@@ -38,7 +37,8 @@ public class MessageContainer {
         this.message = message;
     }
 
-    public <T extends BankIdResponse> T decrypt(BankIdResourceHelper bankIdResourceHelper, Class<T> toInstanceType) {
+    public <T extends BankIdResponse> T decrypt(
+            BankIdResourceHelper bankIdResourceHelper, Class<T> toInstanceType) {
         try {
             String decryptedMessage = bankIdResourceHelper.getEncryptionHelper().m12075a(message);
             return MAPPER.readValue(decryptedMessage, toInstanceType);

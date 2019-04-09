@@ -7,24 +7,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class CardEntity {
     @JsonProperty("CardId")
     private String cardId;
+
     @JsonProperty("CardType")
     private String cardType;
+
     @JsonProperty("Expires")
     private String expires;
+
     @JsonProperty("IsEditable")
     private boolean isEditable;
+
     @JsonProperty("IsUnrestrictedCard")
     private boolean isUnrestrictedCard;
+
     @JsonProperty("MaskedCardNumber")
     private String maskedCardNumber;
+
     @JsonProperty("NameOnCard")
     private String nameOnCard;
+
     @JsonProperty("NeedsActivation")
     private boolean needsActivation;
 
-    public CardEntity() {
-
-    }
+    public CardEntity() {}
 
     public String getCardId() {
         return cardId;

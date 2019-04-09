@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.sbab.model.response;
 
 import com.google.api.client.util.Lists;
-import se.tink.backend.aggregation.agents.models.Transaction;
-
 import java.util.List;
+import se.tink.backend.aggregation.agents.models.Transaction;
 
 public class FetchTransactionsResponse {
 

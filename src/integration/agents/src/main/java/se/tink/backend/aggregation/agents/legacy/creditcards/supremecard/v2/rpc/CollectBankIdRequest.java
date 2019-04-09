@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class CollectBankIdRequest {
     private String orderRef;
 
-    public static CollectBankIdRequest createRequestFromOrderBankIdResponse(OrderBankIdResponse orderBankIdResponse) {
+    public static CollectBankIdRequest createRequestFromOrderBankIdResponse(
+            OrderBankIdResponse orderBankIdResponse) {
         CollectBankIdRequest collectBankIdRequest = new CollectBankIdRequest();
         collectBankIdRequest.orderRef = orderBankIdResponse.getOrderRef();
 

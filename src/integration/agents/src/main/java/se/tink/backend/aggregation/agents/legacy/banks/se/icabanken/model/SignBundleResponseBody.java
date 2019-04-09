@@ -16,5 +16,4 @@ public class SignBundleResponseBody {
     public void setSignedAssignmentList(SignedAssignmentList signedAssignmentList) {
         this.signedAssignmentList = signedAssignmentList;
     }
-    
 }

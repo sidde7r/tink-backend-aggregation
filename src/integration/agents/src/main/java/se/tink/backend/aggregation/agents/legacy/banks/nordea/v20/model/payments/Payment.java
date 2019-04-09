@@ -6,7 +6,10 @@ import se.tink.libraries.account.AccountIdentifier;
 
 public class Payment {
     public enum SubType {
-        EINVOICE("eInvoice"), NORMAL("Normal"), NOTIFIED_PAYMENT("NotifiedPayment"), THIRDPARTY("ThirdParty");
+        EINVOICE("eInvoice"),
+        NORMAL("Normal"),
+        NOTIFIED_PAYMENT("NotifiedPayment"),
+        THIRDPARTY("ThirdParty");
 
         private final String serializedValue;
 
@@ -20,8 +23,9 @@ public class Payment {
 
         public Predicate<PaymentEntity> predicateForType() {
             final String serializedValue = getSerializedValue();
-            return paymentEntity -> paymentEntity != null &&
-                    Objects.equal(paymentEntity.getPaymentSubType(), serializedValue);
+            return paymentEntity ->
+                    paymentEntity != null
+                            && Objects.equal(paymentEntity.getPaymentSubType(), serializedValue);
         }
 
         public static SubType fromSerializedValue(String serializedValue) {
@@ -36,7 +40,8 @@ public class Payment {
     }
 
     public enum SubTypeExtension {
-        SE_BG("BGType", AccountIdentifier.Type.SE_BG), SE_PG("PGType", AccountIdentifier.Type.SE_PG);
+        SE_BG("BGType", AccountIdentifier.Type.SE_BG),
+        SE_PG("PGType", AccountIdentifier.Type.SE_PG);
 
         private final String serializedValue;
         private final AccountIdentifier.Type type;
@@ -52,8 +57,10 @@ public class Payment {
 
         public Predicate<PaymentEntity> predicateForType() {
             final String serializedValue = getSerializedValue();
-            return paymentEntity -> paymentEntity != null &&
-                    Objects.equal(paymentEntity.getPaymentSubTypeExtension(), serializedValue);
+            return paymentEntity ->
+                    paymentEntity != null
+                            && Objects.equal(
+                                    paymentEntity.getPaymentSubTypeExtension(), serializedValue);
         }
 
         public static SubTypeExtension fromSerializedValue(String serializedValue) {
@@ -72,7 +79,8 @@ public class Payment {
     }
 
     public enum StatusCode {
-        UNCONFIRMED("Unconfirmed"), CONFIRMED("Confirmed");
+        UNCONFIRMED("Unconfirmed"),
+        CONFIRMED("Confirmed");
 
         private String serializedValue;
 
@@ -86,8 +94,9 @@ public class Payment {
 
         public Predicate<PaymentEntity> predicateForType() {
             final String serializedValue = getSerializedValue();
-            return paymentEntity -> paymentEntity != null &&
-                    Objects.equal(paymentEntity.getStatusCode(), serializedValue);
+            return paymentEntity ->
+                    paymentEntity != null
+                            && Objects.equal(paymentEntity.getStatusCode(), serializedValue);
         }
 
         public static StatusCode fromSerializedValue(String serializedValue) {

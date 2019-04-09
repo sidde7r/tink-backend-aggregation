@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SignEInvoiceBody {
     @JsonProperty("RequestId")
     private String requestId;
+
     @JsonProperty("AutostartToken")
     private String autostartToken;
 

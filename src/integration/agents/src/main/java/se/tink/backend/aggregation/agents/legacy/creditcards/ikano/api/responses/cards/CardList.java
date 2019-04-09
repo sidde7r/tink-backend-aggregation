@@ -21,13 +21,14 @@ public class CardList extends BaseResponse {
     public void logCards() {
         if (cards != null) {
             for (Card card : cards) {
-                log.info(MoreObjects.toStringHelper(Card.class)
-                        .add("expiresAt", card.getExpiresAt())
-                        .add("cardType", card.getCardType())
-                        .add("groupCode", card.getGroupCode())
-                        .add("hasCredit", card.hasCredit())
-                        .add("state", card.getState())
-                        .toString());
+                log.info(
+                        MoreObjects.toStringHelper(Card.class)
+                                .add("expiresAt", card.getExpiresAt())
+                                .add("cardType", card.getCardType())
+                                .add("groupCode", card.getGroupCode())
+                                .add("hasCredit", card.hasCredit())
+                                .add("state", card.getState())
+                                .toString());
             }
         } else {
             log.info("No cards found");
@@ -59,7 +60,8 @@ public class CardList extends BaseResponse {
 
         cards = cardsWithCorrectType;
 
-        // Throw not a customer exception if user has no cards after filtering. If the user for example selects
+        // Throw not a customer exception if user has no cards after filtering. If the user for
+        // example selects
         // the shell provider and has an IKEA card the not a customer exception is the response.
         ensureHasCards();
     }

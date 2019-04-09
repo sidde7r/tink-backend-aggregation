@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,12 +7,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -25,30 +23,24 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "import")
-public class Import
-    extends Annotated
-{
+public class Import extends Annotated {
 
     @XmlAttribute(name = "namespace")
     @XmlSchemaType(name = "anyURI")
     protected String namespace;
+
     @XmlAttribute(name = "schemaLocation")
     @XmlSchemaType(name = "anyURI")
     protected String schemaLocation;
 
     /**
      * Gets the value of the namespace property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getNamespace() {
         return namespace;
@@ -56,11 +48,8 @@ public class Import
 
     /**
      * Sets the value of the namespace property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setNamespace(String value) {
         this.namespace = value;
@@ -68,11 +57,8 @@ public class Import
 
     /**
      * Gets the value of the schemaLocation property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getSchemaLocation() {
         return schemaLocation;
@@ -80,14 +66,10 @@ public class Import
 
     /**
      * Sets the value of the schemaLocation property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setSchemaLocation(String value) {
         this.schemaLocation = value;
     }
-
 }

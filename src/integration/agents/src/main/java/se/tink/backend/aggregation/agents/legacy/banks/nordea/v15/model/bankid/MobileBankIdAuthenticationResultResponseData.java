@@ -1,11 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v15.model.bankid;
 
-import java.util.Map;
-
-import se.tink.backend.aggregation.agents.banks.nordea.v15.model.AuthenticationToken;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Maps;
+import java.util.Map;
+import se.tink.backend.aggregation.agents.banks.nordea.v15.model.AuthenticationToken;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MobileBankIdAuthenticationResultResponseData {

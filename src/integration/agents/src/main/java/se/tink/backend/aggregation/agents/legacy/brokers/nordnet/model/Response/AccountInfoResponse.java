@@ -5,6 +5,4 @@ import se.tink.backend.aggregation.agents.brokers.nordnet.model.AccountInfoEntit
 import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
-public class AccountInfoResponse extends ArrayList<AccountInfoEntity> {
-
-}
+public class AccountInfoResponse extends ArrayList<AccountInfoEntity> {}

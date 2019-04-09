@@ -10,11 +10,15 @@ public class SupremeCardParsingUtils {
     static Optional<String> parseBankIdUrl(String htmlResponse) {
         Document document = Jsoup.parse(htmlResponse);
 
-        return document != null ?
-                Optional.of(document.select("[href*=" + SupremeCardApiConstants.BANKID_QUERY_PARAMETER + "]")
+        return document != null
+                ? Optional.of(
+                        document.select(
+                                        "[href*="
+                                                + SupremeCardApiConstants.BANKID_QUERY_PARAMETER
+                                                + "]")
                                 .get(0)
-                                .attr("href")) :
-                Optional.empty();
+                                .attr("href"))
+                : Optional.empty();
     }
 
     static Optional<Map<String, String>> parseSignicatFields(String htmlResponse) {
@@ -25,14 +29,15 @@ public class SupremeCardParsingUtils {
         }
 
         Map<String, String> signicatMap = Maps.newHashMap();
-        for (String signicatValue : document.getElementsByTag("script")
-                .get(4)
-                .dataNodes()
-                .get(0)
-                .getWholeData()
-                .replaceAll("\n", "")
-                .replaceAll(" ", "")
-                .split(";")) {
+        for (String signicatValue :
+                document.getElementsByTag("script")
+                        .get(4)
+                        .dataNodes()
+                        .get(0)
+                        .getWholeData()
+                        .replaceAll("\n", "")
+                        .replaceAll(" ", "")
+                        .split(";")) {
             String[] signicatArray = signicatValue.split("=");
             signicatMap.put(signicatArray[0], signicatArray[1].replaceAll("'", ""));
         }
@@ -49,19 +54,24 @@ public class SupremeCardParsingUtils {
             return Optional.empty();
         }
 
-        String samlResponse = document.getElementsByTag("form")
-                .get(0)
-                .getElementsByTag("input")
-                .select("[name*=" + SupremeCardApiConstants.SAML_RESPONSE_PARAMETER_KEY + "]")
-                .get(0)
-                .attr("value");
+        String samlResponse =
+                document.getElementsByTag("form")
+                        .get(0)
+                        .getElementsByTag("input")
+                        .select(
+                                "[name*="
+                                        + SupremeCardApiConstants.SAML_RESPONSE_PARAMETER_KEY
+                                        + "]")
+                        .get(0)
+                        .attr("value");
 
-        String target = document.getElementsByTag("form")
-                .get(0)
-                .getElementsByTag("input")
-                .select("[name*=" + SupremeCardApiConstants.TARGET_PARAMETER_KEY + "]")
-                .get(0)
-                .attr("value");
+        String target =
+                document.getElementsByTag("form")
+                        .get(0)
+                        .getElementsByTag("input")
+                        .select("[name*=" + SupremeCardApiConstants.TARGET_PARAMETER_KEY + "]")
+                        .get(0)
+                        .attr("value");
 
         queryParameters.put(SupremeCardApiConstants.SAML_RESPONSE_PARAMETER_KEY, samlResponse);
         queryParameters.put(SupremeCardApiConstants.TARGET_PARAMETER_KEY, target);

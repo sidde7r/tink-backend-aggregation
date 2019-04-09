@@ -9,6 +9,6 @@ public class GenerateTokenRequest {
     }
 
     public String getDeviceId() {
-        return  deviceId;
+        return deviceId;
     }
 }

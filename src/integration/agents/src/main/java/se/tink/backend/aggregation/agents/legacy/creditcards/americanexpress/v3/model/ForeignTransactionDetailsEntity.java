@@ -55,5 +55,4 @@ public class ForeignTransactionDetailsEntity {
     public void setForeignAmountLabel(String foreignAmountLabel) {
         this.foreignAmountLabel = foreignAmountLabel;
     }
-
 }

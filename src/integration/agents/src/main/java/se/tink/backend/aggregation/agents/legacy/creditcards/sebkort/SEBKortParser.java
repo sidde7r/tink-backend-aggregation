@@ -10,6 +10,13 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.agents.rpc.CredentialsStatus;
@@ -27,23 +34,18 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 public class SEBKortParser {
-    private static final Ordering<Transaction> TRANSACTION_ORDERING = new Ordering<Transaction>() {
-        @Override
-        public int compare(Transaction left, Transaction right) {
-            return ComparisonChain.start().compare(right.getDate(), left.getDate())
-                    .compare(right.getDescription(), left.getDescription()).compare(right.getId(), left.getId())
-                    .result();
-        }
-    };
+    private static final Ordering<Transaction> TRANSACTION_ORDERING =
+            new Ordering<Transaction>() {
+                @Override
+                public int compare(Transaction left, Transaction right) {
+                    return ComparisonChain.start()
+                            .compare(right.getDate(), left.getDate())
+                            .compare(right.getDescription(), left.getDescription())
+                            .compare(right.getId(), left.getId())
+                            .result();
+                }
+            };
 
     private static class AccountDebt {
         public Date date;
@@ -85,7 +87,8 @@ public class SEBKortParser {
         String arrangementNumber = invoiceDetails.getArrangementNumber();
         Date invoiceDate = parseInvoiceDate(invoiceDetails);
 
-        // Loop through the card groups and cobrand card groups and add the accounts and transactions.
+        // Loop through the card groups and cobrand card groups and add the accounts and
+        // transactions.
 
         List<CardGroupEntity> cardGroups = invoiceDetails.getCardGroups();
         cardGroups.addAll(invoiceDetails.getCobrandCardGroups());
@@ -122,16 +125,20 @@ public class SEBKortParser {
         calculateAccountBalances(arrangementNumber);
     }
 
-    public void parsePendingInvoiceDetails(ContractEntity contractEntity, InvoiceDetailsEntity invoiceDetails)
+    public void parsePendingInvoiceDetails(
+            ContractEntity contractEntity, InvoiceDetailsEntity invoiceDetails)
             throws ParseException {
 
         List<TransactionGroupEntity> transactionGroups = invoiceDetails.getTransactionGroups();
         if (transactionGroups != null && transactionGroups.size() > 0) {
             addSummaryTransactionsToPrimaryAccount(
-                    transactionGroups.get(0).getTransactions(), null, invoiceDetails.getArrangementNumber());
+                    transactionGroups.get(0).getTransactions(),
+                    null,
+                    invoiceDetails.getArrangementNumber());
         }
 
-        // Loop through the card groups and cobrand card groups and add the accounts and transactions.
+        // Loop through the card groups and cobrand card groups and add the accounts and
+        // transactions.
 
         List<CardGroupEntity> cardGroups = invoiceDetails.getCardGroups();
         cardGroups.addAll(invoiceDetails.getCobrandCardGroups());
@@ -233,8 +240,10 @@ public class SEBKortParser {
             account.setType(AccountTypes.CREDIT_CARD);
 
             Preconditions.checkState(
-                    Preconditions.checkNotNull(account.getBankId()).matches("[0-9]{6}\\*{6}[0-9]{4}"),
-                    "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+                    Preconditions.checkNotNull(account.getBankId())
+                            .matches("[0-9]{6}\\*{6}[0-9]{4}"),
+                    "Unexpected account.bankid '%s'. Reformatted?",
+                    account.getBankId());
 
             // Always set the name here as we only get the product name from
             // actual invoices, and the fake pending transactions invoice.
@@ -253,8 +262,9 @@ public class SEBKortParser {
         return totalDebt >= unInvoicedDebt;
     }
 
-    private List<Transaction> addSummaryTransactionsToPrimaryAccount(List<TransactionEntity> transactions,
-            Date invoiceDate, String arrangementNumber) throws ParseException {
+    private List<Transaction> addSummaryTransactionsToPrimaryAccount(
+            List<TransactionEntity> transactions, Date invoiceDate, String arrangementNumber)
+            throws ParseException {
         List<Transaction> accountlessTransactions = Lists.newArrayList();
 
         if (transactions != null) {
@@ -291,8 +301,8 @@ public class SEBKortParser {
         return accountlessTransactions;
     }
 
-    private void addTransactionsFromCardGroup(CardGroupEntity cardGroup, Account account, Date invoiceDate)
-            throws ParseException {
+    private void addTransactionsFromCardGroup(
+            CardGroupEntity cardGroup, Account account, Date invoiceDate) throws ParseException {
         List<Transaction> transactions = Lists.newArrayList();
         for (TransactionGroupEntity transactionGroup : cardGroup.getTransactionGroups()) {
 
@@ -302,7 +312,6 @@ public class SEBKortParser {
                 if (checkAndMemorizeNewTransaction(transactionEntity, transaction)) {
                     transactions.add(transaction);
                 }
-
             }
         }
         addTransactionsToAccount(account, transactions);
@@ -326,23 +335,30 @@ public class SEBKortParser {
         return transaction;
     }
 
-    private Transaction parseTransaction(TransactionEntity transactionEntity, Date invoiceDate) throws ParseException {
+    private Transaction parseTransaction(TransactionEntity transactionEntity, Date invoiceDate)
+            throws ParseException {
         Transaction transaction = null;
         transaction = new Transaction();
 
         String description = translateDescription(transactionEntity.getDescription());
         transaction.setDescription(description);
         transaction.setAmount(-transactionEntity.getAmountNumber());
-        transaction.setDate(parseDateWithInvoiceDate(transactionEntity.getOriginalAmountDate(),
-                invoiceDate));
+        transaction.setDate(
+                parseDateWithInvoiceDate(transactionEntity.getOriginalAmountDate(), invoiceDate));
 
         return transaction;
     }
 
-    private boolean checkAndMemorizeNewTransaction(TransactionEntity transactionEntity, Transaction transaction) {
+    private boolean checkAndMemorizeNewTransaction(
+            TransactionEntity transactionEntity, Transaction transaction) {
         String id = transactionEntity.getTransactionId();
         if (id == null) {
-            id = transaction.getDescription() + "/" + transaction.getAmount() + "/" + transaction.getDate().toString();
+            id =
+                    transaction.getDescription()
+                            + "/"
+                            + transaction.getAmount()
+                            + "/"
+                            + transaction.getDate().toString();
         }
         boolean isNew = !transactionHashes.contains(id);
 
@@ -371,19 +387,21 @@ public class SEBKortParser {
     }
 
     private double parseSebAmount(String amount) {
-        return AgentParsingUtils.parseAmount(CharMatcher.WHITESPACE.removeFrom(amount.replace("kr", "")));
+        return AgentParsingUtils.parseAmount(
+                CharMatcher.WHITESPACE.removeFrom(amount.replace("kr", "")));
     }
 
     /**
-     * Construct a date from a MM-DD string format and an invoice date as
-     * reference in order to determine the relevant year.
+     * Construct a date from a MM-DD string format and an invoice date as reference in order to
+     * determine the relevant year.
      *
      * @param text
      * @param invoiceDate
      * @return
      * @throws ParseException
      */
-    private static Date parseDateWithInvoiceDate(String text, Date invoiceDate) throws ParseException {
+    private static Date parseDateWithInvoiceDate(String text, Date invoiceDate)
+            throws ParseException {
         if (invoiceDate == null) {
             invoiceDate = DateUtils.getToday();
         }
@@ -392,8 +410,9 @@ public class SEBKortParser {
             return invoiceDate;
         }
 
-        Date date = ThreadSafeDateFormat.FORMATTER_DAILY
-                .parse(ThreadSafeDateFormat.FORMATTER_YEARLY.format(invoiceDate) + "-" + text);
+        Date date =
+                ThreadSafeDateFormat.FORMATTER_DAILY.parse(
+                        ThreadSafeDateFormat.FORMATTER_YEARLY.format(invoiceDate) + "-" + text);
 
         if (date.after(invoiceDate)) {
             Calendar calendar = DateUtils.getCalendar();
@@ -418,14 +437,18 @@ public class SEBKortParser {
      * @return
      */
     private static String translateDescription(String text) {
-        return text.replace("{", "Ä").replace("}", "Å").replace("@", "Ö").replace("$", "Å").replace("#", "Ä");
+        return text.replace("{", "Ä")
+                .replace("}", "Å")
+                .replace("@", "Ö")
+                .replace("$", "Å")
+                .replace("#", "Ä");
     }
 
-    private void updateStatus(CredentialsStatus updating, Account account, List<Transaction> transactions) {
+    private void updateStatus(
+            CredentialsStatus updating, Account account, List<Transaction> transactions) {
         // Not updating this, since we currently are retrying SEB-kort fetching. Would
         // look weird for clients to see "3 accounts updated" jump to "1 account updated".
         /*if(context != null)
-            statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);*/
+        statusUpdater.updateStatus(CredentialsStatus.UPDATING, account, transactions);*/
     }
-
 }

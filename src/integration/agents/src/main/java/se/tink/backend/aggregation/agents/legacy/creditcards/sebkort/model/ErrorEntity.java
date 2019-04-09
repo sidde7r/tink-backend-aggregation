@@ -23,4 +23,3 @@ public class ErrorEntity {
         this.message = message;
     }
 }
-

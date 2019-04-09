@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v15.model.device;
 
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.collect.Maps;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RegisterDeviceResponseData {

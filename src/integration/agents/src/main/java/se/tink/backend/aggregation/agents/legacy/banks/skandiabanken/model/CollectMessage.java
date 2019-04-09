@@ -7,24 +7,34 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 public class CollectMessage {
     @JsonProperty("Header")
     private String header;
+
     @JsonProperty("Text")
     private String text;
+
     @JsonProperty("ShowGetBankIdButton")
     private Boolean showGetBankIdButton;
+
     @JsonProperty("ShowRetryButton")
     private Boolean showRetryButton;
+
     @JsonProperty("ContinueCollect")
     private Boolean continueCollect;
+
     @JsonProperty("ShowManualStartButton")
     private Boolean showManualStartButton;
+
     @JsonProperty("ShowInstallBankIdButton")
     private Boolean showInstallBankIdButton;
+
     @JsonProperty("ShowContinueButton")
     private Boolean showContinueButton;
+
     @JsonProperty("ShowCancelButton")
     private Boolean showCancelButton;
+
     @JsonProperty("IsInformationMessage")
     private Boolean isInformationMessage;
+
     @JsonProperty("IsSuccessMessage")
     private Boolean isSuccessMessage;
 

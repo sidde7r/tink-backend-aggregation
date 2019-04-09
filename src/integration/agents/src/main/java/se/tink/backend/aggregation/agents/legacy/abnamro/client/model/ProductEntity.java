@@ -6,8 +6,10 @@ import java.util.List;
 public class ProductEntity {
     private String accountType;
     private long buildingBlockId;
+
     @JsonProperty("creditAccount")
     private boolean creditAcccount;
+
     private long id;
     private String name;
     private String productGroup;

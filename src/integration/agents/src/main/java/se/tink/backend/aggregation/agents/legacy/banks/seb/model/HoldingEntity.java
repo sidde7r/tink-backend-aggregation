@@ -10,42 +10,61 @@ import se.tink.libraries.strings.StringUtils;
 public class HoldingEntity {
     @JsonProperty("DEPA_NR")
     private long depotNumber;
+
     @JsonProperty("DEPA_BEN")
     private String depotName;
+
     @JsonProperty("INNEH_ID")
     private String shortId;
+
     @JsonProperty("VP_NR")
     private String isin;
+
     @JsonProperty("VALUTAKOD")
     private String currency;
+
     @JsonProperty("VALUTA_KOD_VP")
     private String holdingCurrency;
+
     @JsonProperty("MARKNAD_VARDE_BEL")
     private String marketValue;
+
     @JsonProperty("FOND_ID")
     private long fundId;
+
     @JsonProperty("FOND_TYP_KOD")
     private long fundType;
+
     @JsonProperty("ANT_NOM")
     private String quantity;
+
     @JsonProperty("VP_FULLST_NAMN1")
     private String name;
+
     @JsonProperty("VARDEPAPPERS_TYP")
     private String type;
+
     @JsonProperty("VP_KURS")
     private double price;
+
     @JsonProperty("PERCENT_SINCE_BUY")
     private String profitInPercentage;
+
     @JsonProperty("ACQUISITION_VALUE")
     private String acquisitionPrice;
+
     @JsonProperty("AVG_ACQUI_PRICE")
     private String averageAcquisitionValue;
+
     @JsonProperty("UNREALIZED_RESULT")
     private String profit;
+
     @JsonProperty("MKT")
     private String market;
+
     @JsonProperty("LISTA")
     private String list;
+
     @JsonProperty("LANDKOD")
     private String land;
 
@@ -162,8 +181,9 @@ public class HoldingEntity {
     }
 
     public Double getAverageAcquisitionValue() {
-        return averageAcquisitionValue == null || averageAcquisitionValue.isEmpty() ?
-                null : StringUtils.parseAmount(averageAcquisitionValue);
+        return averageAcquisitionValue == null || averageAcquisitionValue.isEmpty()
+                ? null
+                : StringUtils.parseAmount(averageAcquisitionValue);
     }
 
     public void setAverageAcquisitionValue(String averageAcquisitionValue) {
@@ -235,21 +255,22 @@ public class HoldingEntity {
 
     private Instrument.Type getInstrumentType() {
         switch (getType().toLowerCase().trim()) {
-        case "aktie":
-            return getInstrumentTypeBasedOnFundId();
-        case "borshandladfond":
-            return Instrument.Type.FUND;
-        case "obligation":
-            // Intentional fall through
-        default:
-            return Instrument.Type.OTHER;
+            case "aktie":
+                return getInstrumentTypeBasedOnFundId();
+            case "borshandladfond":
+                return Instrument.Type.FUND;
+            case "obligation":
+                // Intentional fall through
+            default:
+                return Instrument.Type.OTHER;
         }
     }
 
     /**
-     * SEB seem to set type to "aktie" no matter if it's a fund or a stock. Looking at the pattern for the fundIds
-     * we've seen that stocks always have fundId set to 0. There are also few cases where fundId is 0 even though it's
-     * a fund. This method won't handle those edge cases but it's as good as we can do for now.
+     * SEB seem to set type to "aktie" no matter if it's a fund or a stock. Looking at the pattern
+     * for the fundIds we've seen that stocks always have fundId set to 0. There are also few cases
+     * where fundId is 0 even though it's a fund. This method won't handle those edge cases but it's
+     * as good as we can do for now.
      */
     private Instrument.Type getInstrumentTypeBasedOnFundId() {
         if (fundId == 0) {

@@ -5,9 +5,9 @@ import java.util.regex.Pattern;
 
 public class MultisafePay extends PaymentProvider {
 
-    private final static Pattern NAMES = Pattern.compile("MultiSafepay", Pattern.CASE_INSENSITIVE);
+    private static final Pattern NAMES = Pattern.compile("MultiSafepay", Pattern.CASE_INSENSITIVE);
 
-    private final static ImmutableList<Pattern> PATTERNS = ImmutableList.of(ORDER_PATTERN);
+    private static final ImmutableList<Pattern> PATTERNS = ImmutableList.of(ORDER_PATTERN);
 
     @Override
     protected Pattern getNamePattern() {

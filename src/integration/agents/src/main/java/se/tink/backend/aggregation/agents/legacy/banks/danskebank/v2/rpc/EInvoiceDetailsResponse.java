@@ -15,16 +15,18 @@ import java.util.Map;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers.GiroParser;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.amount.Amount;
+import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EInvoiceDetailsResponse extends AbstractResponse {
     @JsonProperty("FromAccounts")
     private List<AccountEntity> fromAccounts;
+
     @JsonProperty("Invoice")
     private URI invoice;
+
     @JsonProperty("Transaction")
     private EInvoiceDetailsTransactionEntity transaction;
 
@@ -33,9 +35,7 @@ public class EInvoiceDetailsResponse extends AbstractResponse {
             return Lists.newArrayList();
         }
 
-        return Lists.newArrayList(FluentIterable
-                .from(fromAccounts)
-                .filter(Predicates.notNull()));
+        return Lists.newArrayList(FluentIterable.from(fromAccounts).filter(Predicates.notNull()));
     }
 
     public void setFromAccounts(List<AccountEntity> fromAccounts) {
@@ -54,8 +54,7 @@ public class EInvoiceDetailsResponse extends AbstractResponse {
         return transaction;
     }
 
-    public void setTransaction(
-            EInvoiceDetailsTransactionEntity transaction) {
+    public void setTransaction(EInvoiceDetailsTransactionEntity transaction) {
         this.transaction = transaction;
     }
 
@@ -76,7 +75,8 @@ public class EInvoiceDetailsResponse extends AbstractResponse {
         transfer.setDestination(getDestination(transaction.getReceiver()));
         transfer.setDestinationMessage(transaction.getReference());
         transfer.setDueDate(transaction.getDateFromTime());
-        transfer.setSource(null); // Since Danske doesn't set the fromaccount, it's selected by the user
+        transfer.setSource(
+                null); // Since Danske doesn't set the fromaccount, it's selected by the user
         transfer.setSourceMessage(transaction.getReceiver());
 
         transfer.addPayload(TransferPayloadType.PROVIDER_UNIQUE_ID, providerUniqueId);
@@ -86,18 +86,23 @@ public class EInvoiceDetailsResponse extends AbstractResponse {
 
     @JsonIgnore
     public static AccountIdentifier toAccountIdentifier(AccountEntity fromAccount) {
-        return AccountIdentifier.create(AccountIdentifier.Type.SE, fromAccount.getAccountNumber(),
+        return AccountIdentifier.create(
+                AccountIdentifier.Type.SE,
+                fromAccount.getAccountNumber(),
                 fromAccount.getAccountName());
     }
 
     @JsonIgnore
     private AccountIdentifier getDestination(String name) {
-        Map<AccountIdentifier.Type, AccountIdentifier> possibleDestinations = GiroParser
-                .createPossibleIdentifiersFor(transaction.getToAccountId());
-        Preconditions.checkState(Objects.equal(possibleDestinations.size(), 1), "Non-exclusive toAccountId");
+        Map<AccountIdentifier.Type, AccountIdentifier> possibleDestinations =
+                GiroParser.createPossibleIdentifiersFor(transaction.getToAccountId());
+        Preconditions.checkState(
+                Objects.equal(possibleDestinations.size(), 1), "Non-exclusive toAccountId");
 
         AccountIdentifier destination = FluentIterable.from(possibleDestinations.values()).get(0);
-        Preconditions.checkState(destination.isValid(), "Non-valid destination identifier: " + destination.toUriAsString());
+        Preconditions.checkState(
+                destination.isValid(),
+                "Non-valid destination identifier: " + destination.toUriAsString());
 
         destination.setName(name);
 

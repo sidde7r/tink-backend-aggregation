@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v15.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
@@ -68,7 +67,8 @@ public class TransactionEntity {
         this.coverReservationTransaction = coverReservationTransaction;
     }
 
-    public void setIsCoverReservationTransaction(Map<String, Object> isCoverReservationTransaction) {
+    public void setIsCoverReservationTransaction(
+            Map<String, Object> isCoverReservationTransaction) {
         this.isCoverReservationTransaction = isCoverReservationTransaction;
     }
 
@@ -101,10 +101,13 @@ public class TransactionEntity {
     }
 
     public void parseTransactionTextForFi() {
-        transactionTypeForFi = transactionText.get("$") == null ? "" : transactionText.get("$").toString();
+        transactionTypeForFi =
+                transactionText.get("$") == null ? "" : transactionText.get("$").toString();
 
-        String description = transactionCounterpartyName.get("$") == null
-                ? transactionTypeForFi : transactionCounterpartyName.get("$").toString();
+        String description =
+                transactionCounterpartyName.get("$") == null
+                        ? transactionTypeForFi
+                        : transactionCounterpartyName.get("$").toString();
 
         transactionText.put("$", description);
     }

@@ -1,12 +1,12 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.types;
 
 import com.google.common.collect.Lists;
-
 import java.util.Arrays;
 import java.util.List;
 
 public enum IcaDestinationType {
-    PAYMENT("PaymentBg", "PaymentPg"), TRANSFER("TransferTo", "Transfer");
+    PAYMENT("PaymentBg", "PaymentPg"),
+    TRANSFER("TransferTo", "Transfer");
 
     private List<String> destinationType;
 

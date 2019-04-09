@@ -20,17 +20,20 @@ public class ConfirmPaymentsResponse {
 
     public boolean isPaymentSigned() {
 
-        return confirmPaymentsOut != null && confirmPaymentsOut.getConfirmationStatus() != null
+        return confirmPaymentsOut != null
+                && confirmPaymentsOut.getConfirmationStatus() != null
                 && confirmPaymentsOut.getConfirmationStatus().getStatusCode() != null
-                && confirmPaymentsOut.getConfirmationStatus().getStatusCode().equalsIgnoreCase("Paid");
+                && confirmPaymentsOut
+                        .getConfirmationStatus()
+                        .getStatusCode()
+                        .equalsIgnoreCase("Paid");
     }
 
     public BankingServiceResponse getBankingServiceResponse() {
         return bankingServiceResponse;
     }
 
-    public void setBankingServiceResponse(
-            BankingServiceResponse bankingServiceResponse) {
+    public void setBankingServiceResponse(BankingServiceResponse bankingServiceResponse) {
         this.bankingServiceResponse = bankingServiceResponse;
     }
 
@@ -45,5 +48,4 @@ public class ConfirmPaymentsResponse {
     public boolean isError() {
         return getErrorCode() != null;
     }
-
 }

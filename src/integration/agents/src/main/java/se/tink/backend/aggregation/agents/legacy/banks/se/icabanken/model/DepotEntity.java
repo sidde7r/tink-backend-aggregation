@@ -11,30 +11,43 @@ import se.tink.backend.aggregation.agents.models.Portfolio;
 public class DepotEntity {
     @JsonProperty("InvestmentAccountType")
     private String investmentAccountType;
+
     @JsonProperty("Balance")
     private double balance;
+
     @JsonProperty("Reserved")
     private double reserved;
+
     @JsonProperty("Disposable")
     private double disposable;
+
     @JsonProperty("TotalDepotValue")
     private double totalDepotValue;
+
     @JsonProperty("Interests")
     private InterestsEntity interests;
+
     @JsonProperty("InternetClientId")
     private String clientId;
+
     @JsonProperty("DepotNumber")
     private String depotNumber;
+
     @JsonProperty("DepotName")
     private String depotName;
+
     @JsonProperty("InvestedAmount")
     private double investedAmount;
+
     @JsonProperty("FundHoldings")
     private List<FundHoldingsEntity> fundHoldings;
+
     @JsonProperty("IsLocked")
     private boolean isLocked;
+
     @JsonProperty("OwnerIsMinor")
     private boolean ownerIsMinor;
+
     @JsonProperty("OwnerCustomerId")
     private String ownerCustomerId;
 
@@ -175,12 +188,12 @@ public class DepotEntity {
 
     private Portfolio.Type getPortfolioType() {
         switch (getInvestmentAccountType().toLowerCase()) {
-        case "isk":
-            return Portfolio.Type.ISK;
-        case "depot":
-            return Portfolio.Type.DEPOT;
-        default:
-            return Portfolio.Type.OTHER;
+            case "isk":
+                return Portfolio.Type.ISK;
+            case "depot":
+                return Portfolio.Type.DEPOT;
+            default:
+                return Portfolio.Type.OTHER;
         }
     }
 }

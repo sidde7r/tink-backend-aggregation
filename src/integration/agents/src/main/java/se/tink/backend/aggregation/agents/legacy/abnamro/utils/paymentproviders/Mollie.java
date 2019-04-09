@@ -5,12 +5,11 @@ import java.util.regex.Pattern;
 
 public class Mollie extends PaymentProvider {
 
-    private final static Pattern NAME = Pattern.compile("Stg Mollie Payments", Pattern.CASE_INSENSITIVE);
+    private static final Pattern NAME =
+            Pattern.compile("Stg Mollie Payments", Pattern.CASE_INSENSITIVE);
 
-    /**
-     * Hard to match anything on this provider right now
-     */
-    private final static ImmutableList<Pattern> patterns = ImmutableList.of();
+    /** Hard to match anything on this provider right now */
+    private static final ImmutableList<Pattern> patterns = ImmutableList.of();
 
     @Override
     protected Pattern getNamePattern() {

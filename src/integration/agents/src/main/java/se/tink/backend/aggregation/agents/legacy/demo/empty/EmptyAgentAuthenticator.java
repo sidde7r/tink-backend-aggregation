@@ -7,10 +7,12 @@ import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.aggregation.nxgen.controllers.authentication.Authenticator;
 
 public class EmptyAgentAuthenticator implements Authenticator {
-    private static final AggregationLogger log = new AggregationLogger(EmptyAgentAuthenticator.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(EmptyAgentAuthenticator.class);
 
     @Override
-    public void authenticate(Credentials credentials) throws AuthenticationException, AuthorizationException {
+    public void authenticate(Credentials credentials)
+            throws AuthenticationException, AuthorizationException {
         log.info("Empty client login");
     }
 }

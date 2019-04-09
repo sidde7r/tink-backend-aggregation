@@ -5,14 +5,17 @@ import java.util.regex.Pattern;
 
 public class Buckaroo extends PaymentProvider {
 
-    private final static Pattern NAME = Pattern.compile("Stichting Derdengelden Buckaroo", Pattern.CASE_INSENSITIVE);
+    private static final Pattern NAME =
+            Pattern.compile("Stichting Derdengelden Buckaroo", Pattern.CASE_INSENSITIVE);
 
     /**
-     * Think this isn't good enough to be added. Will evaluate it in production before adding it. /EP
+     * Think this isn't good enough to be added. Will evaluate it in production before adding it.
+     * /EP
      */
-    private static final Pattern PATTERN_1 = Pattern.compile("(\\s|\\d)(?<value>(\\D){3,})$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PATTERN_1 =
+            Pattern.compile("(\\s|\\d)(?<value>(\\D){3,})$", Pattern.CASE_INSENSITIVE);
 
-    private final static ImmutableList<Pattern> PATTERNS = ImmutableList.of();
+    private static final ImmutableList<Pattern> PATTERNS = ImmutableList.of();
 
     @Override
     protected Pattern getNamePattern() {

@@ -22,5 +22,4 @@ public class OrderBankIdRequest {
     public void setUseAnotherDevice(boolean useAnotherDevice) {
         this.useAnotherDevice = useAnotherDevice;
     }
-
 }

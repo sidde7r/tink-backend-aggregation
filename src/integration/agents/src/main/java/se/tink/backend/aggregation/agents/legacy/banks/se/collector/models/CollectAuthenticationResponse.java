@@ -9,12 +9,16 @@ import com.google.common.base.Strings;
 public class CollectAuthenticationResponse extends CollectBankIdResponse {
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("refresh_token")
     private String refreshToken;
+
     @JsonProperty("expires_in")
     private String expiresIn;
+
     @JsonProperty("token_type")
     private String tokenType;
+
     @JsonProperty("status_message")
     private String message;
 
@@ -68,8 +72,12 @@ public class CollectAuthenticationResponse extends CollectBankIdResponse {
         return MoreObjects.toStringHelper(this)
                 .add("status", getStatus())
                 .add("status_message", message)
-                .add("access_token", String.format("exists(%s)", !Strings.isNullOrEmpty(accessToken)))
-                .add("refresh_token", String.format("exists(%s)", !Strings.isNullOrEmpty(accessToken)))
+                .add(
+                        "access_token",
+                        String.format("exists(%s)", !Strings.isNullOrEmpty(accessToken)))
+                .add(
+                        "refresh_token",
+                        String.format("exists(%s)", !Strings.isNullOrEmpty(accessToken)))
                 .add("expires_in", expiresIn)
                 .add("token_type", tokenType)
                 .toString();

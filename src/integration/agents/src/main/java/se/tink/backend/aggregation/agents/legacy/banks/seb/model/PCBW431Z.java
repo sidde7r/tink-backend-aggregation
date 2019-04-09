@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PCBW431Z {
     @JsonProperty("ROW_ID")
     public int ROW_ID = 0;
+
     @JsonProperty("KONTO_NR")
     public String KONTO_NR;
+
     @JsonProperty("SEB_KUND_NR")
     public String SEB_KUND_NR;
 }

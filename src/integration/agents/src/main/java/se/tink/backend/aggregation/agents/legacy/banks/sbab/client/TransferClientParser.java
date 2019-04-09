@@ -14,7 +14,8 @@ public class TransferClientParser {
         List<TransferEntity> upcomingTransfers = Lists.newArrayList();
         Elements tableRows = table.select("> tbody > tr");
 
-        // Every transfer has one unnecessary row in the bottom, so row += 2 is necessary for every iteration.
+        // Every transfer has one unnecessary row in the bottom, so row += 2 is necessary for every
+        // iteration.
 
         for (int row = 0; row < tableRows.size(); row += 2) {
             TransferEntity upcomingTransfer = new TransferEntity();
@@ -38,7 +39,8 @@ public class TransferClientParser {
             upcomingTransfer.setFromAccountNumber(fromAccount.nextElementSibling().text());
 
             Element destinationAccount = infoHeaders.select(":contains(Mottagare)").first();
-            upcomingTransfer.setDestinationAccountNumber(destinationAccount.nextElementSibling().text());
+            upcomingTransfer.setDestinationAccountNumber(
+                    destinationAccount.nextElementSibling().text());
 
             upcomingTransfers.add(upcomingTransfer);
         }
@@ -51,7 +53,8 @@ public class TransferClientParser {
         Elements tableHeaders = table.select("> thead > tr > th");
         Elements tableRows = table.select("> tbody > tr");
 
-        // Every transfer has two unnecessary rows in the bottom, so row += 3 is necessary for every iteration.
+        // Every transfer has two unnecessary rows in the bottom, so row += 3 is necessary for every
+        // iteration.
 
         for (int row = 0; row < tableRows.size(); row += 3) {
             TransferEntity transferToAccept = new TransferEntity();
@@ -83,12 +86,12 @@ public class TransferClientParser {
             transferToAccept.setFromAccountNumber(fromAccount.nextElementSibling().text());
 
             Element destinationAccount = infoHeaders.select(":contains(Mottagare)").first();
-            transferToAccept.setDestinationAccountNumber(destinationAccount.nextElementSibling().text());
+            transferToAccept.setDestinationAccountNumber(
+                    destinationAccount.nextElementSibling().text());
 
             transfersToAccept.add(transferToAccept);
         }
 
         return transfersToAccept;
     }
-
 }

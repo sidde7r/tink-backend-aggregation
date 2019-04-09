@@ -8,8 +8,10 @@ import org.joda.time.DateTime;
 import se.tink.backend.aggregation.agents.banks.nordea.v15.model.ProductEntity;
 
 public class BankTransferRequest {
-    private static final DecimalFormatSymbols DECIMAL_FORMAT_SYMBOLS = new DecimalFormatSymbols(Locale.ENGLISH);
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00", DECIMAL_FORMAT_SYMBOLS);
+    private static final DecimalFormatSymbols DECIMAL_FORMAT_SYMBOLS =
+            new DecimalFormatSymbols(Locale.ENGLISH);
+    private static final DecimalFormat DECIMAL_FORMAT =
+            new DecimalFormat("0.00", DECIMAL_FORMAT_SYMBOLS);
 
     private CreateTransferIn createTransferIn;
 
@@ -39,8 +41,9 @@ public class BankTransferRequest {
     }
 
     /**
-     * Nordea is very sensitive and expect the amount to be formatted with exactly two decimals. Sending the value
-     * of 1.0 SEK will be equal to a transfer of 0.10 SEK since they expect two decimals.
+     * Nordea is very sensitive and expect the amount to be formatted with exactly two decimals.
+     * Sending the value of 1.0 SEK will be equal to a transfer of 0.10 SEK since they expect two
+     * decimals.
      *
      * @param amount
      */
@@ -50,7 +53,8 @@ public class BankTransferRequest {
 
     public void setSource(ProductEntity source) {
         createTransferIn.setFromAccountId(source.getInternalId());
-        createTransferIn.setFromAccountProductTypeExtension((String) source.getProductType().get("$"));
+        createTransferIn.setFromAccountProductTypeExtension(
+                (String) source.getProductType().get("$"));
         createTransferIn.setCurrency((String) source.getCurrency().get("$"));
     }
 

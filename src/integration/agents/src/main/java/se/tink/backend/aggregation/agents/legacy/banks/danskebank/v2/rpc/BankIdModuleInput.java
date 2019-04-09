@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BankIdModuleInput {
     private String device;
+
     @JsonProperty("devicetype")
     private String deviceType;
+
     private String operation;
 
     public String getDevice() {

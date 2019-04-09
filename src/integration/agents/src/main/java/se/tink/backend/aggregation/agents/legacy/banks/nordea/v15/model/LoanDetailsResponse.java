@@ -22,7 +22,8 @@ public class LoanDetailsResponse {
         this.loanDetails = loanDetails;
     }
 
-    public Loan toLoan(Account account, Loan.Type loanType, String loanResponseContent) throws ParseException {
+    public Loan toLoan(Account account, Loan.Type loanType, String loanResponseContent)
+            throws ParseException {
         Loan loan = new Loan();
         LoanData loanData = loanDetails.getLoanData();
         LoanPaymentDetails followingPayment = loanDetails.getFollowingPayment();

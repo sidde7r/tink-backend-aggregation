@@ -8,12 +8,15 @@ import java.util.Locale;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateEInvoiceRequest {
-    private static final DecimalFormat AMOUNT_FORMAT = new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US));
+    private static final DecimalFormat AMOUNT_FORMAT =
+            new DecimalFormat("#.##", new DecimalFormatSymbols(Locale.US));
 
     @JsonProperty("PayDate")
     private String payDate;
+
     @JsonProperty("Amount")
     private String amount;
+
     @JsonProperty("InvoiceId")
     private String invoiceId;
 

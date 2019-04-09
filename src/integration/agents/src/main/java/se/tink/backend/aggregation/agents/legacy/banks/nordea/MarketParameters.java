@@ -11,19 +11,24 @@ public class MarketParameters {
     private String appVersion;
     private ApiVersion apiVersion;
 
-    public MarketParameters(String marketCode, ApiVersion apiVersion, String currency, String appVersion) {
+    public MarketParameters(
+            String marketCode, ApiVersion apiVersion, String currency, String appVersion) {
         this.marketCode = marketCode;
         this.currency = currency;
         this.appVersion = appVersion;
         this.apiVersion = apiVersion;
 
-        this.authenticationEndPoint = String.format("%s/AuthenticationService%s", baseUrl(marketCode), apiVersion.get());
-        this.bankingEndpoint = String.format("%s/BankingService%s", baseUrl(marketCode), apiVersion.get());
-        this.savingsEndpoint = String.format("%s/SavingsService%s", baseUrl(marketCode), apiVersion.get());
+        this.authenticationEndPoint =
+                String.format("%s/AuthenticationService%s", baseUrl(marketCode), apiVersion.get());
+        this.bankingEndpoint =
+                String.format("%s/BankingService%s", baseUrl(marketCode), apiVersion.get());
+        this.savingsEndpoint =
+                String.format("%s/SavingsService%s", baseUrl(marketCode), apiVersion.get());
     }
 
     private String baseUrl(String marketCode) {
-        return String.format("https://%s.%s/%s", marketCode.toLowerCase(), BASE_URL, marketCode.toUpperCase());
+        return String.format(
+                "https://%s.%s/%s", marketCode.toLowerCase(), BASE_URL, marketCode.toUpperCase());
     }
 
     public String getAuthenticationEndPoint() {

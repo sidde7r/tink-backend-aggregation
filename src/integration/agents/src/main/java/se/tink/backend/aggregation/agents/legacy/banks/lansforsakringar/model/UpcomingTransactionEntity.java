@@ -5,11 +5,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Date;
 import java.util.Locale;
-import se.tink.libraries.amount.Amount;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.libraries.amount.Amount;
+import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.date.DateUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpcomingTransactionEntity {
@@ -46,7 +46,7 @@ public class UpcomingTransactionEntity {
     public RecipientEntity getPaymentInfo() {
         return paymentInfo;
     }
-    
+
     public void setAmount(double amount) {
         this.amount = amount;
     }
@@ -66,7 +66,7 @@ public class UpcomingTransactionEntity {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public void setPaymentInfo(RecipientEntity paymentInfo) {
         this.paymentInfo = paymentInfo;
     }
@@ -99,7 +99,7 @@ public class UpcomingTransactionEntity {
 
         return transaction;
     }
-    
+
     public Transfer toTransfer() {
         Transfer transfer = new Transfer();
         transfer.setAmount(Amount.inSEK(this.amount));
@@ -113,25 +113,28 @@ public class UpcomingTransactionEntity {
     }
 
     public String calculatePaymentHash(String accountNumber) {
-        return String.valueOf(java.util.Objects.hash(
-                getAmountForHash(amount),
-                paymentInfo.getGiroNumber(),
-                paymentInfo.getReference(),
-                accountNumber));
+        return String.valueOf(
+                java.util.Objects.hash(
+                        getAmountForHash(amount),
+                        paymentInfo.getGiroNumber(),
+                        paymentInfo.getReference(),
+                        accountNumber));
     }
 
     public String calculateTransferHash(String accountNumber) {
-        return String.valueOf(java.util.Objects.hash(
-                getAmountForHash(amount),
-                transferInfo.getToText(),
-                transferInfo.getFromText(),
-                transferInfo.getToAccountBankName(),
-                accountNumber));
+        return String.valueOf(
+                java.util.Objects.hash(
+                        getAmountForHash(amount),
+                        transferInfo.getToText(),
+                        transferInfo.getFromText(),
+                        transferInfo.getToAccountBankName(),
+                        accountNumber));
     }
 
     private String getAmountForHash(double amount) {
         return new DecimalFormat(
-                FOUR_POINT_PRECISION_FORMAT_STRING, DecimalFormatSymbols.getInstance(Locale.ENGLISH))
+                        FOUR_POINT_PRECISION_FORMAT_STRING,
+                        DecimalFormatSymbols.getInstance(Locale.ENGLISH))
                 .format(amount);
     }
 }

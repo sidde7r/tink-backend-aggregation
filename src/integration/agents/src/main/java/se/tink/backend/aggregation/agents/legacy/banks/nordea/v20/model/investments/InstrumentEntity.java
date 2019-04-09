@@ -13,6 +13,7 @@ public class InstrumentEntity {
     private String price;
     private String priceTime;
     private String todaysChange;
+
     @JsonProperty("todaysChangePct")
     private String todaysChangePercentage;
 
@@ -20,8 +21,7 @@ public class InstrumentEntity {
         return instrumentId;
     }
 
-    public void setInstrumentId(
-            InstrumentIdEntity instrumentId) {
+    public void setInstrumentId(InstrumentIdEntity instrumentId) {
         this.instrumentId = instrumentId;
     }
 
@@ -75,14 +75,14 @@ public class InstrumentEntity {
 
     Instrument.Type getTinkInstrumentType() {
         switch (getInstrumentType().toLowerCase()) {
-        case "equity":
-            return Instrument.Type.STOCK;
-        case "fund":
-            return Instrument.Type.FUND;
-        case "derivative":
-            // Intentional fall through
-        default:
-            return Instrument.Type.OTHER;
+            case "equity":
+                return Instrument.Type.STOCK;
+            case "fund":
+                return Instrument.Type.FUND;
+            case "derivative":
+                // Intentional fall through
+            default:
+                return Instrument.Type.OTHER;
         }
     }
 }

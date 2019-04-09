@@ -13,42 +13,48 @@ import java.util.stream.Collectors;
 import se.tink.backend.agents.rpc.Account;
 
 public class AccountUtils {
-    private static final Pattern SUB_ACCOUNTS = Pattern.compile(",?sub_accounts=\\[(?<subAccounts>.*?)\\]");
+    private static final Pattern SUB_ACCOUNTS =
+            Pattern.compile(",?sub_accounts=\\[(?<subAccounts>.*?)\\]");
     private static final Joiner CSV_JOINER = Joiner.on(",");
     private static final Splitter CSV_SPLITTER = Splitter.on(",").trimResults().omitEmptyStrings();
 
     public static String getBankIdBySubAccount(List<Account> accounts, String subAccount) {
         if (accounts != null) {
-            List<Account> accountsWithSubAccounts = accounts.stream()
-                    .filter(account -> getSubAccounts(account).contains(subAccount))
-                    .collect(Collectors.toList());
+            List<Account> accountsWithSubAccounts =
+                    accounts.stream()
+                            .filter(account -> getSubAccounts(account).contains(subAccount))
+                            .collect(Collectors.toList());
 
             if (accountsWithSubAccounts.isEmpty()) {
                 return null;
             }
 
             if (accountsWithSubAccounts.size() > 1) {
-                Optional<Account> optionalAccount = accountsWithSubAccounts.stream()
-                        .filter(account -> !account.isExcluded())
-                        .filter(account -> !account.isClosed())
-                        .findFirst();
+                Optional<Account> optionalAccount =
+                        accountsWithSubAccounts.stream()
+                                .filter(account -> !account.isExcluded())
+                                .filter(account -> !account.isClosed())
+                                .findFirst();
 
                 if (!optionalAccount.isPresent()) {
-                    optionalAccount = accountsWithSubAccounts.stream()
-                            .filter(account -> !account.isExcluded())
-                            .filter(Account::isClosed)
-                            .findFirst();
+                    optionalAccount =
+                            accountsWithSubAccounts.stream()
+                                    .filter(account -> !account.isExcluded())
+                                    .filter(Account::isClosed)
+                                    .findFirst();
                 }
 
                 if (!optionalAccount.isPresent()) {
-                    optionalAccount = accountsWithSubAccounts.stream()
-                            .filter(Account::isExcluded)
-                            .filter(account -> !account.isClosed())
-                            .findFirst();
+                    optionalAccount =
+                            accountsWithSubAccounts.stream()
+                                    .filter(Account::isExcluded)
+                                    .filter(account -> !account.isClosed())
+                                    .findFirst();
                 }
 
-                return optionalAccount.isPresent() ?
-                        optionalAccount.get().getBankId() : accountsWithSubAccounts.get(0).getBankId();
+                return optionalAccount.isPresent()
+                        ? optionalAccount.get().getBankId()
+                        : accountsWithSubAccounts.get(0).getBankId();
             }
 
             return accountsWithSubAccounts.get(0).getBankId();

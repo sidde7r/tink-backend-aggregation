@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.banks;
 
+import static se.tink.libraries.credentials.service.RefreshableItem.*;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,6 +14,18 @@ import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource.Builder;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.http.client.utils.URIBuilder;
@@ -99,21 +113,6 @@ import se.tink.backend.aggregation.agents.exceptions.errors.BankIdError;
 import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.general.GeneralUtils;
 import se.tink.backend.aggregation.agents.general.TransferDestinationPatternBuilder;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.nxgen.http.filter.ClientFilterFactory;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.backend.agents.rpc.CredentialsStatus;
-import se.tink.libraries.credentials.service.RefreshableItem;
-import se.tink.backend.aggregation.utils.transfer.StringNormalizerSwedish;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageFormatter;
-import se.tink.backend.aggregation.utils.transfer.TransferMessageLengthConfig;
-import se.tink.backend.aggregation.agents.models.TransferDestinationPattern;
-import se.tink.libraries.transfer.enums.TransferType;
-import se.tink.libraries.signableoperation.enums.SignableOperationStatuses;
-import se.tink.libraries.transfer.rpc.Transfer;
-import se.tink.libraries.transfer.enums.TransferPayloadType;
 import se.tink.backend.aggregation.agents.models.AccountFeatures;
 import se.tink.backend.aggregation.agents.models.Instrument;
 import se.tink.backend.aggregation.agents.models.Loan;
@@ -132,6 +131,7 @@ import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifier
 import se.tink.libraries.account.identifiers.formatters.DisplayAccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.se.ClearingNumber;
 import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
@@ -145,21 +145,6 @@ import se.tink.libraries.transfer.enums.TransferType;
 import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.uuid.UUIDUtils;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response.Status;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import static se.tink.libraries.credentials.service.RefreshableItem.*;
-
 public class LansforsakringarAgent extends AbstractAgent
         implements RefreshCheckingAccountsExecutor,
                 RefreshSavingsAccountsExecutor,
@@ -170,12 +155,14 @@ public class LansforsakringarAgent extends AbstractAgent
                 RefreshTransferDestinationExecutor,
                 TransferExecutor,
                 PersistentLogin {
-    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
-    private static final DisplayAccountIdentifierFormatter GIRO_FORMATTER = new DisplayAccountIdentifierFormatter();
-    private static final TypeReference<HashMap<String, Object>> TYPE_MAP_REF = new TypeReference<HashMap<String, Object>>() {
-    };
-    private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG = TransferMessageLengthConfig
-            .createWithMaxLength(30, 14);
+    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
+            new DefaultAccountIdentifierFormatter();
+    private static final DisplayAccountIdentifierFormatter GIRO_FORMATTER =
+            new DisplayAccountIdentifierFormatter();
+    private static final TypeReference<HashMap<String, Object>> TYPE_MAP_REF =
+            new TypeReference<HashMap<String, Object>>() {};
+    private static final TransferMessageLengthConfig TRANSFER_MESSAGE_LENGTH_CONFIG =
+            TransferMessageLengthConfig.createWithMaxLength(30, 14);
     private static final int MAX_ATTEMPTS = 80;
 
     public enum SavingsAccountTypes {
@@ -188,56 +175,83 @@ public class LansforsakringarAgent extends AbstractAgent
     private static final String EINVOICE_DESCRIPTION = "ElectronicInvoice";
     private static final String OVERVIEW_URL = BASE_URL + "/overview";
     private static final String PASSWORD_LOGIN_URL = BASE_URL + "/security/user";
-    private static final String BANKID_AUTHENTICATE_URL = BASE_URL + "/security/user/bankid/authenticate";
+    private static final String BANKID_AUTHENTICATE_URL =
+            BASE_URL + "/security/user/bankid/authenticate";
     private static final String BANKID_COLLECT_URL = BASE_URL + "/security/user/bankid/login/2.0";
-    private static final String BANKID_COLLECT_DIRECT_TRANSFER_URL = BASE_URL + "/directtransfer/bankid";
-    private static final String CREATE_BANKID_REFERENCE_URL = BASE_URL + "/directtransfer/createbankidreference";
-    private static final String CREATE_PAYMENT_URL = BASE_URL + "/directpayment/createreference/bankid";
+    private static final String BANKID_COLLECT_DIRECT_TRANSFER_URL =
+            BASE_URL + "/directtransfer/bankid";
+    private static final String CREATE_BANKID_REFERENCE_URL =
+            BASE_URL + "/directtransfer/createbankidreference";
+    private static final String CREATE_PAYMENT_URL =
+            BASE_URL + "/directpayment/createreference/bankid";
     private static final String SAVED_RECIPIENTS_URL = BASE_URL + "/payment/savedrecipients";
     private static final String PAYMENT_ACCOUNTS_URL = BASE_URL + "/payment/paymentaccount";
     private static final String SEND_PAYMENT_URL = BASE_URL + "/directpayment/send/bankid";
-    private static final String FETCH_EINVOICES_URL = BASE_URL + "/payment/einvoice/einvoiceandcredit";
-    private static final String TRANSFER_DESTINATIONS_URL = BASE_URL + "/account/transferrablewithsavedrecipients";
-    private static final String EINVOICE_AND_CREDIT_ALERTS_URL = BASE_URL + "/payment/einvoice/einvoiceandcreditalerts";
+    private static final String FETCH_EINVOICES_URL =
+            BASE_URL + "/payment/einvoice/einvoiceandcredit";
+    private static final String TRANSFER_DESTINATIONS_URL =
+            BASE_URL + "/account/transferrablewithsavedrecipients";
+    private static final String EINVOICE_AND_CREDIT_ALERTS_URL =
+            BASE_URL + "/payment/einvoice/einvoiceandcreditalerts";
     private static final String TRANSACTIONS_URL = BASE_URL + "/account/transaction/2.0";
     private static final String VALIDATE_PAYMENT_URL = BASE_URL + "/directpayment/validate";
     private static final String RECIPIENT_NAME_URL = BASE_URL + "/payment/recipientname";
-    private static final String LIST_UNSIGNED_TRANSFERS_AND_PAYMENTS_URL = BASE_URL + "/unsigned/paymentsandtransfers/list/2.0";
+    private static final String LIST_UNSIGNED_TRANSFERS_AND_PAYMENTS_URL =
+            BASE_URL + "/unsigned/paymentsandtransfers/list/2.0";
     private static final String DELETE_SIGNED_TRANSACTION_URL = BASE_URL + "/payment/signed/delete";
     private static final String FETCH_TOKEN_URL = BASE_URL + "/security/client";
-    private static final String FETCH_UPCOMING_TRANSACTIONS_URL = BASE_URL + "/account/upcoming/5.0";
+    private static final String FETCH_UPCOMING_TRANSACTIONS_URL =
+            BASE_URL + "/account/upcoming/5.0";
     private static final String FETCH_CARD_TRANSACTIONS_URL = BASE_URL + "/card/transaction";
     private static final String FETCH_LOANS_URL = BASE_URL + "/loan/loans/withtotal";
     private static final String FETCH_LOAN_DETAILS_URL = BASE_URL + "/loan/details";
-    private static final String FETCH_UNSIGNED_PAYMENTS_URL = BASE_URL + "/unsigned/paymentsandtransfers/list";
-    private static final String VALIDATE_UNSIGNED_PAYMENTS_URL = BASE_URL + "/unsigned/paymentsandtransfers/validate";
-    private static final String CREATE_BANKID_REFERENCE_PAYMENTS_URL = BASE_URL + "/unsigned/paymentsandtransfers/bankid/createreference";
-    private static final String SEND_UNSIGNED_PAYMENT_URL = BASE_URL + "/unsigned/paymentsandtransfers/bankid/send";
+    private static final String FETCH_UNSIGNED_PAYMENTS_URL =
+            BASE_URL + "/unsigned/paymentsandtransfers/list";
+    private static final String VALIDATE_UNSIGNED_PAYMENTS_URL =
+            BASE_URL + "/unsigned/paymentsandtransfers/validate";
+    private static final String CREATE_BANKID_REFERENCE_PAYMENTS_URL =
+            BASE_URL + "/unsigned/paymentsandtransfers/bankid/createreference";
+    private static final String SEND_UNSIGNED_PAYMENT_URL =
+            BASE_URL + "/unsigned/paymentsandtransfers/bankid/send";
     private static final String DELETE_UNSIGNED_PAYMENT_URL = BASE_URL + "/payment/deleteunsigned";
-    private static final String SIGNLIST_ADD_EINVOICE_URL = BASE_URL + "/payment/einvoice/addeinvoice";
-    private static final String SIGN_PAYMENT_CREATE_REFERENCE_URL = BASE_URL + "/payment/signed/bankid/createreference";
-    private static final String SIGN_PAYMENT_SEND_PAYMENT_URL = BASE_URL + "/payment/signed/modify/bankid";
-    private static final String FETCH_TRANSFER_SOURCE_ACCOUNTS = BASE_URL + "/account/transferrable?direction=from";
+    private static final String SIGNLIST_ADD_EINVOICE_URL =
+            BASE_URL + "/payment/einvoice/addeinvoice";
+    private static final String SIGN_PAYMENT_CREATE_REFERENCE_URL =
+            BASE_URL + "/payment/signed/bankid/createreference";
+    private static final String SIGN_PAYMENT_SEND_PAYMENT_URL =
+            BASE_URL + "/payment/signed/modify/bankid";
+    private static final String FETCH_TRANSFER_SOURCE_ACCOUNTS =
+            BASE_URL + "/account/transferrable?direction=from";
     private static final String INTERNAL_TRANSFER_URL = BASE_URL + "/directtransfer";
-    private static final String FETCH_ALL_BANKNAMES_URL = BASE_URL + "/directtransfer/fetchallbanknames";
+    private static final String FETCH_ALL_BANKNAMES_URL =
+            BASE_URL + "/directtransfer/fetchallbanknames";
     private static final String ISK_URL = BASE_URL + "/depot/investmentsavings/3.0";
-    private static final String FUND_SECURITIES_URL = BASE_URL + "/depot/holding/fund/securityholdings/withdetails/2.0";
-    private static final String STOCK_SECURITIES_URL = BASE_URL + "/depot/holding/share/securityholdings/2.0";
-    private static final String STOCK_DETAILS_URL = BASE_URL + "/depot/trading/share/instrumentwithisin";
+    private static final String FUND_SECURITIES_URL =
+            BASE_URL + "/depot/holding/fund/securityholdings/withdetails/2.0";
+    private static final String STOCK_SECURITIES_URL =
+            BASE_URL + "/depot/holding/share/securityholdings/2.0";
+    private static final String STOCK_DETAILS_URL =
+            BASE_URL + "/depot/trading/share/instrumentwithisin";
     private static final String FUND_DEPOT_URL = BASE_URL + "/fund/holdings";
     private static final String FUND_INFORMATION_URL = BASE_URL + "/fund/fundinformation";
     private static final String STOCK_DEPOT_URL = BASE_URL + "/depot/share";
-    private static final String STOCK_DEPOT_HOLDINGS_URL = BASE_URL + "/depot/holding/share/securityholdings";
-    private static final String STOCK_DEPOT_CASH_BALANCE_URL = BASE_URL + "/depot/holding/depotcashbalance";
-    private static final String ISK_CASH_BALANCE_URL = BASE_URL + "/depot/holding/depotcashbalance/2.0";
+    private static final String STOCK_DEPOT_HOLDINGS_URL =
+            BASE_URL + "/depot/holding/share/securityholdings";
+    private static final String STOCK_DEPOT_CASH_BALANCE_URL =
+            BASE_URL + "/depot/holding/depotcashbalance";
+    private static final String ISK_CASH_BALANCE_URL =
+            BASE_URL + "/depot/holding/depotcashbalance/2.0";
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static Optional<BankEntity> findBankForAccountNumber(String destinationAccount, List<BankEntity> banks) {
+    private static Optional<BankEntity> findBankForAccountNumber(
+            String destinationAccount, List<BankEntity> banks) {
         final Integer accountClearingNumber = Integer.parseInt(destinationAccount.substring(0, 4));
 
-        return banks.stream().filter(
-                be -> be.getFromClearingRange() <= accountClearingNumber && accountClearingNumber <= be
-                        .getToClearingRange())
+        return banks.stream()
+                .filter(
+                        be ->
+                                be.getFromClearingRange() <= accountClearingNumber
+                                        && accountClearingNumber <= be.getToClearingRange())
                 .findFirst();
     }
 
@@ -252,7 +266,8 @@ public class LansforsakringarAgent extends AbstractAgent
     // cache
     private Map<AccountEntity, Account> accounts = null;
 
-    public LansforsakringarAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public LansforsakringarAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         catalog = context.getCatalog();
@@ -260,14 +275,24 @@ public class LansforsakringarAgent extends AbstractAgent
         client = clientFactory.createCustomClient(context.getLogOutputStream());
         // client.addFilter(new LoggingFilter(new PrintStream(System.out)));
 
-        deviceId = new String(Hex.encodeHex(StringUtils.hashSHA1(credentials.getField(Field.Key.USERNAME) + "-TINK")));
-        transferMessageFormatter = new TransferMessageFormatter(
-                catalog, TRANSFER_MESSAGE_LENGTH_CONFIG, new StringNormalizerSwedish(",.-_"));
+        deviceId =
+                new String(
+                        Hex.encodeHex(
+                                StringUtils.hashSHA1(
+                                        credentials.getField(Field.Key.USERNAME) + "-TINK")));
+        transferMessageFormatter =
+                new TransferMessageFormatter(
+                        catalog,
+                        TRANSFER_MESSAGE_LENGTH_CONFIG,
+                        new StringNormalizerSwedish(",.-_"));
     }
 
-    private LoginResponse authenticateBankId() throws AuthorizationException, AuthenticationException {
-        ClientResponse bankIdloginClientResponse = createPostRequest(BANKID_AUTHENTICATE_URL,
-                new BankIdAuthenticationRequest(credentials.getField(Field.Key.USERNAME)));
+    private LoginResponse authenticateBankId()
+            throws AuthorizationException, AuthenticationException {
+        ClientResponse bankIdloginClientResponse =
+                createPostRequest(
+                        BANKID_AUTHENTICATE_URL,
+                        new BankIdAuthenticationRequest(credentials.getField(Field.Key.USERNAME)));
 
         int status = bankIdloginClientResponse.getStatus();
 
@@ -276,31 +301,34 @@ public class LansforsakringarAgent extends AbstractAgent
             String errorMessage = bankIdloginClientResponse.getHeaders().getFirst("Error-Message");
 
             switch (errorCode) {
-            case "000114":
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
-            case "99312":
-                // Error-Message: Du behöver vara över 16 år för att använda Mobilt BankID. Kontakta gärna oss om du har frågor.
-                throw AuthorizationError.UNAUTHORIZED.exception(UserMessage.UNDERAGE.getKey());
-            case "99021":
-                // Error-Message: Dina inloggningsuppgifter stämmer inte. Kontrollera dem och försök igen. Kontakta oss om problemet kvarstår.
-                // This occurs if the user enters the wrong personal number, e.g. 188705030142
-                throw LoginError.INCORRECT_CREDENTIALS.exception();
-            default:
-                // TODO: If we get this often and the fault is on their side, do an implementation which handles that specific error.
-                // Known errors:
-                // - 00012 "Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta oss om problemet kvarstår."
-                // - 00019 "Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta oss om problemet kvarstår."
-                throw new IllegalStateException(
-                        String.format(
-                                "#login-refactoring - LF - Login failed with errorCode: %s, errorMessage: %s",
-                                errorCode,
-                                errorMessage
-                        )
-                );
+                case "000114":
+                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                case "99312":
+                    // Error-Message: Du behöver vara över 16 år för att använda Mobilt BankID.
+                    // Kontakta gärna oss om du har frågor.
+                    throw AuthorizationError.UNAUTHORIZED.exception(UserMessage.UNDERAGE.getKey());
+                case "99021":
+                    // Error-Message: Dina inloggningsuppgifter stämmer inte. Kontrollera dem och
+                    // försök igen. Kontakta oss om problemet kvarstår.
+                    // This occurs if the user enters the wrong personal number, e.g. 188705030142
+                    throw LoginError.INCORRECT_CREDENTIALS.exception();
+                default:
+                    // TODO: If we get this often and the fault is on their side, do an
+                    // implementation which handles that specific error.
+                    // Known errors:
+                    // - 00012 "Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta
+                    // oss om problemet kvarstår."
+                    // - 00019 "Tyvärr har det uppstått ett tekniskt fel. Försök igen och kontakta
+                    // oss om problemet kvarstår."
+                    throw new IllegalStateException(
+                            String.format(
+                                    "#login-refactoring - LF - Login failed with errorCode: %s, errorMessage: %s",
+                                    errorCode, errorMessage));
             }
         }
 
-        BankIdLoginResponse bankIdloginResponse = bankIdloginClientResponse.getEntity(BankIdLoginResponse.class);
+        BankIdLoginResponse bankIdloginResponse =
+                bankIdloginClientResponse.getEntity(BankIdLoginResponse.class);
 
         credentials.setSupplementalInformation(null);
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
@@ -308,36 +336,44 @@ public class LansforsakringarAgent extends AbstractAgent
         supplementalRequester.requestSupplementalInformation(credentials, false);
 
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            ClientResponse clientLoginResponse = createPostRequest(BANKID_COLLECT_URL,
-                    new BankIdLoginRequest(bankIdloginResponse.getReference(),
-                            credentials.getField(Field.Key.USERNAME)));
+            ClientResponse clientLoginResponse =
+                    createPostRequest(
+                            BANKID_COLLECT_URL,
+                            new BankIdLoginRequest(
+                                    bankIdloginResponse.getReference(),
+                                    credentials.getField(Field.Key.USERNAME)));
 
             status = clientLoginResponse.getStatus();
 
             if (status == Status.OK.getStatusCode()) {
                 return clientLoginResponse.getEntity(LoginResponse.class);
-            } else if (status == Status.UNAUTHORIZED.getStatusCode() || status == Status.BAD_REQUEST.getStatusCode()) {
+            } else if (status == Status.UNAUTHORIZED.getStatusCode()
+                    || status == Status.BAD_REQUEST.getStatusCode()) {
                 switch (clientLoginResponse.getHeaders().getFirst("Error-Code")) {
-                case "00013":
-                case "00014":
-                    log.info("Waiting for Mobilt BankID authentication ("
-                            + clientLoginResponse.getHeaders().getFirst("Error-Message") + ")");
-                    break;
-                case "000114":
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
-                case "00011":
-                    throw BankIdError.NO_CLIENT.exception();
-                case "00015":
-                    // Cancelled from BankId due to multiple BankId logins - fall trough
-                case "000115":
-                    throw BankIdError.CANCELLED.exception();
-                case "1011":
-                    // errorMessage:
-                    // Välkommen till mobilbanken. Du aktiverar appen via Länsförsäkringars internetbank.
-                    // Logga in på lansforsakringar.se och godkänn våra allmänna internetvillkor.
-                    throw LoginError.NOT_CUSTOMER.exception();
-                default:
-                    // NOP
+                    case "00013":
+                    case "00014":
+                        log.info(
+                                "Waiting for Mobilt BankID authentication ("
+                                        + clientLoginResponse.getHeaders().getFirst("Error-Message")
+                                        + ")");
+                        break;
+                    case "000114":
+                        throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                    case "00011":
+                        throw BankIdError.NO_CLIENT.exception();
+                    case "00015":
+                        // Cancelled from BankId due to multiple BankId logins - fall trough
+                    case "000115":
+                        throw BankIdError.CANCELLED.exception();
+                    case "1011":
+                        // errorMessage:
+                        // Välkommen till mobilbanken. Du aktiverar appen via Länsförsäkringars
+                        // internetbank.
+                        // Logga in på lansforsakringar.se och godkänn våra allmänna
+                        // internetvillkor.
+                        throw LoginError.NOT_CUSTOMER.exception();
+                    default:
+                        // NOP
                 }
             }
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
@@ -364,7 +400,8 @@ public class LansforsakringarAgent extends AbstractAgent
         return request;
     }
 
-    private <T> T createPostRequestWithResponseHandling(String url, Class<T> returnClass, Object requestEntity)
+    private <T> T createPostRequestWithResponseHandling(
+            String url, Class<T> returnClass, Object requestEntity)
             throws HttpStatusCodeErrorException {
         ClientResponse response = createPostRequest(url, requestEntity);
         return handleRequestResponse(response, returnClass);
@@ -376,7 +413,8 @@ public class LansforsakringarAgent extends AbstractAgent
         return request.post(ClientResponse.class, requestEntity);
     }
 
-    private <T> T createGetRequest(String url, Class<T> returnClass) throws HttpStatusCodeErrorException {
+    private <T> T createGetRequest(String url, Class<T> returnClass)
+            throws HttpStatusCodeErrorException {
         Builder request = createClientRequest(url);
         ClientResponse response = request.get(ClientResponse.class);
         return handleRequestResponse(response, returnClass);
@@ -393,7 +431,8 @@ public class LansforsakringarAgent extends AbstractAgent
             return response.getEntity(returnClass);
         } else {
             String errorMsg = response.getHeaders().getFirst("Error-Message");
-            throw new HttpStatusCodeErrorException(response,
+            throw new HttpStatusCodeErrorException(
+                    response,
                     "Request status code " + response.getStatus() + ": '" + errorMsg + "'");
         }
     }
@@ -405,7 +444,8 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private Map<Account, List<TransferDestinationPattern>> getPaymentAccountDestinations(
-            List<AccountEntity> accountEntities, List<Account> accounts) throws HttpStatusCodeErrorException {
+            List<AccountEntity> accountEntities, List<Account> accounts)
+            throws HttpStatusCodeErrorException {
         if (accountEntities.isEmpty()) {
             log.info("Payment accounts not updated: The user has no accounts.");
             return Collections.emptyMap();
@@ -413,8 +453,8 @@ public class LansforsakringarAgent extends AbstractAgent
 
         List<AccountEntity> paymentAccounts = fetchPaymentAccounts();
 
-        RecipientsResponse recipientsResponse = createGetRequest(SAVED_RECIPIENTS_URL,
-                RecipientsResponse.class);
+        RecipientsResponse recipientsResponse =
+                createGetRequest(SAVED_RECIPIENTS_URL, RecipientsResponse.class);
 
         return new TransferDestinationPatternBuilder()
                 .setSourceAccounts(paymentAccounts)
@@ -427,17 +467,20 @@ public class LansforsakringarAgent extends AbstractAgent
 
     /**
      * Helper that gracefully returns empty account list if the user doesn't have this service.
+     *
      * @return Non-null list of account entities
-     * @throws HttpStatusCodeErrorException If the client threw from bad status code others than "missing service"
+     * @throws HttpStatusCodeErrorException If the client threw from bad status code others than
+     *     "missing service"
      */
     private List<AccountEntity> fetchPaymentAccounts() throws HttpStatusCodeErrorException {
         try {
-            PaymentAccountsResponse paymentAccounts = createGetRequest(PAYMENT_ACCOUNTS_URL,
-                    PaymentAccountsResponse.class);
+            PaymentAccountsResponse paymentAccounts =
+                    createGetRequest(PAYMENT_ACCOUNTS_URL, PaymentAccountsResponse.class);
 
             return paymentAccounts.getPaymentAccounts();
         } catch (HttpStatusCodeErrorException e) {
-            // Error-Message: "Du saknar den här tjänsten. Kontakta oss för att få hjälp att komma igång."
+            // Error-Message: "Du saknar den här tjänsten. Kontakta oss för att få hjälp att komma
+            // igång."
             if (e.hasErrorCode(12051)) {
                 log.info(e.getMessage());
                 return Lists.newArrayList();
@@ -448,7 +491,8 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private Map<Account, List<TransferDestinationPattern>> getTransferAccountDestinations(
-            List<AccountEntity> accountEntities, List<Account> updatedAccounts) throws HttpStatusCodeErrorException {
+            List<AccountEntity> accountEntities, List<Account> updatedAccounts)
+            throws HttpStatusCodeErrorException {
         if (accountEntities.isEmpty()) {
             log.info("Transfer accounts not updated: The user has no accounts.");
             return Collections.emptyMap();
@@ -472,8 +516,9 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private boolean hasPendingEInvoices() throws HttpStatusCodeErrorException {
         try {
-            EInvoiceAndCreditAlertsResponse alertsResponse = createGetRequest(EINVOICE_AND_CREDIT_ALERTS_URL,
-                    EInvoiceAndCreditAlertsResponse.class);
+            EInvoiceAndCreditAlertsResponse alertsResponse =
+                    createGetRequest(
+                            EINVOICE_AND_CREDIT_ALERTS_URL, EInvoiceAndCreditAlertsResponse.class);
 
             return alertsResponse.getNumberOfNewInvoices() > 0;
         } catch (HttpStatusCodeErrorException e) {
@@ -487,7 +532,8 @@ public class LansforsakringarAgent extends AbstractAgent
         }
     }
 
-    private TransferrableResponse fetchTransferDestinationAccounts() throws HttpStatusCodeErrorException {
+    private TransferrableResponse fetchTransferDestinationAccounts()
+            throws HttpStatusCodeErrorException {
         ClientResponse clientResponse = createGetRequest(TRANSFER_DESTINATIONS_URL);
 
         if (clientResponse.getStatus() != HttpStatus.SC_OK) {
@@ -498,17 +544,22 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     private List<UpcomingTransactionEntity> fetchUpcomingTransactions(String accountNumber) {
-        ClientResponse clientResponse = createPostRequest(FETCH_UPCOMING_TRANSACTIONS_URL,
-                new ListUpcomingTransactionRequest(accountNumber));
+        ClientResponse clientResponse =
+                createPostRequest(
+                        FETCH_UPCOMING_TRANSACTIONS_URL,
+                        new ListUpcomingTransactionRequest(accountNumber));
 
         if (Objects.equal(clientResponse.getStatus(), HttpStatus.SC_OK)) {
-            UpcomingTransactionListResponse upcomingTransactionListResponse = clientResponse
-                    .getEntity(UpcomingTransactionListResponse.class);
+            UpcomingTransactionListResponse upcomingTransactionListResponse =
+                    clientResponse.getEntity(UpcomingTransactionListResponse.class);
 
             return upcomingTransactionListResponse.getUpcomingTransactions();
 
         } else {
-            log.error("Could not fetch upcoming transactions (status: " + clientResponse.getStatus() + ")");
+            log.error(
+                    "Could not fetch upcoming transactions (status: "
+                            + clientResponse.getStatus()
+                            + ")");
         }
 
         return Lists.newArrayList();
@@ -518,7 +569,9 @@ public class LansforsakringarAgent extends AbstractAgent
         Transfer transfer = null;
         if (transactionEntity.getPaymentInfo() != null
                 && transactionEntity.getPaymentInfo().isModificationAllowed()
-                && Objects.equal(transactionEntity.getPaymentInfo().getPaymentType(), EINVOICE_DESCRIPTION)) {
+                && Objects.equal(
+                        transactionEntity.getPaymentInfo().getPaymentType(),
+                        EINVOICE_DESCRIPTION)) {
 
             transfer = transactionEntity.toTransfer();
         }
@@ -540,23 +593,25 @@ public class LansforsakringarAgent extends AbstractAgent
         } else {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setMessage("Not implemented.")
-                    .setEndUserMessage("Not implemented.").build();
+                    .setEndUserMessage("Not implemented.")
+                    .build();
         }
     }
 
     @Override
     public void update(Transfer transfer) throws Exception, TransferExecutionException {
         switch (transfer.getType()) {
-        case EINVOICE:
-            approveEInvoice(transfer);
-            break;
-        case PAYMENT:
-            updatePayment(transfer);
-            break;
-        default:
-            throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("Not implemented.")
-                    .setEndUserMessage("Not implemented.").build();
+            case EINVOICE:
+                approveEInvoice(transfer);
+                break;
+            case PAYMENT:
+                updatePayment(transfer);
+                break;
+            default:
+                throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
+                        .setMessage("Not implemented.")
+                        .setEndUserMessage("Not implemented.")
+                        .build();
         }
     }
 
@@ -573,13 +628,15 @@ public class LansforsakringarAgent extends AbstractAgent
     private void validateUpdateIsPermitted(Catalog catalog, Transfer transfer) {
         Transfer originalTransfer = transfer.getOriginalTransfer().get();
 
-        if (!Objects.equal(transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
+        if (!Objects.equal(
+                transfer.getDestinationMessage(), originalTransfer.getDestinationMessage())) {
 
-            throw TransferExecutionException
-                    .builder(SignableOperationStatuses.CANCELLED)
+            throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage("Not allowed to change destination message")
-                    .setEndUserMessage(catalog.getString(
-                            TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_DESTINATION_MESSAGE))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage
+                                            .EINVOICE_MODIFY_DESTINATION_MESSAGE))
                     .build();
         }
 
@@ -587,19 +644,23 @@ public class LansforsakringarAgent extends AbstractAgent
             throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                     .setMessage("Not allowed to change source message")
                     .setEndUserMessage(
-                            catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_MODIFY_SOURCE_MESSAGE))
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage
+                                            .EINVOICE_MODIFY_SOURCE_MESSAGE))
                     .build();
         }
     }
 
-    private PaymentEntity validateNumberOfOutstandingPaymentEntities(int numberOfOutstandingPayments) throws Exception {
-        PaymentsListResponse paymentsListResponse = createGetRequest(
-                FETCH_UNSIGNED_PAYMENTS_URL, PaymentsListResponse.class);
+    private PaymentEntity validateNumberOfOutstandingPaymentEntities(
+            int numberOfOutstandingPayments) throws Exception {
+        PaymentsListResponse paymentsListResponse =
+                createGetRequest(FETCH_UNSIGNED_PAYMENTS_URL, PaymentsListResponse.class);
 
         if (paymentsListResponse != null) {
-            List<PaymentEntity> eInvoices = paymentsListResponse.getPayments().stream()
-                    .filter(p -> Objects.equal(p.getPaymentType(), EINVOICE_DESCRIPTION)).collect(
-                            Collectors.toList());
+            List<PaymentEntity> eInvoices =
+                    paymentsListResponse.getPayments().stream()
+                            .filter(p -> Objects.equal(p.getPaymentType(), EINVOICE_DESCRIPTION))
+                            .collect(Collectors.toList());
 
             if (Iterables.size(eInvoices) == numberOfOutstandingPayments) {
                 if (numberOfOutstandingPayments == 0) {
@@ -612,7 +673,9 @@ public class LansforsakringarAgent extends AbstractAgent
 
         throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
                 .setEndUserMessage(
-                        catalog.getString(TransferExecutionException.EndUserMessage.EXISTING_UNSIGNED_TRANSFERS))
+                        catalog.getString(
+                                TransferExecutionException.EndUserMessage
+                                        .EXISTING_UNSIGNED_TRANSFERS))
                 .build();
     }
 
@@ -621,7 +684,8 @@ public class LansforsakringarAgent extends AbstractAgent
             ClientResponse validateResponse = createGetRequest(VALIDATE_UNSIGNED_PAYMENTS_URL);
             validateTransactionClientResponse(validateResponse);
 
-            ClientResponse createReferenceResponse = createGetRequest(CREATE_BANKID_REFERENCE_PAYMENTS_URL);
+            ClientResponse createReferenceResponse =
+                    createGetRequest(CREATE_BANKID_REFERENCE_PAYMENTS_URL);
             validateTransactionClientResponse(createReferenceResponse);
 
             credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
@@ -642,42 +706,52 @@ public class LansforsakringarAgent extends AbstractAgent
         CancelPaymentRequest request = new CancelPaymentRequest();
         request.setUniqueId(uniqueId);
 
-        ClientResponse cancelPaymentResponse = createPostRequest(DELETE_UNSIGNED_PAYMENT_URL, request);
+        ClientResponse cancelPaymentResponse =
+                createPostRequest(DELETE_UNSIGNED_PAYMENT_URL, request);
 
         validateTransactionClientResponse(cancelPaymentResponse);
     }
 
-    private void addEInvoiceToApproveList(final Transfer transfer, AccountEntity sourceAccount, EInvoice eInvoice) {
+    private void addEInvoiceToApproveList(
+            final Transfer transfer, AccountEntity sourceAccount, EInvoice eInvoice) {
         EInvoicePaymentRequest request = new EInvoicePaymentRequest();
         request.setOcr(transfer.getDestinationMessage());
         request.setDate(transfer.getDueDate().getTime());
         request.setToAccount(transfer.getDestination().getIdentifier(GIRO_FORMATTER));
         request.setElectronicInvoiceId(eInvoice.getElectronicInvoiceId());
         request.setAmount(transfer.getAmount().getValue());
-        request.setFromAccount(sourceAccount.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
+        request.setFromAccount(
+                sourceAccount.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
 
-        ClientResponse createPaymentClientResponse = createPostRequest(SIGNLIST_ADD_EINVOICE_URL, request);
+        ClientResponse createPaymentClientResponse =
+                createPostRequest(SIGNLIST_ADD_EINVOICE_URL, request);
 
         validateTransactionClientResponse(createPaymentClientResponse);
     }
 
     private EInvoice validateEInvoice(final Transfer transfer) throws Exception {
-        final Optional<String> electronicInvoiceId = transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
+        final Optional<String> electronicInvoiceId =
+                transfer.getPayloadValue(TransferPayloadType.PROVIDER_UNIQUE_ID);
 
         if (!electronicInvoiceId.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setMessage("No electronicInvoiceId on transfer").build();
+                    .setMessage("No electronicInvoiceId on transfer")
+                    .build();
         }
 
-        EInvoicesListResponse invoicesListResponse = createGetRequest(
-                FETCH_EINVOICES_URL, EInvoicesListResponse.class);
+        EInvoicesListResponse invoicesListResponse =
+                createGetRequest(FETCH_EINVOICES_URL, EInvoicesListResponse.class);
 
-        Optional<EInvoice> eInvoice = invoicesListResponse.getElectronicInvoices().stream().filter(i ->
-                LFUtils.findEInvoice(electronicInvoiceId.get()).apply(i)).findFirst();
+        Optional<EInvoice> eInvoice =
+                invoicesListResponse.getElectronicInvoices().stream()
+                        .filter(i -> LFUtils.findEInvoice(electronicInvoiceId.get()).apply(i))
+                        .findFirst();
 
         if (!eInvoice.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.EINVOICE_NO_MATCHES))
                     .build();
         }
 
@@ -689,7 +763,9 @@ public class LansforsakringarAgent extends AbstractAgent
 
         if (!sourceAccount.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
                     .build();
         }
 
@@ -706,11 +782,12 @@ public class LansforsakringarAgent extends AbstractAgent
 
         accountLoop:
         for (AccountEntity accountEntity : overview.getAccountEntities()) {
-            for (UpcomingTransactionEntity upcomingTransaction : fetchUpcomingTransactions(
-                    accountEntity.getAccountNumber())) {
+            for (UpcomingTransactionEntity upcomingTransaction :
+                    fetchUpcomingTransactions(accountEntity.getAccountNumber())) {
                 Transfer upcomingTransactionTransfer = upcomingTransaction.toTransfer();
 
-                if (Objects.equal(originalTransfer.getHash(), upcomingTransactionTransfer.getHash())) {
+                if (Objects.equal(
+                        originalTransfer.getHash(), upcomingTransactionTransfer.getHash())) {
                     payment = Optional.of(upcomingTransaction);
                     break accountLoop;
                 }
@@ -731,19 +808,21 @@ public class LansforsakringarAgent extends AbstractAgent
         UpdatePaymentRequest paymentRequest = new UpdatePaymentRequest();
         paymentRequest.setAmount(transfer.getAmount().getValue());
         paymentRequest.setReference(transfer.getDestinationMessage());
-        paymentRequest.setFromAccountNumber(source.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
+        paymentRequest.setFromAccountNumber(
+                source.generalGetAccountIdentifier().getIdentifier(DEFAULT_FORMATTER));
         paymentRequest.setPaymentDate(transfer.getDueDate().getTime());
         paymentRequest.setPaymentId(payment.get().getId());
 
-        ClientResponse createPaymentClientResponse = createPostRequest(SIGN_PAYMENT_CREATE_REFERENCE_URL,
-                paymentRequest);
+        ClientResponse createPaymentClientResponse =
+                createPostRequest(SIGN_PAYMENT_CREATE_REFERENCE_URL, paymentRequest);
         validateTransactionClientResponse(createPaymentClientResponse);
 
         credentials.setStatus(CredentialsStatus.AWAITING_MOBILE_BANKID_AUTHENTICATION);
         credentials.setStatusPayload(null);
         supplementalRequester.requestSupplementalInformation(credentials, false);
 
-        ClientResponse sendPaymentClientResponse = createPostRequest(SIGN_PAYMENT_SEND_PAYMENT_URL, paymentRequest);
+        ClientResponse sendPaymentClientResponse =
+                createPostRequest(SIGN_PAYMENT_SEND_PAYMENT_URL, paymentRequest);
         validateTransactionClientResponse(sendPaymentClientResponse);
     }
 
@@ -755,8 +834,10 @@ public class LansforsakringarAgent extends AbstractAgent
 
         String formattedDestination = destination.getIdentifier(GIRO_FORMATTER);
 
-        ClientResponse recipientNameClientResponse = fetchRecipientNameAndValidateResponse(formattedDestination);
-        RecipientEntity recipientNameResponse = recipientNameClientResponse.getEntity(RecipientEntity.class);
+        ClientResponse recipientNameClientResponse =
+                fetchRecipientNameAndValidateResponse(formattedDestination);
+        RecipientEntity recipientNameResponse =
+                recipientNameClientResponse.getEntity(RecipientEntity.class);
 
         PaymentRequest paymentRequest = new PaymentRequest();
         paymentRequest.setAmount(transfer.getAmount().getValue());
@@ -764,7 +845,8 @@ public class LansforsakringarAgent extends AbstractAgent
         paymentRequest.setReference(transfer.getDestinationMessage());
         paymentRequest.setElectronicInvoiceId("");
         paymentRequest.setFromAccount(source.getIdentifier(DEFAULT_FORMATTER));
-        paymentRequest.setPaymentDate(transfer.getDueDate() != null ? transfer.getDueDate().getTime() : 0);
+        paymentRequest.setPaymentDate(
+                transfer.getDueDate() != null ? transfer.getDueDate().getTime() : 0);
 
         if (Objects.equal(recipientNameResponse.getOcrType(), "OCR_REQUIRED")) {
             paymentRequest.setReferenceType("OCR");
@@ -786,14 +868,17 @@ public class LansforsakringarAgent extends AbstractAgent
 
             // if we fail to remove a payment after
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString("We encountered problems signing the payment/transfer with your bank. Please log in to your bank app and validate the payment/transfer."))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    "We encountered problems signing the payment/transfer with your bank. Please log in to your bank app and validate the payment/transfer."))
                     .build();
         }
     }
 
     private ClientResponse fetchRecipientNameAndValidateResponse(String formattedDestination) {
-        ClientResponse recipientNameClientResponse = postRequestAndValidateResponse(
-                RECIPIENT_NAME_URL, new RecipientRequest(formattedDestination));
+        ClientResponse recipientNameClientResponse =
+                postRequestAndValidateResponse(
+                        RECIPIENT_NAME_URL, new RecipientRequest(formattedDestination));
         validateTransactionClientResponse(recipientNameClientResponse);
 
         return recipientNameClientResponse;
@@ -808,7 +893,8 @@ public class LansforsakringarAgent extends AbstractAgent
                 return false;
             }
 
-            return deleteAndValidateRemovalOfTransaction(paymentRequest.getFromAccount(), uniqueId.get());
+            return deleteAndValidateRemovalOfTransaction(
+                    paymentRequest.getFromAccount(), uniqueId.get());
         } else if (deleteRequest instanceof TransferRequest) {
             TransferRequest transferRequest = (TransferRequest) deleteRequest;
             Optional<String> uniqueId = findFailedTransferInSignedList(transferRequest);
@@ -817,10 +903,13 @@ public class LansforsakringarAgent extends AbstractAgent
                 return false;
             }
 
-            return deleteAndValidateRemovalOfTransaction(transferRequest.getFromAccount(), uniqueId.get());
+            return deleteAndValidateRemovalOfTransaction(
+                    transferRequest.getFromAccount(), uniqueId.get());
         } else {
-            log.warn(String.format("Got unexpected delete request object: %s",
-                    deleteRequest.getClass().getSimpleName()));
+            log.warn(
+                    String.format(
+                            "Got unexpected delete request object: %s",
+                            deleteRequest.getClass().getSimpleName()));
         }
 
         return false;
@@ -829,9 +918,11 @@ public class LansforsakringarAgent extends AbstractAgent
     private boolean deleteAndValidateRemovalOfTransaction(String fromAccount, String uniqueId) {
         try {
             log.info("Removing payment/transfer from signed since there was an exception.");
-            DeleteSignedTransactionRequest request = createDeleteSignedTransactionRequest(false, fromAccount, uniqueId);
+            DeleteSignedTransactionRequest request =
+                    createDeleteSignedTransactionRequest(false, fromAccount, uniqueId);
 
-            ClientResponse deleteTransactionResponse = createPostRequest(DELETE_SIGNED_TRANSACTION_URL, request);
+            ClientResponse deleteTransactionResponse =
+                    createPostRequest(DELETE_SIGNED_TRANSACTION_URL, request);
             validateTransactionClientResponse(deleteTransactionResponse);
 
             return true;
@@ -842,8 +933,8 @@ public class LansforsakringarAgent extends AbstractAgent
         return false;
     }
 
-    private DeleteSignedTransactionRequest createDeleteSignedTransactionRequest(boolean isTransfer, String fromAccount,
-            String uniqueId) {
+    private DeleteSignedTransactionRequest createDeleteSignedTransactionRequest(
+            boolean isTransfer, String fromAccount, String uniqueId) {
         DeleteSignedTransactionRequest request = new DeleteSignedTransactionRequest();
         request.setFromAccountNumber(fromAccount);
 
@@ -858,7 +949,8 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private Optional<String> findFailedPaymentInSignedList(PaymentRequest paymentRequest)
             throws Exception {
-        for (UpcomingTransactionEntity transaction : fetchUpcomingTransactions(paymentRequest.getFromAccount())) {
+        for (UpcomingTransactionEntity transaction :
+                fetchUpcomingTransactions(paymentRequest.getFromAccount())) {
             if (LFUtils.isSamePayment(paymentRequest, transaction)) {
                 return Optional.of(transaction.getId());
             }
@@ -869,7 +961,8 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private Optional<String> findFailedTransferInSignedList(TransferRequest transferRequest)
             throws Exception {
-        for (UpcomingTransactionEntity transaction : fetchUpcomingTransactions(transferRequest.getFromAccount())) {
+        for (UpcomingTransactionEntity transaction :
+                fetchUpcomingTransactions(transferRequest.getFromAccount())) {
             if (LFUtils.isSameTransfer(transferRequest, transaction)) {
                 return Optional.of(transaction.getId());
             }
@@ -882,7 +975,8 @@ public class LansforsakringarAgent extends AbstractAgent
             throws TransferExecutionException, HttpStatusCodeErrorException {
         List<PaymentEntity> unsignedPayments = fetchUnsignedPaymentsAndTransfers();
 
-        Optional<String> uniqueId = findFailedPaymentInUnsignedList(paymentRequest, unsignedPayments);
+        Optional<String> uniqueId =
+                findFailedPaymentInUnsignedList(paymentRequest, unsignedPayments);
 
         if (!uniqueId.isPresent()) {
             return false;
@@ -892,15 +986,16 @@ public class LansforsakringarAgent extends AbstractAgent
             cancelUnsignedPayment(uniqueId.get());
             return true;
         } catch (TransferExecutionException deleteException) {
-            log.warn("Could not delete unsigned transfer from outbox but was expecting it to be possible.",
+            log.warn(
+                    "Could not delete unsigned transfer from outbox but was expecting it to be possible.",
                     deleteException);
         }
 
         return false;
     }
 
-    private Optional<String> findFailedPaymentInUnsignedList(PaymentRequest paymentRequest,
-            List<PaymentEntity> unsignedPayments) {
+    private Optional<String> findFailedPaymentInUnsignedList(
+            PaymentRequest paymentRequest, List<PaymentEntity> unsignedPayments) {
         for (PaymentEntity payment : unsignedPayments) {
             if (LFUtils.isSamePayment(paymentRequest, payment)) {
                 return Optional.of(payment.getUniqueId());
@@ -910,9 +1005,11 @@ public class LansforsakringarAgent extends AbstractAgent
         return Optional.empty();
     }
 
-    private List<PaymentEntity> fetchUnsignedPaymentsAndTransfers() throws HttpStatusCodeErrorException {
-        PaymentsListResponse paymentsList = createGetRequest(
-                LIST_UNSIGNED_TRANSFERS_AND_PAYMENTS_URL, PaymentsListResponse.class);
+    private List<PaymentEntity> fetchUnsignedPaymentsAndTransfers()
+            throws HttpStatusCodeErrorException {
+        PaymentsListResponse paymentsList =
+                createGetRequest(
+                        LIST_UNSIGNED_TRANSFERS_AND_PAYMENTS_URL, PaymentsListResponse.class);
 
         if (paymentsList == null) {
             return Lists.newArrayList();
@@ -937,7 +1034,8 @@ public class LansforsakringarAgent extends AbstractAgent
         collectTransferResponse(SEND_PAYMENT_URL, paymentRequest);
     }
 
-    private void collectTransferResponse(String url, Object transferRequest) throws BankIdException {
+    private void collectTransferResponse(String url, Object transferRequest)
+            throws BankIdException {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
             ClientResponse clientResponse = createPostRequest(url, transferRequest);
 
@@ -948,32 +1046,40 @@ public class LansforsakringarAgent extends AbstractAgent
             } else if (status == Status.UNAUTHORIZED.getStatusCode()
                     || status == Status.BAD_REQUEST.getStatusCode()) {
                 switch (clientResponse.getHeaders().getFirst("Error-Code")) {
-                case "00153":
-                case "00154":
-                    break;
-                case "000114":
-                case "001514":
-                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
-                case "001515":
-                case "000115":
-                case "00015":
-                    throw BankIdError.CANCELLED.exception();
-                case "00159":
-                case "001512":
-                    throw BankIdError.TIMEOUT.exception();
-                default:
-                    if (clientResponse.getHeaders().getFirst("Error-Message") != null) {
-                        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message")).build();
-                    } else {
-                        throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                                .setEndUserMessage(catalog.getString("Failed to sign using BankID, please try again later"))
-                                .build();
-                    }
+                    case "00153":
+                    case "00154":
+                        break;
+                    case "000114":
+                    case "001514":
+                        throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                    case "001515":
+                    case "000115":
+                    case "00015":
+                        throw BankIdError.CANCELLED.exception();
+                    case "00159":
+                    case "001512":
+                        throw BankIdError.TIMEOUT.exception();
+                    default:
+                        if (clientResponse.getHeaders().getFirst("Error-Message") != null) {
+                            throw TransferExecutionException.builder(
+                                            SignableOperationStatuses.FAILED)
+                                    .setEndUserMessage(
+                                            clientResponse.getHeaders().getFirst("Error-Message"))
+                                    .build();
+                        } else {
+                            throw TransferExecutionException.builder(
+                                            SignableOperationStatuses.FAILED)
+                                    .setEndUserMessage(
+                                            catalog.getString(
+                                                    "Failed to sign using BankID, please try again later"))
+                                    .build();
+                        }
                 }
             } else {
                 throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                        .setEndUserMessage(catalog.getString("Failed to sign using BankID, please try again later"))
+                        .setEndUserMessage(
+                                catalog.getString(
+                                        "Failed to sign using BankID, please try again later"))
                         .build();
             }
             Uninterruptibles.sleepUninterruptibly(2, TimeUnit.SECONDS);
@@ -989,13 +1095,14 @@ public class LansforsakringarAgent extends AbstractAgent
         return clientResponse;
     }
 
-    /**
-     * Helper method to validate a client response in the payment process.
-     */
-    private void validateTransactionClientResponse(ClientResponse clientResponse) throws TransferExecutionException {
-        if (clientResponse.getStatus() == 400 && clientResponse.getHeaders().getFirst("Error-Message") != null) {
+    /** Helper method to validate a client response in the payment process. */
+    private void validateTransactionClientResponse(ClientResponse clientResponse)
+            throws TransferExecutionException {
+        if (clientResponse.getStatus() == 400
+                && clientResponse.getHeaders().getFirst("Error-Message") != null) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message")).build();
+                    .setEndUserMessage(clientResponse.getHeaders().getFirst("Error-Message"))
+                    .build();
         } else if (clientResponse.getStatus() != 200) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
                     .setEndUserMessage(catalog.getString("Failed to sign payment using BankID"))
@@ -1003,7 +1110,8 @@ public class LansforsakringarAgent extends AbstractAgent
         }
     }
 
-    private TransferrableResponse fetchTransferSourceAccounts() throws HttpStatusCodeErrorException {
+    private TransferrableResponse fetchTransferSourceAccounts()
+            throws HttpStatusCodeErrorException {
         return createGetRequest(FETCH_TRANSFER_SOURCE_ACCOUNTS, TransferrableResponse.class);
     }
 
@@ -1018,15 +1126,16 @@ public class LansforsakringarAgent extends AbstractAgent
 
         TransferrableResponse destinationAccounts = fetchTransferDestinationAccounts();
 
-        Preconditions.checkState(destinationAccounts != null, "Could not collect transfer accounts");
+        Preconditions.checkState(
+                destinationAccounts != null, "Could not collect transfer accounts");
 
         TransferRequest transferRequest = new TransferRequest();
 
         // Ensure correctly formatted transfer messages
-        boolean isBetweenSameUserAccounts = LFUtils.find(
-                destination, sourceAccounts.getAccounts()).isPresent();
-        TransferMessageFormatter.Messages formattedMessages = transferMessageFormatter.getMessages(
-                transfer, isBetweenSameUserAccounts);
+        boolean isBetweenSameUserAccounts =
+                LFUtils.find(destination, sourceAccounts.getAccounts()).isPresent();
+        TransferMessageFormatter.Messages formattedMessages =
+                transferMessageFormatter.getMessages(transfer, isBetweenSameUserAccounts);
 
         transferRequest.setBankName(findBankName(destination, destinationAccounts));
         transferRequest.setAmount(transfer.getAmount().getValue());
@@ -1056,19 +1165,25 @@ public class LansforsakringarAgent extends AbstractAgent
         }
     }
 
-    private void validateSourceAccount(AccountIdentifier source, TransferrableResponse sourceAccounts) {
-        Optional<AccountEntity> fromAccountDetails = LFUtils.find(source, sourceAccounts.getAccounts());
+    private void validateSourceAccount(
+            AccountIdentifier source, TransferrableResponse sourceAccounts) {
+        Optional<AccountEntity> fromAccountDetails =
+                LFUtils.find(source, sourceAccounts.getAccounts());
 
         if (!fromAccountDetails.isPresent()) {
             throw TransferExecutionException.builder(SignableOperationStatuses.FAILED)
-                    .setEndUserMessage(catalog.getString(TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
+                    .setEndUserMessage(
+                            catalog.getString(
+                                    TransferExecutionException.EndUserMessage.SOURCE_NOT_FOUND))
                     .build();
         }
     }
 
-    private String findBankName(AccountIdentifier destination, TransferrableResponse destinationAccounts)
+    private String findBankName(
+            AccountIdentifier destination, TransferrableResponse destinationAccounts)
             throws HttpStatusCodeErrorException {
-        Optional<AccountEntity> destinationAccount = LFUtils.find(destination, destinationAccounts.getAccounts());
+        Optional<AccountEntity> destinationAccount =
+                LFUtils.find(destination, destinationAccounts.getAccounts());
         if (destinationAccount.isPresent()) {
             if (destinationAccount.get().isLocalAccount()) {
                 return "";
@@ -1076,23 +1191,29 @@ public class LansforsakringarAgent extends AbstractAgent
                 return destinationAccount.get().getBankName();
             }
         } else {
-            BankListResponse bankListResponse = createGetRequest(FETCH_ALL_BANKNAMES_URL, BankListResponse.class);
+            BankListResponse bankListResponse =
+                    createGetRequest(FETCH_ALL_BANKNAMES_URL, BankListResponse.class);
 
-            Optional<BankEntity> bankEntity = findBankForAccountNumber(destination.getIdentifier(DEFAULT_FORMATTER),
-                    bankListResponse.getAllBankNames());
+            Optional<BankEntity> bankEntity =
+                    findBankForAccountNumber(
+                            destination.getIdentifier(DEFAULT_FORMATTER),
+                            bankListResponse.getAllBankNames());
 
             if (bankEntity.isPresent()) {
                 return bankEntity.get().getBankName();
             } else {
-                // If not found, let's try anyway to create the transaction (should work for major banks at least).
+                // If not found, let's try anyway to create the transaction (should work for major
+                // banks at least).
                 if (destination.is(AccountIdentifier.Type.SE)) {
                     SwedishIdentifier swedishDestination = destination.to(SwedishIdentifier.class);
-                    ClearingNumber.Details clearingNumber = LFUtils.getClearingNumberDetails(swedishDestination);
+                    ClearingNumber.Details clearingNumber =
+                            LFUtils.getClearingNumberDetails(swedishDestination);
                     return clearingNumber.getBankName();
                 } else {
                     throw TransferExecutionException.builder(SignableOperationStatuses.CANCELLED)
-                            .setEndUserMessage(catalog.getString(
-                                    "Could not find a bank for the given destination account. Check the account number and try again."))
+                            .setEndUserMessage(
+                                    catalog.getString(
+                                            "Could not find a bank for the given destination account. Check the account number and try again."))
                             .build();
                 }
             }
@@ -1112,11 +1233,11 @@ public class LansforsakringarAgent extends AbstractAgent
 
     private String getToAccount(AccountIdentifier destination) throws Exception {
         if (!destination.is(AccountIdentifier.Type.SE)) {
-            throw new Exception("Transfer account identifiers other than Swedish ones not implemented yet.");
+            throw new Exception(
+                    "Transfer account identifiers other than Swedish ones not implemented yet.");
         }
 
-        return LFUtils.getApiAdaptedToAccount(
-                destination.to(SwedishIdentifier.class));
+        return LFUtils.getApiAdaptedToAccount(destination.to(SwedishIdentifier.class));
     }
 
     private String fetchToken() {
@@ -1127,12 +1248,20 @@ public class LansforsakringarAgent extends AbstractAgent
             throw new IllegalStateException(e.getMessage(), e);
         }
 
-        String tokenChallangeHash = new String(
-                Hex.encodeHex(StringUtils.hashSHA1(Integer.toHexString(tokenResponse.getNumber() + 4112))));
+        String tokenChallangeHash =
+                new String(
+                        Hex.encodeHex(
+                                StringUtils.hashSHA1(
+                                        Integer.toHexString(tokenResponse.getNumber() + 4112))));
 
-        TokenChallengeResponse tokenChallengeResponse = createPostRequest(FETCH_TOKEN_URL,
-                new TokenChallengeRequest(tokenResponse.getNumber(), tokenChallangeHash, tokenResponse.getNumberPair()))
-                .getEntity(TokenChallengeResponse.class);
+        TokenChallengeResponse tokenChallengeResponse =
+                createPostRequest(
+                                FETCH_TOKEN_URL,
+                                new TokenChallengeRequest(
+                                        tokenResponse.getNumber(),
+                                        tokenChallangeHash,
+                                        tokenResponse.getNumberPair()))
+                        .getEntity(TokenChallengeResponse.class);
 
         return tokenChallengeResponse.getToken();
     }
@@ -1144,11 +1273,11 @@ public class LansforsakringarAgent extends AbstractAgent
         LoginResponse loginResponse;
 
         switch (credentials.getType()) {
-        case MOBILE_BANKID:
-            loginResponse = authenticateBankId();
-            break;
-        default:
-            throw new IllegalStateException("Credentials type not implemented");
+            case MOBILE_BANKID:
+                loginResponse = authenticateBankId();
+                break;
+            default:
+                throw new IllegalStateException("Credentials type not implemented");
         }
 
         Preconditions.checkNotNull(loginResponse);
@@ -1163,11 +1292,11 @@ public class LansforsakringarAgent extends AbstractAgent
         createClientRequest(PASSWORD_LOGIN_URL).delete();
     }
 
-    private <T> T createGetRequestFromUrlAndDepotNumber(Class<T> responseClass, String url, String depotNumber)
+    private <T> T createGetRequestFromUrlAndDepotNumber(
+            Class<T> responseClass, String url, String depotNumber)
             throws HttpStatusCodeErrorException, URISyntaxException {
-        String requestUrl = new URIBuilder(url)
-                .addParameter("depotNumber", depotNumber)
-                .build().toString();
+        String requestUrl =
+                new URIBuilder(url).addParameter("depotNumber", depotNumber).build().toString();
         return createGetRequest(requestUrl, responseClass);
     }
 
@@ -1175,11 +1304,12 @@ public class LansforsakringarAgent extends AbstractAgent
             throws HttpStatusCodeErrorException {
         String stockDetailsUrl;
         try {
-            stockDetailsUrl = new URIBuilder(STOCK_DETAILS_URL)
-                    .addParameter("depotNumber", depotNumber)
-                    .addParameter("isinCode", isin)
-                    .build()
-                    .toString();
+            stockDetailsUrl =
+                    new URIBuilder(STOCK_DETAILS_URL)
+                            .addParameter("depotNumber", depotNumber)
+                            .addParameter("isinCode", isin)
+                            .build()
+                            .toString();
         } catch (URISyntaxException e) {
             return null;
         }
@@ -1206,23 +1336,24 @@ public class LansforsakringarAgent extends AbstractAgent
         return accounts;
     }
 
-    private List<CardEntity> fetchCardEntities()
-            throws HttpStatusCodeErrorException {
+    private List<CardEntity> fetchCardEntities() throws HttpStatusCodeErrorException {
         return createGetRequest(OVERVIEW_URL, OverviewEntity.class).getCards();
     }
 
-    private List<AccountEntity> fetchAccountEntities()
-            throws HttpStatusCodeErrorException {
+    private List<AccountEntity> fetchAccountEntities() throws HttpStatusCodeErrorException {
         return createGetRequest(OVERVIEW_URL, OverviewEntity.class).getAccountEntities();
     }
 
-    // This could be moved into abstract agent when we have support for different data types in result
-    protected Map<String, Object> requestSupplementalInformation(Credentials credentials, List<Field> fields) {
+    // This could be moved into abstract agent when we have support for different data types in
+    // result
+    protected Map<String, Object> requestSupplementalInformation(
+            Credentials credentials, List<Field> fields) {
 
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
         credentials.setSupplementalInformation(SerializationUtils.serializeToString(fields));
 
-        String supplementalInformation = supplementalRequester.requestSupplementalInformation(credentials, true);
+        String supplementalInformation =
+                supplementalRequester.requestSupplementalInformation(credentials, true);
 
         log.info("Supplemental Information response is: " + supplementalInformation);
 
@@ -1287,12 +1418,12 @@ public class LansforsakringarAgent extends AbstractAgent
         UserMessage(LocalizableKey userMessage) {
             this.userMessage = userMessage;
         }
+
         @Override
         public LocalizableKey getKey() {
             return userMessage;
         }
     }
-
 
     ///// Refresh Executor Refactor /////
     @Override
@@ -1306,11 +1437,11 @@ public class LansforsakringarAgent extends AbstractAgent
             }
 
             if (!hasPendingEInvoices()) {
-                return new FetchEInvoicesResponse(Collections.emptyList()); 
+                return new FetchEInvoicesResponse(Collections.emptyList());
             }
 
-            EInvoicesListResponse invoicesListResponse = createGetRequest(FETCH_EINVOICES_URL,
-                    EInvoicesListResponse.class);
+            EInvoicesListResponse invoicesListResponse =
+                    createGetRequest(FETCH_EINVOICES_URL, EInvoicesListResponse.class);
 
             List<EInvoice> eInvoiceEntities = invoicesListResponse.getElectronicInvoices();
             if (eInvoiceEntities.isEmpty()) {
@@ -1329,14 +1460,17 @@ public class LansforsakringarAgent extends AbstractAgent
     }
 
     @Override
-    public FetchTransferDestinationsResponse fetchTransferDestinations(List<Account> updatedAccounts) {
+    public FetchTransferDestinationsResponse fetchTransferDestinations(
+            List<Account> updatedAccounts) {
         try {
             List<AccountEntity> accountEntities = fetchAccountEntities();
 
             TransferDestinationsResponse response = new TransferDestinationsResponse();
 
-            response.addDestinations(getTransferAccountDestinations(accountEntities, updatedAccounts));
-            response.addDestinations(getPaymentAccountDestinations(accountEntities, updatedAccounts));
+            response.addDestinations(
+                    getTransferAccountDestinations(accountEntities, updatedAccounts));
+            response.addDestinations(
+                    getPaymentAccountDestinations(accountEntities, updatedAccounts));
 
             return new FetchTransferDestinationsResponse(response.getDestinations());
         } catch (Exception e) {
@@ -1348,16 +1482,18 @@ public class LansforsakringarAgent extends AbstractAgent
     public FetchAccountsResponse fetchCheckingAccounts() {
         return this.refreshTransactionalAccounts(CHECKING_ACCOUNTS);
     }
+
     @Override
     public FetchAccountsResponse fetchSavingsAccounts() {
         return this.refreshTransactionalAccounts(SAVING_ACCOUNTS);
     }
 
     private FetchAccountsResponse refreshTransactionalAccounts(RefreshableItem type) {
-        List<Account> refreshedAccounts = getAccounts().entrySet().stream()
-                .filter(set -> type.isAccountType(set.getValue().getType()))
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
+        List<Account> refreshedAccounts =
+                getAccounts().entrySet().stream()
+                        .filter(set -> type.isAccountType(set.getValue().getType()))
+                        .map(Map.Entry::getValue)
+                        .collect(Collectors.toList());
         return new FetchAccountsResponse(refreshedAccounts);
     }
 
@@ -1366,77 +1502,94 @@ public class LansforsakringarAgent extends AbstractAgent
         return this.refreshTransactionalAccountTransactions(CHECKING_TRANSACTIONS);
     }
 
-
     @Override
     public FetchTransactionsResponse fetchSavingsTransactions() {
         return this.refreshTransactionalAccountTransactions(SAVING_TRANSACTIONS);
     }
 
-    private FetchTransactionsResponse refreshTransactionalAccountTransactions(RefreshableItem type) {
+    private FetchTransactionsResponse refreshTransactionalAccountTransactions(
+            RefreshableItem type) {
         Map<Account, List<Transaction>> accountTransactions = new HashMap<>();
         getAccounts().entrySet().stream()
                 .filter(set -> type.isAccountType(set.getValue().getType()))
-                .forEach(set -> {
-                    AccountEntity accountEntity = set.getKey();
-                    Account account = set.getValue();
+                .forEach(
+                        set -> {
+                            AccountEntity accountEntity = set.getKey();
+                            Account account = set.getValue();
 
-                    List<Transaction> transactions = Lists.newArrayList();
-                    String accountNumber = accountEntity.getAccountNumber();
-                    // Fetch upcoming transactions.
+                            List<Transaction> transactions = Lists.newArrayList();
+                            String accountNumber = accountEntity.getAccountNumber();
+                            // Fetch upcoming transactions.
 
-                    for (UpcomingTransactionEntity transactionEntity : fetchUpcomingTransactions(accountNumber)) {
-                        Transfer transfer = createTransferForUpcomingPayment(transactionEntity);
-                        Transaction transaction = transactionEntity.toTransaction();
+                            for (UpcomingTransactionEntity transactionEntity :
+                                    fetchUpcomingTransactions(accountNumber)) {
+                                Transfer transfer =
+                                        createTransferForUpcomingPayment(transactionEntity);
+                                Transaction transaction = transactionEntity.toTransaction();
 
-                        if (transfer != null) {
-                            transfer.setId(UUIDUtils.fromTinkUUID(transaction.getId()));
+                                if (transfer != null) {
+                                    transfer.setId(UUIDUtils.fromTinkUUID(transaction.getId()));
 
-                            try {
-                                transaction.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER,
-                                        MAPPER.writeValueAsString(transfer));
-                            } catch (Exception e) {
-                                throw new IllegalStateException(e);
+                                    try {
+                                        transaction.setPayload(
+                                                TransactionPayloadTypes
+                                                        .EDITABLE_TRANSACTION_TRANSFER,
+                                                MAPPER.writeValueAsString(transfer));
+                                    } catch (Exception e) {
+                                        throw new IllegalStateException(e);
+                                    }
+                                    transaction.setPayload(
+                                            TransactionPayloadTypes
+                                                    .EDITABLE_TRANSACTION_TRANSFER_ID,
+                                            UUIDUtils.toTinkUUID(transfer.getId()));
+                                }
+
+                                transactions.add(transaction);
                             }
-                            transaction.setPayload(TransactionPayloadTypes.EDITABLE_TRANSACTION_TRANSFER_ID,
-                                    UUIDUtils.toTinkUUID(transfer.getId()));
-                        }
 
-                        transactions.add(transaction);
-                    }
+                            // Fetch transactions.
 
-                    // Fetch transactions.
+                            boolean hasMoreTransactions;
+                            int currentPage = 0;
 
-                    boolean hasMoreTransactions;
-                    int currentPage = 0;
+                            do {
+                                debug(request, "Requesting page " + (currentPage + 1));
 
-                    do {
-                        debug(request, "Requesting page " + (currentPage + 1));
+                                DebitTransactionListResponse transactionListResponse;
+                                try {
+                                    transactionListResponse =
+                                            createPostRequestWithResponseHandling(
+                                                    TRANSACTIONS_URL,
+                                                    DebitTransactionListResponse.class,
+                                                    new ListAccountTransactionRequest(
+                                                            currentPage, accountNumber));
+                                } catch (Exception e) {
+                                    throw new IllegalStateException(e);
+                                }
 
-                        DebitTransactionListResponse transactionListResponse;
-                        try {
-                            transactionListResponse = createPostRequestWithResponseHandling(
-                                    TRANSACTIONS_URL, DebitTransactionListResponse.class,
-                                    new ListAccountTransactionRequest(currentPage, accountNumber));
-                        } catch (Exception e) {
-                            throw new IllegalStateException(e);
-                        }
+                                debug(
+                                        request,
+                                        "Requested page size "
+                                                + MoreObjects.firstNonNull(
+                                                                transactionListResponse
+                                                                        .getTransactions(),
+                                                                Lists.newArrayList())
+                                                        .size());
 
-                        debug(request, "Requested page size " + MoreObjects
-                                .firstNonNull(transactionListResponse.getTransactions(), Lists.newArrayList()).size());
+                                for (TransactionEntity transactionEntity :
+                                        transactionListResponse.getTransactions()) {
+                                    transactions.add(transactionEntity.toTransaction());
+                                }
 
-                        for (TransactionEntity transactionEntity : transactionListResponse.getTransactions()) {
-                            transactions.add(transactionEntity.toTransaction());
-                        }
-
-                        if (isContentWithRefresh(account, transactions)) {
-                            hasMoreTransactions = false;
-                        } else {
-                            hasMoreTransactions = transactionListResponse.getHasMore();
-                            currentPage = transactionListResponse.getNextSequenceNumber();
-                        }
-                    } while (hasMoreTransactions);
-                    accountTransactions.put(account, transactions);
-                });
+                                if (isContentWithRefresh(account, transactions)) {
+                                    hasMoreTransactions = false;
+                                } else {
+                                    hasMoreTransactions = transactionListResponse.getHasMore();
+                                    currentPage = transactionListResponse.getNextSequenceNumber();
+                                }
+                            } while (hasMoreTransactions);
+                            accountTransactions.put(account, transactions);
+                        });
         return new FetchTransactionsResponse(accountTransactions);
     }
 
@@ -1491,14 +1644,23 @@ public class LansforsakringarAgent extends AbstractAgent
                 do {
                     debug(request, "Requesting page " + currentPage);
 
-                    CreditTransactionListResponse transactionListResponse = createPostRequestWithResponseHandling(
-                            FETCH_CARD_TRANSACTIONS_URL, CreditTransactionListResponse.class,
-                            new ListCardTransactionRequest(currentPage, account.getAccountNumber()));
+                    CreditTransactionListResponse transactionListResponse =
+                            createPostRequestWithResponseHandling(
+                                    FETCH_CARD_TRANSACTIONS_URL,
+                                    CreditTransactionListResponse.class,
+                                    new ListCardTransactionRequest(
+                                            currentPage, account.getAccountNumber()));
 
-                    debug(request, "Requested page size " + MoreObjects
-                            .firstNonNull(transactionListResponse.getTransactions(), Lists.newArrayList()).size());
+                    debug(
+                            request,
+                            "Requested page size "
+                                    + MoreObjects.firstNonNull(
+                                                    transactionListResponse.getTransactions(),
+                                                    Lists.newArrayList())
+                                            .size());
 
-                    for (CardTransactionEntity transactionEntity : transactionListResponse.getTransactions()) {
+                    for (CardTransactionEntity transactionEntity :
+                            transactionListResponse.getTransactions()) {
                         transactions.add(transactionEntity.toTransaction());
                     }
 
@@ -1537,10 +1699,14 @@ public class LansforsakringarAgent extends AbstractAgent
 
         for (LoanEntity le : loans.getLoans()) {
             try {
-                String detailsString = createPostRequestWithResponseHandling(FETCH_LOAN_DETAILS_URL, String.class,
-                        new LoanDetailsRequest(le.getLoanNumber()));
+                String detailsString =
+                        createPostRequestWithResponseHandling(
+                                FETCH_LOAN_DETAILS_URL,
+                                String.class,
+                                new LoanDetailsRequest(le.getLoanNumber()));
 
-                LoanDetailsEntity details = MAPPER.readValue(detailsString, LoanDetailsEntity.class);
+                LoanDetailsEntity details =
+                        MAPPER.readValue(detailsString, LoanDetailsEntity.class);
 
                 Account account = details.toAccount();
                 Loan loan = details.toLoan(detailsString);
@@ -1584,7 +1750,8 @@ public class LansforsakringarAgent extends AbstractAgent
         return new FetchTransactionsResponse(Collections.emptyMap());
     }
 
-    private Map<Account, AccountFeatures> refreshIskAccountsCopy() throws HttpStatusCodeErrorException {
+    private Map<Account, AccountFeatures> refreshIskAccountsCopy()
+            throws HttpStatusCodeErrorException {
 
         Map<Account, AccountFeatures> iskAccounts = new HashMap<>();
 
@@ -1593,20 +1760,24 @@ public class LansforsakringarAgent extends AbstractAgent
         InvestmentSavingsDepotResponse investmentSavingsDepotResponse;
 
         try {
-            investmentSavingsDepotResponse = MAPPER.readValue(investmentSavingsDepotResponseString,
-                    InvestmentSavingsDepotResponse.class);
+            investmentSavingsDepotResponse =
+                    MAPPER.readValue(
+                            investmentSavingsDepotResponseString,
+                            InvestmentSavingsDepotResponse.class);
         } catch (IOException e) {
-            log.warn("#lf - investment savings deserialization failed - " +
-                    investmentSavingsDepotResponseString, e);
+            log.warn(
+                    "#lf - investment savings deserialization failed - "
+                            + investmentSavingsDepotResponseString,
+                    e);
             return null;
         }
 
-        InvestmentSavingsDepotEntity investmentSavingsDepotWrapper = investmentSavingsDepotResponse
-                .getInvestmentSavingsDepotWrapper();
+        InvestmentSavingsDepotEntity investmentSavingsDepotWrapper =
+                investmentSavingsDepotResponse.getInvestmentSavingsDepotWrapper();
 
-        if (investmentSavingsDepotWrapper == null ||
-                investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers() == null ||
-                investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers().isEmpty())  {
+        if (investmentSavingsDepotWrapper == null
+                || investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers() == null
+                || investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers().isEmpty()) {
             return null;
         }
 
@@ -1614,73 +1785,97 @@ public class LansforsakringarAgent extends AbstractAgent
                 investmentSavingsDepotWrapper.getInvestmentSavingsDepotWrappers()) {
             Double totalValue = investmentDepotWrapper.getDepot().getTotalValue();
             Double balance = investmentDepotWrapper.getAccount().getBalance();
-            Double marketValue = totalValue != null && balance != null ? (totalValue - balance) : null;
+            Double marketValue =
+                    totalValue != null && balance != null ? (totalValue - balance) : null;
 
             Account account = investmentDepotWrapper.getAccount().toAccount(totalValue);
             String depotNumber = investmentDepotWrapper.getDepot().getDepotNumber();
             Double cashValue = null;
 
             try {
-                CashBalanceResponse cashBalanceResponse = createGetRequestFromUrlAndDepotNumber(
-                        CashBalanceResponse.class, ISK_CASH_BALANCE_URL, depotNumber);
+                CashBalanceResponse cashBalanceResponse =
+                        createGetRequestFromUrlAndDepotNumber(
+                                CashBalanceResponse.class, ISK_CASH_BALANCE_URL, depotNumber);
                 cashValue = cashBalanceResponse.getCashValue();
             } catch (URISyntaxException e) {
                 log.warn("Could not build URI", e);
             }
 
-            Portfolio portfolio = investmentDepotWrapper.getDepot().toPortfolio(marketValue, cashValue, Portfolio.Type.ISK);
+            Portfolio portfolio =
+                    investmentDepotWrapper
+                            .getDepot()
+                            .toPortfolio(marketValue, cashValue, Portfolio.Type.ISK);
 
             SecurityHoldingsResponse funds;
             SecurityHoldingsResponse stocks;
             try {
-                funds = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
-                        FUND_SECURITIES_URL, depotNumber);
-                stocks = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
-                        STOCK_SECURITIES_URL, depotNumber);
+                funds =
+                        createGetRequestFromUrlAndDepotNumber(
+                                SecurityHoldingsResponse.class, FUND_SECURITIES_URL, depotNumber);
+                stocks =
+                        createGetRequestFromUrlAndDepotNumber(
+                                SecurityHoldingsResponse.class, STOCK_SECURITIES_URL, depotNumber);
             } catch (URISyntaxException e) {
                 return null;
             }
 
             List<Instrument> instruments = Lists.newArrayList();
             // Add funds
-            funds.getSecurityHoldings().getFunds().forEach(fundEntity ->
-                    fundEntity.toInstrument().ifPresent(instruments::add));
+            funds.getSecurityHoldings()
+                    .getFunds()
+                    .forEach(fundEntity -> fundEntity.toInstrument().ifPresent(instruments::add));
 
             // Add stocks
-            stocks.getSecurityHoldings().getShares().forEach(shareEntity -> {
-                InstrumentDetailsResponse instrumentDetails;
-                try {
-                    instrumentDetails = getInstrumentDetails(depotNumber, shareEntity.getIsinCode());
-                    if (instrumentDetails == null) {
-                        return;
-                    }
-                } catch (HttpStatusCodeErrorException e) {
-                    // If the user don't have an fund depot this request will get a response with status code 400.
-                    // Just return and don't do anything.
-                    return;
-                }
+            stocks.getSecurityHoldings()
+                    .getShares()
+                    .forEach(
+                            shareEntity -> {
+                                InstrumentDetailsResponse instrumentDetails;
+                                try {
+                                    instrumentDetails =
+                                            getInstrumentDetails(
+                                                    depotNumber, shareEntity.getIsinCode());
+                                    if (instrumentDetails == null) {
+                                        return;
+                                    }
+                                } catch (HttpStatusCodeErrorException e) {
+                                    // If the user don't have an fund depot this request will get a
+                                    // response with status code 400.
+                                    // Just return and don't do anything.
+                                    return;
+                                }
 
-                shareEntity.toInstrument(instrumentDetails.getInstrument()).ifPresent(instruments::add);
-            });
+                                shareEntity
+                                        .toInstrument(instrumentDetails.getInstrument())
+                                        .ifPresent(instruments::add);
+                            });
 
             // Add bonds
-            stocks.getSecurityHoldings().getBonds().forEach(bondEntity -> {
-                InstrumentDetailsResponse instrumentDetails;
-                try {
-                    instrumentDetails = getInstrumentDetails(depotNumber, bondEntity.getIsinCode());
-                    if (instrumentDetails == null) {
-                        return;
-                    }
-                    log.info("#lf - bond details: " + MAPPER.writeValueAsString(instrumentDetails));
-                } catch (HttpStatusCodeErrorException e) {
-                    // If the user don't have an fund depot this request will get a response with status code 400.
-                    // Just return and don't do anything.
-                    return;
-                } catch (JsonProcessingException e) {
-                    // Just continue
-                }
-                bondEntity.toInstrument().ifPresent(instruments::add);
-            });
+            stocks.getSecurityHoldings()
+                    .getBonds()
+                    .forEach(
+                            bondEntity -> {
+                                InstrumentDetailsResponse instrumentDetails;
+                                try {
+                                    instrumentDetails =
+                                            getInstrumentDetails(
+                                                    depotNumber, bondEntity.getIsinCode());
+                                    if (instrumentDetails == null) {
+                                        return;
+                                    }
+                                    log.info(
+                                            "#lf - bond details: "
+                                                    + MAPPER.writeValueAsString(instrumentDetails));
+                                } catch (HttpStatusCodeErrorException e) {
+                                    // If the user don't have an fund depot this request will get a
+                                    // response with status code 400.
+                                    // Just return and don't do anything.
+                                    return;
+                                } catch (JsonProcessingException e) {
+                                    // Just continue
+                                }
+                                bondEntity.toInstrument().ifPresent(instruments::add);
+                            });
 
             portfolio.setInstruments(instruments);
 
@@ -1694,7 +1889,8 @@ public class LansforsakringarAgent extends AbstractAgent
         try {
             fundHoldingsResponse = createGetRequest(FUND_DEPOT_URL, FundHoldingsResponse.class);
         } catch (HttpStatusCodeErrorException e) {
-            // If the user don't have an fund depot this request will get a response with status code 400.
+            // If the user don't have an fund depot this request will get a response with status
+            // code 400.
             // Just return and don't do anything.
             return Optional.empty();
         }
@@ -1704,28 +1900,39 @@ public class LansforsakringarAgent extends AbstractAgent
 
         List<Instrument> instruments = Lists.newArrayList();
 
-        fundHoldingsResponse.getFunds().forEach(fundEntity -> {
-            String fundInformationUrlWithFundId;
-            try {
-                fundInformationUrlWithFundId = new URIBuilder(FUND_INFORMATION_URL)
-                        .addParameter("fundid", String.valueOf(fundEntity.getFundId()))
-                        .build()
-                        .toString();
-            } catch (URISyntaxException e) {
-                log.error("failed to create uri builder", e);
-                return;
-            }
+        fundHoldingsResponse
+                .getFunds()
+                .forEach(
+                        fundEntity -> {
+                            String fundInformationUrlWithFundId;
+                            try {
+                                fundInformationUrlWithFundId =
+                                        new URIBuilder(FUND_INFORMATION_URL)
+                                                .addParameter(
+                                                        "fundid",
+                                                        String.valueOf(fundEntity.getFundId()))
+                                                .build()
+                                                .toString();
+                            } catch (URISyntaxException e) {
+                                log.error("failed to create uri builder", e);
+                                return;
+                            }
 
-            FundInformationWrapper fundInformationWrapper;
-            try {
-                fundInformationWrapper = createGetRequest(fundInformationUrlWithFundId, FundInformationWrapper.class);
-            } catch (HttpStatusCodeErrorException e) {
-                log.warn("failed to fetch fund details", e);
-                return;
-            }
+                            FundInformationWrapper fundInformationWrapper;
+                            try {
+                                fundInformationWrapper =
+                                        createGetRequest(
+                                                fundInformationUrlWithFundId,
+                                                FundInformationWrapper.class);
+                            } catch (HttpStatusCodeErrorException e) {
+                                log.warn("failed to fetch fund details", e);
+                                return;
+                            }
 
-            fundEntity.toInstrument(fundInformationWrapper.getFundInformation()).ifPresent(instruments::add);
-        });
+                            fundEntity
+                                    .toInstrument(fundInformationWrapper.getFundInformation())
+                                    .ifPresent(instruments::add);
+                        });
         portfolio.setInstruments(instruments);
         return Optional.of(new Pair<>(account, AccountFeatures.createForPortfolios(portfolio)));
     }
@@ -1738,17 +1945,22 @@ public class LansforsakringarAgent extends AbstractAgent
             shareDepotResponse = createGetRequest(STOCK_DEPOT_URL, ShareDepotResponse.class);
             if (shareDepotResponse.getShareDepotWrapper() == null
                     || shareDepotResponse.getShareDepotWrapper().getDepot() == null
-                    || shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber() == null) {
+                    || shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber()
+                            == null) {
                 return Optional.empty();
             }
 
-            String depotNumber = shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber();
-            securityHoldingsResponse = createGetRequestFromUrlAndDepotNumber(SecurityHoldingsResponse.class,
-                    STOCK_DEPOT_HOLDINGS_URL, depotNumber);
-            cashBalanceResponse = createGetRequestFromUrlAndDepotNumber(CashBalanceResponse.class,
-                    STOCK_DEPOT_CASH_BALANCE_URL, depotNumber);
+            String depotNumber =
+                    shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber();
+            securityHoldingsResponse =
+                    createGetRequestFromUrlAndDepotNumber(
+                            SecurityHoldingsResponse.class, STOCK_DEPOT_HOLDINGS_URL, depotNumber);
+            cashBalanceResponse =
+                    createGetRequestFromUrlAndDepotNumber(
+                            CashBalanceResponse.class, STOCK_DEPOT_CASH_BALANCE_URL, depotNumber);
         } catch (HttpStatusCodeErrorException e) {
-            // If the user don't have an fund depot this request will get a response with status code 400.
+            // If the user don't have an fund depot this request will get a response with status
+            // code 400.
             // Just return and don't do anything.
             if (e.getResponse().getStatus() != 400) {
                 log.error("could not fetch fund depot", e);
@@ -1760,56 +1972,76 @@ public class LansforsakringarAgent extends AbstractAgent
             return Optional.empty();
         }
 
-        Optional<Account> account = securityHoldingsResponse.toShareDepotAccount(
-                shareDepotResponse.getShareDepotWrapper());
+        Optional<Account> account =
+                securityHoldingsResponse.toShareDepotAccount(
+                        shareDepotResponse.getShareDepotWrapper());
 
         if (!account.isPresent()) {
             return Optional.empty();
         }
 
-        Portfolio portfolio = securityHoldingsResponse.toShareDepotPortfolio(shareDepotResponse.getShareDepotWrapper(),
-                cashBalanceResponse.getCashValue());
+        Portfolio portfolio =
+                securityHoldingsResponse.toShareDepotPortfolio(
+                        shareDepotResponse.getShareDepotWrapper(),
+                        cashBalanceResponse.getCashValue());
 
         List<Instrument> instruments = Lists.newArrayList();
 
         String depotNumber = shareDepotResponse.getShareDepotWrapper().getDepot().getDepotNumber();
-        securityHoldingsResponse.getSecurityHoldings().getShares().forEach(shareEntity -> {
-            InstrumentDetailsResponse instrumentDetails;
+        securityHoldingsResponse
+                .getSecurityHoldings()
+                .getShares()
+                .forEach(
+                        shareEntity -> {
+                            InstrumentDetailsResponse instrumentDetails;
 
-            try {
-                instrumentDetails = getInstrumentDetails(depotNumber, shareEntity.getIsinCode());
-                if (instrumentDetails == null) {
-                    return;
-                }
-            } catch (HttpStatusCodeErrorException e) {
-                // If the user don't have an fund depot this request will get a response with status code 400.
-                // Just return and don't do anything.
-                return;
-            }
+                            try {
+                                instrumentDetails =
+                                        getInstrumentDetails(
+                                                depotNumber, shareEntity.getIsinCode());
+                                if (instrumentDetails == null) {
+                                    return;
+                                }
+                            } catch (HttpStatusCodeErrorException e) {
+                                // If the user don't have an fund depot this request will get a
+                                // response with status code 400.
+                                // Just return and don't do anything.
+                                return;
+                            }
 
-            shareEntity.toInstrument(instrumentDetails.getInstrument()).ifPresent(instruments::add);
-        });
+                            shareEntity
+                                    .toInstrument(instrumentDetails.getInstrument())
+                                    .ifPresent(instruments::add);
+                        });
 
-        securityHoldingsResponse.getSecurityHoldings().getBonds().forEach(bondEntity -> {
-            InstrumentDetailsResponse instrumentDetails;
-            try {
-                instrumentDetails = getInstrumentDetails(depotNumber, bondEntity.getIsinCode());
-                if (instrumentDetails == null) {
-                    return;
-                }
-                log.info("#lf - stockdepot - bond details: " + MAPPER.writeValueAsString(instrumentDetails));
-            } catch (HttpStatusCodeErrorException e) {
-                // If the user don't have an fund depot this request will get a response with status code 400.
-                // Just return and don't do anything.
-                return;
-            } catch (JsonProcessingException e) {
-                // Just continue
-            }
-            bondEntity.toInstrument().ifPresent(instruments::add);
-        });
+        securityHoldingsResponse
+                .getSecurityHoldings()
+                .getBonds()
+                .forEach(
+                        bondEntity -> {
+                            InstrumentDetailsResponse instrumentDetails;
+                            try {
+                                instrumentDetails =
+                                        getInstrumentDetails(depotNumber, bondEntity.getIsinCode());
+                                if (instrumentDetails == null) {
+                                    return;
+                                }
+                                log.info(
+                                        "#lf - stockdepot - bond details: "
+                                                + MAPPER.writeValueAsString(instrumentDetails));
+                            } catch (HttpStatusCodeErrorException e) {
+                                // If the user don't have an fund depot this request will get a
+                                // response with status code 400.
+                                // Just return and don't do anything.
+                                return;
+                            } catch (JsonProcessingException e) {
+                                // Just continue
+                            }
+                            bondEntity.toInstrument().ifPresent(instruments::add);
+                        });
         portfolio.setInstruments(instruments);
-        return Optional.of(new Pair<>(account.get(), AccountFeatures.createForPortfolios(portfolio)));
+        return Optional.of(
+                new Pair<>(account.get(), AccountFeatures.createForPortfolios(portfolio)));
     }
     /////////////////////////////////////
 }
-

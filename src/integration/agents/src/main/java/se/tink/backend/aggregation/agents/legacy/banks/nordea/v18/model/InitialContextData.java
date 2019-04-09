@@ -1,10 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v18.model;
 
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlRootElement;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlRootElement

@@ -7,38 +7,55 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FundDetails {
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("Id")
     private String id;
+
     @JsonProperty("Active")
     private boolean active;
+
     @JsonProperty("Buyable")
     private boolean buyable;
+
     @JsonProperty("Currency")
     private CurrencyEntity currency; // "Code": "kr"
+
     @JsonProperty("CountryCodeTwoChars")
     private String countryCode;
+
     @JsonProperty("TradingCode")
     private String tradingCode; // SEK for swedish
+
     @JsonProperty("NetAssetValue")
     private double newAssetValue;
+
     @JsonProperty("NetAssetValueDate")
     private String netAssetValueDate;
+
     @JsonProperty("ISIN")
     private String isin;
+
     @JsonProperty("MorningstarId")
     private String morningstarId;
+
     @JsonProperty("Rating")
     private int rating;
+
     @JsonProperty("Risk")
     private int risk;
+
     @JsonProperty("Fees")
     private FeeEntity fees;
+
     @JsonProperty("Category")
     private String category;
+
     @JsonProperty("Development")
     private DevelopmentEntity development;
+
     @JsonProperty("MinimumBuyAmount")
     private String minimumBuyAmount;
+
     @JsonProperty("SustainabilityRating")
     private int sustainabilityRating;
 

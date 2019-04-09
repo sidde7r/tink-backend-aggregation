@@ -6,15 +6,19 @@ import java.util.List;
 import se.tink.backend.aggregation.agents.banks.danskebank.v2.rpc.AbstractResponse;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PapersListResponse extends AbstractResponse{
+public class PapersListResponse extends AbstractResponse {
     @JsonProperty("Papers")
     private List<PaperEntity> papers;
+
     @JsonProperty("PortfolioChangeValue")
     private Double portfolioChangeValue;
+
     @JsonProperty("PortfolioName")
     private String portfolioName;
+
     @JsonProperty("PortfolioTotalValue")
     private Double portfolioTotalValue;
+
     @JsonProperty("Sorted")
     private Boolean sorted;
 

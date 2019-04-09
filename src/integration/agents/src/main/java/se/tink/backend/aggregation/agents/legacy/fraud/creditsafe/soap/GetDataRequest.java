@@ -5,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GETDATA_REQUEST complex type.
- * 
+ * Java class for GETDATA_REQUEST complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="GETDATA_REQUEST">
  *   &lt;complexContent>
@@ -28,42 +27,45 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GETDATA_REQUEST", propOrder = {
-    "account",
-    "blockName",
-    "searchNumber",
-    "formattedOutput",
-    "lodCustFreeText",
-    "mobile",
-    "email"
-})
+@XmlType(
+        name = "GETDATA_REQUEST",
+        propOrder = {
+            "account",
+            "blockName",
+            "searchNumber",
+            "formattedOutput",
+            "lodCustFreeText",
+            "mobile",
+            "email"
+        })
 public class GetDataRequest {
 
     protected Account account;
+
     @XmlElement(name = "Block_Name")
     protected String blockName;
+
     @XmlElement(name = "SearchNumber")
     protected String searchNumber;
+
     @XmlElement(name = "FormattedOutput")
     protected String formattedOutput;
+
     @XmlElement(name = "LODCustFreeText")
     protected String lodCustFreeText;
+
     @XmlElement(name = "Mobile")
     protected String mobile;
+
     @XmlElement(name = "Email")
     protected String email;
 
     /**
      * Gets the value of the account property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Account }
-     *     
+     *
+     * @return possible object is {@link Account }
      */
     public Account getAccount() {
         return account;
@@ -71,11 +73,8 @@ public class GetDataRequest {
 
     /**
      * Sets the value of the account property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Account }
-     *     
+     *
+     * @param value allowed object is {@link Account }
      */
     public void setAccount(Account value) {
         this.account = value;
@@ -83,11 +82,8 @@ public class GetDataRequest {
 
     /**
      * Gets the value of the blockName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getBlockName() {
         return blockName;
@@ -95,11 +91,8 @@ public class GetDataRequest {
 
     /**
      * Sets the value of the blockName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setBlockName(String value) {
         this.blockName = value;
@@ -107,11 +100,8 @@ public class GetDataRequest {
 
     /**
      * Gets the value of the searchNumber property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getSearchNumber() {
         return searchNumber;
@@ -119,11 +109,8 @@ public class GetDataRequest {
 
     /**
      * Sets the value of the searchNumber property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setSearchNumber(String value) {
         this.searchNumber = value;
@@ -131,11 +118,8 @@ public class GetDataRequest {
 
     /**
      * Gets the value of the formattedOutput property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getFormattedOutput() {
         return formattedOutput;
@@ -143,11 +127,8 @@ public class GetDataRequest {
 
     /**
      * Sets the value of the formattedOutput property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setFormattedOutput(String value) {
         this.formattedOutput = value;
@@ -155,11 +136,8 @@ public class GetDataRequest {
 
     /**
      * Gets the value of the lodCustFreeText property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getLODCustFreeText() {
         return lodCustFreeText;
@@ -167,11 +145,8 @@ public class GetDataRequest {
 
     /**
      * Sets the value of the lodCustFreeText property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setLODCustFreeText(String value) {
         this.lodCustFreeText = value;
@@ -179,11 +154,8 @@ public class GetDataRequest {
 
     /**
      * Gets the value of the mobile property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getMobile() {
         return mobile;
@@ -191,11 +163,8 @@ public class GetDataRequest {
 
     /**
      * Sets the value of the mobile property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setMobile(String value) {
         this.mobile = value;
@@ -203,11 +172,8 @@ public class GetDataRequest {
 
     /**
      * Gets the value of the email property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getEmail() {
         return email;
@@ -215,14 +181,10 @@ public class GetDataRequest {
 
     /**
      * Sets the value of the email property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setEmail(String value) {
         this.email = value;
     }
-
 }

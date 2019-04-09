@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import se.tink.libraries.serialization.utils.SerializationUtils;
 import se.tink.backend.aggregation.agents.abnamro.client.model.ErrorEntity;
+import se.tink.libraries.serialization.utils.SerializationUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ErrorResponse {
@@ -33,9 +33,7 @@ public class ErrorResponse {
         return Optional.empty();
     }
 
-    /**
-     * Message text of a message entity is quite messy so serialize the whole thing to json
-     */
+    /** Message text of a message entity is quite messy so serialize the whole thing to json */
     public String getErrorDetails() {
         return messages == null ? null : SerializationUtils.serializeToString(messages);
     }

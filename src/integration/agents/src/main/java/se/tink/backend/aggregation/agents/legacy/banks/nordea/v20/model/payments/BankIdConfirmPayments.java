@@ -56,8 +56,7 @@ public class BankIdConfirmPayments {
         return confirmationStatus;
     }
 
-    public void setConfirmationStatus(
-            BankIdConfirmPaymentsStatus confirmationStatus) {
+    public void setConfirmationStatus(BankIdConfirmPaymentsStatus confirmationStatus) {
         this.confirmationStatus = confirmationStatus;
     }
 }

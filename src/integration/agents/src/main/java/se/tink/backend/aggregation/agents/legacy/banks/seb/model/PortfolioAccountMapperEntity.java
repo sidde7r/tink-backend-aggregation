@@ -7,18 +7,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PortfolioAccountMapperEntity {
     @JsonProperty("ROW_ID")
     private Integer rowId;
+
     @JsonProperty("DEPA_ID")
     private String depotId;
+
     @JsonProperty("KONTO_NR")
     private String accountNumber;
+
     @JsonProperty("VALUTA_KOD")
     private String currency;
+
     @JsonProperty("KTO_FUNK_KOD")
-    private Integer accountCode; // Looks like this is 3 for the mapping between depot id and the real account number;
+    private Integer
+            accountCode; // Looks like this is 3 for the mapping between depot id and the real
+                         // account number;
+
     @JsonProperty("DISP_BEL")
     private Double availableAmount; // Looks like this value always is 0.00
+
     @JsonProperty("BOKF_SALDO")
     private Double bookedAmount; // Looks like this value always is 0.00
+
     @JsonProperty("KHAV")
     private String accountOwner; // Looks like this is just a bunch of white spaces
 

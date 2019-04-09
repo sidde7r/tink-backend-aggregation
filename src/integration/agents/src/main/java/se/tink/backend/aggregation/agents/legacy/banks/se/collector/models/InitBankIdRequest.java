@@ -19,8 +19,6 @@ public class InitBankIdRequest {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("pnr", ssn)
-                .toString();
+        return MoreObjects.toStringHelper(this).add("pnr", ssn).toString();
     }
 }

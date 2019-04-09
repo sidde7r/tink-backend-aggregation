@@ -9,16 +9,17 @@ import com.google.api.client.util.Maps;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.models.LoanDetails;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.models.LoanDetails;
+import se.tink.libraries.date.ThreadSafeDateFormat;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MortgageEntity {
     private static final Splitter SPLITTER = Splitter.on(CharMatcher.BREAKING_WHITESPACE);
@@ -51,12 +52,13 @@ public class MortgageEntity {
     }
 
     public Double getInterestRate() {
-        return AgentParsingUtils.parsePercentageFormInterest(transformedMortgageDetails.get("Aktuell räntesats"));
+        return AgentParsingUtils.parsePercentageFormInterest(
+                transformedMortgageDetails.get("Aktuell räntesats"));
     }
 
     public Double getInitialDebt() {
         String initialDebt = transformedMortgageDetails.get("Ursprunglig skuld");
-        if(!Strings.isNullOrEmpty(initialDebt)) {
+        if (!Strings.isNullOrEmpty(initialDebt)) {
             return AgentParsingUtils.parseAmountTrimCurrency(initialDebt);
         }
         return null;
@@ -77,8 +79,10 @@ public class MortgageEntity {
 
             Iterable<String> timeDescription = SPLITTER.split(cleanPeriodDescription);
             if (Iterables.size(timeDescription) == 3) {
-                return AgentParsingUtils
-                        .parseNumMonthsBound(Iterables.get(timeDescription, 1) + " " + Iterables.get(timeDescription, 2));
+                return AgentParsingUtils.parseNumMonthsBound(
+                        Iterables.get(timeDescription, 1)
+                                + " "
+                                + Iterables.get(timeDescription, 2));
             }
         }
         return null;
@@ -122,7 +126,7 @@ public class MortgageEntity {
         Map<String, String> map = Maps.newHashMap();
 
         for (Map<String, String> keyValuePair : mortgageDetails) {
-            map.put(keyValuePair.get("Key"),keyValuePair.get("Value"));
+            map.put(keyValuePair.get("Key"), keyValuePair.get("Value"));
         }
 
         this.transformedMortgageDetails = map;
@@ -171,8 +175,10 @@ public class MortgageEntity {
         loanDetails.setCoApplicant(applicantHelper.isCoApplicants());
 
         SecurityEntity securities = new SecurityEntity();
-        securities.setSecurity(getSecurity()); // The getter and setter are from two different classes
-        securities.setTypeOfSecurity(getTypeOfSecurity()); // The getter and setter are from two different classes
+        securities.setSecurity(
+                getSecurity()); // The getter and setter are from two different classes
+        securities.setTypeOfSecurity(
+                getTypeOfSecurity()); // The getter and setter are from two different classes
         loanDetails.setLoanSecurity(MAPPER.writeValueAsString(securities));
 
         loan.setLoanDetails(loanDetails);

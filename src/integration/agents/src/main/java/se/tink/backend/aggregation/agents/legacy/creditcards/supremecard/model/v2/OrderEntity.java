@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class OrderEntity {
     @JsonProperty("autoStartToken")
     private String autoStartToken;
+
     @JsonProperty("collectUrl")
     private String collectUrl;
+
     @JsonProperty("orderRef")
     private String orderRef;
 

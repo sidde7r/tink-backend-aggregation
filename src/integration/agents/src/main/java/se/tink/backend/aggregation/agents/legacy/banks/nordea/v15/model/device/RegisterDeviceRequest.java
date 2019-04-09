@@ -15,5 +15,4 @@ public class RegisterDeviceRequest {
     public void setData(RegisterDeviceRequestData data) {
         this.data = data;
     }
-
 }

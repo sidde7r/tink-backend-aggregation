@@ -17,8 +17,8 @@ public class ErrorResponse {
     public boolean isUserCancel() {
         String lowerCaseMessage = Optional.ofNullable(message).orElse("").toLowerCase();
 
-        return lowerCaseMessage.contains(AvanzaV2Constants.AuthError.USER_CANCEL) ||
-                lowerCaseMessage.contains(AvanzaV2Constants.AuthError.CANCELLED);
+        return lowerCaseMessage.contains(AvanzaV2Constants.AuthError.USER_CANCEL)
+                || lowerCaseMessage.contains(AvanzaV2Constants.AuthError.CANCELLED);
     }
 
     public int getStatusCode() {

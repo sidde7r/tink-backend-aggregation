@@ -5,16 +5,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AuthenticateBankIdResponse {
     @JsonProperty("State")
     private Integer state;
+
     @JsonProperty("IsMobileDevice")
     private Boolean isMobileDevice;
+
     @JsonProperty("AutoStartUrl")
     private String autostartUrl;
+
     @JsonProperty("IsAjaxResponse")
     private boolean isAjaxResponse;
+
     @JsonProperty("Message")
     private FailMessage message;
+
     @JsonProperty("RedirectUrl")
     private String redirectUrl;
+
     @JsonProperty("UseBankidAppswitchUrl")
     private String useBankIdAppSwitchUrl;
 

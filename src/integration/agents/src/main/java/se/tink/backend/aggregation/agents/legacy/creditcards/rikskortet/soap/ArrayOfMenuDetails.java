@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import java.util.ArrayList;
@@ -8,12 +7,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ArrayOfMenuDetails complex type.
- * 
+ * Java class for ArrayOfMenuDetails complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="ArrayOfMenuDetails">
  *   &lt;complexContent>
@@ -25,13 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ArrayOfMenuDetails", propOrder = {
-    "menuDetails"
-})
+@XmlType(
+        name = "ArrayOfMenuDetails",
+        propOrder = {"menuDetails"})
 public class ArrayOfMenuDetails {
 
     @XmlElement(name = "MenuDetails", nillable = true)
@@ -39,25 +35,18 @@ public class ArrayOfMenuDetails {
 
     /**
      * Gets the value of the menuDetails property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the menuDetails property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
+     * modification you make to the returned list will be present inside the JAXB object. This is
+     * why there is not a <CODE>set</CODE> method for the menuDetails property.
+     *
+     * <p>For example, to add a new item, do as follows:
+     *
      * <pre>
      *    getMenuDetails().add(newItem);
      * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link MenuDetails }
-     * 
-     * 
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link MenuDetails }
      */
     public List<MenuDetails> getMenuDetails() {
         if (menuDetails == null) {
@@ -65,5 +54,4 @@ public class ArrayOfMenuDetails {
         }
         return this.menuDetails;
     }
-
 }

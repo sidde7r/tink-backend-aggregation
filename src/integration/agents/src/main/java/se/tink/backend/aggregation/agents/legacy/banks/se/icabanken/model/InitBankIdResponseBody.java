@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class InitBankIdResponseBody {
     @JsonProperty("Status")
     private String status;
+
     @JsonProperty("AutostartToken")
     private String autostartToken;
+
     @JsonProperty("RequestId")
     private String requestId;
 
@@ -35,5 +37,4 @@ public class InitBankIdResponseBody {
     public void setRequestId(String requestId) {
         this.requestId = requestId;
     }
-
 }

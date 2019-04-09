@@ -23,7 +23,7 @@ public class SBABClient {
     final ObjectMapper MAPPER = new ObjectMapper();
 
     protected String signBaseUrl;
-    
+
     static final String SECURE_BASE_URL = "https://secure.sbab.se";
     static final String IDP_BASE_URL = "https://idp.sbab.se";
     static final String OVERVIEW_URL = SECURE_BASE_URL + "/privat";
@@ -37,14 +37,16 @@ public class SBABClient {
         this.credentials = credentials;
         this.userAgent = userAgent;
     }
-    
+
     public void setConfiguration(SBABConfiguration sbabConfiguration) {
         this.signBaseUrl = sbabConfiguration.getSignBaseUrl();
     }
 
     Builder createRequest(String url) {
         Builder builder = client.resource(url).header("User-Agent", userAgent);
-        return Strings.isNullOrEmpty(remoteIp) ? builder : builder.header("X-Forwarded-For", remoteIp);
+        return Strings.isNullOrEmpty(remoteIp)
+                ? builder
+                : builder.header("X-Forwarded-For", remoteIp);
     }
 
     Builder createFormEncodedHtmlRequest(String url) {
@@ -79,7 +81,8 @@ public class SBABClient {
                 .accept(MediaType.APPLICATION_JSON);
     }
 
-    Builder createRequestWithOptionalTypeRefererAndBearerToken(String url, String referer, String mediaType) {
+    Builder createRequestWithOptionalTypeRefererAndBearerToken(
+            String url, String referer, String mediaType) {
         return createRequest(url)
                 .type(mediaType)
                 .header("Referer", referer)
@@ -105,16 +108,19 @@ public class SBABClient {
 
     String getRedirectUrl(ClientResponse response, String baseUrl) throws URISyntaxException {
         String location = response.getHeaders().getFirst("Location");
-        Preconditions.checkState(!Strings.isNullOrEmpty(location),"Did not get redirect url in response from bank.");
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(location),
+                "Did not get redirect url in response from bank.");
         return hasHost(location) ? location : baseUrl + location;
     }
 
-    /**
-     * Sometimes a referer must be set since the bank otherwise returns a CSRF error page.
-     */
+    /** Sometimes a referer must be set since the bank otherwise returns a CSRF error page. */
     Document getJsoupDocumentWithReferer(String url, String referer) throws Exception {
-        return Jsoup.parse(createRequest(url).accept(MediaType.TEXT_HTML)
-                .header("Referer", referer).get(String.class));
+        return Jsoup.parse(
+                createRequest(url)
+                        .accept(MediaType.TEXT_HTML)
+                        .header("Referer", referer)
+                        .get(String.class));
     }
 
     String portletResponseToValidJson(String portletResponse) {
@@ -141,19 +147,19 @@ public class SBABClient {
     public void setRemoteIp(String remoteIp) {
         this.remoteIp = remoteIp;
     }
-    
+
     protected String getUrl(String baseUrl, String path) {
         return baseUrl + path;
     }
-    
+
     protected String getUrl(String baseUrl, String path, Object... args) {
         return String.format(getUrl(baseUrl, path), args);
     }
-    
+
     protected String getSignUrl(String path) {
         return getUrl(signBaseUrl, path);
     }
-    
+
     protected String getSignUrl(String path, Object... args) {
         return String.format(getSignUrl(path), args);
     }

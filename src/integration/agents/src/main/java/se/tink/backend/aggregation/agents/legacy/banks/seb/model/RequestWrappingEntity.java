@@ -9,6 +9,7 @@ import java.util.List;
 public class RequestWrappingEntity {
     @JsonProperty("__type")
     private String type = "SEB_CS.SEBCSService";
+
     @JsonProperty("ServiceInput")
     private List<ServiceInput> serviceInput = Lists.newArrayList();
 

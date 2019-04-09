@@ -22,5 +22,4 @@ public class LightLoginResponse {
     public void setErrorMessage(ErrorMessage errorMessage) {
         this.errorMessage = errorMessage;
     }
-
 }

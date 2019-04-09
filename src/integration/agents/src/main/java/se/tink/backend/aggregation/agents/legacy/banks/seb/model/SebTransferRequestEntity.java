@@ -7,25 +7,29 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import se.tink.backend.aggregation.agents.banks.seb.SEBAgentUtils;
 import se.tink.backend.aggregation.agents.banks.seb.SebAccountIdentifierFormatter;
-import se.tink.libraries.transfer.rpc.Transfer;
 import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatter;
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
+import se.tink.libraries.transfer.rpc.Transfer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SebTransferRequestEntity implements MatchableTransferRequestEntity {
-    private static final AccountIdentifierFormatter SEB_ACCOUNT_IDENTIFIER_FORMATTER = new SebAccountIdentifierFormatter();
+    private static final AccountIdentifierFormatter SEB_ACCOUNT_IDENTIFIER_FORMATTER =
+            new SebAccountIdentifierFormatter();
 
     public SebTransferRequestEntity() {}
 
     SebTransferRequestEntity(Transfer transfer, String customerNumber) {
         Amount = formatAmmountWith2Decimals(transfer);
         CustomerNumber = customerNumber;
-        DestinationAccount = transfer.getDestination().getIdentifier(SEB_ACCOUNT_IDENTIFIER_FORMATTER);
+        DestinationAccount =
+                transfer.getDestination().getIdentifier(SEB_ACCOUNT_IDENTIFIER_FORMATTER);
         SourceAccount = transfer.getSource().getIdentifier(new DefaultAccountIdentifierFormatter());
     }
 
     private static Double formatAmmountWith2Decimals(Transfer transfer) {
-        return new BigDecimal(transfer.getAmount().getValue()).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        return new BigDecimal(transfer.getAmount().getValue())
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 
     @JsonProperty("UPPDRAG_BEL")
@@ -50,15 +54,18 @@ public class SebTransferRequestEntity implements MatchableTransferRequestEntity 
     @JsonIgnore
     public boolean matches(TransferListEntity transferListEntity) {
         // Source and destination accounts cannot be null
-        if (this.DestinationAccount == null || this.SourceAccount == null ||
-                transferListEntity.SourceAccountNumber == null || transferListEntity.DestinationAccountNumber == null) {
+        if (this.DestinationAccount == null
+                || this.SourceAccount == null
+                || transferListEntity.SourceAccountNumber == null
+                || transferListEntity.DestinationAccountNumber == null) {
             return false;
         }
 
         // Accounts and the amount must match
-        return
-                SEBAgentUtils.trimmedDashAgnosticEquals(this.DestinationAccount, transferListEntity.DestinationAccountNumber) &&
-                SEBAgentUtils.trimmedDashAgnosticEquals(this.SourceAccount, transferListEntity.SourceAccountNumber) &&
-                Math.abs(this.Amount - transferListEntity.Amount) < 0.01;
+        return SEBAgentUtils.trimmedDashAgnosticEquals(
+                        this.DestinationAccount, transferListEntity.DestinationAccountNumber)
+                && SEBAgentUtils.trimmedDashAgnosticEquals(
+                        this.SourceAccount, transferListEntity.SourceAccountNumber)
+                && Math.abs(this.Amount - transferListEntity.Amount) < 0.01;
     }
 }

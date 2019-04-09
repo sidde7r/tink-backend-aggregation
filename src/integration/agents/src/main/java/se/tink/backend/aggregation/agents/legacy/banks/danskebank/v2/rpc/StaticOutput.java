@@ -7,12 +7,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class StaticOutput {
     @JsonProperty("ModuleOutput")
     private BankIdModuleOutput moduleOutput;
+
     @JsonProperty("FixedOutput")
     private FixedOutput fixedOutput;
 
-    public StaticOutput() {
-
-    }
+    public StaticOutput() {}
 
     public StaticOutput(BankIdModuleOutput moduleOutput) {
         this.moduleOutput = moduleOutput;
@@ -33,5 +32,4 @@ public class StaticOutput {
     public void setFixedOutput(FixedOutput fixedOutput) {
         this.fixedOutput = fixedOutput;
     }
-
 }

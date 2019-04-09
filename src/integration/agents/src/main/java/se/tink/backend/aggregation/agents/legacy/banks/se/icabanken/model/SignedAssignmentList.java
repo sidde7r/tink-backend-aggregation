@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import java.util.List;

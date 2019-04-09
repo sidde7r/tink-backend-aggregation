@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
@@ -83,7 +82,7 @@ public class RecipientEntity implements GeneralAccountEntity {
             return new PlusGiroIdentifier(giroNumber);
         }
 
-        throw new RuntimeException ("unknown giro number: " + giroNumber);
+        throw new RuntimeException("unknown giro number: " + giroNumber);
     }
 
     @Override

@@ -38,9 +38,6 @@ public class LoanPostResponse {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("applicationId", applicationId)
-                .toString();
+        return MoreObjects.toStringHelper(this).add("applicationId", applicationId).toString();
     }
 }
-

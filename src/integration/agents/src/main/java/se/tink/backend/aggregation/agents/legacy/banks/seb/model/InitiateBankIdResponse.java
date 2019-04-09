@@ -6,10 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InitiateBankIdResponse {
     private String status;
+
     @JsonProperty("next_request")
     private NextRequestEntity nextRequest;
+
     @JsonProperty("autostarttoken")
     private String autostartToken;
+
     private String message;
     private String rfa;
 

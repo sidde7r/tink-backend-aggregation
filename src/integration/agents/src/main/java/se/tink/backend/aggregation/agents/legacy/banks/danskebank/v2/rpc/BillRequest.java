@@ -80,7 +80,10 @@ public class BillRequest {
 
     public void setDate(Date date) {
         if (date == null) {
-            this.date = "\\/Date(" + DateUtils.getNextBusinessDay().getTime() / 1000 * 1000 + "+0200)\\/";
+            this.date =
+                    "\\/Date("
+                            + DateUtils.getNextBusinessDay().getTime() / 1000 * 1000
+                            + "+0200)\\/";
         } else {
             this.date = "\\/Date(" + date.getTime() / 1000 * 1000 + "+0200)\\/";
         }

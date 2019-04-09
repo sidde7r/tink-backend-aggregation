@@ -2,31 +2,37 @@ package se.tink.backend.aggregation.agents.creditcards.coop.v2.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import se.tink.backend.aggregation.agents.creditcards.coop.v2.AccountType;
+import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.creditcards.coop.v2.AccountType;
 import se.tink.libraries.account.identifiers.PlusGiroIdentifier;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountEntity {
     @JsonProperty("AccountType")
     private int accountType;
+
     @JsonProperty("Balance")
     private Double balance;
+
     @JsonProperty("CreditLimit")
     private Integer creditLimit;
+
     @JsonProperty("CanSetInternetAndForeignPayments")
     private Boolean canMakeOnlineAndForeignPayments;
+
     @JsonProperty("Details")
     private List<AccountDetailsEntity> accountDetails;
+
     @JsonProperty("Name")
     private String accountName;
+
     @JsonProperty("TotalBalance")
     private Double totalBalance;
 
@@ -75,8 +81,7 @@ public class AccountEntity {
         return accountDetails;
     }
 
-    public void setAccountDetails(
-            List<AccountDetailsEntity> accountDetails) {
+    public void setAccountDetails(List<AccountDetailsEntity> accountDetails) {
         this.accountDetails = accountDetails;
     }
 
@@ -114,11 +119,12 @@ public class AccountEntity {
     }
 
     /**
-     * To be able to easily do transfers to the account we can add the plusgiro identifier with OCR that should be
-     * available on all coop accounts that you can pay to. There might be accounts that are special, so we only add
-     * those with valid ocr and plusgiro.
+     * To be able to easily do transfers to the account we can add the plusgiro identifier with OCR
+     * that should be available on all coop accounts that you can pay to. There might be accounts
+     * that are special, so we only add those with valid ocr and plusgiro.
      */
-    private static Optional<PlusGiroIdentifier> getAccountIdentifier(Map<String, String> accountDetailsMap) {
+    private static Optional<PlusGiroIdentifier> getAccountIdentifier(
+            Map<String, String> accountDetailsMap) {
         String plusGiro = accountDetailsMap.get("plusgironumber");
         String ocr = accountDetailsMap.get("ocrnumber");
 
@@ -157,16 +163,16 @@ public class AccountEntity {
         }
 
         switch (type) {
-        case MEDMERA_MER:
-        case MEDMERA_EFTER_1:
-        case MEDMERA_EFTER_2:
-        case MEDMERA_FORE:
-        case MEDMERA_FAKTURA:
-        case MEDMERA_VISA:
-            return AccountTypes.CREDIT_CARD;
-        case MEDMERA_KONTO:
-        default:
-            return AccountTypes.OTHER;
+            case MEDMERA_MER:
+            case MEDMERA_EFTER_1:
+            case MEDMERA_EFTER_2:
+            case MEDMERA_FORE:
+            case MEDMERA_FAKTURA:
+            case MEDMERA_VISA:
+                return AccountTypes.CREDIT_CARD;
+            case MEDMERA_KONTO:
+            default:
+                return AccountTypes.OTHER;
         }
     }
 }

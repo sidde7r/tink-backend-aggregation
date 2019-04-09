@@ -46,5 +46,4 @@ public class BankEntity {
     public void setFullRuleMessage(String fullRuleMessage) {
         this.fullRuleMessage = fullRuleMessage;
     }
-
 }

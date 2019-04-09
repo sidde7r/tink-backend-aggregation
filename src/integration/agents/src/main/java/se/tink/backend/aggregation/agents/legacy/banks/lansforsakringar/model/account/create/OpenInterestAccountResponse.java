@@ -10,6 +10,7 @@ public class OpenInterestAccountResponse {
 
     @JsonProperty("currentInterests")
     private List<OpenInterestAccountOption> accountOptions = Lists.newArrayList();
+
     private String changeDate;
 
     public String getChangeDate() {

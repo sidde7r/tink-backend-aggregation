@@ -1,9 +1,8 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v14.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AuthenticationToken {
@@ -70,5 +69,4 @@ public class AuthenticationToken {
     public void setToken(Map<String, Object> token) {
         this.token = token;
     }
-
 }

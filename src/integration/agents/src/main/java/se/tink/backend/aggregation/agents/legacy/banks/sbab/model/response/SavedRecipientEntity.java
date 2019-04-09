@@ -4,9 +4,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import se.tink.backend.aggregation.agents.general.models.GeneralAccountEntity;
+import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import se.tink.backend.aggregation.log.AggregationLogger;
 
 public class SavedRecipientEntity implements GeneralAccountEntity {
 
@@ -52,16 +52,15 @@ public class SavedRecipientEntity implements GeneralAccountEntity {
         this.isUserAccount = isUserAccount;
     }
 
-    /**
-     * The recipient String should be on the format "12345|BI|ExampleName".
-     */
+    /** The recipient String should be on the format "12345|BI|ExampleName". */
     public static Optional<SavedRecipientEntity> createFromString(String recipientString) {
         SavedRecipientEntity recipientEntity = new SavedRecipientEntity();
 
         Matcher matcher = pattern.matcher(recipientString);
 
         if (!matcher.matches()) {
-            log.error("The given recipient string (" + recipientString + ") has an unknown format.");
+            log.error(
+                    "The given recipient string (" + recipientString + ") has an unknown format.");
             return Optional.empty();
         }
 
@@ -70,8 +69,10 @@ public class SavedRecipientEntity implements GeneralAccountEntity {
 
         // SBAB has account numbers with only numbers in them and no additional characters.
         if (!accountNumber.matches("\\d+")) {
-            log.error("The given recipient string (" + recipientString
-                    + ") contains an account number with an unknown format.");
+            log.error(
+                    "The given recipient string ("
+                            + recipientString
+                            + ") contains an account number with an unknown format.");
             return Optional.empty();
         }
 
@@ -87,8 +88,8 @@ public class SavedRecipientEntity implements GeneralAccountEntity {
     }
 
     /**
-     * New recipients are formatted in the same way as existing ones, except for the fields being replaced
-     * by "-" characters.
+     * New recipients are formatted in the same way as existing ones, except for the fields being
+     * replaced by "-" characters.
      */
     public static Optional<String> getNewRecipientIdentifier(String accountNumber) {
         SavedRecipientEntity savedRecipientEntity = new SavedRecipientEntity();
@@ -98,9 +99,7 @@ public class SavedRecipientEntity implements GeneralAccountEntity {
         return savedRecipientEntity.getSBABIdentifier();
     }
 
-    /**
-     * Used at SBAB to identify an account.
-     */
+    /** Used at SBAB to identify an account. */
     public Optional<String> getSBABIdentifier() {
         if (getAccountNumber() != null && getLabel() != null && getName() != null) {
             return Optional.of(getAccountNumber() + "|" + getLabel() + "|" + getName());

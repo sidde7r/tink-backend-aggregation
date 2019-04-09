@@ -16,6 +16,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.aggregation.agents.banks.sbab.exception.UnacceptedTermsAndConditionsException;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.AccountEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.AccountsResponse;
@@ -24,24 +26,25 @@ import se.tink.backend.aggregation.agents.banks.sbab.model.response.LoanEntity;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.LoanResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.SignFormRequestBody;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.TransactionEntity;
-import se.tink.backend.aggregation.utils.json.JsonUtils;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.backend.aggregation.agents.models.Loan;
 import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.backend.aggregation.utils.json.JsonUtils;
+import se.tink.libraries.documentcontainer.DocumentContainer;
 import se.tink.libraries.serialization.utils.SerializationUtils;
 
 public class UserDataClient extends SBABClient {
 
     private static final AggregationLogger log = new AggregationLogger(UserDataClient.class);
 
-    private static final String ACCOUNT_INFO_URL = SECURE_BASE_URL + "/konto/kontoinformation?kontonummer=%s";
+    private static final String ACCOUNT_INFO_URL =
+            SECURE_BASE_URL + "/konto/kontoinformation?kontonummer=%s";
     private static final String ACCOUNTS_OVERVIEW_URL = SECURE_BASE_URL + "/meny/sparkontomeny";
     private static final String LOAN_URL = SECURE_BASE_URL + "/secure-rest/rest/lan";
-    private static final String AMORTIZATION_DOCUMENTATION_URL = SECURE_BASE_URL + "/secure-rest/rest/amorteringskrav/ejomfattad/%s";
-    private static final String LOAN_DETAILS_URL = SECURE_BASE_URL + "/privat/lan/mina_lan/detaljer.html?lanenummer=%s";
+    private static final String AMORTIZATION_DOCUMENTATION_URL =
+            SECURE_BASE_URL + "/secure-rest/rest/amorteringskrav/ejomfattad/%s";
+    private static final String LOAN_DETAILS_URL =
+            SECURE_BASE_URL + "/privat/lan/mina_lan/detaljer.html?lanenummer=%s";
     private static final String APPLICATION_PDF = "application/pdf";
 
     public UserDataClient(Client client, Credentials credentials, String userAgent) {
@@ -49,11 +52,14 @@ public class UserDataClient extends SBABClient {
     }
 
     public List<AccountEntity> getAccounts() throws Exception {
-        String accountOverview = portletResponseToValidJson(createHtmlRequest(ACCOUNTS_OVERVIEW_URL).get(String.class));
+        String accountOverview =
+                portletResponseToValidJson(
+                        createHtmlRequest(ACCOUNTS_OVERVIEW_URL).get(String.class));
 
         // Parse the accounts overview if we got valid json
         if (JsonUtils.isValidJson(accountOverview)) {
-            return SerializationUtils.deserializeFromString(accountOverview, AccountsResponse.class).getAccounts();
+            return SerializationUtils.deserializeFromString(accountOverview, AccountsResponse.class)
+                    .getAccounts();
         }
 
         Document document = Jsoup.parse(accountOverview);
@@ -69,11 +75,13 @@ public class UserDataClient extends SBABClient {
         throw new UnacceptedTermsAndConditionsException(url, getFormData(form));
     }
 
-    public SignFormRequestBody initiateTermsAndConditionsSigning(String url, MultivaluedMapImpl input)
-            throws Exception {
-        ClientResponse initiateResponse = createFormEncodedHtmlRequest(url).post(ClientResponse.class, input);
+    public SignFormRequestBody initiateTermsAndConditionsSigning(
+            String url, MultivaluedMapImpl input) throws Exception {
+        ClientResponse initiateResponse =
+                createFormEncodedHtmlRequest(url).post(ClientResponse.class, input);
 
-        ClientResponse redirectResponse = createGetRequest(getRedirectUrl(initiateResponse, SECURE_BASE_URL));
+        ClientResponse redirectResponse =
+                createGetRequest(getRedirectUrl(initiateResponse, SECURE_BASE_URL));
 
         Document document = Jsoup.parse(redirectResponse.getEntity(String.class));
 
@@ -90,9 +98,10 @@ public class UserDataClient extends SBABClient {
         Element potentialNextPageLink = searchResultPage.select("li[id=next-link]").first();
 
         if (potentialNextPageLink != null) {
-            String potentialNextPageIndex = potentialNextPageLink.attr("onclick").replaceAll("[^\\d.]", "");
-            if (!Strings.isNullOrEmpty(potentialNextPageIndex) && pageNumber >= Integer
-                    .parseInt(potentialNextPageIndex)) {
+            String potentialNextPageIndex =
+                    potentialNextPageLink.attr("onclick").replaceAll("[^\\d.]", "");
+            if (!Strings.isNullOrEmpty(potentialNextPageIndex)
+                    && pageNumber >= Integer.parseInt(potentialNextPageIndex)) {
                 return false;
             }
         } else {
@@ -101,15 +110,17 @@ public class UserDataClient extends SBABClient {
         return true;
     }
 
-    public FetchTransactionsResponse fetchTransactions(String accountNumber, int pageNumber,
-            FetchTransactionsResponse response) throws Exception {
+    public FetchTransactionsResponse fetchTransactions(
+            String accountNumber, int pageNumber, FetchTransactionsResponse response)
+            throws Exception {
         Document searchResultPage = getTransactionsPage(accountNumber, pageNumber, response);
         FetchTransactionsResponse newResponse = buildTransactionsResponse(searchResultPage);
         newResponse.setHasMoreResults(hasMoreTransactions(searchResultPage, pageNumber));
         return newResponse;
     }
 
-    public FetchTransactionsResponse initiateTransactionSearch(String accountNumber) throws Exception {
+    public FetchTransactionsResponse initiateTransactionSearch(String accountNumber)
+            throws Exception {
         String accountInfoUrl = String.format(ACCOUNT_INFO_URL, accountNumber);
         Document accountPage = getJsoupDocument(accountInfoUrl);
 
@@ -122,7 +133,8 @@ public class UserDataClient extends SBABClient {
         return response;
     }
 
-    private FetchTransactionsResponse buildTransactionsResponse(Document page) throws JsonProcessingException {
+    private FetchTransactionsResponse buildTransactionsResponse(Document page)
+            throws JsonProcessingException {
         FetchTransactionsResponse response = new FetchTransactionsResponse();
         Element form = page.select("#genomfordaTransaktionerForm").first();
 
@@ -136,18 +148,22 @@ public class UserDataClient extends SBABClient {
         return response;
     }
 
-    private Document getTransactionsPage(String accountNumber, int pageNumber,
-            FetchTransactionsResponse response) throws Exception {
-        MultivaluedMapImpl transactionSearchBody = createTransactionBody(response, pageNumber, accountNumber);
+    private Document getTransactionsPage(
+            String accountNumber, int pageNumber, FetchTransactionsResponse response)
+            throws Exception {
+        MultivaluedMapImpl transactionSearchBody =
+                createTransactionBody(response, pageNumber, accountNumber);
 
-        ClientResponse redirectResponse = createFormEncodedHtmlRequest(response.getPostUrl())
-                .header("Referer", String.format(ACCOUNT_INFO_URL, accountNumber))
-                .post(ClientResponse.class, transactionSearchBody);
+        ClientResponse redirectResponse =
+                createFormEncodedHtmlRequest(response.getPostUrl())
+                        .header("Referer", String.format(ACCOUNT_INFO_URL, accountNumber))
+                        .post(ClientResponse.class, transactionSearchBody);
 
         return getJsoupDocument(getRedirectUrl(redirectResponse, SECURE_BASE_URL));
     }
 
-    private List<Transaction> parseTransactionsFrom(Elements tableRows) throws JsonProcessingException {
+    private List<Transaction> parseTransactionsFrom(Elements tableRows)
+            throws JsonProcessingException {
         List<Transaction> transactions = Lists.newArrayList();
 
         for (int i = 0; i < tableRows.size(); i++) {
@@ -156,7 +172,8 @@ public class UserDataClient extends SBABClient {
             Element mainRow = tableRows.get(i);
             transactionValues.put("Belopp", mainRow.select("[data-title=Belopp]").text());
             transactionValues.put("Datum", mainRow.select("[data-title=Datum]").text());
-            transactionValues.put("Beskrivning", mainRow.select("[data-title=Beskrivning] > a").text());
+            transactionValues.put(
+                    "Beskrivning", mainRow.select("[data-title=Beskrivning] > a").text());
             transactionValues.put("Typ", mainRow.select("[data-title=Beskrivning] > span").text());
 
             Element infoRow = tableRows.get(++i);
@@ -176,8 +193,9 @@ public class UserDataClient extends SBABClient {
 
             i++; // This is a row with a print option which we skip.
 
-            TransactionEntity transactionEntity = SerializationUtils
-                    .deserializeFromString(MAPPER.writeValueAsString(transactionValues), TransactionEntity.class);
+            TransactionEntity transactionEntity =
+                    SerializationUtils.deserializeFromString(
+                            MAPPER.writeValueAsString(transactionValues), TransactionEntity.class);
             Optional<Transaction> transaction = transactionEntity.toTinkTransaction();
             if (transaction.isPresent()) {
                 transactions.add(transaction.get());
@@ -193,7 +211,8 @@ public class UserDataClient extends SBABClient {
         return accountInfoPage.select("#kommandeContainer > table > tbody > tr").first() != null;
     }
 
-    private List<Transaction> getUpcomingTransactions(Document page) throws JsonProcessingException {
+    private List<Transaction> getUpcomingTransactions(Document page)
+            throws JsonProcessingException {
         Elements tableRows = page.select("#kommandeContainer > table > tbody > tr");
         List<Transaction> upcomingTransactions = Lists.newArrayList();
 
@@ -206,8 +225,9 @@ public class UserDataClient extends SBABClient {
 
     private List<Transaction> parseTransactionsFrom(Document searchResultPage)
             throws JsonProcessingException {
-        Elements tableRows = searchResultPage
-                .select("table[class=action-rows accountdetails my-accounts] > tbody > tr");
+        Elements tableRows =
+                searchResultPage.select(
+                        "table[class=action-rows accountdetails my-accounts] > tbody > tr");
 
         if (tableRows != null) {
             return parseTransactionsFrom(tableRows);
@@ -216,8 +236,8 @@ public class UserDataClient extends SBABClient {
         return Lists.newArrayList();
     }
 
-    private MultivaluedMapImpl createTransactionBody(FetchTransactionsResponse response, int currentPage,
-            String accountNumber) {
+    private MultivaluedMapImpl createTransactionBody(
+            FetchTransactionsResponse response, int currentPage, String accountNumber) {
         MultivaluedMapImpl transactionSearchBody = new MultivaluedMapImpl();
         transactionSearchBody.add("aktuellSidaHistorik", currentPage);
         transactionSearchBody.add("kontonummer", accountNumber);
@@ -257,11 +277,14 @@ public class UserDataClient extends SBABClient {
     public DocumentContainer getAmortizationDocumentation(String loanId) throws Exception {
         String url = String.format(AMORTIZATION_DOCUMENTATION_URL, loanId);
 
-        ClientResponse response = createRequestWithOptionalTypeRefererAndBearerToken(
-                url, String.format(LOAN_DETAILS_URL, loanId), MediaType.APPLICATION_OCTET_STREAM)
-                .get(ClientResponse.class);
+        ClientResponse response =
+                createRequestWithOptionalTypeRefererAndBearerToken(
+                                url,
+                                String.format(LOAN_DETAILS_URL, loanId),
+                                MediaType.APPLICATION_OCTET_STREAM)
+                        .get(ClientResponse.class);
 
-         return new DocumentContainer(APPLICATION_PDF, response.getEntityInputStream());
+        return new DocumentContainer(APPLICATION_PDF, response.getEntityInputStream());
     }
 
     private Optional<LoanResponse> getLoanResponse() throws Exception {

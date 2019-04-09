@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AssignmentEntity {
     @JsonProperty("Amount")
     private Double amount;
+
     @JsonProperty("RegistrationId")
     private String registrationId;
+
     @JsonProperty("IsRejected")
     private boolean rejected;
 
@@ -35,5 +37,4 @@ public class AssignmentEntity {
     public void setRejected(boolean rejected) {
         this.rejected = rejected;
     }
-
 }

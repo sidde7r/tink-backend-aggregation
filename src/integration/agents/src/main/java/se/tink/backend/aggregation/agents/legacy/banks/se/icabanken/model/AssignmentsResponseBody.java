@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.se.icabanken.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
@@ -9,8 +8,10 @@ import java.util.List;
 public class AssignmentsResponseBody {
     @JsonProperty("Assignments")
     private List<AssignmentEntity> assignments;
+
     @JsonProperty("TotalAmount")
     private double totalAmount;
+
     @JsonProperty("CurrentMonthTotalAmount")
     private double currentMonthTotalAmount;
 
@@ -37,5 +38,4 @@ public class AssignmentsResponseBody {
     public void setCurrentMonthTotalAmount(double currentMonthTotalAmount) {
         this.currentMonthTotalAmount = currentMonthTotalAmount;
     }
-
 }

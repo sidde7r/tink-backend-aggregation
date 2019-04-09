@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TotalPortfolioEntity {
     @JsonProperty("ChangeValue")
     private Double changeValue;
+
     @JsonProperty("Currency")
     private String currency;
+
     @JsonProperty("TotalValue")
     private Double totalValue;
 

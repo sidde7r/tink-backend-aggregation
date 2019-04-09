@@ -12,18 +12,19 @@ public class SubscriptionResponse extends ErrorResponse {
     private static final int ACTIVE_STATUS = 1;
 
     /**
-     * The state machine for the customer status at ABN AMRO side.
-     * 1) POST /pfmsubscription/the-bc-number    => Subscription created with status `REGISTERED` (0)
-     * 2) Sign the terms and conditions          => Subscription updated to status `SUBSCRIPTION_ACCEPTED` (6)
-     * 3) PUT /pfmsubscription/the-bc-number     => Subscription updated to status `ACTIVE` (1)
-     * 4) DELETE /pfmsubscription/the-bc-number  => Subscription updated to status `INACTIVE` (2)
+     * The state machine for the customer status at ABN AMRO side. 1) POST
+     * /pfmsubscription/the-bc-number => Subscription created with status `REGISTERED` (0) 2) Sign
+     * the terms and conditions => Subscription updated to status `SUBSCRIPTION_ACCEPTED` (6) 3) PUT
+     * /pfmsubscription/the-bc-number => Subscription updated to status `ACTIVE` (1) 4) DELETE
+     * /pfmsubscription/the-bc-number => Subscription updated to status `INACTIVE` (2)
      */
-    private static final ImmutableMap<Integer, String> CUSTOMER_STATUS = ImmutableMap.<Integer, String>builder()
-            .put(0, "REGISTERED")
-            .put(ACTIVE_STATUS, "ACTIVE")
-            .put(2, "INACTIVE")
-            .put(6, "SUBSCRIPTION_ACCEPTED")
-            .build();
+    private static final ImmutableMap<Integer, String> CUSTOMER_STATUS =
+            ImmutableMap.<Integer, String>builder()
+                    .put(0, "REGISTERED")
+                    .put(ACTIVE_STATUS, "ACTIVE")
+                    .put(2, "INACTIVE")
+                    .put(6, "SUBSCRIPTION_ACCEPTED")
+                    .build();
 
     private String bcNumber;
     private Integer status;

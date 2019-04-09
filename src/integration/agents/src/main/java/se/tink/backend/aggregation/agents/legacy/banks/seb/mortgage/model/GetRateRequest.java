@@ -13,9 +13,9 @@ import se.tink.backend.aggregation.agents.banks.seb.mortgage.ApiRequest;
 
 /**
  * Query string request model for GET: indicative interest rate
- * <p>
- * loan_amount is a mandatory field. Value has to be greater than 0<br />
- * age is a mandatory field. Value has to be greater than 0<br />
+ *
+ * <p>loan_amount is a mandatory field. Value has to be greater than 0<br>
+ * age is a mandatory field. Value has to be greater than 0<br>
  * property_type: 01 = appartment; 02 = villa; 03 = others
  */
 public class GetRateRequest implements ApiRequest {
@@ -51,14 +51,17 @@ public class GetRateRequest implements ApiRequest {
             queryBuilder.append("&market_value=").append(doubleToString(marketValue));
         }
         if (newPlacementVolume != null) {
-            queryBuilder.append("&new_placement_volume=").append(doubleToString(newPlacementVolume));
+            queryBuilder
+                    .append("&new_placement_volume=")
+                    .append(doubleToString(newPlacementVolume));
         }
 
         return queryBuilder.toString();
     }
 
     private static String doubleToString(double value) {
-        DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.ENGLISH);
+        DecimalFormatSymbols decimalFormatSymbols =
+                DecimalFormatSymbols.getInstance(Locale.ENGLISH);
         DecimalFormat decimalFormat = new DecimalFormat("0.00", decimalFormatSymbols);
         return decimalFormat.format(value);
     }
@@ -74,17 +77,18 @@ public class GetRateRequest implements ApiRequest {
 
         GetRateRequest that = (GetRateRequest) o;
 
-        return Objects.equal(this.age, that.age) &&
-                Objects.equal(this.loanAmount, that.loanAmount) &&
-                Objects.equal(this.propertyType, that.propertyType) &&
-                Objects.equal(this.municipality, that.municipality) &&
-                Objects.equal(this.marketValue, that.marketValue) &&
-                Objects.equal(this.newPlacementVolume, that.newPlacementVolume);
+        return Objects.equal(this.age, that.age)
+                && Objects.equal(this.loanAmount, that.loanAmount)
+                && Objects.equal(this.propertyType, that.propertyType)
+                && Objects.equal(this.municipality, that.municipality)
+                && Objects.equal(this.marketValue, that.marketValue)
+                && Objects.equal(this.newPlacementVolume, that.newPlacementVolume);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(age, loanAmount, propertyType, municipality, marketValue, newPlacementVolume);
+        return Objects.hashCode(
+                age, loanAmount, propertyType, municipality, marketValue, newPlacementVolume);
     }
 
     @Override
@@ -130,7 +134,8 @@ public class GetRateRequest implements ApiRequest {
         }
 
         public Builder withOptionalMunicipality(String municipality) {
-            Preconditions.checkArgument(!Strings.isNullOrEmpty(municipality), "Construction with no string not needed");
+            Preconditions.checkArgument(
+                    !Strings.isNullOrEmpty(municipality), "Construction with no string not needed");
             getRateRequest.municipality = municipality;
             return this;
         }
@@ -147,7 +152,7 @@ public class GetRateRequest implements ApiRequest {
 
         public GetRateRequest build() {
             Preconditions.checkArgument(getRateRequest.age != null);
-            Preconditions.checkArgument(getRateRequest.loanAmount!= null);
+            Preconditions.checkArgument(getRateRequest.loanAmount != null);
             Preconditions.checkArgument(getRateRequest.propertyType != null);
             Preconditions.checkArgument(getRateRequest.propertyType.getNumericalKey() != null);
 

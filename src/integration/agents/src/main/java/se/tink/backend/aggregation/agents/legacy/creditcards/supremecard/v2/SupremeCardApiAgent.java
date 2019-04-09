@@ -33,31 +33,36 @@ public class SupremeCardApiAgent {
                 .header("User-Agent", SupremeCardApiConstants.USER_AGENT);
     }
 
-    private WebResource.Builder createPostRequest(String url, String referer, String accept, String contentType) {
-        return createRequest(url, referer, accept)
-                .type(contentType);
+    private WebResource.Builder createPostRequest(
+            String url, String referer, String accept, String contentType) {
+        return createRequest(url, referer, accept).type(contentType);
     }
 
     private WebResource.Builder createGetRequest(String url, String referer, String accept) {
         return createRequest(url, referer, accept);
     }
 
-    private <T> T postRequestWithJsonAcceptAndType(String url, String referer, Class<T> responseClass,
-            Object requestEntity) {
-        return createPostRequest(url, referer, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON)
+    private <T> T postRequestWithJsonAcceptAndType(
+            String url, String referer, Class<T> responseClass, Object requestEntity) {
+        return createPostRequest(
+                        url, referer, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON)
                 .post(responseClass, requestEntity);
     }
 
-    private <T> T postRequestWithOptionalAcceptAndType(String url, String referer, String accept,
-            String contentType, Class<T> responseClass, Object requestEntity) {
+    private <T> T postRequestWithOptionalAcceptAndType(
+            String url,
+            String referer,
+            String accept,
+            String contentType,
+            Class<T> responseClass,
+            Object requestEntity) {
         return createPostRequest(url, referer, accept, contentType)
                 .post(responseClass, requestEntity);
     }
 
-    private <T> T getRequestWithOptionalAccept(String url, String referer, String accept,
-            Class<T> responseClass) {
-        return createGetRequest(url, referer, accept)
-                .get(responseClass);
+    private <T> T getRequestWithOptionalAccept(
+            String url, String referer, String accept, Class<T> responseClass) {
+        return createGetRequest(url, referer, accept).get(responseClass);
     }
 
     ClientResponse initiateBankId() {
@@ -70,14 +75,12 @@ public class SupremeCardApiAgent {
 
     ClientResponse followInitiateBankIdRedirect(String url) {
         return getRequestWithOptionalAccept(
-                url,
-                SupremeCardApiConstants.BASE_URL,
-                MediaType.TEXT_HTML,
-                ClientResponse.class);
+                url, SupremeCardApiConstants.BASE_URL, MediaType.TEXT_HTML, ClientResponse.class);
     }
 
     ClientResponse initiateBankIdLogin(String url, String referer) {
-        return getRequestWithOptionalAccept(url, referer, MediaType.TEXT_HTML, ClientResponse.class);
+        return getRequestWithOptionalAccept(
+                url, referer, MediaType.TEXT_HTML, ClientResponse.class);
     }
 
     OrderBankIdResponse orderBankId(String url, String referer, String ssn) {
@@ -96,7 +99,9 @@ public class SupremeCardApiAgent {
                 CollectBankIdRequest.createRequestFromOrderBankIdResponse(orderBankIdResponse));
     }
 
-    ClientResponse completeBankId(String referer, OrderBankIdResponse orderBankIdResponse,
+    ClientResponse completeBankId(
+            String referer,
+            OrderBankIdResponse orderBankIdResponse,
             CollectBankIdResponse collectBankIdResponse) {
         return postRequestWithOptionalAcceptAndType(
                 collectBankIdResponse.getCompleteUrl(),
@@ -118,14 +123,15 @@ public class SupremeCardApiAgent {
     }
 
     ClientResponse followFinishBankIdLoginRedirect(String url, String referer) {
-        return getRequestWithOptionalAccept(url, referer, MediaType.TEXT_HTML, ClientResponse.class);
+        return getRequestWithOptionalAccept(
+                url, referer, MediaType.TEXT_HTML, ClientResponse.class);
     }
 
     AccountInfoResponse fetchAccountInfo() {
         return createRequest(
-                SupremeCardApiConstants.ACCOUNT_INFO_URL,
-                SupremeCardApiConstants.MY_PAGE_URL,
-                MediaType.APPLICATION_JSON)
+                        SupremeCardApiConstants.ACCOUNT_INFO_URL,
+                        SupremeCardApiConstants.MY_PAGE_URL,
+                        MediaType.APPLICATION_JSON)
                 .header(
                         SupremeCardApiConstants.REQUESTED_WITH_HEADER_KEY,
                         SupremeCardApiConstants.REQUESTED_WITH_HEADER_VALUE)
@@ -134,13 +140,13 @@ public class SupremeCardApiAgent {
 
     TransactionsResponse fetchTransactions(TransactionsRequest transactionsRequest) {
         return createPostRequest(
-                SupremeCardApiConstants.TRANSCATIONS_URL,
-                SupremeCardApiConstants.MY_PAGE_URL,
-                MediaType.APPLICATION_JSON,
-                MediaType.APPLICATION_FORM_URLENCODED)
+                        SupremeCardApiConstants.TRANSCATIONS_URL,
+                        SupremeCardApiConstants.MY_PAGE_URL,
+                        MediaType.APPLICATION_JSON,
+                        MediaType.APPLICATION_FORM_URLENCODED)
                 .header(
                         SupremeCardApiConstants.REQUESTED_WITH_HEADER_KEY,
-                        SupremeCardApiConstants.REQUESTED_WITH_HEADER_VALUE
-                ).post(TransactionsResponse.class, transactionsRequest);
+                        SupremeCardApiConstants.REQUESTED_WITH_HEADER_VALUE)
+                .post(TransactionsResponse.class, transactionsRequest);
     }
 }

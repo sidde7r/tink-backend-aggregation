@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v18.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountTransactionsEntity {

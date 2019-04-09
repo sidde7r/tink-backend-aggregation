@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class InitBankIdRequest {
     @JsonProperty("subject")
     private final String ssn;
+
     private final boolean useAnotherDevice = true;
 
     public InitBankIdRequest(String ssn) {

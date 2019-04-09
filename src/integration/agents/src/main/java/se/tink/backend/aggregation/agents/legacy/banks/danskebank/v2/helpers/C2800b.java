@@ -5,6 +5,5 @@ public abstract class C2800b {
     public byte[] a;
     public int b;
 
-    C2800b() {
-    }
+    C2800b() {}
 }

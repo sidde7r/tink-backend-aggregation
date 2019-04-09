@@ -50,5 +50,4 @@ public class CreatePaymentOut {
     public void setPaymentToken(String paymentToken) {
         this.paymentToken = paymentToken;
     }
-
 }

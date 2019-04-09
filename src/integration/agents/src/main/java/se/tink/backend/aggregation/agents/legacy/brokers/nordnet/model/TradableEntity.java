@@ -7,12 +7,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class TradableEntity {
     @JsonProperty("market_id")
     private String marketId;
+
     @JsonProperty("tick_size_id")
     private String tickSizeId;
+
     @JsonProperty("display_order")
     private int displayOrder;
+
     @JsonProperty("lot_size")
     private double lotSize;
+
     private String identifier;
 
     public String getMarketId() {

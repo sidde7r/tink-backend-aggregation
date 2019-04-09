@@ -9,25 +9,36 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 public class PositionEntity {
     @JsonProperty("accno")
     private String accountNumber;
+
     @JsonProperty("accid")
     private String accountId;
+
     private InstrumentEntity instrument;
+
     @JsonProperty("main_market_price")
     private AmountEntity mainMarketPrice;
+
     @JsonProperty("morning_price")
     private AmountEntity morningPrice;
+
     @JsonProperty("qty")
     private double quantity;
+
     @JsonProperty("pawn_percent")
     private int pawnPercentage;
+
     @JsonProperty("market_value_acc")
     private AmountEntity accountCurrencyMarketValue;
+
     @JsonProperty("market_value")
     private AmountEntity marketValue;
+
     @JsonProperty("acq_price")
     private AmountEntity acquisitionPrice;
+
     @JsonProperty("acq_price_acc")
     private AmountEntity accountCurrencyAcquisitionPrice;
+
     @JsonProperty("is_custom_gav")
     private boolean isCustomerGav;
 
@@ -91,8 +102,7 @@ public class PositionEntity {
         return accountCurrencyMarketValue;
     }
 
-    public void setAccountCurrencyMarketValue(
-            AmountEntity accountCurrencyMarketValue) {
+    public void setAccountCurrencyMarketValue(AmountEntity accountCurrencyMarketValue) {
         this.accountCurrencyMarketValue = accountCurrencyMarketValue;
     }
 
@@ -116,8 +126,7 @@ public class PositionEntity {
         return accountCurrencyAcquisitionPrice;
     }
 
-    public void setAccountCurrencyAcquisitionPrice(
-            AmountEntity accountCurrencyAcquisitionPrice) {
+    public void setAccountCurrencyAcquisitionPrice(AmountEntity accountCurrencyAcquisitionPrice) {
         this.accountCurrencyAcquisitionPrice = accountCurrencyAcquisitionPrice;
     }
 
@@ -136,7 +145,8 @@ public class PositionEntity {
             return Optional.empty();
         }
 
-        instrument.setAverageAcquisitionPrice(getAcquisitionPrice() != null ? getAcquisitionPrice().getValue() : null);
+        instrument.setAverageAcquisitionPrice(
+                getAcquisitionPrice() != null ? getAcquisitionPrice().getValue() : null);
         instrument.setCurrency(getInstrument().getCurrency());
         instrument.setIsin(getInstrument().getIsin());
         instrument.setMarketValue(getMarketValue() != null ? getMarketValue().getValue() : null);
@@ -144,8 +154,10 @@ public class PositionEntity {
         instrument.setPrice(getMainMarketPrice() != null ? getMainMarketPrice().getValue() : null);
         instrument.setProfit(getProfit());
         instrument.setQuantity(getQuantity());
-        instrument.setRawType(String.format("type: %s, group type: %s", getInstrument().getType(),
-                getInstrument().getGroupType()));
+        instrument.setRawType(
+                String.format(
+                        "type: %s, group type: %s",
+                        getInstrument().getType(), getInstrument().getGroupType()));
         instrument.setType(getInstrumentType());
         instrument.setTicker(getInstrument().getSymbol());
         instrument.setUniqueIdentifier(getInstrument().getIsin() + getInstrument().getId());
@@ -159,12 +171,12 @@ public class PositionEntity {
         }
 
         switch (getInstrument().getGroupType().toLowerCase()) {
-        case "eq":
-            return Instrument.Type.STOCK;
-        case "fnd":
-            return Instrument.Type.FUND;
-        default:
-            return Instrument.Type.OTHER;
+            case "eq":
+                return Instrument.Type.STOCK;
+            case "fnd":
+                return Instrument.Type.FUND;
+            default:
+                return Instrument.Type.OTHER;
         }
     }
 

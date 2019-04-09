@@ -11,14 +11,19 @@ import se.tink.libraries.account.identifiers.SwedishIdentifier;
 public class RecipientEntity implements GeneralAccountEntity {
     @JsonProperty("AccountNumber")
     private String accountNumber;
+
     @JsonProperty("BudgetGroup")
     private String budgetGroup;
+
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("RecipientId")
     private String recipientId;
+
     @JsonProperty("TransferBankId")
     private String transferBankId;
+
     @JsonProperty("Type")
     private String type;
 
@@ -43,7 +48,8 @@ public class RecipientEntity implements GeneralAccountEntity {
     }
 
     public void setName(String name) {
-        this.name = !Strings.isNullOrEmpty(name) && name.length() > 20 ? name.substring(0, 20) : name;
+        this.name =
+                !Strings.isNullOrEmpty(name) && name.length() > 20 ? name.substring(0, 20) : name;
     }
 
     public String getRecipientId() {
@@ -88,7 +94,8 @@ public class RecipientEntity implements GeneralAccountEntity {
 
     @Override
     public String generalGetBank() {
-        if (generalGetAccountIdentifier().isValid() && generalGetAccountIdentifier().is(AccountIdentifier.Type.SE)) {
+        if (generalGetAccountIdentifier().isValid()
+                && generalGetAccountIdentifier().is(AccountIdentifier.Type.SE)) {
             return generalGetAccountIdentifier().to(SwedishIdentifier.class).getBankName();
         }
         return null;

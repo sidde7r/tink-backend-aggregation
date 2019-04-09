@@ -6,25 +6,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.repackaged.com.google.common.base.Strings;
 import com.google.api.client.util.Maps;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-import se.tink.backend.aggregation.agents.models.Loan;
-import se.tink.backend.aggregation.agents.models.LoanDetails;
-import se.tink.libraries.date.ThreadSafeDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
+import se.tink.backend.aggregation.agents.models.Loan;
+import se.tink.backend.aggregation.agents.models.LoanDetails;
+import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoanEntity {
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
     @JsonProperty("InterestRatesDetails")
     private List<Map<String, String>> interestRatesDetails;
 
     @JsonProperty("LoanDetails")
-    private List<Map<String,String>> loanDetails;
+    private List<Map<String, String>> loanDetails;
 
     private Map<String, String> transformedLoanDetails;
 
@@ -50,7 +51,8 @@ public class LoanEntity {
     }
 
     public Double getInterestRate() {
-        return AgentParsingUtils.parsePercentageFormInterest(transformedLoanDetails.get("Aktuell räntesats"));
+        return AgentParsingUtils.parsePercentageFormInterest(
+                transformedLoanDetails.get("Aktuell räntesats"));
     }
 
     public String getLoanName() {
@@ -65,7 +67,7 @@ public class LoanEntity {
         return null;
     }
 
-    public Date getInitialDate () throws ParseException {
+    public Date getInitialDate() throws ParseException {
         String initialDate = transformedLoanDetails.get("Utbetalningsdag");
         if (!Strings.isNullOrEmpty(initialDate)) {
             return ThreadSafeDateFormat.FORMATTER_DAILY.parse(initialDate);
@@ -92,7 +94,7 @@ public class LoanEntity {
     public void setLoanDetails(List<Map<String, String>> loanDetails) {
         this.loanDetails = loanDetails;
 
-        Map<String,String> map = Maps.newHashMap();
+        Map<String, String> map = Maps.newHashMap();
 
         for (Map<String, String> keyValuePair : loanDetails) {
             map.put(keyValuePair.get("Key"), keyValuePair.get("Value"));
@@ -137,7 +139,7 @@ public class LoanEntity {
         loan.setInitialDate(getInitialDate());
         loan.setLoanNumber(getLoanNumber());
 
-        if (getInitialDebt() != null ) {
+        if (getInitialDebt() != null) {
             loan.setInitialBalance(-getInitialDebt());
         }
 

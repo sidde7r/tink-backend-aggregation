@@ -2,15 +2,20 @@ package se.tink.backend.aggregation.agents.creditcards.coop.v2;
 
 import java.util.Locale;
 import java.util.Objects;
-import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.log.AggregationLogger;
 
 public enum AccountType {
     MEDMERA_VISA(-1, "Visa", AccountTypes.CREDIT_CARD, "Coop MedMera Visa"),
     MEDMERA_KONTO(0, "Konto", AccountTypes.OTHER, "Coop MedMera Konto"),
     MEDMERA_FAKTURA(1, "Faktura", AccountTypes.CREDIT_CARD, "Coop MedMera Faktura"),
     MEDMERA_FORE(6, "Före", AccountTypes.CREDIT_CARD, "Coop MedMera Före"),
-    MEDMERA_EFTER_1(7, "Efter", AccountTypes.CREDIT_CARD, "Coop MedMera Efter 1"), // For legacy reason we add a number on this hash so that it's separated from below EFTER
+    MEDMERA_EFTER_1(
+            7,
+            "Efter",
+            AccountTypes.CREDIT_CARD,
+            "Coop MedMera Efter 1"), // For legacy reason we add a number on this hash so that it's
+                                     // separated from below EFTER
     MEDMERA_MER(8, "Mer", AccountTypes.CREDIT_CARD, "Coop MedMera Mer"),
     MEDMERA_EFTER_2(9, "Efter", AccountTypes.CREDIT_CARD, "Coop MedMera Efter");
 
@@ -22,7 +27,11 @@ public enum AccountType {
     private final AccountTypes accountType;
     private final String legacyBankIdPart;
 
-    AccountType(int accountTypeOrdinal, String accountNameSuffix, AccountTypes accountType, String legacyBankIdPart) {
+    AccountType(
+            int accountTypeOrdinal,
+            String accountNameSuffix,
+            AccountTypes accountType,
+            String legacyBankIdPart) {
         this.accountTypeOrdinal = accountTypeOrdinal;
         this.accountNameSuffix = accountNameSuffix;
         this.accountType = accountType;
@@ -50,7 +59,8 @@ public enum AccountType {
         String suffixLowerCase = nameWords[nameWords.length - 1].toLowerCase(SWEDISH_LOCALE);
 
         for (AccountType accountType : values()) {
-            if (Objects.equals(accountType.accountNameSuffix.toLowerCase(SWEDISH_LOCALE), suffixLowerCase)) {
+            if (Objects.equals(
+                    accountType.accountNameSuffix.toLowerCase(SWEDISH_LOCALE), suffixLowerCase)) {
                 log.info("guessFromName(" + accountName + ") --> " + accountType.name());
                 return accountType;
             }

@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -25,15 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "login",
-    "password",
-    "restaurantId"
-})
+@XmlType(
+        name = "",
+        propOrder = {"login", "password", "restaurantId"})
 @XmlRootElement(name = "RemoveFavourite")
 public class RemoveFavourite {
 
@@ -43,11 +37,8 @@ public class RemoveFavourite {
 
     /**
      * Gets the value of the login property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getLogin() {
         return login;
@@ -55,11 +46,8 @@ public class RemoveFavourite {
 
     /**
      * Sets the value of the login property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setLogin(String value) {
         this.login = value;
@@ -67,11 +55,8 @@ public class RemoveFavourite {
 
     /**
      * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getPassword() {
         return password;
@@ -79,30 +64,20 @@ public class RemoveFavourite {
 
     /**
      * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setPassword(String value) {
         this.password = value;
     }
 
-    /**
-     * Gets the value of the restaurantId property.
-     * 
-     */
+    /** Gets the value of the restaurantId property. */
     public int getRestaurantId() {
         return restaurantId;
     }
 
-    /**
-     * Sets the value of the restaurantId property.
-     * 
-     */
+    /** Sets the value of the restaurantId property. */
     public void setRestaurantId(int value) {
         this.restaurantId = value;
     }
-
 }

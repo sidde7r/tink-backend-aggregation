@@ -17,7 +17,8 @@ import se.tink.libraries.account.identifiers.se.ClearingNumber;
 public class ProductEntity implements GeneralAccountEntity {
 
     private static final String personalAccountClearingNumber = "3300";
-    private static final Set<String> personalAccountCodes = Sets.newHashSet("SE0000", "SE0200", "SE0300");
+    private static final Set<String> personalAccountCodes =
+            Sets.newHashSet("SE0000", "SE0200", "SE0300");
 
     private Map<String, Object> accountType = new HashMap<String, Object>();
     private Map<String, Object> balance = new HashMap<String, Object>();
@@ -161,7 +162,8 @@ public class ProductEntity implements GeneralAccountEntity {
         if (includeClearingNumber) {
             String accountTypeCode = productTypeExtension.get("$").toString();
 
-            if (accountTypeCode != null && personalAccountCodes.contains(accountTypeCode.toUpperCase())
+            if (accountTypeCode != null
+                    && personalAccountCodes.contains(accountTypeCode.toUpperCase())
                     && accountNumber.length() == 10) {
                 return personalAccountClearingNumber + accountNumber;
             }
@@ -204,7 +206,7 @@ public class ProductEntity implements GeneralAccountEntity {
         if (productId.containsKey("$")) {
             Object o = productId.get("$");
             if (o instanceof String) {
-                return (String)o;
+                return (String) o;
             }
         }
         return null;
@@ -236,7 +238,7 @@ public class ProductEntity implements GeneralAccountEntity {
     public Boolean getProductIdBoolean(String key) {
         Object object = productId.get(key);
         if (object instanceof Map) {
-            Object value = ((Map)object).get("$");
+            Object value = ((Map) object).get("$");
             if (value instanceof String) {
                 return Boolean.parseBoolean((String) value);
             } else if (value instanceof Boolean) {

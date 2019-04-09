@@ -14,20 +14,24 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.Nullable;
 import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.libraries.date.DateUtils;
 import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpcomingTransactionEntity {
-    private static final AggregationLogger log = new AggregationLogger(UpcomingTransactionEntity.class);
+    private static final AggregationLogger log =
+            new AggregationLogger(UpcomingTransactionEntity.class);
 
     @JsonProperty("BETAL_DATUM")
     public String date;
+
     @JsonProperty("MOTTAGARE")
     public String displayDescription;
+
     @JsonProperty("UPPDRAG_BEL")
     public Double amount;
+
     @JsonProperty("KONTO_NR")
     public String accountNumber;
 
@@ -37,25 +41,26 @@ public class UpcomingTransactionEntity {
     public String VERIF_SUB_ID;
     // String SEB_KUND_NR;
     public String KTOSLAG_TXT;
-    //public String KHAV;
-    //public String UPPDRAGS_ID;
+    // public String KHAV;
+    // public String UPPDRAGS_ID;
     public String UPPDRAGS_TYP;
-    //public Double BOKF_SALDO;
-    //public Double DISP_BEL;
-    //public Double KREDBEL;
+    // public Double BOKF_SALDO;
+    // public Double DISP_BEL;
+    // public Double KREDBEL;
     public String UPPDAT_FLG;
     public String REG_TIMESTAMP;
     // String TABORT_ID;
     public String MOTTAGARE_PREFIX;
 
     public static List<Transaction> toTransactionsForAccount(
-            List<UpcomingTransactionEntity> upcomingTransactionEntities, final AccountEntity account) {
+            List<UpcomingTransactionEntity> upcomingTransactionEntities,
+            final AccountEntity account) {
 
-        Predicate<UpcomingTransactionEntity> isMatchingAccount = upcomingTransactionEntity -> Objects
-                .equal(account.KONTO_NR, upcomingTransactionEntity.accountNumber);
+        Predicate<UpcomingTransactionEntity> isMatchingAccount =
+                upcomingTransactionEntity ->
+                        Objects.equal(account.KONTO_NR, upcomingTransactionEntity.accountNumber);
 
-        return FluentIterable
-                .from(upcomingTransactionEntities)
+        return FluentIterable.from(upcomingTransactionEntities)
                 .filter(isMatchingAccount)
                 .transform(UpcomingTransactionEntity.TO_PENDING_TRANSACTION)
                 .filter(Predicates.<Transaction>notNull())
@@ -95,10 +100,14 @@ public class UpcomingTransactionEntity {
             Date date = ThreadSafeDateFormat.FORMATTER_DAILY.parse(this.date);
             return DateUtils.flattenTime(date);
         } catch (ParseException pe) {
-            log.warn(String.format(
-                    "[Expected format for date]: YYYY-MM-DD [Found]: %s [Account number non-empty]: %s [Amount]: %s [Description non-empty]: %s",
-                    this.date, !Strings.isNullOrEmpty(this.accountNumber), this.amount,
-                    !Strings.isNullOrEmpty(this.displayDescription)), pe);
+            log.warn(
+                    String.format(
+                            "[Expected format for date]: YYYY-MM-DD [Found]: %s [Account number non-empty]: %s [Amount]: %s [Description non-empty]: %s",
+                            this.date,
+                            !Strings.isNullOrEmpty(this.accountNumber),
+                            this.amount,
+                            !Strings.isNullOrEmpty(this.displayDescription)),
+                    pe);
             throw pe;
         }
     }

@@ -20,15 +20,24 @@ public class BankIdConfirmationResponse {
     }
 
     public boolean isPaymentSigned() {
-        if (bankIdConfirmationOut != null && bankIdConfirmationOut.getConfirmPayments() != null
+        if (bankIdConfirmationOut != null
+                && bankIdConfirmationOut.getConfirmPayments() != null
                 && bankIdConfirmationOut.getConfirmPayments().getConfirmationStatus() != null
-                && bankIdConfirmationOut.getConfirmPayments().getConfirmationStatus().getStatusCode() != null) {
+                && bankIdConfirmationOut
+                                .getConfirmPayments()
+                                .getConfirmationStatus()
+                                .getStatusCode()
+                        != null) {
 
-            String statusCode = bankIdConfirmationOut.getConfirmPayments().getConfirmationStatus().getStatusCode();
-            
+            String statusCode =
+                    bankIdConfirmationOut
+                            .getConfirmPayments()
+                            .getConfirmationStatus()
+                            .getStatusCode();
+
             // For bank transfers the complete status is "Paid".
             // For payments the complete status is "Confirmed".
-            
+
             if (Objects.equal(statusCode, "Paid") || Objects.equal(statusCode, "Confirmed")) {
                 return true;
             }
@@ -40,8 +49,7 @@ public class BankIdConfirmationResponse {
         return bankingServiceResponse;
     }
 
-    public void setBankingServiceResponse(
-            BankingServiceResponse bankingServiceResponse) {
+    public void setBankingServiceResponse(BankingServiceResponse bankingServiceResponse) {
         this.bankingServiceResponse = bankingServiceResponse;
     }
 

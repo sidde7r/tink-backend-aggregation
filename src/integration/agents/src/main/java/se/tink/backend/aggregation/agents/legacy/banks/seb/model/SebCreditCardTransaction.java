@@ -11,7 +11,7 @@ public class SebCreditCardTransaction {
 
     @JsonProperty("ORIG_AMT_DATE")
     public String ORIG_AMT_DATE;
-    
+
     @JsonProperty("ADV_AMT_CURR_CODE")
     public String ADV_AMT_CURR_CODE;
 

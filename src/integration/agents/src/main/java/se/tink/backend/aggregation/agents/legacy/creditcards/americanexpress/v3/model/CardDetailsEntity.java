@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Objects;
-import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.utils.MarketParameters;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.utils.MarketParameters;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -82,7 +82,10 @@ public class CardDetailsEntity {
     public Account toAccount(MarketParameters marketParameters) {
         Account a = new Account();
 
-        a.setName(cardProductName + " - " + cardNumberDisplay.substring(cardNumberDisplay.length() - 5));
+        a.setName(
+                cardProductName
+                        + " - "
+                        + cardNumberDisplay.substring(cardNumberDisplay.length() - 5));
         a.setAccountNumber(cardNumberDisplay);
 
         if (marketParameters.isUseOldBankId()) {
@@ -95,14 +98,18 @@ public class CardDetailsEntity {
 
         String totalBalance = summary.getTotalBalance().getValue();
 
-        // Amex have twin cards that are that are connected to the same credit card account as another card.
-        // The total balance of these cards is set to "n/a". We have not yet figured out how to display twin
-        // and extra cards in the app, so for now we just set the total balance to 0 in the "n/a" case.
+        // Amex have twin cards that are that are connected to the same credit card account as
+        // another card.
+        // The total balance of these cards is set to "n/a". We have not yet figured out how to
+        // display twin
+        // and extra cards in the app, so for now we just set the total balance to 0 in the "n/a"
+        // case.
         if (Objects.equal(totalBalance.toLowerCase(), "n/a")) {
             a.setBalance(0);
         } else {
-            a.setBalance(-StringUtils.parseAmount(totalBalance.replace("£", "").replace("$", "")
-                    .replace("kr", "")));
+            a.setBalance(
+                    -StringUtils.parseAmount(
+                            totalBalance.replace("£", "").replace("$", "").replace("kr", "")));
         }
         return a;
     }

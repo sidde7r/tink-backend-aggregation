@@ -7,8 +7,8 @@ public class CreditCardUtils {
     private static final int SHOWN_DIGITS = 4;
 
     /**
-     * Masks credit card numbers to avoid showing sensitive data. For example, "1234123412341234" would become
-     * "**** **** **** 1234".
+     * Masks credit card numbers to avoid showing sensitive data. For example, "1234123412341234"
+     * would become "**** **** **** 1234".
      */
     public static String maskCardNumber(String cardNumber) {
         cardNumber = cardNumber.replaceAll("[- .]", "");
@@ -31,8 +31,8 @@ public class CreditCardUtils {
             }
         }
 
-        return maskedNumber.toString() + (cardNumber.length() % 4 == 0 || cardNumber.length() < 4 ? "" : " ")
+        return maskedNumber.toString()
+                + (cardNumber.length() % 4 == 0 || cardNumber.length() < 4 ? "" : " ")
                 + lastDigits.toString();
     }
-
 }

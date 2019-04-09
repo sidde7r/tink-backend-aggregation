@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,15 +5,13 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * 
- *    group type for the three kinds of group
- * 
+ * group type for the three kinds of group
+ *
  * <p>Java class for explicitGroup complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="explicitGroup">
  *   &lt;complexContent>
@@ -28,18 +25,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "explicitGroup")
-@XmlSeeAlso({
-    All.class,
-    SimpleExplicitGroup.class
-})
-public class ExplicitGroup
-    extends Group
-{
-
-
-}
+@XmlSeeAlso({All.class, SimpleExplicitGroup.class})
+public class ExplicitGroup extends Group {}

@@ -15,9 +15,7 @@ import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.strings.StringUtils;
 
-/**
- * Build a user friendly error message for ICS credit cards.
- */
+/** Build a user friendly error message for ICS credit cards. */
 public class ErrorMessageBuilder {
 
     private final SortedSetMultimap<ErrorType, Long> contractNumbersByErrorType;
@@ -48,11 +46,11 @@ public class ErrorMessageBuilder {
 
         if (toCheck instanceof IcsException) {
             IcsException icsException = (IcsException) toCheck;
-            contractNumbersByErrorType.put(mapErrorKeyToErrorType(icsException.getKey()), contractNumber);
+            contractNumbersByErrorType.put(
+                    mapErrorKeyToErrorType(icsException.getKey()), contractNumber);
         } else {
             contractNumbersByErrorType.put(ErrorType.TEMPORARY_ERROR, contractNumber);
         }
-
     }
 
     public boolean hasExceptions() {
@@ -76,12 +74,12 @@ public class ErrorMessageBuilder {
             Set<Long> contractNumbers = contractNumbersByErrorType.get(errorType);
 
             switch (errorType) {
-            case TEMPORARY_ERROR:
-                errors.add(getTranslatedTemporaryError(contractNumbers));
-                break;
-            case APPROVAL_ERROR:
-                errors.add(getTranslatedApprovalError(contractNumbers));
-                break;
+                case TEMPORARY_ERROR:
+                    errors.add(getTranslatedTemporaryError(contractNumbers));
+                    break;
+                case APPROVAL_ERROR:
+                    errors.add(getTranslatedApprovalError(contractNumbers));
+                    break;
             }
         }
 
@@ -90,27 +88,33 @@ public class ErrorMessageBuilder {
 
     private String getTranslatedApprovalError(Set<Long> contractNumbers) {
 
-        String format = catalog.getPluralString(
-                "No transactions are available for credit card {0}. Please go to ‘Settings’ > ‘Accounts’ in the Mobile Banking app to add this credit card. If your credit card transactions are displayed in Mobile Banking, they will also be available for Grip.",
-                "No transactions are available for credit cards {0}. Please go to ‘Settings’ > ‘Accounts’ in the Mobile Banking app to add these credit cards. If your credit cards transactions are displayed in Mobile Banking, they will also be available for Grip.",
-                contractNumbers.size());
+        String format =
+                catalog.getPluralString(
+                        "No transactions are available for credit card {0}. Please go to ‘Settings’ > ‘Accounts’ in the Mobile Banking app to add this credit card. If your credit card transactions are displayed in Mobile Banking, they will also be available for Grip.",
+                        "No transactions are available for credit cards {0}. Please go to ‘Settings’ > ‘Accounts’ in the Mobile Banking app to add these credit cards. If your credit cards transactions are displayed in Mobile Banking, they will also be available for Grip.",
+                        contractNumbers.size());
 
         return Catalog.format(format, formatContractNumbers(contractNumbers));
     }
 
     private String getTranslatedTemporaryError(Set<Long> contractNumbers) {
-        String format = catalog.getPluralString(
-                "A temporary error occurred in the communication between ABN and ICS for the credit card {0}. We will automatically refresh data as soon as the connection is available.",
-                "A temporary error occurred in the communication between ABN and ICS for the credit cards {0}. We will automatically refresh data as soon as the connection is available.",
-                contractNumbers.size());
+        String format =
+                catalog.getPluralString(
+                        "A temporary error occurred in the communication between ABN and ICS for the credit card {0}. We will automatically refresh data as soon as the connection is available.",
+                        "A temporary error occurred in the communication between ABN and ICS for the credit cards {0}. We will automatically refresh data as soon as the connection is available.",
+                        contractNumbers.size());
 
         return Catalog.format(format, formatContractNumbers(contractNumbers));
     }
 
     private String formatContractNumbers(Set<Long> contractNumbers) {
-        ImmutableList<String> list = FluentIterable.from(contractNumbers).transform(
-                contractNumber -> AbnAmroUtils.maskCreditCardContractNumber(String.valueOf(contractNumber), true))
-                .toList();
+        ImmutableList<String> list =
+                FluentIterable.from(contractNumbers)
+                        .transform(
+                                contractNumber ->
+                                        AbnAmroUtils.maskCreditCardContractNumber(
+                                                String.valueOf(contractNumber), true))
+                        .toList();
 
         String firstSeparator = ", ";
         String lastSeparator = " " + catalog.getString("and") + " ";

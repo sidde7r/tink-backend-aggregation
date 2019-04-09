@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class BaseRequest {
     @JsonProperty("applicationID")
     private String applicationId;
+
     private String token;
+
     @JsonProperty("userID")
     private String userId;
 

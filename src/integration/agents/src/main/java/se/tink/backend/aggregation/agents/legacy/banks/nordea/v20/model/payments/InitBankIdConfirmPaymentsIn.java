@@ -12,8 +12,7 @@ public class InitBankIdConfirmPaymentsIn {
         return confirmTransData;
     }
 
-    public void setConfirmTransData(
-            InitBankIdConfirmPaymentsTransData confirmTransData) {
+    public void setConfirmTransData(InitBankIdConfirmPaymentsTransData confirmTransData) {
         this.confirmTransData = confirmTransData;
     }
 
@@ -21,8 +20,7 @@ public class InitBankIdConfirmPaymentsIn {
         return payments;
     }
 
-    public void setPayments(
-            List<InitBankIdPayment> payments) {
+    public void setPayments(List<InitBankIdPayment> payments) {
         this.payments = payments;
     }
 }

@@ -270,7 +270,8 @@ public class CrossKeyLoanDetails {
     }
 
     public Date getNextInterestAdjustmentDate() throws ParseException {
-        if (!Strings.isNullOrEmpty(nextInterestAdjustmentDate) && !nextInterestAdjustmentDate.equals("00000000")) {
+        if (!Strings.isNullOrEmpty(nextInterestAdjustmentDate)
+                && !nextInterestAdjustmentDate.equals("00000000")) {
             return ThreadSafeDateFormat.FORMATTER_INTEGER_DATE.parse(nextInterestAdjustmentDate);
         }
         return null;

@@ -5,29 +5,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.assertj.core.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.backend.aggregation.agents.models.Portfolio;
+import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonObject
 public class InsuranceEntity {
-    @JsonIgnore
-    private static final Logger log = LoggerFactory.getLogger(InsuranceEntity.class);
+    @JsonIgnore private static final Logger log = LoggerFactory.getLogger(InsuranceEntity.class);
 
     @JsonProperty("FORS_NR")
     private String insuranceNumber;
+
     @JsonProperty("KUND_NAMN_FORSAKR")
     private String customerName;
+
     @JsonProperty("KOMPL_TARIFF_KOD")
     private String tariffCode;
+
     @JsonProperty("ANDEL_VARDE_BEL")
     private double marketValue;
+
     @JsonProperty("TYP")
     private String type;
+
     @JsonProperty("VERKS_GREN_KOD")
-    private String accountType; // I'm really not sure what to call this, but the field value is "IPS" for one object.
+    private String
+            accountType; // I'm really not sure what to call this, but the field value is "IPS" for
+                         // one object.
+
     @JsonProperty("DETAIL_URL")
     private String detailUrl;
 
@@ -64,13 +71,13 @@ public class InsuranceEntity {
         }
 
         switch (type.toLowerCase()) {
-        case "kapitalförsäkring":
-            return Portfolio.Type.KF;
-        case "tjänstepension":
-            return Portfolio.Type.PENSION;
-        default:
-            log.warn(String.format("Unknown insurance type: %s", type));
-            return Portfolio.Type.OTHER;
+            case "kapitalförsäkring":
+                return Portfolio.Type.KF;
+            case "tjänstepension":
+                return Portfolio.Type.PENSION;
+            default:
+                log.warn(String.format("Unknown insurance type: %s", type));
+                return Portfolio.Type.OTHER;
         }
     }
 

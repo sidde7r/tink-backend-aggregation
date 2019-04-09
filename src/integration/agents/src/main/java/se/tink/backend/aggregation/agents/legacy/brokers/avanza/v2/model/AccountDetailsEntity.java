@@ -1,5 +1,7 @@
 package se.tink.backend.aggregation.agents.brokers.avanza.v2.model;
 
+import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.MAPPERS;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -9,7 +11,6 @@ import java.util.Optional;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
 import se.tink.libraries.account.identifiers.SwedishIdentifier;
-import static se.tink.backend.aggregation.agents.brokers.avanza.AvanzaV2Constants.MAPPERS;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDetailsEntity {

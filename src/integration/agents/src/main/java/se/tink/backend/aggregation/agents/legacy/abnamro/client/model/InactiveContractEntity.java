@@ -6,11 +6,12 @@ import com.google.common.collect.ImmutableMap;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InactiveContractEntity {
 
-    private static final ImmutableMap<Integer, String> INACTIVE_REASONS = new ImmutableMap.Builder<Integer, String>()
-            .put(2, "INACTIVE")
-            .put(4, "FRS SUBSCRIPTION FAILED")
-            .put(9, "FAILURE DUE TO TECHNICAL REASONS")
-            .build();
+    private static final ImmutableMap<Integer, String> INACTIVE_REASONS =
+            new ImmutableMap.Builder<Integer, String>()
+                    .put(2, "INACTIVE")
+                    .put(4, "FRS SUBSCRIPTION FAILED")
+                    .put(9, "FAILURE DUE TO TECHNICAL REASONS")
+                    .build();
 
     private String contractNumber;
     private Integer status;

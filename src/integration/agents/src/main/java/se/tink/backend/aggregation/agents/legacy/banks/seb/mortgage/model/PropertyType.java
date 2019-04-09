@@ -21,10 +21,10 @@ public enum PropertyType {
 
     public String getNumericalKey() {
         if (numerical == null) {
-            throw new UnsupportedOperationException(String.format(
-                    "%s.%s has no numerical representation",
-                    PropertyType.class.getSimpleName(),
-                    name()));
+            throw new UnsupportedOperationException(
+                    String.format(
+                            "%s.%s has no numerical representation",
+                            PropertyType.class.getSimpleName(), name()));
         }
 
         return numerical;

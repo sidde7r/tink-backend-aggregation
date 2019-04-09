@@ -7,23 +7,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.BankIdStatus;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.InitBankIdResponse;
 import se.tink.backend.aggregation.agents.banks.sbab.model.response.PollBankIdResponse;
 import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.backend.agents.rpc.Credentials;
 
 public class AuthenticationClient extends SBABClient {
 
     private static final AggregationLogger log = new AggregationLogger(AuthenticationClient.class);
 
-    public static ImmutableMap<String, BankIdStatus> BANKID_STATUS = ImmutableMap.<String,BankIdStatus>builder()
-            .put("CONTINUE", BankIdStatus.WAITING)
-            .put("ONGOING", BankIdStatus.WAITING)
-            .put("SUCCESS", BankIdStatus.DONE)
-            .put("FAILURE", BankIdStatus.CANCELLED)
-            .build();
+    public static ImmutableMap<String, BankIdStatus> BANKID_STATUS =
+            ImmutableMap.<String, BankIdStatus>builder()
+                    .put("CONTINUE", BankIdStatus.WAITING)
+                    .put("ONGOING", BankIdStatus.WAITING)
+                    .put("SUCCESS", BankIdStatus.DONE)
+                    .put("FAILURE", BankIdStatus.CANCELLED)
+                    .build();
 
     private static final String BANKID_INIT_URL = SECURE_BASE_URL + "/auth/api/v1/initiate";
     private static final String BANKID_POLL_URL = SECURE_BASE_URL + "/auth/api/v1/pending";
@@ -32,25 +33,26 @@ public class AuthenticationClient extends SBABClient {
 
     public AuthenticationClient(Client client, Credentials credentials, String userAgent) {
         super(client, credentials, userAgent);
-
     }
 
     public void initiateBankIdLogin() {
 
-        InitBankIdResponse response = client.resource(BANKID_INIT_URL)
-                .queryParam("dep", "privat")
-                .queryParam("auth_mech", "PW_MBID")
-                .queryParam("auth_device", "OTHER")
-                .queryParam("pnr", credentials.getField(Field.Key.USERNAME))
-                .get(InitBankIdResponse.class);
+        InitBankIdResponse response =
+                client.resource(BANKID_INIT_URL)
+                        .queryParam("dep", "privat")
+                        .queryParam("auth_mech", "PW_MBID")
+                        .queryParam("auth_device", "OTHER")
+                        .queryParam("pnr", credentials.getField(Field.Key.USERNAME))
+                        .get(InitBankIdResponse.class);
         reference = response.getPendingAuthorizationCode();
     }
 
     public BankIdStatus getLoginStatus() {
 
-        PollBankIdResponse response = client.resource(BANKID_POLL_URL)
-                .queryParam("code", reference)
-                .get(PollBankIdResponse.class);
+        PollBankIdResponse response =
+                client.resource(BANKID_POLL_URL)
+                        .queryParam("code", reference)
+                        .get(PollBankIdResponse.class);
 
         return BANKID_STATUS.getOrDefault(response.getStatus(), BankIdStatus.FAILED_UNKNOWN);
     }

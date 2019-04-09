@@ -10,7 +10,8 @@ public class CompleteBankIdPage {
     private final Element form;
 
     public CompleteBankIdPage(String html) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(html), "No html provided for the complete BankID page");
+        Preconditions.checkArgument(
+                !Strings.isNullOrEmpty(html), "No html provided for the complete BankID page");
 
         Document doc = Jsoup.parse(html);
         Element form = doc.getElementById("responseForm");
@@ -24,7 +25,8 @@ public class CompleteBankIdPage {
         Preconditions.checkState(input != null, "Couldn't find SAMLResponse input field");
 
         String value = input.attr("value");
-        Preconditions.checkState(!Strings.isNullOrEmpty(value), "No SAMLResponse input value available");
+        Preconditions.checkState(
+                !Strings.isNullOrEmpty(value), "No SAMLResponse input value available");
 
         return value;
     }

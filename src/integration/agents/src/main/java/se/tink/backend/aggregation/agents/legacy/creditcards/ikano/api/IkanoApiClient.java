@@ -42,7 +42,8 @@ public class IkanoApiClient {
     private int limit = DEFAULT_LIMIT;
     private final String userAgent;
 
-    public IkanoApiClient(Client client, Credentials credentials, String payload, String userAgent) throws NoSuchAlgorithmException {
+    public IkanoApiClient(Client client, Credentials credentials, String payload, String userAgent)
+            throws NoSuchAlgorithmException {
         this.client = client;
         this.credentials = credentials;
         cardType = CardType.valueOf(payload);
@@ -52,9 +53,10 @@ public class IkanoApiClient {
     }
 
     public String authenticateWithBankId() throws Exception {
-        BankIdReference response = createClientRequest(MOBILE_BANK_ID_REFERENCE_URI)
-                .header("Username", credentials.getUsername())
-                .get(BankIdReference.class);
+        BankIdReference response =
+                createClientRequest(MOBILE_BANK_ID_REFERENCE_URI)
+                        .header("Username", credentials.getUsername())
+                        .get(BankIdReference.class);
 
         if (response.isBankIdAlreadyInProgress()) {
             throw BankIdError.ALREADY_IN_PROGRESS.exception();
@@ -68,9 +70,10 @@ public class IkanoApiClient {
     public boolean fetchBankIdSession(String reference) throws Exception {
         String uri = MOBILE_BANK_ID_SESSION_URI + reference;
 
-        BankIdSession response = createClientRequest(uri)
-                .header("Username", credentials.getUsername())
-                .get(BankIdSession.class);
+        BankIdSession response =
+                createClientRequest(uri)
+                        .header("Username", credentials.getUsername())
+                        .get(BankIdSession.class);
 
         if (response.isBankIdNoClient()) {
             throw BankIdError.NO_CLIENT.exception();
@@ -93,10 +96,11 @@ public class IkanoApiClient {
     }
 
     public CardList fetchCards() throws Exception {
-        CardList response = createClientRequest(CARDS_URI)
-                .header("SessionKey", sessionKey)
-                .header("SessionId", sessionId)
-                .get(CardList.class);
+        CardList response =
+                createClientRequest(CARDS_URI)
+                        .header("SessionKey", sessionKey)
+                        .header("SessionId", sessionId)
+                        .get(CardList.class);
 
         // Throws not a customer exception if user has no cards
         response.ensureHasCards();
@@ -114,26 +118,29 @@ public class IkanoApiClient {
             RegisterCardRequest request = new RegisterCardRequest();
             request.setCardType(card.getCardType());
 
-            RegisteredCards response = createClientRequest(REGISTER_CARDS_URI)
-                    .header("SessionKey", sessionKey)
-                    .header("SessionId", sessionId)
-                    .post(RegisteredCards.class, request);
+            RegisteredCards response =
+                    createClientRequest(REGISTER_CARDS_URI)
+                            .header("SessionKey", sessionKey)
+                            .header("SessionId", sessionId)
+                            .post(RegisteredCards.class, request);
 
             response.logRequestedAndRegisteredCardTypes(credentials, card.getCardType());
         }
     }
 
     private void fetchCardsAndTransactions(int limit) throws Exception {
-        cardsAndTransactionsResponse = createClientRequest(ENGAGEMENTS_URI + limit)
-                .header("SessionKey", sessionKey)
-                .header("SessionId", sessionId)
-                .get(CardEntities.class);
+        cardsAndTransactionsResponse =
+                createClientRequest(ENGAGEMENTS_URI + limit)
+                        .header("SessionKey", sessionKey)
+                        .header("SessionId", sessionId)
+                        .get(CardEntities.class);
 
         cardsAndTransactionsResponse.keepSelectedCardTypes(cardType);
     }
 
     public List<Account> fetchAccounts() throws Exception {
-        if (cardsAndTransactionsResponse == null || cardsAndTransactionsResponse.getCards().isEmpty()) {
+        if (cardsAndTransactionsResponse == null
+                || cardsAndTransactionsResponse.getCards().isEmpty()) {
             fetchCardsAndTransactions(DEFAULT_LIMIT);
         }
 
@@ -151,25 +158,31 @@ public class IkanoApiClient {
         return getTransactionsFor(account);
     }
 
-    public List<Transaction> getTransactionsFor(Account account) throws IkanoApiAgent.AccountRelationNotFoundException {
+    public List<Transaction> getTransactionsFor(Account account)
+            throws IkanoApiAgent.AccountRelationNotFoundException {
         if (cardsAndTransactionsResponse == null) {
-            throw new IllegalStateException("It's not possible to get transactions from the response before fetching cards and transactions");
+            throw new IllegalStateException(
+                    "It's not possible to get transactions from the response before fetching cards and transactions");
         }
 
         return cardsAndTransactionsResponse.getCardFor(account).getTinkTransactions();
     }
 
-    public boolean hasMoreTransactionHistory(Account account) throws IkanoApiAgent.AccountRelationNotFoundException {
+    public boolean hasMoreTransactionHistory(Account account)
+            throws IkanoApiAgent.AccountRelationNotFoundException {
         if (cardsAndTransactionsResponse == null) {
-            throw new IllegalStateException("It's not possible to check transaction history before cards and transactions have been fetched");
+            throw new IllegalStateException(
+                    "It's not possible to check transaction history before cards and transactions have been fetched");
         }
 
-        int numberOfTransactions = cardsAndTransactionsResponse.getCardFor(account).getTransactions().size();
+        int numberOfTransactions =
+                cardsAndTransactionsResponse.getCardFor(account).getTransactions().size();
         return numberOfTransactions == this.limit;
     }
 
     private WebResource.Builder createClientRequest(String uri) {
-        return client.resource(ROOT_URL + uri).header("User-Agent", userAgent)
+        return client.resource(ROOT_URL + uri)
+                .header("User-Agent", userAgent)
                 .header("DeviceId", deviceId)
                 .header("DeviceAuth", deviceAuth)
                 .type(MediaType.APPLICATION_JSON)

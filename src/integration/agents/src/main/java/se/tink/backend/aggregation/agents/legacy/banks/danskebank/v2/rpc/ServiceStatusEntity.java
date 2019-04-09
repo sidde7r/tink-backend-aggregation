@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ServiceStatusEntity {
     @JsonProperty("StatusCode")
     private String statusCode;
+
     @JsonProperty("StatusText")
     private String statusText;
 

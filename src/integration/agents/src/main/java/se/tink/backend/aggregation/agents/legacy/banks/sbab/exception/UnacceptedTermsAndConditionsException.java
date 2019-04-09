@@ -7,7 +7,8 @@ public class UnacceptedTermsAndConditionsException extends RuntimeException {
     private MultivaluedMapImpl input;
 
     public UnacceptedTermsAndConditionsException(String url, MultivaluedMapImpl input) {
-        super("User has not accepted the Terms and Conditions needed for using the SBABs web site.");
+        super(
+                "User has not accepted the Terms and Conditions needed for using the SBABs web site.");
         this.url = url;
         this.input = input;
     }

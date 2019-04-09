@@ -7,24 +7,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class LoginResponse extends AbstractResponse {
     @JsonProperty("Challenge")
     private String challenge;
+
     @JsonProperty("ChallengeData")
     private String challengeData;
+
     @JsonProperty("ChallengeHelp")
     private String challengeHelp;
+
     @JsonProperty("ChallengeNeeded")
     private boolean challengeNeeded;
+
     @JsonProperty("ChangePasswordRequired")
     protected boolean changePasswordRequired;
+
     @JsonProperty("CustomerSegment")
     protected String customerSegment;
+
     @JsonProperty("Name")
     protected String name;
+
     @JsonProperty("SecurityKey")
     private String securityKey;
+
     @JsonProperty("SGSegment")
     protected String sgSegment;
+
     @JsonProperty("UserHash")
     protected String userHash;
+
     @JsonProperty("SGSession")
     private String sgSession;
 

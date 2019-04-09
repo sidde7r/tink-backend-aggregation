@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import java.util.Date;
 import java.util.List;
-import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.AgentParsingUtils;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -26,8 +26,10 @@ public class AccountInfoEntity {
     private String paymentMissing;
     private String overdue;
     private List<CardEntity> cards;
+
     @JsonProperty("OCR")
     private OcrEntity ocr;
+
     private String createdYear;
     private String createdMonth;
     private List<String> monthNames;
@@ -177,7 +179,8 @@ public class AccountInfoEntity {
     }
 
     private double calculateBalance() {
-        return -(AgentParsingUtils.parseAmount(positiveBalance) + AgentParsingUtils.parseAmount(reservedAmount));
+        return -(AgentParsingUtils.parseAmount(positiveBalance)
+                + AgentParsingUtils.parseAmount(reservedAmount));
     }
 
     public Account toAccount() {
@@ -193,7 +196,8 @@ public class AccountInfoEntity {
 
         Preconditions.checkState(
                 Preconditions.checkNotNull(account.getBankId()).matches("[0-9]{16}"),
-                "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+                "Unexpected account.bankid '%s'. Reformatted?",
+                account.getBankId());
 
         return account;
     }

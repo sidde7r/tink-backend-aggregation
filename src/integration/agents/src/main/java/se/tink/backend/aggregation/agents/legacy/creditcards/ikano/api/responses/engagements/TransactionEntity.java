@@ -3,14 +3,13 @@ package se.tink.backend.aggregation.agents.creditcards.ikano.api.responses.engag
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.Objects;
 import se.tink.backend.aggregation.agents.creditcards.ikano.api.utils.IkanoParser;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.libraries.date.DateUtils;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
@@ -34,8 +33,8 @@ public class TransactionEntity {
     }
 
     private boolean isPendingTransaction() {
-        return !Strings.isNullOrEmpty(transactionName) &&
-                Objects.equals(transactionName.toLowerCase(), "skyddat belopp");
+        return !Strings.isNullOrEmpty(transactionName)
+                && Objects.equals(transactionName.toLowerCase(), "skyddat belopp");
     }
 
     public double getAmount() {

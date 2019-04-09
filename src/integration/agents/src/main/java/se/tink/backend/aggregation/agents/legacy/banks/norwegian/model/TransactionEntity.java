@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Strings;
+import java.text.ParseException;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionTypes;
 import se.tink.backend.aggregation.log.AggregationLogger;
 import se.tink.libraries.date.DateUtils;
 import se.tink.libraries.date.ThreadSafeDateFormat;
-
-import java.text.ParseException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionEntity {
@@ -23,8 +22,10 @@ public class TransactionEntity {
     private String transactionText;
     private String transactionTypeText;
     private String message;
+
     @JsonProperty("isBooked")
     private boolean booked;
+
     private String postingDate;
     private String valueDate;
 
@@ -117,38 +118,41 @@ public class TransactionEntity {
         t.setId(String.valueOf(externalId));
         t.setAmount(getAmount());
         try {
-            t.setDate(DateUtils
-                    .flattenTime(ThreadSafeDateFormat.FORMATTER_SECONDS_T.parse(getFormattedTransactionDate())));
+            t.setDate(
+                    DateUtils.flattenTime(
+                            ThreadSafeDateFormat.FORMATTER_SECONDS_T.parse(
+                                    getFormattedTransactionDate())));
         } catch (ParseException e) {
             throw new IllegalStateException("Unable to parse date", e);
         }
         t.setDescription(Strings.nullToEmpty(getTransactionText()).trim());
 
         switch (getTransactionTypeText().toLowerCase()) {
-        case "reserverat":
-            t.setPending(true);
-            break;
-        case "kontantuttag":
-            t.setType(TransactionTypes.WITHDRAWAL);
-            break;
-        case "köp":
-            t.setType(TransactionTypes.CREDIT_CARD);
-            break;
-        default:
-            // NOP
+            case "reserverat":
+                t.setPending(true);
+                break;
+            case "kontantuttag":
+                t.setType(TransactionTypes.WITHDRAWAL);
+                break;
+            case "köp":
+                t.setType(TransactionTypes.CREDIT_CARD);
+                break;
+            default:
+                // NOP
         }
 
         log.info(
                 String.format(
                         "[transactionTypeText]: %s [hasMessage]: %s",
-                        getTransactionTypeText(),
-                        !Strings.isNullOrEmpty(getMessage())));
+                        getTransactionTypeText(), !Strings.isNullOrEmpty(getMessage())));
 
         return t;
     }
 
-    // Recent payments are not listed in the billed transactions for current month. They're first listed in
-    // pending transactions. This method returns true if the accountTransactionId is 0 and the transactionTypeText
+    // Recent payments are not listed in the billed transactions for current month. They're first
+    // listed in
+    // pending transactions. This method returns true if the accountTransactionId is 0 and the
+    // transactionTypeText
     // is "betalning".
     @JsonIgnore
     public boolean isNotBilledPayment() {

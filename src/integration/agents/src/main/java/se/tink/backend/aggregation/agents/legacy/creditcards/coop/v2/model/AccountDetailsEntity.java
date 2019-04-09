@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AccountDetailsEntity {
     @JsonProperty("ID")
     private String id;
+
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("Value")
     private String value;
 

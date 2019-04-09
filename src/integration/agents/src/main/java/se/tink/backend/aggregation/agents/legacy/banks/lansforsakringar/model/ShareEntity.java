@@ -95,14 +95,21 @@ public class ShareEntity {
         Double marketValue = parseStringToDouble(getMarketValue());
         instrument.setMarketValue(marketValue);
         instrument.setName(getName());
-        instrument.setPrice(parseStringToDouble(instrumentDetails != null ? instrumentDetails.getBuyingPrice() : null));
+        instrument.setPrice(
+                parseStringToDouble(
+                        instrumentDetails != null ? instrumentDetails.getBuyingPrice() : null));
         Double acquisitionCost = parseStringToDouble(getAcquisitionCost());
-        instrument.setProfit(marketValue != null && acquisitionCost != null ? marketValue - acquisitionCost : null);
+        instrument.setProfit(
+                marketValue != null && acquisitionCost != null
+                        ? marketValue - acquisitionCost
+                        : null);
         instrument.setQuantity(quantity);
         instrument.setTicker(instrumentDetails != null ? instrumentDetails.getSymbol() : null);
         instrument.setType(Instrument.Type.STOCK);
-        instrument.setUniqueIdentifier(instrumentDetails != null ?
-                getIsinCode() + instrumentDetails.getSymbol().trim() : getIsinCode());
+        instrument.setUniqueIdentifier(
+                instrumentDetails != null
+                        ? getIsinCode() + instrumentDetails.getSymbol().trim()
+                        : getIsinCode());
 
         return Optional.of(instrument);
     }

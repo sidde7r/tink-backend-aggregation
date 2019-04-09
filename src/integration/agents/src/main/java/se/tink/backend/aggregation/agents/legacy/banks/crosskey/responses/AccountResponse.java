@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.MoreObjects;
 import java.util.Collections;
 import java.util.List;
-import se.tink.backend.aggregation.agents.banks.crosskey.utils.CrossKeyUtils;
 import se.tink.backend.agents.rpc.Account;
-import se.tink.libraries.account.AccountIdentifier;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.agents.banks.crosskey.utils.CrossKeyUtils;
+import se.tink.libraries.account.AccountIdentifier;
 import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -41,7 +41,6 @@ public class AccountResponse {
     private Boolean softLocked;
     private Boolean pledged;
     private List<InterestLadder> interestLadder;
-
 
     public Account toTinkAccount(CrossKeyConfig config) {
         Account tinkAccount = new Account();

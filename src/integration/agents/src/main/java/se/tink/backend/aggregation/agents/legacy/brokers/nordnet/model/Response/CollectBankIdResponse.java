@@ -9,19 +9,21 @@ import se.tink.backend.aggregation.agents.BankIdStatus;
 public class CollectBankIdResponse {
     @JsonProperty("progressStatus")
     private String status;
+
     private String completeUrl;
 
     public BankIdStatus getStatus() {
-        switch(status) {
-        case "USER_SIGN":
-        case "OUTSTANDING_TRANSACTION":
-            return BankIdStatus.WAITING;
-        case "COMPLETE":
-            return BankIdStatus.DONE;
-        case "NO_CLIENT":
-            return BankIdStatus.NO_CLIENT;
-        default:
-            throw new IllegalStateException("Unknown error detected while collecting BankID status: " + status);
+        switch (status) {
+            case "USER_SIGN":
+            case "OUTSTANDING_TRANSACTION":
+                return BankIdStatus.WAITING;
+            case "COMPLETE":
+                return BankIdStatus.DONE;
+            case "NO_CLIENT":
+                return BankIdStatus.NO_CLIENT;
+            default:
+                throw new IllegalStateException(
+                        "Unknown error detected while collecting BankID status: " + status);
         }
     }
 

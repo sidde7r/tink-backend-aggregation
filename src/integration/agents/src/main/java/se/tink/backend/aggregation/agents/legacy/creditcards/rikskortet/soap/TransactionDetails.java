@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -6,12 +5,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for TransactionDetails complex type.
- * 
+ * Java class for TransactionDetails complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="TransactionDetails">
  *   &lt;complexContent>
@@ -28,40 +26,35 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TransactionDetails", propOrder = {
-    "cardAcceptor",
-    "description",
-    "amount",
-    "date",
-    "type",
-    "typeName"
-})
+@XmlType(
+        name = "TransactionDetails",
+        propOrder = {"cardAcceptor", "description", "amount", "date", "type", "typeName"})
 public class TransactionDetails {
 
     @XmlElement(name = "CardAcceptor")
     protected String cardAcceptor;
+
     @XmlElement(name = "Description")
     protected String description;
+
     @XmlElement(name = "Amount")
     protected String amount;
+
     @XmlElement(name = "Date")
     protected String date;
+
     @XmlElement(name = "Type", required = true)
     protected EmployeeTransactionType type;
+
     @XmlElement(name = "TypeName")
     protected String typeName;
 
     /**
      * Gets the value of the cardAcceptor property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getCardAcceptor() {
         return cardAcceptor;
@@ -69,11 +62,8 @@ public class TransactionDetails {
 
     /**
      * Sets the value of the cardAcceptor property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setCardAcceptor(String value) {
         this.cardAcceptor = value;
@@ -81,11 +71,8 @@ public class TransactionDetails {
 
     /**
      * Gets the value of the description property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getDescription() {
         return description;
@@ -93,11 +80,8 @@ public class TransactionDetails {
 
     /**
      * Sets the value of the description property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setDescription(String value) {
         this.description = value;
@@ -105,11 +89,8 @@ public class TransactionDetails {
 
     /**
      * Gets the value of the amount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getAmount() {
         return amount;
@@ -117,11 +98,8 @@ public class TransactionDetails {
 
     /**
      * Sets the value of the amount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setAmount(String value) {
         this.amount = value;
@@ -129,11 +107,8 @@ public class TransactionDetails {
 
     /**
      * Gets the value of the date property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getDate() {
         return date;
@@ -141,11 +116,8 @@ public class TransactionDetails {
 
     /**
      * Sets the value of the date property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setDate(String value) {
         this.date = value;
@@ -153,11 +125,8 @@ public class TransactionDetails {
 
     /**
      * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link EmployeeTransactionType }
-     *     
+     *
+     * @return possible object is {@link EmployeeTransactionType }
      */
     public EmployeeTransactionType getType() {
         return type;
@@ -165,11 +134,8 @@ public class TransactionDetails {
 
     /**
      * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link EmployeeTransactionType }
-     *     
+     *
+     * @param value allowed object is {@link EmployeeTransactionType }
      */
     public void setType(EmployeeTransactionType value) {
         this.type = value;
@@ -177,11 +143,8 @@ public class TransactionDetails {
 
     /**
      * Gets the value of the typeName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is {@link String }
      */
     public String getTypeName() {
         return typeName;
@@ -189,14 +152,10 @@ public class TransactionDetails {
 
     /**
      * Sets the value of the typeName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is {@link String }
      */
     public void setTypeName(String value) {
         this.typeName = value;
     }
-
 }

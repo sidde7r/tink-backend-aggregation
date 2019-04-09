@@ -5,6 +5,16 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Uninterruptibles;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import se.tink.backend.agents.rpc.Account;
@@ -18,14 +28,6 @@ import se.tink.backend.aggregation.agents.FetchTransactionsResponse;
 import se.tink.backend.aggregation.agents.RefreshCheckingAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshCreditCardAccountsExecutor;
 import se.tink.backend.aggregation.agents.RefreshSavingsAccountsExecutor;
-import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
-import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
-import se.tink.backend.aggregation.agents.models.Transaction;
-import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
-import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.backend.aggregation.log.AggregationLogger;
-import se.tink.libraries.credentials.service.CredentialsRequest;
-import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.backend.aggregation.agents.abnamro.client.EnrollmentClient;
 import se.tink.backend.aggregation.agents.abnamro.client.IBSubscriptionClient;
 import se.tink.backend.aggregation.agents.abnamro.client.exceptions.IcsException;
@@ -35,23 +37,20 @@ import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.Credi
 import se.tink.backend.aggregation.agents.abnamro.client.model.creditcards.TransactionContainerEntity;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.enrollment.CollectEnrollmentResponse;
 import se.tink.backend.aggregation.agents.abnamro.client.rpc.enrollment.InitiateEnrollmentResponse;
-import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
+import se.tink.backend.aggregation.agents.abnamro.converters.AccountConverter;
+import se.tink.backend.aggregation.agents.abnamro.ics.mappers.TransactionMapper;
 import se.tink.backend.aggregation.agents.abnamro.utils.AbnAmroUtils;
+import se.tink.backend.aggregation.agents.models.Transaction;
+import se.tink.backend.aggregation.configuration.AgentsServiceConfiguration;
+import se.tink.backend.aggregation.configuration.SignatureKeyPair;
+import se.tink.backend.aggregation.configuration.integrations.abnamro.AbnAmroConfiguration;
+import se.tink.backend.aggregation.log.AggregationLogger;
+import se.tink.libraries.credentials.service.CredentialsRequest;
+import se.tink.libraries.credentials.service.RefreshableItem;
 import se.tink.libraries.i18n.Catalog;
 import se.tink.libraries.phonenumbers.InvalidPhoneNumberException;
 import se.tink.libraries.phonenumbers.utils.PhoneNumberUtils;
 import se.tink.libraries.user.rpc.User;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /** This is the new AbnAmroAgent that will be used for Grip 3.0. It also includes ICS. */
 public class AbnAmroAgent extends AbstractAgent
@@ -73,40 +72,49 @@ public class AbnAmroAgent extends AbstractAgent
     private List<Account> existingAccounts = null;
     private final Integer OLD_ICS_ID_LENGTH = 16;
 
-    public AbnAmroAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public AbnAmroAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
         this.user = request.getUser();
         this.credentials = request.getCredentials();
         this.catalog = Catalog.getCatalog(user.getLocale());
         this.existingAccounts = request.getAccounts();
     }
+
     @Override
     public void setConfiguration(AgentsServiceConfiguration configuration) {
         this.abnAmroConfiguration = getValidAbnAmroConfiguration(configuration);
 
-        this.subscriptionClient = new IBSubscriptionClient(abnAmroConfiguration, metricContext.getMetricRegistry());
+        this.subscriptionClient =
+                new IBSubscriptionClient(abnAmroConfiguration, metricContext.getMetricRegistry());
 
-        this.enrollmentService = new EnrollmentClient(
-                clientFactory.createBasicClient(context.getLogOutputStream()),
-                abnAmroConfiguration.getEnrollmentConfiguration(),
-                metricContext.getMetricRegistry());
+        this.enrollmentService =
+                new EnrollmentClient(
+                        clientFactory.createBasicClient(context.getLogOutputStream()),
+                        abnAmroConfiguration.getEnrollmentConfiguration(),
+                        metricContext.getMetricRegistry());
     }
 
-    private AbnAmroConfiguration getValidAbnAmroConfiguration(AgentsServiceConfiguration configuration) {
+    private AbnAmroConfiguration getValidAbnAmroConfiguration(
+            AgentsServiceConfiguration configuration) {
         if (Objects.nonNull(configuration.getAbnAmro())) {
             return configuration.getAbnAmro();
         }
 
-        String clusterIdentifier = Optional.ofNullable(context.getClusterId())
-                .orElseThrow(() -> new IllegalStateException("Failed to fetch cluster identifier."));
+        String clusterIdentifier =
+                Optional.ofNullable(context.getClusterId())
+                        .orElseThrow(
+                                () ->
+                                        new IllegalStateException(
+                                                "Failed to fetch cluster identifier."));
 
         switch (clusterIdentifier.toLowerCase()) {
-        case "leeds-staging":
-            return configuration.getAbnAmroStaging();
-        case "leeds-production":
-            return configuration.getAbnAmroProduction();
-        default:
-            throw new IllegalStateException("This agent can only be used by Leeds cluster.");
+            case "leeds-staging":
+                return configuration.getAbnAmroStaging();
+            case "leeds-production":
+                return configuration.getAbnAmroProduction();
+            default:
+                throw new IllegalStateException("This agent can only be used by Leeds cluster.");
         }
     }
 
@@ -115,19 +123,16 @@ public class AbnAmroAgent extends AbstractAgent
         return isAuthenticated() || authenticateWithMobileBanking();
     }
 
-    /**
-     * User is authenticated if we have a the customer number stored in the payload.
-     */
+    /** User is authenticated if we have a the customer number stored in the payload. */
     private boolean isAuthenticated() {
         return AbnAmroUtils.isValidBcNumberFormat(credentials.getPayload());
     }
 
     /**
-     * Authenticate with the Mobile Banking App. The authentication is performed in four steps
-     * 1) Initiate the enrollment for Grip against ABN AMRO.
-     * 2) Let the Grip app redirect to Mobile Banking app.
-     * 3) User signs/accept the T&C in the Mobile Banking app.
-     * 4) Collect/poll the status of the signing.
+     * Authenticate with the Mobile Banking App. The authentication is performed in four steps 1)
+     * Initiate the enrollment for Grip against ABN AMRO. 2) Let the Grip app redirect to Mobile
+     * Banking app. 3) User signs/accept the T&C in the Mobile Banking app. 4) Collect/poll the
+     * status of the signing.
      */
     private boolean authenticateWithMobileBanking() throws InvalidPhoneNumberException {
         final String phoneNumber = PhoneNumberUtils.normalize(user.getUsername());
@@ -158,9 +163,7 @@ public class AbnAmroAgent extends AbstractAgent
         return bcNumber.isPresent();
     }
 
-    /**
-     * Collect/poll the enrollment service until is is completed or timed out.
-     */
+    /** Collect/poll the enrollment service until is is completed or timed out. */
     private Optional<String> collect(String signingToken) {
         final DateTime start = new DateTime();
 
@@ -203,19 +206,25 @@ public class AbnAmroAgent extends AbstractAgent
 
     private Double getCreditCardBalance(Account account) throws IcsException {
         Long accountNumber = getCreditCardContractNumber(account);
-        Optional<CreditCardAccountEntity> accountEntity = getCreditCardAccountEntities(accountNumber);
+        Optional<CreditCardAccountEntity> accountEntity =
+                getCreditCardAccountEntities(accountNumber);
 
-        return accountEntity.map(acc -> -(acc.getCurrentBalance()+acc.getAuthorizedBalance())).orElse(0.0);
+        return accountEntity
+                .map(acc -> -(acc.getCurrentBalance() + acc.getAuthorizedBalance()))
+                .orElse(0.0);
     }
 
     private List<Transaction> getCreditCardTransactions(Long accountNumber) throws IcsException {
-        Optional<CreditCardAccountEntity> accountEntity = getCreditCardAccountEntities(accountNumber);
+        Optional<CreditCardAccountEntity> accountEntity =
+                getCreditCardAccountEntities(accountNumber);
 
-        return accountEntity.map(acc -> icsTransactionsConverter(acc.getTransactions()))
+        return accountEntity
+                .map(acc -> icsTransactionsConverter(acc.getTransactions()))
                 .orElseGet(ImmutableList::of);
     }
 
-    private Optional<CreditCardAccountEntity> getCreditCardAccountEntities(Long accountNumber) throws IcsException {
+    private Optional<CreditCardAccountEntity> getCreditCardAccountEntities(Long accountNumber)
+            throws IcsException {
         if (accountEntities.containsKey(accountNumber)) {
             // We've already fetched this account recently.
             return Optional.of(accountEntities.get(accountNumber));
@@ -227,31 +236,39 @@ public class AbnAmroAgent extends AbstractAgent
 
         String bcNumber = credentials.getPayload();
 
-        List<CreditCardAccountEntity> entities = subscriptionClient
-                .getCreditCardAccountAndTransactions(bcNumber, accountNumber)
-                .stream()
-                .map(CreditCardAccountContainerEntity::getCreditCardAccount)
-                .collect(Collectors.toList());
+        List<CreditCardAccountEntity> entities =
+                subscriptionClient.getCreditCardAccountAndTransactions(bcNumber, accountNumber)
+                        .stream()
+                        .map(CreditCardAccountContainerEntity::getCreditCardAccount)
+                        .collect(Collectors.toList());
 
         if (entities.size() != 1) {
-            log.warn(String.format("Fetching ICS accounts, expected 1 account in payload, got %d", entities.size()));
+            log.warn(
+                    String.format(
+                            "Fetching ICS accounts, expected 1 account in payload, got %d",
+                            entities.size()));
             return Optional.empty();
         }
 
         CreditCardAccountEntity accountEntity = entities.get(0);
         accountEntities.put(accountNumber, accountEntity);
-        // We're only asking for a single account, so we're only interested in the first account entity.
+        // We're only asking for a single account, so we're only interested in the first account
+        // entity.
         return Optional.of(accountEntity);
     }
 
     private Long getCreditCardContractNumber(Account account) {
-        // The contract number is an extension of the account number suffixed by a card specific number. When a user
-        // is issued a new card, the contract number changes although the account stays the same. We store the latest
-        // available full contract number in the payload to fetch data from ICS but map only on the account number.
+        // The contract number is an extension of the account number suffixed by a card specific
+        // number. When a user
+        // is issued a new card, the contract number changes although the account stays the same. We
+        // store the latest
+        // available full contract number in the payload to fetch data from ICS but map only on the
+        // account number.
         return Long.valueOf(account.getPayload(AbnAmroUtils.ABN_AMRO_ICS_ACCOUNT_CONTRACT_PAYLOAD));
     }
 
-    private List<Transaction> icsTransactionsConverter(List<TransactionContainerEntity> transactionContainer) {
+    private List<Transaction> icsTransactionsConverter(
+            List<TransactionContainerEntity> transactionContainer) {
         return transactionContainer.stream()
                 .filter(TransactionContainerEntity::isInEUR)
                 .map(TransactionMapper::toTransaction)
@@ -263,18 +280,20 @@ public class AbnAmroAgent extends AbstractAgent
                 .filter(a -> Objects.equals(a.getType(), AccountTypes.CREDIT_CARD))
                 .filter(a -> a.getBankId().length() == OLD_ICS_ID_LENGTH)
                 .filter(a -> importedAccounts.stream().anyMatch(isOldICSAccount(a)))
-                .forEach(a -> {
-                    a.setBankId(a.getBankId().concat("-duplicate"));
-                    a.setExcluded(true);
-                    a.setClosed(true);
-                    financialDataCacher.cacheAccount(a);
-                    systemUpdater.sendAccountToUpdateService(a.getBankId());
-                });
+                .forEach(
+                        a -> {
+                            a.setBankId(a.getBankId().concat("-duplicate"));
+                            a.setExcluded(true);
+                            a.setClosed(true);
+                            financialDataCacher.cacheAccount(a);
+                            systemUpdater.sendAccountToUpdateService(a.getBankId());
+                        });
     }
 
     private Predicate<Account> isOldICSAccount(Account possiblyOld) {
-        return newlyImported -> !Strings.isNullOrEmpty(newlyImported.getPayload()) &&
-                newlyImported.getPayload().contains(possiblyOld.getBankId());
+        return newlyImported ->
+                !Strings.isNullOrEmpty(newlyImported.getPayload())
+                        && newlyImported.getPayload().contains(possiblyOld.getBankId());
     }
 
     @Override

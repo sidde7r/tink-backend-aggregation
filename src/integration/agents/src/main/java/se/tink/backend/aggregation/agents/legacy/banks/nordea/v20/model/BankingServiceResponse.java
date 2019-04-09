@@ -1,9 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v20.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Optional;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BankingServiceResponse {
@@ -16,17 +16,17 @@ public class BankingServiceResponse {
     public void setErrorMessage(Map<String, Object> errorMessage) {
         this.errorMessage = errorMessage;
     }
-    
+
     @SuppressWarnings("rawtypes")
     public Optional<String> getErrorCode() {
         if (getErrorMessage() != null) {
-        
+
             Map<String, Object> errorMessage = getErrorMessage();
 
             if (errorMessage.containsKey("errorCode")) {
-                
-                Map errorCodes = (Map) errorMessage.get("errorCode"); 
-                
+
+                Map errorCodes = (Map) errorMessage.get("errorCode");
+
                 if (errorMessage instanceof Map) {
                     Object value = errorCodes.get("$");
 
@@ -34,7 +34,7 @@ public class BankingServiceResponse {
                 }
             }
         }
-        
+
         return Optional.empty();
     }
 

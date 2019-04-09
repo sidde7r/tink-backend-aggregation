@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.ws.rs.core.MediaType;
+import se.tink.backend.agents.rpc.Credentials;
 import se.tink.backend.agents.rpc.Field;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.CardDetailsEntity;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.CardEntity;
@@ -25,7 +26,6 @@ import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.T
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsRequest;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.model.TransactionsResponse;
 import se.tink.backend.aggregation.agents.creditcards.americanexpress.v3.utils.MarketParameters;
-import se.tink.backend.agents.rpc.Credentials;
 import se.tink.libraries.date.ThreadSafeDateFormat;
 import se.tink.libraries.strings.StringUtils;
 
@@ -38,25 +38,43 @@ public class AmericanExpressV3ApiClient {
     private List<CardDetailsEntity> cardList;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final String SWEDISH_LOGIN_URL = "https://global.americanexpress.com/myca/intl/moblclient/emea/services/accountservicing/v1/loginSummary?Face=sv_SE";
-    private static final String SWEDISH_TIMELINE_URL = "https://global.americanexpress.com/myca/intl/moblclient/emea/services/timeline/v1/timelineDetail?Face=sv_SE";
-    private static final ThreadSafeDateFormat LOCAL_TIME_FORMAT = new ThreadSafeDateFormat(
-            "MM-dd-YYYY'T'HH:mm:ss");// 09-06-2015T14:44:16"
+    private static final String SWEDISH_LOGIN_URL =
+            "https://global.americanexpress.com/myca/intl/moblclient/emea/services/accountservicing/v1/loginSummary?Face=sv_SE";
+    private static final String SWEDISH_TIMELINE_URL =
+            "https://global.americanexpress.com/myca/intl/moblclient/emea/services/timeline/v1/timelineDetail?Face=sv_SE";
+    private static final ThreadSafeDateFormat LOCAL_TIME_FORMAT =
+            new ThreadSafeDateFormat("MM-dd-YYYY'T'HH:mm:ss"); // 09-06-2015T14:44:16"
 
     private static final ImmutableMap<String, MarketParameters> MARKET_PARAMETERS =
             new ImmutableMap.Builder<String, MarketParameters>()
-                    .put("SG",
-                            new MarketParameters("en_SG", "sg.co.americanexpress.amexservice",
-                                    "https://global.americanexpress.com/myca/intl/moblclient/japa/svc", "3.2.3", false))
-                    .put("GB",
-                            new MarketParameters("en_GB", "uk.co.americanexpress.amexservice",
-                                    "https://global.americanexpress.com/myca/intl/moblclient/emea/svc", "3.4.3", false))
-                    .put("SE",
-                            new MarketParameters("sv_SE", "com.americanexpress.android.acctsvcs.se",
-                                    "https://global.americanexpress.com/myca/intl/moblclient/emea/svc", "4.4.1", true))
+                    .put(
+                            "SG",
+                            new MarketParameters(
+                                    "en_SG",
+                                    "sg.co.americanexpress.amexservice",
+                                    "https://global.americanexpress.com/myca/intl/moblclient/japa/svc",
+                                    "3.2.3",
+                                    false))
+                    .put(
+                            "GB",
+                            new MarketParameters(
+                                    "en_GB",
+                                    "uk.co.americanexpress.amexservice",
+                                    "https://global.americanexpress.com/myca/intl/moblclient/emea/svc",
+                                    "3.4.3",
+                                    false))
+                    .put(
+                            "SE",
+                            new MarketParameters(
+                                    "sv_SE",
+                                    "com.americanexpress.android.acctsvcs.se",
+                                    "https://global.americanexpress.com/myca/intl/moblclient/emea/svc",
+                                    "4.4.1",
+                                    true))
                     .build();
 
-    public AmericanExpressV3ApiClient(Client client, String market, String defaultUserAgent, Credentials credentials) {
+    public AmericanExpressV3ApiClient(
+            Client client, String market, String defaultUserAgent, Credentials credentials) {
         this.client = client;
         this.defaultUserAgent = defaultUserAgent;
         this.credentials = credentials;
@@ -64,18 +82,18 @@ public class AmericanExpressV3ApiClient {
     }
 
     private WebResource.Builder createRequest(String url) {
-        WebResource.Builder request = client
-                .resource(url)
-                .header("User-Agent", defaultUserAgent)
-                .accept(MediaType.APPLICATION_JSON)
-                .header("appID", marketParameters.getAppId())
-                .header("oSversion", "4.2.2")
-                .header("Face", marketParameters.getLocale())
-                .header("clientType", "Android")
-                .header("deviceId", StringUtils.hashAsUUID(credentials.getId()))
-                .header("charset", "UTF-8")
-                .header("clientVersion", marketParameters.getClientVersion())
-                .type(MediaType.APPLICATION_JSON);
+        WebResource.Builder request =
+                client.resource(url)
+                        .header("User-Agent", defaultUserAgent)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("appID", marketParameters.getAppId())
+                        .header("oSversion", "4.2.2")
+                        .header("Face", marketParameters.getLocale())
+                        .header("clientType", "Android")
+                        .header("deviceId", StringUtils.hashAsUUID(credentials.getId()))
+                        .header("charset", "UTF-8")
+                        .header("clientVersion", marketParameters.getClientVersion())
+                        .type(MediaType.APPLICATION_JSON);
 
         if (!Strings.isNullOrEmpty(cupcake)) {
             request = request.header("cupcake", cupcake);
@@ -94,9 +112,13 @@ public class AmericanExpressV3ApiClient {
         timelineRequest.setCmlEnabled(true);
 
         return MAPPER.readValue(
-                createRequest(Objects.equals("sv_SE", marketParameters.getLocale()) ?
-                        SWEDISH_TIMELINE_URL : marketParameters.getBaseUrl()).post(String.class, timelineRequest),
-                TimelineResponse.class).getTimeline();
+                        createRequest(
+                                        Objects.equals("sv_SE", marketParameters.getLocale())
+                                                ? SWEDISH_TIMELINE_URL
+                                                : marketParameters.getBaseUrl())
+                                .post(String.class, timelineRequest),
+                        TimelineResponse.class)
+                .getTimeline();
     }
 
     public LoginResponse login() {
@@ -106,7 +128,9 @@ public class AmericanExpressV3ApiClient {
         loginRequest.setProfileInfo(profileInfo);
         loginRequest.setTimeZoneOffsetInMilli("7200000");
         loginRequest.setClientVersion(marketParameters.getClientVersion());
-        loginRequest.setHardwareId(StringUtils.hashAsUUID(credentials.getId() + credentials.getField(Field.Key.USERNAME)));
+        loginRequest.setHardwareId(
+                StringUtils.hashAsUUID(
+                        credentials.getId() + credentials.getField(Field.Key.USERNAME)));
         loginRequest.setOsBuild("iOS 10.3.2");
         loginRequest.setPassword(credentials.getField(Field.Key.PASSWORD));
         loginRequest.setUser(credentials.getField(Field.Key.USERNAME));
@@ -118,12 +142,15 @@ public class AmericanExpressV3ApiClient {
 
         LoginResponse loginResponse;
         try {
-            loginResponse = MAPPER.readValue(
-                    createRequest(
-                            Objects.equals(marketParameters.getLocale(), "sv_SE") ?
-                                    SWEDISH_LOGIN_URL :
-                                    marketParameters.getBaseUrl() + "/v1/loginSummary.do")
-                            .post(String.class, loginRequest), LoginResponse.class);
+            loginResponse =
+                    MAPPER.readValue(
+                            createRequest(
+                                            Objects.equals(marketParameters.getLocale(), "sv_SE")
+                                                    ? SWEDISH_LOGIN_URL
+                                                    : marketParameters.getBaseUrl()
+                                                            + "/v1/loginSummary.do")
+                                    .post(String.class, loginRequest),
+                            LoginResponse.class);
         } catch (IOException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -132,12 +159,15 @@ public class AmericanExpressV3ApiClient {
             cupcake = loginResponse.getLogonData().getCupcake();
         }
 
-        if (loginResponse.getLogonData() != null && loginResponse.getLogonData().getProfileData() != null) {
-            credentials.setSensitivePayload("profileInfo", loginResponse.getLogonData().getProfileData().getData());
+        if (loginResponse.getLogonData() != null
+                && loginResponse.getLogonData().getProfileData() != null) {
+            credentials.setSensitivePayload(
+                    "profileInfo", loginResponse.getLogonData().getProfileData().getData());
         }
 
         // Save this response for laters, for the refresh operation in the agent
-        if (loginResponse.getSummaryData() != null && loginResponse.getSummaryData().getCardList() != null) {
+        if (loginResponse.getSummaryData() != null
+                && loginResponse.getSummaryData().getCardList() != null) {
             cardList = loginResponse.getSummaryData().getCardList();
         }
 
@@ -147,24 +177,26 @@ public class AmericanExpressV3ApiClient {
     TransactionDetailsEntity getTransactionDetails(int billingIndex, CardDetailsEntity cardEntity)
             throws Exception {
         TransactionsRequest transactionsRequest = new TransactionsRequest();
-        transactionsRequest.setBillingIndexList(Collections.singletonList(Integer.toString(billingIndex)));
+        transactionsRequest.setBillingIndexList(
+                Collections.singletonList(Integer.toString(billingIndex)));
         transactionsRequest.setSortedIndex(cardEntity.getSortedIndex());
         return MAPPER.readValue(
-                createRequest(marketParameters.getBaseUrl() + "/v1/transaction.do")
-                        .post(String.class, transactionsRequest), TransactionsResponse.class).getTransactionDetails();
+                        createRequest(marketParameters.getBaseUrl() + "/v1/transaction.do")
+                                .post(String.class, transactionsRequest),
+                        TransactionsResponse.class)
+                .getTransactionDetails();
     }
 
     MarketParameters getMarketParameters() {
         return marketParameters;
     }
 
-    /**
-     * Create a map from suppIndex (00, 01 etc.) to card number (XXX-ddddd).
-     */
+    /** Create a map from suppIndex (00, 01 etc.) to card number (XXX-ddddd). */
     Map<String, String> createCardNumberBySuppIndexMap(List<CardEntity> cardList) {
         Map<String, String> cardNumberBySuppIndex = Maps.newHashMap();
         for (CardEntity card : cardList) {
-            cardNumberBySuppIndex.put(card.getSuppIndex(), productNameToCardNumber(card.getCardProductName()));
+            cardNumberBySuppIndex.put(
+                    card.getSuppIndex(), productNameToCardNumber(card.getCardProductName()));
         }
         return cardNumberBySuppIndex;
     }

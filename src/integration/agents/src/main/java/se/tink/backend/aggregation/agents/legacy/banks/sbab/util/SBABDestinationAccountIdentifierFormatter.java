@@ -7,7 +7,8 @@ import se.tink.libraries.account.identifiers.formatters.AccountIdentifierFormatt
 import se.tink.libraries.account.identifiers.formatters.DefaultAccountIdentifierFormatter;
 
 public class SBABDestinationAccountIdentifierFormatter implements AccountIdentifierFormatter {
-    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER = new DefaultAccountIdentifierFormatter();
+    private static final DefaultAccountIdentifierFormatter DEFAULT_FORMATTER =
+            new DefaultAccountIdentifierFormatter();
 
     @Override
     public String apply(AccountIdentifier identifier) {
@@ -22,26 +23,26 @@ public class SBABDestinationAccountIdentifierFormatter implements AccountIdentif
         String clearingNumber = swedishIdentifier.getClearingNumber();
 
         switch (swedishIdentifier.getBank()) {
-        case HANDELSBANKEN:
-            if (accountNumber.length() < 13) {
-                accountNumber = Strings.padStart(accountNumber, 9, '0');
-            }
-            break;
-        case DANSKE_BANK_SVERIGE:
-        case SPARBANKEN_SYD:
-        case SPARBANKEN_ORESUND:
-        case PLUSGIROT_BANK:
-            if (accountNumber.length() < 14) {
-                accountNumber = Strings.padStart(accountNumber, 10, '0');
-            }
-            break;
-        case SWEDBANK:
-            if (clearingNumber.length() == 5 && accountNumber.length() < 15) {
-                accountNumber = Strings.padStart(accountNumber, 10, '0');
-            }
-            break;
-        default:
-            return swedishIdentifier.getIdentifier();
+            case HANDELSBANKEN:
+                if (accountNumber.length() < 13) {
+                    accountNumber = Strings.padStart(accountNumber, 9, '0');
+                }
+                break;
+            case DANSKE_BANK_SVERIGE:
+            case SPARBANKEN_SYD:
+            case SPARBANKEN_ORESUND:
+            case PLUSGIROT_BANK:
+                if (accountNumber.length() < 14) {
+                    accountNumber = Strings.padStart(accountNumber, 10, '0');
+                }
+                break;
+            case SWEDBANK:
+                if (clearingNumber.length() == 5 && accountNumber.length() < 15) {
+                    accountNumber = Strings.padStart(accountNumber, 10, '0');
+                }
+                break;
+            default:
+                return swedishIdentifier.getIdentifier();
         }
 
         return clearingNumber + accountNumber;

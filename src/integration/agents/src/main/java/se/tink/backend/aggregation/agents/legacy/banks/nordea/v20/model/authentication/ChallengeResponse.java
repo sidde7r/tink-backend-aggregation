@@ -16,5 +16,4 @@ public class ChallengeResponse {
     public void setChallengeResponseIn(ChallengeResponseIn challengeResponseIn) {
         this.challengeResponseIn = challengeResponseIn;
     }
-
 }

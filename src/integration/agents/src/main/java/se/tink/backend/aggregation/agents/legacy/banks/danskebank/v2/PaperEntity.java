@@ -9,40 +9,58 @@ import se.tink.backend.aggregation.agents.models.Instrument;
 public class PaperEntity {
     @JsonProperty("PaperId")
     private String paperId;
+
     @JsonProperty("PaperIsFund")
     private Boolean paperIsFund;
+
     @JsonProperty("PaperName")
     private String paperName;
+
     @JsonProperty("PaperPriceUpdateInterval")
     private Integer paperPriceUpdateInterval;
+
     @JsonProperty("GainChangeNominal")
     private Double gainChangeNominal;
+
     @JsonProperty("GainChangePercent")
     private Double gainChangePercent;
+
     @JsonProperty("PaperCount")
     private Double paperCount;
+
     @JsonProperty("PaperCountDecimals")
     private Integer paperCountDecimals;
+
     @JsonProperty("PaperCountText")
     private String paperCountText;
+
     @JsonProperty("PaperPrice")
     private Double paperPrice;
+
     @JsonProperty("PaperPriceChangeNominal")
     private Double paperPriceChangeNominal;
+
     @JsonProperty("PaperPriceChangePercent")
     private Double paperPriceChangePercent;
+
     @JsonProperty("PaperPriceDecimals")
     private Double paperPriceDecimals;
+
     @JsonProperty("PaperTotalValue")
     private Double paperTotalValue;
+
     @JsonProperty("PaperTotalValueDecimals")
     private Integer paperTotalValueDecimals;
+
     @JsonProperty("PortfolioShare")
     private Double portfolioShare;
+
     @JsonProperty("PortfolioShareDecimals")
     private Integer portfolioShareDecimals;
+
     @JsonProperty("Untreated")
     private Double untreated;
+
     @JsonProperty("UntreatedText")
     private String untreatedText;
 
@@ -199,9 +217,11 @@ public class PaperEntity {
     }
 
     private Double getProfit() {
-        // GainChangeNominal is not always set. Instead multiply the priceChangePerPaper with paperCount.
-        return getGainChangeNominal() != null ? getGainChangeNominal() :
-                getPaperPriceChangeNominal() * getPaperCount();
+        // GainChangeNominal is not always set. Instead multiply the priceChangePerPaper with
+        // paperCount.
+        return getGainChangeNominal() != null
+                ? getGainChangeNominal()
+                : getPaperPriceChangeNominal() * getPaperCount();
     }
 
     private Double calculateAverageAcquisitionPrice() {

@@ -2,9 +2,9 @@ package se.tink.backend.aggregation.agents.brokers.lysa.model;
 
 import java.util.Date;
 import java.util.Map;
-import se.tink.backend.aggregation.annotations.JsonObject;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.AccountTypes;
+import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class AccountEntity {
@@ -15,8 +15,8 @@ public class AccountEntity {
     private String name;
     private Date created;
     private String owner;
-    private Map<String,Double> target;
-    private Map<String,PositionEntity> positions;
+    private Map<String, Double> target;
+    private Map<String, PositionEntity> positions;
     private String type;
 
     public String getType() {
@@ -102,7 +102,7 @@ public class AccountEntity {
     public Account toAccount() {
         Account a = new Account();
 
-        a.setBalance(worth+cash);
+        a.setBalance(worth + cash);
         a.setName(name);
         a.setType(AccountTypes.INVESTMENT);
         a.setBankId(accountId);

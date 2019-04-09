@@ -14,5 +14,4 @@ public class RecipientsResponseBody {
     public void setRecipients(List<RecipientEntity> recipients) {
         this.recipients = recipients;
     }
-
 }

@@ -32,13 +32,13 @@ public abstract class BaseResponse {
 
     @JsonIgnore
     public boolean isBankIdAlreadyInProgress() {
-        return error != null &&
-                IkanoApiConstants.ErrorCode.BANKID_IN_PROGRESS.equalsIgnoreCase(error.getCode());
+        return error != null
+                && IkanoApiConstants.ErrorCode.BANKID_IN_PROGRESS.equalsIgnoreCase(error.getCode());
     }
 
     @JsonIgnore
     public boolean isBankIdCancel() {
-        return error != null &&
-                IkanoApiConstants.ErrorCode.BANKID_CANCELLED.equalsIgnoreCase(error.getCode());
+        return error != null
+                && IkanoApiConstants.ErrorCode.BANKID_CANCELLED.equalsIgnoreCase(error.getCode());
     }
 }

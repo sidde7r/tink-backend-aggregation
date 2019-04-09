@@ -18,8 +18,9 @@ public class Session extends CookieContainer {
     }
 
     public boolean isExpired() {
-        // Don't load stored session if it is older than 30 minutes. This is because Nordea has a timeout
-        // and a client cannot be logged in for more than 30 minutes. 
+        // Don't load stored session if it is older than 30 minutes. This is because Nordea has a
+        // timeout
+        // and a client cannot be logged in for more than 30 minutes.
         return lastUpdated != null && lastUpdated.plusMinutes(30).isBefore(DateTime.now());
     }
 

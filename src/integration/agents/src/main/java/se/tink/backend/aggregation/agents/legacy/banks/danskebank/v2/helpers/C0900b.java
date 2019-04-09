@@ -1,7 +1,6 @@
 package se.tink.backend.aggregation.agents.banks.danskebank.v2.helpers;
 
 import org.json.JSONException;
-
 import org.json.JSONObject;
 
 /* renamed from: com.danskebank.core.models.r.b */
@@ -21,8 +20,17 @@ public class C0900b {
     }
 
     public static C0900b m4164a(JSONObject jSONObject) throws JSONException {
-        JSONObject jSONObject2 = jSONObject.getJSONObject("Output").getJSONObject("StaticOutput").getJSONObject("ModuleOutput");
-        return new C0900b(C0714l.m3213b(jSONObject2, "AutoStartToken"), C0714l.m3213b(jSONObject2, "OrderReference"), C0714l.m3213b(jSONObject2, "BankIDStatusCode"), C0714l.m3213b(jSONObject2, "BankIDStatusText"), C0714l.m3213b(jSONObject2, "BankIDToken"));
+        JSONObject jSONObject2 =
+                jSONObject
+                        .getJSONObject("Output")
+                        .getJSONObject("StaticOutput")
+                        .getJSONObject("ModuleOutput");
+        return new C0900b(
+                C0714l.m3213b(jSONObject2, "AutoStartToken"),
+                C0714l.m3213b(jSONObject2, "OrderReference"),
+                C0714l.m3213b(jSONObject2, "BankIDStatusCode"),
+                C0714l.m3213b(jSONObject2, "BankIDStatusText"),
+                C0714l.m3213b(jSONObject2, "BankIDToken"));
     }
 
     public String m4165b() {

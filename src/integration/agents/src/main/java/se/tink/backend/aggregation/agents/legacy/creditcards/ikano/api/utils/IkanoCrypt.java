@@ -1,12 +1,11 @@
 package se.tink.backend.aggregation.agents.creditcards.ikano.api.utils;
 
 import com.google.common.base.Strings;
-import se.tink.backend.agents.rpc.Credentials;
-import se.tink.libraries.strings.StringUtils;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import se.tink.backend.agents.rpc.Credentials;
+import se.tink.libraries.strings.StringUtils;
 
 public class IkanoCrypt {
     // Do not change the SENSITIVE_PAYLOAD_KEY
@@ -18,7 +17,12 @@ public class IkanoCrypt {
     }
 
     public static String generateDeviceAuth(String deviceId) throws NoSuchAlgorithmException {
-        String bigInteger = new BigInteger(1, MessageDigest.getInstance("MD5").digest((deviceId + AUTH_SUFFIX).getBytes())).toString(16);
+        String bigInteger =
+                new BigInteger(
+                                1,
+                                MessageDigest.getInstance("MD5")
+                                        .digest((deviceId + AUTH_SUFFIX).getBytes()))
+                        .toString(16);
 
         return Strings.padStart(bigInteger, 32, '0');
     }

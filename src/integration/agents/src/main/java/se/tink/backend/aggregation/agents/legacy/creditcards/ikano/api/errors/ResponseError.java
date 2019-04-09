@@ -27,6 +27,7 @@ public class ResponseError {
     }
 
     public enum Type {
-        USER_ERROR, FATAL_ERROR
+        USER_ERROR,
+        FATAL_ERROR
     }
 }

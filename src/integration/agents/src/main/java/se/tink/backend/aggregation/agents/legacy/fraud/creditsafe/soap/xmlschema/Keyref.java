@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.fraud.creditsafe.soap.xmlschema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -8,12 +7,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 
-
 /**
- * <p>Java class for anonymous complex type.
- * 
+ * Java class for anonymous complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -24,26 +22,19 @@ import javax.xml.namespace.QName;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "keyref")
-public class Keyref
-    extends Keybase
-{
+public class Keyref extends Keybase {
 
     @XmlAttribute(name = "refer", required = true)
     protected QName refer;
 
     /**
      * Gets the value of the refer property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link QName }
-     *     
+     *
+     * @return possible object is {@link QName }
      */
     public QName getRefer() {
         return refer;
@@ -51,14 +42,10 @@ public class Keyref
 
     /**
      * Sets the value of the refer property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link QName }
-     *     
+     *
+     * @param value allowed object is {@link QName }
      */
     public void setRefer(QName value) {
         this.refer = value;
     }
-
 }

@@ -9,33 +9,48 @@ import se.tink.backend.aggregation.annotations.JsonObject;
 
 @JsonObject
 public class TransferRequest {
-    @JsonIgnore
-    private static final String TODAY_AS_TRANSFER_DATE = "Now";
+    @JsonIgnore private static final String TODAY_AS_TRANSFER_DATE = "Now";
+
     @JsonProperty("creditAccountNoExt")
     private final String destinationAccountNumber;
+
     @JsonProperty("debitAccount")
     private final String sourceAccountNumber;
+
     @JsonProperty("creditorStatementText")
     private final String destinationMessage;
+
     @JsonProperty("debitorStatementText")
     private final String sourceMessage;
+
     private final String amount;
     private final String currency;
+
     @JsonProperty("simpleDate")
     private final String date;
+
     @JsonProperty("creditAccountRegNoExt")
     private static final String CREDIT_ACCOUNT_REG_NO_EXT = "";
+
     @JsonProperty("sendMessageToReceiver")
     private static final String SEND_MESSAGE_TO_RECEIVER = "false";
+
     @JsonProperty("sendReceiptToSender")
     private static final String SEND_RECEIPT_TO_SENDER = "false";
+
     @JsonProperty("savePayee")
     private static final String SAVE_PAYEE = "false";
+
     @JsonProperty("saveForLaterApproval")
     private static final String SAVE_FOR_LATER_APPROVAL = "false";
 
-    private TransferRequest(String amount, String currency, String date, String destinationAccountNumber,
-            String destinationMessage, String sourceAccountNumber,
+    private TransferRequest(
+            String amount,
+            String currency,
+            String date,
+            String destinationAccountNumber,
+            String destinationMessage,
+            String sourceAccountNumber,
             String sourceMessage) {
         this.amount = amount;
         this.currency = currency;
@@ -118,8 +133,10 @@ public class TransferRequest {
         }
 
         public Builder date(LocalDate date) {
-            this.date = date.isEqual(LocalDate.now()) ?
-                    TODAY_AS_TRANSFER_DATE : date.format(DateTimeFormatter.BASIC_ISO_DATE);
+            this.date =
+                    date.isEqual(LocalDate.now())
+                            ? TODAY_AS_TRANSFER_DATE
+                            : date.format(DateTimeFormatter.BASIC_ISO_DATE);
             return this;
         }
 
@@ -152,8 +169,14 @@ public class TransferRequest {
             Preconditions.checkNotNull(sourceAccountNumber);
             Preconditions.checkNotNull(sourceMessage);
 
-            return new TransferRequest(amount, currency, date, destinationAccountNumber,
-                    destinationMessage, sourceAccountNumber, sourceMessage);
+            return new TransferRequest(
+                    amount,
+                    currency,
+                    date,
+                    destinationAccountNumber,
+                    destinationMessage,
+                    sourceAccountNumber,
+                    sourceMessage);
         }
     }
 }

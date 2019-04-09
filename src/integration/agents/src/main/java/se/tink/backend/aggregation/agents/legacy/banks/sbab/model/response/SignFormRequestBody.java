@@ -6,10 +6,8 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.jsoup.nodes.Element;
 
 public class SignFormRequestBody extends MultivaluedMapImpl {
-    @JsonIgnore
-    private String signUri;
-    @JsonIgnore
-    private String referer;
+    @JsonIgnore private String signUri;
+    @JsonIgnore private String referer;
 
     public String getClient() {
         return getFirst("nx_client");

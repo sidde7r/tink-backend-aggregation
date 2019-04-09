@@ -18,8 +18,7 @@ public class EInvoiceListResponse extends AbstractResponse {
         return transactions;
     }
 
-    public void setTransactions(
-            List<EInvoiceListTransactionEntity> transactions) {
+    public void setTransactions(List<EInvoiceListTransactionEntity> transactions) {
         this.transactions = transactions;
     }
 }

@@ -18,14 +18,13 @@ import se.tink.backend.aggregation.nxgen.http.TinkHttpClient;
 import se.tink.libraries.credentials.service.CredentialsRequest;
 
 public class EmptyAgent extends NextGenerationAgent {
-    public EmptyAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public EmptyAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context, signatureKeyPair);
     }
 
     @Override
-    protected void configureHttpClient(TinkHttpClient client) {
-
-    }
+    protected void configureHttpClient(TinkHttpClient client) {}
 
     @Override
     protected Authenticator constructAuthenticator() {
@@ -33,7 +32,8 @@ public class EmptyAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransactionalAccountRefreshController> constructTransactionalAccountRefreshController() {
+    protected Optional<TransactionalAccountRefreshController>
+            constructTransactionalAccountRefreshController() {
         return Optional.empty();
     }
 
@@ -58,7 +58,8 @@ public class EmptyAgent extends NextGenerationAgent {
     }
 
     @Override
-    protected Optional<TransferDestinationRefreshController> constructTransferDestinationRefreshController() {
+    protected Optional<TransferDestinationRefreshController>
+            constructTransferDestinationRefreshController() {
         return Optional.empty();
     }
 

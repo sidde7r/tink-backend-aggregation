@@ -1,4 +1,3 @@
-
 package se.tink.backend.aggregation.agents.creditcards.rikskortet.soap;
 
 import java.util.ArrayList;
@@ -8,12 +7,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ArrayOfRestaurantInfo complex type.
- * 
+ * Java class for ArrayOfRestaurantInfo complex type.
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="ArrayOfRestaurantInfo">
  *   &lt;complexContent>
@@ -25,13 +23,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ArrayOfRestaurantInfo", propOrder = {
-    "restaurantInfo"
-})
+@XmlType(
+        name = "ArrayOfRestaurantInfo",
+        propOrder = {"restaurantInfo"})
 public class ArrayOfRestaurantInfo {
 
     @XmlElement(name = "RestaurantInfo", nillable = true)
@@ -39,25 +35,18 @@ public class ArrayOfRestaurantInfo {
 
     /**
      * Gets the value of the restaurantInfo property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the restaurantInfo property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
+     *
+     * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
+     * modification you make to the returned list will be present inside the JAXB object. This is
+     * why there is not a <CODE>set</CODE> method for the restaurantInfo property.
+     *
+     * <p>For example, to add a new item, do as follows:
+     *
      * <pre>
      *    getRestaurantInfo().add(newItem);
      * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link RestaurantInfo }
-     * 
-     * 
+     *
+     * <p>Objects of the following type(s) are allowed in the list {@link RestaurantInfo }
      */
     public List<RestaurantInfo> getRestaurantInfo() {
         if (restaurantInfo == null) {
@@ -65,5 +54,4 @@ public class ArrayOfRestaurantInfo {
         }
         return this.restaurantInfo;
     }
-
 }

@@ -1,8 +1,7 @@
 package se.tink.backend.aggregation.agents.banks.nordea.v18.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreditCardTransactionsEntity {

@@ -22,6 +22,7 @@ public class UserDataEntity {
     private List<AccountEntity> accounts;
     private String bonusAmount;
     private String upcomingBonusAmount;
+
     @JsonProperty("login_type")
     private String loginType;
 
@@ -133,8 +134,7 @@ public class UserDataEntity {
         return accounts;
     }
 
-    public void setAccounts(
-            List<AccountEntity> accounts) {
+    public void setAccounts(List<AccountEntity> accounts) {
         this.accounts = accounts;
     }
 

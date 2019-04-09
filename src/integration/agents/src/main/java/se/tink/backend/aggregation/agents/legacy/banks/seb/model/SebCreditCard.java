@@ -8,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SebCreditCard {
     @JsonProperty("ROW_ID")
     public String ROW_ID;
-    
+
     @JsonProperty("CARD_NO")
     public String CARD_NO;
-    
+
     @JsonProperty("NAME_ON_CARD")
     public String NAME_ON_CARD;
 }

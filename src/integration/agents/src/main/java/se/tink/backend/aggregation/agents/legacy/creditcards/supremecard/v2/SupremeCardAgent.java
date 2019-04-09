@@ -5,6 +5,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.Uninterruptibles;
 import com.sun.jersey.api.client.ClientResponse;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.apache.http.client.utils.URIBuilder;
 import se.tink.backend.agents.rpc.Account;
 import se.tink.backend.agents.rpc.Credentials;
@@ -23,19 +30,12 @@ import se.tink.backend.aggregation.agents.exceptions.errors.LoginError;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.utils.jersey.NoRedirectStrategy;
 import se.tink.backend.aggregation.configuration.SignatureKeyPair;
-import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.backend.aggregation.utils.SupplementalInformationUtils;
+import se.tink.libraries.credentials.service.CredentialsRequest;
 import se.tink.libraries.i18n.LocalizableEnum;
 import se.tink.libraries.i18n.LocalizableKey;
 import se.tink.libraries.net.TinkApacheHttpClient4;
 import se.tink.libraries.serialization.utils.SerializationUtils;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCardAccountsExecutor {
     private static final int MAX_ATTEMPTS = 65;
@@ -46,7 +46,8 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
     private AccountInfoEntity accountInfoEntity = null;
     private Account account = null;
 
-    public SupremeCardAgent(CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
+    public SupremeCardAgent(
+            CredentialsRequest request, AgentContext context, SignatureKeyPair signatureKeyPair) {
         super(request, context);
 
         this.apiAgent = createApiAgent();
@@ -54,8 +55,9 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
     }
 
     private SupremeCardApiAgent createApiAgent() {
-        TinkApacheHttpClient4 client = clientFactory
-                .createClientWithRedirectHandler(context.getLogOutputStream(), new NoRedirectStrategy());
+        TinkApacheHttpClient4 client =
+                clientFactory.createClientWithRedirectHandler(
+                        context.getLogOutputStream(), new NoRedirectStrategy());
 
         return SupremeCardApiAgent.createApiAgent(client);
     }
@@ -63,10 +65,10 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
     @Override
     public boolean login() throws Exception {
         switch (credentials.getType()) {
-        case MOBILE_BANKID:
-            return loginWithBankId();
-        default:
-            throw new IllegalStateException("Not implemented");
+            case MOBILE_BANKID:
+                return loginWithBankId();
+            default:
+                throw new IllegalStateException("Not implemented");
         }
     }
 
@@ -82,7 +84,8 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
         field.setMinLength(12);
         field.setPattern("^(19|20)\\d{2}(0\\d|1[0-2])([0-2]\\d|3[0-1])\\d{4}$"); // SSN regex
 
-        credentials.setSupplementalInformation(SerializationUtils.serializeToString(Lists.newArrayList(field)));
+        credentials.setSupplementalInformation(
+                SerializationUtils.serializeToString(Lists.newArrayList(field)));
         credentials.setStatus(CredentialsStatus.AWAITING_SUPPLEMENTAL_INFORMATION);
 
         String response = supplementalRequester.requestSupplementalInformation(credentials);
@@ -91,8 +94,10 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
     }
 
     private boolean loginWithBankId() throws BankIdException, LoginException {
-        // Historically we have been using autostartToken to authenticate users (the credential doesn't contain a ssn)
-        // But since their app stopped working and their website doesn't allow autostartToken authentication with
+        // Historically we have been using autostartToken to authenticate users (the credential
+        // doesn't contain a ssn)
+        // But since their app stopped working and their website doesn't allow autostartToken
+        // authentication with
         // mobile devices, we need to ask the user for their ssn and update it on the credential
         if (Strings.isNullOrEmpty(credentials.getField(Field.Key.USERNAME))) {
             Optional<String> ssn = askUserForSsn();
@@ -104,7 +109,8 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
             credentials.setField(Field.Key.USERNAME, ssn.get());
             systemUpdater.updateCredentialsExcludingSensitiveInformation(credentials, false);
 
-            // Due to a bug in the app, we aren't able to prompt BankID after a supplemental information request
+            // Due to a bug in the app, we aren't able to prompt BankID after a supplemental
+            // information request
             // So instead we need to abort the current login operation and ask the user to try again
             throw LoginError.INCORRECT_CREDENTIALS.exception(UserMessage.SSN_UPDATED.getKey());
         }
@@ -114,8 +120,8 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
         Map<String, String> initiateBankIdMap = initiateBankId();
 
         // All the steps in the bank id login uses a dynamic referer.
-        Optional<String> optionalBankIdRefererUrl = SupremeCardParsingUtils.parseBankIdUrl(
-                initiateBankIdMap.get("htmlResponse"));
+        Optional<String> optionalBankIdRefererUrl =
+                SupremeCardParsingUtils.parseBankIdUrl(initiateBankIdMap.get("htmlResponse"));
         if (!optionalBankIdRefererUrl.isPresent()) {
             throw new IllegalStateException("#supreme-card - Could not find bank id referer url.");
         }
@@ -124,17 +130,19 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
         // Before we can do the order of a bankId login we have to initiate the bankId session.
         // From this will get signicat information which will be used as query parameters in the
         // referer for when we collect bankId status.
-        String initiateBankIdResponse = initiateBankIdLogin(bankIdRefererUrl, initiateBankIdMap.get("referer"));
+        String initiateBankIdResponse =
+                initiateBankIdLogin(bankIdRefererUrl, initiateBankIdMap.get("referer"));
 
-        Optional<Map<String, String>> optionalSignicatFields = SupremeCardParsingUtils
-                .parseSignicatFields(initiateBankIdResponse);
+        Optional<Map<String, String>> optionalSignicatFields =
+                SupremeCardParsingUtils.parseSignicatFields(initiateBankIdResponse);
 
         if (!optionalSignicatFields.isPresent()) {
             throw new IllegalStateException("#supreme-card - Could parse signicat fields.");
         }
 
         Map<String, String> signicatFieldsMap = optionalSignicatFields.get();
-        String bankIdBaseUrl = signicatFieldsMap.get(SupremeCardApiConstants.SIGNICAT_SERVICE_URL_KEY);
+        String bankIdBaseUrl =
+                signicatFieldsMap.get(SupremeCardApiConstants.SIGNICAT_SERVICE_URL_KEY);
 
         // Finally we can order bankId
         OrderBankIdResponse orderBankIdResponse = orderBankId(bankIdBaseUrl, bankIdRefererUrl);
@@ -144,7 +152,8 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
 
         // Time to collect bankId;
         openBankID();
-        CollectBankIdResponse collectBankIdResponse = collectBankId(bankIdCollectReferer, orderBankIdResponse);
+        CollectBankIdResponse collectBankIdResponse =
+                collectBankId(bankIdCollectReferer, orderBankIdResponse);
 
         // Complete bankId login
         return completeBankId(bankIdCollectReferer, orderBankIdResponse, collectBankIdResponse);
@@ -155,14 +164,16 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
         ClientResponse initiateBankIdResponse = apiAgent.initiateBankId();
 
         // Follow the redirect.
-        ClientResponse followRedirect = apiAgent
-                .followInitiateBankIdRedirect(initiateBankIdResponse.getLocation().toString());
+        ClientResponse followRedirect =
+                apiAgent.followInitiateBankIdRedirect(
+                        initiateBankIdResponse.getLocation().toString());
         // Now we can closed the initial stream.
         initiateBankIdResponse.close();
 
-        // Follow the redirect. From this response we can parse out the referer for a future request.
-        ClientResponse bankIdLoginUrlResponse = apiAgent.followInitiateBankIdRedirect(
-                followRedirect.getLocation().toString());
+        // Follow the redirect. From this response we can parse out the referer for a future
+        // request.
+        ClientResponse bankIdLoginUrlResponse =
+                apiAgent.followInitiateBankIdRedirect(followRedirect.getLocation().toString());
 
         Map<String, String> initiateBankIdMap = Maps.newHashMap();
         initiateBankIdMap.put("referer", followRedirect.getLocation().toString());
@@ -182,22 +193,21 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
         try {
             String ticket = signicatFieldsMap.get(SupremeCardApiConstants.SIGNICAT_TICKET_KEY);
             String server = signicatFieldsMap.get(SupremeCardApiConstants.SIGNICAT_SERVER_KEY);
-            String serviceUrl = signicatFieldsMap.get(SupremeCardApiConstants.SIGNICAT_SERVICE_URL_KEY);
+            String serviceUrl =
+                    signicatFieldsMap.get(SupremeCardApiConstants.SIGNICAT_SERVICE_URL_KEY);
 
             if (ticket == null || server == null) {
                 throw new IllegalStateException(
                         String.format(
                                 "#supreme-card - ticket or server string where null - ticket: %s, server: %s",
-                                ticket == null,
-                                server == null));
+                                ticket == null, server == null));
             }
 
             if (ticket.isEmpty() || server.isEmpty()) {
                 throw new IllegalStateException(
                         String.format(
                                 "#supreme-card - ticket or server string where empty - ticket: %s, server: %s",
-                                ticket.isEmpty(),
-                                server.isEmpty()));
+                                ticket.isEmpty(), server.isEmpty()));
             }
 
             URIBuilder uriBuilder = new URIBuilder(serviceUrl);
@@ -210,48 +220,49 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
         }
     }
 
-    private OrderBankIdResponse orderBankId(String bankIdBaseUrl, String bankIdRefererUrl) throws BankIdException {
-        OrderBankIdResponse orderBankIdResponse = apiAgent
-                .orderBankId(bankIdBaseUrl, bankIdRefererUrl, credentials.getField(Field.Key.USERNAME));
+    private OrderBankIdResponse orderBankId(String bankIdBaseUrl, String bankIdRefererUrl)
+            throws BankIdException {
+        OrderBankIdResponse orderBankIdResponse =
+                apiAgent.orderBankId(
+                        bankIdBaseUrl, bankIdRefererUrl, credentials.getField(Field.Key.USERNAME));
 
         ErrorEntity error = orderBankIdResponse.getError();
         if (error != null) {
             switch (error.getCode().toLowerCase()) {
-            case SupremeCardApiConstants.BANKID_STATUS_ALREADY_IN_PROGRESS:
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
-            default:
-                throw new IllegalStateException(
-                        String.format(
-                                "#supreme-card - never before seen error code: %s",
-                                error.getCode()));
+                case SupremeCardApiConstants.BANKID_STATUS_ALREADY_IN_PROGRESS:
+                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                default:
+                    throw new IllegalStateException(
+                            String.format(
+                                    "#supreme-card - never before seen error code: %s",
+                                    error.getCode()));
             }
-
         }
         return orderBankIdResponse;
     }
 
-    private CollectBankIdResponse collectBankId(URI bankIdRefererURI, OrderBankIdResponse orderBankIdResponse)
-            throws BankIdException {
+    private CollectBankIdResponse collectBankId(
+            URI bankIdRefererURI, OrderBankIdResponse orderBankIdResponse) throws BankIdException {
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            CollectBankIdResponse collectBankIdResponse = apiAgent.collectBankId(
-                    bankIdRefererURI.toString(), orderBankIdResponse);
+            CollectBankIdResponse collectBankIdResponse =
+                    apiAgent.collectBankId(bankIdRefererURI.toString(), orderBankIdResponse);
 
             switch (collectBankIdResponse.getProgressStatus().toLowerCase()) {
-            case SupremeCardApiConstants.BANKID_STATUS_COMPLETE:
-                return collectBankIdResponse;
-            case SupremeCardApiConstants.BANKID_STATUS_ALREADY_IN_PROGRESS:
-                throw BankIdError.ALREADY_IN_PROGRESS.exception();
-            case SupremeCardApiConstants.BANKID_STATUS_OUTSTANDING_TRANSACTION:
-                // intentional fall through
-            case SupremeCardApiConstants.BANKID_STATUS_USER_SIGN:
-                break;
-            case SupremeCardApiConstants.BANKID_STATUS_NO_CLIENT:
-                throw BankIdError.NO_CLIENT.exception();
-            default:
-                throw new IllegalStateException(
-                        String.format(
-                                "#supreme-card - bankid status not implemented: %s",
-                                collectBankIdResponse.getProgressStatus()));
+                case SupremeCardApiConstants.BANKID_STATUS_COMPLETE:
+                    return collectBankIdResponse;
+                case SupremeCardApiConstants.BANKID_STATUS_ALREADY_IN_PROGRESS:
+                    throw BankIdError.ALREADY_IN_PROGRESS.exception();
+                case SupremeCardApiConstants.BANKID_STATUS_OUTSTANDING_TRANSACTION:
+                    // intentional fall through
+                case SupremeCardApiConstants.BANKID_STATUS_USER_SIGN:
+                    break;
+                case SupremeCardApiConstants.BANKID_STATUS_NO_CLIENT:
+                    throw BankIdError.NO_CLIENT.exception();
+                default:
+                    throw new IllegalStateException(
+                            String.format(
+                                    "#supreme-card - bankid status not implemented: %s",
+                                    collectBankIdResponse.getProgressStatus()));
             }
 
             Uninterruptibles.sleepUninterruptibly(2000, TimeUnit.MILLISECONDS);
@@ -260,13 +271,17 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
         throw BankIdError.TIMEOUT.exception();
     }
 
-    private boolean completeBankId(URI bankIdRefererURI, OrderBankIdResponse orderBankidResponse,
+    private boolean completeBankId(
+            URI bankIdRefererURI,
+            OrderBankIdResponse orderBankidResponse,
             CollectBankIdResponse collectBankIdResponse) {
-        ClientResponse clientResponse = apiAgent.completeBankId(
-                bankIdRefererURI.toString(), orderBankidResponse, collectBankIdResponse);
+        ClientResponse clientResponse =
+                apiAgent.completeBankId(
+                        bankIdRefererURI.toString(), orderBankidResponse, collectBankIdResponse);
 
-        Optional<Map<String, String>> optionalSamlResponse = SupremeCardParsingUtils
-                .parseSAMLResponseAndTargetURL(clientResponse.getEntity(String.class));
+        Optional<Map<String, String>> optionalSamlResponse =
+                SupremeCardParsingUtils.parseSAMLResponseAndTargetURL(
+                        clientResponse.getEntity(String.class));
 
         if (!optionalSamlResponse.isPresent()) {
             throw new IllegalStateException(
@@ -275,19 +290,22 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
 
         Map<String, String> samlResponse = optionalSamlResponse.get();
 
-        ClientResponse finishBankIdLoginResponse = apiAgent.finishBankIdLogin(
-                samlResponse.get(SupremeCardApiConstants.TARGET_PARAMETER_KEY),
-                bankIdRefererURI.toString(),
-                SamlRequest.from(samlResponse));
+        ClientResponse finishBankIdLoginResponse =
+                apiAgent.finishBankIdLogin(
+                        samlResponse.get(SupremeCardApiConstants.TARGET_PARAMETER_KEY),
+                        bankIdRefererURI.toString(),
+                        SamlRequest.from(samlResponse));
 
-        ClientResponse finishBankIdLoginRedirect = apiAgent.followFinishBankIdLoginRedirect(
-                finishBankIdLoginResponse.getLocation().toString(),
-                bankIdRefererURI.toString());
+        ClientResponse finishBankIdLoginRedirect =
+                apiAgent.followFinishBankIdLoginRedirect(
+                        finishBankIdLoginResponse.getLocation().toString(),
+                        bankIdRefererURI.toString());
         finishBankIdLoginResponse.close();
 
-        ClientResponse bankIdLoginFinished = apiAgent.followFinishBankIdLoginRedirect(
-                finishBankIdLoginRedirect.getLocation().toString(),
-                bankIdRefererURI.toString());
+        ClientResponse bankIdLoginFinished =
+                apiAgent.followFinishBankIdLoginRedirect(
+                        finishBankIdLoginRedirect.getLocation().toString(),
+                        bankIdRefererURI.toString());
 
         finishBankIdLoginRedirect.close();
         bankIdLoginFinished.close();
@@ -296,9 +314,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
     }
 
     @Override
-    public void logout() throws Exception {
-
-    }
+    public void logout() throws Exception {}
 
     private void fetchAccountInfo() {
         AccountInfoResponse accountInfoResponse = apiAgent.fetchAccountInfo();
@@ -330,7 +346,9 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
     }
 
     private enum UserMessage implements LocalizableEnum {
-        SSN_UPDATED(new LocalizableKey("The social security number has been updated, please try again"));
+        SSN_UPDATED(
+                new LocalizableKey(
+                        "The social security number has been updated, please try again"));
 
         private final LocalizableKey key;
 
@@ -360,15 +378,16 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
         AccountInfoEntity accountInfoEntity = getAccountInfoEntity();
         Account account = getAccount();
 
-        LocalDate nowInLocalDate = LocalDate.now(TimeZone.getTimeZone("Europe/Stockholm").toZoneId());
+        LocalDate nowInLocalDate =
+                LocalDate.now(TimeZone.getTimeZone("Europe/Stockholm").toZoneId());
         int year = nowInLocalDate.getYear();
         int month = nowInLocalDate.getMonthValue();
 
         List<Transaction> transactions = Lists.newArrayList();
         int failCounter = 0;
         do {
-            TransactionsResponse transactionsResponse = apiAgent.fetchTransactions(
-                    TransactionsRequest.from(year, month));
+            TransactionsResponse transactionsResponse =
+                    apiAgent.fetchTransactions(TransactionsRequest.from(year, month));
 
             if (month == 1) {
                 month = 12;
@@ -378,10 +397,12 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
             }
 
             // No need to search beyond the creation of the card
-            if (YearMonth.of(year, month).compareTo(
-                    YearMonth.of(
-                            Integer.valueOf(accountInfoEntity.getCreatedYear()),
-                            Integer.valueOf(accountInfoEntity.getCreatedMonth()))) < 0) {
+            if (YearMonth.of(year, month)
+                            .compareTo(
+                                    YearMonth.of(
+                                            Integer.valueOf(accountInfoEntity.getCreatedYear()),
+                                            Integer.valueOf(accountInfoEntity.getCreatedMonth())))
+                    < 0) {
                 break;
             }
 
@@ -399,8 +420,7 @@ public class SupremeCardAgent extends AbstractAgent implements RefreshCreditCard
                     transactionsResponse.getData().stream()
                             .map(TransactionEntity::toTransaction)
                             .collect(Collectors.toList()));
-        } while (failCounter < 3 && !isContentWithRefresh(account,
-                transactions));
+        } while (failCounter < 3 && !isContentWithRefresh(account, transactions));
         transactionsMap.put(account, transactions);
         return new FetchTransactionsResponse(transactionsMap);
     }

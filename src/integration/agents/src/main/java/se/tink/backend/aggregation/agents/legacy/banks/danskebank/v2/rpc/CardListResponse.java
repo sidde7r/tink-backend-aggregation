@@ -12,8 +12,9 @@ import java.util.List;
 public class CardListResponse extends BankIdOutput {
     @JsonProperty("OthersCards")
     private List<CardEntity> otherCards;
+
     @JsonProperty("Cards")
-    private List<CardEntity>  cards;
+    private List<CardEntity> cards;
 
     public List<CardEntity> getOtherCards() {
         return otherCards;
@@ -32,10 +33,18 @@ public class CardListResponse extends BankIdOutput {
             return Collections.emptyList();
         }
 
-        ImmutableList<CardEntity> creditCards = FluentIterable.from(cards).filter(cardEntity -> cardEntity != null &&
-                cardEntity.getCardName() != null &&
-                !cardEntity.getCardName().isEmpty() &&
-                !cardEntity.getCardName().toLowerCase().contains("bankkort")).toList();
+        ImmutableList<CardEntity> creditCards =
+                FluentIterable.from(cards)
+                        .filter(
+                                cardEntity ->
+                                        cardEntity != null
+                                                && cardEntity.getCardName() != null
+                                                && !cardEntity.getCardName().isEmpty()
+                                                && !cardEntity
+                                                        .getCardName()
+                                                        .toLowerCase()
+                                                        .contains("bankkort"))
+                        .toList();
 
         List<String> creditCardAccounts = Lists.newArrayList();
         for (CardEntity card : creditCards) {

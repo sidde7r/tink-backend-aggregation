@@ -1,10 +1,9 @@
 package se.tink.backend.aggregation.agents.banks.lansforsakringar.model;
 
-import se.tink.backend.agents.rpc.Account;
-import se.tink.backend.agents.rpc.AccountTypes;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
+import se.tink.backend.agents.rpc.Account;
+import se.tink.backend.agents.rpc.AccountTypes;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CardEntity {
@@ -75,9 +74,9 @@ public class CardEntity {
         account.setType(AccountTypes.CREDIT_CARD);
 
         Preconditions.checkState(
-                Preconditions.checkNotNull(account.getBankId()).matches(
-                        "[0-9]{4}|[0-9]{11}"),
-                "Unexpected account.bankid '%s'. Reformatted?", account.getBankId());
+                Preconditions.checkNotNull(account.getBankId()).matches("[0-9]{4}|[0-9]{11}"),
+                "Unexpected account.bankid '%s'. Reformatted?",
+                account.getBankId());
 
         return account;
     }

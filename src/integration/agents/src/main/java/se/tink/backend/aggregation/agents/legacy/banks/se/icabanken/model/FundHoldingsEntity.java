@@ -7,18 +7,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FundHoldingsEntity {
     @JsonProperty("FundName")
     private String fundName;
+
     @JsonProperty("FundId")
     private String fundId;
+
     @JsonProperty("Shares")
     private double shares;
+
     @JsonProperty("Rate")
     private double rate;
+
     @JsonProperty("InvestedAmount")
     private double investedAmount;
+
     @JsonProperty("MarketValue")
     private double marketValue;
+
     @JsonProperty("ReturnAmount")
     private double returnAmount;
+
     @JsonProperty("ReturnPercentage")
     private double returnPercentage;
 

@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TokenResponse {
-	protected int number;
-	protected String numberPair;
+    protected int number;
+    protected String numberPair;
 
-	public int getNumber() {
-		return number;
-	}
+    public int getNumber() {
+        return number;
+    }
 
-	public void setNumber(int number) {
-		this.number = number;
-	}
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
-	public String getNumberPair() {
-		return numberPair;
-	}
+    public String getNumberPair() {
+        return numberPair;
+    }
 
-	public void setNumberPair(String numberPair) {
-		this.numberPair = numberPair;
-	}
+    public void setNumberPair(String numberPair) {
+        this.numberPair = numberPair;
+    }
 }

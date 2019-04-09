@@ -1,11 +1,10 @@
 package se.tink.backend.aggregation.agents.creditcards.okq8.model;
 
-import com.google.common.base.Objects;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.Strings;
 import com.google.common.base.Function;
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import java.util.Date;
 import se.tink.backend.aggregation.agents.models.Transaction;
 import se.tink.backend.aggregation.agents.models.TransactionPayloadTypes;
@@ -15,9 +14,9 @@ import se.tink.libraries.strings.StringUtils;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionDataEntity {
-    
+
     private static String PENDING_TRANSACTION_DESCRIPTION = "Reserverat belopp";
-    
+
     /**
      * Transformation function to be used by e.g. Iterables or List.transform(entities, TRANSFORM)
      */
@@ -25,10 +24,13 @@ public class TransactionDataEntity {
             TransactionDataEntity::toTinkTransaction;
 
     private String amount;
+
     @JsonProperty("card_number")
     private String cardNumber;
+
     private String date;
     private String description;
+
     @JsonProperty("shop_name")
     private String shopName;
 
@@ -72,9 +74,7 @@ public class TransactionDataEntity {
         this.shopName = shopName;
     }
 
-    /**
-     * String format of amount should be "4 780,00" according to API
-     */
+    /** String format of amount should be "4 780,00" according to API */
     public double getAmountAsDouble() {
         if (Strings.isNullOrEmpty(amount)) {
             throw new NullPointerException("Transaction amount not present. It should be.");
@@ -84,7 +84,8 @@ public class TransactionDataEntity {
     }
 
     /**
-     * Format of the dates returned from okq8 is 2016-01-26 (without time specified), so we also flatten time to noon
+     * Format of the dates returned from okq8 is 2016-01-26 (without time specified), so we also
+     * flatten time to noon
      */
     public Date getDateAsDate() {
         if (Strings.isNullOrEmpty(date)) {
@@ -107,7 +108,7 @@ public class TransactionDataEntity {
         if (transaction.getAmount() < 0) {
             transaction.setType(TransactionTypes.CREDIT_CARD);
         }
-        
+
         if (Objects.equal(getDescription(), PENDING_TRANSACTION_DESCRIPTION)) {
             transaction.setPending(true);
         }

@@ -13,8 +13,10 @@ public class CollectBankIdResponseBody {
 
     @JsonProperty("Status")
     private String status;
+
     @JsonProperty("SessionId")
     private String sessionId;
+
     @JsonProperty("RequestId")
     private String requestId;
 
