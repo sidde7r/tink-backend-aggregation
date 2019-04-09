@@ -51,11 +51,10 @@ public final class SpareBank1ApiClient {
 
     public GetTransactionsResponse getTransactions(TransactionalAccount account) {
         return createRequestInSession(
-                        SpareBank1Constants.Urls.FETCH_TRANSACTIONS
-                                .parameter(
-                                        SpareBank1Constants.IdTags.ACCOUNT_ID,
-                                        account.getFromTemporaryStorage(
-                                                SpareBank1Constants.StorageKeys.ACCOUNT_ID)))
+                        SpareBank1Constants.Urls.FETCH_TRANSACTIONS.parameter(
+                                SpareBank1Constants.IdTags.ACCOUNT_ID,
+                                account.getFromTemporaryStorage(
+                                        SpareBank1Constants.StorageKeys.ACCOUNT_ID)))
                 .get(GetTransactionsResponse.class);
     }
 

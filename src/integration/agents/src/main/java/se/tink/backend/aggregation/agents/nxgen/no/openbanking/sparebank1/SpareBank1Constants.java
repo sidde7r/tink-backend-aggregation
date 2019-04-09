@@ -18,7 +18,8 @@ public final class SpareBank1Constants {
 
         public static final URL FETCH_TOKEN = new URL(BASE_URL + ApiService.GET_TOKEN);
         public static final URL FETCH_ACCOUNTS = new URL(BASE_URL + ApiService.GET_ACCOUNTS);
-        public static final URL FETCH_TRANSACTIONS = new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
+        public static final URL FETCH_TRANSACTIONS =
+                new URL(BASE_URL + ApiService.GET_TRANSACTIONS);
     }
 
     public static class ApiService {
