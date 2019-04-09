@@ -23,6 +23,12 @@ filegroup(
 )
 
 filegroup(
+    name = "provision_clients",
+    srcs = glob(["provision/clients/**"]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
     name = "tink_ca",
     srcs = ["security/TinkCA.truststore"],
     visibility = ["//visibility:public"],

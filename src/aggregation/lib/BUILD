@@ -5,6 +5,7 @@ java_library(
     srcs = glob(["src/main/**/*.java"]),
     data = [
         "//data:cryptography_test",
+        "//data:provision_clients",
         "//data:tesseract_training_set",
         "//tools:libkbc_wbaes_linux",
         "//tools:libkbc_wbaes_mac",

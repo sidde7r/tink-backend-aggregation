@@ -1,0 +1,5 @@
+clients:
+  babis-staging:
+    aggregatorIdentifier: "Babis Ab"
+  babis-production:
+    aggregatorIdentifier: "Babis AB"
